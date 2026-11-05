@@ -750,7 +750,10 @@ Let $\varepsilon > 0$ be such that $\exp_p$ is a diffeomorphism from $B(0, \vare
 For $x \in U$ let $\rho(x) = |\exp_p^{-1}(x)|$, a continuous function, smooth on $U \setminus \{p\}$. Let $c \colon [a, b] \to U \setminus \{p\}$ be a piecewise smooth curve and write $c(t) = \exp_p(\rho(t)u(t))$ with $\rho(t) = \rho(c(t)) > 0$ and $|u(t)| = 1$.
 Then $\dot c = d\exp_p(\dot\rho u + \rho\dot u)$ at the point $\rho u$, with $\langle u, \dot u\rangle = 0$. By the Gauss lemma, $d\exp_p(u)$ has length $1$ and is orthogonal to $d\exp_p(\rho\dot u)$ (both at $\rho u$), so
 \begin{equation}\label{riemannian-geometry:equation-length-estimate}
-|\dot c|^2 = \dot\rho^2 + |d\exp_p(\rho\dot u)|^2 \geq \dot\rho^2, \qquad\text{hence}\qquad L(c) \geq \int_a^b|\dot\rho|\,dt \geq \rho(b) - \rho(a).
+\begin{aligned}
+&|\dot c|^2 = \dot\rho^2 + |d\exp_p(\rho\dot u)|^2 \geq \dot\rho^2, \qquad\text{hence}\\
+&L(c) \geq \int_a^b|\dot\rho|\,dt \geq \rho(b) - \rho(a).
+\end{aligned}
 \end{equation}
 Now let $c \colon [a, b] \to M$ go from $p$ to $q = \exp_p(v)$, $0 < |v| = r < \varepsilon$. Suppose first that $c$ stays in $U$. Let $a'$ be the last time with $c(a') = p$; applying \eqref{riemannian-geometry:equation-length-estimate} on $[a'', b]$ for $a'' \downarrow a'$ gives $L(c) \geq r$. If
 $L(c) = r$, then $c$ is constant on $[a, a']$, and on $(a', b]$ equality holds in \eqref{riemannian-geometry:equation-length-estimate}: $\dot\rho \geq 0$ and $d\exp_p(\rho\dot u) = 0$, so $\dot u = 0$ ($d\exp_p$ being injective on $B(0, \varepsilon)$), $u$ is constant and $c$ is a monotone

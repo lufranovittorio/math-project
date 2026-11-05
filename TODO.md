@@ -126,8 +126,8 @@ counterexamples, exercises with solutions, citations for quoted results.
   parts from the aux files of the full build); `make.py all` builds them and the
   table of contents of the website links them.
 - [x] 2026-11-05: **Report an error and status.** Every page ends with a link that
-  opens a prefilled GitHub issue; section pages show the chapter status above
-  the text (chapter pages already showed it under the title).
+  opens a prefilled GitHub issue, and every chapter and section page shows the
+  status of its chapter under the title.
 - [x] 2026-11-05: `combinatorics` (complete, 1900 lines): basic rules, binomial
   coefficients (also modulo primes: Lucas, Legendre, Kummer), multisets and the
   twelvefold way, inclusion–exclusion, Möbius inversion on posets, pigeonhole

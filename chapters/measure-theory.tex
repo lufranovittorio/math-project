@@ -2413,7 +2413,10 @@ For an injective linear $L \colon \RR^k \to \RR^m$ let $m(L) = \min_{|v| = 1}|Lv
 \emph{Step 1: a decomposition of $U$.} Call a pair $(B, L)$ of an open ball $B \subseteq U$ with rational centre and radius and an injective linear map $L$ with rational matrix \emph{good} if, for all
 $x, y \in B$,
 \begin{equation}\label{measure-theory:equation-good-pair}
-t^{-1}|L(x - y)| \leq |f(x) - f(y)| \leq t|L(x - y)| \qquad\text{and}\qquad t^{-k}JL \leq Jf(x) \leq t^kJL .
+\begin{aligned}
+&t^{-1}|L(x - y)| \leq |f(x) - f(y)| \leq t|L(x - y)| \qquad\text{and}\\
+&t^{-k}JL \leq Jf(x) \leq t^kJL .
+\end{aligned}
 \end{equation}
 Every $x_0 \in U$ lies in the ball of some good pair. Indeed, let $\mu_0 = m(Df(x_0)) > 0$ and $\eta = (1 - t^{-1})\mu_0/2$. Since $|m(L) - m(L^{\prime})| \leq \|L - L^{\prime}\|$, $J$ is
 continuous, and $Jf(x_0) > 0$, there is $L$ with rational matrix such that $\|Df(x_0) - L\| < \min(\eta, \mu_0)/2$ and $t^{-k}JL < Jf(x_0) < t^kJL$; then $m(L) \geq \mu_0/2$, so

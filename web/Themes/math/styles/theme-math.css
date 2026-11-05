@@ -380,6 +380,10 @@ a.part-pdf:hover { border-color: var(--accent); text-decoration: none; }
 .main-text .MathJax_Display { overflow-x: auto; overflow-y: hidden; }
 .main-text .equation { display: flex; align-items: center; gap: 1rem; }
 .main-text .equation > p { flex: 1; margin: 0; display: flex; align-items: center; }
+/* plasTeX writes <p><div class="equation_content">...</div></p>; the browser closes the
+   <p> before the <div>, leaving two empty paragraphs that would take two thirds of the
+   width as flex items and force the formula to scroll. */
+.main-text .equation > p:not(:has(*)) { display: none; }
 .main-text .equation_content { flex: 1; min-width: 0; }
 .main-text .equation_label::before { content: "("; }
 .main-text .equation_label::after { content: ")"; }

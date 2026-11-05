@@ -73,8 +73,9 @@ https://lufranovittorio.github.io/math-project/. So publishing is `git push`;
 the run takes about 15 minutes, and its log is under the Actions tab.
 
 Every page of the website ends with a link that opens a GitHub issue,
-prefilled with the address of the page, to report an error; section pages show
-the status of their chapter above the text.
+prefilled with the address of the page, to report an error, and every chapter
+and section page shows the status of its chapter under the title. In the
+search, chapters and sections whose title contains all the words come first.
 
 ## Writing
 

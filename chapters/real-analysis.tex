@@ -1910,7 +1910,10 @@ $\langle w, p\rangle = 0$, hence $\langle w, c\rangle \leq 0$ for all $c \in C$,
 In the situation \eqref{real-analysis:equation-nlp}, let $a \in F$ be a local minimum of $f$ on $F$, and assume the \emph{linear independence constraint qualification}: the gradients $\nabla g_i(a)$ for
 $i \in I(a)$ and $\nabla h_j(a)$ for $1 \leq j \leq q$ are linearly independent. Then there are unique numbers $\mu_1, \ldots, \mu_p$ and $\lambda_1, \ldots, \lambda_q$ with
 \begin{equation}\label{real-analysis:equation-kkt}
-\nabla f(a) + \sum_{i=1}^p\mu_i\nabla g_i(a) + \sum_{j=1}^q\lambda_j\nabla h_j(a) = 0, \qquad \mu_i \geq 0, \qquad \mu_ig_i(a) = 0 \quad (1 \leq i \leq p).
+\begin{aligned}
+&\nabla f(a) + \sum_{i=1}^p\mu_i\nabla g_i(a) + \sum_{j=1}^q\lambda_j\nabla h_j(a) = 0,\\
+&\mu_i \geq 0, \qquad \mu_ig_i(a) = 0 \quad (1 \leq i \leq p).
+\end{aligned}
 \end{equation}
 \end{theorem}
 

@@ -762,15 +762,16 @@ def command_html(args, project=None):
     if code != 0 or not (HTML_DIR / "index.html").exists():
         print("html: FAILED")
         return False
-    postprocess_html(project)
     pdf = PDF_DIR / "book.pdf"
     if pdf.exists():
         shutil.copy2(pdf, HTML_DIR / "book.pdf")
+    # Before the post-processing, which links the part PDFs that exist.
     part_pdfs = sorted(PARTS_DIR.glob("part-*.pdf")) if PARTS_DIR.exists() else []
     if part_pdfs:
         (HTML_DIR / "pdf").mkdir(exist_ok=True)
         for part_pdf in part_pdfs:
             shutil.copy2(part_pdf, HTML_DIR / "pdf" / part_pdf.name)
+    postprocess_html(project)
     print(f"html: wrote {HTML_DIR.relative_to(ROOT)}/index.html")
     return True
 

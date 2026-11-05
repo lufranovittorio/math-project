@@ -88,23 +88,37 @@
     return false;
   }
 
+  // Depth of a heading: 0 chapter, 1 section, 2 subsection, 3 subsubsection
+  // (from its number, "5.3.2" is a subsection); -1 for numbered environments.
+  function headingLevel(it) {
+    if (it.kind === "chapter") return 0;
+    if (it.kind !== "section") return -1;
+    var depth = String(it.number || "").split(".").length - 1;
+    return Math.max(1, Math.min(depth, 3));
+  }
+
+  // Returns {s: score, top: whether it is a chapter or section whose name contains
+  // every term}; those come first, chapters before sections.
   function score(it, terms) {
     var total = 0;
     var inName = 0;
+    var level = headingLevel(it);
     for (var i = 0; i < terms.length; i++) {
       var t = terms[i];
       var s = 0;
       if (it.fName.indexOf(t) !== -1) { s += wordStart(it.fName, t) ? 12 : 6; inName++; }
       if (it.fKind === t || (t.length > 3 && it.fKind.indexOf(t) === 0)) s += 4;
-      if (it.fLabel.indexOf(t) !== -1) s += wordStart(it.fLabel, t) ? 5 : 2;
+      // The label of a heading repeats its title, and would favour subsections,
+      // whose labels are usually longer than those of sections.
+      if (level < 0 && it.fLabel.indexOf(t) !== -1) s += wordStart(it.fLabel, t) ? 5 : 2;
+      else if (level >= 0 && s === 0 && it.fLabel.indexOf(t) !== -1) s += 1;
       if (it.fText.indexOf(t) !== -1) s += wordStart(it.fText, t) ? 3 : 1;
-      if (s === 0) return 0;
+      if (s === 0) return null;
       total += s;
     }
     if (inName === terms.length) total += 10;
-    if (it.kind === "chapter") total += 4;
-    else if (it.kind === "section") total += 2;
-    return total;
+    if (level >= 0) total += [6, 4, 2, 1][level];
+    return { s: total, top: level >= 0 && level <= 1 && inName === terms.length, level: level };
   }
 
   var state = { query: "", group: "all", shown: PAGE, results: [] };
@@ -127,10 +141,14 @@
       items.forEach(function (it) {
         if (it === pinned) return;
         if (group.kinds && group.kinds.indexOf(it.kind) === -1) return;
-        var s = score(it, terms);
-        if (s > 0) out.push({ it: it, s: s });
+        var r = score(it, terms);
+        if (r) out.push({ it: it, s: r.s, top: r.top, level: r.level });
       });
-      out.sort(function (a, b) { return b.s - a.s || a.it.order - b.it.order; });
+      out.sort(function (a, b) {
+        if (a.top !== b.top) return a.top ? -1 : 1;
+        if (a.top && a.level !== b.level) return a.level - b.level;
+        return b.s - a.s || a.it.order - b.it.order;
+      });
     }
     var res = out.map(function (r) { return r.it; });
     if (pinned) res.unshift(pinned);
