@@ -3,7 +3,7 @@
 The goal: all of mathematics, at a good level, with complete proofs, written
 slowly (motivation, examples, counterexamples, exercises with solutions), in
 one strict logical order. The starting material is the 77 chapters copied
-from The Hodge Project on 2026-11-05 (about 1.5k PDF pages); the expected size
+from [The Hodge Project](https://lufranovittorio.github.io/Appunti_Matematica/) on 2026-11-05 (about 1.5k PDF pages); the expected size
 is about ten times that. Work through the phases in order, but new parts can
 be started as soon as phase 0 is done. Tick items off (`[x]`) and move them to
 Done with a short summary.
@@ -80,6 +80,28 @@ counterexamples, exercises with solutions, citations for quoted results.
   `symplectic-geometry`, `mixed-hodge-structures`, `absolute-hodge`,
   `cycle-class`, `tate-conjecture` have 2 each).
 - [ ] Finish `deformations` (status `draft`).
+
+## Comprehensive rebuild of the existing chapters (user request, 2026-11-05)
+
+"Complete" is not final: chapters below the depth of the Stacks project are to
+be rebuilt (rewritten slowly, enlarged, split into several chapters, or
+merged and reorganised), not only patched. Work on them alternates with the
+new parts. Order: the foundations and algebra chapters that the new parts use
+first, then the thinnest chapters. Thinnest written chapters (lines, at
+2026-11-05): failures 172, etale-cohomology 188, known-cases 194,
+lefschetz-11 197, cycle-class 205, intermediate-jacobians 207, vhs 209,
+mumford-tate 214, cohomology-operations 235, hodge-conjecture 244,
+dolbeault 247, calabi-yau 249, tate-conjecture 260, gaga 266,
+abelian-varieties 273, hodge-structures 280, index-theorems 283,
+algebraic-groups 285, intersection-theory 293, curves 297,
+spectral-sequences 300 (then everything below about 800 lines).
+
+- [ ] For each: list what the Stacks project (or the standard reference) covers,
+  plan the new chapter(s), rewrite, keep every existing label (tags are
+  permanent; a removed result keeps its tag by staying, possibly as a remark).
+- [x] 2026-11-05: removed the paragraphs "On the way to the Hodge conjecture"
+  from all chapters (the route stays in the introduction); The Hodge Project
+  is linked wherever it is mentioned.
 
 ## Carried over from The Hodge Project (still open)
 

@@ -89,12 +89,17 @@ material, free to be reorganised, split, merged and expanded. The plan is in
   after `\chapter`. Planned chapters contain a summary, a Prerequisites line
   (`\noindent\textbf{Prerequisites.} Chapter~\ref{slug} (Title), ...`) and a
   Planned contents list. Only a human reader may set a chapter to `checked`.
-- **Reading paths**: the copied chapters have, after the Prerequisites line,
-  a paragraph `\noindent\textbf{On the way to the Hodge conjecture.}` saying
-  which sections the direct route to the Hodge conjecture needs. Here the
-  Hodge conjecture is one reading path among several: keep those paragraphs
-  updated, and describe every new path (probability, PDE, ...) in the
-  introduction's reading guide.
+- **Reading paths** are described only in the introduction's reading guide
+  (the Hodge conjecture is one path among several); describe every new path
+  (probability, PDE, ...) there. Chapters have no per-chapter path paragraph
+  (the old "On the way to the Hodge conjecture" paragraphs were removed on
+  2026-11-05 at the user's request; do not add them back).
+- **The Hodge Project**: whenever the book, README or site mentions it, link
+  it: `\href{https://lufranovittorio.github.io/Appunti_Matematica/}{The Hodge Project}`
+  (source: https://github.com/lufranovittorio/Appunti_Matematica).
+- **Comprehensive.** Chapters marked complete are not finished for good: when
+  a subject deserves it, rebuild or split an existing chapter to make it
+  bigger, or reorganise chapters, rather than only adding new ones.
 - **Math that works on both outputs**: plasTeX expands macros from
   `macros.tex` itself, and MathJax 2.7.9 renders the result. Stick to amsmath /
   amssymb commands that MathJax supports; do not add packages without testing

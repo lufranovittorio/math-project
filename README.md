@@ -5,7 +5,9 @@ and in a strict logical order, aiming to cover all of it: foundations,
 algebra, topology, analysis, geometry, number theory, discrete mathematics,
 probability, differential equations, numerical analysis, optimisation, game
 theory and research-level topics such as Hodge theory. It started in November
-2026 from the chapters of The Hodge Project. It is organised like the
+2026 from the chapters of
+[The Hodge Project](https://lufranovittorio.github.io/Appunti_Matematica/)
+([source](https://github.com/lufranovittorio/Appunti_Matematica)). It is organised like the
 [Stacks project](https://stacks.math.columbia.edu): one LaTeX source, a strict
 logical order, and a permanent tag for every result.
 
