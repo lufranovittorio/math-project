@@ -1,0 +1,776 @@
+\chapter{Vector Bundles}\label{vector-bundles}
+\chapterstatus{complete}
+
+\section{Introduction}\label{vector-bundles:section-introduction}
+
+A vector bundle is a family of vector spaces $E_p$, one for each point $p$ of a manifold $M$, glued together smoothly. The model is the tangent bundle: at each point of a
+surface in $\RR^3$ there is a tangent plane, and as the point moves the plane moves with it. Locally such a family looks like a product $U \times \mathbb{K}^r$, a
+\emph{local trivialisation}; globally it may be twisted, as the M\"obius band is a twisted version of the cylinder. The twisting is recorded by \emph{transition functions}:
+where two trivialisations overlap, they differ by a smoothly varying invertible matrix.
+
+Vector bundles appear everywhere in this book. Tangent and cotangent bundles and the bundles of differential forms are the setting of analysis on manifolds; sections of
+bundles are ``twisted functions'', which is how the line bundles of complex and algebraic geometry encode divisors and linear systems; and the amount of twisting is measured
+by characteristic classes, the first of which, the first Chern class of a complex line bundle, is constructed at the end of this chapter.
+
+The chapter goes as follows.
+\begin{enumerate}
+\item Definitions, examples, and the description of bundles by cocycles of transition functions (Section~\ref{vector-bundles:section-definition}), with the M\"obius bundle,
+the tangent bundle and the tautological bundles worked out.
+\item Sections and frames, and the dictionary between vector bundles and locally free sheaves.
+\item The linear algebra of bundles: direct sums, tensor products, duals, $\Hom$ bundles, exterior powers, pullbacks; metrics; tensor fields and their components in coordinates; subbundles, kernels and normal bundles
+(Section~\ref{vector-bundles:section-operations}).
+\item Complex line bundles: their classification by $H^2(M; \ZZ)$, and an elementary classification on the sphere by the winding number of a transition function
+(Section~\ref{vector-bundles:section-line-bundles}).
+\item Parallelizable manifolds, whose tangent bundle is trivial: Lie groups, $S^3$, $S^1 \times S^n$, and the theorem that $S^n$ is parallelizable only for $n = 0, 1, 3, 7$
+(Section~\ref{vector-bundles:section-parallelizable}).
+\end{enumerate}
+References: \cite{lee-smooth-manifolds}, \cite{milnor-stasheff}, \cite[Chapter 0]{griffiths-harris}.
+
+\noindent\textbf{Prerequisites.} Chapter~\ref{smooth-manifolds} (Smooth Manifolds), Chapter~\ref{multilinear-algebra} (Multilinear Algebra) and Chapter~\ref{sheaves} (Sheaves on
+Topological Spaces).
+
+\noindent\textbf{On the way to the Hodge conjecture.} Needed: vector bundles and cocycles, operations on bundles, and line bundles with the first Chern class (Sections~\ref{vector-bundles:section-definition} to \ref{vector-bundles:section-line-bundles}).
+Section~\ref{vector-bundles:section-parallelizable} can be skipped.
+
+\noindent\textbf{Conventions.} $\mathbb{K} = \RR$ or $\CC$, and $M$ is a smooth manifold. Vectors of $\mathbb{K}^r$ are columns, and $e_1, \ldots, e_r$ is the standard basis.
+$\GL_r(\mathbb{K})$ is the group of invertible $r \times r$ matrices, an open subset of $M_r(\mathbb{K})$.
+
+\section{Vector bundles and cocycles}\label{vector-bundles:section-definition}
+
+\begin{definition}\label{vector-bundles:definition-vector-bundle}
+A \emph{vector bundle} of rank $r$ over $M$ is a smooth map $\pi \colon E \to M$ together with $\mathbb{K}$-vector space structures on the fibres $E_p = \pi^{-1}(p)$, such that every point of $M$ has an open
+neighbourhood $U$ and a diffeomorphism $\Phi \colon \pi^{-1}(U) \to U \times \mathbb{K}^r$ (a \emph{local trivialisation}) with $\mathrm{pr}_1 \circ \Phi = \pi$, linear on each fibre. A \emph{morphism} of vector
+bundles over $M$ is a smooth $f \colon E \to F$ with $\pi_F \circ f = \pi_E$, linear on fibres; \emph{line bundle} means rank $1$.
+\end{definition}
+
+Unwinding the definition: $E$ is a manifold, $\pi$ maps it onto $M$, each fibre $E_p$ is a vector space of dimension $r$, and over a neighbourhood of each point the manifold $E$
+is identified with $U \times \mathbb{K}^r$ in such a way that the fibre $E_p$ goes to $\{p\} \times \mathbb{K}^r$ by a linear isomorphism $\Phi_p \colon E_p \to \mathbb{K}^r$.
+The rank is part of the data; one could allow it to vary, but it is locally constant (because of the local trivialisations), so on a connected manifold it is constant. An
+\emph{isomorphism} is a morphism with an inverse morphism, and $E$ is \emph{trivial} if it is isomorphic to the \emph{trivial bundle} $M \times \mathbb{K}^r$ with the projection
+to $M$. A complex vector bundle of rank $r$ is also a real one of rank $2r$, by forgetting the complex structure.
+
+\begin{lemma}\label{vector-bundles:lemma-bijective-morphism}
+A morphism of vector bundles over $M$ that is bijective on every fibre is an isomorphism.
+\end{lemma}
+
+\begin{proof}
+The inverse map is linear on fibres; we must show it is smooth. This is local, so we may assume both bundles are trivial, $U \times \mathbb{K}^r$, and the morphism is
+$(p, v) \mapsto (p, A(p)v)$ for a smooth map $A \colon U \to M_r(\mathbb{K})$ (its entries are the components of the images of the constant sections $e_j$). By hypothesis $A(p)$ is
+invertible, and $A(p)^{-1}$ is smooth in $p$ by Cramer's rule, since the entries of the inverse are polynomials in the entries of $A$ divided by $\det A \neq 0$. So the inverse
+$(p, w) \mapsto (p, A(p)^{-1}w)$ is smooth.
+\end{proof}
+
+\begin{example}\label{vector-bundles:example-bundles}
+\begin{enumerate}
+\item \emph{The trivial bundle} $M \times \mathbb{K}^r$.
+\item \emph{The tangent bundle} $TM$ (Definition~\ref{smooth-manifolds:definition-tangent-bundle}). A chart $\varphi = (x^1, \ldots, x^n)$ on $U$ gives the local trivialisation
+$T_pM \to \RR^n$, $v \mapsto (dx^1(v), \ldots, dx^n(v))$, sending $\sum_iv^i\partial/\partial x^i$ to $(v^1, \ldots, v^n)$. Its dual, the \emph{cotangent bundle} $T^*M$, has fibres
+$T_p^*M = (T_pM)^*$.
+\item \emph{The M\"obius bundle} over $S^1 = \RR/\ZZ$ is the quotient of $\RR \times \RR$ by $(x, t) \sim (x + 1, -t)$, with the projection $[x, t] \mapsto [x]$. Equivalently,
+it is obtained from $[0, 1] \times \RR$ by gluing $(0, t)$ to $(1, -t)$. Over each interval $\{[x] : a < x < a + 1\}$ it is trivialised by $[x, t] \mapsto ([x], t)$ with
+$a < x < a + 1$.
+\item \emph{The tautological line bundles.} On $\RR\PP^n$ and on $\CC\PP^n$, $\mathcal{O}(-1) = \{(\ell, v) : v \in \ell\} \subseteq \mathbb{K}\PP^n \times \mathbb{K}^{n+1}$, whose fibre over a
+line $\ell$ is the line itself (Exercise~\ref{vector-bundles:exercise-tautological}).
+\item \emph{The normal bundle} $N_{S/M} = (TM|_S)/TS$ of a submanifold $S \subseteq M$ (Proposition~\ref{vector-bundles:proposition-constant-rank}); for $S \subseteq \RR^N$ it can be
+realised as $\{(p, v) \in S \times \RR^N : v \perp T_pS\}$.
+\end{enumerate}
+\end{example}
+
+\begin{proposition}\label{vector-bundles:proposition-lie-group-parallelisable}
+The tangent bundle of a Lie group $G$ is trivial: $G \times \mathfrak{g} \to TG$, $(g, v) \mapsto d(L_g)_e(v)$, is an isomorphism of vector bundles. In particular $S^1$, $S^3 \cong \mathrm{SU}(2)$ and the tori $T^n$ have trivial tangent
+bundles.
+\end{proposition}
+
+\begin{proof}
+The map is smooth, as the differential of multiplication restricted to $G \times T_eG$, it covers the identity of $G$, and it is a linear isomorphism on each fibre since $L_g$ is a diffeomorphism. By
+Lemma~\ref{vector-bundles:lemma-bijective-morphism} it is an isomorphism. For $S^3$ note that
+$\mathrm{SU}(2) = \{\begin{pmatrix}a & -\bar b\\ b & \bar a\end{pmatrix} : |a|^2 + |b|^2 = 1\}$ is diffeomorphic to $S^3 \subseteq \CC^2$.
+\end{proof}
+
+\begin{counterexample}\label{vector-bundles:counterexample-mobius}
+The M\"obius bundle $E$ over $S^1$ (Example~\ref{vector-bundles:example-bundles}) is not trivial. A trivial line bundle has a section that vanishes nowhere: $M \times \RR$ has $p \mapsto (p, 1)$, and an isomorphism $\Phi \colon M \times \RR \to E$ carries it to
+$p \mapsto \Phi(p, 1)$, which vanishes nowhere because $\Phi$ is injective on each fibre. But $E$ has no nowhere vanishing section: such a section would correspond to a continuous
+$s \colon [0, 1] \to \RR \setminus \{0\}$ with $s(1) = -s(0)$, and by the intermediate value theorem $s$ would vanish somewhere. (Sections that vanish somewhere but are not identically zero exist on every
+bundle, so ``nowhere vanishing'' cannot be weakened to ``nonzero''. Conversely, a real line bundle with a nowhere vanishing section $s$ is trivial, by $(p, t) \mapsto ts(p)$; see
+Remark~\ref{vector-bundles:remark-sections-triviality} for both points and for what changes in higher rank.) The tautological line bundle of $\RR\PP^1$ is isomorphic to $E$: parametrising
+$\RR\PP^1$ by $\theta \in [0, \pi]$, with $\theta$ corresponding to the line through $u(\theta) = (\cos\theta, \sin\theta)$, the section $u$ trivialises the bundle over $[0, \pi]$ and $u(\pi) = -u(0)$, which is the gluing of $E$. Hence the
+tautological line bundle of $\RR\PP^n$, which restricts to it on $\RR\PP^1 \subseteq \RR\PP^n$, is nontrivial as well.
+\end{counterexample}
+
+Two local trivialisations $\Phi_i$ and $\Phi_j$ of the same bundle can be compared on the overlap of their domains: $\Phi_i \circ \Phi_j^{-1}$ maps $(p, v)$ to
+$(p, g_{ij}(p)v)$, where $g_{ij}(p) = \Phi_{i,p} \circ \Phi_{j,p}^{-1}$ is the invertible matrix that converts the coordinates of a vector of $E_p$ in the trivialisation $j$ into
+its coordinates in the trivialisation $i$. These matrices are the transition functions, and they determine the bundle.
+
+\begin{proposition}\label{vector-bundles:proposition-cocycles}
+Let $(U_i)$ be an open cover of $M$.
+\begin{enumerate}
+\item A vector bundle with trivialisations $\Phi_i$ over $U_i$ determines \emph{transition functions} $g_{ij} \colon U_i \cap U_j \to \GL_r(\mathbb{K})$, smooth, with
+$\Phi_i\Phi_j^{-1}(p, v) = (p, g_{ij}(p)v)$; they satisfy the \emph{cocycle condition} $g_{ij}g_{jk} = g_{ik}$ on triple intersections, and $g_{ii} = 1$.
+\item Conversely, every such family $(g_{ij})$ arises from a vector bundle, unique up to isomorphism, namely $E = (\bigsqcup_i U_i \times \mathbb{K}^r)/\sim$ with $(p, v)_j \sim (p, g_{ij}(p)v)_i$.
+\item Two cocycles $(g_{ij})$, $(g'_{ij})$ define isomorphic bundles if and only if there are smooth $h_i \colon U_i \to \GL_r(\mathbb{K})$ with $g'_{ij} = h_ig_{ij}h_j^{-1}$. Hence isomorphism classes of rank
+$r$ bundles correspond to $\check{H}^1(M, \underline{\GL_r})$, \v{C}ech cohomology with values in the sheaf of smooth $\GL_r(\mathbb{K})$-valued functions
+(Remark~\ref{sheaf-cohomology:remark-cech-limit}).
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) The map $\Phi_i\Phi_j^{-1}$ is a diffeomorphism of $(U_i \cap U_j) \times \mathbb{K}^r$ that commutes with the projection to $U_i \cap U_j$ and is linear on fibres, so it has
+the form $(p, v) \mapsto (p, g_{ij}(p)v)$ with $g_{ij}(p)$ invertible. The entries of $g_{ij}$ are smooth: the $k$-th column of $g_{ij}(p)$ is the second component of
+$\Phi_i\Phi_j^{-1}(p, e_k)$, a smooth function of $p$. On $U_i \cap U_j \cap U_k$, $\Phi_i\Phi_k^{-1} = (\Phi_i\Phi_j^{-1})(\Phi_j\Phi_k^{-1})$, which is $g_{ik} = g_{ij}g_{jk}$, and $g_{ii} = 1$.
+In particular $g_{ji} = g_{ij}^{-1}$.
+
+(2) The relation $\sim$ is reflexive because $g_{ii} = 1$, symmetric because $g_{ji} = g_{ij}^{-1}$, and transitive because of the cocycle condition. Let $E$ be the quotient,
+$\pi[p, v]_i = p$, and give $E_p$ the vector space structure transported from $\mathbb{K}^r$ by $v \mapsto [p, v]_i$ for any $i$ with $p \in U_i$; this does not depend on $i$, as the
+identifications differ by the linear maps $g_{ij}(p)$. The maps $\Phi_i \colon \pi^{-1}(U_i) \to U_i \times \mathbb{K}^r$, $[p, v]_i \mapsto (p, v)$, are bijective, and their transition maps
+$(p, v) \mapsto (p, g_{ij}(p)v)$ are diffeomorphisms of the open sets $(U_i \cap U_j) \times \mathbb{K}^r$. Composing with charts of $M$, the $\Phi_i$ form an atlas of $E$ (Hausdorff and second
+countable because $M$ is and the cover can be taken countable), for which $\pi$ is smooth and the $\Phi_i$ are local trivialisations with transition functions $g_{ij}$. If a bundle
+$E^{\prime}$ has trivialisations $\Phi^{\prime}_i$ with the same transition functions, then $\Phi_i^{\prime-1}\Phi_i$ on $\pi^{-1}(U_i)$ agree on overlaps and glue to an isomorphism $E \to E^{\prime}$.
+
+(3) An isomorphism $f \colon E \to E^{\prime}$ is given in the trivialisations by $\Phi^{\prime}_if\Phi_i^{-1}(p, v) = (p, h_i(p)v)$ with $h_i$ smooth and invertible (as in (1)). On
+$U_i \cap U_j$, computing $\Phi^{\prime}_if\Phi_j^{-1}$ in two ways gives $h_ig_{ij} = g^{\prime}_{ij}h_j$. Conversely, given such $h_i$, the maps $\Phi_i^{\prime-1}h_i\Phi_i$ agree on overlaps and define
+an isomorphism, which is smooth with smooth inverse. The relation $g^{\prime}_{ij} = h_ig_{ij}h_j^{-1}$ is exactly the statement that the two \v{C}ech cocycles are cohomologous.
+\end{proof}
+
+\begin{example}\label{vector-bundles:example-cocycles}
+\begin{enumerate}
+\item \emph{The tangent bundle.} For the trivialisations of $TM$ given by charts $\varphi$ and $\psi$ (Example~\ref{vector-bundles:example-bundles}(2)), a vector with components
+$\xi$ in the chart $\varphi$ has components $D\tau(\varphi(p))\xi$ in the chart $\psi$, where $\tau = \psi \circ \varphi^{-1}$ (Proposition~\ref{smooth-manifolds:proposition-tangent-bundle}).
+So the transition functions of $TM$ are the Jacobian matrices of the transition maps of the atlas, and the cocycle condition is the chain rule.
+\item \emph{The sphere.} For the two stereographic charts of $S^n$ (Example~\ref{general-topology:example-stereographic}), the transition map is the inversion
+$\tau(y) = y/|y|^2$ of $\RR^n \setminus \{0\}$, whose Jacobian matrix is
+\[
+D\tau(y) = \frac{1}{|y|^2}\Bigl(I - \frac{2yy^T}{|y|^2}\Bigr),
+\]
+the reflection in the hyperplane $y^\perp$ divided by $|y|^2$. It has determinant $-|y|^{-2n}$: the two charts induce opposite orientations. This single matrix-valued function
+on $\RR^n \setminus \{0\}$ describes $TS^n$ completely.
+\item \emph{The M\"obius bundle.} With the two trivialisations of Example~\ref{vector-bundles:example-bundles}(3) over the intervals $0 < x < 1$ and $\frac12 < x < \frac32$, the overlap
+consists of two arcs; on one the transition function is $1$ and on the other it is $-1$. A cocycle with values in $\{\pm1\} \subseteq \GL_1(\RR)$ describes a bundle with locally constant
+transition functions, a \emph{flat} bundle (Chapter~\ref{connections}).
+\item \emph{The tautological line bundle of $\CC\PP^1$.} Over $U_0 = \{[1 : z]\}$ and $U_1 = \{[w : 1]\}$ the line $\ell$ has the basis vectors $s_0 = (1, z)$ and $s_1 = (w, 1)$, which
+trivialise $\mathcal{O}(-1)$. On $U_0 \cap U_1$, where $w = 1/z$, $s_1 = z^{-1}s_0$. So a vector $v = a\,s_0 = b\,s_1$ has coordinates related by $a = z^{-1}b$: the transition function
+is $g_{01} = z^{-1}$, a function $\CC^\times \to \GL_1(\CC) = \CC^\times$.
+\end{enumerate}
+\end{example}
+
+\begin{definition}\label{vector-bundles:definition-sections}
+A \emph{section} of $E$ over $U \subseteq M$ open is a smooth $s \colon U \to E$ with $\pi \circ s = \id$; they form a $C^\infty(U)$-module $\Gamma(U, E)$, and $U \mapsto \Gamma(U, E)$ is a sheaf
+$\mathcal{E}$ of $C^\infty_M$-modules. A \emph{frame} over $U$ is a tuple of sections that is a basis of each fibre.
+\end{definition}
+
+A section picks a vector in each fibre, smoothly. In a trivialisation $\Phi$ over $U$ a section is the same as a smooth function $U \to \mathbb{K}^r$, namely $\Phi \circ s$; so
+sections are ``functions twisted by the bundle''. The sections of the trivial line bundle are the functions, the sections of $TM$ are the vector fields, and those of $T^*M$ are the
+$1$-forms. Every bundle has the zero section, and many others: if $v \in E_p$, a bump function times a local section through $v$ gives a global section with value $v$ at $p$.
+
+\begin{example}\label{vector-bundles:example-sections}
+\begin{enumerate}
+\item \emph{Sections of the M\"obius bundle} are the smooth functions $f \colon \RR \to \RR$ with $f(x + 1) = -f(x)$, such as $\sin(\pi x)$, which vanishes exactly at the integers.
+Every section vanishes somewhere (Counterexample~\ref{vector-bundles:counterexample-mobius}).
+\item \emph{Sections of a bundle given by a cocycle} are families of functions $s_i \colon U_i \to \mathbb{K}^r$ with $s_i = g_{ij}s_j$ on $U_i \cap U_j$. For $\mathcal{O}(-1)$ on
+$\CC\PP^1$, with Example~\ref{vector-bundles:example-cocycles}(4), a section is a pair of functions $a$ on $U_0$ and $b$ on $U_1$ with $a = z^{-1}b$; holomorphic sections would be
+power series $a(z)$ and $b(w)$ with $a(z) = z^{-1}b(1/z)$, and comparing the powers of $z$ shows that only $a = b = 0$ is possible. So $\mathcal{O}(-1)$ has no nonzero holomorphic
+section, although it has many smooth ones (Chapter~\ref{holomorphic-bundles}).
+\end{enumerate}
+\end{example}
+
+\begin{proposition}\label{vector-bundles:proposition-sheaf-of-sections}
+$\mathcal{E}$ is locally free of rank $r$ (Definition~\ref{sheaves:definition-module-operations}): a trivialisation over $U$ is the same as a frame over $U$, and gives $\mathcal{E}|_U \cong (C^\infty_U)^r$.
+Conversely every locally free $C^\infty_M$-module of rank $r$ is the sheaf of sections of a vector bundle, unique up to isomorphism, and this correspondence is an equivalence between vector bundles and
+locally free sheaves.
+\end{proposition}
+
+\begin{proof}
+A trivialisation $\Phi$ gives the frame $s_i(p) = \Phi^{-1}(p, e_i)$, and conversely a frame defines $\Phi(v) = (p, (v^1, \ldots, v^r))$ where $v = \sum v^is_i(p)$; smoothness in both directions follows because
+the coefficients are smooth functions (they are the components in a trivialisation). Given a locally free sheaf $\mathcal{F}$, choose isomorphisms $\mathcal{F}|_{U_i} \cong (C^\infty_{U_i})^r$; on overlaps
+they differ by automorphisms of $(C^\infty)^r$, that is, by matrices $g_{ij}$ of smooth functions with smooth inverse, which form a cocycle. The bundle of
+Proposition~\ref{vector-bundles:proposition-cocycles}(2) has $\mathcal{F}$ as its sheaf of sections. Morphisms correspond in the same way, since a morphism of bundles is determined by its action on sections.
+\end{proof}
+
+\section{Operations on bundles}\label{vector-bundles:section-operations}
+
+Every construction of linear algebra that is applied to vector spaces can be applied fibre by fibre to vector bundles. The principle is always the same: apply the construction to
+the transition functions, and use Proposition~\ref{vector-bundles:proposition-cocycles}(2).
+
+\begin{proposition}\label{vector-bundles:proposition-operations}
+Let $E$, $F$ be vector bundles over $M$ of ranks $r$, $s$, with cocycles $(g_{ij})$, $(h_{ij})$, and let $f \colon N \to M$ be smooth.
+\begin{enumerate}
+\item There are vector bundles $E \oplus F$, $E \otimes F$, $E^\vee$, $\Hom(E, F)$, $\Lambda^kE$ and $\mathrm{Sym}^kE$ whose fibres are the corresponding constructions on the fibres, with cocycles
+$g_{ij} \oplus h_{ij}$, $g_{ij} \otimes h_{ij}$, $(g_{ij}^T)^{-1}$, and so on. Their sheaves of sections are the corresponding operations on locally free sheaves.
+\item The \emph{pullback} $f^*E$, with fibre $(f^*E)_q = E_{f(q)}$ and cocycle $g_{ij} \circ f$ for the cover $(f^{-1}U_i)$, is a vector bundle on $N$; $f^*$ is functorial and
+$(g \circ f)^* \cong f^*g^*$.
+\item $\det E = \Lambda^rE$ is a line bundle with cocycle $\det g_{ij}$.
+\end{enumerate}
+\end{proposition}
+
+Explicitly, the cocycles are: for $E \oplus F$ the block matrices $\bigl(\begin{smallmatrix} g_{ij} & 0\\ 0 & h_{ij}\end{smallmatrix}\bigr)$; for $E \otimes F$ the Kronecker products
+$g_{ij} \otimes h_{ij}$, which act on $v \otimes w$ by $g_{ij}v \otimes h_{ij}w$; for the dual $E^\vee$, $(g_{ij}^T)^{-1}$, because a linear form with coordinates $\xi$ (a row vector
+$\xi^T$) must satisfy $\xi_i^Tv_i = \xi_j^Tv_j$ when $v_i = g_{ij}v_j$; for $\Hom(E, F)$, the map $A \mapsto h_{ij}Ag_{ij}^{-1}$ on matrices; for $\Lambda^kE$ the matrices of $k \times k$
+minors of $g_{ij}$; and for $\det E$ the determinants.
+
+\begin{proof}
+In each case the fibrewise construction is a functor on finite-dimensional vector spaces and isomorphisms, and the transition matrices of the new bundle are obtained from the
+$g_{ij}$ and $h_{ij}$ by applying this functor. Their entries are polynomials in the entries of $g_{ij}$, $h_{ij}$, possibly divided by $\det g_{ij}$, so they are smooth; and functoriality
+turns the cocycle conditions for $(g_{ij})$ and $(h_{ij})$ into the cocycle condition for the new family. By Proposition~\ref{vector-bundles:proposition-cocycles}(2) there is a bundle with
+these transition functions, and its fibre over $p$ is canonically the construction applied to $E_p$ and $F_p$, since the identifications with $\mathbb{K}^r$ and $\mathbb{K}^s$ over different
+$U_i$ differ exactly by the transition matrices. The sheaf of sections is computed locally, where everything is trivial. For the pullback, the functions $g_{ij} \circ f$ are smooth and
+satisfy the cocycle condition on the cover $(f^{-1}U_i)$, and $(f^*E)_q = E_{f(q)}$ canonically; functoriality holds because the cocycle of $(g \circ f)^*E$ is that of $f^*(g^*E)$.
+For the determinant, $\Lambda^r$ of an $r \times r$ matrix is multiplication by its determinant.
+\end{proof}
+
+\begin{example}\label{vector-bundles:example-operations}
+\begin{enumerate}
+\item The cotangent bundle $T^*M$ has transition functions $(D\tau^T)^{-1}$, the inverse transposes of the Jacobian matrices; the bundle $\Lambda^kT^*M$ of $k$-forms has the $k \times k$
+minors of these, and the bundle $\Lambda^nT^*M$ of top degree forms has transition functions $\det(D\tau)^{-1}$. It is trivial when the atlas can be chosen with $\det D\tau > 0$,
+which is the orientability of $M$ (Chapter~\ref{differential-forms}).
+\item The line bundles $\mathcal{O}(k)$ on $\CC\PP^1$: $\mathcal{O}(1) = \mathcal{O}(-1)^\vee$ has transition function $z$, and $\mathcal{O}(k) = \mathcal{O}(1)^{\otimes k}$ for $k \geq 0$,
+$\mathcal{O}(k) = \mathcal{O}(-1)^{\otimes(-k)}$ for $k < 0$, has transition function $z^k$ with respect to the covering $U_0$, $U_1$ (for line bundles, tensor products multiply the
+transition functions, and duals invert them).
+\item \emph{Restrictions and constant maps.} For the inclusion $\iota \colon S \to M$ of a submanifold, $\iota^*E = E|_S$ is the restriction. For a constant map $f \colon N \to M$ with value $p$,
+$f^*E = N \times E_p$ is trivial.
+\end{enumerate}
+\end{example}
+
+\begin{proposition}\label{vector-bundles:proposition-pullback-fibre-product}
+Let $\pi \colon E \to M$ be a vector bundle and $f \colon N \to M$ smooth. The fibre product
+\[
+N \times_ME = \{(q, e) \in N \times E : f(q) = \pi(e)\}
+\]
+is a submanifold of $N \times E$ (Proposition~\ref{smooth-manifolds:proposition-fibre-product}), and the projection to $N$, with the vector space structures of the
+fibres $E_{f(q)}$, is a vector bundle isomorphic to the pullback $f^*E$ of Proposition~\ref{vector-bundles:proposition-operations}(2). It has the universal
+property of the fibre product: for a manifold $L$, the smooth maps $L \to f^*E$ correspond to pairs of smooth maps $a \colon L \to N$ and $b \colon L \to E$ with
+$f \circ a = \pi \circ b$. In particular the sections of $f^*E$ over $N$ correspond to the smooth maps $s \colon N \to E$ with $\pi \circ s = f$, and a section $t$ of
+$E$ pulls back to the section $f^*t = t \circ f$.
+\end{proposition}
+
+\begin{proof}
+A vector bundle projection is a submersion, since in a local trivialisation it is the projection $U \times \mathbb{K}^r \to U$, so
+Proposition~\ref{smooth-manifolds:proposition-fibre-product} applies and gives the submanifold and the universal property. If $\Phi \colon \pi^{-1}(U) \to U \times \mathbb{K}^r$
+is a local trivialisation of $E$, then $(q, e) \mapsto (q, \mathrm{pr}_2\Phi(e))$ is a diffeomorphism from the part of $N \times_ME$ over $f^{-1}(U)$ onto
+$f^{-1}(U) \times \mathbb{K}^r$, linear on fibres; so the projection to $N$ is a vector bundle, and its transition functions for these trivialisations are the
+$g_{ij} \circ f$, which are those of $f^*E$. Two vector bundles with the same cocycle are isomorphic (Proposition~\ref{vector-bundles:proposition-cocycles}).
+\end{proof}
+
+So a section of $f^*E$ is ``a section of $E$ along $f$'': for example, for a curve $\gamma$ in $M$, a section of $\gamma^*TM$ is a vector field along the curve, such as its
+velocity, and the differential $df$ of a smooth map is a section of $T^*N \otimes f^*TM$.
+
+\begin{proposition}\label{vector-bundles:proposition-metrics}
+Every vector bundle over a manifold admits a metric: a smooth family of inner products (Hermitian inner products in the complex case) on the fibres. Consequently:
+\begin{enumerate}
+\item every subbundle has a complement, and every short exact sequence $0 \to E' \to E \to E'' \to 0$ of vector bundles splits;
+\item $E \cong E^\vee$ for real bundles, and $E^\vee \cong \overline{E}$ for complex bundles with Hermitian metric.
+\end{enumerate}
+\end{proposition}
+
+Here a \emph{subbundle} of $E$ is a subset $E^{\prime} \subseteq E$ such that every point has a neighbourhood with a frame $s_1, \ldots, s_r$ of $E$ for which $s_1, \ldots, s_k$ is a frame of
+$E^{\prime}$; then $E^{\prime}$ is a vector bundle of rank $k$, and the quotient $E/E^{\prime}$, with fibres $E_p/E^{\prime}_p$, is a vector bundle with the local frames given by the images of
+$s_{k+1}, \ldots, s_r$. The \emph{conjugate} $\overline{E}$ of a complex bundle is the same real bundle with the conjugate complex structure.
+
+\begin{proof}
+Choose trivialisations over a cover $(U_i)$ and a subordinate partition of unity $(\psi_i)$ (Theorem~\ref{smooth-manifolds:theorem-partitions-of-unity}); the sum $\sum_i\psi_i\langle -, - \rangle_i$ of the
+pulled-back standard inner products is a metric, since a convex combination of inner products is an inner product. Given a subbundle $E' \subseteq E$, the orthogonal complement $E'^\perp$ is a subbundle (in a
+local frame adapted to $E'$, apply Gram--Schmidt, Theorem~\ref{linear-algebra:theorem-gram-schmidt}, which depends smoothly on the frame) and $E = E' \oplus E'^\perp$; a surjection $E \to E''$ then splits
+by inverting $E'^\perp \to E''$. Statement (2) is the fibrewise isomorphism $v \mapsto \langle -, v \rangle$, which is smooth.
+\end{proof}
+
+With a metric one can always choose \emph{orthonormal} local frames, by Gram--Schmidt; then the transition functions are orthogonal (unitary) matrices. So every real bundle can
+be described by a cocycle with values in $\mathrm{O}(r)$, and every complex one by a cocycle with values in $\mathrm{U}(r)$: the structure group can be \emph{reduced} to a compact group.
+
+\begin{proposition}\label{vector-bundles:proposition-frames}
+\begin{enumerate}
+\item A vector bundle $E$ of rank $r$ is trivial if and only if it has $r$ sections $s_1, \ldots, s_r$ that are linearly independent at every point (a \emph{global frame}).
+\item For a real line bundle $L$, $L \otimes L$ is trivial. For a complex line bundle $L$, $L \otimes \overline{L}$ is trivial, so $\overline{L} \cong L^\vee$.
+\end{enumerate}
+In particular the isomorphism classes of real line bundles form a group under $\otimes$ in which every element has order at most $2$.
+\end{proposition}
+
+\begin{proof}
+(1) A frame gives the morphism $M \times \mathbb{K}^r \to E$, $(p, a) \mapsto \sum_ia_is_i(p)$, which is bijective on each fibre, hence an isomorphism
+(Lemma~\ref{vector-bundles:lemma-bijective-morphism}); conversely the standard basis vectors are a frame of the trivial bundle. (2) Choose a metric (Proposition~\ref{vector-bundles:proposition-metrics}).
+In the real case the map $L \otimes L \to M \times \RR$, $v \otimes w \mapsto \langle v, w\rangle$, is fibrewise a nonzero linear map between lines, hence an isomorphism; smoothness is checked in a local frame. In the
+complex case use $v \otimes \bar w \mapsto \langle v, w\rangle$ on $L \otimes \overline{L}$. The group structure on line bundles is Proposition~\ref{vector-bundles:proposition-operations} and the uniqueness of
+tensor products up to isomorphism, with the trivial bundle as unit and $L^\vee$ as inverse, since $L \otimes L^\vee \cong \End(L)$ has the nowhere vanishing section $\id$.
+\end{proof}
+
+\begin{example}\label{vector-bundles:example-mobius-square}
+For the M\"obius bundle $E$ over $S^1$, $E \otimes E$ is trivial by Proposition~\ref{vector-bundles:proposition-frames}, although $E$ is not (Counterexample~\ref{vector-bundles:counterexample-mobius}). Directly: $E \otimes E$ is glued from
+$[0, 1] \times \RR$ by $(0, t) \sim (1, (-1)^2t) = (1, t)$, which is the trivial bundle. Likewise $E \oplus E$ is trivial: it is glued by $-\id_{\RR^2}$, the rotation by $\pi$, and the rotations by $\pi s$, $0 \leq s \leq 1$,
+connect it to the identity. Concretely, the sections $x \mapsto (\cos\pi x, \sin\pi x)$ and $x \mapsto (-\sin\pi x, \cos\pi x)$ of $E \oplus E$ (functions $\RR \to \RR^2$ with
+$f(x + 1) = -f(x)$) form a global frame. The same argument shows that a real bundle glued from $[0, 1] \times \RR^r$ by a matrix $A$ is trivial when $A$ can be joined to the identity by a path in $\GL_r(\RR)$: if $A_t$ is such a path, constant near its ends, with $A_0 = \id$ and $A_1 = A$,
+the sections $t \mapsto A_te_i$ satisfy the gluing condition and form a global frame.
+\end{example}
+
+\begin{remark}\label{vector-bundles:remark-sections-triviality}
+\emph{Sections and triviality.} Proposition~\ref{vector-bundles:proposition-frames}(1) is the precise relation between sections and triviality; three points deserve to be made explicit.
+\begin{enumerate}
+\item \emph{``Nonzero'' is not the right condition, ``nowhere vanishing'' is.} Every bundle of positive rank has sections that are not identically zero: if $s$ is a section over a trivialising open set $U$, nonzero at a point, and $\chi$ is
+a bump function with support in $U$ that is $1$ near that point (Corollary~\ref{smooth-manifolds:corollary-partition-applications}), then $\chi s$, extended by $0$, is a global section that is not identically zero. The M\"obius
+bundle has many such sections; what it lacks are sections that vanish \emph{nowhere} (Counterexample~\ref{vector-bundles:counterexample-mobius}).
+\item \emph{Line bundles.} A frame of a line bundle is a single nowhere vanishing section. So a line bundle is trivial if and only if it has a nowhere vanishing section: one direction is the case $r = 1$ of
+Proposition~\ref{vector-bundles:proposition-frames}(1), and conversely an isomorphism $\Phi \colon M \times \mathbb{K} \to L$ gives the nowhere vanishing section $p \mapsto \Phi(p, 1)$.
+\item \emph{Higher rank.} A trivial bundle of rank $r \geq 1$ has nowhere vanishing sections, for instance the first vector of a global frame, so a bundle without nowhere vanishing sections is not trivial. The converse fails for
+$r \geq 2$: one nowhere vanishing section is much less than a frame. For the M\"obius bundle $E$ and the trivial line bundle $\underline{\RR}$ over $S^1$, the bundle $E \oplus \underline{\RR}$ has the nowhere vanishing section
+$p \mapsto (0, 1)$, but it is not trivial. Indeed, if $(g_{ij})$ is a cocycle of $E$, then $E \oplus \underline{\RR}$ has the cocycle $\bigl(\begin{smallmatrix}g_{ij} & 0\\ 0 & 1\end{smallmatrix}\bigr)$, whose determinants are the
+$g_{ij}$, so $\det(E \oplus \underline{\RR}) \cong E$ by Proposition~\ref{vector-bundles:proposition-operations}(3), while the determinant of a trivial bundle is trivial; isomorphic bundles have isomorphic determinant bundles, and $E$ is
+not trivial.
+\end{enumerate}
+For tangent bundles, sections are vector fields: by the hairy ball theorem (Corollary~\ref{singular-homology:corollary-sphere-applications}(2)) the even-dimensional spheres have no nowhere vanishing vector field, so
+$TS^{2n}$ is not trivial for $n \geq 1$, while the odd-dimensional spheres do have nowhere vanishing vector fields, and the question whether they have a whole frame is much harder
+(Section~\ref{vector-bundles:section-parallelizable}).
+\end{remark}
+
+The constructions of Proposition~\ref{vector-bundles:proposition-operations}, applied to the tangent bundle, give the bundles whose sections are the tensor fields of differential
+geometry: the pointwise version of Section~\ref{multilinear-algebra:section-tensors}.
+
+\begin{definition}\label{vector-bundles:definition-tensor-fields}
+Let $M$ be a smooth manifold and $r, s \in \NN$. The \emph{bundle of tensors of type $(r,s)$} is the real vector bundle
+\[
+T^r_sM = TM^{\otimes r} \otimes (T^*M)^{\otimes s},
+\]
+with fibre $T^r_s(T_pM)$ over $p$ (Definition~\ref{multilinear-algebra:definition-tensor-type}), and $T^0_0M = M \times \RR$. A \emph{tensor field of type $(r,s)$} on an open set $U \subseteq M$ is a
+section of $T^r_sM$ over $U$; it assigns to every $p \in U$ a tensor of type $(r,s)$ on $T_pM$, depending smoothly on $p$, in the sense made precise in
+Proposition~\ref{vector-bundles:proposition-tensor-fields-smooth}.
+\end{definition}
+
+\begin{example}\label{vector-bundles:example-tensor-fields}
+\begin{enumerate}
+\item Tensor fields of type $(0,0)$ are smooth functions, those of type $(1,0)$ are vector fields, and those of type $(0,1)$ are $1$-forms
+(Definition~\ref{vector-bundles:definition-sections}).
+\item Tensor fields of type $(1,1)$ are sections of $TM \otimes T^*M \cong \End(TM)$ (Proposition~\ref{multilinear-algebra:proposition-hom-tensor}, applied fibrewise), that is, smooth families of
+endomorphisms of the tangent spaces. The identity is one of them; an \emph{almost complex structure} is one whose square is $-\id$ (Chapter~\ref{complex-manifolds}).
+\item Tensor fields of type $(0,2)$ are smooth families of bilinear forms on the tangent spaces. A \emph{Riemannian metric} is one that is symmetric and positive definite at every point; it exists
+on every manifold (Proposition~\ref{vector-bundles:proposition-metrics}, applied to $TM$), and it is the subject of Chapter~\ref{riemannian-geometry}.
+\item Alternating tensor fields of type $(0,k)$ are the sections of $\Lambda^kT^*M$ (Proposition~\ref{multilinear-algebra:proposition-dual-exterior}), the differential $k$-forms of
+Chapter~\ref{differential-forms}.
+\item The Lie bracket of vector fields is \emph{not} a tensor field of type $(1,2)$: for a function $f$, $[X, fY] = f[X, Y] + (Xf)Y$, so the value of $[X, Y]$ at $p$ is not determined by
+$X(p)$ and $Y(p)$. Tensors are exactly the objects whose value at a point depends only on the values of their arguments at that point; this is made precise by the tensoriality lemma of
+Chapter~\ref{connections}.
+\end{enumerate}
+\end{example}
+
+\begin{proposition}\label{vector-bundles:proposition-tensor-fields-coordinates}
+Let $\varphi = (x^1, \ldots, x^n)$ be a chart of $M$ on $U$.
+\begin{enumerate}
+\item The tensor fields $\partial_{i_1} \otimes \cdots \otimes \partial_{i_r} \otimes dx^{j_1} \otimes \cdots \otimes dx^{j_s}$, where $\partial_i = \partial/\partial x^i$, form a frame of $T^r_sM$ over $U$. So
+every tensor field of type $(r,s)$ on $U$ is uniquely
+\[
+T = \sum T^{i_1 \ldots i_r}_{j_1 \ldots j_s}\,\partial_{i_1} \otimes \cdots \otimes \partial_{i_r} \otimes dx^{j_1} \otimes \cdots \otimes dx^{j_s},
+\]
+with smooth \emph{component functions} $T^{i_1 \ldots i_r}_{j_1 \ldots j_s}$, and conversely every family of smooth functions on $U$ defines a tensor field in this way.
+\item If $\psi = (y^1, \ldots, y^n)$ is a second chart on $U$, the components of $T$ in the two charts are related at every point by the transformation law of
+Proposition~\ref{multilinear-algebra:proposition-tensor-transformation}, with $P^i_j = \partial x^i/\partial y^j$ and $Q^i_j = \partial y^i/\partial x^j$, the entries of the
+Jacobian matrices of $\varphi \circ \psi^{-1}$ and of $\psi \circ \varphi^{-1}$.
+\item Tensor product and contraction (Definitions~\ref{multilinear-algebra:definition-tensor-type} and~\ref{multilinear-algebra:definition-contraction}), applied pointwise, take
+tensor fields to tensor fields; so do raising and lowering of indices with a Riemannian metric (Definition~\ref{multilinear-algebra:definition-raising-lowering}).
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) The vector fields $\partial_i$ form a frame of $TM$ over $U$ (Example~\ref{vector-bundles:example-bundles}(2)), and the $1$-forms $dx^j$, which are the dual frame, form a frame of
+$T^*M$. In the trivialisations of $T^r_sM$ given by Proposition~\ref{vector-bundles:proposition-operations}, built from these frames, the displayed tensor fields are the constant
+basis vectors of Proposition~\ref{multilinear-algebra:proposition-tensors-multilinear}(3); so they form a frame (Proposition~\ref{vector-bundles:proposition-sheaf-of-sections}), and a section is
+smooth if and only if its coefficients in this frame are smooth.
+
+(2) By the chain rule, $\partial/\partial y^j = \sum_i(\partial x^i/\partial y^j)\,\partial/\partial x^i$ at every point of $U$
+(Example~\ref{vector-bundles:example-cocycles}(1)). So at each point the basis $(\partial/\partial y^j)$ of $T_pM$ is obtained from $(\partial/\partial x^i)$ by the matrix $P$ with entries
+$\partial x^i/\partial y^j$, whose inverse is the Jacobian matrix $Q$ of the inverse transition map. Apply Proposition~\ref{multilinear-algebra:proposition-tensor-transformation}(2).
+
+(3) By (1), the components of the result are polynomials in the components of the arguments: for the tensor product, products of components; for a contraction, sums of components
+(Proposition~\ref{multilinear-algebra:proposition-contraction}(1)); for raising and lowering, sums of products with the smooth functions $g_{ij}$ and $g^{ij}$, the latter smooth because they are
+the entries of the inverse of an invertible matrix of smooth functions (Cramer's rule). So the results are smooth.
+\end{proof}
+
+In the older literature, and in physics, Proposition~\ref{vector-bundles:proposition-tensor-fields-coordinates}(2) is the definition: a tensor field is a family of functions, one for each
+chart, that transforms with the Jacobian matrices as in the proposition. Proposition~\ref{multilinear-algebra:proposition-tensor-transformation}(3), applied at every point, shows that this is the same
+notion.
+
+\begin{example}\label{vector-bundles:example-metric-coordinates}
+A Riemannian metric is written in a chart as $g = \sum_{i,j}g_{ij}\,dx^i \otimes dx^j$, with $g_{ij} = g(\partial_i, \partial_j)$ a symmetric positive definite matrix of smooth functions. The
+Euclidean metric of $\RR^2$ is $dx \otimes dx + dy \otimes dy$. In polar coordinates $x = \rho\cos\theta$, $y = \rho\sin\theta$ on $\{\rho > 0, 0 < \theta < 2\pi\}$, the chain rule gives
+$\partial_\rho = \cos\theta\,\partial_x + \sin\theta\,\partial_y$ and $\partial_\theta = -\rho\sin\theta\,\partial_x + \rho\cos\theta\,\partial_y$, so
+$g(\partial_\rho, \partial_\rho) = 1$, $g(\partial_\rho, \partial_\theta) = 0$ and $g(\partial_\theta, \partial_\theta) = \rho^2$:
+\[
+g = d\rho \otimes d\rho + \rho^2\,d\theta \otimes d\theta .
+\]
+This is the transformation law $g^{\prime} = P^TgP$ of Example~\ref{multilinear-algebra:example-tensor-transformation}(2), with $g$ the identity matrix and $P$ the Jacobian matrix of
+$(\rho, \theta) \mapsto (x, y)$.
+\emph{How such an expression acts on vectors.} By Proposition~\ref{multilinear-algebra:proposition-tensors-multilinear}(1), a decomposable tensor of type $(0,2)$ acts on a pair of vectors factor by factor:
+\[
+(\varphi \otimes \psi)(v, w) = \varphi(v)\,\psi(w), \qquad\text{so}\qquad g(v, w) = d\rho(v)\,d\rho(w) + \rho^2\,d\theta(v)\,d\theta(w).
+\]
+The covectors $d\rho$ and $d\theta$ read off the components of a vector in the basis $(\partial_\rho, \partial_\theta)$, since they are the dual basis: for $v = a\,\partial_\rho + b\,\partial_\theta$ and
+$w = c\,\partial_\rho + e\,\partial_\theta$ one has $d\rho(v) = a$, $d\theta(v) = b$, and so
+\[
+g(v, w) = ac + \rho^2be, \qquad |v|^2 = g(v, v) = a^2 + \rho^2b^2 .
+\]
+For instance $\partial_\theta$ at the point with polar coordinates $(\rho, \theta)$ has length $\rho$, as it should: in Cartesian components it is $(-\rho\sin\theta, \rho\cos\theta)$. The classical notation
+$ds^2 = d\rho^2 + \rho^2\,d\theta^2$ denotes the same tensor, or the quadratic form $v \mapsto g(v, v)$ it determines; $d\rho^2$ stands for $d\rho \otimes d\rho$, not for the wedge product, which would be $0$.
+In general, for a tensor field of type $(0,s)$ written as $T = \sum T_{j_1 \ldots j_s}\,dx^{j_1} \otimes \cdots \otimes dx^{j_s}$ and vectors $v_b = \sum_jv_b^j\,\partial_j$,
+\[
+T(v_1, \ldots, v_s) = \sum_{j_1, \ldots, j_s}T_{j_1 \ldots j_s}\,v_1^{j_1}v_2^{j_2} \cdots v_s^{j_s},
+\]
+since $dx^j(v_b) = v_b^j$; for type $(r,s)$ one also inserts covectors $\eta^a = \sum_i\eta^a_i\,dx^i$ in the first $r$ slots, using $\eta(\partial_i) = \eta_i$, and the components $\eta^1_{i_1} \cdots \eta^r_{i_r}$ appear
+in the sum as well. For $s = 2$ this is the matrix formula $T(v, w) = v^{\mathsf T}(T_{ij})w$ of bilinear forms.
+\end{example}
+
+The phrase ``depending smoothly on $p$'' in Definition~\ref{vector-bundles:definition-tensor-fields} means that the map $p \mapsto T_p$ is a smooth section of the vector bundle $T^r_sM$. The next proposition
+collects the practical ways of checking this, and the ways of passing from local tensor fields to global ones.
+
+\begin{proposition}\label{vector-bundles:proposition-tensor-fields-smooth}
+Let $M$ be a smooth manifold and $T = (T_p)_{p \in M}$ a family of tensors $T_p \in T^r_s(T_pM)$.
+\begin{enumerate}
+\item The following are equivalent: (a) $T$ is a smooth section of $T^r_sM$; (b) in every chart of some atlas the components $T^{i_1 \ldots i_r}_{j_1 \ldots j_s}$ are smooth functions; (c) for every open $U \subseteq M$, all smooth
+$1$-forms $\eta^1, \ldots, \eta^r$ and all smooth vector fields $X_1, \ldots, X_s$ on $U$, the function $p \mapsto T_p(\eta^1(p), \ldots, \eta^r(p), X_1(p), \ldots, X_s(p))$ is smooth on $U$.
+\item \emph{Gluing.} Let $(U_i)$ be an open cover of $M$ and $T_i$ a tensor field on $U_i$ for each $i$, with $T_i = T_j$ on $U_i \cap U_j$ for all $i, j$. Then there is exactly one tensor field $T$ on $M$ with
+$T|_{U_i} = T_i$ for all $i$.
+\item \emph{Averaging.} Let $(U_i)$ be an open cover, $T_i$ a tensor field on $U_i$, with no compatibility assumed, and $(\psi_i)$ a partition of unity subordinate to $(U_i)$. Then
+$\sum_i\psi_iT_i$, where $\psi_iT_i$ is extended by $0$ outside $U_i$, is a tensor field on $M$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) (a) $\Leftrightarrow$ (b) is Proposition~\ref{vector-bundles:proposition-tensor-fields-coordinates}(1), since smoothness of a section is a local property. (b) $\Rightarrow$ (c): on a chart domain inside $U$
+write $\eta^a = \sum_i\eta^a_i\,dx^i$ and $X_b = \sum_jX_b^j\,\partial_j$, with smooth coefficients. By multilinearity,
+\[
+T(\eta^1, \ldots, \eta^r, X_1, \ldots, X_s) = \sum T^{i_1 \ldots i_r}_{j_1 \ldots j_s}\,\eta^1_{i_1} \cdots \eta^r_{i_r}\,X_1^{j_1} \cdots X_s^{j_s},
+\]
+a polynomial in smooth functions; and smoothness is local. (c) $\Rightarrow$ (b): on a chart domain $U$, take for the $\eta^a$ the coordinate $1$-forms $dx^{i_a}$ and for the $X_b$ the coordinate fields $\partial_{j_b}$; the
+resulting functions are the components, by Proposition~\ref{multilinear-algebra:proposition-tensors-multilinear}(1) and the duality $dx^i(\partial_j) = \delta_{ij}$.
+
+(2) Define $T_p = T_i(p)$ for any $i$ with $p \in U_i$; by the compatibility this does not depend on $i$. Near each point $T$ coincides with one of the smooth $T_i$, so it is smooth, and it is the only family with the
+prescribed restrictions.
+
+(3) Since $\operatorname{supp}\psi_i \subseteq U_i$ is closed in $M$, the extension of $\psi_iT_i$ by $0$ is smooth: on $U_i$ it is a product of a smooth function and a smooth section, and on the open set
+$M \setminus \operatorname{supp}\psi_i$ it is $0$. Every point has a neighbourhood meeting only finitely many of the supports, and there the sum is a finite sum of smooth sections.
+\end{proof}
+
+\begin{remark}\label{vector-bundles:remark-local-to-global}
+\emph{From local to global.} There are two different ways of producing a global tensor field from local ones, and they answer different questions.
+\begin{enumerate}
+\item If the local objects \emph{agree on overlaps}, they glue by Proposition~\ref{vector-bundles:proposition-tensor-fields-smooth}(2): tensor fields form a sheaf
+(Proposition~\ref{vector-bundles:proposition-sheaf-of-sections}). This is how one defines tensor fields chart by chart: components given in every chart of an atlas and related by the transformation law of
+Proposition~\ref{vector-bundles:proposition-tensor-fields-coordinates}(2) define tensors $T_p$ that do not depend on the chart, and they form a tensor field by (1)(b). Natural constructions, such as the
+differential $df$ of a function or the curvature of a connection, are glued in this way, often without being mentioned: they are defined by the same formula in every chart, and the formula is compatible with
+changes of chart.
+\item If the local objects \emph{do not agree}, one can still average them with a partition of unity by (3), but the result is a new tensor field, which in general coincides with none of the $T_i$. Averaging
+preserves every property defined by a \emph{convex} condition at each point. For example, if every $T_i$ is a Riemannian metric, then at each $p$ the sum $\sum_i\psi_i(p)T_i(p)$ is a combination with nonnegative
+coefficients adding up to $1$ of positive definite symmetric bilinear forms, hence again one: this is the proof that Riemannian metrics exist
+(Proposition~\ref{vector-bundles:proposition-metrics}). Properties that are not convex are lost. If $J$ is an almost complex structure on an open set, then so is $-J$, but $\frac12J + \frac12(-J) = 0$ is not; and for the
+cover of $\RR$ by $U_1 = (-\infty, 1)$ and $U_2 = (0, \infty)$, the average $\psi_1\partial_x + \psi_2(-\partial_x) = (\psi_1 - \psi_2)\partial_x$ of the nowhere vanishing fields $\partial_x$ on $U_1$ and $-\partial_x$ on $U_2$
+vanishes somewhere in $(0, 1)$, by the intermediate value theorem, since $\psi_1 - \psi_2$ is $1$ on $(-\infty, 0]$ and $-1$ on $[1, \infty)$. This is why some tensor fields
+(metrics, connections, which form an affine space) exist on every manifold, while others (almost complex structures, nowhere vanishing vector fields, symplectic forms) need not, and their existence is a
+genuine global question.
+\end{enumerate}
+\end{remark}
+
+\begin{proposition}\label{vector-bundles:proposition-constant-rank}
+Let $f \colon E \to F$ be a morphism of vector bundles over $M$ whose rank on the fibres is constant. Then $\ker f \subseteq E$ and $\operatorname{im}f \subseteq F$ are subbundles, and $\operatorname{coker}f = F/\operatorname{im}f$ is a vector
+bundle. For a submanifold $S \subseteq M$ the normal bundle $N_{S/M} = (TM|_S)/TS$ is a vector bundle, and if $S = \phi^{-1}(q)$ for a regular value $q$ of a smooth $\phi \colon M \to N$, then $d\phi$ induces an isomorphism
+$N_{S/M} \cong S \times T_qN$, so $N_{S/M}$ is trivial.
+\end{proposition}
+
+\begin{proof}
+The question is local, so let $E = U \times \mathbb{K}^r$, $F = U \times \mathbb{K}^s$ and $f$ a smooth family of matrices $A(p)$ of constant rank $k$. Near $p_0$ some $k \times k$ minor of $A$ is nonzero; after permuting bases,
+$A = \begin{pmatrix}A_{11} & A_{12}\\ A_{21} & A_{22}\end{pmatrix}$ with $A_{11}$ invertible near $p_0$. The first $k$ columns of $A$ are linearly independent and, as the rank is $k$, span the image; so they form a frame of $\operatorname{im}f$,
+which is therefore a subbundle. The vectors $\begin{pmatrix}-A_{11}^{-1}A_{12}w\\ w\end{pmatrix}$, $w \in \mathbb{K}^{r-k}$, lie in the kernel (the last $s - k$ rows are combinations of the first $k$), and they span it by dimension count; they
+form a frame of $\ker f$ depending smoothly on $p$. Completing a frame of $\operatorname{im}f$ by constant vectors to a frame of $F$ gives a frame of $\operatorname{coker}f$. For the normal bundle apply this to the inclusion
+$TS \to TM|_S$, of constant rank $\dim S$. If $S = \phi^{-1}(q)$ with $q$ regular, $d\phi \colon TM|_S \to S \times T_qN$ is surjective with kernel $TS$ (Theorem~\ref{smooth-manifolds:theorem-regular-value}), so it induces the stated isomorphism.
+\end{proof}
+
+\begin{counterexample}\label{vector-bundles:counterexample-rank-jump}
+The rank must be constant. The morphism $f \colon \RR \times \RR \to \RR \times \RR$, $(x, t) \mapsto (x, xt)$, of trivial line bundles over $\RR$ has rank $1$ for $x \neq 0$ and $0$ at
+$x = 0$. Its kernel is the zero vector over each $x \neq 0$ and the whole line over $x = 0$, and its image is the whole line over each $x \neq 0$ and the zero vector over $x = 0$.
+In both cases the dimension of the fibres jumps, so neither is a subbundle.
+\end{counterexample}
+
+\begin{example}\label{vector-bundles:example-stably-trivial}
+$TS^n$ is \emph{stably trivial}: $TS^n \oplus (S^n \times \RR) \cong S^n \times \RR^{n+1}$, because the normal bundle of $S^n = f^{-1}(1)$, $f(x) = |x|^2$, is trivial by Proposition~\ref{vector-bundles:proposition-constant-rank}, and
+$TS^n \oplus N_{S^n/\RR^{n+1}} \cong T\RR^{n+1}|_{S^n}$ by Proposition~\ref{vector-bundles:proposition-metrics}(1). Concretely, $TS^n$ is the kernel of the constant rank morphism
+$S^n \times \RR^{n+1} \to S^n \times \RR$, $(x, v) \mapsto (x, \langle x, v\rangle)$, and the normal line is spanned by the section $x \mapsto x$. Nevertheless $TS^2$ is not trivial,
+since $S^2$ has no nowhere vanishing vector field (the hairy ball theorem, Corollary~\ref{singular-homology:corollary-sphere-applications}); so a bundle is not determined by its stable class.
+\end{example}
+
+\begin{example}\label{vector-bundles:example-euler-sequence}
+On $\CC\PP^n$ there is an exact sequence of holomorphic vector bundles
+$0 \to \mathcal{O} \to \mathcal{O}(1)^{\oplus(n+1)} \to T\CC\PP^n \to 0$ (the \emph{Euler sequence}), where $\mathcal{O}(1) = \mathcal{O}(-1)^\vee$ (Chapter~\ref{holomorphic-bundles}). Over the smooth category it
+splits by Proposition~\ref{vector-bundles:proposition-metrics}, but it does not split holomorphically: holomorphic splittings are much rarer, which is why holomorphic bundles carry more information than
+smooth ones.
+\end{example}
+
+\section{Line bundles and the first Chern class}\label{vector-bundles:section-line-bundles}
+
+\begin{definition}\label{vector-bundles:definition-picard}
+The \emph{Picard group} $\Pic^\infty(M)$ is the set of isomorphism classes of smooth complex line bundles with the tensor product; by Proposition~\ref{sheaves:proposition-modules} it is a group, with
+inverse the dual.
+\end{definition}
+
+For line bundles the transition functions are nowhere vanishing functions $g_{ij} \colon U_i \cap U_j \to \CC^\times$, which commute, and the tensor product multiplies them. So
+$\Pic^\infty(M)$ is the first \v{C}ech cohomology group of the sheaf of nowhere vanishing smooth functions, and it can be computed with the exponential function.
+
+\begin{theorem}\label{vector-bundles:theorem-line-bundles}
+Let $\underline{\CC}^\times_M$ be the sheaf of smooth nowhere vanishing complex functions. There are natural isomorphisms
+\[
+\Pic^\infty(M) \cong H^1(M, \underline{\CC}^\times_M) \xrightarrow{\ \sim\ } H^2(M; \ZZ),
+\]
+the second induced by the connecting homomorphism of the \emph{exponential sequence}
+$0 \to \ZZ \to \underline{\CC}_M \xrightarrow{\exp(2\pi i\,\cdot)} \underline{\CC}^\times_M \to 0$. The resulting class $c_1(L) \in H^2(M; \ZZ)$ is the \emph{first Chern class}; it satisfies
+$c_1(L \otimes L') = c_1(L) + c_1(L')$, $c_1(f^*L) = f^*c_1(L)$, and $L$ is trivial if and only if $c_1(L) = 0$.
+\end{theorem}
+
+\begin{proof}
+Line bundles are classified by $\check{H}^1$ of the sheaf of smooth nonvanishing functions by Proposition~\ref{vector-bundles:proposition-cocycles}(3), and \v{C}ech and sheaf cohomology agree in degree one
+(Remark~\ref{sheaf-cohomology:remark-cech-limit}); the group structures agree because the cocycle of a tensor product is the product of the cocycles. The exponential sequence is exact as a sequence of
+sheaves: surjectivity holds because a nonvanishing function has a smooth logarithm on any set where it is defined and contractible, for instance a small ball, and the kernel of $\exp(2\pi i\,\cdot)$ is the
+constant sheaf $\ZZ$ (Theorem~\ref{real-analysis:theorem-pi}). Its long exact sequence reads
+\[
+H^1(M, \underline{\CC}_M) \to H^1(M, \underline{\CC}^\times_M) \to H^2(M, \ZZ_M) \to H^2(M, \underline{\CC}_M),
+\]
+and the outer terms vanish because $\underline{\CC}_M$ is a sheaf of modules over $\mathcal{C}_M$, hence fine, hence acyclic (Corollary~\ref{sheaf-cohomology:corollary-fine-acyclic}); manifolds are
+paracompact (Proposition~\ref{general-topology:proposition-exhaustion}). Finally $H^2(M, \ZZ_M) \cong H^2(M; \ZZ)$ by Theorem~\ref{sheaf-cohomology:theorem-singular-comparison}, since manifolds are locally
+contractible. Additivity and naturality follow from the corresponding properties of the cocycles and of the connecting homomorphism, and triviality of $L$ means exactly that its class in
+$H^1(M, \underline{\CC}^\times_M)$ vanishes.
+\end{proof}
+
+In particular every complex line bundle on a manifold with $H^2(M; \ZZ) = 0$ is trivial: on $\RR^n$, on a disc, on $S^1$, on $S^3$. On the sphere $S^2$ the theorem gives
+$\Pic^\infty(S^2) \cong \ZZ$, and in this case the classification can be made completely explicit, by the winding number of a transition function.
+
+For a continuous loop $c \colon [0, 1] \to \CC^\times$, $c(0) = c(1)$, choose a continuous logarithm $L$ along it, $e^{L(t)} = c(t)$; one exists because $\exp \colon \CC \to \CC^\times$ is a covering
+map (local inverses are the branches of the logarithm on slit planes) and paths lift (Proposition~\ref{homotopy:proposition-homotopy-lifting}). The \emph{winding number}
+$\mathrm{wind}(c) = (L(1) - L(0))/2\pi i$ is an integer, as $e^{L(1)} = e^{L(0)}$, and does not depend on $L$, since two lifts differ by a constant in $2\pi i\ZZ$. For a function
+$g \colon \CC^\times \to \CC^\times$ we write $\mathrm{wind}(g)$ for the winding number of $t \mapsto g(e^{2\pi it})$ along the unit circle.
+
+\begin{lemma}\label{vector-bundles:lemma-winding-number}
+\begin{enumerate}
+\item $\mathrm{wind}(c_1c_2) = \mathrm{wind}(c_1) + \mathrm{wind}(c_2)$, and $\mathrm{wind}(z^k) = k$.
+\item Loops that are homotopic through loops in $\CC^\times$ have the same winding number. In particular $\mathrm{wind}(g) = 0$ if $g$ extends to a continuous nowhere vanishing
+function on the closed unit disc, or on $\{|z| \geq 1\} \cup \{\infty\} \subseteq \CC\PP^1$.
+\item A continuous $g \colon \CC^\times \to \CC^\times$ with $\mathrm{wind}(g) = 0$ has a continuous logarithm on $\CC^\times$, smooth if $g$ is smooth.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) If $L_1$, $L_2$ are logarithms along $c_1$, $c_2$, then $L_1 + L_2$ is one along $c_1c_2$. For $z^k$ along $e^{2\pi it}$ take $L(t) = 2\pi ikt$. (2) Let $H(s, t)$ be a homotopy of loops.
+Lifting $H$ through $\exp$ (Proposition~\ref{homotopy:proposition-homotopy-lifting}) gives $\tilde H$ with $e^{\tilde H} = H$, and $s \mapsto (\tilde H(s, 1) - \tilde H(s, 0))/2\pi i$ is a
+continuous integer-valued function, hence constant. If $g$ extends to the closed unit disc, the loops $t \mapsto g(\rho e^{2\pi it})$, $0 \leq \rho \leq 1$, form a homotopy through loops in
+$\CC^\times$ from the constant loop $g(0)$ to the given one; if it extends to $\{|z| \geq 1\} \cup \{\infty\}$, use the loops $t \mapsto g(\sigma^{-1}e^{2\pi it})$, $0 < \sigma \leq 1$, with the
+constant loop $g(\infty)$ at $\sigma = 0$.
+(3) The function $G(r, t) = g(re^{2\pi it})$ on $(0, \infty) \times \RR$, which is simply connected, lifts through $\exp$ to a continuous $\Lambda$ with $e^\Lambda = G$
+(Proposition~\ref{homotopy:proposition-lifting-criterion}). The difference $\Lambda(r, t + 1) - \Lambda(r, t)$ lies in $2\pi i\ZZ$ and depends continuously on $(r, t)$, so it is a constant, equal to
+$2\pi i$ times the winding number of the circle of radius $1$, which is $0$. So $\Lambda(r, t)$ depends only on $re^{2\pi it}$, and defines a continuous logarithm of $g$ on $\CC^\times$; it is
+smooth when $g$ is, because $\exp$ is a local diffeomorphism.
+\end{proof}
+
+\begin{proposition}\label{vector-bundles:proposition-line-bundles-sphere}
+Let $L$ be a complex line bundle on $\CC\PP^1 = U_0 \cup U_1$, with $U_0 = \{[1 : z]\} \cong \CC$ and $U_1 = \{[w : 1]\}$, $w = 1/z$ on the overlap. Then $L$ has frames $s_0$ over
+$U_0$ and $s_1$ over $U_1$, and on $U_0 \cap U_1 \cong \CC^\times$ (coordinate $z$) we can write $s_1 = g\,s_0$ with $g \colon \CC^\times \to \CC^\times$. The integer
+\[
+\deg L = \mathrm{wind}(g)
+\]
+does not depend on the frames, $\deg(L \otimes L^{\prime}) = \deg L + \deg L^{\prime}$, every integer is the degree of some line bundle, and $L \cong L^{\prime}$ if and only if
+$\deg L = \deg L^{\prime}$. So $\deg \colon \Pic^\infty(\CC\PP^1) \to \ZZ$ is an isomorphism.
+\end{proposition}
+
+\begin{proof}
+The frames exist because $U_0$ and $U_1$ are diffeomorphic to $\RR^2$, over which every complex line bundle is trivial, as $H^2(\RR^2; \ZZ) = 0$
+(Theorem~\ref{vector-bundles:theorem-line-bundles}). Other frames are $s^{\prime}_0 = h_0s_0$ and $s^{\prime}_1 = h_1s_1$ with $h_i \colon U_i \to \CC^\times$, and then
+$g^{\prime} = h_1gh_0^{-1}$; by Lemma~\ref{vector-bundles:lemma-winding-number}(1),(2), $\mathrm{wind}(g^{\prime}) = \mathrm{wind}(g) + \mathrm{wind}(h_1) - \mathrm{wind}(h_0) = \mathrm{wind}(g)$, as $h_0$ is
+defined on all of $U_0 = \CC$ and $h_1$ on $U_1 = \CC\PP^1 \setminus \{0\}$, which contains $\{|z| \geq 1\} \cup \{\infty\}$. For the tensor product, $s_1 \otimes s^{\prime}_1 = gg^{\prime}\,s_0 \otimes s^{\prime}_0$, so
+degrees add. The bundle with transition function $g = z^k$, obtained by Proposition~\ref{vector-bundles:proposition-cocycles}(2), has degree $k$. If $\deg L = \deg L^{\prime}$, with transition
+functions $g$ and $g^{\prime}$, then $g^{\prime}/g$ has winding number $0$, hence a smooth logarithm $f$ on $\CC^\times$ (Lemma~\ref{vector-bundles:lemma-winding-number}(3)). Choose a partition of unity
+$\psi_0 + \psi_1 = 1$ subordinate to $\{U_0, U_1\}$ and put $f_0 = -\psi_1f$ on $U_0$ and $f_1 = \psi_0f$ on $U_1$, each extended by $0$ where the cut-off vanishes; then $f_1 - f_0 = f$ on the
+overlap, and $h_i = e^{f_i}$ satisfy $h_1gh_0^{-1} = ge^{f} = g^{\prime}$. So after changing the frames of $L$ by $h_0$ and $h_1$, the two bundles have the same transition function, and they are
+isomorphic by Proposition~\ref{vector-bundles:proposition-cocycles}(3).
+\end{proof}
+
+\begin{example}\label{vector-bundles:example-degrees}
+\begin{enumerate}
+\item The tautological bundle has $s_1 = z^{-1}s_0$ (Example~\ref{vector-bundles:example-cocycles}(4)), so $\deg\mathcal{O}(-1) = -1$, and $\deg\mathcal{O}(k) = k$.
+\item The tangent bundle $T\CC\PP^1$, a complex line bundle with the frames $s_0 = \partial/\partial z$ and $s_1 = \partial/\partial w$: from $z = 1/w$,
+$\partial/\partial w = (dz/dw)\,\partial/\partial z = -w^{-2}\,\partial/\partial z = -z^2\,\partial/\partial z$, so $g = -z^2$ and $\deg T\CC\PP^1 = 2$. Hence
+$T\CC\PP^1 \cong \mathcal{O}(2)$, and $TS^2$ is not trivial, which gives another proof of the hairy ball theorem for $S^2$. The cotangent bundle has degree $-2$.
+\item The degree is the first Chern class: under $H^2(\CC\PP^1; \ZZ) \cong \ZZ$ given by the complex orientation, $c_1(L) = \deg L$. We do not verify this here by computing the
+connecting homomorphism; it follows from Chern--Weil theory (Chapter~\ref{characteristic-classes}), and in Chapter~\ref{connections} the curvature of a connection on
+$\mathcal{O}(-1)$ is computed to integrate to $-1$. The degree $2$ of $T\CC\PP^1$ is the Euler characteristic of $S^2$, an instance of the Gauss--Bonnet theorem.
+\end{enumerate}
+\end{example}
+
+\begin{example}\label{vector-bundles:example-line-bundles}
+$H^2(S^2; \ZZ) \cong \ZZ$, so the complex line bundles on $S^2 = \CC\PP^1$ are classified by an integer, the degree; the tautological bundle $\mathcal{O}(-1)$ has $c_1 = -1$ with the standard
+orientation. On $\CC\PP^n$, $H^2 \cong \ZZ$ is generated by $c_1(\mathcal{O}(1))$. Every complex line bundle on a surface of genus $g$ is classified by its degree in $H^2 \cong \ZZ$, while on a simply
+connected manifold with $H^2 = 0$, such as $S^3$ or $S^4$, every complex line bundle is trivial. Real line bundles are classified in the same way by
+$H^1(M; \ZZ/2\ZZ)$, using the sheaf of nonvanishing real functions and the sequence $0 \to \ZZ/2 \to \underline{\RR}^\times \to \underline{\RR}^\times_{>0} \to 0$; the resulting class is the first
+Stiefel--Whitney class $w_1(L)$, which vanishes if and only if $L$ is orientable.
+\end{example}
+
+\begin{remark}\label{vector-bundles:remark-higher-chern}
+For bundles of higher rank the classification is not by a single class: isomorphism classes of rank $r$ complex bundles on $M$ correspond to homotopy classes of maps $M \to \mathrm{BU}(r)$, and the Chern
+classes $c_k(E) \in H^{2k}(M; \ZZ)$ are pulled back from universal classes on the classifying space. They are constructed and computed in Chapter~\ref{characteristic-classes}; for line bundles $c_1$ agrees
+with the class above.
+\end{remark}
+
+\section{Parallelizable manifolds}\label{vector-bundles:section-parallelizable}
+
+The most natural question about the tangent bundle is whether it is trivial. A trivialisation $TM \cong M \times \RR^n$ lets one compare tangent vectors at different points, and decide when two of them
+are ``parallel'' independently of any path, which is the origin of the name.
+
+\begin{definition}\label{vector-bundles:definition-parallelizable}
+A smooth $n$-manifold $M$ is \emph{parallelizable} if its tangent bundle is trivial; equivalently (Proposition~\ref{vector-bundles:proposition-frames}(1)), if there are vector fields $X_1, \ldots, X_n$ on $M$ that are
+linearly independent at every point, a \emph{global frame}.
+\end{definition}
+
+Then every vector field is uniquely $\sum_if^iX_i$ with smooth functions $f^i$, the components of a field are defined on all of $M$, and a vector at one point is transported to every other point by
+keeping its components constant.
+
+\begin{example}\label{vector-bundles:example-parallelizable}
+\begin{enumerate}
+\item $\RR^n$ and its open subsets, with the frame $\partial_1, \ldots, \partial_n$; the torus $T^n = \RR^n/\ZZ^n$, since the fields $\partial_i$ are invariant under translations and descend to $T^n$.
+\item \emph{Lie groups.} If $v_1, \ldots, v_n$ is a basis of $T_eG$, the left-invariant fields $X_i(g) = d_e(L_g)(v_i)$ are smooth (Proposition~\ref{lie-groups:proposition-left-invariant}) and linearly independent at every
+$g$, because $d_eL_g$ is an isomorphism, $L_g$ being a diffeomorphism. So every Lie group is parallelizable: $S^1$, $\GL_n(\RR)$, $\mathrm{SO}(n)$, $\mathrm{U}(n)$, and $\mathrm{SU}(2) \cong S^3$
+(Example~\ref{lie-groups:example-su2}).
+\item \emph{The sphere $S^3$}, explicitly. Identify $\RR^4$ with the quaternions, $x = x_0 + x_1i + x_2j + x_3k$. Right multiplication by $i$, $j$, $k$ gives
+\[
+xi = (-x_1, x_0, x_3, -x_2), \qquad xj = (-x_2, -x_3, x_0, x_1), \qquad xk = (-x_3, x_2, -x_1, x_0),
+\]
+and for $|x| = 1$ the four vectors $x$, $xi$, $xj$, $xk$ are orthonormal (a direct check of the inner products, for instance $\langle x, xi\rangle = -x_0x_1 + x_1x_0 + x_2x_3 - x_3x_2 = 0$). So $xi$, $xj$, $xk$ are
+three vector fields tangent to $S^3$ (orthogonal to $x$) and orthonormal at every point: a global frame.
+\item \emph{Products.} By Proposition~\ref{smooth-manifolds:proposition-product-tangent}, $T_{(p,q)}(M \times N) = T_pM \oplus T_qN$; so if $M$ and $N$ are parallelizable, the frames of $M$ and of $N$,
+regarded as vector fields on $M \times N$, form a global frame of $M \times N$.
+\item \emph{The manifolds $S^1 \times S^n$} are parallelizable for every $n$, although $S^2$ is not. With $\theta$ the coordinate of $S^1$, and $x \in S^n \subseteq \RR^{n+1}$, the $n + 1$ fields
+\[
+Y_i(\theta, x) = \langle e_i, x\rangle\,\partial_\theta + \bigl(e_i - \langle e_i, x\rangle x\bigr), \qquad i = 1, \ldots, n + 1,
+\]
+are tangent to $S^1 \times S^n$ (the second part is the tangential part of $e_i$), and they are linearly independent at every point: if $\sum_ic_iY_i = 0$ with $c = \sum_ic_ie_i$, then $\langle c, x\rangle = 0$ and
+$c - \langle c, x\rangle x = 0$, so $c = 0$. This is the stable triviality of $TS^n$ (Example~\ref{vector-bundles:example-stably-trivial}) made explicit: the trivial line $\RR\,\partial_\theta$ of the circle plays the role of the
+normal line $\RR x$.
+\end{enumerate}
+\end{example}
+
+The sphere $S^2$ is not parallelizable, as it has no nowhere vanishing vector field at all, and more generally the even-dimensional spheres $S^{2m}$ are not, by the hairy ball theorem
+(Corollary~\ref{singular-homology:corollary-sphere-applications}(2)); for $S^2$ this also follows from $TS^2 \cong T\CC\PP^1$ having degree $2$ (Example~\ref{vector-bundles:example-degrees}). The odd-dimensional spheres
+have a nowhere vanishing field, $x \mapsto (-x_2, x_1, -x_4, x_3, \ldots)$, but one field is far from a frame, and the answer for spheres is a deep theorem.
+
+\begin{theorem}\label{vector-bundles:theorem-parallelizable-spheres}
+The sphere $S^n$ is parallelizable if and only if $n = 0$, $1$, $3$ or $7$.
+\end{theorem}
+
+For $n = 1$ and $n = 3$ this is Example~\ref{vector-bundles:example-parallelizable}, and for $n = 7$ the same construction with the octonions, an eight-dimensional normed algebra that is not associative,
+gives seven orthonormal fields. That no other sphere is parallelizable was proved independently by Bott and Milnor \cite{bott-milnor-1958} and by Kervaire \cite{kervaire-1958}; it is closely related to
+the theorem that $\RR^n$ carries a bilinear multiplication without zero divisors only for $n = 1, 2, 4, 8$, and to Adams' theorem on the Hopf invariant \cite{adams-1960}
+(Corollary~\ref{cohomology-operations:corollary-hopf-invariant} is its first step).
+
+\begin{remark}\label{vector-bundles:remark-parallelizable-obstructions}
+Several necessary conditions for parallelizability appear in later chapters. A parallelizable manifold is orientable: the dual coframe of a global frame gives a nowhere vanishing $n$-form
+(Chapter~\ref{differential-forms}). A compact parallelizable manifold has a nowhere vanishing vector field, so its Euler characteristic is $0$ by the Poincar\'e--Hopf theorem, and all the characteristic
+classes of its tangent bundle vanish (Chapter~\ref{characteristic-classes}); this rules out, for example, all compact orientable surfaces except the torus and all complex projective spaces. These
+conditions are not sufficient: $S^5$ is orientable, has Euler characteristic $0$ and, being stably parallelizable, vanishing characteristic classes, but it is not parallelizable by
+Theorem~\ref{vector-bundles:theorem-parallelizable-spheres}. Finally, a global frame $(X_i)$ defines a connection by declaring the $X_i$ parallel, $\nabla(\sum_if^iX_i) = \sum_idf^i \otimes X_i$; it is flat, its
+parallel transport does not depend on the path, and conversely a flat connection with trivial holonomy on a connected manifold produces a global parallel frame (Chapter~\ref{connections}).
+\end{remark}
+
+\section{Exercises}\label{vector-bundles:section-exercises}
+
+\begin{exercise}\label{vector-bundles:exercise-mobius}
+Show that the M\"obius bundle $L \to S^1$ is nontrivial, that $L \otimes L$ is trivial, and that $L$ has no nowhere vanishing section.
+\end{exercise}
+
+\begin{solution}
+A nowhere vanishing section would give a trivialisation; on the other hand a section is a continuous function $f \colon [0, 1] \to \RR$ with $f(1) = -f(0)$, which must vanish somewhere by the intermediate
+value theorem. The transition function of $L \otimes L$ is the square of that of $L$, namely $1$.
+\end{solution}
+
+\begin{exercise}\label{vector-bundles:exercise-tangent-sphere-nontrivial}
+Show that $TS^2$ is not trivial, using that a trivialisation would give a nowhere vanishing vector field (Corollary~\ref{singular-homology:corollary-sphere-applications}).
+\end{exercise}
+
+\begin{solution}
+A trivialisation $TS^2 \cong S^2 \times \RR^2$ gives the global frame $\Phi^{-1}(p, e_1)$, $\Phi^{-1}(p, e_2)$, and in particular the nowhere vanishing vector field $\Phi^{-1}(p, e_1)$,
+which does not exist. For another proof, see Example~\ref{vector-bundles:example-degrees}(2).
+\end{solution}
+
+\begin{exercise}\label{vector-bundles:exercise-tautological}
+Show that the tautological line bundle on $\CC\PP^n$ is $\mathcal{O}(-1) = \{(\ell, v) : v \in \ell\} \subseteq \CC\PP^n \times \CC^{n+1}$, that it is a submanifold and a line bundle, and compute its transition
+functions for the standard cover.
+\end{exercise}
+
+\begin{solution}
+On $U_i = \{x_i \neq 0\}$ the map $\ell \mapsto (\ell, (x_0/x_i, \ldots, 1, \ldots, x_n/x_i))$ is a nowhere vanishing section $s_i$, giving a trivialisation; then $s_j = (x_i/x_j)s_i$, so
+$g_{ij} = x_i/x_j$ as functions on $U_i \cap U_j$.
+\end{solution}
+
+\begin{exercise}\label{vector-bundles:exercise-normal-bundle}
+Let $S \subseteq M$ be a submanifold with normal bundle $N = (TM|_S)/TS$. Show that if $S = f^{-1}(q)$ for a submersion $f$, then $N \cong S \times \RR^m$ is trivial, and that the normal bundle of
+$\RR\PP^{n-1} \subseteq \RR\PP^n$ is the tautological bundle.
+\end{exercise}
+
+\begin{solution}
+The first statement is Proposition~\ref{vector-bundles:proposition-constant-rank}. For the second, $\RR\PP^{n-1} = \{x_n = 0\}$. A tangent vector to $\RR\PP^n$ at a line $\ell$ is the same as a
+linear map $\ell \to \ell^\perp$ (the derivative of a curve of lines $\ell_t$, measured by how a vector of $\ell$ moves orthogonally), so $T_\ell\RR\PP^n = \Hom(\ell, \ell^\perp)$. For
+$\ell \subseteq \RR^n = \{x_n = 0\}$, the tangent space of $\RR\PP^{n-1}$ is $\Hom(\ell, \ell^\perp \cap \RR^n)$, and the quotient is $\Hom(\ell, \RR e_n) \cong \ell^\vee$. So the normal bundle is the
+dual of the tautological bundle, which is isomorphic to it by Proposition~\ref{vector-bundles:proposition-metrics}(2).
+\end{solution}
+
+\begin{exercise}\label{vector-bundles:exercise-inversion-jacobian}
+Compute the Jacobian matrix of the inversion $\tau(y) = y/|y|^2$ of $\RR^n \setminus \{0\}$ and verify the formula of Example~\ref{vector-bundles:example-cocycles}(2), including
+$\det D\tau(y) = -|y|^{-2n}$. For $n = 2$, write $y = x_1 + ix_2$ and check that $\tau(y) = 1/\bar y$.
+\end{exercise}
+
+\begin{solution}
+$\partial_j(y_i/|y|^2) = \delta_{ij}/|y|^2 - 2y_iy_j/|y|^4$, which is the formula. The matrix $I - 2uu^T$ with $u = y/|y|$ is the reflection in $u^\perp$, of determinant $-1$, so
+$\det D\tau = (|y|^{-2})^n \cdot (-1)$. For $n = 2$, $1/\bar y = y/(y\bar y) = y/|y|^2$.
+\end{solution}
+
+\begin{exercise}\label{vector-bundles:exercise-pullback-degree}
+Let $f \colon \CC\PP^1 \to \CC\PP^1$ be $[x_0 : x_1] \mapsto [x_0^k : x_1^k]$ for $k \geq 1$. Show that $f^*\mathcal{O}(-1) \cong \mathcal{O}(-k)$, by computing the transition function of the
+pulled back bundle.
+\end{exercise}
+
+\begin{solution}
+In the coordinate $z$ of $U_0$, $f(z) = z^k$, and $f$ maps $U_0$ to $U_0$ and $U_1$ to $U_1$. The pulled back frames $s_0 \circ f$ and $s_1 \circ f$ satisfy
+$s_1 \circ f = (z^k)^{-1}\,s_0 \circ f$, by Example~\ref{vector-bundles:example-cocycles}(4) evaluated at $f(z)$. So the transition function is $z^{-k}$, of winding number $-k$, and
+$f^*\mathcal{O}(-1) \cong \mathcal{O}(-k)$ by Proposition~\ref{vector-bundles:proposition-line-bundles-sphere}. The degree is multiplied by the degree $k$ of the map.
+\end{solution}
+
+\begin{exercise}\label{vector-bundles:exercise-real-line-bundles}
+Show that for a real line bundle $L$ the following are equivalent: $L$ is trivial; $L$ has a nowhere vanishing section; the transition functions of some trivialising cover can be
+chosen positive. Deduce that the tautological bundle of $\RR\PP^n$ is not trivial for $n \geq 1$, and that every real line bundle over a simply connected manifold is trivial (using
+the classification by $H^1(M; \ZZ/2)$ of Example~\ref{vector-bundles:example-line-bundles}).
+\end{exercise}
+
+\begin{solution}
+A nowhere vanishing section $s$ gives the trivialisation $(p, t) \mapsto ts(p)$; conversely $p \mapsto \Phi^{-1}(p, 1)$. With positive transition functions, choose a partition of unity
+and glue the local sections $\Phi_i^{-1}(p, 1)$: $s = \sum_i\psi_i\Phi_i^{-1}(\cdot, 1)$ is nowhere zero, because in any trivialisation the summands are positive multiples of each other.
+Conversely, with a nowhere vanishing section, rescale the trivialisations so that it becomes the constant $1$; then all transition functions are $1$. For $\RR\PP^n$ the tautological bundle
+restricts on $\RR\PP^1$ to the M\"obius bundle (Counterexample~\ref{vector-bundles:counterexample-mobius}). On a simply connected $M$, $H^1(M; \ZZ/2) = \Hom(\pi_1(M), \ZZ/2) = 0$.
+\end{solution}
+
+\begin{exercise}\label{vector-bundles:exercise-hom-cocycle}
+Show directly that $\Hom(E, F)$, defined as the bundle with fibres $\Hom(E_p, F_p)$ and transition functions $A \mapsto h_{ij}Ag_{ij}^{-1}$, is isomorphic to $E^\vee \otimes F$, and that its sections
+are exactly the morphisms of vector bundles $E \to F$.
+\end{exercise}
+
+\begin{solution}
+Fibrewise $E_p^\vee \otimes F_p \to \Hom(E_p, F_p)$, $\phi \otimes w \mapsto (v \mapsto \phi(v)w)$, is an isomorphism (Proposition~\ref{multilinear-algebra:proposition-hom-tensor}); in trivialisations
+it is a fixed linear isomorphism $\mathbb{K}^{r\vee} \otimes \mathbb{K}^s \to M_{s \times r}(\mathbb{K})$ intertwining the transition functions, since $(g^T)^{-1}\xi \otimes hw \mapsto hw\,\xi^Tg^{-1}$. So
+it is an isomorphism of bundles (Lemma~\ref{vector-bundles:lemma-bijective-morphism}). A section is a smoothly varying family of linear maps $E_p \to F_p$, which is a morphism of bundles:
+in trivialisations it is a smooth matrix-valued function.
+\end{solution}
+
+\begin{exercise}\label{vector-bundles:exercise-sum-mobius-explicit}
+Let $E$ be the M\"obius bundle. Show that $E \oplus (S^1 \times \RR)$ is not trivial but that $E \oplus E$ is, by describing sections as functions on $\RR$ with the appropriate periodicity.
+\end{exercise}
+
+\begin{solution}
+Sections of $E \oplus (S^1 \times \RR)$ are pairs $(f, g)$ with $f(x + 1) = -f(x)$ and $g(x + 1) = g(x)$. If it were trivial, its determinant line bundle $\det(E \oplus \RR) \cong E$
+(Proposition~\ref{vector-bundles:proposition-operations}(3)) would be trivial. For $E \oplus E$, the sections $(\cos\pi x, \sin\pi x)$ and $(-\sin\pi x, \cos\pi x)$ are anti-periodic, hence
+sections, and linearly independent everywhere (Example~\ref{vector-bundles:example-mobius-square}).
+\end{solution}
+
+\begin{exercise}\label{vector-bundles:exercise-rp3-parallelizable}
+Show that $\RR\PP^3 = S^3/\{\pm1\}$ is parallelizable, by checking that the vector fields $xi$, $xj$, $xk$ of Example~\ref{vector-bundles:example-parallelizable}(3) descend to $\RR\PP^3$. Show also that
+$T^2 \times S^2$ is parallelizable.
+\end{exercise}
+
+\begin{solution}
+Let $a(x) = -x$ be the antipodal map and $\pi \colon S^3 \to \RR\PP^3$ the projection, a local diffeomorphism with $\pi \circ a = \pi$. For $X(x) = xi$, $d_xa(X(x)) = -xi = (-x)i = X(a(x))$, so the vectors
+$d_x\pi(X(x))$ and $d_{-x}\pi(X(-x)) = d_{-x}\pi(d_xa(X(x))) = d_x(\pi \circ a)(X(x))$ agree: $Y(\pi(x)) = d_x\pi(X(x))$ is a well-defined vector field on $\RR\PP^3$, smooth because $\pi$ has smooth local inverses. The
+same holds for $xj$ and $xk$, and the three fields are linearly independent at every point because $d_x\pi$ is an isomorphism. (Alternatively, $\RR\PP^3$ is diffeomorphic to the Lie group $\mathrm{SO}(3)$.)
+Finally $T^2 \times S^2 = S^1 \times (S^1 \times S^2)$ is a product of parallelizable manifolds, by Example~\ref{vector-bundles:example-parallelizable}(4) and (5).
+\end{solution}

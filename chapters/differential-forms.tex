@@ -1,0 +1,873 @@
+\chapter{Differential Forms and Integration}\label{differential-forms}
+\chapterstatus{complete}
+
+\section{Introduction}\label{differential-forms:section-introduction}
+
+Differential forms are the integrands of geometry. A $k$-form is a quantity that can be integrated over oriented $k$-dimensional submanifolds: a $1$-form over curves (the
+work of a force field along a path), a $2$-form over surfaces (the flux of a field through a surface), an $n$-form over an $n$-manifold (a volume). Why forms, and not functions,
+are the right integrands is explained by the change of variables formula. Under a change of coordinates $x = \tau(y)$, the integral $\int f\,dx^1 \cdots dx^n$ becomes
+$\int(f \circ \tau)\,|\det D\tau|\,dy^1 \cdots dy^n$, with the \emph{absolute value} of the Jacobian determinant, while the $n$-form $f\,dx^1 \wedge \cdots \wedge dx^n$ becomes
+$(f \circ \tau)\det D\tau\,dy^1 \wedge \cdots \wedge dy^n$, with the determinant itself. The two rules agree for orientation-preserving changes of coordinates, and this is why an
+$n$-form can be integrated over an oriented manifold without any further choice, such as coordinates or a metric. (A metric allows one to integrate functions instead:
+Chapter~\ref{riemannian-geometry}.)
+
+The \emph{exterior derivative} $d$ turns $k$-forms into $(k + 1)$-forms. On $\RR^3$ it unifies the gradient, the curl and the divergence of vector calculus, it satisfies
+$d \circ d = 0$ (which contains $\operatorname{curl}\operatorname{grad} = 0$ and $\operatorname{div}\operatorname{curl} = 0$), and it makes \emph{Stokes' theorem}
+(Theorem~\ref{differential-forms:theorem-stokes}) true: the integral of $d\omega$ over a manifold with boundary is the integral of $\omega$ over the boundary. This one statement
+contains the fundamental theorem of calculus and the theorems of Green, Gauss and Stokes. Everything in Hodge theory is written in this language: de Rham cohomology
+(Chapter~\ref{de-rham}), harmonic forms (Chapter~\ref{hodge-theorem}), and the decomposition of forms on a complex manifold into types (Chapter~\ref{dolbeault}).
+
+The chapter goes as follows.
+\begin{enumerate}
+\item Differential forms, their three descriptions (sections of a bundle, alternating maps on tangent vectors, coefficients in charts) and their behaviour under changes of
+coordinates; computations of wedge products and pullbacks (Section~\ref{differential-forms:section-forms}).
+\item The exterior derivative, constructed and characterised step by step; the interior product, the Lie derivative and Cartan's formula; closed and exact forms and line
+integrals.
+\item Orientations, in terms of forms, of atlases and of unit normal fields (Section~\ref{differential-forms:section-orientations}).
+\item Integration of forms, manifolds with boundary and Stokes' theorem, with worked computations (Section~\ref{differential-forms:section-integration}).
+\end{enumerate}
+References: \cite{lee-smooth-manifolds}, \cite{warner-foundations}, \cite{spivak-calculus-manifolds}.
+
+\noindent\textbf{Prerequisites.} Chapter~\ref{vector-bundles} (Vector Bundles) and Chapter~\ref{measure-theory} (Measure and Integration).
+
+\noindent\textbf{On the way to the Hodge conjecture.} The whole chapter is needed: differential forms, orientations, integration and Stokes' theorem.
+
+\section{Differential forms}\label{differential-forms:section-forms}
+
+This section introduces the objects and operations of the calculus of differential forms, in the order in which they depend on each other. First the forms themselves and their
+coefficients in charts (Subsection~\ref{differential-forms:subsection-forms-charts}); then the two operations computed point by point with the multilinear algebra of
+Chapter~\ref{multilinear-algebra}: the wedge product (Subsection~\ref{differential-forms:subsection-wedge}) and the pullback along smooth maps (Subsection~\ref{differential-forms:subsection-pullback}). Then the
+exterior derivative $d$, the first operation that involves derivatives (Subsection~\ref{differential-forms:subsection-exterior-derivative}); closed and exact forms and line integrals
+(Subsection~\ref{differential-forms:subsection-closed-exact}); and finally the interior product and the Lie derivative, related to $d$ by Cartan's formula
+(Subsection~\ref{differential-forms:subsection-lie}).
+
+\subsection{Forms and their coefficients in charts}\label{differential-forms:subsection-forms-charts}
+
+\begin{definition}\label{differential-forms:definition-forms}
+A \emph{differential $k$-form} on a smooth manifold $M$ is a smooth section of $\Lambda^kT^*M$; the space of $k$-forms is $\Omega^k(M)$, and $\Omega^\bullet(M) = \bigoplus_k\Omega^k(M)$.
+So a $k$-form $\omega$ assigns to each point $p \in M$ an element $\omega_p$ of the exterior power $\Lambda^kT_p^*M$ of the single vector space $T_p^*M$, depending smoothly on $p$.
+\end{definition}
+
+By Proposition~\ref{differential-forms:proposition-forms-descriptions} below, a $k$-form is the same as a smoothly varying family of alternating $k$-linear maps
+$(T_pM)^k \to \RR$, or as a family of coefficient functions in charts transforming in a prescribed way. With the wedge product, defined pointwise by $(\alpha \wedge \beta)_p = \alpha_p \wedge \beta_p$ in the exterior algebra of
+the vector space $T_p^*M$ (Definition~\ref{differential-forms:definition-wedge}), $\Omega^\bullet(M)$ is a graded-commutative algebra over $C^\infty(M)$ (Proposition~\ref{differential-forms:proposition-wedge}); and forms can be pulled
+back along smooth maps (Definition~\ref{differential-forms:definition-pullback}).
+
+In a chart $(U, (x^1, \ldots, x^n))$, $dx^i$ is the differential of the coordinate function $x^i$, so $dx^i(\partial/\partial x^j) = \partial x^i/\partial x^j = \delta_{ij}$: the
+$dx^i|_p$ form the basis of $T_p^*M$ dual to the basis $\partial/\partial x^j|_p$ of $T_pM$. For a multi-index $I = (i_1 < \cdots < i_k)$ we write
+$dx^I = dx^{i_1} \wedge \cdots \wedge dx^{i_k}$; for a sequence $(i_1, \ldots, i_k)$ that is not increasing, $dx^{i_1} \wedge \cdots \wedge dx^{i_k}$ is $0$ if two indices coincide
+and $\pm dx^I$ otherwise, with the sign of the permutation that sorts the indices.
+
+\begin{remark}\label{differential-forms:remark-differential-function}
+The most important $1$-forms are the differentials of functions. For $f \in C^\infty(M)$, the differential $d_pf \colon T_pM \to T_{f(p)}\RR$ (Definition~\ref{smooth-manifolds:definition-tangent-space})
+takes values in the tangent space of $\RR$, which is identified with $\RR$ by $w \mapsto w(t)$, the value of the derivation $w$ on the coordinate function $t$ of $\RR$ (that is, $w = w(t)\,d/dt$).
+With this identification
+\[
+(df)_p(v) = d_pf(v)(t) = v(t \circ f) = v(f), \qquad\text{so}\qquad df(X) = X(f) = Xf
+\]
+for a vector field $X$: the differential of $f$ evaluated on $X$ is the derivative of $f$ in the direction $X$. In a chart, $df(\partial/\partial x^j) = \partial f/\partial x^j$, so
+$df = \sum_j\frac{\partial f}{\partial x^j}dx^j$; for $f = x^i$ this gives the statement $dx^i(\partial/\partial x^j) = \delta_{ij}$ above. The $1$-form $df$ is smooth, since its coefficients are, and
+$d(fg) = f\,dg + g\,df$ by the Leibniz rule for tangent vectors.
+\end{remark}
+
+\begin{proposition}\label{differential-forms:proposition-forms-descriptions}
+Let $M$ be a smooth $n$-manifold. For each $p$, the fibre $\Lambda^kT_p^*M$ is the space of alternating $k$-linear maps $(T_pM)^k \to \RR$
+(Proposition~\ref{multilinear-algebra:proposition-dual-exterior} and Notation~\ref{multilinear-algebra:notation-forms}). For a family $\omega = (\omega_p)_{p \in M}$ of such maps the
+following are equivalent:
+\begin{enumerate}
+\item $\omega$ is a smooth section of $\Lambda^kT^*M$, that is, a $k$-form;
+\item for all smooth vector fields $X_1, \ldots, X_k$ on an open set $U$, the function $p \mapsto \omega_p(X_1(p), \ldots, X_k(p))$ is smooth on $U$;
+\item in every chart of some atlas, the \emph{coefficients} $\omega_I(p) = \omega_p(\partial/\partial x^{i_1}|_p, \ldots, \partial/\partial x^{i_k}|_p)$ are smooth.
+\end{enumerate}
+In a chart $\omega = \sum_I\omega_I\,dx^I$, uniquely. If $(y^1, \ldots, y^n)$ is a second chart, then on the overlap
+\[
+dx^I = \sum_J\det\Bigl(\frac{\partial x^I}{\partial y^J}\Bigr)dy^J, \qquad \omega^{(y)}_J = \sum_I\omega^{(x)}_I\det\Bigl(\frac{\partial x^I}{\partial y^J}\Bigr),
+\]
+where $\partial x^I/\partial y^J$ is the $k \times k$ matrix $(\partial x^{i_a}/\partial y^{j_b})_{a,b}$ and the superscripts indicate the chart. For $k = n$ this reads
+$\omega^{(y)} = \omega^{(x)}\det(\partial x/\partial y)$, with the Jacobian determinant of the transition map. Conversely, functions $\omega^{(x)}_I$ given on the charts of an atlas
+and satisfying this rule on all overlaps come from a unique $k$-form.
+\end{proposition}
+
+\begin{proof}
+\emph{The expression in a chart.} Since the $dx^i|_p$ are the basis dual to the $\partial/\partial x^i|_p$, the $dx^I|_p$ form a basis of $\Lambda^kT_p^*M$
+(Proposition~\ref{multilinear-algebra:proposition-exterior-properties}(3)), and for increasing $I$ and $J$,
+$dx^I(\partial/\partial x^{j_1}, \ldots, \partial/\partial x^{j_k}) = \det(dx^{i_a}(\partial/\partial x^{j_b}))_{a,b}$, which is $1$ if $I = J$ and $0$ otherwise
+(Notation~\ref{multilinear-algebra:notation-forms}). Evaluating $\omega_p = \sum_Ic_I\,dx^I|_p$ on $(\partial/\partial x^{j_1}, \ldots, \partial/\partial x^{j_k})$ therefore gives
+$c_J = \omega_J(p)$: the coefficients are the $\omega_J$, and they are unique.
+
+(1) $\Leftrightarrow$ (3). The smooth structure of $\Lambda^kT^*M$ (Proposition~\ref{vector-bundles:proposition-operations}) is the one for which the frames $(dx^I)$ of charts are
+local trivialisations; a section is smooth if and only if its coefficients in these frames are smooth. (3) $\Rightarrow$ (2). On a chart domain write
+$X_b = \sum_jX_b^j\,\partial/\partial x^j$. By multilinearity $\omega(X_1, \ldots, X_k) = \sum_I\omega_I\,dx^I(X_1, \ldots, X_k)$, and
+$dx^I(X_1, \ldots, X_k) = \det(X_b^{i_a})_{a,b}$ is a polynomial in the smooth functions $X_b^j$. (2) $\Rightarrow$ (3). Take the $X_b$ to be coordinate vector fields.
+
+\emph{Change of chart.} By the first part applied to the chart $y$, the coefficient of $dy^J$ in $dx^I$ is
+$dx^I(\partial/\partial y^{j_1}, \ldots, \partial/\partial y^{j_k}) = \det(dx^{i_a}(\partial/\partial y^{j_b})) = \det(\partial x^{i_a}/\partial y^{j_b})$, since
+$dx^i(\partial/\partial y^j) = \partial x^i/\partial y^j$ is the derivative of the function $x^i$ in the direction $\partial/\partial y^j$. Substituting into
+$\omega = \sum_I\omega^{(x)}_I\,dx^I$ and comparing coefficients gives the rule for $\omega^{(y)}_J$. For $k = n$ there is one multi-index, $(1, \ldots, n)$. Conversely, if
+coefficients satisfying the rule are given on the charts of an atlas, define $\omega_p = \sum_I\omega^{(x)}_I(p)\,dx^I|_p$ using any chart at $p$; the rule says exactly
+that this does not depend on the chart, and $\omega$ is smooth by (3).
+\end{proof}
+
+\begin{example}\label{differential-forms:example-polar-forms}
+In the polar coordinates $(r, \theta)$ of Example~\ref{smooth-manifolds:example-polar}, with $x = r\cos\theta$ and $y = r\sin\theta$, the rule of
+Proposition~\ref{differential-forms:proposition-forms-descriptions} for $k = 1$ gives $dx = \cos\theta\,dr - r\sin\theta\,d\theta$ and $dy = \sin\theta\,dr + r\cos\theta\,d\theta$.
+Solving,
+\[
+dr = \cos\theta\,dx + \sin\theta\,dy = \frac{x\,dx + y\,dy}{r}, \qquad d\theta = \frac{-\sin\theta\,dx + \cos\theta\,dy}{r} = \frac{x\,dy - y\,dx}{x^2 + y^2},
+\]
+the second being the angle form of Counterexample~\ref{differential-forms:counterexample-closed-not-exact}. Compare with the tangent vectors
+$\partial/\partial r = \cos\theta\,\partial/\partial x + \sin\theta\,\partial/\partial y$ and $\partial/\partial\theta = -r\sin\theta\,\partial/\partial x + r\cos\theta\,\partial/\partial y$.
+The formula $dr = \cos\theta\,dx + \sin\theta\,dy$ found in many texts is about the covector $dr$, not the vector $\partial/\partial r$: vectors change by the Jacobian matrix
+$P = \partial(x, y)/\partial(r, \theta)$ (its columns give $\partial/\partial r$ and $\partial/\partial\theta$), and covectors by its inverse (the rows of $P^{-1}$ give $dr$ and $d\theta$).
+The coefficients agree for $r$ and not for $\theta$ because $P$ is a rotation followed by $\operatorname{diag}(1, r)$: $\partial/\partial r$ is a unit vector orthogonal to the
+circles $r = \text{const}$, so the Euclidean metric identifies it with $dr$, while $\partial/\partial\theta$ has length $r$ and corresponds to $r^2\,d\theta$. For $2$-forms the rule
+gives
+\[
+dx \wedge dy = \det\frac{\partial(x, y)}{\partial(r, \theta)}\,dr \wedge d\theta = r\,dr \wedge d\theta,
+\]
+which is the change of variables $\int f\,dx\,dy = \int f\,r\,dr\,d\theta$ of Example~\ref{measure-theory:example-gaussian}, in the language of forms
+(Proposition~\ref{differential-forms:proposition-integral-well-defined}).
+\end{example}
+
+\subsection{The wedge product}\label{differential-forms:subsection-wedge}
+
+The exterior algebra of Chapter~\ref{multilinear-algebra} is an algebra built from \emph{one} vector space $V$. A differential form is a family of elements of the exterior algebras $\Lambda(T_p^*M)$, one for each point $p$,
+so the wedge product of forms is defined one point at a time; the work is to check that the result is again smooth and that the algebraic rules survive.
+
+\begin{definition}\label{differential-forms:definition-wedge}
+Let $\alpha \in \Omega^k(M)$ and $\beta \in \Omega^l(M)$. Their \emph{wedge product} $\alpha \wedge \beta$ is the family
+\[
+(\alpha \wedge \beta)_p = \alpha_p \wedge \beta_p \in \Lambda^{k+l}T_p^*M, \qquad p \in M,
+\]
+where on the right $\wedge$ is the product of the exterior algebra $\Lambda(T_p^*M)$ of the single vector space $T_p^*M$ (Chapter~\ref{multilinear-algebra}). For $k = 0$, a $0$-form is a function $f$, and
+$f \wedge \beta = f\beta$ is the pointwise product $(f\beta)_p = f(p)\beta_p$. The wedge product is extended to $\Omega^\bullet(M) = \bigoplus_k\Omega^k(M)$ by bilinearity.
+\end{definition}
+
+\begin{proposition}\label{differential-forms:proposition-wedge}
+Let $\alpha \in \Omega^k(M)$, $\beta \in \Omega^l(M)$ and $\gamma \in \Omega^m(M)$.
+\begin{enumerate}
+\item $\alpha \wedge \beta$ is smooth, so it is a $(k + l)$-form. In a chart, if $\alpha = \sum_I\alpha_I\,dx^I$ and $\beta = \sum_J\beta_J\,dx^J$, then
+\[
+\alpha \wedge \beta = \sum_{I, J}\alpha_I\beta_J\,dx^I \wedge dx^J,
+\]
+where $dx^I \wedge dx^J$ is $0$ if $I$ and $J$ have a common index, and otherwise $\pm dx^K$ with $K$ the increasing rearrangement of $I \cup J$ and the sign of the permutation that sorts $(I, J)$.
+\item On tangent vectors, or on vector fields,
+\[
+(\alpha \wedge \beta)(X_1, \ldots, X_{k+l}) = \sum_\sigma\operatorname{sgn}(\sigma)\,\alpha(X_{\sigma(1)}, \ldots, X_{\sigma(k)})\,\beta(X_{\sigma(k+1)}, \ldots, X_{\sigma(k+l)}),
+\]
+the sum over the shuffles $\sigma$ of Proposition~\ref{multilinear-algebra:proposition-wedge-formula}. For $1$-forms, $(\alpha \wedge \beta)(X, Y) = \alpha(X)\beta(Y) - \alpha(Y)\beta(X)$.
+\item The product is $C^\infty(M)$-bilinear, $(f\alpha) \wedge \beta = f(\alpha \wedge \beta) = \alpha \wedge (f\beta)$, associative, $(\alpha \wedge \beta) \wedge \gamma = \alpha \wedge (\beta \wedge \gamma)$, and graded
+commutative, $\beta \wedge \alpha = (-1)^{kl}\alpha \wedge \beta$; in particular $\alpha \wedge \alpha = 0$ if $k$ is odd. So $\Omega^\bullet(M)$ is a graded-commutative algebra over $C^\infty(M)$, with unit the constant
+function $1$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) At a point $p$ of the chart, $\alpha_p = \sum_I\alpha_I(p)\,dx^I|_p$ and $\beta_p = \sum_J\beta_J(p)\,dx^J|_p$, and the product of $\Lambda(T_p^*M)$ is bilinear, so
+$(\alpha \wedge \beta)_p = \sum_{I,J}\alpha_I(p)\beta_J(p)\,dx^I|_p \wedge dx^J|_p$. The rule for $dx^I \wedge dx^J$ is that for wedge products of the basis covectors $dx^i|_p$ (the paragraph after
+Definition~\ref{differential-forms:definition-forms}). So the coefficient of $dx^K$ in $\alpha \wedge \beta$ is a sum of terms $\pm\alpha_I\beta_J$, a smooth function, and $\alpha \wedge \beta$ is smooth by
+Proposition~\ref{differential-forms:proposition-forms-descriptions}(3).
+
+(2) Apply Proposition~\ref{multilinear-algebra:proposition-wedge-formula} with $V = T_pM$ at each point $p$, using the identification of $\Lambda^kT_p^*M$ with alternating maps
+(Notation~\ref{multilinear-algebra:notation-forms}). For $k = l = 1$ the shuffles are the identity and the transposition of $1$ and $2$.
+
+(3) Each identity holds at every point, because it holds in the exterior algebra $\Lambda(T_p^*M)$: this algebra is associative, as a quotient of the tensor algebra, it is graded commutative by
+Proposition~\ref{multilinear-algebra:proposition-exterior-properties}(1), and $(f\alpha)_p = f(p)\alpha_p$ with $f(p)$ a scalar, which can be moved out of a bilinear product. If $k$ is odd, graded commutativity gives
+$\alpha \wedge \alpha = -\alpha \wedge \alpha$, so $2\alpha \wedge \alpha = 0$ and $\alpha \wedge \alpha = 0$.
+\end{proof}
+
+\begin{example}\label{differential-forms:example-wedge}
+\begin{enumerate}
+\item On $\RR^3$, $(dx + dy) \wedge (dx - dy) = dx \wedge dx - dx \wedge dy + dy \wedge dx - dy \wedge dy = -2\,dx \wedge dy$. On the vectors $e_1, e_2$ the formula of (2) gives
+$(dx + dy)(e_1)(dx - dy)(e_2) - (dx + dy)(e_2)(dx - dy)(e_1) = (1)(-1) - (1)(1) = -2$, in accordance.
+\item The functions are part of the algebra: $(x^2\,dy) \wedge (e^x\,dz) = x^2e^x\,dy \wedge dz$, by $C^\infty$-bilinearity.
+\item For even degree, $\alpha \wedge \alpha$ need not vanish. On $\RR^4$ with $\omega = dx^1 \wedge dx^2 + dx^3 \wedge dx^4$,
+\[
+\omega \wedge \omega = dx^1 \wedge dx^2 \wedge dx^3 \wedge dx^4 + dx^3 \wedge dx^4 \wedge dx^1 \wedge dx^2 = 2\,dx^1 \wedge dx^2 \wedge dx^3 \wedge dx^4,
+\]
+since moving the $2$-form $dx^3 \wedge dx^4$ past $dx^1 \wedge dx^2$ costs the sign $(-1)^{2 \cdot 2} = 1$, and the squares $(dx^1 \wedge dx^2)^2$ and $(dx^3 \wedge dx^4)^2$ vanish. This is the standard symplectic form of
+$\RR^4$, and $\omega \wedge \omega \neq 0$ is its nondegeneracy (Chapter~\ref{symplectic-geometry}).
+\end{enumerate}
+\end{example}
+
+\subsection{Pullback along smooth maps}\label{differential-forms:subsection-pullback}
+
+\begin{definition}\label{differential-forms:definition-pullback}
+Let $f \colon N \to M$ be smooth and $\omega \in \Omega^k(M)$. The \emph{pullback} $f^*\omega$ is defined by
+\[
+(f^*\omega)_p(v_1, \ldots, v_k) = \omega_{f(p)}(d_pf\,v_1, \ldots, d_pf\,v_k), \qquad p \in N,\ v_1, \ldots, v_k \in T_pN .
+\]
+For a function $g$, $f^*g = g \circ f$. The pullback is again a $k$-form, by the formula in charts of Proposition~\ref{differential-forms:proposition-induced-maps}(3); it is an algebra homomorphism
+(Proposition~\ref{differential-forms:proposition-induced-maps}(5)) and $(g \circ f)^* = f^*g^*$.
+\end{definition}
+
+\begin{remark}\label{differential-forms:remark-induced-maps}
+\emph{Pullback, and what a smooth map induces.} The definition of $f^*\omega$ says: to evaluate $f^*\omega$ on tangent vectors at $p \in N$, push the vectors forward to $f(p)$ with the differential $d_pf$ and
+evaluate $\omega$ there. Since $d_pf$ is linear, $(f^*\omega)_p$ is again alternating and multilinear, and $f^*$ is linear, compatible with wedge products ($f^*(\omega \wedge \eta) = f^*\omega \wedge f^*\eta$, as
+both sides are computed pointwise from the same multilinear algebra) and functorial: $(g \circ f)^* = f^*g^*$ by the chain rule $d(g \circ f) = dg \circ df$, and $\id^* = \id$. A smooth map
+$f \colon N \to M$ induces maps in two directions:
+\begin{enumerate}
+\item \emph{forward} (covariantly): tangent vectors, $d_pf \colon T_pN \to T_{f(p)}M$, and with them $k$-vectors
+(Proposition~\ref{differential-forms:proposition-induced-maps}); and curves, $\gamma \mapsto f \circ \gamma$;
+\item \emph{backward} (contravariantly): functions, $f^*g = g \circ f$; covectors and forms, $f^*\omega$; covariant tensors such as metrics, $(f^*g)(v, w) = g(df\,v, df\,w)$, which is again a metric if and only if
+$f$ is an immersion (Remark~\ref{differential-forms:remark-induced-maps-metric}); vector bundles and their sections, $f^*E$ (Chapter~\ref{vector-bundles}); and de Rham cohomology (Chapter~\ref{de-rham}).
+\end{enumerate}
+Vector fields are neither: a vector field $X$ on $N$ cannot be pushed forward in general (if $f$ is not injective, two points with the same image may give different vectors, and if $f$ is not surjective
+there is nothing to define off the image), nor pulled back. A diffeomorphism transports everything in both directions, $f_*X = df \circ X \circ f^{-1}$; for a general $f$ one only has the notion of
+\emph{$f$-related} fields, $df(X_p) = Y_{f(p)}$, and then $f^*(\omega(Y_1, \ldots, Y_k)) = (f^*\omega)(X_1, \ldots, X_k)$. This asymmetry is why differential forms, not vector fields, are the objects that
+can be integrated over images of maps and that form a contravariant functor, cohomology.
+\end{remark}
+
+\begin{remark}\label{differential-forms:remark-induced-maps-metric}
+For $f \colon N \to (M, g)$ with $g$ a Riemannian metric, $(f^*g)_p(v, v) = |d_pf\,v|^2$ vanishes for $v \neq 0$ exactly when $v \in \ker d_pf$; so $f^*g$ is positive definite, a metric, if and only if every $d_pf$ is
+injective. For the inclusion of a submanifold this is the induced metric (Chapter~\ref{riemannian-geometry}).
+\end{remark}
+
+The maps of Remark~\ref{differential-forms:remark-induced-maps} are all obtained from the single linear map $d_pf \colon T_pN \to T_{f(p)}M$ by the functorial constructions of multilinear
+algebra (Chapter~\ref{multilinear-algebra}): constructions built from the tangent space go forward, those built from its dual go backward. For the exterior algebra this gives two families of maps,
+one in each direction, and the pullback of forms is one of them.
+
+\begin{proposition}\label{differential-forms:proposition-induced-maps}
+Let $f \colon N \to M$ be smooth, $p \in N$, and $k \geq 0$.
+\begin{enumerate}
+\item The differential induces linear maps $\Lambda^kd_pf \colon \Lambda^kT_pN \to \Lambda^kT_{f(p)}M$, $v_1 \wedge \cdots \wedge v_k \mapsto d_pf\,v_1 \wedge \cdots \wedge d_pf\,v_k$, on
+\emph{$k$-vectors}, and its transpose $(d_pf)^* \colon T^*_{f(p)}M \to T^*_pN$, $\varphi \mapsto \varphi \circ d_pf$, induces $\Lambda^k(d_pf)^* \colon \Lambda^kT^*_{f(p)}M \to \Lambda^kT^*_pN$.
+\item $\Lambda^k(d_pf)^*$ is the pullback, $(f^*\omega)_p = \Lambda^k(d_pf)^*(\omega_{f(p)})$, and under the pairings of Proposition~\ref{multilinear-algebra:proposition-dual-exterior} it is the
+transpose of $\Lambda^kd_pf$:
+\[
+\langle (f^*\omega)_p, v_1 \wedge \cdots \wedge v_k\rangle = \langle\omega_{f(p)}, \Lambda^kd_pf(v_1 \wedge \cdots \wedge v_k)\rangle .
+\]
+\item Let $(x^1, \ldots, x^n)$ be a chart near $p$ and $(y^1, \ldots, y^m)$ a chart near $f(p)$, and write $y^i$ also for the components of $f$ in these charts. In the bases
+$\partial_{x^J} = \partial/\partial x^{j_1} \wedge \cdots \wedge \partial/\partial x^{j_k}$ and $\partial_{y^I}$, for increasing multi-indices, the matrix of $\Lambda^kd_pf$ consists of the
+$k \times k$ minors $\partial(y^{i_1}, \ldots, y^{i_k})/\partial(x^{j_1}, \ldots, x^{j_k})$ of the Jacobian matrix at $p$, and
+\[
+f^*(dy^{i_1} \wedge \cdots \wedge dy^{i_k}) = \sum_{j_1 < \cdots < j_k}\frac{\partial(y^{i_1}, \ldots, y^{i_k})}{\partial(x^{j_1}, \ldots, x^{j_k})}\,dx^{j_1} \wedge \cdots \wedge dx^{j_k} .
+\]
+In particular, if $n = m$, then $f^*(dy^1 \wedge \cdots \wedge dy^n) = \det\bigl(\partial y^i/\partial x^j\bigr)\,dx^1 \wedge \cdots \wedge dx^n$.
+\item The rank of $d_pf$ is the largest $r$ with $\Lambda^rd_pf \neq 0$, equivalently with $\Lambda^r(d_pf)^* \neq 0$.
+\item For $\alpha, \beta \in \Omega^\bullet(M)$, $f^*(\alpha \wedge \beta) = f^*\alpha \wedge f^*\beta$: the pullback $f^* \colon \Omega^\bullet(M) \to \Omega^\bullet(N)$ is a homomorphism of graded algebras.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) $\Lambda^k$ is a functor on linear maps (Proposition~\ref{multilinear-algebra:proposition-exterior-properties}(5)), and the transpose of a linear map is linear
+(Definition~\ref{linear-algebra:definition-dual}).
+
+(2) Identify $\Lambda^kT^*_qM$ with the alternating $k$-linear forms on $T_qM$ (Notation~\ref{multilinear-algebra:notation-forms}); then a decomposable element $\varphi_1 \wedge \cdots \wedge \varphi_k$
+is the form $(w_1, \ldots, w_k) \mapsto \det(\varphi_a(w_b))$, by Proposition~\ref{multilinear-algebra:proposition-dual-exterior}. Its image under $\Lambda^k(d_pf)^*$ is
+$(\varphi_1 \circ d_pf) \wedge \cdots \wedge (\varphi_k \circ d_pf)$, the form $(v_1, \ldots, v_k) \mapsto \det(\varphi_a(d_pf\,v_b))$, that is,
+$(v_1, \ldots, v_k) \mapsto (\varphi_1 \wedge \cdots \wedge \varphi_k)(d_pf\,v_1, \ldots, d_pf\,v_k)$. By linearity, $\Lambda^k(d_pf)^*$ sends every $\omega_{f(p)}$ to
+$(v_1, \ldots, v_k) \mapsto \omega_{f(p)}(d_pf\,v_1, \ldots, d_pf\,v_k)$, which is $(f^*\omega)_p$ by Definition~\ref{differential-forms:definition-pullback}. The displayed formula is the same
+statement written with the pairing, since $\langle\alpha, v_1 \wedge \cdots \wedge v_k\rangle = \alpha(v_1, \ldots, v_k)$.
+
+(3) The matrix of $d_pf$ in the bases $(\partial/\partial x^j)$ and $(\partial/\partial y^i)$ is the Jacobian matrix $(\partial y^i/\partial x^j)$, because
+$d_pf(\partial/\partial x^j)(y^i) = \partial(y^i \circ f)/\partial x^j$ (Definition~\ref{smooth-manifolds:definition-tangent-space}). By
+Proposition~\ref{multilinear-algebra:proposition-minors}(1) the matrix of $\Lambda^kd_pf$ consists of its $k \times k$ minors. By (2), the matrix of the pullback in the dual bases $(dy^I)$ and
+$(dx^J)$ is the transpose of this matrix, which is the formula. For $k = n = m$ there is a single minor, the determinant.
+
+(4) The first statement is Proposition~\ref{multilinear-algebra:proposition-minors}(3). A linear map and its transpose have the same rank (Proposition~\ref{linear-algebra:proposition-duality}(5)),
+and by (2) $\Lambda^r(d_pf)^*$ is the transpose of $\Lambda^rd_pf$.
+
+(5) By (2), $(f^*\omega)_p = \Lambda(d_pf)^*(\omega_{f(p)})$ in every degree, where $\Lambda(d_pf)^* \colon \Lambda(T^*_{f(p)}M) \to \Lambda(T^*_pN)$ is the map induced by
+the linear map $(d_pf)^*$. It is an algebra homomorphism: it is the extension of $T^*_{f(p)}M \to T^*_pN \subseteq \Lambda(T^*_pN)$ given by
+Proposition~\ref{multilinear-algebra:proposition-universal-algebras}(3), since it sends a product $\varphi_1 \wedge \cdots \wedge \varphi_k$ to $(d_pf)^*\varphi_1 \wedge \cdots \wedge (d_pf)^*\varphi_k$. So
+$(f^*(\alpha \wedge \beta))_p = \Lambda(d_pf)^*(\alpha_{f(p)} \wedge \beta_{f(p)}) = (f^*\alpha)_p \wedge (f^*\beta)_p$.
+\end{proof}
+
+So the pullback of a form is ``$\Lambda^k$ of the transpose of the Jacobian matrix'', and the familiar factor $\det(\partial y^i/\partial x^j)$ in the pullback of a top degree form is the
+case $k = n$; up to its absolute value it is the factor of the change of variables formula (Theorem~\ref{measure-theory:theorem-change-of-variables}), which is why the integral of a top degree
+form does not depend on the chart, up to sign (Section~\ref{differential-forms:section-integration}). The $k$-vectors $v_1 \wedge \cdots \wedge v_k$ have a geometric meaning: up to scalars, a
+nonzero decomposable $k$-vector is the same as a $k$-dimensional subspace of the tangent space with a chosen orientation and volume, and $\Lambda^kd_pf$ says how $f$ transforms such
+infinitesimal $k$-dimensional parallelepipeds. A $k$-form is what measures them, and $f^*\omega$ measures a parallelepiped by measuring its image.
+
+Two operations are used constantly: the wedge product of forms, computed pointwise with the rules of the exterior algebra
+($dx^i \wedge dx^j = -dx^j \wedge dx^i$, so $dx^i \wedge dx^i = 0$), and the pullback, computed by substituting: for $f \colon N \to M$,
+$f^*(\sum_I\omega_I\,dx^{i_1} \wedge \cdots \wedge dx^{i_k}) = \sum_I(\omega_I \circ f)\,d(x^{i_1} \circ f) \wedge \cdots \wedge d(x^{i_k} \circ f)$, since $f^*$ is an algebra homomorphism with
+$f^*(dg) = d(g \circ f)$ for functions (the chain rule).
+
+\begin{example}\label{differential-forms:example-form-computations}
+\begin{enumerate}
+\item \emph{A wedge product.} On $\RR^3$, for $\alpha = x\,dx + y\,dy$ and $\beta = dx + z\,dz$,
+\[
+\alpha \wedge \beta = x\,dx \wedge dx + xz\,dx \wedge dz + y\,dy \wedge dx + yz\,dy \wedge dz = -y\,dx \wedge dy + xz\,dx \wedge dz + yz\,dy \wedge dz .
+\]
+On the vectors $e_1, e_2$ it takes the value $\alpha(e_1)\beta(e_2) - \alpha(e_2)\beta(e_1) = x \cdot 0 - y \cdot 1 = -y$, in accordance with the coefficient of $dx \wedge dy$.
+\item \emph{Pullback to a curve.} For the helix $\gamma(t) = (\cos t, \sin t, t)$ and $\omega = z\,dx + x\,dy$,
+$\gamma^*\omega = t\,d(\cos t) + \cos t\,d(\sin t) = (\cos^2t - t\sin t)\,dt$.
+\item \emph{Pullback to the sphere.} Let $x(\vartheta, \varphi) = (\sin\vartheta\cos\varphi, \sin\vartheta\sin\varphi, \cos\vartheta)$ and $\omega = x\,dy \wedge dz + y\,dz \wedge dx + z\,dx \wedge dy$. By
+Proposition~\ref{differential-forms:proposition-forms-descriptions}, the pullback of $dy \wedge dz$ is the Jacobian minor $\partial(y, z)/\partial(\vartheta, \varphi)$ times
+$d\vartheta \wedge d\varphi$, and similarly for the others:
+\[
+x^*(dy \wedge dz) = \sin^2\vartheta\cos\varphi\,d\vartheta \wedge d\varphi, \quad x^*(dz \wedge dx) = \sin^2\vartheta\sin\varphi\,d\vartheta \wedge d\varphi, \quad
+x^*(dx \wedge dy) = \sin\vartheta\cos\vartheta\,d\vartheta \wedge d\varphi .
+\]
+So $x^*\omega = (\sin^3\vartheta\cos^2\varphi + \sin^3\vartheta\sin^2\varphi + \sin\vartheta\cos^2\vartheta)\,d\vartheta \wedge d\varphi = \sin\vartheta\,d\vartheta \wedge d\varphi$, the area form of the
+unit sphere in spherical coordinates.
+\item \emph{Spherical coordinates in space.} For $(r, \vartheta, \varphi) \mapsto r\,x(\vartheta, \varphi)$, the pullback of $dx \wedge dy \wedge dz$ is the Jacobian determinant times
+$dr \wedge d\vartheta \wedge d\varphi$, namely $r^2\sin\vartheta\,dr \wedge d\vartheta \wedge d\varphi$ (Exercise~\ref{differential-forms:exercise-spherical-volume}).
+\end{enumerate}
+\end{example}
+
+\subsection{The exterior derivative}\label{differential-forms:subsection-exterior-derivative}
+
+\begin{theorem}\label{differential-forms:theorem-exterior-derivative}
+There is a unique family of linear maps $d \colon \Omega^k(M) \to \Omega^{k+1}(M)$, for all $M$ and $k$, such that:
+$df$ is the differential of $f$ for $f \in \Omega^0(M) = C^\infty(M)$; $d(\alpha \wedge \beta) = d\alpha \wedge \beta + (-1)^{|\alpha|}\alpha \wedge d\beta$; and $d \circ d = 0$. It is local, given in a chart by
+$d(\sum_I\omega_I\,dx^I) = \sum_I d\omega_I \wedge dx^I$, and natural: $f^*(d\omega) = d(f^*\omega)$. Moreover, for vector fields,
+\[
+d\omega(X_0, \ldots, X_k) = \sum_i(-1)^i X_i\left(\omega(X_0, \ldots, \widehat{X_i}, \ldots, X_k)\right) + \sum_{i<j}(-1)^{i+j}\omega([X_i, X_j], X_0, \ldots, \widehat{X_i}, \ldots, \widehat{X_j}, \ldots, X_k).
+\]
+\end{theorem}
+
+\begin{proof}
+We write $\partial_l = \partial/\partial x^l$ in a chart, and $J \setminus j_m$ for the multi-index $J = (j_0 < \cdots < j_k)$ with $j_m$ removed.
+
+\emph{Step 1: the formula in a chart and its coefficients.} On a chart domain $U$ define
+\[
+d_U\Bigl(\sum_I\omega_I\,dx^I\Bigr) = \sum_Id\omega_I \wedge dx^I = \sum_I\sum_{l=1}^n\partial_l\omega_I\,dx^l \wedge dx^I.
+\]
+Then $d_U(f\,dx^{i_1} \wedge \cdots \wedge dx^{i_k}) = df \wedge dx^{i_1} \wedge \cdots \wedge dx^{i_k}$ also for sequences that are not increasing, since both sides vanish for repeated
+indices and change by the same sign when the indices are sorted. We compute the coefficients of $d_U\omega$: for $J = (j_0 < \cdots < j_k)$,
+\[
+(d_U\omega)(\partial_{j_0}, \ldots, \partial_{j_k}) = \sum_{m=0}^k(-1)^m\,\partial_{j_m}\omega_{J \setminus j_m}.
+\]
+Indeed the form $dx^l \wedge dx^I$ vanishes on $(\partial_{j_0}, \ldots, \partial_{j_k})$ unless $l \notin I$ and $\{l\} \cup I = J$ as sets, that is, unless $l = j_m$ and
+$I = J \setminus j_m$ for some $m$; and then $dx^{j_m} \wedge dx^{J \setminus j_m} = (-1)^m\,dx^J$, moving $dx^{j_m}$ past the $m$ forms $dx^{j_0}, \ldots, dx^{j_{m-1}}$, which takes
+the value $(-1)^m$. Conversely, collecting the terms, $\sum_J\bigl(\sum_m(-1)^m\partial_{j_m}\omega_{J \setminus j_m}\bigr)dx^J = \sum_I\sum_l\partial_l\omega_I\,dx^l \wedge dx^I$.
+
+\emph{Step 2: the three rules hold in a chart.} For a function, $d_Uf = \sum_l\partial_lf\,dx^l$ is the differential $df$, by the dual basis property. For the Leibniz rule it suffices by
+linearity to take $\alpha = f\,dx^I$ with $|I| = k$ and $\beta = g\,dx^J$; then $\alpha \wedge \beta = fg\,dx^I \wedge dx^J$ and
+\[
+d_U(\alpha \wedge \beta) = (g\,df + f\,dg) \wedge dx^I \wedge dx^J = (df \wedge dx^I) \wedge (g\,dx^J) + (-1)^k(f\,dx^I) \wedge (dg \wedge dx^J),
+\]
+moving the $1$-form $dg$ past the $k$-form $dx^I$. Finally
+$d_Ud_U(f\,dx^I) = \sum_{m,l}\partial_m\partial_lf\,dx^m \wedge dx^l \wedge dx^I = 0$: the terms $(m, l)$ and $(l, m)$ cancel because $\partial_m\partial_lf = \partial_l\partial_mf$
+(Theorem~\ref{real-analysis:theorem-schwarz}) while $dx^m \wedge dx^l = -dx^l \wedge dx^m$, and the terms with $m = l$ vanish.
+
+\emph{Step 3: uniqueness and locality.} Let $D$ be any family of linear maps with the three properties. If $\omega$ vanishes on an open set $U \ni p$, choose a bump function
+$\chi$ with support in $U$ and $\chi(p) = 1$ (Lemma~\ref{smooth-manifolds:lemma-bump-manifold}); then $\chi\omega = 0$, so $0 = D(\chi\omega) = d\chi \wedge \omega + \chi\,D\omega$, and at
+$p$ this gives $(D\omega)_p = 0$. So $D\omega$ near $p$ depends only on $\omega$ near $p$. Now let $p$ lie in a chart domain $U$, choose bump functions $\chi$ and $\tilde\chi$ with
+support in $U$, with $\chi = 1$ near $p$ and $\tilde\chi = 1$ near the support of $\chi$
+(Corollary~\ref{smooth-manifolds:corollary-partition-applications}(1), applied to a compact neighbourhood of $\operatorname{supp}\chi$ in $U$). Then $\chi\omega = \sum_I(\chi\omega_I)\,d(\tilde\chi x^{i_1}) \wedge \cdots \wedge d(\tilde\chi x^{i_k})$
+is a form on $M$ built from global functions, and the Leibniz rule and $D \circ D = 0$ give $D(\chi\omega) = \sum_Id(\chi\omega_I) \wedge d(\tilde\chi x^{i_1}) \wedge \cdots \wedge d(\tilde\chi x^{i_k})$, since
+$D(d(\tilde\chi x^i)) = DD(\tilde\chi x^i) = 0$. Near $p$ this is $\sum_Id\omega_I \wedge dx^I$, and $D\omega = D(\chi\omega)$ near $p$ by locality. So $D$ is given by the coordinate formula
+in every chart, and is unique.
+
+\emph{Step 4: existence, and what happens on the intersection of two charts.} Define $d\omega$ on each chart domain $U$ by $d_U$. On the intersection of two chart domains $U$ and $V$,
+the operator $d_V$ satisfies the three rules (Step 2, on the manifold $U \cap V$), so, writing $\omega = \sum_I\omega_I\,dx^I$ in the coordinates of $U$ and using
+$d_V(dx^i) = d_V(d_Vx^i) = 0$ and the Leibniz rule,
+\[
+d_V\Bigl(\sum_I\omega_I\,dx^I\Bigr) = \sum_Id_V\omega_I \wedge dx^I = \sum_Id\omega_I \wedge dx^I = d_U\Bigl(\sum_I\omega_I\,dx^I\Bigr).
+\]
+So the local definitions agree on overlaps and glue to an operator $d$ on $M$, which satisfies the three rules because they are local.
+
+\emph{Step 5: naturality.} For a function $g$ on $M$, $f^*(dg) = d(g \circ f)$ by the chain rule. Locally $\omega = \sum_I\omega_I\,dx^{i_1} \wedge \cdots \wedge dx^{i_k}$, so
+$f^*\omega = \sum_I(\omega_I \circ f)\,d(x^{i_1} \circ f) \wedge \cdots \wedge d(x^{i_k} \circ f)$, and by the Leibniz rule and $d \circ d = 0$ on $N$,
+$d(f^*\omega) = \sum_Id(\omega_I \circ f) \wedge d(x^{i_1} \circ f) \wedge \cdots \wedge d(x^{i_k} \circ f) = f^*\bigl(\sum_Id\omega_I \wedge dx^I\bigr) = f^*(d\omega)$.
+
+\emph{Step 6: the invariant formula.} Call the right-hand side $T(X_0, \ldots, X_k)$. It is local in the $X_i$. It is $C^\infty(M)$-linear in $X_0$: replacing $X_0$ by $fX_0$, the
+term $i = 0$ becomes $f$ times itself; the terms $i \geq 1$ acquire the extra summands $(-1)^i(X_if)\,\omega(X_0, \ldots, \widehat{X_i}, \ldots, X_k)$; and the bracket terms with
+$i = 0$ acquire, since $[fX_0, X_j] = f[X_0, X_j] - (X_jf)X_0$, the extra summands $-(-1)^j(X_jf)\,\omega(X_0, X_1, \ldots, \widehat{X_j}, \ldots, X_k)$, which cancel the previous ones.
+A similar check shows that $T$ changes sign when two arguments are exchanged, so it is $C^\infty(M)$-linear in every argument, like $d\omega$. Two such expressions agree if they
+agree on coordinate fields, and by alternation it suffices to take $\partial_{j_0}, \ldots, \partial_{j_k}$ with $j_0 < \cdots < j_k$. For coordinate fields all brackets vanish,
+and $T(\partial_{j_0}, \ldots, \partial_{j_k}) = \sum_m(-1)^m\partial_{j_m}\omega_{J \setminus j_m}$, which is $d\omega(\partial_{j_0}, \ldots, \partial_{j_k})$ by Step 1.
+\end{proof}
+
+\begin{remark}\label{differential-forms:remark-ddf}
+For a function $f$, $df = \sum_j(\partial f/\partial x^j)\,dx^j$ (Remark~\ref{differential-forms:remark-differential-function}) is a $1$-form, a section of the cotangent bundle $T^*M$; it should
+not be confused with the tangent map $Tf \colon TM \to T\RR$, although at each point both are the linear map $v \mapsto v(f)$. The identity $d(df) = 0$ is, in coordinates, the symmetry of second
+derivatives:
+\[
+d(df) = \sum_j d\Bigl(\frac{\partial f}{\partial x^j}\Bigr) \wedge dx^j = \sum_{i,j}\frac{\partial^2f}{\partial x^i\partial x^j}\,dx^i \wedge dx^j
+= \sum_{i<j}\Bigl(\frac{\partial^2f}{\partial x^i\partial x^j} - \frac{\partial^2f}{\partial x^j\partial x^i}\Bigr)dx^i \wedge dx^j = 0
+\]
+(Theorem~\ref{real-analysis:theorem-schwarz}). So a $1$-form $\omega = \sum_j\omega_j\,dx^j$ can be exact only if $\partial_i\omega_j = \partial_j\omega_i$; this necessary condition is $d\omega = 0$, and
+whether it is sufficient is the question answered by de Rham cohomology (Chapter~\ref{de-rham}).
+\end{remark}
+
+\begin{example}\label{differential-forms:example-exterior-derivative-low}
+For $k = 1$ the invariant formula reads $d\omega(X, Y) = X\omega(Y) - Y\omega(X) - \omega([X, Y])$, and in coordinates on $\RR^2$, for $\omega = P\,dx + Q\,dy$,
+$d\omega = (\partial_xQ - \partial_yP)\,dx \wedge dy$: Step 1 with $J = (1, 2)$ gives the coefficient $\partial_1\omega_2 - \partial_2\omega_1$. This is the integrand of Green's theorem,
+which is Stokes' theorem (Theorem~\ref{differential-forms:theorem-stokes}) for a domain in the plane.
+\end{example}
+
+\begin{example}\label{differential-forms:example-forms-r3}
+On $\RR^3$ the Euclidean metric and orientation identify $1$-forms and $2$-forms with vector fields, by $F = (F_1, F_2, F_3) \mapsto F_1\,dx + F_2\,dy + F_3\,dz$ and
+$F \mapsto F_1\,dy \wedge dz + F_2\,dz \wedge dx + F_3\,dx \wedge dy$, and $3$-forms with functions. Under these identifications $d$ on $0$-, $1$- and $2$-forms is the gradient, the curl and the divergence, and $d \circ d = 0$ becomes
+$\operatorname{curl}\operatorname{grad} = 0$ and $\operatorname{div}\operatorname{curl} = 0$. Indeed $df = f_x\,dx + f_y\,dy + f_z\,dz$; for a $1$-form,
+\[
+d(F_1\,dx + F_2\,dy + F_3\,dz) = (\partial_yF_3 - \partial_zF_2)\,dy \wedge dz + (\partial_zF_1 - \partial_xF_3)\,dz \wedge dx + (\partial_xF_2 - \partial_yF_1)\,dx \wedge dy,
+\]
+since, for instance, $dF_1 \wedge dx = \partial_yF_1\,dy \wedge dx + \partial_zF_1\,dz \wedge dx$; and for a $2$-form,
+$d(F_1\,dy \wedge dz + F_2\,dz \wedge dx + F_3\,dx \wedge dy) = (\partial_xF_1 + \partial_yF_2 + \partial_zF_3)\,dx \wedge dy \wedge dz$, because only the derivative in the missing variable
+survives in each term.
+\end{example}
+
+\subsection{Closed and exact forms, line integrals}\label{differential-forms:subsection-closed-exact}
+
+\begin{definition}\label{differential-forms:definition-closed-exact}
+A form $\omega$ is \emph{closed} if $d\omega = 0$ and \emph{exact} if $\omega = d\eta$ for some form $\eta$. Exact forms are closed, since $d \circ d = 0$.
+\end{definition}
+
+\begin{definition}\label{differential-forms:definition-line-integral}
+For a $1$-form $\alpha$ on $M$ and a piecewise smooth curve $\gamma \colon [a, b] \to M$, the \emph{line integral} is $\int_\gamma\alpha = \int_a^b\alpha_{\gamma(t)}(\dot\gamma(t))\,dt$, the sum of the integrals of $\gamma^*\alpha$ over the smooth pieces. For $M$ open in $\RR^n$ and $\alpha = \sum_jF_j\,dx_j$ this is the line integral of the second kind of the vector field
+$F = (F_1, \ldots, F_n)$ (Definition~\ref{real-analysis:definition-second-kind}).
+\end{definition}
+
+\begin{proposition}\label{differential-forms:proposition-line-integrals}
+\begin{enumerate}
+\item The line integral is unchanged under orientation-preserving reparametrisation $\gamma \circ \phi$, $\phi \colon [c, d] \to [a, b]$ increasing and piecewise smooth with $\phi(c) = a$, $\phi(d) = b$, and changes sign under reversal.
+\item (Fundamental theorem for line integrals) $\int_\gamma df = f(\gamma(b)) - f(\gamma(a))$.
+\item On a connected manifold, a $1$-form $\alpha$ is exact if and only if $\int_\gamma\alpha = 0$ for every closed piecewise smooth curve $\gamma$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) is the substitution rule (Corollary~\ref{real-analysis:corollary-integration-rules}) on each piece, as $(\gamma \circ \phi)^*\alpha = \phi^*\gamma^*\alpha$. (2) $\gamma^*df = d(f \circ \gamma) = (f \circ \gamma)'\,dt$, and
+Theorem~\ref{real-analysis:theorem-ftc} applies on each piece; the intermediate values cancel. (3) If $\alpha = df$, closed curves give $0$ by (2). Conversely, fix $p_0$ and define $f(p) = \int_\gamma\alpha$ for any piecewise smooth curve
+$\gamma$ from $p_0$ to $p$; such curves exist since $M$ is connected and locally path-connected by piecewise smooth curves (use straight segments in charts), and the value does not depend on $\gamma$, because for two
+curves $\gamma$, $\gamma'$ the concatenation of $\gamma$ with the reverse of $\gamma'$ is closed. In a chart around $p$, with $p$ at the origin, computing $f$ along $\gamma$ followed by the segment from $p$ to $p + se_i$ gives
+$f(p + se_i) - f(p) = \int_0^s\alpha_i(p + ue_i)\,du$, so $\partial_if = \alpha_i$ by Theorem~\ref{real-analysis:theorem-ftc}; hence $f$ is smooth and $df = \alpha$.
+\end{proof}
+
+\begin{counterexample}\label{differential-forms:counterexample-closed-not-exact}
+Closed forms need not be exact. On $M = \RR^2 \setminus \{0\}$, the \emph{angle form} $\alpha = (x\,dy - y\,dx)/(x^2 + y^2)$ is closed, as a direct computation shows, but along the unit circle $\gamma(t) = (\cos t, \sin t)$,
+$\gamma^*\alpha = (\cos^2t + \sin^2t)\,dt = dt$, so $\int_\gamma\alpha = 2\pi \neq 0$, and $\alpha$ is not exact by Proposition~\ref{differential-forms:proposition-line-integrals}(3). On the half-plane $\{x > 0\}$ it is exact, equal to
+$d\arctan(y/x)$: exactness is a global question, measured by de Rham cohomology (Chapter~\ref{de-rham}).
+\end{counterexample}
+
+\subsection{Interior product and Lie derivative}\label{differential-forms:subsection-lie}
+
+\begin{definition}\label{differential-forms:definition-interior-lie}
+For $X \in \mathfrak{X}(M)$ the \emph{interior product} $\iota_X \colon \Omega^k \to \Omega^{k-1}$ is $(\iota_X\omega)(X_1, \ldots, X_{k-1}) = \omega(X, X_1, \ldots, X_{k-1})$
+(Definition~\ref{multilinear-algebra:definition-interior-product}), and the \emph{Lie derivative} is $L_X\omega = \frac{d}{dt}\big|_{t=0}\Phi_t^*\omega$, where $\Phi$ is the flow of $X$.
+\end{definition}
+
+The interior product inserts $X$ as the first argument; on a function it is $0$, and on a $1$-form $\iota_X\alpha = \alpha(X)$. By
+Proposition~\ref{multilinear-algebra:proposition-interior-antiderivation} it is an antiderivation: $\iota_X(\alpha \wedge \beta) = \iota_X\alpha \wedge \beta + (-1)^k\alpha \wedge \iota_X\beta$ for a
+$k$-form $\alpha$. For instance $\iota_{\partial_x}(dx \wedge dy) = dy$ and $\iota_{\partial_y}(dx \wedge dy) = -dx$.
+
+The Lie derivative measures how $\omega$ changes along the flow of $X$. The flow is in general only defined for small $|t|$ near each point
+(Theorem~\ref{smooth-manifolds:theorem-flow}), but this suffices: $(\Phi_t^*\omega)_p$ involves only the values of $\omega$ near $\Phi_t(p)$, it is defined for $|t|$ small, and it depends
+smoothly on $(t, p)$, as its coefficients in a chart are built from the coefficients of $\omega$ and the derivatives of the flow. So $L_X\omega$ is again a $k$-form. On a function,
+$L_Xf = \frac{d}{dt}f(\Phi_t(p))|_{t=0} = Xf$.
+
+\begin{example}\label{differential-forms:example-lie-derivative}
+On $\RR^2$ let $X = x\,\partial_x + y\,\partial_y$, whose flow is $\Phi_t(p) = e^tp$. Then $\Phi_t^*(dx \wedge dy) = d(e^tx) \wedge d(e^ty) = e^{2t}dx \wedge dy$, so
+$L_X(dx \wedge dy) = 2\,dx \wedge dy$: the flow expands areas at the rate $2$. For the rotation field $Y = -y\,\partial_x + x\,\partial_y$, the flow consists of rotations, which preserve
+$dx \wedge dy$, so $L_Y(dx \wedge dy) = 0$. Cartan's formula below gives the same results by pure algebra: $\iota_X(dx \wedge dy) = x\,dy - y\,dx$, whose differential is $2\,dx \wedge dy$, and
+$\iota_Y(dx \wedge dy) = -y\,dy - x\,dx = -d(\frac12(x^2 + y^2))$, whose differential is $0$.
+\end{example}
+
+\begin{proposition}[Cartan's formulas]\label{differential-forms:proposition-cartan}
+$L_X = d\iota_X + \iota_Xd$ on forms; $L_X$ commutes with $d$; $\frac{d}{dt}\Phi_t^*\omega = \Phi_t^*L_X\omega$; and $L_{[X,Y]} = L_XL_Y - L_YL_X$.
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1: $L_X$ is a local derivation of degree $0$ commuting with $d$.} Since $\Phi_t^*(\alpha \wedge \beta) = \Phi_t^*\alpha \wedge \Phi_t^*\beta$, differentiating at $t = 0$ (the product
+rule, applied pointwise to the coefficients) gives $L_X(\alpha \wedge \beta) = L_X\alpha \wedge \beta + \alpha \wedge L_X\beta$. Since $\Phi_t^*d = d\Phi_t^*$ (naturality of $d$,
+Theorem~\ref{differential-forms:theorem-exterior-derivative}) and derivatives in $t$ and in the coordinates commute (the coefficients are smooth in $(t, p)$), $L_Xd = dL_X$. It is local,
+as noted above.
+
+\emph{Step 2: $D = d\iota_X + \iota_Xd$ is a local derivation of degree $0$ commuting with $d$.} For a $k$-form $\alpha$, using the antiderivation rules for $d$ and for $\iota_X$,
+\[
+\begin{aligned}
+d\iota_X(\alpha \wedge \beta) &= d\iota_X\alpha \wedge \beta + (-1)^{k-1}\iota_X\alpha \wedge d\beta + (-1)^kd\alpha \wedge \iota_X\beta + \alpha \wedge d\iota_X\beta,\\
+\iota_Xd(\alpha \wedge \beta) &= \iota_Xd\alpha \wedge \beta + (-1)^{k+1}d\alpha \wedge \iota_X\beta + (-1)^k\iota_X\alpha \wedge d\beta + \alpha \wedge \iota_Xd\beta,
+\end{aligned}
+\]
+and adding, the middle terms cancel: $D(\alpha \wedge \beta) = D\alpha \wedge \beta + \alpha \wedge D\beta$. Moreover $dD = d\iota_Xd = Dd$, since $d \circ d = 0$.
+
+\emph{Step 3: $L_X = D$.} On a function, $L_Xf = Xf = df(X) = \iota_Xdf = Df$, as $\iota_Xf = 0$. On an exact $1$-form $df$, both give $d(Xf)$, since both commute with $d$. Locally every form
+is a sum of forms $f\,dg_1 \wedge \cdots \wedge dg_k$ (in a chart, $\omega_I\,dx^{i_1} \wedge \cdots \wedge dx^{i_k}$), and two local derivations of degree $0$ that agree on functions and on
+exact $1$-forms agree on such products, hence everywhere.
+
+\emph{Step 4: the derivative at time $t$.} By the group law, near a point and for small $s$, $\Phi_{t+s} = \Phi_s \circ \Phi_t$, so $\Phi_{t+s}^*\omega = \Phi_t^*(\Phi_s^*\omega)$, and differentiating at
+$s = 0$ gives $\frac{d}{dt}\Phi_t^*\omega = \Phi_t^*L_X\omega$ ($\Phi_t^*$ is linear and acts pointwise, so it commutes with $\frac{d}{ds}$).
+
+\emph{Step 5: brackets.} $L_XL_Y - L_YL_X$ is again a local derivation of degree $0$ commuting with $d$, and on functions it is $XY f - YXf = [X, Y]f = L_{[X,Y]}f$. As in Step 3 the
+two derivations agree everywhere.
+\end{proof}
+
+By Step 4, the flow of $X$ preserves a form $\omega$, that is $\Phi_t^*\omega = \omega$ for all $t$, if and only if $L_X\omega = 0$. For example, the flow of a vector field on $\RR^n$
+preserves the volume form $dx^1 \wedge \cdots \wedge dx^n$ exactly when $\operatorname{div}X = \sum_i\partial_iX^i = 0$
+(Exercise~\ref{differential-forms:exercise-lie-derivative-volume}); in dimension $2$ the Hamiltonian vector fields are such
+(Exercise~\ref{differential-forms:exercise-hamiltonian-area}).
+
+\section{Orientations}\label{differential-forms:section-orientations}
+
+\begin{definition}\label{differential-forms:definition-orientation}
+An \emph{orientation} of a smooth $n$-manifold $M$ is an equivalence class of nowhere vanishing $n$-forms, two being equivalent if they differ by a positive function; $M$ is \emph{orientable} if such a
+form exists, and \emph{oriented} once one is chosen. A chart is \emph{positively oriented} if $dx^1 \wedge \cdots \wedge dx^n$ represents the orientation.
+\end{definition}
+
+\begin{proposition}\label{differential-forms:proposition-orientation}
+$M$ is orientable if and only if it has an atlas whose transition maps have positive Jacobian determinant, if and only if the line bundle $\det T^*M$ is trivial. For connected $M$ there are then exactly two
+orientations. This agrees with the topological notion of Definition~\ref{poincare-duality:definition-orientation-covering}.
+\end{proposition}
+
+\begin{proof}
+A nowhere vanishing $n$-form $\mu$ gives such an atlas: take charts with $\mu = f\,dx^1 \wedge \cdots \wedge dx^n$, $f > 0$ (compose with a reflection if necessary), and on overlaps the transition Jacobian is
+the ratio of two positive functions. Conversely, given such an atlas, patch the forms $dx^1 \wedge \cdots \wedge dx^n$ with a partition of unity: the sum is nowhere vanishing because in each chart it is a
+positive combination of positive multiples of $dx^1 \wedge \cdots \wedge dx^n$. A nowhere vanishing section of the line bundle $\det T^*M = \Lambda^nT^*M$ is the same as a trivialisation. For the last
+statement, in a positively oriented chart a generator of $H_n(M \mid p; \ZZ)$ is determined by the orientation of $\RR^n$, and this choice is locally constant, giving a section of the orientation covering;
+conversely such a section determines a compatible atlas.
+\end{proof}
+
+\begin{counterexample}\label{differential-forms:counterexample-mobius}
+The open M\"obius band is not orientable. Let $\ZZ$ act on $\RR \times (-1, 1)$ by $g^k(x, t) = (x + k, (-1)^kt)$, freely and properly, and let $B$ be the smooth quotient (Theorem~\ref{smooth-manifolds:theorem-smooth-quotient}). A
+nowhere vanishing $2$-form $\mu$ on $B$ would pull back to a nowhere vanishing form $f\,dx \wedge dt$ on $\RR \times (-1, 1)$ invariant under $g$. As $g^*(f\,dx \wedge dt) = (f \circ g)\,dx \wedge d(-t) = -(f \circ g)\,dx \wedge dt$,
+invariance means $f \circ g = -f$. But $f$ is continuous and nowhere zero on the connected set $\RR \times (-1, 1)$, hence of constant sign (Corollary~\ref{general-topology:corollary-ivt}), which contradicts $f(g(x, t)) = -f(x, t)$.
+\end{counterexample}
+
+For surfaces in $\RR^3$ one usually thinks of an orientation as a choice of side, that is, of a unit normal vector varying continuously along the surface. This is
+the same notion.
+
+\begin{proposition}\label{differential-forms:proposition-orientation-normal}
+Let $S \subseteq \RR^{n+1}$ be an $n$-dimensional submanifold. A \emph{unit normal field} is a continuous map $\nu \colon S \to \RR^{n+1}$ with $|\nu(p)| = 1$ and
+$\nu(p) \perp T_pS$ for all $p$. Unit normal fields correspond bijectively to orientations of $S$: to $\nu$ corresponds the orientation of the nowhere vanishing
+$n$-form $\mu_p(v_1, \ldots, v_n) = \det(\nu(p), v_1, \ldots, v_n)$, for which a basis $(v_1, \ldots, v_n)$ of $T_pS$ is positive exactly when $(\nu(p), v_1, \ldots, v_n)$ is a
+positive basis of $\RR^{n+1}$. In particular $S$ is orientable if and only if it has a unit normal field, and every unit normal field is smooth. For a surface in $\RR^3$, a
+basis $(v, w)$ of $T_pS$ is positive exactly when $v \times w$ is a positive multiple of $\nu(p)$.
+\end{proposition}
+
+\begin{proof}
+Near a point of $S$ write $S$ as a regular level set $F^{-1}(0)$ with $F$ real valued (Proposition~\ref{smooth-manifolds:proposition-submanifold-criteria}(4)). Then
+$T_pS = \ker d_pF = \nabla F(p)^\perp$ (Theorem~\ref{smooth-manifolds:theorem-regular-value}), so the normal line at $p$ is spanned by $\nabla F(p) \neq 0$, and a unit normal field
+is there $\varepsilon\,\nabla F/|\nabla F|$ with $\varepsilon = \pm1$ continuous, hence locally constant; so $\nu$ is smooth. Given $\nu$, $\mu$ is a smooth $n$-form on $S$ (in a
+parametrisation its coefficient is $\det(\nu, x_1, \ldots, x_n)$), and it vanishes nowhere, because $\nu(p) \notin T_pS$, so $(\nu(p), v_1, \ldots, v_n)$ is a basis of $\RR^{n+1}$
+whenever $(v_i)$ is one of $T_pS$. Conversely, given an orientation, exactly one of the two unit normals $\pm\nu(p)$ makes $\det(\nu(p), v_1, \ldots, v_n) > 0$ for positive bases
+$(v_i)$, the choice not depending on the positive basis, as two positive bases differ by a matrix of positive determinant. Near a point, in the notation above,
+$\nu = \varepsilon\nabla F/|\nabla F|$ with $\varepsilon$ the sign of $\det(\nabla F, \partial_1, \ldots, \partial_n)$ for the coordinate fields of a positive chart, a continuous nowhere zero
+function; so $\nu$ is continuous. The two constructions are inverse to each other. For $n = 2$, $\det(\nu, v, w) = \langle\nu, v \times w\rangle$ and $v \times w$ is normal to
+$T_pS$.
+\end{proof}
+
+\begin{remark}\label{differential-forms:remark-moving-normal}
+So a hypersurface is orientable when a unit normal can be carried continuously around every closed curve and comes back to itself. The regular level sets
+$F^{-1}(c) \subseteq \RR^{n+1}$ are orientable, with $\nu = \nabla F/|\nabla F|$; for instance spheres, with the outward normal. For the M\"obius band embedded in
+$\RR^3$ as the image of $x(s, t) = ((1 + t\cos\frac s2)\cos s, (1 + t\cos\frac s2)\sin s, t\sin\frac s2)$, $|t| < \frac12$, the normal along the central circle $t = 0$ is
+$x_s \times x_t = (\cos s\sin\frac s2, \sin s\sin\frac s2, -\cos\frac s2)$, which is $(0, 0, -1)$ at $s = 0$ and $(0, 0, 1)$ at $s = 2\pi$, at the same point $(1, 0, 0)$: going once
+around reverses the normal, so there is no unit normal field, in accordance with Counterexample~\ref{differential-forms:counterexample-mobius}. The induced orientation of a
+boundary (Definition~\ref{differential-forms:definition-manifold-with-boundary} below) is the same idea with the outward normal: for a domain in $\RR^3$ bounded by a surface, the boundary
+is oriented by the outward unit normal, which is the convention of the divergence theorem.
+\end{remark}
+
+\section{Integration and Stokes' theorem}\label{differential-forms:section-integration}
+
+Let $\tau \colon V \to U$ be a diffeomorphism between open subsets of $\RR^n$, with coordinates $y$ on $V$ and $x$ on $U$. For a function $f$ on $U$, the change of variables formula
+(Theorem~\ref{measure-theory:theorem-change-of-variables}) says $\int_Uf\,d\lambda = \int_V(f \circ \tau)\,|\det D\tau|\,d\lambda$, while the pullback of the $n$-form $f\,dx^1 \wedge \cdots \wedge dx^n$
+is $(f \circ \tau)\det D\tau\,dy^1 \wedge \cdots \wedge dy^n$ (Proposition~\ref{differential-forms:proposition-forms-descriptions}). So if we integrate an $n$-form by integrating its coefficient,
+the answer does not change under orientation-preserving changes of coordinates ($\det D\tau > 0$) and changes sign under orientation-reversing ones. This is the whole reason for
+the following definition.
+
+\begin{definition}\label{differential-forms:definition-integral}
+Let $M$ be an oriented $n$-manifold and $\omega$ an $n$-form with compact support contained in a positively oriented chart $\varphi \colon U \to \RR^n$. Write $(\varphi^{-1})^*\omega = f\,dx^1 \wedge \cdots \wedge dx^n$
+and set $\int_M\omega = \int_{\varphi(U)}f\,d\lambda$. For general compactly supported $\omega$, choose a partition of unity $(\psi_i)$ subordinate to a cover by positively oriented charts and set
+$\int_M\omega = \sum_i\int_M\psi_i\omega$.
+\end{definition}
+
+\begin{proposition}\label{differential-forms:proposition-integral-well-defined}
+The integral is well defined, linear, and satisfies $\int_M\omega = \int_N f^*\omega$ for an orientation-preserving diffeomorphism $f \colon N \to M$; it changes sign if the orientation is reversed.
+\end{proposition}
+
+\begin{proof}
+\emph{One chart.} Let $\omega$ have compact support in the domains of two positively oriented charts $\varphi$ and $\psi$, and $\tau = \varphi \circ \psi^{-1}$, a diffeomorphism between open subsets of
+$\RR^n$ with $\det D\tau > 0$. If $(\varphi^{-1})^*\omega = f\,dx$, with $dx = dx^1 \wedge \cdots \wedge dx^n$, then $(\psi^{-1})^*\omega = \tau^*(\varphi^{-1})^*\omega = (f \circ \tau)\det D\tau\,dy$, and by the
+change of variables formula $\int(f \circ \tau)\det D\tau\,d\lambda = \int(f \circ \tau)|\det D\tau|\,d\lambda = \int f\,d\lambda$. (The supports lie in the common domain, and the integrands vanish
+outside it.)
+
+\emph{Partitions of unity.} The sum in the definition is finite, because the compact support of $\omega$ meets only finitely many supports of a locally finite partition of unity, and
+each term is defined by the first case. For two partitions $(\psi_i)$ and $(\chi_j)$, each $\psi_i\chi_j\omega$ is supported in the domains of the charts of both, so
+$\sum_i\int\psi_i\omega = \sum_{i,j}\int\chi_j\psi_i\omega = \sum_j\int\chi_j\omega$, using the linearity of the one-chart integral.
+
+\emph{Properties.} Linearity follows from that of the one-chart integral. If $f \colon N \to M$ is an orientation-preserving diffeomorphism, compositions $\varphi \circ f$ of positive charts of
+$M$ with $f$ are positive charts of $N$, and $\psi_i \circ f$ is a partition of unity; the coefficient of $f^*\omega$ in the chart $\varphi \circ f$ is that of $\omega$ in $\varphi$. So the defining sums
+agree. Reversing the orientation replaces each positive chart $\varphi$ by $r \circ \varphi$, with the reflection $r(x^1, \ldots, x^n) = (-x^1, x^2, \ldots, x^n)$, which changes the sign of every
+one-chart integral.
+\end{proof}
+
+In practice one does not use partitions of unity: one parametrises $M$ up to a set of measure zero.
+
+\begin{proposition}\label{differential-forms:proposition-integral-parametrisation}
+Let $M$ be an oriented $n$-manifold, $U \subseteq \RR^n$ open and $x \colon U \to M$ an orientation-preserving diffeomorphism onto an open subset whose complement $M \setminus x(U)$ has
+measure zero, that is, its image in every chart has Lebesgue measure $0$. For a compactly supported $n$-form $\omega$ write $x^*\omega = f\,du^1 \wedge \cdots \wedge du^n$. Then $f$ is integrable
+and
+\[
+\int_M\omega = \int_Uf\,d\lambda .
+\]
+\end{proposition}
+
+\begin{proof}
+Choose a partition of unity $(\psi_i)$ subordinate to positively oriented charts $(U_i, \varphi_i)$; finitely many $\psi_i$ meet the support of $\omega$. In the one-chart integral of $\psi_i\omega$ we may
+remove the null set $\varphi_i(U_i \setminus x(U))$. On the rest, $\tau_i = \varphi_i \circ x$ is an orientation-preserving diffeomorphism from $x^{-1}(U_i)$ onto $\varphi_i(U_i \cap x(U))$, so by the
+change of variables formula, as in the proof of Proposition~\ref{differential-forms:proposition-integral-well-defined}, $\int_M\psi_i\omega = \int_{x^{-1}(U_i)}f_i\,d\lambda$, where
+$x^*(\psi_i\omega) = f_i\,du$. Summing over the finitely many $i$, and using $\sum_if_i = f$ on $U$, gives the claim; each $f_i$ is integrable, so $f$ is.
+\end{proof}
+
+\begin{example}\label{differential-forms:example-integrals}
+\begin{enumerate}
+\item \emph{Curves.} If $\gamma \colon (a, b) \to M$ is an embedding onto a curve $C$, oriented by $\gamma$, then $\int_C\alpha = \int_a^b\alpha(\dot\gamma(t))\,dt$ is the line integral of
+Definition~\ref{differential-forms:definition-line-integral}.
+\item \emph{The sphere.} Orient $S^2$ by its outward normal (Proposition~\ref{differential-forms:proposition-orientation-normal}); the spherical coordinates
+$x(\vartheta, \varphi)$ on $(0, \pi) \times (0, 2\pi)$ are positively oriented, since $x_\vartheta \times x_\varphi = \sin\vartheta\,x$ points outward, and they miss only a closed half great
+circle, which has measure zero (it is a segment in the chart given by $\varphi \in (-\pi, \pi)$, together with two points). By
+Example~\ref{differential-forms:example-form-computations}(3) and Proposition~\ref{differential-forms:proposition-integral-parametrisation},
+\[
+\int_{S^2}x\,dy \wedge dz + y\,dz \wedge dx + z\,dx \wedge dy = \int_0^{2\pi}\int_0^\pi\sin\vartheta\,d\vartheta\,d\varphi = 4\pi .
+\]
+With the inner normal the same integral is $-4\pi$.
+\item \emph{The angle form.} $\int_{S^1}\alpha = 2\pi$ for $\alpha = (x\,dy - y\,dx)/(x^2 + y^2)$ and the counterclockwise orientation of $S^1 \subseteq \RR^2$
+(Counterexample~\ref{differential-forms:counterexample-closed-not-exact}).
+\end{enumerate}
+\end{example}
+
+\begin{definition}\label{differential-forms:definition-manifold-with-boundary}
+A \emph{smooth $n$-manifold with boundary} is defined as in Definition~\ref{smooth-manifolds:definition-manifold} with charts taking values in open subsets of the half-space
+$\mathbb{H}^n = \{x \in \RR^n : x^n \geq 0\}$; the \emph{boundary} $\partial M$ is the set of points corresponding to $x^n = 0$, a smooth $(n-1)$-manifold. If $M$ is oriented, $\partial M$ carries the
+\emph{induced orientation}, defined by declaring a chart of $\partial M$ positively oriented when the $n$-form $dx^1 \wedge \cdots \wedge dx^n$ of a positively oriented chart of $M$ is $(-1)^n\,\nu \wedge
+(dx^1 \wedge \cdots \wedge dx^{n-1})$ for an outward-pointing covector $\nu$; concretely, $(x^1, \ldots, x^{n-1})$ is positively oriented on $\partial M$ when $(-1)^n(x^1, \ldots, x^n)$ is on $M$.
+\end{definition}
+
+Here a map defined on an open subset of $\mathbb{H}^n$ (open for the subspace topology) is \emph{smooth} if near each point it is the restriction of a smooth map defined on an open subset of $\RR^n$;
+the transition maps between charts are required to be smooth in this sense. Tangent spaces, vector fields and forms are defined as for manifolds; at a boundary point the tangent space is
+still $n$-dimensional, and a tangent vector is \emph{outward-pointing} if in a chart its $n$-th component is negative. The rule for the induced orientation says: a basis
+$(v_1, \ldots, v_{n-1})$ of $T_p\partial M$ is positive if and only if $(w, v_1, \ldots, v_{n-1})$ is a positive basis of $T_pM$ for an outward vector $w$ (\emph{outward vector first}).
+Indeed, in a positive chart $w = -\partial_n$ is outward, and $\det(-e_n, e_1, \ldots, e_{n-1}) = (-1)^n$.
+
+\begin{lemma}\label{differential-forms:lemma-boundary-well-defined}
+Whether a point of a manifold with boundary lies on the boundary does not depend on the chart. The restrictions of the charts to $\partial M$ form an atlas of an $(n-1)$-manifold without
+boundary, and $M \setminus \partial M$ is an $n$-manifold without boundary.
+\end{lemma}
+
+\begin{proof}
+Suppose a chart $\varphi$ sends $p$ to a point with $x^n = 0$ and a chart $\psi$ sends it to a point with $x^n > 0$. Shrinking the domain, $\psi$ maps onto an open subset $W$ of $\RR^n$ contained in
+$\{x^n > 0\}$, and $\tau = \varphi \circ \psi^{-1} \colon W \to \mathbb{H}^n$ is smooth with a smooth inverse, which near $\varphi(p)$ extends to a smooth map $\sigma$ on an open subset of $\RR^n$.
+From $\sigma \circ \tau = \id$ near $\psi(p)$, the chain rule gives $D\sigma(\varphi(p))D\tau(\psi(p)) = I$, so $D\tau(\psi(p))$ is invertible. By the inverse function theorem
+(Theorem~\ref{real-analysis:theorem-inverse-function}), $\tau$ maps a neighbourhood of $\psi(p)$ onto an open subset of $\RR^n$ containing $\varphi(p)$; but every neighbourhood of $\varphi(p)$ in
+$\RR^n$ contains points with $x^n < 0$, which are not in $\mathbb{H}^n$. This contradiction proves the first statement. The restrictions of the transition maps to $\{x^n = 0\} = \RR^{n-1}$ are
+smooth with smooth inverses, which gives the atlas of $\partial M$, and the charts restricted to the interior points take values in the open set $\{x^n > 0\}$ of $\RR^n$.
+\end{proof}
+
+\begin{example}\label{differential-forms:example-boundaries}
+\begin{enumerate}
+\item $M = [a, b]$, with the orientation of $\RR$. At $b$ the outward direction is $+\partial_t$ and at $a$ it is $-\partial_t$; a point is oriented by a sign, and ``outward vector first''
+gives $\partial[a, b] = \{b\} - \{a\}$: the sign $+1$ at $b$ and $-1$ at $a$.
+\item The closed unit disc $\bar D \subseteq \RR^2$: at a boundary point $x$ the vector $x$ points outward, and $(x, v)$ is a positive basis of $\RR^2$ exactly when $v$ is a positive multiple of
+$(-x_2, x_1)$. So the boundary circle is oriented counterclockwise: the disc is on the left.
+\item The closed ball in $\RR^3$: its boundary $S^2$ is oriented by the outward normal, in the sense of Proposition~\ref{differential-forms:proposition-orientation-normal}.
+\item The half-space $\mathbb{H}^n$ itself: $\partial\mathbb{H}^n = \RR^{n-1}$ with $(-1)^n$ times its standard orientation; for $n = 2$ the boundary of the upper half-plane is the
+real line oriented from left to right.
+\end{enumerate}
+\end{example}
+
+\begin{theorem}[Stokes]\label{differential-forms:theorem-stokes}
+Let $M$ be an oriented $n$-manifold with boundary and $\omega$ an $(n-1)$-form with compact support. Then
+\[
+\int_Md\omega = \int_{\partial M}\omega,
+\]
+where $\partial M$ has the induced orientation. If $\partial M = \emptyset$, the integral of an exact compactly supported form vanishes.
+\end{theorem}
+
+\begin{proof}
+\emph{Reduction to one chart.} Let $(\psi_i)$ be a partition of unity subordinate to positively oriented charts. Only finitely many $\psi_i\omega$ are nonzero, $\omega = \sum_i\psi_i\omega$ and
+$d\omega = \sum_id(\psi_i\omega)$. Both sides of the formula are linear in $\omega$, so it suffices to prove it for each $\psi_i\omega$, that is, for $\omega$ supported in a single positively oriented
+chart. Via the chart, $M$ becomes an open subset of $\RR^n$ or of $\mathbb{H}^n$, and extending $\omega$ by $0$, we may assume $M = \RR^n$ or $M = \mathbb{H}^n$ and $\omega$ has compact support.
+
+\emph{The computation.} Write
+$\omega = \sum_i(-1)^{i-1}f_i\,dx^1 \wedge \cdots \wedge \widehat{dx^i} \wedge \cdots \wedge dx^n$; then $d\omega = (\sum_i\partial_if_i)\,dx^1 \wedge \cdots \wedge dx^n$, because
+$d f_i \wedge dx^1 \wedge \cdots \wedge \widehat{dx^i} \wedge \cdots \wedge dx^n = (-1)^{i-1}\partial_if_i\,dx^1 \wedge \cdots \wedge dx^n$. By Fubini's theorem (Theorem~\ref{measure-theory:theorem-fubini})
+we may integrate $\partial_if_i$ first in the variable $x^i$. For $i < n$, and also for $i = n$ when $M = \RR^n$, the integral over the whole line vanishes by the fundamental theorem of calculus,
+as $f_i$ has compact support. So $\int_{\RR^n}d\omega = 0 = \int_{\partial\RR^n}\omega$. For $M = \mathbb{H}^n$ the only surviving term is
+\[
+\int_{\mathbb{H}^n}\partial_nf_n\,d\lambda = \int_{\RR^{n-1}}\left(\int_0^\infty\partial_nf_n\,dx^n\right)dx^1 \cdots dx^{n-1} = -\int_{\RR^{n-1}}f_n(x', 0)\,dx' .
+\]
+On $\partial\mathbb{H}^n = \{x^n = 0\}$ the forms containing $dx^n$ restrict to $0$, so $\omega|_{\partial\mathbb{H}^n} = (-1)^{n-1}f_n\,dx^1 \wedge \cdots \wedge dx^{n-1}$, and the induced orientation is
+$(-1)^n$ times the standard one (Example~\ref{differential-forms:example-boundaries}(4)). Hence $\int_{\partial\mathbb{H}^n}\omega = (-1)^n(-1)^{n-1}\int f_n(x', 0)\,dx' = -\int f_n(x', 0)\,dx'$,
+which is the left side.
+\end{proof}
+
+\begin{counterexample}\label{differential-forms:counterexample-stokes-support}
+Stokes' theorem needs compact support. On $M = \RR$, without boundary, the $0$-form $\arctan$ has $\int_\RR d\arctan = \int_\RR\frac{dx}{1 + x^2} = \pi \neq 0$. On $M = [0, +\infty)$, with boundary the point $0$ carrying the induced orientation $-1$,
+the constant function $1$ has $\int_Md1 = 0$ while $\int_{\partial M}1 = -1$.
+\end{counterexample}
+
+\begin{example}\label{differential-forms:example-stokes-dimension-one}
+For $M = [a, b]$ with its standard orientation, $\partial M = \{b\} - \{a\}$ with the induced orientation, and Stokes' theorem for a function $f$ is the fundamental theorem of calculus, $\int_a^bf' = f(b) - f(a)$. For a compact region
+$M \subseteq \RR^2$ with smooth boundary and $\omega = P\,dx + Q\,dy$, it is Green's formula $\int_M(\partial_xQ - \partial_yP)\,dx\,dy = \int_{\partial M}P\,dx + Q\,dy$, the boundary being traversed with $M$ on the left.
+\end{example}
+
+\begin{example}\label{differential-forms:example-classical}
+For $M \subseteq \RR^3$ a compact region with smooth boundary, Stokes' theorem specialises to the divergence theorem $\int_M\operatorname{div}F\,dV = \int_{\partial M}\langle F, \nu\rangle\,dA$ and to the classical
+Stokes and Green formulas, after identifying vector fields with $1$- or $2$-forms using the Euclidean metric and orientation (Theorem~\ref{multilinear-algebra:theorem-hodge-star}). On a compact oriented
+manifold without boundary, $\int_M d\omega = 0$, so integration descends to de Rham cohomology (Chapter~\ref{de-rham}).
+\end{example}
+
+\begin{example}\label{differential-forms:example-stokes-checks}
+\begin{enumerate}
+\item \emph{Area by a line integral.} For the unit disc $\bar D$ and $\omega = x\,dy$, $d\omega = dx \wedge dy$, so $\int_{\partial\bar D}x\,dy = \int_{\bar D}dx \wedge dy = \pi$. Directly, with
+$x = \cos t$, $y = \sin t$: $\int_0^{2\pi}\cos^2t\,dt = \pi$. More generally the area of a plane region is $\frac12\int_{\partial R}(x\,dy - y\,dx)$.
+\item \emph{Volume by a flux.} For the unit ball $B$ and $\omega = x\,dy \wedge dz + y\,dz \wedge dx + z\,dx \wedge dy$, $d\omega = 3\,dx \wedge dy \wedge dz$, and Stokes' theorem gives
+$\int_{S^2}\omega = 3\operatorname{vol}(B) = 4\pi$, which is the value computed directly in Example~\ref{differential-forms:example-integrals}(2). So $\operatorname{vol}(B) = 4\pi/3$.
+\item \emph{A closed form on an annulus.} For the annulus $A = \{1 \leq |x| \leq 2\}$ and the angle form $\alpha$, $d\alpha = 0$ and $\partial A$ is the outer circle counterclockwise and the
+inner circle clockwise, so $\int_{\partial A}\alpha = 2\pi - 2\pi = 0$, as it must be. The punctured disc is not compact, and there Stokes' theorem does not apply: the closed form $\alpha$
+has integral $2\pi$ over the boundary circle.
+\end{enumerate}
+\end{example}
+
+\begin{corollary}\label{differential-forms:corollary-volume}
+On a compact oriented $n$-manifold $M$ without boundary, $\int_M \colon \Omega^n(M) \to \RR$ is surjective, and $\int_M\mu > 0$ for any $\mu$ representing the orientation. Hence $M$ carries a \emph{volume
+form}, and any two differ by a positive function.
+\end{corollary}
+
+\begin{proof}
+In a positively oriented chart the integral of a nonnegative bump $n$-form is positive; a form representing the orientation is positive in every positively oriented chart, so its integral is positive by the
+definition via a partition of unity.
+\end{proof}
+
+\section{Exercises}\label{differential-forms:section-exercises}
+
+\begin{exercise}\label{differential-forms:exercise-pullback-computation}
+Compute the pullback of $dx \wedge dy$ under polar coordinates $(r, \theta) \mapsto (r\cos\theta, r\sin\theta)$, and the exterior derivative of $\alpha = (x\,dy - y\,dx)/(x^2 + y^2)$ on $\RR^2 \setminus \{0\}$.
+Show that $\alpha$ is closed but not exact, by integrating over the unit circle.
+\end{exercise}
+
+\begin{solution}
+The pullback is $r\,dr \wedge d\theta$. A computation gives $d\alpha = 0$, while $\int_{S^1}\alpha = 2\pi \neq 0$; an exact form would integrate to $0$ over the closed curve $S^1$ by Stokes' theorem.
+\end{solution}
+
+\begin{exercise}\label{differential-forms:exercise-orientability-projective}
+Show that $\RR\PP^n$, $n \geq 1$, is orientable if and only if $n$ is odd, by computing the effect of the antipodal map on a volume form of $S^n$ (compare
+Exercise~\ref{poincare-duality:exercise-projective-orientability}).
+\end{exercise}
+
+\begin{solution}
+Let $\Omega = dx^1 \wedge \cdots \wedge dx^{n+1}$ and $\omega = (\iota_x\Omega)|_{S^n} = \sum_i(-1)^{i-1}x^i\,dx^1 \wedge \cdots \wedge \widehat{dx^i} \wedge \cdots \wedge dx^{n+1}$, restricted to $S^n$.
+For a basis $v_1, \ldots, v_n$ of $T_xS^n = x^\perp$, $\omega_x(v_1, \ldots, v_n) = \det(x, v_1, \ldots, v_n) \neq 0$, so $\omega$ is a volume form. The antipodal map $a(x) = -x$ changes the sign of every
+$x^i$ and of every $dx^j$, so each term of $\omega$ is multiplied by $(-1)^{n+1}$: $a^*\omega = (-1)^{n+1}\omega$. Let $\pi \colon S^n \to \RR\PP^n$ be the projection, a local diffeomorphism with
+$\pi \circ a = \pi$.
+
+If $n$ is odd, $a^*\omega = \omega$. Define an $n$-form $\eta$ on $\RR\PP^n$ by $\eta = (\sigma^{-1})^*\omega$ on $\pi(U)$, where $U \subseteq S^n$ is open with $U \cap a(U) = \emptyset$ and
+$\sigma = \pi|_U$; the other local inverse is $\pi|_{a(U)} = \sigma \circ a^{-1}$ on $a(U)$, and it gives the same form since $a^*\omega = \omega$. So $\eta$ is well defined, nowhere zero, and
+$\RR\PP^n$ is orientable (Proposition~\ref{differential-forms:proposition-orientation}). If $n$ is even and $\eta$ is a nowhere vanishing $n$-form on $\RR\PP^n$, then $\pi^*\eta = f\omega$ with $f$
+nowhere zero, hence of constant sign since $S^n$ is connected; but $a^*\pi^*\eta = \pi^*\eta$ gives $(f \circ a)(-1)^{n+1}\omega = f\omega$, that is, $f \circ a = -f$, a contradiction. (For
+$n = 0$, $\RR\PP^0$ is a point, which is orientable.)
+\end{solution}
+
+\begin{exercise}\label{differential-forms:exercise-lie-derivative-volume}
+Let $\mu$ be a volume form and $X$ a vector field. Show that $L_X\mu = (\operatorname{div}X)\mu$ defines the divergence, that $\operatorname{div}X = \sum_i\partial_iX^i$ in coordinates with
+$\mu = dx^1 \wedge \cdots \wedge dx^n$, and that the flow of $X$ preserves $\mu$ if and only if $\operatorname{div}X = 0$.
+\end{exercise}
+
+\begin{solution}
+$L_X\mu$ is an $n$-form, hence a function times $\mu$. By Cartan's formula $L_X\mu = d\iota_X\mu$, and computing $\iota_X\mu$ in coordinates gives $\sum_i(-1)^{i-1}X^i\,dx^1 \wedge \cdots \widehat{dx^i} \cdots \wedge dx^n$,
+whose differential is $(\sum_i\partial_iX^i)\mu$. The flow preserves $\mu$ if and only if $\frac{d}{dt}\Phi_t^*\mu = \Phi_t^*L_X\mu$ vanishes.
+\end{solution}
+
+\begin{exercise}\label{differential-forms:exercise-stokes-degree}
+Let $f \colon M \to N$ be a smooth map between compact oriented $n$-manifolds without boundary. Show that $\int_Mf^*\omega = \deg(f)\int_N\omega$ for a suitable integer $\deg(f)$ independent of $\omega$, using
+Sard's theorem and the local form of $f$ near regular values.
+\end{exercise}
+
+\begin{exercise}\label{differential-forms:exercise-exact-primitive}
+On $\RR^3$ let $\omega = yz\,dx + zx\,dy + xy\,dz$. Show that $d\omega = 0$ and find $f$ with $df = \omega$. Compute also $d(e^{xy}\,dx \wedge dz)$.
+\end{exercise}
+
+\begin{solution}
+$d\omega = (z\,dy + y\,dz) \wedge dx + (z\,dx + x\,dz) \wedge dy + (y\,dx + x\,dy) \wedge dz$, and the six terms cancel in pairs, for example $z\,dy \wedge dx + z\,dx \wedge dy = 0$. A primitive is
+$f = xyz$. Next, $d(e^{xy}dx \wedge dz) = (ye^{xy}dx + xe^{xy}dy) \wedge dx \wedge dz = xe^{xy}\,dy \wedge dx \wedge dz = -xe^{xy}\,dx \wedge dy \wedge dz$.
+\end{solution}
+
+\begin{exercise}\label{differential-forms:exercise-spherical-volume}
+Show that the pullback of $dx \wedge dy \wedge dz$ under spherical coordinates $(r, \vartheta, \varphi) \mapsto (r\sin\vartheta\cos\varphi, r\sin\vartheta\sin\varphi, r\cos\vartheta)$ is
+$r^2\sin\vartheta\,dr \wedge d\vartheta \wedge d\varphi$, and compute the volume of the ball of radius $R$ as the integral of $dx \wedge dy \wedge dz$.
+\end{exercise}
+
+\begin{solution}
+The pullback is the Jacobian determinant times $dr \wedge d\vartheta \wedge d\varphi$. Expanding the $3 \times 3$ determinant along the row of $z = r\cos\vartheta$, whose entries are
+$\cos\vartheta$, $-r\sin\vartheta$, $0$, gives $\cos\vartheta \cdot r^2\sin\vartheta\cos\vartheta + r\sin\vartheta \cdot r\sin^2\vartheta = r^2\sin\vartheta$. By
+Proposition~\ref{differential-forms:proposition-integral-parametrisation}, the volume is $\int_0^{2\pi}\int_0^\pi\int_0^Rr^2\sin\vartheta\,dr\,d\vartheta\,d\varphi = \frac43\pi R^3$.
+\end{solution}
+
+\begin{exercise}\label{differential-forms:exercise-stokes-hemisphere}
+Verify Stokes' theorem for $\omega = x\,dy - y\,dx$ on the closed upper hemisphere $H = S^2 \cap \{z \geq 0\}$, oriented by the outward normal, by computing both sides.
+\end{exercise}
+
+\begin{solution}
+$d\omega = 2\,dx \wedge dy$. The parametrisation $(u, v) \mapsto (u, v, \sqrt{1 - u^2 - v^2})$ of the open upper hemisphere by the open unit disc is positively oriented, as its normal
+$x_u \times x_v$ has positive third component, and the pullback of $dx \wedge dy$ is $du \wedge dv$; so $\int_Hd\omega = 2\pi$
+(Proposition~\ref{differential-forms:proposition-integral-parametrisation}; the equator has measure zero in $H$). The boundary is the equator. At $(1, 0, 0)$ an outward vector of $H$ is $-e_3$,
+and $(-e_3, e_2)$ is positive for the outward normal $e_1$, since $\det(e_1, -e_3, e_2) = 1$; so the equator is traversed counterclockwise seen from above, and
+$\int_{\partial H}x\,dy - y\,dx = \int_0^{2\pi}(\cos^2t + \sin^2t)\,dt = 2\pi$.
+\end{solution}
+
+\begin{exercise}\label{differential-forms:exercise-lie-derivative-rotation}
+On $\RR^3$ let $X = x\,\partial_y - y\,\partial_x$ be the infinitesimal rotation about the $z$-axis. Compute $L_X$ of $dx$, $dy$, $dz$, $x\,dy - y\,dx$ and $dx \wedge dy$, and interpret the results.
+\end{exercise}
+
+\begin{solution}
+$L_Xdx = d(Xx) = d(-y) = -dy$, $L_Xdy = d(Xy) = dx$, $L_Xdz = 0$. Then $L_X(x\,dy) = (Xx)\,dy + x\,L_Xdy = -y\,dy + x\,dx$ and $L_X(y\,dx) = x\,dx - y\,dy$, so
+$L_X(x\,dy - y\,dx) = 0$, and $L_X(dx \wedge dy) = -dy \wedge dy + dx \wedge dx = 0$. The rotations preserve the angular form and the area form of the planes orthogonal to the axis, and the
+height $z$.
+\end{solution}
+
+\begin{exercise}\label{differential-forms:exercise-hamiltonian-area}
+For a smooth function $H$ on $\RR^2$ let $X_H = \partial_yH\,\partial_x - \partial_xH\,\partial_y$. Show that $\iota_{X_H}(dx \wedge dy) = dH$, that $X_HH = 0$, and deduce that the flow of $X_H$
+preserves areas and the level sets of $H$.
+\end{exercise}
+
+\begin{solution}
+$\iota_{X_H}(dx \wedge dy) = \partial_yH\,dy + \partial_xH\,dx = dH$. By Cartan's formula $L_{X_H}(dx \wedge dy) = d\iota_{X_H}(dx \wedge dy) = d\,dH = 0$, so the flow preserves $dx \wedge dy$
+(Proposition~\ref{differential-forms:proposition-cartan}). And $X_HH = \partial_yH\,\partial_xH - \partial_xH\,\partial_yH = 0$, so $H$ is constant along the flow lines. This is the
+two-dimensional case of Liouville's theorem in Hamiltonian mechanics.
+\end{solution}
+
+\begin{exercise}\label{differential-forms:exercise-forms-on-submanifolds}
+Let $C = \{x^2 + y^2 = 1\} \subseteq \RR^3$ be the cylinder, with the parametrisation $(\theta, z) \mapsto (\cos\theta, \sin\theta, z)$ and inclusion $\iota$. Compute $\iota^*$ of $dx \wedge dy$, $dx \wedge dz$,
+$dy \wedge dz$ and $x\,dy \wedge dz - y\,dx \wedge dz$, and of the $1$-forms $x\,dy - y\,dx$ and $dz$. Which of these forms restrict to zero on $C$, and why is that visible without computation for
+$dx \wedge dy$?
+\end{exercise}
+
+\begin{solution}
+$\iota^*dx = -\sin\theta\,d\theta$, $\iota^*dy = \cos\theta\,d\theta$, $\iota^*dz = dz$. So $\iota^*(dx \wedge dy) = 0$, $\iota^*(dx \wedge dz) = -\sin\theta\,d\theta \wedge dz$,
+$\iota^*(dy \wedge dz) = \cos\theta\,d\theta \wedge dz$, $\iota^*(x\,dy \wedge dz - y\,dx \wedge dz) = (\cos^2\theta + \sin^2\theta)\,d\theta \wedge dz = d\theta \wedge dz$, the area form of the cylinder,
+$\iota^*(x\,dy - y\,dx) = d\theta$ and $\iota^*dz = dz$. A form restricts to zero exactly when it vanishes on all tuples of tangent vectors of $C$. At each point the tangent plane of $C$ is spanned by $\partial_z$ and a
+horizontal vector $w$, and $dx \wedge dy(w, \partial_z) = 0$ since $dx(\partial_z) = dy(\partial_z) = 0$; by bilinearity $dx \wedge dy$ vanishes on the whole tangent plane. Geometrically, $dx \wedge dy$ measures
+the area of the projection to the $(x, y)$-plane, which maps $C$ onto a circle, of area zero. Note that $\iota^*(x\,dy - y\,dx) = d\theta$ is closed but not exact on $C$, although
+$x\,dy - y\,dx$ is not closed on $\RR^3$.
+\end{solution}
+
+\begin{exercise}\label{differential-forms:exercise-angle-form-polar}
+Let $\alpha = (x\,dy - y\,dx)/(x^2 + y^2)$ be the angle form on $\RR^2 \setminus \{0\}$ and $P \colon (0, \infty) \times \RR \to \RR^2 \setminus \{0\}$, $P(r, \theta) = (r\cos\theta, r\sin\theta)$.
+\begin{enumerate}
+\item Compute $P^*\alpha$ by substituting $x = r\cos\theta$, $y = r\sin\theta$, and show that $P^*\alpha = d\theta$. Compute also $P^*\bigl((x\,dx + y\,dy)/(x^2 + y^2)\bigr)$.
+\item Deduce from (1), without computing $d\alpha$ in Cartesian coordinates, that $\alpha$ is closed.
+\item Let $\gamma(t) = P(r(t), \theta(t))$, $t \in [a, b]$, with $r > 0$ and $\theta$ smooth. Show that $\int_\gamma\alpha = \theta(b) - \theta(a)$, the total change of the angle along $\gamma$. Compute $\int_\gamma\alpha$ for the circle
+$\gamma(t) = (\cos kt, \sin kt)$, $t \in [0, 2\pi]$, traversed $k$ times, $k \in \ZZ$.
+\item For $p = (a, b) \in \RR^2$, the \emph{angle form centred at $p$} is $\alpha_p = ((x - a)\,dy - (y - b)\,dx)/((x - a)^2 + (y - b)^2)$. Show that $\alpha_p = \tau^*\alpha$ for the translation $\tau(x, y) = (x - a, y - b)$, and compute
+$\int_\gamma\alpha_p$ for the unit circle $\gamma(t) = (\cos t, \sin t)$, $t \in [0, 2\pi]$, and $p = (2, 0)$.
+\end{enumerate}
+\end{exercise}
+
+\begin{solution}
+(1) By Example~\ref{differential-forms:example-polar-forms}, $P^*dx = \cos\theta\,dr - r\sin\theta\,d\theta$ and $P^*dy = \sin\theta\,dr + r\cos\theta\,d\theta$; pullback is computed by substitution, since it is
+compatible with products and $P^*(dx) = d(x \circ P)$. Then
+\[
+P^*(x\,dy - y\,dx) = r\cos\theta(\sin\theta\,dr + r\cos\theta\,d\theta) - r\sin\theta(\cos\theta\,dr - r\sin\theta\,d\theta) = r^2(\cos^2\theta + \sin^2\theta)\,d\theta = r^2\,d\theta,
+\]
+the $dr$-terms cancelling, and $P^*(x^2 + y^2) = r^2$; so $P^*\alpha = d\theta$. Similarly
+$P^*(x\,dx + y\,dy) = r\cos\theta(\cos\theta\,dr - r\sin\theta\,d\theta) + r\sin\theta(\sin\theta\,dr + r\cos\theta\,d\theta) = r\,dr$, so the second form pulls back to $dr/r$: it is $d\log r$, with
+$r = (x^2 + y^2)^{1/2}$. Note that $\theta$ is a function on $(0, \infty) \times \RR$, but not on $\RR^2 \setminus \{0\}$; this is why $d\theta$ is exact upstairs while $\alpha$ is not exact downstairs
+(Counterexample~\ref{differential-forms:counterexample-closed-not-exact}).
+
+(2) $P^*(d\alpha) = d(P^*\alpha) = d(d\theta) = 0$, since $d$ commutes with pullbacks and $d \circ d = 0$. The Jacobian determinant of $P$ is $r \neq 0$, so $d_qP$ is invertible at every $q$, and
+$(P^*d\alpha)_q = \Lambda^2(d_qP)^*\bigl((d\alpha)_{P(q)}\bigr)$ (Proposition~\ref{differential-forms:proposition-induced-maps}) vanishes only if $(d\alpha)_{P(q)} = 0$. As $P$ is surjective, $d\alpha = 0$.
+
+(3) $\gamma = P \circ c$ with $c(t) = (r(t), \theta(t))$, so $\gamma^*\alpha = c^*P^*\alpha = c^*d\theta = d(\theta \circ c) = \theta^{\prime}(t)\,dt$, and $\int_\gamma\alpha = \int_a^b\theta^{\prime}(t)\,dt = \theta(b) - \theta(a)$. For the
+circle traversed $k$ times, $r = 1$ and $\theta(t) = kt$, so $\int_\gamma\alpha = 2\pi k$. For a closed curve the result is $2\pi$ times an integer, the \emph{winding number} of $\gamma$ around $0$.
+
+(4) $\tau^*x = x - a$, $\tau^*y = y - b$, $\tau^*dx = dx$ and $\tau^*dy = dy$, which gives $\tau^*\alpha = \alpha_p$. Now $\gamma(t) - p = (\cos t - 2, \sin t)$ has negative first coordinate for all $t$, so it can be written
+as $\rho(t)(\cos\vartheta(t), \sin\vartheta(t))$ with $\rho(t) = |\gamma(t) - p|$ and $\vartheta(t) = \pi + \arctan\bigl(\sin t/(\cos t - 2)\bigr)$, a smooth function with values in $(\frac\pi2, \frac{3\pi}2)$; indeed for a point
+$(u, v)$ with $u < 0$ the angle $\pi + \arctan(v/u)$ satisfies $\cos = u/\sqrt{u^2 + v^2}$ and $\sin = v/\sqrt{u^2 + v^2}$. Since $\gamma^*\alpha_p = (\tau \circ \gamma)^*\alpha$ and $\tau \circ \gamma = \gamma - p$, part (3)
+gives $\int_\gamma\alpha_p = \vartheta(2\pi) - \vartheta(0) = \pi - \pi = 0$: the circle does not wind around $p$.
+\end{solution}

@@ -1,0 +1,562 @@
+\chapter{Complex Manifolds}\label{complex-manifolds}
+\chapterstatus{complete}
+
+\section{Introduction}\label{complex-manifolds:section-introduction}
+
+A complex manifold is a manifold with holomorphic transition functions. The rigidity of holomorphic functions makes these spaces
+very different from smooth manifolds: compact complex manifolds have only constant holomorphic functions, and their geometry is
+recorded instead by the cohomology of holomorphic bundles and by the decomposition of differential forms into types, which is the
+subject of Hodge theory. This chapter sets up complex manifolds, meromorphic forms on Riemann surfaces and the residue theorem on a compact Riemann surface (the sum of the residues of a
+meromorphic $1$-form is zero), the uniformisation of Riemann surfaces with its consequences (the hyperbolic metric, Picard's theorem),
+the operators $\partial$ and $\bar\partial$, analytic subvarieties and
+blow-ups. References: \cite[Chapter 0]{griffiths-harris}, \cite[Chapter 2]{huybrechts-complex},
+\cite[Chapter 3]{voisin-hodge-1}.
+
+\noindent\textbf{Prerequisites.} Chapter~\ref{smooth-manifolds} (Smooth Manifolds), Chapter~\ref{several-complex-variables} (Several
+Complex Variables), Chapter~\ref{multilinear-algebra} (Multilinear Algebra) and Chapter~\ref{vector-bundles} (Vector Bundles).
+
+\noindent\textbf{On the way to the Hodge conjecture.} Needed: complex manifolds, meromorphic forms, almost complex structures and forms of type $(p,q)$, and analytic subvarieties and blow-ups.
+Section~\ref{complex-manifolds:section-uniformisation}, on the uniformisation of Riemann surfaces, is not used later and can be skipped.
+
+\section{Complex manifolds}\label{complex-manifolds:section-manifolds}
+
+\begin{definition}\label{complex-manifolds:definition-complex-manifold}
+A \emph{complex manifold} of dimension $n$ is a topological $2n$-manifold with an atlas of charts $\varphi_i \colon U_i \to \CC^n$ whose transition maps are holomorphic; a map of complex manifolds is
+\emph{holomorphic} if it is so in charts, and a \emph{biholomorphism} is a bijective holomorphic map with holomorphic inverse. The sheaf of holomorphic functions is $\mathcal{O}_X$, making $(X, \mathcal{O}_X)$ a
+locally ringed space. Every complex manifold is in particular a smooth $2n$-manifold, canonically oriented by the orientation of $\CC^n$ (transition maps have Jacobian determinant $|\det_\CC|^2 > 0$).
+\end{definition}
+
+\begin{example}\label{complex-manifolds:example-complex-manifolds}
+\begin{enumerate}
+\item Open subsets of $\CC^n$; $\CC\PP^n$ with the charts of Example~\ref{smooth-manifolds:example-manifolds}, whose transition maps are rational and nowhere singular.
+\item A \emph{complex torus} $X = \CC^n/\Lambda$ for a lattice $\Lambda \cong \ZZ^{2n}$; these are compact, and for $n = 1$ they are the elliptic curves. Two complex tori are rarely biholomorphic even when
+they are diffeomorphic, which is the first appearance of moduli (Chapter~\ref{hodge-structures}).
+\item Grassmannians $\mathrm{Gr}(k, n)$ of $k$-planes in $\CC^n$, with charts given by graphs of linear maps; they are compact complex manifolds of dimension $k(n-k)$.
+\item A smooth analytic hypersurface $\{f = 0\} \subseteq \CC\PP^n$, for $f$ a homogeneous polynomial with $df \neq 0$ on the zero set, is a compact complex manifold of dimension $n - 1$, by the implicit
+function theorem (Theorem~\ref{real-analysis:theorem-implicit-function}, valid for holomorphic maps by Remark~\ref{real-analysis:remark-constant-rank}).
+\item Not every even-dimensional smooth manifold admits a complex structure: $S^4$ does not (Exercise~\ref{characteristic-classes:exercise-no-almost-complex}), and whether $S^6$ does is open.
+\end{enumerate}
+\end{example}
+
+\begin{proposition}\label{complex-manifolds:proposition-no-functions}
+A holomorphic function on a compact connected complex manifold is constant. Consequently a compact complex manifold has no nonconstant holomorphic map to $\CC^n$, and $\mathcal{O}_X(X) = \CC$.
+\end{proposition}
+
+\begin{proof}
+$|f|$ attains a maximum at some $p$; in a chart around $p$, the maximum principle
+(Proposition~\ref{several-complex-variables:proposition-identity-maximum}) makes $f$ constant near $p$, and the set where $f$ equals $f(p)$ is open and closed by the identity theorem.
+\end{proof}
+
+\begin{corollary}\label{complex-manifolds:corollary-compact-submanifolds}
+Every compact complex submanifold of $\CC^n$ is a finite set of points. In particular no compact complex manifold of positive dimension, such as $\CC\PP^m$ or a complex torus, embeds holomorphically in $\CC^n$, in contrast with the
+Whitney embedding theorem for smooth manifolds (Theorem~\ref{smooth-manifolds:theorem-whitney}).
+\end{corollary}
+
+\begin{proof}
+The coordinate functions restrict to holomorphic functions on each connected component, which are constant by Proposition~\ref{complex-manifolds:proposition-no-functions}; so each component is a point, and a compact discrete set is
+finite.
+\end{proof}
+
+\begin{theorem}\label{complex-manifolds:theorem-maps-of-tori}
+Let $X = \CC^n/\Lambda$ and $Y = \CC^m/\Lambda'$ be complex tori. Every holomorphic map $f \colon X \to Y$ is induced by an affine map $\CC^n \to \CC^m$, $z \mapsto Az + b$, with $A$ a complex $m \times n$ matrix such that
+$A\Lambda \subseteq \Lambda'$. In particular $f$ is a group homomorphism followed by a translation, and $X \cong Y$ as complex manifolds if and only if $n = m$ and $\Lambda' = A\Lambda$ for some $A \in \GL_n(\CC)$.
+\end{theorem}
+
+\begin{proof}
+The projection $\CC^n \to X$ is a universal covering, as $\CC^n$ is simply connected and $\Lambda$ acts freely and properly (Theorem~\ref{topological-manifolds:theorem-covering-action}). By the lifting criterion
+(Proposition~\ref{homotopy:proposition-lifting-criterion}), $f \circ \pi$ lifts to a continuous map $F \colon \CC^n \to \CC^m$, holomorphic because $\pi'$ is a local biholomorphism. For $\lambda \in \Lambda$, $F(z + \lambda) - F(z) \in \Lambda'$ for all
+$z$, and by continuity and discreteness of $\Lambda'$ it is a constant $c(\lambda)$. Hence each partial derivative $\partial F_j/\partial z_k$ is $\Lambda$-periodic, so it is a holomorphic function on the compact manifold $X$, hence constant
+(Proposition~\ref{complex-manifolds:proposition-no-functions}). So $F(z) = Az + b$, and $A\lambda = c(\lambda) \in \Lambda'$. If $f$ is a biholomorphism, apply this to $f$ and $f^{-1}$: their lifts compose to a lift of the identity, which is
+a translation by an element of $\Lambda$, so $A$ is invertible with $A\Lambda = \Lambda'$ and $n = m$; the converse is clear.
+\end{proof}
+
+\begin{corollary}\label{complex-manifolds:corollary-elliptic-curves}
+Every one-dimensional complex torus is biholomorphic to $E_\tau = \CC/(\ZZ + \ZZ\tau)$ with $\operatorname{Im}\tau > 0$, and $E_\tau \cong E_{\tau'}$ if and only if $\tau' = \frac{a\tau + b}{c\tau + d}$ for some
+$\begin{pmatrix}a & b\\ c & d\end{pmatrix} \in \SL_2(\ZZ)$.
+\end{corollary}
+
+\begin{proof}
+A lattice $\ZZ\omega_1 + \ZZ\omega_2$ is carried by $z \mapsto z/\omega_1$ to $\ZZ + \ZZ\tau$ with $\tau = \omega_2/\omega_1 \notin \RR$, and replacing $\omega_2$ by $-\omega_2$ if necessary, $\operatorname{Im}\tau > 0$. By
+Theorem~\ref{complex-manifolds:theorem-maps-of-tori}, $E_\tau \cong E_{\tau'}$ if and only if $\alpha(\ZZ + \ZZ\tau) = \ZZ + \ZZ\tau'$ for some $\alpha \in \CC^\times$. Then $\alpha\tau = a\tau' + b$ and $\alpha = c\tau' + d$ for an integer matrix,
+invertible over $\ZZ$ because the inverse change of basis is also integral; so $\tau = \frac{a\tau' + b}{c\tau' + d}$, and the determinant is $+1$ because both $\tau$ and $\tau'$ lie in the upper half plane, as
+$\operatorname{Im}\frac{a\tau' + b}{c\tau' + d} = \frac{(ad - bc)\operatorname{Im}\tau'}{|c\tau' + d|^2}$. Conversely such a matrix gives the lattice isomorphism. The relation is symmetric, so $\tau'$ is also of this form in terms of $\tau$.
+\end{proof}
+
+\begin{counterexample}\label{complex-manifolds:counterexample-tori}
+Diffeomorphic complex manifolds need not be biholomorphic: all $E_\tau$ are diffeomorphic to $S^1 \times S^1$, but by Corollary~\ref{complex-manifolds:corollary-elliptic-curves} $E_i \not\cong E_{2i}$, since
+$\frac{ai + b}{ci + d} = 2i$ with integers of determinant $1$ would give, comparing imaginary parts, $|ci + d|^2 = \frac12$, impossible for integers $c$, $d$.
+\end{counterexample}
+
+\begin{proposition}\label{complex-manifolds:proposition-normal-form}
+Let $f \colon X \to Y$ be a nonconstant holomorphic map of connected Riemann surfaces (complex manifolds of dimension $1$), and $p \in X$. There are holomorphic coordinates $z$ centred at $p$ and $w$ centred at $f(p)$ in
+which $f$ is $z \mapsto z^k$ for a unique integer $k = e_p \geq 1$, the \emph{ramification index}. Consequently $f$ is open, its fibres are discrete, and if $X$ is compact and $Y$ connected, then $f$ is surjective and
+has finite fibres.
+\end{proposition}
+
+\begin{proof}
+Choose coordinates $z$ at $p$ and $w$ at $f(p)$ with $z(p) = 0$, $w(f(p)) = 0$. In them $f$ is a holomorphic function of one variable with $f(0) = 0$, not identically zero near $0$ by the identity theorem
+(Theorem~\ref{complex-analysis:theorem-identity}) and connectedness of $X$. So $f(z) = z^kg(z)$ with $k \geq 1$ and $g(0) \neq 0$. On a small disc where $g$ has no zeros, $g'/g$ has a primitive $L$
+(Corollary~\ref{complex-analysis:corollary-primitive-convex}), and $(ge^{-L})' = 0$, so $g = ce^L$ with $c \neq 0$; writing $c = e^{c'}$, the function $h = e^{(L + c')/k}$ satisfies $h^k = g$. The new coordinate
+$\tilde z = zh(z)$ has derivative $h(0) \neq 0$ at $0$, so it is a local biholomorphism (Theorem~\ref{complex-analysis:theorem-open-mapping}, or
+Proposition~\ref{several-complex-variables:proposition-inverse-function}), and $f = \tilde z^k$. The integer $k$ is determined by $f$, as the number of preimages near $p$ of points $w \neq 0$ near $0$. The map
+$z \mapsto z^k$ is open with discrete fibres, so $f$ is. If $X$ is compact, $f(X)$ is compact, hence closed, and open, so $f(X) = Y$ when $Y$ is connected; the fibres are discrete and closed in a compact space, hence
+finite.
+\end{proof}
+
+\begin{proposition}\label{complex-manifolds:proposition-degree}
+Let $f \colon X \to Y$ be a nonconstant holomorphic map of compact connected Riemann surfaces. The number $\deg f = \sum_{p \in f^{-1}(q)}e_p$ does not depend on $q \in Y$. It equals the number of preimages of every
+point $q$ outside the finite set $f(\{p : e_p > 1\})$ of \emph{branch points}.
+\end{proposition}
+
+\begin{proof}
+The ramification points, where $f'$ vanishes in coordinates, are the zeros of a holomorphic function locally, hence discrete, hence finitely many in the compact $X$. Fix $q_0$ with preimages $p_1, \ldots, p_r$
+(Proposition~\ref{complex-manifolds:proposition-normal-form}), and choose disjoint coordinate discs $D_i$ around $p_i$ on which $f$ is $z \mapsto z^{e_i}$ onto a disc $D$ around $q_0$. The set
+$f(X \setminus \bigcup_iD_i)$ is compact and does not contain $q_0$, so there is a neighbourhood $D' \subseteq D$ of $q_0$ avoiding it. For $q \in D' \setminus \{q_0\}$, all preimages of $q$ lie in $\bigcup_iD_i$,
+and in $D_i$ the equation $z^{e_i} = w(q) \neq 0$ has exactly $e_i$ solutions, each with ramification index $1$. So the weighted count equals $\sum_ie_i$ on $D'$. Hence $q \mapsto \deg_q f$ is locally constant, hence
+constant on the connected $Y$.
+\end{proof}
+
+\begin{corollary}\label{complex-manifolds:corollary-maps-to-tori}
+Every holomorphic map from a simply connected compact connected complex manifold, such as $\CC\PP^1$, to a complex torus is constant. In particular $\CC\PP^1$ is not biholomorphic, and admits no nonconstant holomorphic
+map, to an elliptic curve.
+\end{corollary}
+
+\begin{proof}
+Let $f \colon X \to T = \CC^m/\Lambda$. The projection $\CC^m \to T$ is a covering (Theorem~\ref{topological-manifolds:theorem-covering-action}), so by the lifting criterion
+(Proposition~\ref{homotopy:proposition-lifting-criterion}) $f$ lifts to a continuous $F \colon X \to \CC^m$, which is holomorphic because the projection is a local biholomorphism. By
+Proposition~\ref{complex-manifolds:proposition-no-functions} each component of $F$ is constant, so $f$ is constant. The projective line is covered by the two charts $U_0$, $U_1$, each homeomorphic to $\CC$, with
+path-connected intersection $\CC^\times$; by the Seifert--van Kampen theorem (Theorem~\ref{homotopy:theorem-van-kampen}) $\pi_1(\CC\PP^1)$ is a quotient of the free product of two trivial groups, hence trivial.
+\end{proof}
+
+\section{Meromorphic forms and the residue theorem}\label{complex-manifolds:section-residues}
+
+On a compact Riemann surface, Stokes' theorem turns the residue theorem of complex analysis into a global constraint: the residues of a meromorphic $1$-form add up to zero. This is
+the simplest case of the \emph{global residue theorem} \cite[Chapter 5]{griffiths-harris}, and it has quick consequences: a meromorphic function has as many zeros as poles, a complex torus
+carries no meromorphic function with a single simple pole, and the roots of a polynomial satisfy identities that are not obvious from the polynomial.
+
+\begin{definition}\label{complex-manifolds:definition-meromorphic-form}
+Let $X$ be a Riemann surface. A \emph{meromorphic $1$-form} $\omega$ on $X$ is given in every holomorphic chart $z$ by an expression $f(z)\,dz$ with $f$ meromorphic
+(Definition~\ref{complex-analysis:definition-singularity}), such that for two charts $z$ and $w$ the expressions $f(z)\,dz$ and $g(w)\,dw$ agree: $g(w) = f(z(w))\,z^{\prime}(w)$. It is
+\emph{holomorphic} if all the $f$ are. The \emph{order} $\operatorname{ord}_p\omega$ is $\operatorname{ord}_0f$ in a chart centred at $p$, and the \emph{residue} $\operatorname{Res}_p\omega$ is the
+residue at $0$ of $f$, that is, the coefficient of $z^{-1}$ in its Laurent expansion.
+\end{definition}
+
+Since $z^{\prime}(w)$ does not vanish, the order does not depend on the chart; the residue does not either, by the lemma below. For a meromorphic function $h$, $dh = h^{\prime}(z)\,dz$ is a
+meromorphic $1$-form, and so is $dh/h$ if $h \not\equiv 0$. On $\CC\PP^1$, with the charts $z$ and $w = 1/z$, the form $dz$ becomes $dz = -dw/w^2$: it has a pole of order $2$ at $\infty$ and residue $0$
+there, while $dz/z = -dw/w$ has residue $1$ at $0$ and $-1$ at $\infty$.
+
+Away from its poles, a meromorphic $1$-form is a smooth complex-valued $1$-form, $\omega = \alpha + i\beta$ with real $1$-forms $\alpha$ and $\beta$, and line integrals and integrals over manifolds
+of such forms are taken componentwise. It is \emph{closed}: in a chart, with $f$ holomorphic, the Cauchy--Riemann equations (Proposition~\ref{complex-analysis:proposition-cauchy-riemann}) give
+$\partial_xf = f^{\prime}$ and $\partial_yf = if^{\prime}$, so $df = f^{\prime}\,(dx + i\,dy) = f^{\prime}\,dz$ and $d(f\,dz) = df \wedge dz = f^{\prime}\,dz \wedge dz = 0$. Holomorphic charts preserve the orientation (the
+Jacobian determinant of a holomorphic map is $|f^{\prime}|^2 \geq 0$), so a Riemann surface is canonically oriented, and the boundary of a coordinate disc is traversed counterclockwise in the chart.
+
+\begin{lemma}\label{complex-manifolds:lemma-residue-integral}
+Let $\omega$ be a meromorphic $1$-form on a Riemann surface $X$ and $p \in X$. For every closed coordinate disc $D$ around $p$ (the preimage of a closed disc under a holomorphic chart) whose only
+possible pole is $p$,
+\[
+\operatorname{Res}_p\omega = \frac{1}{2\pi i}\int_{\partial D}\omega .
+\]
+In particular $\operatorname{Res}_p\omega$ does not depend on the chart.
+\end{lemma}
+
+\begin{proof}
+If $D = \{|z| \leq r\}$ in a chart $z$ centred at $p$ with $\omega = f\,dz$, the line integral of $\omega$ over $\partial D$ is the complex path integral $\int_{|z| = r}f(z)\,dz$, which is
+$2\pi i\operatorname{Res}_0f$ by the residue theorem (Theorem~\ref{complex-analysis:theorem-residues}). Now let $D^{\prime}$ be a closed coordinate disc around $p$ for another chart, with no pole other than
+$p$. For $r$ small the disc $D_r = \{|z| \leq r\}$ lies in the interior of $D^{\prime}$, and $D^{\prime}$ minus the interior of $D_r$ is a compact manifold with boundary $\partial D^{\prime} \cup \partial D_r$, the
+second circle with the opposite orientation. As $\omega$ is closed there, Stokes' theorem (Theorem~\ref{differential-forms:theorem-stokes}) gives $\int_{\partial D^{\prime}}\omega = \int_{\partial D_r}\omega$.
+\end{proof}
+
+\begin{theorem}[Residue theorem on a compact Riemann surface]\label{complex-manifolds:theorem-global-residue}
+Let $X$ be a compact Riemann surface and $\omega$ a meromorphic $1$-form on $X$. Then $\omega$ has finitely many poles, and
+\[
+\sum_{p \in X}\operatorname{Res}_p\omega = 0 .
+\]
+\end{theorem}
+
+\begin{proof}
+In a chart the poles of a meromorphic function are isolated, so the poles of $\omega$ form a discrete closed subset of the compact $X$, hence a finite set $\{p_1, \ldots, p_k\}$. Choose pairwise
+disjoint closed coordinate discs $D_j$ around the $p_j$. Then $X^{\prime} = X \setminus \bigcup_j\mathrm{int}\,D_j$ is a compact manifold with boundary $\bigcup_j\partial D_j$, each circle with the
+orientation opposite to its orientation as the boundary of $D_j$, and $\omega$ is a closed form on $X^{\prime}$. By Stokes' theorem and Lemma~\ref{complex-manifolds:lemma-residue-integral},
+\[
+0 = \int_{X^{\prime}}d\omega = \int_{\partial X^{\prime}}\omega = -\sum_{j=1}^k\int_{\partial D_j}\omega = -2\pi i\sum_{j=1}^k\operatorname{Res}_{p_j}\omega,
+\]
+which is the claim.
+\end{proof}
+
+The proof is the same as that of the residue theorem in the plane, with one difference: on a compact surface there is no ``outside'', so the integral over the boundary of the complement of the
+discs is not the integral over a large circle but zero. For $X = \CC\PP^1$ the point $\infty$ plays the role of the outside: the theorem says that the sum of the residues of a rational form in $\CC$
+equals minus its residue at $\infty$.
+
+\begin{corollary}\label{complex-manifolds:corollary-zeros-poles}
+Let $f$ be a nonconstant meromorphic function on a compact connected Riemann surface $X$. Then $\sum_p\operatorname{ord}_pf = 0$: $f$ has as many zeros as poles, counted with multiplicity. Hence $f$
+takes every value $c \in \CC$ the same number of times, counted with multiplicity, namely the number of its poles.
+\end{corollary}
+
+\begin{proof}
+At a point $p$, in a chart centred at $p$, write $f = z^kg$ with $k = \operatorname{ord}_pf$ and $g$ holomorphic and nonvanishing near $0$. Then $df/f = k\,dz/z + dg/g$, and $dg/g$ is holomorphic near $0$,
+so $\operatorname{Res}_p(df/f) = \operatorname{ord}_pf$. Since $f$ is not identically zero (it is nonconstant on the connected $X$, so not zero on any open set by the identity theorem), $df/f$ is a meromorphic
+$1$-form, and Theorem~\ref{complex-manifolds:theorem-global-residue} gives $\sum_p\operatorname{ord}_pf = 0$. Apply this to $f - c$, which has the same poles as $f$.
+\end{proof}
+
+This is also Proposition~\ref{complex-manifolds:proposition-degree} applied to $f$ regarded as a holomorphic map to $\CC\PP^1$; the residue theorem gives it without the local analysis of that proof.
+
+\begin{corollary}\label{complex-manifolds:corollary-no-single-pole}
+Let $X$ be a compact Riemann surface with a holomorphic $1$-form $\eta$ that does not vanish at $p \in X$. Then no meromorphic function on $X$ is holomorphic on $X \setminus \{p\}$ with a simple pole at $p$.
+In particular a meromorphic function on a complex torus $\CC/\Lambda$ that is not constant has at least two poles, counted with multiplicity.
+\end{corollary}
+
+\begin{proof}
+Suppose $f$ were such a function. In a chart centred at $p$, $f = c/z + (\text{holomorphic})$ with $c \neq 0$ and $\eta = h(z)\,dz$ with $h(0) \neq 0$. Then $f\eta$ is holomorphic except at $p$, where
+$\operatorname{Res}_p(f\eta) = c\,h(0) \neq 0$, contradicting Theorem~\ref{complex-manifolds:theorem-global-residue}. On $\CC/\Lambda$ the form $dz$ is invariant under the translations by $\Lambda$, so it
+descends to a holomorphic $1$-form without zeros. A nonconstant meromorphic function has a pole, since otherwise it would be a holomorphic function on a compact connected manifold, hence constant
+(Proposition~\ref{complex-manifolds:proposition-no-functions}); and a single simple pole is excluded by the first part, applied at that pole.
+\end{proof}
+
+On $\CC\PP^1$ the function $z$ has a single simple pole, at $\infty$, so by the corollary $\CC\PP^1$ has no holomorphic $1$-form that is nonzero at $\infty$. In fact it has no nonzero holomorphic
+$1$-form at all: such a form is $f(z)\,dz$ with $f$ entire, and $f(z)\,dz = -f(1/w)w^{-2}\,dw$ is holomorphic at $w = 0$ only if $f(z) = O(|z|^{-2})$ as $z \to \infty$; then $f$ is bounded, hence
+constant by Liouville's theorem, hence $0$.
+
+\begin{corollary}[Euler--Jacobi formula in one variable]\label{complex-manifolds:corollary-euler-jacobi}
+Let $f \in \CC[z]$ have degree $d \geq 2$ and distinct roots $r_1, \ldots, r_d$, and let $g \in \CC[z]$ have degree at most $d - 2$. Then
+\[
+\sum_{i=1}^d\frac{g(r_i)}{f^{\prime}(r_i)} = 0 .
+\]
+\end{corollary}
+
+\begin{proof}
+Apply Theorem~\ref{complex-manifolds:theorem-global-residue} to $\omega = g(z)\,dz/f(z)$ on $\CC\PP^1$. In $\CC$ its poles are the roots of $f$, which are simple since $f^{\prime}(r_i) \neq 0$, and there
+$\operatorname{Res}_{r_i}\omega = \lim_{z \to r_i}(z - r_i)g(z)/f(z) = g(r_i)/f^{\prime}(r_i)$. At $\infty$, with $w = 1/z$, write $g(1/w) = w^{-e}G(w)$ and $f(1/w) = w^{-d}F(w)$ with polynomials $F$, $G$,
+where $e = \deg g$ and $F(0) \neq 0$ is the leading coefficient of $f$. Then $\omega = -w^{d-e-2}\frac{G(w)}{F(w)}\,dw$, which is holomorphic at $w = 0$ because $d - e - 2 \geq 0$ (if $g = 0$ there is nothing to prove).
+So the residues at the roots add up to zero.
+\end{proof}
+
+For example, for $f = z^3 - 1$ the roots are the cube roots of unity $\zeta$, with $f^{\prime}(\zeta) = 3\zeta^2$, and the formula with $g = 1$ and $g = z$ says $\sum_\zeta\zeta^{-2} = 0$ and $\sum_\zeta\zeta^{-1} = 0$;
+for $g = z^2$, which has degree $d - 1$, the residue at $\infty$ is $-1$ and indeed $\sum_\zeta\frac{\zeta^2}{3\zeta^2} = 1$. For $f = z^2 - 1$ and $g = 1$: $\frac{1}{2} + \frac{1}{-2} = 0$.
+
+In higher dimension the residue of a meromorphic $n$-form is attached to a point where $n$ divisors meet: if near $P$ the divisors are $\{f_1 = 0\}, \ldots, \{f_n = 0\}$, meeting only at $P$, and
+$\omega = g\,dz_1 \wedge \cdots \wedge dz_n/(f_1 \cdots f_n)$ with $g$ holomorphic, the residue is
+$\operatorname{Res}_P\omega = \frac{1}{(2\pi i)^n}\int_\Gamma\omega$ over the real $n$-cycle $\Gamma = \{|f_1| = \cdots = |f_n| = \varepsilon\}$, suitably oriented.
+
+\begin{theorem}[Global residue theorem]\label{complex-manifolds:theorem-global-residue-higher}
+Let $M$ be a compact complex manifold of dimension $n$, $D_1, \ldots, D_n$ effective divisors whose intersection is a finite set of points, and $\omega$ a meromorphic $n$-form on $M$ whose poles are
+contained in $D_1 \cup \cdots \cup D_n$, of order at most one along each $D_i$ (that is, $\omega$ is a holomorphic section of $\Omega^n_M(D_1 + \cdots + D_n)$). Then
+$\sum_{P \in D_1 \cap \cdots \cap D_n}\operatorname{Res}_P\omega = 0$.
+\end{theorem}
+
+This is \cite[Chapter 5]{griffiths-harris}. For $n = 1$ and $D_1$ the polar divisor it is Theorem~\ref{complex-manifolds:theorem-global-residue} for forms with simple poles. As there, the proof rests on
+Stokes' theorem, now applied on the complement of tubes around the divisors, together with a local analysis of the residue. Griffiths and Harris use it to prove the Cayley--Bacharach theorem: if two plane
+cubic curves meet in nine distinct points, every cubic through eight of them passes through the ninth.
+
+\section{Uniformisation of Riemann surfaces}\label{complex-manifolds:section-uniformisation}
+
+A \emph{Riemann surface} is a connected complex manifold of dimension $1$. The uniformisation theorem reduces the study of all Riemann surfaces to three simply connected
+ones, the sphere, the plane and the disc, and to groups of automorphisms acting on them. Combined with the hyperbolic metric of the disc it shows that most Riemann surfaces,
+among them all compact ones of genus at least $2$, carry a natural metric of constant curvature $-1$; and it gives a short proof of Picard's theorem. Throughout,
+$\mathbb{D} = \{|z| < 1\}$ and $\mathrm{Aut}(X)$ is the group of biholomorphisms of $X$ to itself.
+
+\begin{lemma}\label{complex-manifolds:lemma-coverings}
+Let $X$ be a Riemann surface.
+\begin{enumerate}
+\item If $p \colon Y \to X$ is a covering map with $Y$ connected, then $Y$ has a unique structure of Riemann surface for which $p$ is a local biholomorphism, and the deck
+transformations are biholomorphisms.
+\item If a group $\Gamma$ acts on $X$ freely and properly by biholomorphisms, then $X/\Gamma$ has a unique structure of Riemann surface for which $X \to X/\Gamma$ is a local
+biholomorphism, and a map $f \colon X/\Gamma \to Z$ to a Riemann surface is holomorphic if and only if its composite with the projection is.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+These are the proofs of Theorem~\ref{smooth-manifolds:theorem-smooth-quotient} and Example~\ref{smooth-manifolds:example-smooth-quotients}, with ``holomorphic'' in place of
+``smooth'': the charts of $Y$ (of $X/\Gamma$) are the charts of $X$ composed with $p$ on sheets over evenly covered chart domains (with local inverses of the projection), and their
+transition maps are transition maps of $X$, composed with the biholomorphisms of $\Gamma$ in the case of $X/\Gamma$. Topologically, $Y$ is a surface by
+Proposition~\ref{topological-manifolds:proposition-constructions}(4), and $X/\Gamma$ one by (3). A deck transformation $\tau$ satisfies $p \circ \tau = p$, so in these charts it is
+the identity map of coordinates.
+\end{proof}
+
+In particular the universal covering $\widetilde{X}$ of a Riemann surface (Theorem~\ref{homotopy:theorem-universal-cover}) is a simply connected Riemann surface, $\pi_1(X)$ acts
+on it freely and properly by biholomorphisms as the deck group (Proposition~\ref{homotopy:proposition-deck}), and $X \cong \widetilde{X}/\pi_1(X)$.
+
+\begin{theorem}[Uniformisation theorem]\label{complex-manifolds:theorem-uniformisation}
+Every simply connected Riemann surface is biholomorphic to exactly one of $\CC\PP^1$, $\CC$ and $\mathbb{D}$.
+\end{theorem}
+
+This is due to Koebe and Poincar\'e (1907); see \cite{forster-riemann-surfaces}. The three surfaces are pairwise non-biholomorphic: $\CC\PP^1$ is compact and the others are not,
+and a biholomorphism $\CC \to \mathbb{D}$ would be a bounded nonconstant entire function (Exercise~\ref{complex-analysis:exercise-disc-not-plane}). For open subsets of $\CC$ the
+theorem is the Riemann mapping theorem (Theorem~\ref{complex-analysis:theorem-riemann-mapping}); the general case constructs the biholomorphism from Green's functions, using
+Perron's method to solve the Dirichlet problem on the surface.
+
+\begin{lemma}\label{complex-manifolds:lemma-automorphisms}
+\begin{enumerate}
+\item $\mathrm{Aut}(\CC\PP^1)$ consists of the M\"obius maps $z \mapsto (az + b)/(cz + d)$, $ad - bc \neq 0$, and each of them has a fixed point.
+\item $\mathrm{Aut}(\CC)$ consists of the maps $z \mapsto az + b$, $a \neq 0$; those without fixed points are the translations $z \mapsto z + b$, $b \neq 0$.
+\item $\mathrm{Aut}(\mathbb{D})$ consists of the maps $z \mapsto \lambda(z - a)/(1 - \bar az)$ with $|\lambda| = 1$ and $a \in \mathbb{D}$, and acts transitively on $\mathbb{D}$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(2) is Exercise~\ref{complex-analysis:exercise-automorphisms-plane}, and $az + b = z$ has the solution $b/(1 - a)$ when $a \neq 1$. (3) is
+Proposition~\ref{complex-analysis:proposition-disc-automorphisms}; the map $\phi_{-a}$ sends $0$ to $a$. (1) A M\"obius map is holomorphic in the charts of $\CC\PP^1$, with the
+M\"obius inverse $z \mapsto (dz - b)/(-cz + a)$, so it is an automorphism, and the M\"obius maps act transitively ($z \mapsto z + b$ and $z \mapsto 1/z$ move any point to any
+other). Given $f \in \mathrm{Aut}(\CC\PP^1)$, choose a M\"obius $m$ with $m(f(\infty)) = \infty$; then $m \circ f$ restricts to an automorphism of $\CC = \CC\PP^1 \setminus \{\infty\}$,
+hence is $z \mapsto az + b$ by (2), and $f = m^{-1} \circ (m \circ f)$ is M\"obius. If $c = 0$, $\infty$ is a fixed point; if $c \neq 0$, the equation $cz^2 + (d - a)z - b = 0$ has a
+root $z_0 \in \CC$ (Corollary~\ref{complex-analysis:corollary-liouville}(2)), and $cz_0 + d \neq 0$, since at $z_0 = -d/c$ the left side is $(ad - bc)/c \neq 0$; so $z_0$ is a fixed point.
+\end{proof}
+
+\begin{proposition}[The Poincar\'e metric]\label{complex-manifolds:proposition-poincare-metric}
+Let $g_{\mathbb{D}} = 4|dz|^2/(1 - |z|^2)^2$ on $\mathbb{D}$, that is $4(dx^2 + dy^2)/(1 - x^2 - y^2)^2$.
+\begin{enumerate}
+\item (Schwarz--Pick) For every holomorphic $f \colon \mathbb{D} \to \mathbb{D}$,
+\[
+\frac{|f^{\prime}(z)|}{1 - |f(z)|^2} \leq \frac1{1 - |z|^2},
+\]
+that is, $f^*g_{\mathbb{D}} \leq g_{\mathbb{D}}$: holomorphic self-maps of the disc do not increase lengths of curves, hence distances.
+\item Every automorphism of $\mathbb{D}$ is an isometry of $g_{\mathbb{D}}$.
+\item $g_{\mathbb{D}}$ is complete, with constant curvature $-1$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) Fix $a \in \mathbb{D}$, let $b = f(a)$ and $\phi_a(z) = (z - a)/(1 - \bar az)$. A computation gives $\phi_a^{\prime}(z) = (1 - |a|^2)/(1 - \bar az)^2$, so
+$\phi_{-a}^{\prime}(0) = 1 - |a|^2$ and $\phi_b^{\prime}(b) = 1/(1 - |b|^2)$. The map $h = \phi_b \circ f \circ \phi_{-a}$ sends $\mathbb{D}$ to $\mathbb{D}$ and $0$ to $0$, so
+$|h^{\prime}(0)| \leq 1$ by Schwarz's lemma (Lemma~\ref{complex-analysis:lemma-schwarz}), and by the chain rule $h^{\prime}(0) = f^{\prime}(a)(1 - |a|^2)/(1 - |b|^2)$. At a point
+$z$, $f^*g_{\mathbb{D}}$ is $4|f^{\prime}(z)|^2|dz|^2/(1 - |f(z)|^2)^2$, so the inequality says $f^*g_{\mathbb{D}} \leq g_{\mathbb{D}}$, and lengths of curves decrease.
+
+(2) Apply (1) to an automorphism and to its inverse: $f^*g_{\mathbb{D}} \leq g_{\mathbb{D}}$ and $g_{\mathbb{D}} = (f^{-1})^*f^*g_{\mathbb{D}}$ force equality.
+
+(3) The curvature is $-1$ by Proposition~\ref{riemannian-geometry:proposition-conformal-curvature} (Example~\ref{riemannian-geometry:example-conformal-metrics}(2)). For
+completeness, choose $\varepsilon > 0$ such that $\exp_0$ is defined on the ball of radius $\varepsilon$ in $T_0\mathbb{D}$. Since $\mathrm{Aut}(\mathbb{D})$ acts transitively
+by isometries, and isometries map geodesics to geodesics, the same $\varepsilon$ works at every point: every geodesic of unit speed is defined on an interval of length
+$\varepsilon$ around each of its times. So a maximal unit speed geodesic defined on $[0, T)$ with $T < \infty$ could be continued beyond $T$ from its point at time
+$T - \varepsilon/2$, a contradiction. Geodesics are defined for all time, and $g_{\mathbb{D}}$ is complete by Theorem~\ref{riemannian-geometry:theorem-hopf-rinow}.
+\end{proof}
+
+\begin{theorem}\label{complex-manifolds:theorem-riemann-surfaces-classification}
+Every Riemann surface $X$ is biholomorphic to $\widetilde{X}/\Gamma$, where $\widetilde{X} \in \{\CC\PP^1, \CC, \mathbb{D}\}$ is its universal covering and $\Gamma \cong \pi_1(X)$ is
+a group of automorphisms of $\widetilde{X}$ acting freely and properly. Moreover:
+\begin{enumerate}
+\item $\widetilde{X} = \CC\PP^1$ if and only if $X \cong \CC\PP^1$;
+\item $\widetilde{X} = \CC$ if and only if $X$ is biholomorphic to $\CC$, to $\CC^\times$ or to a complex torus $\CC/\Lambda$;
+\item in all other cases $\widetilde{X} = \mathbb{D}$, and $X$ carries a unique complete metric of constant curvature $-1$ for which the projection $\mathbb{D} \to X$ is a local
+isometry; in holomorphic coordinates it has the form $\lambda(z)|dz|^2$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+The first statement is Theorem~\ref{complex-manifolds:theorem-uniformisation} and the remark after Lemma~\ref{complex-manifolds:lemma-coverings}. (1) By
+Lemma~\ref{complex-manifolds:lemma-automorphisms}(1) every automorphism of $\CC\PP^1$ has a fixed point, so a group acting freely on it is trivial. (2) By
+Lemma~\ref{complex-manifolds:lemma-automorphisms}(2), $\Gamma$ consists of translations $z \mapsto z + \lambda$, and $\Lambda = \{\lambda\}$ is a subgroup of $\CC = \RR^2$. It is
+discrete: it is the orbit of $0$, which is a fibre of the covering $\CC \to X$. By Lemma~\ref{lie-groups:lemma-discrete-subgroups}, $\Lambda$ is $0$, $\ZZ\omega$ with
+$\omega \neq 0$, or a lattice. In the first case $X \cong \CC$; in the second, $z \mapsto e^{2\pi iz/\omega}$ is a covering $\CC \to \CC^\times$ whose fibres are the cosets of
+$\ZZ\omega$, so it induces a bijective local biholomorphism $\CC/\ZZ\omega \to \CC^\times$; in the third $X$ is a complex torus. Conversely these surfaces have universal covering
+$\CC$. (3) The group $\Gamma \subseteq \mathrm{Aut}(\mathbb{D})$ acts by isometries of $g_{\mathbb{D}}$ (Proposition~\ref{complex-manifolds:proposition-poincare-metric}), so
+$g_{\mathbb{D}}$ descends to a metric on $X$ making the projection a local isometry (Proposition~\ref{riemannian-geometry:proposition-quotient-metric}), of curvature $-1$; it is
+complete because geodesics of $X$ lift to geodesics of the complete $\mathbb{D}$ (as in the proof of Theorem~\ref{riemannian-geometry:theorem-bonnet-myers}), and in the
+holomorphic coordinates given by local inverses of the projection it is $4|dz|^2/(1 - |z|^2)^2$. It is unique because the projection is a local diffeomorphism, so the metric on
+$X$ is determined by its pullback $g_{\mathbb{D}}$.
+\end{proof}
+
+\begin{corollary}\label{complex-manifolds:corollary-compact-uniformisation}
+Let $X$ be a compact Riemann surface of genus $g$ (Theorem~\ref{topological-manifolds:theorem-classification-surfaces}; $X$ is orientable). If $g = 0$ then $X \cong \CC\PP^1$; if
+$g = 1$ then $X$ is a complex torus $\CC/\Lambda$; and if $g \geq 2$ then $X \cong \mathbb{D}/\Gamma$, and $X$ carries a metric of constant curvature $-1$, compatible with its
+complex structure, with area $4\pi(g - 1)$.
+\end{corollary}
+
+\begin{proof}
+If $g = 0$, $X$ is simply connected (Corollary~\ref{homotopy:corollary-spheres}), so $X$ is its own universal covering, compact, hence $\CC\PP^1$. If $g \geq 1$, $\pi_1(X)$ is
+nontrivial, as its abelianisation $H_1(X; \ZZ)$ (Theorem~\ref{singular-homology:theorem-hurewicz}) is $\ZZ^{2g}$
+(Example~\ref{singular-homology:example-cellular-computations}), so $\widetilde{X} \neq \CC\PP^1$ by
+Theorem~\ref{complex-manifolds:theorem-riemann-surfaces-classification}(1). If $\widetilde{X} = \mathbb{D}$, the metric of curvature $-1$ has area $A$ with $-A = 2\pi(2 - 2g)$ by
+the Gauss--Bonnet theorem (Theorem~\ref{riemannian-geometry:theorem-gauss-bonnet}), so $A = 4\pi(g - 1)$ and $g \geq 2$. If $\widetilde{X} = \CC$, then $X$ is compact among
+$\CC$, $\CC^\times$ and the tori, so it is a torus, of genus $1$. Hence $g = 1$ forces $\widetilde{X} = \CC$ and $g \geq 2$ forces $\widetilde{X} = \mathbb{D}$.
+\end{proof}
+
+\begin{corollary}[Little Picard theorem]\label{complex-manifolds:corollary-picard}
+A nonconstant entire function takes every complex value with at most one exception.
+\end{corollary}
+
+\begin{proof}
+Suppose the entire function $f$ omits two values; composing with an affine map we may assume they are $0$ and $1$, so $f \colon \CC \to X = \CC \setminus \{0, 1\}$. The fundamental
+group of $X$ is not abelian: $X = U \cup V$ with $U = \{\operatorname{Re}z < \frac34\} \setminus \{0\}$ and $V = \{\operatorname{Re}z > \frac14\} \setminus \{1\}$, where
+$U \cap V$ is a convex strip, hence simply connected, and $U$, $V$ deformation retract onto the circles of radius $\frac14$ around $0$ and $1$ (radially, along segments
+that stay in the convex half planes), so $\pi_1(U) \cong \pi_1(V) \cong \ZZ$ (Lemma~\ref{homotopy:lemma-deformation-retract} and Theorem~\ref{homotopy:theorem-circle}) and
+$\pi_1(X) \cong \ZZ * \ZZ$ by Corollary~\ref{homotopy:corollary-spheres}, a non-abelian group (Example~\ref{homotopy:example-wedge}). Since $X$ is not compact and $\pi_1(X)$ is not abelian, while
+$\CC$, $\CC^\times$ and the tori have abelian fundamental groups $0$, $\ZZ$ and $\ZZ^2$, Theorem~\ref{complex-manifolds:theorem-riemann-surfaces-classification} gives a covering
+map $p \colon \mathbb{D} \to X$ that is a local biholomorphism. As $\CC$ is simply connected, $f$ lifts to a continuous $\tilde f \colon \CC \to \mathbb{D}$ with $p \circ \tilde f = f$
+(Proposition~\ref{homotopy:proposition-lifting-criterion}), which is holomorphic, being locally a local inverse of $p$ composed with $f$. Then $\tilde f$ is a bounded entire function,
+hence constant (Corollary~\ref{complex-analysis:corollary-liouville}), and so is $f$.
+\end{proof}
+
+\begin{remark}\label{complex-manifolds:remark-uniformisation-metrics}
+For compact surfaces the three cases match the sign of the Euler characteristic: $\CC\PP^1$ carries the round metric of curvature $1$ (Example~\ref{riemannian-geometry:example-conformal-metrics}(3)),
+complex tori the flat metric $|dz|^2$, and surfaces of genus $g \geq 2$ the hyperbolic metric, all compatible with the complex structure; the sign of the curvature is forced by the
+Gauss--Bonnet theorem. Schwarz--Pick also shows that the hyperbolic metric is intrinsic: a holomorphic map $f \colon X \to Y$ between Riemann surfaces covered by the disc
+lifts to a holomorphic map $\mathbb{D} \to \mathbb{D}$ of the universal coverings (Proposition~\ref{homotopy:proposition-lifting-criterion}), so it does not increase the lengths of
+curves for the hyperbolic metrics of Theorem~\ref{complex-manifolds:theorem-riemann-surfaces-classification}(3).
+\end{remark}
+
+\section{Almost complex structures and forms of type $(p,q)$}\label{complex-manifolds:section-pq}
+
+\begin{definition}\label{complex-manifolds:definition-almost-complex}
+An \emph{almost complex structure} on a smooth manifold $M$ is an endomorphism $J$ of $TM$ with $J^2 = -\id$. It makes each $T_pM$ a complex vector space, and gives the decomposition
+$T_pM \otimes \CC = T^{1,0}_p \oplus T^{0,1}_p$ into the $\pm i$ eigenspaces, with $T^{0,1} = \overline{T^{1,0}}$, and dually
+$\Lambda^k T^*_pM \otimes \CC = \bigoplus_{p+q=k}\Lambda^{p,q}$ (Proposition~\ref{multilinear-algebra:proposition-pq-decomposition}). A complex manifold has a canonical almost complex structure, given in
+holomorphic coordinates $z^j = x^j + iy^j$ by $J\partial_{x^j} = \partial_{y^j}$, $J\partial_{y^j} = -\partial_{x^j}$; then $T^{1,0}$ has frame $\partial/\partial z^j$ and $\Lambda^{p,q}$ has frame
+$dz^I \wedge d\bar z^J$ with $|I| = p$, $|J| = q$. An almost complex structure is \emph{integrable} if it arises from a complex structure.
+\end{definition}
+
+\begin{definition}\label{complex-manifolds:definition-dbar}
+On a complex manifold, $\Omega^{p,q}(X)$ denotes the smooth $(p,q)$-forms, so $\Omega^k(X, \CC) = \bigoplus_{p+q=k}\Omega^{p,q}(X)$. Writing $d = \partial + \bar\partial$ with
+$\partial \colon \Omega^{p,q} \to \Omega^{p+1,q}$ and $\bar\partial \colon \Omega^{p,q} \to \Omega^{p,q+1}$ the components of $d$, one has in coordinates
+\[
+\partial\left(\sum f_{IJ}\,dz^I \wedge d\bar z^J\right) = \sum\frac{\partial f_{IJ}}{\partial z^k}\,dz^k \wedge dz^I \wedge d\bar z^J, \qquad
+\bar\partial\left(\sum f_{IJ}\,dz^I \wedge d\bar z^J\right) = \sum\frac{\partial f_{IJ}}{\partial\bar z^k}\,d\bar z^k \wedge dz^I \wedge d\bar z^J .
+\]
+\end{definition}
+
+\begin{proposition}\label{complex-manifolds:proposition-dbar}
+On a complex manifold $d = \partial + \bar\partial$, and $\partial^2 = \bar\partial^2 = \partial\bar\partial + \bar\partial\partial = 0$. A function is holomorphic if and only if $\bar\partial f = 0$, and a $(p, 0)$-form
+$\alpha$ is \emph{holomorphic} (has holomorphic coefficients) if and only if $\bar\partial\alpha = 0$; the sheaf of holomorphic $p$-forms is denoted $\Omega^p_X$, with $\Omega^0_X = \mathcal{O}_X$ and
+$\Omega^n_X = K_X$ the \emph{canonical bundle}.
+\end{proposition}
+
+\begin{proof}
+In holomorphic coordinates $d$ of a $(p,q)$-form has components of types $(p+1, q)$ and $(p, q+1)$ only, by the coordinate formula for $d$; these are $\partial$ and $\bar\partial$. Then $0 = d^2$ decomposes into
+its components of types $(p+2, q)$, $(p+1, q+1)$ and $(p, q+2)$, which are $\partial^2$, $\partial\bar\partial + \bar\partial\partial$ and $\bar\partial^2$. The statement about functions is the Cauchy--Riemann
+equations (Definition~\ref{several-complex-variables:definition-holomorphic}), and for forms it is the same condition on the coefficients.
+\end{proof}
+
+\begin{theorem}[Newlander--Nirenberg]\label{complex-manifolds:theorem-newlander-nirenberg}
+An almost complex structure $J$ on a smooth manifold is integrable if and only if the \emph{Nijenhuis tensor} vanishes,
+\[
+N_J(X, Y) = [JX, JY] - J[JX, Y] - J[X, JY] - [X, Y] = 0,
+\]
+equivalently if and only if $T^{0,1}$ is closed under the Lie bracket, equivalently if and only if $d = \partial + \bar\partial$ on $1$-forms with respect to the induced type decomposition.
+\end{theorem}
+
+The implication ``integrable $\Rightarrow$ $N_J = 0$'' is a computation in holomorphic coordinates, where the brackets of the coordinate fields vanish; the converse is a hard analytic theorem, proved in
+\cite[Chapter 2]{huybrechts-complex} and, in the real-analytic case, by the Frobenius theorem (Theorem~\ref{smooth-manifolds:theorem-frobenius}) applied to $T^{0,1}$ after complexification.
+
+\begin{proposition}\label{complex-manifolds:proposition-surfaces-almost-complex}
+Every almost complex structure on a manifold of real dimension $2$ has vanishing Nijenhuis tensor. Consequently, by Theorem~\ref{complex-manifolds:theorem-newlander-nirenberg}, every oriented surface with a Riemannian metric is a Riemann
+surface, with $J$ the rotation by $\pi/2$ in each tangent plane.
+\end{proposition}
+
+\begin{proof}
+$N_J$ is antisymmetric and $C^\infty$-bilinear, so it suffices to evaluate it on $X$ and $JX$ for a local nowhere vanishing field $X$, which together with $JX$ form a frame. Using $J^2 = -1$,
+$N_J(X, JX) = [JX, -X] - J[JX, JX] - J[X, -X] - [X, JX] = [X, JX] - [X, JX] = 0$. On an oriented surface with a metric, rotation by $\pi/2$ in the positive sense is a smooth endomorphism with $J^2 = -1$.
+\end{proof}
+
+\section{Analytic subvarieties and blow-ups}\label{complex-manifolds:section-subvarieties}
+
+\begin{definition}\label{complex-manifolds:definition-analytic-subvariety}
+An \emph{analytic subvariety} of a complex manifold $X$ is a closed subset that is locally the common zero set of finitely many holomorphic functions (Definition~\ref{several-complex-variables:definition-analytic-set});
+it is \emph{smooth}, that is, a complex submanifold, at its regular points. By Theorem~\ref{several-complex-variables:theorem-analytic-structure} the singular locus is a proper analytic subvariety, the regular
+locus is dense, and $Z$ has a well-defined dimension on each irreducible component.
+\end{definition}
+
+\begin{proposition}\label{complex-manifolds:proposition-subvariety-class}
+Let $Z \subseteq X$ be an analytic subvariety of pure complex dimension $k$ in a compact complex manifold of dimension $n$. Then integration over the regular locus,
+$\varphi \mapsto \int_{Z_{\mathrm{reg}}}\varphi$, converges for every smooth $2k$-form $\varphi$ and defines a closed current of degree $2n - 2k$; its class in $H^{2n-2k}(X; \RR)$ is the \emph{cycle class} $[Z]$.
+Moreover $\int_Z\varphi \geq 0$ when $\varphi$ is a positive $(k,k)$-form.
+\end{proposition}
+
+\begin{proof}[Sketch of proof]
+Convergence follows from the local structure of analytic sets: near a regular point $Z$ is a submanifold, and near a singular point it is a finite branched cover of a polydisc
+(Theorem~\ref{several-complex-variables:theorem-analytic-structure}), so the volume of $Z \cap K$ is finite for compact $K$ (in a chart, Wirtinger's inequality bounds the volume by the integral of a power of the
+standard form $\frac{i}{2}\sum_jdz^j \wedge d\bar z^j$ of $\CC^n$). Closedness, that is, Stokes' theorem across the singular locus, is proved by cutting out a neighbourhood of the singular set, whose boundary
+has small area because the singular locus has real codimension at least $2$. The positivity statement is local linear algebra. Details are in \cite[Chapter 0, Section 2]{griffiths-harris} and
+\cite[Chapter 11]{voisin-hodge-1}.
+\end{proof}
+
+\begin{remark}\label{complex-manifolds:remark-cycle-class-nonzero}
+If $X$ carries a K\"ahler form $\omega$ (Chapter~\ref{kahler}) and $Z \neq \emptyset$, then $[Z] \neq 0$: pairing with the closed form $\omega^k$ gives $\int_Z\omega^k > 0$, the volume of $Z$ up to a constant.
+On non-K\"ahler manifolds cycle classes can vanish; for instance on the Hopf surface of Exercise~\ref{complex-manifolds:exercise-hopf-surface} the elliptic curves $\{z_1 = 0\}/\langle 2 \rangle$ have
+zero class, since $H^2$ of the Hopf surface vanishes.
+\end{remark}
+
+\begin{definition}\label{complex-manifolds:definition-blowup}
+The \emph{blow-up} of $\CC^n$ at the origin is
+\[
+\mathrm{Bl}_0\CC^n = \{(z, \ell) \in \CC^n \times \CC\PP^{n-1} : z \in \ell\},
+\]
+with the projection $\pi$ to $\CC^n$. It is a complex manifold, $\pi$ is a biholomorphism over $\CC^n \setminus \{0\}$, and $E = \pi^{-1}(0) \cong \CC\PP^{n-1}$ is the \emph{exceptional divisor}. For a point $p$ of
+a complex manifold $X$ one defines $\mathrm{Bl}_pX$ by gluing $\mathrm{Bl}_0\CC^n$ in a chart, and similarly along a complex submanifold $Z \subseteq X$, with $E = \PP(N_{Z/X})$.
+\end{definition}
+
+\begin{proposition}\label{complex-manifolds:proposition-blowup}
+$\mathrm{Bl}_pX$ is a compact complex manifold if $X$ is, $\pi$ is proper and holomorphic, and
+\[
+H^k(\mathrm{Bl}_pX; \ZZ) \cong H^k(X; \ZZ) \oplus \bigoplus_{0 < j < n} H^{k-2j}(\mathrm{pt}; \ZZ),
+\]
+so blowing up a point adds one generator in each even degree $2, 4, \ldots, 2n-2$. The exceptional divisor has normal bundle $\mathcal{O}(-1)$ in $\mathrm{Bl}_0\CC^n$.
+\end{proposition}
+
+\begin{proof}
+In the chart $\ell = [1 : w_2 : \cdots : w_n]$ the map $(u, w_2, \ldots, w_n) \mapsto (u, uw_2, \ldots, uw_n)$ identifies $\CC^n$ with an open subset of $\mathrm{Bl}_0\CC^n$, which shows that the blow-up is a complex
+manifold and that $\pi$ is holomorphic and biholomorphic away from $E$; properness holds because $\CC\PP^{n-1}$ is compact. In these coordinates $E$ is $\{u = 0\}$, and the transition functions of its
+normal bundle are those of the tautological bundle, so $N_{E} \cong \mathcal{O}(-1)$. For the cohomology, use the Mayer--Vietoris sequence for $\mathrm{Bl}_pX = (\mathrm{Bl}_pX \setminus E) \cup \pi^{-1}(B)$ with
+$B$ a small ball, together with $\pi^{-1}(B) \simeq \CC\PP^{n-1}$ and $\mathrm{Bl}_pX \setminus E \cong X \setminus \{p\}$, and Example~\ref{singular-cohomology:example-cohomology-groups}.
+\end{proof}
+
+\begin{remark}\label{complex-manifolds:remark-blowup-birational}
+Blow-ups are the basic birational modifications: Hironaka's resolution of singularities states that every analytic (or algebraic, in characteristic zero) variety becomes smooth after finitely many blow-ups
+along smooth centres, and the weak factorisation theorem says that any two birational smooth projective varieties are connected by blow-ups and blow-downs. Both are used to reduce statements about the Hodge
+conjecture to the smooth projective case (Chapter~\ref{mixed-hodge-structures}).
+\end{remark}
+
+\section{Exercises}\label{complex-manifolds:section-exercises}
+
+\begin{exercise}\label{complex-manifolds:exercise-tori}
+Show that every complex torus of dimension $1$ is biholomorphic to $\CC/(\ZZ + \tau\ZZ)$ with $\operatorname{Im}\tau > 0$, and that two such are biholomorphic if and only if the parameters are related by
+an element of $\SL_2(\ZZ)$ acting by M\"obius transformations.
+\end{exercise}
+
+\begin{exercise}\label{complex-manifolds:exercise-projective-space-charts}
+Verify that the transition maps of $\CC\PP^n$ are holomorphic and that $\CC\PP^1$ is biholomorphic to the Riemann sphere $\CC \cup \{\infty\}$, with $S^2$ as underlying smooth manifold.
+\end{exercise}
+
+\begin{exercise}\label{complex-manifolds:exercise-hopf-surface}
+The \emph{Hopf surface} is $X = (\CC^2 \setminus \{0\})/\langle z \mapsto 2z\rangle$. Show that it is a compact complex manifold diffeomorphic to $S^1 \times S^3$, and deduce that $b_1(X) = 1$; conclude that $X$
+carries no K\"ahler metric (Chapter~\ref{hodge-decomposition}), since odd Betti numbers of compact K\"ahler manifolds are even.
+\end{exercise}
+
+\begin{solution}
+The action is free and properly discontinuous, so the quotient is a complex manifold, and it is compact because the annulus $1 \leq |z| \leq 2$ maps onto it. The diffeomorphism with $S^1 \times S^3$ comes from
+the polar decomposition $\CC^2 \setminus \{0\} \cong S^3 \times \RR_{>0}$, with the action becoming translation on the second factor. Then $b_1(S^1 \times S^3) = 1$ by the K\"unneth formula.
+\end{solution}
+
+\begin{exercise}\label{complex-manifolds:exercise-almost-complex-s6}
+Show that $S^2$ and $S^6$ admit almost complex structures (for $S^6$ use the octonionic cross product), and that $S^2$'s is integrable.
+\end{exercise}
+
+\begin{exercise}\label{complex-manifolds:exercise-residue-infinity}
+Compute $\int_{|z| = 2}\frac{z^5}{z^6 - 1}\,dz$ and $\int_{|z| = 2}\frac{dz}{(z - 1)^3(z^2 + 9)}$ (the circle traversed once counterclockwise) by computing a single residue at $\infty$ on $\CC\PP^1$ instead of the residues
+inside the circle.
+\end{exercise}
+
+\begin{solution}
+By Theorem~\ref{complex-manifolds:theorem-global-residue} on $\CC\PP^1$, the integral over the circle, which is $2\pi i$ times the sum of the residues inside it, equals $-2\pi i$ times the sum of the residues
+outside it, including $\infty$. For $\omega = z^5\,dz/(z^6 - 1)$ all six poles lie inside. With $w = 1/z$, $\frac{z^5}{z^6 - 1} = \frac{w}{1 - w^6}$ and $dz = -dw/w^2$, so $\omega = -\frac{dw}{w(1 - w^6)}$ has residue $-1$
+at $\infty$, and the integral is $2\pi i$. (Directly: each pole $\zeta$ is simple with residue $\zeta^5/(6\zeta^5) = \frac16$.) For the second form the poles $\pm3i$ lie outside the circle and $1$ inside. At
+$\infty$ the form is $O(w^3)\,dw$, holomorphic, so the integral is $-2\pi i(\operatorname{Res}_{3i} + \operatorname{Res}_{-3i})$, with
+$\operatorname{Res}_{\pm3i} = \frac{1}{(\pm3i - 1)^3(\pm6i)}$. Now $(3i - 1)^3 = 26 - 18i$ and $(3i - 1)^3 \cdot 6i = 108 + 156i$, so $\operatorname{Res}_{3i} = \frac{1}{108 + 156i}$ and
+$\operatorname{Res}_{-3i} = \frac{1}{108 - 156i}$ is its conjugate. Their sum is $\frac{216}{108^2 + 156^2} = \frac{216}{36000} = \frac{3}{500}$, and the integral is $-\frac{3\pi i}{250}$. (Directly: the
+residue at the triple pole $1$ is $\frac12\frac{d^2}{dz^2}(z^2 + 9)^{-1}$ at $z = 1$, which is $\frac12\bigl(-\frac{2}{100} + \frac{8}{1000}\bigr) = -\frac{3}{500}$.)
+\end{solution}
+
+\begin{exercise}\label{complex-manifolds:exercise-abel-torus}
+Let $f$ be a nonconstant meromorphic function on $X = \CC/\Lambda$, $\Lambda = \ZZ\omega_1 + \ZZ\omega_2$, viewed as a $\Lambda$-periodic meromorphic function on $\CC$. Let $a_1, \ldots, a_k$ and $b_1, \ldots, b_k$ be
+its zeros and poles in a fundamental parallelogram $P$ with vertices $a$, $a + \omega_1$, $a + \omega_1 + \omega_2$, $a + \omega_2$, listed with multiplicity, with $a$ chosen so that no zero or pole lies on
+$\partial P$. Show that $\sum_ia_i - \sum_ib_i \in \Lambda$, by computing $\frac{1}{2\pi i}\int_{\partial P}z\frac{f^{\prime}(z)}{f(z)}\,dz$ in two ways. (This is one direction of Abel's theorem for complex tori.)
+\end{exercise}
+
+\begin{solution}
+At a zero or pole $c$ of order $m$ (negative for a pole), $f^{\prime}/f = m/(z - c) + (\text{holomorphic})$, so $zf^{\prime}/f$ has residue $mc$. The residue theorem in the plane
+(Theorem~\ref{complex-analysis:theorem-residues}) gives $\frac{1}{2\pi i}\int_{\partial P}zf^{\prime}/f\,dz = \sum_ia_i - \sum_ib_i$. On the other hand, pair opposite sides: the side from $a + \omega_2$ to
+$a + \omega_1 + \omega_2$ is traversed backwards, and on it $f^{\prime}/f$ takes the same values as on the side from $a$ to $a + \omega_1$, so the two sides contribute
+\[
+\int_a^{a+\omega_1}\bigl(z - (z + \omega_2)\bigr)\frac{f^{\prime}(z)}{f(z)}\,dz = -\omega_2\int_a^{a+\omega_1}\frac{f^{\prime}(z)}{f(z)}\,dz = -2\pi i\,n_1\omega_2,
+\]
+where $\frac{1}{2\pi i}\int_a^{a+\omega_1}f^{\prime}/f\,dz = n_1$ is the winding number around $0$ of the closed curve $t \mapsto f(a + t\omega_1)$, $t \in [0, 1]$ (closed because $f$ is periodic), an
+integer. In the same way the other two sides contribute $2\pi i\,n_2\omega_1$ with $n_2 \in \ZZ$. So $\sum_ia_i - \sum_ib_i = n_2\omega_1 - n_1\omega_2 \in \Lambda$. Applying the same computation to
+$f^{\prime}/f$ instead of $zf^{\prime}/f$ gives $k$ zeros and $k$ poles again, in accordance with Corollary~\ref{complex-manifolds:corollary-zeros-poles}.
+\end{solution}

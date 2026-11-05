@@ -1,0 +1,93 @@
+{% set links = obj.links %}
+{% set doc = obj.ownerDocument.getElementsByTagName('document')[0] %}
+{% set toc = doc.tableofcontents %}
+{% set rendererdata = obj.ownerDocument.rendererdata['html5'] %}
+{% macro chapterLink(chapter) %}<a href="{{ chapter.url }}" data-label="{{ chapter.id }}"><span class="toc_ref">{{ chapter.ref.textContent }}</span> <span class="toc_entry">{{ chapter.tocEntry }}</span></a>{% endmacro %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="{{ config.files['output-encoding'] }}" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content="plasTeX" />
+<title>{{ links.document.title | striptags }}</title>
+<script>
+  try { var r = document.documentElement, t = localStorage.getItem("math-theme"); if (t === "light" || t === "dark" || t === "auto") r.setAttribute("data-theme-mode", t); if (t === "auto") { var h = new Date().getHours(); t = h >= 20 || h < 7 ? "dark" : "light"; } if (t === "light" || t === "dark") r.setAttribute("data-theme", t); } catch (e) {}
+</script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]], processEscapes: true, processEnvironments: true },
+  TeX: { extensions: ["AMSmath.js", "AMSsymbols.js"], equationNumbers: { autoNumber: "none" } },
+  "HTML-CSS": { availableFonts: ["TeX"], imageFont: null },
+  messageStyle: "none"
+});
+</script>
+<script src="{{ config.html5['mathjax-url'] }}"></script>
+{% for css in rendererdata.get('css', []) %}
+<link rel="stylesheet" href="styles/{{ css }}" />
+{% endfor %}
+</head>
+
+<body class="home-page">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="site-title" href="index.html">{{ links.document.title | striptags }}</a>
+  <form class="site-search" id="site-search" action="search.html" method="get" role="search">
+    <label class="visually-hidden" for="search-input">Search the project, or go to a tag</label>
+    <input id="search-input" name="q" type="search" placeholder="Search or tag" autocomplete="off" spellcheck="false" />
+    <button type="submit">Search</button>
+  </form>
+  <a class="header-link" href="tags.html">Tags</a>
+  <a class="header-link" href="book.pdf">PDF</a>
+  <button id="random-section" class="icon-button" type="button" aria-label="Go to a random section" title="Random section">
+    <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><rect x="3.5" y="3.5" width="13" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="7.2" cy="7.2" r="1.2" fill="currentColor"/><circle cx="10" cy="10" r="1.2" fill="currentColor"/><circle cx="12.8" cy="12.8" r="1.2" fill="currentColor"/></svg>
+  </button>
+  <button id="theme-toggle" class="icon-button" type="button" aria-label="Change theme: light, dark, or automatic by time of day" title="Theme">
+    <svg class="theme-icon theme-icon-system" viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 3.5a6.5 6.5 0 0 1 0 13z" fill="currentColor"/></svg>
+    <svg class="theme-icon theme-icon-light" viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="3.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M2.5 10h2M15.5 10h2M4.7 4.7l1.4 1.4M13.9 13.9l1.4 1.4M4.7 15.3l1.4-1.4M13.9 6.1l1.4-1.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    <svg class="theme-icon theme-icon-dark" viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M15.8 12.3A6.6 6.6 0 0 1 7.7 4.2a6.6 6.6 0 1 0 8.1 8.1z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    <svg class="theme-icon theme-icon-auto" viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 6.2V10l2.6 1.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+</header>
+
+<main class="content home" id="main">
+<section class="hero">
+  <h1>{{ links.document.title | striptags }}</h1>
+  <p class="lede">A cumulative reference that develops mathematics with complete proofs, slowly
+  and in a strict logical order: from logic and set theory through algebra, analysis, topology
+  and geometry to probability, differential equations, numerical analysis, optimisation and
+  game theory, and on to research-level topics such as Hodge theory.</p>
+  <p class="hero-links">
+    {% if toc %}<a class="button" href="{{ toc[0].url }}">Read the introduction</a>{% endif %}
+    <a href="book.pdf">Download the PDF</a>
+    <a href="search.html">Search</a>
+    <a href="tags.html">Browse tags</a>
+  </p>
+</section>
+
+<nav class="book-toc" aria-label="Table of contents">
+{% for section in toc %}
+{% if section.level < 0 %}
+<section class="book-part">
+  <h2><a href="{{ section.url }}" data-label="{{ section.id }}"><span class="part-number">Part {{ section.ref.textContent }}</span> {{ section.tocEntry }}</a></h2>
+  <ol class="chapter-list">
+  {% for chapter in section.tableofcontents %}
+    <li>{{ chapterLink(chapter) }}</li>
+  {% endfor %}
+  </ol>
+</section>
+{% else %}
+<section class="book-part">
+  <ol class="chapter-list">
+    <li>{{ chapterLink(section) }}</li>
+  </ol>
+</section>
+{% endif %}
+{% endfor %}
+</nav>
+</main>
+
+{% for js in rendererdata.get('js', []) %}
+<script src="js/{{ js }}"></script>
+{% endfor %}
+</body>
+</html>

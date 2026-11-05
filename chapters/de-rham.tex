@@ -1,0 +1,893 @@
+\chapter{de Rham Cohomology}\label{de-rham}
+\chapterstatus{complete}
+
+\section{Introduction}\label{de-rham:section-introduction}
+
+Every exact form is closed, because $d \circ d = 0$. The converse is a question about the shape of the manifold. On $\RR^n$, and on any convex open set, every closed form of
+positive degree is exact (the Poincar\'e lemma). On the punctured plane $\RR^2 \setminus \{0\}$ the angle form $(x\,dy - y\,dx)/(x^2 + y^2)$ is closed but not exact: its integral
+around the origin is $2\pi$, while the integral of an exact form around a closed curve is $0$. The obstruction comes from the hole at the origin. \emph{De Rham cohomology},
+closed forms modulo exact forms, measures such obstructions in every degree:
+\[
+H^k_{\mathrm{dR}}(M) = \frac{\{\text{closed } k\text{-forms}\}}{\{\text{exact } k\text{-forms}\}} .
+\]
+The de Rham theorem (Theorem~\ref{de-rham:theorem-de-rham}) says that this analytic invariant is the singular cohomology of $M$ with real coefficients, a topological invariant.
+This is the bridge between analysis and topology on which Hodge theory is built: the Hodge theorem selects a canonical harmonic representative in each de Rham class
+(Chapter~\ref{hodge-theorem}), and on a complex manifold the type decomposition of harmonic forms gives the Hodge decomposition (Chapter~\ref{hodge-decomposition}).
+
+The chapter goes as follows.
+\begin{enumerate}
+\item The de Rham complex, first examples, homotopy invariance with an explicit homotopy operator, and the Poincar\'e lemma with an explicit formula for primitives
+(Section~\ref{de-rham:section-complex}).
+\item The Mayer--Vietoris sequence, with its connecting homomorphism made explicit, and the computation of the cohomology of spheres, punctured planes and projective spaces.
+\item The de Rham theorem, periods of $1$-forms, the K\"unneth formula, Poincar\'e duality, and the cohomology of compact Lie groups
+(Section~\ref{de-rham:section-de-rham-theorem}).
+\item Currents, the forms with distribution coefficients, which contain both forms and submanifolds: support, products with forms and push-forward, Stokes' theorem as $d[Z] = \pm[\partial Z]$, the
+angle form as a current with $d(\frac{1}{2\pi}T_\omega) = [0]$, the fact that currents compute de Rham cohomology, and a glimpse of positive currents and of geometric measure theory
+(Section~\ref{de-rham:section-currents}).
+\end{enumerate}
+References: \cite{bott-tu}, \cite{warner-foundations}, \cite[Chapter 0]{griffiths-harris}.
+
+\noindent\textbf{Prerequisites.} Chapter~\ref{differential-forms} (Differential Forms and Integration), Chapter~\ref{sheaf-cohomology}
+(Sheaf Cohomology), Chapter~\ref{poincare-duality} (Topological Manifolds and Poincar\'e Duality) and Chapter~\ref{distributions}
+(Distributions and Sobolev Spaces).
+
+\noindent\textbf{On the way to the Hodge conjecture.} The whole chapter is needed. Currents (Section~\ref{de-rham:section-currents}) give the integration currents of subvarieties, used for the cycle class map; the first two subsections and
+Theorem~\ref{de-rham:theorem-currents} are what is needed, and the remarks at the end preview the Poincar\'e--Lelong formula behind the Lefschetz $(1,1)$ theorem. Remark~\ref{de-rham:remark-no-torsion} explains why de Rham cohomology only sees rational (indeed real) classes, which is
+why the Hodge conjecture is stated with $\QQ$ coefficients.
+
+\section{The de Rham complex}\label{de-rham:section-complex}
+
+\begin{definition}\label{de-rham:definition-de-rham}
+The \emph{de Rham complex} of a smooth manifold $M$ is $0 \to \Omega^0(M) \xrightarrow{d} \Omega^1(M) \xrightarrow{d} \cdots$, a complex by Theorem~\ref{differential-forms:theorem-exterior-derivative}. Its
+cohomology $H^k_{\mathrm{dR}}(M) = \ker(d \colon \Omega^k \to \Omega^{k+1})/\operatorname{im}(d \colon \Omega^{k-1} \to \Omega^k)$ is the \emph{de Rham cohomology}; its elements are classes $[\omega]$ of
+\emph{closed} forms modulo \emph{exact} ones. The wedge product makes $H^\bullet_{\mathrm{dR}}(M)$ a graded-commutative $\RR$-algebra, and a smooth map $f \colon N \to M$ induces an algebra homomorphism
+$f^* \colon H^\bullet_{\mathrm{dR}}(M) \to H^\bullet_{\mathrm{dR}}(N)$. Replacing $\Omega^\bullet(M)$ by the compactly supported forms $\Omega^\bullet_c(M)$ gives $H^\bullet_{\mathrm{dR},c}(M)$, functorial for
+open inclusions (extension by zero) and for proper maps.
+\end{definition}
+
+\begin{proposition}\label{de-rham:proposition-h0}
+$H^0_{\mathrm{dR}}(M) \cong \RR^{\pi_0(M)}$, the locally constant functions. The wedge product is well defined on classes, and $f^*$ commutes with $d$, hence descends to cohomology.
+\end{proposition}
+
+\begin{proof}
+A function with $df = 0$ has vanishing differential, hence is constant on connected components (Theorem~\ref{real-analysis:theorem-mean-value} in charts, and connectedness). If $\alpha$, $\beta$ are closed then
+$d(\alpha \wedge \beta) = 0$, and if $\alpha = d\gamma$ then $\alpha \wedge \beta = d(\gamma \wedge \beta)$, because $d(\gamma \wedge \beta) = d\gamma \wedge \beta \pm \gamma \wedge d\beta$ and $d\beta = 0$; naturality of $d$ is
+Theorem~\ref{differential-forms:theorem-exterior-derivative}.
+\end{proof}
+
+\begin{example}\label{de-rham:example-first-computations}
+\begin{enumerate}
+\item \emph{A point.} On the $0$-dimensional manifold $\{p\}$, $\Omega^0 = \RR$ (the functions are the constants) and $\Omega^k = 0$ for $k \geq 1$. So $H^0_{\mathrm{dR}}(\{p\}) = \RR$ and
+$H^k_{\mathrm{dR}}(\{p\}) = 0$ for $k \geq 1$; more generally a $0$-dimensional manifold, a countable discrete set $S$, has $H^0 = \RR^S$ and nothing else. By homotopy invariance
+(Theorem~\ref{de-rham:theorem-homotopy-invariance} below) every contractible manifold, such as $\RR^n$ or a ball, has the de Rham cohomology of a point: this is the Poincar\'e lemma.
+\item \emph{The real line.} Every $1$-form on $\RR$ is $f\,dx$, and it is exact: $f\,dx = dF$ with $F(x) = \int_0^xf$. So $H^0_{\mathrm{dR}}(\RR) = \RR$ and $H^k_{\mathrm{dR}}(\RR) = 0$ for
+$k \geq 1$ (there are no forms of degree $\geq 2$).
+\item \emph{The circle.} On $S^1 = \RR/2\pi\ZZ$ every $1$-form is closed, and is $f(\theta)\,d\theta$ with $f$ periodic. It is exact if and only if $\int_0^{2\pi}f = 0$: then
+$F(\theta) = \int_0^\theta f$ is periodic and $dF = f\,d\theta$; conversely $\int_{S^1}dF = 0$. So $\int_{S^1} \colon H^1_{\mathrm{dR}}(S^1) \to \RR$ is an isomorphism, and $[d\theta]$ is a basis.
+Here $d\theta$ is a closed $1$-form which is not the differential of a function, since $\theta$ is not a function on $S^1$.
+\item \emph{The punctured plane.} The angle form $\alpha = (x\,dy - y\,dx)/(x^2 + y^2)$ is closed and not exact on $\RR^2 \setminus \{0\}$
+(Counterexample~\ref{differential-forms:counterexample-closed-not-exact}); so $H^1_{\mathrm{dR}}(\RR^2 \setminus \{0\}) \neq 0$. It is the pullback of $d\theta$ by
+$(x, y) \mapsto (x, y)/r \in S^1$, and we will see that it spans $H^1$ (Example~\ref{de-rham:example-angle-form}).
+\end{enumerate}
+\end{example}
+
+\begin{theorem}[Homotopy invariance and the Poincar\'e lemma]\label{de-rham:theorem-homotopy-invariance}
+Let $i_0, i_1 \colon M \to M \times \RR$ be $p \mapsto (p, 0)$ and $p \mapsto (p, 1)$. There is a linear map $K \colon \Omega^k(M \times \RR) \to \Omega^{k-1}(M)$ with
+\[
+i_1^*\omega - i_0^*\omega = d(K\omega) + K(d\omega).
+\]
+Consequently smoothly homotopic maps induce the same map on de Rham cohomology, homotopy equivalent manifolds have isomorphic de Rham cohomology, and $H^k_{\mathrm{dR}}(U) = 0$ for $k > 0$ and
+$H^0_{\mathrm{dR}}(U) = \RR$ for every convex open $U \subseteq \RR^n$ (the \emph{Poincar\'e lemma}).
+\end{theorem}
+
+\begin{proof}
+\emph{The decomposition.} Let $t$ be the coordinate of $\RR$. In local coordinates $x$ on $M$ and $t$, a $k$-form on $M \times \RR$ is a sum of terms $f(x, t)\,dx^I$ and
+$g(x, t)\,dt \wedge dx^J$; so it can be written uniquely as
+\[
+\omega = \alpha_t + dt \wedge \beta_t,
+\]
+where $\alpha_t$ is a $k$-form and $\beta_t$ a $(k-1)$-form on $M$, depending smoothly on the parameter $t$ (their coefficients are $f(\cdot, t)$ and $g(\cdot, t)$); this is
+independent of the coordinates on $M$. For instance $i_s^*\omega = \alpha_s$, since $i_s^*dt = 0$. Write $d_M$ for the exterior derivative in the $M$-directions at fixed $t$, and
+$\partial_t$ for the derivative of the coefficients in $t$. Then $d = d_M + dt \wedge \partial_t$ on forms without $dt$, and
+\[
+d\omega = d_M\alpha_t + dt \wedge \partial_t\alpha_t + d(dt \wedge \beta_t) = d_M\alpha_t + dt \wedge (\partial_t\alpha_t - d_M\beta_t),
+\]
+because $d(dt \wedge \beta_t) = -dt \wedge d\beta_t = -dt \wedge (d_M\beta_t + dt \wedge \partial_t\beta_t) = -dt \wedge d_M\beta_t$.
+
+\emph{The homotopy operator.} Define $K\omega = \int_0^1\beta_t\,dt$, the $(k-1)$-form on $M$ whose coefficients are the integrals over $t \in [0, 1]$ of those of $\beta_t$. By the
+formula for $d\omega$, its $dt$-part is $\partial_t\alpha_t - d_M\beta_t$, so $K(d\omega) = \int_0^1(\partial_t\alpha_t - d_M\beta_t)\,dt$. On the other hand
+$d(K\omega) = \int_0^1d_M\beta_t\,dt$, by differentiation under the integral sign (Proposition~\ref{real-analysis:proposition-parameter-integrals}). Adding, and using the fundamental
+theorem of calculus for the coefficients,
+\[
+d(K\omega) + K(d\omega) = \int_0^1\partial_t\alpha_t\,dt = \alpha_1 - \alpha_0 = i_1^*\omega - i_0^*\omega .
+\]
+
+If $F \colon M \times \RR \to N$ is smooth with $F \circ i_0 = f$ and $F \circ i_1 = g$, then for closed $\omega$ on $N$,
+$g^*\omega - f^*\omega = d(K F^*\omega)$, so $f^* = g^*$ on cohomology. Continuous homotopies may be replaced by smooth ones: continuous maps between manifolds are homotopic to smooth maps, and continuously
+homotopic smooth maps are smoothly homotopic \cite[Chapter 2]{hirsch-differential-topology}. A convex $U$ is smoothly contractible, by the straight-line homotopy, so its de Rham cohomology is that of a
+point.
+\end{proof}
+
+\begin{remark}\label{de-rham:remark-smooth-homotopy}
+\emph{Smooth and continuous homotopies.} Here a homotopy between smooth maps $f, g \colon M \to N$ is a smooth map $F \colon M \times \RR \to N$ with $F(\cdot, 0) = f$ and $F(\cdot, 1) = g$, a \emph{smooth
+homotopy}, and a smooth homotopy equivalence is defined with smooth maps and smooth homotopies. Nothing is lost: by the Whitney approximation theorem every continuous map between smooth manifolds is
+homotopic to a smooth one, and two smooth maps that are homotopic through continuous maps are smoothly homotopic \cite[Chapter 6]{lee-smooth-manifolds}. So homotopic in the sense of
+Chapter~\ref{homotopy} and smoothly homotopic agree for smooth maps, and homotopy equivalent manifolds have isomorphic de Rham cohomology, in accordance with the de Rham theorem below, which identifies
+de Rham cohomology with singular cohomology, a homotopy invariant.
+\end{remark}
+
+\begin{remark}\label{de-rham:remark-k-and-prism}
+\emph{The homotopy operator and the prism operator.} Singular homology has the same homotopy invariance, with the same structure of proof: a chain homotopy $P$ with $\partial P + P\partial = g_\# - f_\#$, the
+\emph{prism operator} of Theorem~\ref{singular-homology:theorem-homotopy-invariance}, plays the role of $K$ with $dK + Kd = i_1^* - i_0^*$. The two are dual to each other under integration. Let $\sigma \colon \Delta^k \to M$ be a
+smooth singular simplex, $F \colon M \times \RR \to N$ a smooth homotopy and $\omega$ a $(k+1)$-form on $N$. The prism $P(\sigma)$ is $F \circ (\sigma \times \id)$ restricted to the $k + 1$ simplices that triangulate
+$\Delta^k \times [0, 1]$ (Remark~\ref{singular-homology:remark-prism}), so integrating $\omega$ over it means integrating $(\sigma \times \id)^*F^*\omega = \alpha_t + dt \wedge \beta_t$ over the prism
+$\Delta^k \times [0, 1]$. Only the part $dt \wedge \beta_t$ has the right type to contribute, and by Fubini's theorem
+\[
+\int_{P(\sigma)}\omega = \pm\int_{\Delta^k}\int_0^1\beta_t\,dt = \pm\int_\sigma K(F^*\omega),
+\]
+with a sign depending only on $k$ and on the orientation conventions. So $K$ is ``integration over the prism, one dimension at a time'': it integrates over the $I$-direction and leaves the integral over
+$\Delta^k$ for later. The identities $dK + Kd = i_1^* - i_0^*$ and $\partial P + P\partial = g_\# - f_\#$ correspond to each other under Stokes' theorem, which turns the boundary of the prism into the exterior derivative.
+For forms no triangulation is needed; for chains the prism must be cut into simplices, and the cuts cancel in pairs. This compatibility is one ingredient of the de Rham theorem
+(Theorem~\ref{de-rham:theorem-de-rham}): the integration map from forms to singular cochains is compatible with the two homotopy invariances.
+\end{remark}
+
+The homotopy operator gives explicit primitives. For a star-shaped open set $U \subseteq \RR^n$ (with respect to $0$), let $X = \sum_ix^i\partial_i$ be the position vector
+field.
+
+\begin{corollary}[Explicit Poincar\'e lemma]\label{de-rham:corollary-explicit-poincare}
+Let $U \subseteq \RR^n$ be star-shaped with respect to $0$ and $\omega$ a closed $k$-form on $U$, $k \geq 1$. Then $\omega = d\eta$ with
+\[
+\eta_x = \int_0^1t^{k-1}\,(\iota_X\omega)_{tx}\,dt, \qquad\text{that is,}\qquad \eta = \sum_I\Bigl(\int_0^1t^{k-1}\omega_I(tx)\,dt\Bigr)\iota_X(dx^I),
+\]
+where $\iota_X(dx^{i_1} \wedge \cdots \wedge dx^{i_k}) = \sum_m(-1)^{m-1}x^{i_m}\,dx^{i_1} \wedge \cdots \wedge \widehat{dx^{i_m}} \wedge \cdots \wedge dx^{i_k}$.
+\end{corollary}
+
+\begin{proof}
+Let $\rho \colon \RR \to [0, 1]$ be smooth and nondecreasing, with $\rho = 0$ on $(-\infty, 0]$ and $\rho = 1$ on $[1, \infty)$, and apply
+Theorem~\ref{de-rham:theorem-homotopy-invariance} to $F(x, t) = \rho(t)x$, a smooth map $U \times \RR \to U$ since $U$ is star-shaped. Since
+$F^*dx^i = \rho(t)\,dx^i + \rho^{\prime}(t)x^i\,dt$, the terms of $F^*(\omega_I\,dx^{i_1} \wedge \cdots \wedge dx^{i_k})$ containing $dt$ are
+$\omega_I(\rho x)\,\rho^{k-1}\rho^{\prime}\sum_m x^{i_m}\,dx^{i_1} \wedge \cdots \wedge dt \wedge \cdots \wedge dx^{i_k}$, with $dt$ in the $m$-th place; moving $dt$ to the front gives the sign
+$(-1)^{m-1}$. So $\beta_t = \rho(t)^{k-1}\rho^{\prime}(t)(\iota_X\omega)_{\rho(t)x}$ in the notation of the proof of the theorem, and the substitution $s = \rho(t)$ gives
+$K(F^*\omega) = \int_0^1s^{k-1}(\iota_X\omega)_{sx}\,ds = \eta$. As $F(\cdot, 1) = \id$, $F(\cdot, 0)$ is constant, whose pullback kills forms of positive degree, and $d\omega = 0$, the
+homotopy formula gives $\omega = d\eta$.
+\end{proof}
+
+\begin{example}\label{de-rham:example-explicit-primitives}
+\begin{enumerate}
+\item For the closed $1$-form $\omega = 2xy\,dx + x^2\,dy$ on $\RR^2$, $\iota_X\omega = 2x^2y + x^2y = 3x^2y$, so $\eta = \int_0^13t^2\,dt \cdot x^2y = x^2y$, and indeed $d(x^2y) = \omega$.
+\item For $\omega = dx \wedge dy$ on $\RR^2$, $\iota_X\omega = x\,dy - y\,dx$ and $\eta = \int_0^1t\,dt\,(x\,dy - y\,dx) = \frac12(x\,dy - y\,dx)$, the primitive used in
+Example~\ref{differential-forms:example-stokes-checks}(1) to compute areas.
+\item For the volume form $dx \wedge dy \wedge dz$ of $\RR^3$ the formula gives $\frac13(x\,dy \wedge dz + y\,dz \wedge dx + z\,dx \wedge dy)$.
+\item The slit plane $\RR^2 \setminus \{(x, 0) : x \leq 0\}$ does not contain $0$, but it is star-shaped with respect to $(1, 0)$: a segment from $(1, 0)$ to a point off the
+$x$-axis meets the axis only at $(1, 0)$. So the angle form is exact there; a primitive is the polar angle with values in $(-\pi, \pi)$.
+\end{enumerate}
+\end{example}
+
+\begin{theorem}[Mayer--Vietoris]\label{de-rham:theorem-mayer-vietoris}
+Let $M = U \cup V$ with $U$, $V$ open. There is a long exact sequence
+\[
+\cdots \to H^k_{\mathrm{dR}}(M) \to H^k_{\mathrm{dR}}(U) \oplus H^k_{\mathrm{dR}}(V) \to H^k_{\mathrm{dR}}(U \cap V) \xrightarrow{\ \delta\ } H^{k+1}_{\mathrm{dR}}(M) \to \cdots
+\]
+\end{theorem}
+
+\begin{proof}
+The sequence of complexes $0 \to \Omega^\bullet(M) \to \Omega^\bullet(U) \oplus \Omega^\bullet(V) \to \Omega^\bullet(U \cap V) \to 0$, with maps $\omega \mapsto (\omega|_U, \omega|_V)$ and
+$(\alpha, \beta) \mapsto \alpha|_{U \cap V} - \beta|_{U \cap V}$, is exact. Injectivity: a form vanishing on $U$ and on $V$ vanishes. Exactness in the middle: if $\alpha = \beta$ on $U \cap V$, they
+glue to a form on $M$. Surjectivity: for a partition of unity $\{\psi_U, \psi_V\}$ subordinate to $\{U, V\}$ (Theorem~\ref{smooth-manifolds:theorem-partitions-of-unity}) and
+$\gamma \in \Omega^\bullet(U \cap V)$, the forms $\psi_V\gamma$ on $U$ and $-\psi_U\gamma$ on $V$, both extended by zero (the support of $\psi_V$ does not meet $U \setminus V$, and similarly for
+$\psi_U$), have difference $\gamma$ on $U \cap V$. The maps commute with $d$, so Theorem~\ref{homological-algebra:theorem-long-exact-sequence} gives the long exact sequence. Following the
+construction of the connecting homomorphism, for a closed $\gamma$ on $U \cap V$ we lift it to $(\psi_V\gamma, -\psi_U\gamma)$, apply $d$, and observe that $d(\psi_V\gamma)$ and
+$-d(\psi_U\gamma)$ agree on $U \cap V$, since $d(\psi_U\gamma + \psi_V\gamma) = d\gamma = 0$. So
+\[
+\delta[\gamma] = [\omega], \qquad \omega = \begin{cases} d(\psi_V\gamma) = d\psi_V \wedge \gamma & \text{on } U,\\ -d(\psi_U\gamma) = -d\psi_U \wedge \gamma & \text{on } V,\end{cases}
+\]
+a closed form on $M$ supported in $U \cap V$.
+\end{proof}
+
+\begin{example}\label{de-rham:example-spheres}
+$H^k_{\mathrm{dR}}(S^n) \cong \RR$ for $k = 0, n$ and $0$ otherwise ($n \geq 1$). Let $U = S^n \setminus \{N\}$ and $V = S^n \setminus \{S\}$ for the north and south poles. Both are
+diffeomorphic to $\RR^n$ by stereographic projection, so their cohomology is $\RR$ in degree $0$ and $0$ otherwise; and $U \cap V$ is diffeomorphic to $\RR^n \setminus \{0\}$, which is
+homotopy equivalent to $S^{n-1}$ (by $x \mapsto x/|x|$, with the inclusion of the unit sphere as homotopy inverse, and the homotopy $(x, t) \mapsto x/((1 - t) + t|x|)$), so
+$H^\bullet_{\mathrm{dR}}(U \cap V) \cong H^\bullet_{\mathrm{dR}}(S^{n-1})$ by Theorem~\ref{de-rham:theorem-homotopy-invariance}. The Mayer--Vietoris sequence splits into pieces:
+\begin{enumerate}
+\item for $k \geq 1$ the terms $H^k(U) \oplus H^k(V)$ vanish, so $\delta \colon H^k_{\mathrm{dR}}(U \cap V) \to H^{k+1}_{\mathrm{dR}}(S^n)$ is an isomorphism, that is
+$H^{k+1}(S^n) \cong H^k(S^{n-1})$;
+\item in low degrees, $0 \to H^0(S^n) \to H^0(U) \oplus H^0(V) = \RR^2 \to H^0(U \cap V) \to H^1(S^n) \to 0$.
+\end{enumerate}
+For $n = 1$, $U \cap V$ has two components, so $H^0(U \cap V) = \RR^2$, the map $\RR^2 \to \RR^2$, $(a, b) \mapsto (a - b, a - b)$, has rank $1$, and $H^1(S^1) \cong \RR$, $H^0(S^1) = \RR$. For
+$n \geq 2$, $U \cap V$ is connected, the map $\RR^2 \to \RR$ is surjective, and $H^1(S^n) = 0$, $H^0(S^n) = \RR$. Induction on $n$ with (1) gives the result: $H^n(S^n) \cong H^{n-1}(S^{n-1}) \cong \cdots \cong H^1(S^1) \cong \RR$,
+and all other groups vanish. For the circle, the generator of $H^1$ is the form $d\theta$, which is closed but not exact; its integral over $S^1$ is $2\pi$
+(Exercise~\ref{differential-forms:exercise-pullback-computation}). In general $\int_M \colon H^n_{\mathrm{dR}}(M) \to \RR$ is well defined for compact oriented $M$ by Stokes' theorem
+(Theorem~\ref{differential-forms:theorem-stokes}).
+
+The connecting homomorphism can be seen at work on the circle. Take $U$ and $V$ two open arcs covering $S^1$, whose intersection consists of two arcs $A$ and $B$, and let $\gamma$ be the
+locally constant function equal to $1$ on $A$ and $0$ on $B$. Then $\delta[\gamma]$ is represented by $d\psi_V$ on $A$ (and $0$ elsewhere), a $1$-form supported in $A$. Near the end of $A$
+where $V$ stops, $\psi_V = 0$, as the support of $\psi_V$ lies in $V$; near the end where $U$ stops, $\psi_U = 0$, so $\psi_V = 1$. Hence $\int_Ad\psi_V = \pm1$, and $\delta[\gamma]$ is a nonzero
+multiple of the generator of $H^1(S^1)$: a ``bump'' $1$-form concentrated on one arc.
+\end{example}
+
+\section{The de Rham theorem}\label{de-rham:section-de-rham-theorem}
+
+\begin{theorem}[de Rham]\label{de-rham:theorem-de-rham}
+For every smooth manifold $M$ there are natural isomorphisms
+\[
+H^k_{\mathrm{dR}}(M) \cong H^k(M, \RR_M) \cong H^k(M; \RR),
+\]
+the first to sheaf cohomology of the constant sheaf, the second to singular cohomology with real coefficients. Under these isomorphisms the wedge product corresponds to the cup product, and the
+isomorphism is induced by integration: the class of a closed $k$-form $\omega$ corresponds to the singular cochain $\sigma \mapsto \int_{\Delta^k}\sigma^*\omega$ on smooth simplices.
+\end{theorem}
+
+\begin{proof}
+Let $\underline{\Omega}^k$ be the sheaf $U \mapsto \Omega^k(U)$. The sequence of sheaves
+\[
+0 \to \RR_M \to \underline{\Omega}^0 \xrightarrow{d} \underline{\Omega}^1 \xrightarrow{d} \cdots
+\]
+is exact: exactness at $\underline{\Omega}^0$ is Proposition~\ref{de-rham:proposition-h0}, and exactness at $\underline{\Omega}^k$ for $k \geq 1$ holds on stalks, because every point has a basis of convex
+coordinate neighbourhoods, on which closed forms are exact by the Poincar\'e lemma (Theorem~\ref{de-rham:theorem-homotopy-invariance}). Each $\underline{\Omega}^k$ is a module over the sheaf of smooth
+functions, hence fine, hence acyclic on the paracompact space $M$ (Example~\ref{sheaf-cohomology:example-fine} and
+Theorem~\ref{sheaf-cohomology:theorem-soft-acyclic}). So this is an acyclic resolution of $\RR_M$ and
+Proposition~\ref{sheaf-cohomology:proposition-hypercohomology}(3) gives $H^k(M, \RR_M) \cong H^k(\Gamma(M, \underline{\Omega}^\bullet)) = H^k_{\mathrm{dR}}(M)$. The second isomorphism is
+Theorem~\ref{sheaf-cohomology:theorem-singular-comparison}, since manifolds are locally contractible and paracompact, and it is compatible with products. The description by integration over smooth simplices
+is the standard comparison of the two resolutions; see \cite[Chapter 5]{warner-foundations} or \cite[Chapter III]{bredon-sheaf}.
+\end{proof}
+
+\begin{corollary}\label{de-rham:corollary-consequences}
+For a compact manifold $M$ the spaces $H^k_{\mathrm{dR}}(M)$ are finite-dimensional, they vanish for $k > \dim M$, and $\dim H^k_{\mathrm{dR}}(M) = b_k(M)$, the $k$-th Betti number. For a compact oriented
+$n$-manifold, $H^n_{\mathrm{dR}}(M) \cong \RR$ for each connected component, with the isomorphism given by integration.
+\end{corollary}
+
+\begin{proof}
+Compact manifolds have finitely generated singular homology \cite[Appendix]{hatcher-at}, so Theorem~\ref{de-rham:theorem-de-rham} and the universal coefficient theorem give finite dimension and the
+identification with Betti numbers; the vanishing above the dimension holds because there are no nonzero forms of degree $> n$. For the top degree, $H^n(M; \RR) \cong H_0(M; \RR) \cong \RR$ per component by
+Poincar\'e duality (Theorem~\ref{poincare-duality:theorem-poincare-duality}), and integration is nonzero on the class of a volume form
+(Corollary~\ref{differential-forms:corollary-volume}).
+\end{proof}
+
+Explicitly, if $M_1, \ldots, M_c$ are the connected components of the compact oriented manifold $M$ (finitely many, as they are open and cover the compact $M$), then
+$\Omega^\bullet(M) = \prod_i\Omega^\bullet(M_i)$, so $H^n_{\mathrm{dR}}(M) = \bigoplus_iH^n_{\mathrm{dR}}(M_i)$, and the isomorphism of the corollary is
+\[
+H^n_{\mathrm{dR}}(M) \to \RR^c, \qquad [\omega] \mapsto \Bigl(\int_{M_1}\omega, \ldots, \int_{M_c}\omega\Bigr).
+\]
+So a top degree form on $M$ is exact if and only if its integral over \emph{each} component vanishes; the vanishing of the total integral $\int_M\omega$ is not enough when
+$M$ is disconnected. For example, on $M = S^2 \sqcup S^2$ the form equal to the area form on the first sphere and to minus the area form on the second has total integral $0$ but is
+not exact.
+
+\begin{proposition}\label{de-rham:proposition-periods}
+Let $M$ be a connected manifold and $x_0 \in M$. There is an isomorphism
+\[
+H^1_{\mathrm{dR}}(M) \xrightarrow{\ \sim\ } \Hom(\pi_1(M, x_0), \RR),
+\]
+sending $[\omega]$ to the homomorphism whose value on the class of a piecewise smooth loop $\gamma$ is the \emph{period} $\int_\gamma\omega$. In particular $H^1_{\mathrm{dR}}(M) = 0$ if $M$ is simply connected, and a closed
+$1$-form is exact if and only if all its periods vanish.
+\end{proposition}
+
+\begin{proof}
+Compose the isomorphism $H^1_{\mathrm{dR}}(M) \cong H^1(M; \RR)$ of Theorem~\ref{de-rham:theorem-de-rham}, given by integration over smooth simplices, with $H^1(M; \RR) \cong \Hom_\RR(H_1(M; \RR), \RR) = \Hom(H_1(M), \RR)$
+(Theorem~\ref{singular-cohomology:theorem-universal-coefficients} over the field $\RR$) and with $\Hom(H_1(M), \RR) \cong \Hom(\pi_1(M, x_0), \RR)$, which holds by the Hurewicz theorem
+(Theorem~\ref{singular-homology:theorem-hurewicz}) because homomorphisms to the abelian group $\RR$ factor through the abelianisation. The composite is the period map.
+
+The last statement can also be seen directly. If $\omega = df$, then $\int_\gamma\omega = f(\gamma(1)) - f(\gamma(0)) = 0$ for loops. Conversely, if all periods vanish, $f(x) = \int_{x_0}^x\omega$ along any piecewise smooth path is
+well defined, since two paths differ by a loop, and in a chart around $x$ that is a ball, integrating along segments shows $df = \omega$, by the Poincar\'e lemma on the ball
+(Theorem~\ref{de-rham:theorem-homotopy-invariance}): there $\omega = dg$, and $f - g$ is constant.
+\end{proof}
+
+\begin{example}\label{de-rham:example-angle-form}
+On $M = \RR^2 \setminus \{0\}$ the \emph{angle form} $\omega = \frac{x\,dy - y\,dx}{x^2 + y^2}$ is closed, and its period on the unit circle is $2\pi$, so it is not exact. Since $\pi_1(M) \cong \ZZ$, Proposition~\ref{de-rham:proposition-periods}
+gives $H^1_{\mathrm{dR}}(M) = \RR[\omega]$: a closed $1$-form $\eta$ on $M$ is exact if and only if $\int_{S^1}\eta = 0$, and in general $\eta - \frac{1}{2\pi}\big(\int_{S^1}\eta\big)\omega$ is exact. On the simply connected
+$\RR^3 \setminus \{0\}$, by contrast, every closed $1$-form is exact.
+\end{example}
+
+\begin{counterexample}\label{de-rham:counterexample-infinite-dimensional}
+De Rham cohomology of a noncompact manifold can be infinite-dimensional. On $M = \CC \setminus \ZZ$ let $\alpha_n$ be the angle form centred at $n$, the pullback of the angle form of
+Counterexample~\ref{differential-forms:counterexample-closed-not-exact} by $z \mapsto z - n$. It is closed, and its integral over the circle $\gamma_m$ of radius $\frac12$ around $m$ is $2\pi$ if $m = n$ and $0$ otherwise (for $m \neq n$ the circle lies in
+a half-plane, where $\alpha_n$ is exact). If $\sum_nc_n\alpha_n = d f$ for finitely many nonzero $c_n$, integrating over $\gamma_m$ gives $2\pi c_m = 0$ (Proposition~\ref{differential-forms:proposition-line-integrals}). So the classes
+$[\alpha_n]$, $n \in \ZZ$, are linearly independent in $H^1_{\mathrm{dR}}(M)$.
+\end{counterexample}
+
+\begin{proposition}\label{de-rham:proposition-finite-quotient}
+Let a finite group $G$ act freely on $M$ by diffeomorphisms, and $\pi \colon M \to M/G$ the quotient (Theorem~\ref{smooth-manifolds:theorem-smooth-quotient}). Then $\pi^*$ induces an isomorphism
+$H^k_{\mathrm{dR}}(M/G) \cong H^k_{\mathrm{dR}}(M)^G$ onto the classes fixed by $G$.
+\end{proposition}
+
+\begin{proof}
+As $\pi$ is a local diffeomorphism and $\pi \circ g = \pi$, $\pi^*$ identifies $\Omega^\bullet(M/G)$ with the complex $\Omega^\bullet(M)^G$ of $G$-invariant forms: an invariant form descends, because locally $\pi$ has smooth inverses that differ
+by elements of $G$. The averaging operator $A = \frac{1}{|G|}\sum_{g \in G}g^*$ commutes with $d$ and is a projection of $\Omega^\bullet(M)$ onto $\Omega^\bullet(M)^G$. The map $H^k(\Omega^\bullet(M)^G) \to H^k_{\mathrm{dR}}(M)^G$ is injective: if an
+invariant $\omega$ equals $d\eta$, then $\omega = A\omega = d(A\eta)$ with $A\eta$ invariant. It is surjective: if $[\omega]$ is $G$-fixed, then $A\omega$ is invariant, closed, and cohomologous to $\omega$, since each $g^*\omega$ is.
+\end{proof}
+
+\begin{example}\label{de-rham:example-real-projective}
+$H^k_{\mathrm{dR}}(\RR\PP^n) \cong \RR$ for $k = 0$, and for $k = n$ if $n$ is odd; it vanishes otherwise. By Proposition~\ref{de-rham:proposition-finite-quotient} and Example~\ref{de-rham:example-spheres}, only the action of the
+antipodal map $a$ on $H^n_{\mathrm{dR}}(S^n) \cong \RR$ matters. The volume form of $S^n$ is $\iota_X\Omega$ restricted to $S^n$, where $\Omega = dx^1 \wedge \cdots \wedge dx^{n+1}$ and $X = \sum x^i\partial_i$; as $a$ is the restriction of $-\mathrm{id}$,
+$a^*\Omega = (-1)^{n+1}\Omega$ and $a$ preserves $X$, so $a^*$ acts on $H^n$ by $(-1)^{n+1}$, and the invariant part is $H^n$ for $n$ odd and $0$ for $n$ even. In particular $\RR\PP^n$ is not orientable for $n$ even, by
+Corollary~\ref{de-rham:corollary-consequences}.
+\end{example}
+
+\begin{theorem}[K\"unneth formula]\label{de-rham:theorem-kunneth}
+If $M$ has a finite good cover, the map $\bigoplus_{p+q=k}H^p_{\mathrm{dR}}(M) \otimes H^q_{\mathrm{dR}}(N) \to H^k_{\mathrm{dR}}(M \times N)$, $[\alpha] \otimes [\beta] \mapsto [\mathrm{pr}_M^*\alpha \wedge \mathrm{pr}_N^*\beta]$, is an isomorphism for every
+manifold $N$.
+\end{theorem}
+
+\begin{proof}
+Write $\psi_M$ for the map. It is natural in $M$ for restrictions to open subsets. If $M \cong \RR^m$, then $\mathrm{pr}_N \colon M \times N \to N$ is a homotopy equivalence and $H^\bullet_{\mathrm{dR}}(M) = \RR$ in degree $0$, so $\psi_M$ is
+$\mathrm{pr}_N^*$, an isomorphism by Theorem~\ref{de-rham:theorem-homotopy-invariance}. For open $U, V \subseteq M$, tensoring the Mayer--Vietoris sequence of $U, V$ with the vector space $H^q_{\mathrm{dR}}(N)$ and summing over $q$ gives an
+exact sequence, which $\psi$ maps to the Mayer--Vietoris sequence of $U \times N$, $V \times N$. The squares involving restrictions commute, and so does the one with the connecting maps: with a partition of unity $\{\rho_U, \rho_V\}$ on
+$U \cup V$, the connecting maps are $[\omega] \mapsto [d(\rho_V\omega)]$ on both sides, and for closed $\beta$, $d(\mathrm{pr}_M^*(\rho_V\omega) \wedge \mathrm{pr}_N^*\beta) = \mathrm{pr}_M^*d(\rho_V\omega) \wedge \mathrm{pr}_N^*\beta$. So if $\psi$ is an isomorphism for $U$, $V$ and $U \cap V$, it is one for $U \cup V$
+by the five lemma (Lemma~\ref{homological-algebra:lemma-five}). Now let $U_1, \ldots, U_k$ be a finite good cover of $M$; we show by induction on $k$ that $\psi$ is an isomorphism for every open set covered by $k$ open sets forming a good
+cover. For $k = 1$ this is the case $\RR^m$. For the induction step apply the five lemma to $W = U_1 \cup \cdots \cup U_{k-1}$ and $U_k$, noting that $W \cap U_k$ is covered by the $k - 1$ sets $U_i \cap U_k$, which form a good cover.
+\end{proof}
+
+\begin{corollary}\label{de-rham:corollary-torus}
+$H^\bullet_{\mathrm{dR}}(T^n)$ is the exterior algebra on the classes of $dx^1, \ldots, dx^n$, so $b_k(T^n) = \binom nk$; and $H^\bullet_{\mathrm{dR}}(S^1 \times S^2)$ has dimensions $1, 1, 1, 1$.
+\end{corollary}
+
+\begin{proof}
+By Example~\ref{de-rham:example-spheres}, $H^\bullet(S^1)$ is spanned by $1$ and $[d\theta]$, and $T^n = (S^1)^n$ has a finite good cover; Theorem~\ref{de-rham:theorem-kunneth} and induction give the tensor product of $n$ copies of
+$\RR \oplus \RR[d\theta]$, which is the exterior algebra because $d\theta \wedge d\theta = 0$ and the wedge product is graded commutative. The second statement is the same computation with $H^\bullet(S^2)$.
+\end{proof}
+
+\begin{remark}\label{de-rham:remark-no-torsion}
+\emph{De Rham cohomology is a vector space, and it does not see torsion.} The spaces $\Omega^k(M)$ are real vector spaces and $d$ is $\RR$-linear, so $H^k_{\mathrm{dR}}(M)$ is a real vector space, not just an abelian group.
+When it is finite-dimensional, for instance for compact $M$ (Corollary~\ref{de-rham:corollary-consequences}), a choice of basis gives $H^k_{\mathrm{dR}}(M) \cong \RR^{b_k}$, and the only invariant left is the dimension.
+A real vector space has no torsion: $mv = 0$ with $m \neq 0$ forces $v = m^{-1}(mv) = 0$. Integer phenomena are therefore lost. By Theorem~\ref{de-rham:theorem-de-rham} and the universal coefficient theorem
+(Theorem~\ref{singular-cohomology:theorem-universal-coefficients}) over the field $\RR$,
+\[
+H^k_{\mathrm{dR}}(M) \cong H^k(M; \RR) \cong \Hom(H_k(M), \RR),
+\]
+and $\Hom(\ZZ/m\ZZ, \RR) = 0$, since the image of a generator $x$ would satisfy $m\varphi(x) = 0$. So if $H_k(M) \cong \ZZ^{r} \oplus T$ with $T$ finite, then $b_k = r$: de Rham cohomology records the free part of homology and
+forgets $T$. For example (Examples~\ref{de-rham:example-spheres} and~\ref{de-rham:example-real-projective}), $S^3$ and $\RR\PP^3$ have the same de Rham cohomology, $\RR$ in degrees $0$ and $3$, although
+$H_1(\RR\PP^3) \cong \ZZ/2\ZZ$ while $H_1(S^3) = 0$; and the Klein bottle has $H_1 \cong \ZZ \oplus \ZZ/2\ZZ$ (Exercise~\ref{singular-homology:exercise-klein-bottle}) and $H^1_{\mathrm{dR}} \cong \RR$
+(Example~\ref{de-rham:example-dimension-counting}(2)). To see torsion one needs integer coefficients, singular or \v{C}ech cohomology with values in $\ZZ$. This matters for the Hodge conjecture: its rational form only
+concerns $H^{2p}(X; \QQ)$, while torsion classes in $H^{2p}(X; \ZZ)$ are responsible for the first counterexamples to the integral version (Chapter~\ref{failures}).
+\end{remark}
+
+Because the groups are vector spaces, computations can be done by counting dimensions. The basic tool is the following.
+
+\begin{proposition}\label{de-rham:proposition-dimension-counting}
+\begin{enumerate}
+\item If $0 \to V_1 \to V_2 \to \cdots \to V_m \to 0$ is an exact sequence of finite-dimensional vector spaces, then $\sum_{i=1}^m(-1)^i\dim V_i = 0$.
+\item Let $M = U \cup V$ with $U$, $V$ open. If two of the three manifolds $M$, $U \sqcup V$ and $U \cap V$ have finite-dimensional de Rham cohomology (in all degrees together), then so does the third, and the
+\emph{de Rham Euler characteristics} $\chi(W) = \sum_k(-1)^k\dim H^k_{\mathrm{dR}}(W)$ satisfy
+\[
+\chi(M) = \chi(U) + \chi(V) - \chi(U \cap V).
+\]
+\item A manifold with a finite good cover, a finite open cover $U_1, \ldots, U_k$ in which every nonempty intersection $U_{i_1} \cap \cdots \cap U_{i_p}$ is diffeomorphic to $\RR^n$, has finite-dimensional de Rham
+cohomology.
+\end{enumerate}
+\end{proposition}
+
+Here $H^k_{\mathrm{dR}}(U \sqcup V) = H^k_{\mathrm{dR}}(U) \oplus H^k_{\mathrm{dR}}(V)$, since a form on a disjoint union is a pair of forms. For compact $M$, $\chi(M)$ is the Euler characteristic of
+Chapter~\ref{singular-homology}, because $\dim H^k_{\mathrm{dR}}(M) = b_k(M)$ (Corollary~\ref{de-rham:corollary-consequences}). The formula in (2) is the analogue of the inclusion--exclusion principle
+$|U \cup V| = |U| + |V| - |U \cap V|$ for finite sets: the Euler characteristic behaves like a ``number of points'', and for a finite set of points it is exactly that.
+
+\begin{proof}
+(1) Put $V_0 = V_{m+1} = 0$ and let $f_i \colon V_i \to V_{i+1}$, $0 \leq i \leq m$, be the maps, so that $f_0 = 0$ and $f_m = 0$. By rank--nullity (Theorem~\ref{linear-algebra:theorem-rank-nullity}), $\dim V_i = \dim\ker f_i + \dim\im f_i$, and exactness says
+$\dim\ker f_i = \dim\im f_{i-1}$. So $\sum_i(-1)^i\dim V_i = \sum_i(-1)^i(\dim\im f_{i-1} + \dim\im f_i)$, a telescoping sum equal to $\pm\dim\im f_0 \pm \dim\im f_m = 0$.
+
+(2) First, if $A \xrightarrow{a} B \xrightarrow{b} C$ is exact with $A$ and $C$ finite-dimensional, so is $B$: by rank--nullity $\dim B = \dim\ker b + \dim\im b$, and $\ker b = \im a$ has dimension at most $\dim A$,
+while $\im b \subseteq C$. In the Mayer--Vietoris sequence (Theorem~\ref{de-rham:theorem-mayer-vietoris})
+\[
+\cdots \to H^{k-1}_{\mathrm{dR}}(U \cap V) \to H^k_{\mathrm{dR}}(M) \to H^k_{\mathrm{dR}}(U \sqcup V) \to H^k_{\mathrm{dR}}(U \cap V) \to H^{k+1}_{\mathrm{dR}}(M) \to \cdots
+\]
+each space sits between a space of each of the other two kinds, so this argument shows that the third kind is finite-dimensional. All the spaces vanish above $\dim M$, so the Mayer--Vietoris sequence is a finite exact
+sequence of finite-dimensional spaces; apply (1). In it, $H^k(M)$, $H^k(U) \oplus H^k(V)$ and $H^k(U \cap V)$ occupy the positions $3k + 1$, $3k + 2$, $3k + 3$, with signs $(-1)^{k+1}$, $(-1)^k$, $(-1)^{k+1}$ in
+the alternating sum, which gives $-\chi(M) + \chi(U) + \chi(V) - \chi(U \cap V) = 0$.
+
+(3) By induction on the number $k$ of sets in a good cover: for $k = 1$ the manifold is diffeomorphic to $\RR^n$, whose cohomology is $\RR$ in degree $0$ by the Poincar\'e lemma
+(Theorem~\ref{de-rham:theorem-homotopy-invariance}). We prove that every open set covered by $k$ sets forming a good cover has finite-dimensional cohomology. For the induction step write the union as $W \cup U_k$ with $W = U_1 \cup \cdots \cup U_{k-1}$; then
+$W \cap U_k$ is covered by the (at most) $k - 1$ nonempty sets $U_i \cap U_k$, which form a good cover of it because their intersections are intersections of the $U_j$. By induction $W$ and $W \cap U_k$ have
+finite-dimensional cohomology, and so does $U_k \cong \RR^n$; so (2) applies.
+\end{proof}
+
+\begin{example}\label{de-rham:example-dimension-counting}
+\begin{enumerate}
+\item \emph{The torus.} Write $T^2 = S^1 \times S^1$ as the union of two open annuli $U = S^1 \times A$ and $V = S^1 \times B$, where $A$ and $B$ are open arcs covering $S^1$; then $U \cap V$ is a disjoint union of two annuli. Each annulus is
+homotopy equivalent to $S^1$ (Theorem~\ref{de-rham:theorem-homotopy-invariance}), which has $\chi = 1 - 1 = 0$ (Example~\ref{de-rham:example-spheres}). So $\chi(T^2) = 0 + 0 - 0 = 0$. Since $T^2$ is compact, connected and orientable, $b_0 = b_2 = 1$ (Proposition~\ref{de-rham:proposition-h0} and
+Corollary~\ref{de-rham:corollary-consequences}), and $1 - b_1 + 1 = 0$ gives $b_1 = 2$, as in Corollary~\ref{de-rham:corollary-torus}, but without computing any map in the sequence. In general, the
+Euler characteristic of a Mayer--Vietoris decomposition is computed from the pieces alone, while the individual $b_k$ depend on the maps; dimension counting gives the $b_k$ as soon as all but one of them are known.
+\item \emph{The Klein bottle.} The Klein bottle is $K = T^2/G$ for the group $G = \{1, \tau\}$ generated by the free involution $\tau(x, y) = (x + \frac12, -y)$ of $T^2 = \RR^2/\ZZ^2$. By Corollary~\ref{de-rham:corollary-torus},
+$H^1_{\mathrm{dR}}(T^2)$ has basis $[dx]$, $[dy]$ and $H^2_{\mathrm{dR}}(T^2)$ basis $[dx \wedge dy]$; and $\tau^*dx = dx$, $\tau^*dy = -dy$, $\tau^*(dx \wedge dy) = -dx \wedge dy$. By
+Proposition~\ref{de-rham:proposition-finite-quotient} the invariant classes give $H^\bullet_{\mathrm{dR}}(K)$: $\RR$, $\RR[dx]$, $0$ in degrees $0$, $1$, $2$. So $\chi(K) = 1 - 1 + 0 = 0$, as for the torus, while
+$H^2_{\mathrm{dR}}(K) = 0$ shows that $K$ is not orientable, since a compact connected oriented surface has $H^2_{\mathrm{dR}} \cong \RR$ (Corollary~\ref{de-rham:corollary-consequences}). Compare with
+$H_1(K) \cong \ZZ \oplus \ZZ/2\ZZ$ (Exercise~\ref{singular-homology:exercise-klein-bottle}): the free part $\ZZ$ gives $b_1 = 1$, and the torsion $\ZZ/2\ZZ$ is invisible (Remark~\ref{de-rham:remark-no-torsion}).
+\item \emph{Counting with the Euler characteristic.} If a compact connected surface $S$ is the union of open sets whose cohomology is known, (2) of the proposition gives $\chi(S)$, and then
+$b_1 = b_0 + b_2 - \chi(S)$ with $b_0 = 1$ and $b_2 = 1$ or $0$ according as $S$ is orientable or not. Exercise~\ref{de-rham:exercise-genus-betti} does this for the surfaces of genus $g$.
+\end{enumerate}
+\end{example}
+
+\begin{theorem}[Poincar\'e duality in de Rham cohomology]\label{de-rham:theorem-poincare-duality-de-rham}
+Let $M$ be an oriented $n$-manifold. The pairing
+\[
+H^k_{\mathrm{dR}}(M) \times H^{n-k}_{\mathrm{dR},c}(M) \to \RR, \qquad ([\alpha], [\beta]) \mapsto \int_M\alpha \wedge \beta,
+\]
+is well defined and nondegenerate if $M$ has a finite good cover (for instance if $M$ is compact); in that case $H^k_{\mathrm{dR}}(M) \cong H^{n-k}_{\mathrm{dR},c}(M)^*$. For compact oriented $M$ this is the
+statement that $\int_M\alpha \wedge \beta$ is a perfect pairing between $H^k_{\mathrm{dR}}(M)$ and $H^{n-k}_{\mathrm{dR}}(M)$.
+\end{theorem}
+
+\begin{proof}
+The pairing is well defined by Stokes' theorem: if $\alpha$ is closed and $\beta = d\gamma$ has compact support, then $\alpha \wedge \beta = \pm d(\alpha \wedge \gamma)$ has compact support and integrates to zero.
+Nondegeneracy is proved by induction on the number of sets in a finite good cover, one in which all nonempty intersections are diffeomorphic to $\RR^n$ (such covers exist on any manifold, and finite ones
+on compact manifolds), comparing the Mayer--Vietoris sequences of $H^\bullet_{\mathrm{dR}}$ and $H^\bullet_{\mathrm{dR},c}$ with the five lemma; see \cite[Chapter I, Section 5]{bott-tu}. Alternatively it follows from Theorem~\ref{de-rham:theorem-de-rham} and topological Poincar\'e duality
+(Corollary~\ref{poincare-duality:corollary-cup-pairing}), since the wedge product corresponds to the cup product.
+\end{proof}
+
+\begin{theorem}[Cartan--Chevalley--Eilenberg]\label{de-rham:theorem-lie-group-cohomology}
+Let $G$ be a compact connected Lie group. Every de Rham class of $G$ has a unique representative that is invariant under left and right translations, and the bi-invariant forms are closed. Consequently
+$H^\bullet_{\mathrm{dR}}(G) \cong (\Lambda^\bullet\mathfrak{g}^*)^{G}$, the space of $\Ad(G)$-invariant alternating forms on the Lie algebra.
+\end{theorem}
+
+\begin{proof}
+$G \times G$ acts on $G$ by $(a, b) \cdot x = axb^{-1}$; let $\mu$ be the Haar probability measure on the compact connected group $K = G \times G$ (Theorem~\ref{lie-groups:theorem-haar}) and, for a form $\omega$, let
+$A\omega = \int_Kk^*\omega\,d\mu(k)$, defined pointwise; $A\omega$ is smooth and bi-invariant, $A$ commutes with $d$ (differentiation under the integral sign), and $A\omega = \omega$ for bi-invariant $\omega$.
+
+\emph{Averaging does not change classes.} Let $\omega$ be closed. Each $k \in K$ is connected to the identity by a smooth path, so $k^*\omega$ is cohomologous to $\omega$ (Theorem~\ref{de-rham:theorem-homotopy-invariance}). For a closed form $\eta$
+of complementary degree, Fubini's theorem gives $\int_GA\omega \wedge \eta = \int_K(\int_Gk^*\omega \wedge \eta)\,d\mu(k) = \int_G\omega \wedge \eta$, since the inner integral depends only on the class of $k^*\omega$ (Stokes). By Poincar\'e duality
+(Theorem~\ref{de-rham:theorem-poincare-duality-de-rham}), $[A\omega] = [\omega]$.
+
+\emph{Bi-invariant forms are closed.} The inversion $\iota(x) = x^{-1}$ satisfies $\iota \circ L_a = R_{a^{-1}} \circ \iota$, so it maps bi-invariant forms to bi-invariant forms, and $d_e\iota = -\mathrm{id}$ (differentiate $\exp(tX)^{-1} = \exp(-tX)$).
+A bi-invariant form is determined by its value at $e$, so $\iota^*\omega = (-1)^k\omega$ for a bi-invariant $k$-form. As $d\omega$ is bi-invariant of degree $k + 1$, $(-1)^{k+1}d\omega = \iota^*d\omega = d\iota^*\omega = (-1)^kd\omega$, so $d\omega = 0$.
+
+\emph{Uniqueness.} If a bi-invariant $\omega$ is exact, $\omega = d\eta$, then $\omega = A\omega = d(A\eta) = 0$, because $A\eta$ is bi-invariant, hence closed. So bi-invariant forms map isomorphically onto $H^\bullet_{\mathrm{dR}}(G)$. A
+left-invariant form is determined by its value $\omega_e \in \Lambda^\bullet\mathfrak{g}^*$, and it is also right-invariant if and only if $\omega_e$ is invariant under $\Ad(g) = d_e(L_g \circ R_{g^{-1}})$.
+\end{proof}
+
+\begin{example}\label{de-rham:example-su2}
+For $G = \mathrm{SU}(2)$, $\mathfrak{g} = \mathfrak{su}(2) \cong \RR^3$ and $\Ad$ maps $\mathrm{SU}(2)$ onto $\mathrm{SO}(3)$ (Exercise~\ref{lie-groups:exercise-su2}). The $\mathrm{SO}(3)$-invariants in $\Lambda^\bullet\RR^3$ are the constants and the
+multiples of the determinant $e_1^* \wedge e_2^* \wedge e_3^*$, since $\Lambda^1$ and $\Lambda^2 \cong \RR^3$ are irreducible nontrivial representations. So $H^\bullet(\mathrm{SU}(2))$ is $\RR$ in degrees $0$ and $3$, in accordance with
+$\mathrm{SU}(2) \cong S^3$.
+\end{example}
+
+\section{Currents}\label{de-rham:section-currents}
+
+A closed $k$-form $\eta$ on a compact oriented $n$-manifold $M$ and a compact oriented submanifold $Z$ of dimension $n - k$ both give linear functionals on the $(n-k)$-forms:
+\[
+\varphi \longmapsto \int_M\eta \wedge \varphi \qquad \text{and} \qquad \varphi \longmapsto \int_Z\varphi .
+\]
+Poincar\'e duality says that every functional of the second kind agrees, on closed forms, with one of the first kind. It is natural to look for a single space that contains both kinds of objects,
+with an exterior derivative extending $d$ on forms. Distributions do this for functions (Chapter~\ref{distributions}): they contain the locally integrable functions and also the Dirac
+distributions, which are ``functions concentrated at a point''. \emph{Currents} are the analogous objects for differential forms, introduced by de Rham \cite{de-rham-book}. A current is a
+form whose coefficients are distributions; the current of a submanifold is a form concentrated on it. In this section $M$ is an oriented $n$-manifold, and forms and currents are real.
+
+\subsection{Definition and first examples}\label{de-rham:subsection-currents-definition}
+
+To define currents we need a notion of convergence of compactly supported forms. We say that $\varphi_j \to \varphi$ in $\Omega^m_c(M)$ if all $\varphi_j$ have support in one fixed compact
+set $K \subseteq M$ and, in every chart, the coefficients of $\varphi_j$ converge to those of $\varphi$ uniformly on compact subsets of the chart domain, together with all their partial
+derivatives. For $M$ an open subset of $\RR^n$ this is the convergence of test functions of Definition~\ref{distributions:definition-distribution}, applied to each coefficient. If
+$\varphi_j \to \varphi$, then $d\varphi_j \to d\varphi$, because the coefficients of $d\varphi$ are sums of partial derivatives of those of $\varphi$.
+
+\begin{definition}\label{de-rham:definition-current}
+A \emph{current of degree $k$}, or \emph{$k$-current}, on $M$ is a linear map $T \colon \Omega^{n-k}_c(M) \to \RR$ that is continuous in the sense that $T(\varphi_j) \to T(\varphi)$ whenever
+$\varphi_j \to \varphi$ in $\Omega^{n-k}_c(M)$. The $k$-currents form a vector space $\mathcal{D}^{\prime k}(M)$. The \emph{exterior derivative} of $T \in \mathcal{D}^{\prime k}(M)$ is the
+$(k+1)$-current
+\[
+(dT)(\varphi) = (-1)^{k+1}T(d\varphi), \qquad \varphi \in \Omega^{n-k-1}_c(M).
+\]
+A current $T$ is \emph{closed} if $dT = 0$ and \emph{exact} if $T = dS$ for a current $S$.
+\end{definition}
+
+The functional $dT$ is continuous because $d$ preserves convergence, and $d(dT) = \pm T \circ d \circ d = 0$. So the currents form a complex
+$\mathcal{D}^{\prime 0}(M) \to \mathcal{D}^{\prime 1}(M) \to \cdots \to \mathcal{D}^{\prime n}(M)$, just like the forms. A $k$-current is also said to have \emph{dimension} $n - k$, the degree of the forms
+it is evaluated on; geometric measure theory usually indexes currents by their dimension. The sign in the definition of $dT$ is the one that makes $d$ on currents extend $d$ on forms, as
+the first example shows.
+
+\begin{example}\label{de-rham:example-currents}
+\begin{enumerate}
+\item (\emph{Forms.}) A $k$-form $\eta$ with locally integrable coefficients defines the $k$-current $T_\eta(\varphi) = \int_M\eta \wedge \varphi$. If $\eta$ is smooth, then $dT_\eta = T_{d\eta}$:
+for $\varphi \in \Omega^{n-k-1}_c(M)$, Stokes' theorem (Theorem~\ref{differential-forms:theorem-stokes}) applied to $d(\eta \wedge \varphi) = d\eta \wedge \varphi + (-1)^k\eta \wedge d\varphi$ gives
+$\int_M\eta \wedge d\varphi = (-1)^{k+1}\int_Md\eta \wedge \varphi$, so $(dT_\eta)(\varphi) = (-1)^{k+1}\int_M\eta \wedge d\varphi = \int_Md\eta \wedge \varphi$. By
+Example~\ref{distributions:example-distributions}(1), applied to the coefficients in charts, $T_\eta = 0$ only if $\eta = 0$ almost everywhere; so we may regard forms as currents.
+\item (\emph{Submanifolds.}) Let $Z \subseteq M$ be an oriented submanifold of dimension $p$ which is a closed subset of $M$, for instance a compact one, and $i \colon Z \to M$ the inclusion. For
+$\varphi \in \Omega^p_c(M)$ the form $i^*\varphi$ has compact support on $Z$, and the \emph{current of integration}
+\[
+[Z](\varphi) = \int_Zi^*\varphi = \int_Z\varphi
+\]
+is a current of degree $n - p$. It is continuous because $\int_Z$ of a form supported in a fixed compact set is bounded by a constant times the supremum of its coefficients. If
+$\partial Z = \emptyset$, Stokes' theorem on $Z$ gives $[Z](d\varphi) = 0$, so $[Z]$ is closed.
+\item (\emph{Points.}) A point $p \in M$, oriented by the sign $+1$, is a compact submanifold of dimension $0$, and $[p](f) = f(p)$ for $f \in \Omega^0_c(M)$. This $n$-current is the Dirac distribution
+$\delta_p$ in the guise of a current; it is not of the form $T_\eta$ (Exercise~\ref{de-rham:exercise-dirac-current}).
+\item (\emph{Neither.}) On $\RR$ the $0$-current $T(g\,dx) = g^{\prime}(0)$ involves a derivative of the form it is evaluated on, so it is neither a form nor the current of a submanifold. In
+terms of distributions it is $-\delta_0^{\prime}$ (Example~\ref{distributions:example-heaviside}).
+\end{enumerate}
+\end{example}
+
+The first example explains the slogan ``currents are forms with distribution coefficients''. On an open subset of $\RR^n$ it can be made precise. For an increasing multi-index
+$I = (i_1 < \cdots < i_k)$ let $I^c$ be the increasing multi-index of the complementary indices, and define the sign $\varepsilon_I = \pm1$ by
+$dx^I \wedge dx^{I^c} = \varepsilon_I\,dx^1 \wedge \cdots \wedge dx^n$.
+
+\begin{proposition}\label{de-rham:proposition-currents-local}
+Let $U \subseteq \RR^n$ be open, with the standard orientation. For a $k$-current $T$ on $U$ and each increasing multi-index $I$ of length $k$, the map
+$T_I(f) = \varepsilon_I\,T(f\,dx^{I^c})$ is a real-valued distribution on $U$, and
+\[
+T(\varphi) = \sum_{|I| = k}\varepsilon_I\,T_I(\varphi_{I^c}) \qquad \text{for } \varphi = \sum_{|J| = n-k}\varphi_J\,dx^J \in \Omega^{n-k}_c(U).
+\]
+Conversely, every family $(T_I)_{|I| = k}$ of real distributions on $U$ arises in this way from exactly one $k$-current. If $T = T_\eta$ with $\eta = \sum_I\eta_I\,dx^I$, then $T_I = T_{\eta_I}$.
+\end{proposition}
+
+\begin{proof}
+A sequence $f_j \to f$ in $\mathcal{D}(U)$ gives $f_j\,dx^{I^c} \to f\,dx^{I^c}$ in $\Omega^{n-k}_c(U)$, so $T_I$ is continuous. Every increasing $J$ of length $n - k$ is $I^c$ for exactly one $I$
+of length $k$, so by linearity $T(\varphi) = \sum_IT(\varphi_{I^c}\,dx^{I^c}) = \sum_I\varepsilon_IT_I(\varphi_{I^c})$, using $\varepsilon_I^2 = 1$. Conversely, given distributions $T_I$, the right hand side
+of the displayed formula defines a linear map on $\Omega^{n-k}_c(U)$; it is continuous, because $\varphi_j \to \varphi$ in $\Omega^{n-k}_c(U)$ means exactly that every coefficient converges in
+$\mathcal{D}(U)$, and its components are the given $T_I$. Uniqueness is the displayed formula. Finally, $\eta \wedge f\,dx^{I^c} = \eta_If\,dx^I \wedge dx^{I^c} = \varepsilon_I\eta_If\,dx^1 \wedge \cdots \wedge dx^n$,
+because $dx^K \wedge dx^{I^c} = 0$ for $K \neq I$; so $T_I(f) = \varepsilon_I^2\int_U\eta_If = T_{\eta_I}(f)$.
+\end{proof}
+
+So on $U$ we may write a $k$-current as $T = \sum_IT_I\,dx^I$ with distribution coefficients. For instance the $n$-current $[p]$ is $\delta_p\,dx^1 \wedge \cdots \wedge dx^n$, and the
+current of the oriented line $Z = \RR \times \{0\} \subseteq \RR^2$, oriented by $dx$, is $[Z](g\,dx + h\,dy) = \int_\RR g(t, 0)\,dt$. Its component $T_{(1)}(f) = [Z](f\,dy)$ vanishes, as $dy$ restricts to zero on $Z$, and
+$T_{(2)}(f) = \varepsilon_{(2)}[Z](f\,dx) = -\int_\RR f(t, 0)\,dt$, as $dy \wedge dx = -dx \wedge dy$. So $[Z] = -\delta_{\{y = 0\}}\,dy$, where $\delta_{\{y = 0\}}(f) = \int_\RR f(t, 0)\,dt$ is the
+distribution ``$\delta_0(y)$'' concentrated on the line.
+
+\subsection{Support and operations}\label{de-rham:subsection-currents-operations}
+
+If $V \subseteq M$ is open, a form in $\Omega_c(V)$ extended by zero is a form in $\Omega_c(M)$, and convergence in $\Omega_c(V)$ implies convergence in $\Omega_c(M)$. So a current $T$ on $M$
+restricts to a current $T|_V$ on $V$. We say that $T$ \emph{vanishes on} $V$ if $T|_V = 0$.
+
+\begin{lemma}\label{de-rham:lemma-currents-local}
+If a current $T$ on $M$ vanishes on each open set of a family $(V_i)_{i \in I}$, then it vanishes on $V = \bigcup_iV_i$.
+\end{lemma}
+
+\begin{proof}
+Let $\varphi \in \Omega_c(V)$. Choose a smooth partition of unity $(\psi_i)$ on $V$ subordinate to the cover $(V_i)$ (Theorem~\ref{smooth-manifolds:theorem-partitions-of-unity}). Since the supports are
+locally finite and $\operatorname{supp}\varphi$ is compact, only finitely many $\psi_i$ are nonzero on $\operatorname{supp}\varphi$, so $\varphi = \sum_i\psi_i\varphi$ is a finite sum. The support of
+$\psi_i\varphi$ is a closed subset of the compact set $\operatorname{supp}\varphi$ contained in $\operatorname{supp}\psi_i \subseteq V_i$, so $\psi_i\varphi \in \Omega_c(V_i)$ and $T(\psi_i\varphi) = 0$. Hence
+$T(\varphi) = 0$.
+\end{proof}
+
+\begin{definition}\label{de-rham:definition-current-support}
+The \emph{support} $\operatorname{supp}T$ of a current $T$ is the complement of the largest open set on which $T$ vanishes, the union of all such open sets.
+\end{definition}
+
+By the lemma, $T(\varphi) = 0$ whenever $\operatorname{supp}\varphi \cap \operatorname{supp}T = \emptyset$. For a continuous form $\eta$, $\operatorname{supp}T_\eta$ is the closure of
+$\{\eta \neq 0\}$; $\operatorname{supp}[Z] \subseteq Z$, since $[Z](\varphi) = 0$ when $\varphi$ vanishes near $Z$; and $\operatorname{supp}[p] = \{p\}$. Currents can thus be supported on
+sets of measure zero, which forms cannot.
+
+Three operations on forms extend to currents. In each case the extension is forced by the requirement that it agree with the operation on forms, read through
+Example~\ref{de-rham:example-currents}(1).
+
+\begin{definition}\label{de-rham:definition-current-operations}
+Let $T \in \mathcal{D}^{\prime k}(M)$.
+\begin{enumerate}
+\item (\emph{Product with smooth forms.}) For $\alpha \in \Omega^l(M)$, $\alpha \wedge T \in \mathcal{D}^{\prime k+l}(M)$ is $(\alpha \wedge T)(\varphi) = (-1)^{kl}T(\alpha \wedge \varphi)$.
+\item (\emph{Restriction.}) For $V \subseteq M$ open, $T|_V$ as above.
+\item (\emph{Push-forward.}) Let $f \colon M \to N$ be a proper smooth map to an oriented $n^{\prime}$-manifold. Then $f_*T \in \mathcal{D}^{\prime\, k + n^{\prime} - n}(N)$ is $(f_*T)(\psi) = T(f^*\psi)$.
+\end{enumerate}
+\end{definition}
+
+In (3), $f^*\psi$ has compact support because $\operatorname{supp}f^*\psi \subseteq f^{-1}(\operatorname{supp}\psi)$ and $f$ is proper, and $\psi_j \to \psi$ implies $f^*\psi_j \to f^*\psi$ by the chain
+rule; so $f_*T$ is a current. The degree is right: $T$ is evaluated on forms of degree $n - k$, and so is $f_*T$, which is therefore a current of degree $n^{\prime} - (n - k)$ on $N$. Forms can be pulled
+back, but in general not pushed forward; currents can be pushed forward, but in general not pulled back. This is the same duality as between cohomology and homology.
+
+\begin{proposition}\label{de-rham:proposition-current-operations}
+Let $T \in \mathcal{D}^{\prime k}(M)$ and $\alpha \in \Omega^l(M)$.
+\begin{enumerate}
+\item $\alpha \wedge T_\eta = T_{\alpha \wedge \eta}$ for every locally integrable $k$-form $\eta$, and $d(\alpha \wedge T) = d\alpha \wedge T + (-1)^l\alpha \wedge dT$.
+\item $\operatorname{supp}(\alpha \wedge T) \subseteq \operatorname{supp}\alpha \cap \operatorname{supp}T$.
+\item For $f \colon M \to N$ proper, $d(f_*T) = (-1)^{n^{\prime} - n}f_*(dT)$.
+\item If $Z \subseteq M$ is a closed oriented submanifold with inclusion $i$, then $[Z] = i_*T_1$, where $T_1$ is the $0$-current on $Z$ given by the constant function $1$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) For $\varphi \in \Omega^{n-k-l}_c(M)$, $(\alpha \wedge T_\eta)(\varphi) = (-1)^{kl}\int_M\eta \wedge \alpha \wedge \varphi = \int_M\alpha \wedge \eta \wedge \varphi$, since moving the $l$-form $\alpha$ past the
+$k$-form $\eta$ costs $(-1)^{kl}$. For the Leibniz rule, let $\varphi \in \Omega^{n-k-l-1}_c(M)$. From $d(\alpha \wedge \varphi) = d\alpha \wedge \varphi + (-1)^l\alpha \wedge d\varphi$,
+\[
+d(\alpha \wedge T)(\varphi) = (-1)^{k+l+1}(-1)^{kl}\,T(\alpha \wedge d\varphi) = (-1)^{k+1+kl}\bigl(T(d(\alpha \wedge \varphi)) - T(d\alpha \wedge \varphi)\bigr).
+\]
+On the other hand $(d\alpha \wedge T)(\varphi) = (-1)^{k(l+1)}T(d\alpha \wedge \varphi)$, which is the second term, and
+$(-1)^l(\alpha \wedge dT)(\varphi) = (-1)^{l + (k+1)l}(dT)(\alpha \wedge \varphi) = (-1)^{kl}(-1)^{k+1}T(d(\alpha \wedge \varphi))$, which is the first.
+
+(2) If $\varphi$ is supported in the open set $M \setminus \operatorname{supp}\alpha$, then $\alpha \wedge \varphi = 0$; if it is supported in $M \setminus \operatorname{supp}T$, then so is $\alpha \wedge \varphi$, and
+$T(\alpha \wedge \varphi) = 0$ by Lemma~\ref{de-rham:lemma-currents-local}. So $\alpha \wedge T$ vanishes on both open sets, hence on their union.
+
+(3) For $\psi$ of degree $n - k - 1$ on $N$, using $f^*d = df^*$ (Theorem~\ref{differential-forms:theorem-exterior-derivative}),
+$d(f_*T)(\psi) = (-1)^{k + n^{\prime} - n + 1}T(f^*d\psi) = (-1)^{n^{\prime} - n}(-1)^{k+1}T(df^*\psi) = (-1)^{n^{\prime} - n}(dT)(f^*\psi)$.
+
+(4) $(i_*T_1)(\varphi) = T_1(i^*\varphi) = \int_Z1 \wedge i^*\varphi = [Z](\varphi)$; the inclusion is proper because $Z$ is closed.
+\end{proof}
+
+\begin{remark}\label{de-rham:remark-current-products}
+Two currents cannot be multiplied in general, and this is not a defect of the definitions. Take $\rho \geq 0$ smooth with compact support in the unit ball of $\RR^n$ and $\int\rho = 1$, and
+$\rho_\varepsilon(x) = \varepsilon^{-n}\rho(x/\varepsilon)$. Then $T_{\rho_\varepsilon} \to \delta_0$ (Proposition~\ref{distributions:proposition-approximate-identity}), but for $\varphi \geq 0$ with $\varphi(0) > 0$,
+\[
+\int\rho_\varepsilon^2\varphi = \varepsilon^{-n}\int\rho(y)^2\varphi(\varepsilon y)\,dy \sim \varepsilon^{-n}\varphi(0)\int\rho^2 \to \infty,
+\]
+so the squares do not converge, and no reasonable product $\delta_0 \cdot \delta_0$ exists. In geometric terms: the product of two currents of integration should be the current of the
+intersection, and this only makes sense when the submanifolds meet transversally. This is one reason why intersection theory of cycles needs moving lemmas or deformation to the normal cone
+(Chapter~\ref{intersection-theory}).
+\end{remark}
+
+\subsection{Boundaries and the angle form}\label{de-rham:subsection-currents-boundaries}
+
+Stokes' theorem becomes a statement about currents. Let $Z$ be an oriented $p$-manifold with boundary and $i \colon Z \to M$ a proper smooth map, for instance any smooth map if $Z$ is compact; the formula $[Z](\varphi) = \int_Zi^*\varphi$
+still defines a current of degree $n - p$, the current of the ``singular chain'' $i$, and similarly for $\partial Z$, with the induced orientation (Definition~\ref{differential-forms:definition-manifold-with-boundary}).
+
+\begin{proposition}\label{de-rham:proposition-boundary-current}
+In this situation $d[Z] = (-1)^{n-p+1}[\partial Z]$.
+\end{proposition}
+
+\begin{proof}
+For $\varphi \in \Omega^{p-1}_c(M)$, Stokes' theorem on $Z$ and $i^*d = di^*$ give
+$d[Z](\varphi) = (-1)^{n-p+1}\int_Zi^*d\varphi = (-1)^{n-p+1}\int_Zd(i^*\varphi) = (-1)^{n-p+1}\int_{\partial Z}i^*\varphi$.
+\end{proof}
+
+Up to sign, the exterior derivative of currents is the boundary operator of chains. For example:
+\begin{enumerate}
+\item If $\gamma \colon [0, 1] \to M$ is a smooth path from $q$ to $p$, then $\partial[0, 1] = \{1\} - \{0\}$ (Example~\ref{differential-forms:example-boundaries}(1)), so
+$d[\gamma] = (-1)^n([p] - [q])$: the difference of two points joined by a path is an exact current.
+\item On $\RR$, the current of $Z = [0, \infty)$ is $T_H$ for the Heaviside function $H$, and $\partial Z = -\{0\}$ (the outward direction at $0$ is $-\partial_t$). The proposition gives
+$dT_H = [0]$, the current version of $H^{\prime} = \delta_0$ (Example~\ref{distributions:example-heaviside}).
+\end{enumerate}
+In this way currents contain both differential forms and (smooth) chains, with compatible differentials. This is why they are a natural place to compare de Rham cohomology with homology, which
+was de Rham's motivation.
+
+The next example shows a closed form that stops being closed when it is regarded as a current on a larger manifold, and the defect is concentrated at a point.
+
+\begin{example}\label{de-rham:example-angle-current}
+Let $\omega = (x\,dy - y\,dx)/(x^2 + y^2)$ be the angle form on $\RR^2 \setminus \{0\}$ (Example~\ref{de-rham:example-angle-form}). Its coefficients are bounded by $1/r$, which is integrable near $0$
+in the plane ($\int_0^1r^{-1}\,r\,dr < \infty$), so $\omega$ defines a $1$-current $T_\omega$ on all of $\RR^2$. We claim
+\[
+d\Bigl(\frac{1}{2\pi}T_\omega\Bigr) = [0].
+\]
+Let $f \in \Omega^0_c(\RR^2)$. Then $(dT_\omega)(f) = (-1)^2T_\omega(df) = \int_{\RR^2}\omega \wedge df = \lim_{\varepsilon \to 0}\int_{r \geq \varepsilon}\omega \wedge df$ by dominated convergence. On
+$\{r \geq \varepsilon\}$ the form $\omega$ is smooth and closed, so $d(f\omega) = df \wedge \omega = -\omega \wedge df$, and Stokes' theorem on the manifold with boundary $\{r \geq \varepsilon\}$, where $f\omega$ has
+compact support, gives
+\[
+\int_{r \geq \varepsilon}\omega \wedge df = -\int_{\partial\{r \geq \varepsilon\}}f\omega = \int_{|x| = \varepsilon}f\omega = \int_0^{2\pi}f(\varepsilon\cos t, \varepsilon\sin t)\,dt \longrightarrow 2\pi f(0).
+\]
+Here the circle in the third expression is oriented counterclockwise: the outward direction of $\{r \geq \varepsilon\}$ at a boundary point points towards $0$, opposite to that of the disc, so
+the induced orientation is clockwise (compare Example~\ref{differential-forms:example-boundaries}(2)); and $\omega$ restricts to $dt$ on the counterclockwise circle. Hence
+$(dT_\omega)(f) = 2\pi f(0) = 2\pi[0](f)$.
+\end{example}
+
+So the obstruction to extending the closed form $\omega$ across the puncture is $2\pi$ times the point, and $2\pi$ is the period of $\omega$. More generally, if $\eta$ is a closed $1$-form on
+$\RR^2 \setminus \{p_1, \ldots, p_m\}$ that is a combination $\sum_ic_i\alpha_i$ of angle forms centred at the $p_i$, then $d T_\eta = 2\pi\sum_ic_i[p_i]$: the current remembers the periods around the
+punctures. The same computation in $\RR^3$, with the solid angle form, gives $d T_\sigma = 4\pi[0]$ (Exercise~\ref{de-rham:exercise-solid-angle-current}); in physics this is Gauss's law, the electric
+field of a point charge has divergence concentrated at the charge. Its complex-analytic version, $\frac{1}{2\pi i}d\bigl(\frac{dz}{z}\bigr) = [0]$ as currents on $\CC$, underlies the residue theorem and the
+argument principle.
+
+\subsection{The cohomology of currents}\label{de-rham:subsection-currents-cohomology}
+
+Since currents form a complex containing the de Rham complex, one can compare their cohomology groups. The fundamental fact is that they agree.
+
+\begin{theorem}\label{de-rham:theorem-currents}
+On an oriented manifold the complex of currents computes de Rham cohomology: the inclusion of smooth forms into currents is a quasi-isomorphism. Under this identification and Poincar\'e duality, the class
+of $[Z]$ for a compact oriented $k$-dimensional submanifold $Z$ of a compact oriented $n$-manifold $M$ is the Poincar\'e dual of $Z$: it is the unique class $\eta_Z \in H^{n-k}_{\mathrm{dR}}(M)$ with
+\[
+\int_Z\varphi = \int_M\eta_Z \wedge \varphi \qquad \text{for all closed } \varphi \in \Omega^k(M).
+\]
+\end{theorem}
+
+This is proved in \cite[Chapter IV]{de-rham-book} and \cite[Chapter 0, Section 4]{griffiths-harris}; the first statement is a sheaf-theoretic argument like the proof of
+Theorem~\ref{de-rham:theorem-de-rham}, applied to the fine resolution of $\RR_M$ by sheaves of currents, and the second follows by comparing both sides with the topological Poincar\'e dual
+(Remark~\ref{poincare-duality:remark-fundamental-classes-subspaces}). The sheaf of currents is fine, because currents can be multiplied by smooth functions, by
+Definition~\ref{de-rham:definition-current-operations}(1); the real input is the Poincar\'e lemma for currents, that a closed current of positive degree on a ball is exact.
+
+Concretely, the theorem says two things. Every closed current $T$ is cohomologous to a smooth closed form: $T = T_\eta + dS$ with $\eta$ smooth and $S$ a current. And a smooth closed form that is
+the derivative of a current is already the derivative of a smooth form. So singular objects such as $[Z]$ can be used as representatives of cohomology classes, and nothing new is created.
+
+\begin{example}\label{de-rham:example-point-class}
+Let $M$ be compact, connected and oriented. The class of $[p]$ in $H^n_{\mathrm{dR}}(M)$ is represented by any $n$-form $\eta$ with $\int_M\eta = 1$. Indeed, by Theorem~\ref{de-rham:theorem-currents} for
+$Z = \{p\}$ the class $\eta_p$ satisfies $f(p) = \int_M\eta_p f$ for all closed $0$-forms $f$, which are the constants; so $\int_M\eta_p = 1$, and this determines the class because
+$H^n_{\mathrm{dR}}(M) \cong H^0_{\mathrm{dR}}(M)^* \cong \RR$ by integration (Theorem~\ref{de-rham:theorem-poincare-duality-de-rham}). The class does not depend on $p$, as also follows from the exact
+current $d[\gamma] = \pm([p] - [q])$ above. On the noncompact manifold $\RR^2$, by contrast, $[0] = d(\frac{1}{2\pi}T_\omega)$ is exact, in accordance with $H^2_{\mathrm{dR}}(\RR^2) = 0$.
+\end{example}
+
+\begin{remark}\label{de-rham:remark-regularisation}
+De Rham proved a quantitative form of the first statement of the theorem \cite{de-rham-book}: there are linear operators $R_\varepsilon$ and $A_\varepsilon$ on currents such that $R_\varepsilon T$ is a
+smooth form for every $T$, $R_\varepsilon T \to T$ as $\varepsilon \to 0$, the supports of $R_\varepsilon T$ and $A_\varepsilon T$ lie in any prescribed neighbourhood of $\operatorname{supp}T$ for $\varepsilon$
+small, and
+\[
+R_\varepsilon T - T = dA_\varepsilon T + A_\varepsilon dT .
+\]
+On $\RR^n$, $R_\varepsilon$ is essentially convolution with $\rho_\varepsilon$, as in Remark~\ref{de-rham:remark-current-products}; on a manifold one patches such convolutions together with a partition of unity. For a closed
+current the formula exhibits $R_\varepsilon T$ as a smooth form cohomologous to $T$, a ``smoothing'' of $T$. For $T = [Z]$ with $Z$ compact and without boundary, the smoothing is a closed form supported near $Z$ that
+represents the Poincar\'e dual of $Z$.
+\end{remark}
+
+\subsection{Currents in complex geometry and in geometric measure theory}\label{de-rham:subsection-currents-further}
+
+\begin{remark}\label{de-rham:remark-cycle-classes}
+Currents are the natural home for the cycle classes of Hodge theory: an analytic subvariety $Z$ of a compact complex manifold, possibly singular, defines a current of integration because its singular locus
+has measure zero and $\int_{Z_{\mathrm{reg}}}\varphi$ converges (Chapter~\ref{cycle-class}); its class in $H^{2n-2k}(X; \ZZ)$ is the cycle class whose Hodge-theoretic characterisation the Hodge conjecture
+concerns.
+\end{remark}
+
+\begin{remark}\label{de-rham:remark-complex-currents}
+On a complex manifold of complex dimension $n$, complex-valued currents split by type, as forms do (Chapter~\ref{dolbeault}): a current of \emph{bidegree} $(p, q)$ is evaluated on forms of type
+$(n - p, n - q)$, and $d = \partial + \bar\partial$ on currents. The current of integration over a complex submanifold of complex codimension $p$ has bidegree $(p, p)$, because a form of type
+$(a, b)$ with $a \neq b$ restricts to zero on a complex manifold of dimension $\frac{a+b}{2}$; it is moreover \emph{positive}, a notion modelled on the positivity of the volume form of a complex
+submanifold. Lelong's theorem says that integration over the regular part of a possibly singular subvariety is a closed positive current, and the \emph{Poincar\'e--Lelong formula}
+\[
+\frac{i}{2\pi}\,\partial\bar\partial\log|f|^2 = [Z(f)]
+\]
+for a holomorphic function $f$, where the zeros are counted with multiplicities, expresses the current of a divisor through a function with a logarithmic singularity
+\cite[Chapter 3]{griffiths-harris}. In dimension one it is the computation of Example~\ref{de-rham:example-angle-current} in another guise: it says that $\frac{1}{2\pi}\log|z|$ is a fundamental solution of the Laplacian
+on $\RR^2$, the two-dimensional analogue of Exercise~\ref{distributions:exercise-fundamental-solution}. Taking classes, it gives the equality between the cycle class of a divisor and the first Chern class of its line bundle, a key
+input of the Lefschetz $(1,1)$ theorem.
+\end{remark}
+
+\begin{remark}\label{de-rham:remark-gmt-currents}
+In geometric measure theory one studies currents by their size rather than their cohomology. The \emph{mass} of a current $T$ of dimension $p$ in $\RR^N$ is
+$\sup\{T(\varphi) : \|\varphi(x)\| \leq 1 \text{ for all } x\}$, where $\|\varphi(x)\|$ is the comass of Definition~\ref{multilinear-algebra:definition-comass}: the largest value of $\varphi(x)$ on a unit simple $p$-vector, that
+is, on an oriented $p$-plane with its unit area element. The mass of $[Z]$ is the $p$-dimensional volume of $Z$. The inequality $M([Z]) \leq \mathrm{vol}(Z)$ is immediate: $[Z](\varphi) = \int_Z\langle\varphi, \xi\rangle\,dA$ with
+$\xi$ the unit tangent $p$-vector of $Z$, which is simple, and $\langle\varphi, \xi\rangle \leq \|\varphi\|$. The comass, rather than the Euclidean norm of forms, is the right normalisation because of
+\emph{calibrations}. Let $\varphi$ be a closed $p$-form with $\|\varphi(x)\| \leq 1$ everywhere, and $Z$ a compact oriented submanifold without boundary on which $\varphi$ restricts to the volume form, that is,
+$\langle\varphi, \xi\rangle = 1$ at every point. If $Z^{\prime}$ is another compact oriented $p$-submanifold such that $Z$ and $Z^{\prime}$ together bound, that is, $Z \sqcup (-Z^{\prime})$ is the oriented boundary of a compact oriented
+$(p + 1)$-manifold $W$ mapped into $M$, then by Stokes' theorem
+\[
+\mathrm{vol}(Z) = \int_Z\varphi = \int_{Z^{\prime}}\varphi + \int_Wd\varphi = \int_{Z^{\prime}}\varphi \leq M([Z^{\prime}]) = \mathrm{vol}(Z^{\prime}),
+\]
+so $Z$ has the least volume among such competitors; with currents the same computation applies to every current homologous to $[Z]$. The basic example is the K\"ahler form: by the Wirtinger inequality (Chapter~\ref{kahler}) $\omega^p/p!$ has comass $1$ on a K\"ahler manifold, with
+equality exactly on the complex $p$-planes, so compact complex submanifolds, in particular algebraic cycles, minimise volume in their homology classes. With the Euclidean norm this would fail: the K\"ahler form
+$\sum_jdx^j \wedge dy^j$ of $\CC^n$ has Euclidean norm $\sqrt n$ but comass $1$ (Example~\ref{multilinear-algebra:example-comass} for $n = 2$). Federer and Fleming introduced \emph{normal currents}, for which $T$ and its
+boundary have finite mass, and \emph{integral currents}, generalised oriented surfaces with integer multiplicities, and proved a compactness theorem for integral currents of bounded mass and
+boundary mass \cite{federer-fleming-1960}. It gives the existence of an area-minimising surface with any prescribed boundary in every dimension and codimension, a solution of Plateau's problem
+\cite{federer-gmt}. Integral currents also give a homology theory: on nice spaces, homology classes are represented by integral cycles, and area minimisers in a class play the role that harmonic
+forms play in de Rham cohomology (Chapter~\ref{hodge-theorem}).
+\end{remark}
+
+\section{Exercises}\label{de-rham:section-exercises}
+
+\begin{exercise}\label{de-rham:exercise-torus}
+Compute $H^\bullet_{\mathrm{dR}}(T^n)$ and show that it is the exterior algebra on $H^1$, generated by the forms $d\theta^1, \ldots, d\theta^n$.
+\end{exercise}
+
+\begin{solution}
+By Theorem~\ref{de-rham:theorem-de-rham} and Example~\ref{singular-cohomology:example-torus}, $H^\bullet_{\mathrm{dR}}(T^n) \cong \Lambda^\bullet\RR^n$. The classes of the closed forms $d\theta^i$, which are
+not exact since $\int_{S^1_i}d\theta^i = 2\pi$, generate: their products are the $\binom{n}{k}$ linearly independent classes of $d\theta^{i_1} \wedge \cdots \wedge d\theta^{i_k}$, which can be detected by
+integration over the corresponding subtori.
+\end{solution}
+
+\begin{exercise}\label{de-rham:exercise-compactly-supported-line}
+Show that $H^0_{\mathrm{dR},c}(\RR) = 0$ and $H^1_{\mathrm{dR},c}(\RR) \cong \RR$, with the isomorphism given by integration; so compactly supported de Rham cohomology is not homotopy invariant.
+\end{exercise}
+
+\begin{solution}
+A compactly supported function with $df = 0$ is constant, hence zero. The map $\int_\RR \colon \Omega^1_c(\RR) \to \RR$ is surjective, and $f\,dx$ integrates to zero if and only if $F(x) = \int_{-\infty}^xf$ has
+compact support, in which case $f\,dx = dF$ is exact.
+\end{solution}
+
+\begin{exercise}\label{de-rham:exercise-degree-de-rham}
+Let $f \colon M \to N$ be a smooth map of compact connected oriented $n$-manifolds. Show that $f^* \colon H^n_{\mathrm{dR}}(N) \to H^n_{\mathrm{dR}}(M)$ is multiplication by the degree of $f$, and that a map of
+nonzero degree is surjective.
+\end{exercise}
+
+\begin{exercise}\label{de-rham:exercise-kunneth-de-rham}
+Prove the K\"unneth formula $H^\bullet_{\mathrm{dR}}(M \times N) \cong H^\bullet_{\mathrm{dR}}(M) \otimes H^\bullet_{\mathrm{dR}}(N)$ for manifolds with finite good covers, by induction with Mayer--Vietoris.
+\end{exercise}
+
+\begin{exercise}\label{de-rham:exercise-punctured-plane}
+Let $M = \RR^2 \setminus \{p_1, \ldots, p_k\}$ for distinct points $p_i$. Show that $H^1_{\mathrm{dR}}(M) \cong \RR^k$, with a basis given by the angle forms $\alpha_i$ centred at the $p_i$,
+and that a closed $1$-form $\eta$ on $M$ is exact if and only if its integrals over small circles around all the $p_i$ vanish.
+\end{exercise}
+
+\begin{solution}
+After a rotation we may assume the $p_i$ have distinct first coordinates, $p_1$ having the largest. Let $U$ be $M$ intersected with $\{x < a\}$ and $V$ be $M$ intersected with
+$\{x > b\}$, where $b < a$ are chosen so that $p_1$ is the only point with first coordinate $> b$ and none has first coordinate in $[b, a]$. Then $U \cap V$ is a strip, which is
+contractible, so Mayer--Vietoris gives $H^1(M) \cong H^1(U) \oplus H^1(V)$. The half-planes are diffeomorphic to $\RR^2$, so $V$ is a plane minus one point, with $H^1 \cong \RR$ spanned by
+$\alpha_1$ (Example~\ref{de-rham:example-angle-form}), and $U$ is a plane minus $k - 1$ points; induction gives $\RR^k$. The integral of $\alpha_i$ over a small circle around $p_j$ is
+$2\pi\delta_{ij}$ (away from $p_i$, $\alpha_i$ is exact on a disc), so the map $[\eta] \mapsto (\int_{C_j}\eta)_j$ is surjective onto $\RR^k$, hence an isomorphism, and the $[\alpha_i]$ form a basis.
+\end{solution}
+
+\begin{exercise}\label{de-rham:exercise-solid-angle}
+On $\RR^3 \setminus \{0\}$ let $\sigma = (x\,dy \wedge dz + y\,dz \wedge dx + z\,dx \wedge dy)/r^3$, $r = (x^2 + y^2 + z^2)^{1/2}$ (the \emph{solid angle form}). Show that $\sigma$ is closed, that
+$\int_{S^2}\sigma = 4\pi$, and deduce that $H^2_{\mathrm{dR}}(\RR^3 \setminus \{0\}) = \RR[\sigma]$ and that $\sigma$ is not exact.
+\end{exercise}
+
+\begin{solution}
+By Example~\ref{differential-forms:example-forms-r3}, $d\sigma = \operatorname{div}(x/r^3, y/r^3, z/r^3)\,dx \wedge dy \wedge dz$, and $\partial_x(x/r^3) = 1/r^3 - 3x^2/r^5$, so the divergence is
+$3/r^3 - 3r^2/r^5 = 0$. On the unit sphere $r = 1$ and $\sigma$ restricts to the area form (Example~\ref{differential-forms:example-integrals}(2)), so $\int_{S^2}\sigma = 4\pi$. An exact form would have
+integral $0$ over the closed surface $S^2$ (Theorem~\ref{differential-forms:theorem-stokes}). Finally $\RR^3 \setminus \{0\}$ is homotopy equivalent to $S^2$, so its $H^2$ is one-dimensional
+(Example~\ref{de-rham:example-spheres}), spanned by the nonzero class $[\sigma]$.
+\end{solution}
+
+\begin{exercise}\label{de-rham:exercise-explicit-primitive}
+Decide whether the $2$-form $\omega = z\,dx \wedge dy + x\,dy \wedge dz + y\,dz \wedge dx$ on $\RR^3$ is closed, and find a primitive of the closed form
+$\omega^{\prime} = dx \wedge dy + dy \wedge dz$ using Corollary~\ref{de-rham:corollary-explicit-poincare}.
+\end{exercise}
+
+\begin{solution}
+$d\omega = \partial_zz\,dz \wedge dx \wedge dy + \partial_xx\,dx \wedge dy \wedge dz + \partial_yy\,dy \wedge dz \wedge dx = 3\,dx \wedge dy \wedge dz \neq 0$, so $\omega$ is not closed and has no primitive.
+For $\omega^{\prime}$, which has constant coefficients and is closed, $\iota_X\omega^{\prime} = x\,dy - y\,dx + y\,dz - z\,dy$ and $\eta = \frac12(x\,dy - y\,dx + y\,dz - z\,dy)$; then
+$d\eta = \frac12(2\,dx \wedge dy + 2\,dy \wedge dz) = \omega^{\prime}$.
+\end{solution}
+
+\begin{exercise}\label{de-rham:exercise-dirac-current}
+Show that for $p \in M$ the current $[p]$ is not of the form $T_\eta$ for a locally integrable $n$-form $\eta$.
+\end{exercise}
+
+\begin{solution}
+Suppose $[p] = T_\eta$, and restrict both sides to a positively oriented chart $V \cong U \subseteq \RR^n$ around $p$; the restriction of $T_\eta$ is $T_{\eta|_V}$. Write $\eta = h\,dx^1 \wedge \cdots \wedge dx^n$
+on $U$. For $I = (1, \ldots, n)$ we have $I^c = \emptyset$ and $\varepsilon_I = 1$, so by Proposition~\ref{de-rham:proposition-currents-local} the only component of $[p]$ is $f \mapsto [p](f) = f(p)$, the Dirac
+distribution $\delta_p$, and the only component of $T_\eta$ is $T_h$. So $\delta_p = T_h$ with $h$ locally integrable, which is impossible by
+Example~\ref{distributions:example-distributions}(2) (translated from $0$ to $p$).
+\end{solution}
+
+\begin{exercise}\label{de-rham:exercise-solid-angle-current}
+Let $\sigma$ be the solid angle form on $\RR^3 \setminus \{0\}$ (Exercise~\ref{de-rham:exercise-solid-angle}). Show that $\sigma$ has locally integrable coefficients on $\RR^3$ and that
+$dT_\sigma = 4\pi[0]$ as currents on $\RR^3$.
+\end{exercise}
+
+\begin{solution}
+The coefficients of $\sigma$ are bounded by $1/r^2$, and $\int_0^1r^{-2}\,r^2\,dr < \infty$, so they are locally integrable. For $f \in \Omega^0_c(\RR^3)$, $(dT_\sigma)(f) = (-1)^3T_\sigma(df) = -\lim_{\varepsilon \to 0}\int_{r \geq \varepsilon}\sigma \wedge df$.
+On $\{r \geq \varepsilon\}$ the form $\sigma$ is closed, so $d(f\sigma) = df \wedge \sigma = \sigma \wedge df$ ($df$ has degree $1$ and $\sigma$ degree $2$). By Stokes' theorem,
+$-\int_{r \geq \varepsilon}\sigma \wedge df = -\int_{\partial\{r \geq \varepsilon\}}f\sigma = \int_{|x| = \varepsilon}f\sigma$, where the sphere $\{|x| = \varepsilon\}$ now carries the orientation of the boundary of the ball,
+since the outward directions of the ball and of its complement are opposite. The form $\sigma$ is invariant under the scaling $x \mapsto \varepsilon x$ (numerator and denominator are homogeneous of degree $3$),
+so $\int_{|x| = \varepsilon}f\sigma = \int_{S^2}f(\varepsilon u)\,\sigma(u)$, and $\sigma$ restricts to the area form on $S^2$. As $\varepsilon \to 0$ this tends to $4\pi f(0)$ by uniform continuity of $f$.
+Hence $dT_\sigma = 4\pi[0]$.
+\end{solution}
+
+\begin{exercise}\label{de-rham:exercise-current-products-functions}
+\begin{enumerate}
+\item Show that $g \wedge [p] = g(p)[p]$ for a smooth function $g$, and that $\alpha \wedge [Z] = 0$ for a closed oriented submanifold $Z$ and a form $\alpha$ with $i^*\alpha = 0$.
+\item Let $T$ be the $0$-current $T(g\,dx) = g^{\prime}(0)$ on $\RR$ of Example~\ref{de-rham:example-currents}(4). Show that $\operatorname{supp}T = \{0\}$ and that $x \wedge T$ is the current
+$g\,dx \mapsto g(0)$, which is not zero although $x$ vanishes on $\operatorname{supp}T$.
+\end{enumerate}
+\end{exercise}
+
+\begin{solution}
+(1) $(g \wedge [p])(f) = [p](gf) = g(p)f(p)$. For $\alpha$ of degree $l$ and $Z$ of dimension $q$, $(\alpha \wedge [Z])(\varphi) = \pm\int_Zi^*\alpha \wedge i^*\varphi = 0$.
+(2) If $\operatorname{supp}g \not\ni 0$, then $g^{\prime}(0) = 0$, so $T$ vanishes on $\RR \setminus \{0\}$; and $T \neq 0$. Further $(x \wedge T)(g\,dx) = T(xg\,dx) = (xg)^{\prime}(0) = g(0)$. So the inclusion
+of Proposition~\ref{de-rham:proposition-current-operations}(2) cannot be improved to: $\alpha \wedge T = 0$ if $\alpha$ vanishes on $\operatorname{supp}T$. For currents involving derivatives one needs
+$\alpha$ to vanish to higher order.
+\end{solution}
+
+\begin{exercise}\label{de-rham:exercise-pushforward-diffeomorphism}
+Let $f \colon M \to N$ be an orientation-preserving diffeomorphism of oriented $n$-manifolds. Show that $f_*T_\eta = T_{(f^{-1})^*\eta}$ for every locally integrable form $\eta$ on $M$, and
+$f_*[Z] = [f(Z)]$ for every closed oriented submanifold $Z \subseteq M$, with $f(Z)$ oriented so that $f|_Z \colon Z \to f(Z)$ preserves orientation.
+\end{exercise}
+
+\begin{solution}
+Integration of compactly supported top-degree forms is invariant under orientation-preserving diffeomorphisms (Proposition~\ref{differential-forms:proposition-integral-well-defined}), so for $\psi$ on $N$,
+$(f_*T_\eta)(\psi) = \int_M\eta \wedge f^*\psi = \int_Mf^*\bigl((f^{-1})^*\eta \wedge \psi\bigr) = \int_N(f^{-1})^*\eta \wedge \psi$. Similarly
+$(f_*[Z])(\psi) = \int_Zi^*f^*\psi = \int_Z(f|_Z)^*\bigl(\psi|_{f(Z)}\bigr) = \int_{f(Z)}\psi$.
+\end{solution}
+
+\begin{exercise}\label{de-rham:exercise-spheres-euler}
+Write $S^n = U \cup V$ with $U$, $V$ the complements of the north and south poles. Using only Proposition~\ref{de-rham:proposition-dimension-counting}, find $\chi(S^n)$. Deduce $b_n(S^n)$ from $b_0 = 1$ and the vanishing of
+$b_k(S^n)$ for $0 < k < n$ (Example~\ref{de-rham:example-spheres}), and check the answer against that example.
+\end{exercise}
+
+\begin{solution}
+$U$ and $V$ are diffeomorphic to $\RR^n$ by stereographic projection, so $\chi(U) = \chi(V) = 1$, and $U \cap V \cong S^{n-1} \times \RR$ is homotopy equivalent to $S^{n-1}$. By induction on $n$, starting from $\chi(S^0) = 2$
+(two points), $\chi(S^n) = 2 - \chi(S^{n-1})$, so $\chi(S^n) = 1 + (-1)^n$. Then $1 + (-1)^nb_n = 1 + (-1)^n$ gives $b_n = 1$.
+\end{solution}
+
+\begin{exercise}\label{de-rham:exercise-genus-betti}
+Let $S$ be a compact connected surface.
+\begin{enumerate}
+\item Let $D \subseteq S$ be a closed disc in a chart, and $S^\circ = S \setminus D$. Show that $H^\bullet_{\mathrm{dR}}(S^\circ)$ is finite-dimensional and $\chi(S^\circ) = \chi(S) - 1$.
+\item The connected sum $S \# S'$ of two compact connected surfaces is obtained by removing a closed disc from each and gluing the two along collars of the boundary circles, so that $S \# S' = U \cup V$ with
+$U \cong S^\circ$, $V \cong S'^\circ$ and $U \cap V$ an annulus. Show that $\chi(S \# S') = \chi(S) + \chi(S') - 2$.
+\item Deduce that the closed orientable surface $\Sigma_g = T^2 \# \cdots \# T^2$ of genus $g$ (with $\Sigma_0 = S^2$) has $\chi(\Sigma_g) = 2 - 2g$, hence $b_1(\Sigma_g) = 2g$, and that the connected sum $N_h$ of
+$h \geq 1$ copies of $\RR\PP^2$ has $\chi(N_h) = 2 - h$, hence $b_1(N_h) = h - 1$. Use that $\Sigma_g$ is orientable and $N_h$ is not, so $b_2(\Sigma_g) = 1$ and $b_2(N_h) = 0$
+(Corollary~\ref{de-rham:corollary-consequences}).
+\end{enumerate}
+\end{exercise}
+
+\begin{solution}
+(1) Let $D^\prime \supset D$ be a slightly larger open disc in the same chart. Then $S = S^\circ \cup D^\prime$, and $S^\circ \cap D^\prime = D^\prime \setminus D$ is an open annulus, homotopy equivalent to $S^1$, so
+$\chi(S^\circ \cap D^\prime) = 0$. As $S$ and the annulus have finite-dimensional cohomology (Corollary~\ref{de-rham:corollary-consequences}), so does $S^\circ \sqcup D^\prime$ by
+Proposition~\ref{de-rham:proposition-dimension-counting}(2), and $\chi(S) = \chi(S^\circ) + \chi(D^\prime) - 0 = \chi(S^\circ) + 1$.
+
+(2) By (1) and Proposition~\ref{de-rham:proposition-dimension-counting}(2), $\chi(S \# S') = (\chi(S) - 1) + (\chi(S') - 1) - 0$.
+
+(3) $\chi(T^2) = 0$ (Example~\ref{de-rham:example-dimension-counting}) and $\chi(S^2) = 2$, so by (2) $\chi(\Sigma_g) = \chi(\Sigma_{g-1}) - 2$ and $\chi(\Sigma_g) = 2 - 2g$; then
+$b_1 = b_0 + b_2 - \chi = 2 - (2 - 2g) = 2g$. For $\RR\PP^2$, Example~\ref{de-rham:example-real-projective} gives $\chi = 1$, so $\chi(N_h) = \chi(N_{h-1}) - 1 = 2 - h$ and $b_1(N_h) = 1 + 0 - (2 - h) = h - 1$. For instance the Klein bottle
+$N_2$ has $b_1 = 1$, as in Example~\ref{de-rham:example-dimension-counting}(2). The integral homology is $H_1(\Sigma_g) \cong \ZZ^{2g}$ and $H_1(N_h) \cong \ZZ^{h-1} \oplus \ZZ/2\ZZ$ \cite{hatcher-at}: the torsion of the
+non-orientable surfaces is again invisible.
+\end{solution}
+
+\begin{exercise}\label{de-rham:exercise-dimension-in-sequences}
+Let $0 \to A \to B \to C \to 0$ be a short exact sequence of finite-dimensional real vector spaces. Show that $B \cong A \oplus C$, so that over a field every short exact sequence splits. Give an example of a short exact
+sequence of abelian groups that does not split, and explain why such sequences cannot occur among the de Rham cohomology groups of a Mayer--Vietoris sequence, but do occur in singular homology with
+coefficients in $\ZZ$.
+\end{exercise}
+
+\begin{solution}
+Let $a \colon A \to B$ and $b \colon B \to C$ be the maps. Choose a basis $c_1, \ldots, c_r$ of $C$ and, as $b$ is surjective, elements $b_i$ with $b(b_i) = c_i$; the linear map $s \colon C \to B$ with $s(c_i) = b_i$ satisfies
+$b \circ s = \id_C$. Then $A \oplus C \to B$, $(x, y) \mapsto a(x) + s(y)$, is an isomorphism: it is injective, since $a(x) + s(y) = 0$ gives $y = b(a(x) + s(y)) = 0$ and then $x = 0$ as $a$ is injective; and it is surjective, since
+$z - s(b(z)) \in \ker b = \im a$ for every $z \in B$. This argument works for vector spaces over any field, and for modules wherever $C$ has a basis.
+
+The sequence $0 \to \ZZ \xrightarrow{2} \ZZ \to \ZZ/2\ZZ \to 0$ does not split: $\ZZ \not\cong \ZZ \oplus \ZZ/2\ZZ$, since $\ZZ$ has no element of order $2$. In de Rham cohomology all groups are real vector spaces and all
+maps are linear, so every short exact sequence extracted from a long exact sequence splits, and only dimensions matter. In integral homology such non-split sequences appear: in the cellular chain complex of
+$\RR\PP^2$ the boundary of the $2$-cell is twice the $1$-cell, and $H_1(\RR\PP^2) \cong \ZZ/2\ZZ$ arises exactly from the multiplication by $2$ above.
+\end{solution}

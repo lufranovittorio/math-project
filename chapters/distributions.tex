@@ -1,0 +1,499 @@
+\chapter{Distributions and Sobolev Spaces}\label{distributions}
+\chapterstatus{complete}
+
+\section{Introduction}\label{distributions:section-introduction}
+
+To solve $\Delta u = f$ one first finds a weak solution in a space of distributions and then proves that it is smooth. This chapter
+sets up the two tools that make this work: the Fourier transform, which turns differentiation into multiplication, and the Sobolev
+spaces $H^s$, in which the elliptic estimate (Theorem~\ref{distributions:theorem-elliptic-estimate}) and Rellich's compactness
+theorem (Theorem~\ref{distributions:theorem-rellich}) hold. The Poincar\'e inequalities, which bound a function by its gradient once the constants are
+excluded, give the simplest existence theorem, for the Dirichlet problem (Subsection~\ref{distributions:subsection-poincare}). On a compact manifold these local statements are patched together with
+partitions of unity to prove the Hodge theorem (Chapter~\ref{hodge-theorem}). References: \cite{hormander-pdo1},
+\cite[Chapters 6--7]{rudin-fa}, \cite{brezis-functional}, \cite[Chapter 6]{warner-foundations}.
+
+\noindent\textbf{Prerequisites.} Chapter~\ref{functional-analysis} (Functional Analysis).
+
+\noindent\textbf{On the way to the Hodge conjecture.} The direct route needs Sobolev spaces (Section~\ref{distributions:section-sobolev}; its subsection on Poincar\'e inequalities is optional), and through them distributions and the Fourier transform; Section~\ref{distributions:section-elliptic} is the local
+model of the elliptic estimates of Chapter~\ref{elliptic-operators}.
+
+Multi-index notation is as in Theorem~\ref{real-analysis:theorem-taylor-several}; we write $D^\alpha = \partial^\alpha$ and $\langle \xi \rangle = (1 + |\xi|^2)^{1/2}$.
+
+\section{Distributions}\label{distributions:section-distributions}
+
+\begin{definition}\label{distributions:definition-distribution}
+Let $U \subseteq \RR^n$ be open and $\mathcal{D}(U) = C_c^\infty(U)$. A sequence $\varphi_k \to \varphi$ in $\mathcal{D}(U)$ means: all $\varphi_k$ have support in a fixed compact subset of $U$, and
+$D^\alpha\varphi_k \to D^\alpha\varphi$ uniformly for every $\alpha$. A \emph{distribution} is a linear map $T \colon \mathcal{D}(U) \to \CC$ such that $T(\varphi_k) \to T(\varphi)$ whenever
+$\varphi_k \to \varphi$; equivalently, for every compact $K \subseteq U$ there are $C$ and $N$ with $|T(\varphi)| \leq C\sum_{|\alpha| \leq N}\sup|D^\alpha\varphi|$ for all $\varphi$ supported in $K$. The space of
+distributions is $\mathcal{D}'(U)$, and $T_k \to T$ means $T_k(\varphi) \to T(\varphi)$ for every $\varphi$.
+\end{definition}
+
+\begin{example}\label{distributions:example-distributions}
+\begin{enumerate}
+\item Every $f \in L^1_{\mathrm{loc}}(U)$ defines $T_f(\varphi) = \int f\varphi$, and $T_f = T_g$ if and only if $f = g$ a.e.; so $\mathcal{D}'(U)$ contains the locally integrable functions.
+\item The \emph{Dirac distribution} $\delta_a(\varphi) = \varphi(a)$ is not of this form: if $\delta_0 = T_f$, then $\int f\varphi = 0$ for all $\varphi$ supported away from $0$, so $f = 0$ a.e., while
+$\delta_0 \neq 0$.
+\item $\operatorname{pv}\frac1x(\varphi) = \lim_{\varepsilon \to 0}\int_{|x| > \varepsilon}\frac{\varphi(x)}{x}\,dx$ is a distribution on $\RR$ of order $1$.
+\end{enumerate}
+\end{example}
+
+\begin{definition}\label{distributions:definition-derivative}
+For $T \in \mathcal{D}'(U)$, $\alpha$ a multi-index and $g \in C^\infty(U)$, set $(D^\alpha T)(\varphi) = (-1)^{|\alpha|}T(D^\alpha\varphi)$ and $(gT)(\varphi) = T(g\varphi)$. The \emph{support} of $T$ is the
+complement of the largest open set on which $T$ vanishes.
+\end{definition}
+
+\begin{proposition}\label{distributions:proposition-derivative}
+These are distributions; $D^\alpha D^\beta T = D^{\alpha+\beta}T$; for $f \in C^k(U)$ the distributional derivatives of order $\leq k$ are the classical ones; and differentiation is continuous: $T_k \to T$
+implies $D^\alpha T_k \to D^\alpha T$.
+\end{proposition}
+
+\begin{proof}
+Continuity is clear from the definition, and the formula for $D^\alpha T$ is forced by integration by parts, which for $f \in C^k$ and $\varphi \in C_c^\infty$ gives
+$\int (D^\alpha f)\varphi = (-1)^{|\alpha|}\int f D^\alpha\varphi$ (Fubini's theorem and the fundamental theorem of calculus in one variable at a time,
+Proposition~\ref{real-analysis:proposition-parameter-integrals}). The other statements are immediate.
+\end{proof}
+
+\begin{example}\label{distributions:example-heaviside}
+The Heaviside function $H = \mathbf{1}_{[0,\infty)}$ on $\RR$ has $H' = \delta_0$, since $-\int_0^\infty\varphi' = \varphi(0)$. Hence $\delta_0' (\varphi) = -\varphi'(0)$, and the function $\log|x|$ has
+distributional derivative $\operatorname{pv}\frac1x$.
+\end{example}
+
+\begin{proposition}\label{distributions:proposition-zero-derivative}
+Let $I \subseteq \RR$ be an open interval. A distribution $T$ on $I$ with $T' = 0$ is a constant function: $T = T_c$ for some $c \in \CC$.
+\end{proposition}
+
+\begin{proof}
+Fix $\psi \in \mathcal{D}(I)$ with $\int\psi = 1$ and put $c = T(\psi)$. For $\varphi \in \mathcal{D}(I)$, the function $\varphi - (\int\varphi)\psi$ has integral $0$ and compact support in $I$, so it is the derivative of
+$\chi(x) = \int_{-\infty}^x(\varphi - (\int\varphi)\psi)$, which also has compact support in $I$ (it vanishes to the left of both supports, and to the right because the total integral is $0$). Hence
+$T(\varphi) - (\int\varphi)c = T(\chi') = -T'(\chi) = 0$, that is, $T(\varphi) = \int c\varphi$.
+\end{proof}
+
+\begin{proposition}\label{distributions:proposition-approximate-identity}
+Let $\rho \in L^1(\RR^n)$ with $\int\rho = 1$ and $\rho_\varepsilon(x) = \varepsilon^{-n}\rho(x/\varepsilon)$. Then $T_{\rho_\varepsilon} \to \delta_0$ in $\mathcal{D}'(\RR^n)$ as $\varepsilon \to 0$.
+\end{proposition}
+
+\begin{proof}
+For $\varphi \in \mathcal{D}(\RR^n)$, the substitution $x = \varepsilon y$ gives $\int\rho_\varepsilon\varphi - \varphi(0) = \int\rho(y)(\varphi(\varepsilon y) - \varphi(0))\,dy$. The integrand tends to $0$ pointwise and is bounded by
+$2\sup|\varphi|\,|\rho|$, so the integral tends to $0$ by dominated convergence (Theorem~\ref{measure-theory:theorem-dominated-convergence}).
+\end{proof}
+
+\section{The Fourier transform}\label{distributions:section-fourier}
+
+\begin{definition}\label{distributions:definition-schwartz}
+The \emph{Schwartz space} $\mathcal{S}(\RR^n)$ consists of the $f \in C^\infty(\RR^n)$ with $p_{\alpha\beta}(f) = \sup_x|x^\alpha D^\beta f(x)| < \infty$ for all $\alpha, \beta$; convergence in $\mathcal{S}$ means
+convergence in all these seminorms. Its continuous dual $\mathcal{S}'(\RR^n)$ is the space of \emph{tempered distributions}. For $f \in \mathcal{S}$,
+\[
+\hat f(\xi) = \mathcal{F}f(\xi) = \int_{\RR^n}f(x)e^{-2\pi i x \cdot \xi}\,dx .
+\]
+\end{definition}
+
+\begin{theorem}\label{distributions:theorem-fourier-schwartz}
+$\mathcal{F}$ maps $\mathcal{S}$ continuously to $\mathcal{S}$, with $\mathcal{F}(D^\alpha f)(\xi) = (2\pi i\xi)^\alpha\hat f(\xi)$ and $\mathcal{F}(x^\alpha f)(\xi) = (-2\pi i)^{-|\alpha|}D^\alpha\hat f(\xi)$.
+Moreover:
+\begin{enumerate}
+\item $\mathcal{F}(e^{-\pi|x|^2}) = e^{-\pi|\xi|^2}$;
+\item (Inversion) $f(x) = \int\hat f(\xi)e^{2\pi ix\cdot\xi}\,d\xi$, so $\mathcal{F}$ is a bijection of $\mathcal{S}$ with inverse $\mathcal{F}^{-1}g(x) = \hat g(-x)$;
+\item (Plancherel) $\int f\bar g = \int\hat f\overline{\hat g}$; in particular $\|\hat f\|_2 = \|f\|_2$, and $\mathcal{F}$ extends to a unitary operator on $L^2(\RR^n)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Differentiation under the integral sign and integration by parts give the two formulas, and they imply that $\mathcal{F}f$ is smooth and rapidly decreasing, with continuity of $\mathcal{F}$ in the seminorms.
+
+(1) For $n = 1$ let $g(\xi) = \int e^{-\pi x^2}e^{-2\pi ix\xi}dx$. Differentiating under the integral and integrating by parts, $g'(\xi) = -2\pi\xi g(\xi)$, so $g(\xi) = g(0)e^{-\pi\xi^2}$, and $g(0) = 1$ by
+Example~\ref{measure-theory:example-gaussian}. The general case follows by Fubini's theorem, since $e^{-\pi|x|^2} = \prod_je^{-\pi x_j^2}$.
+
+(2) For $f, g \in \mathcal{S}$, Fubini's theorem gives the multiplication formula $\int\hat fg = \int f\hat g$. Apply it with $g(\xi) = e^{2\pi ix\cdot\xi}e^{-\pi\varepsilon^2|\xi|^2}$, whose Fourier transform is
+$\varepsilon^{-n}e^{-\pi|x - y|^2/\varepsilon^2}$ by (1) and the scaling and translation rules. The right-hand side is a convolution of $f$ with an approximate identity, which converges to $f(x)$ as
+$\varepsilon \to 0$ by uniform continuity, and the left-hand side converges to $\int\hat f(\xi)e^{2\pi ix\cdot\xi}d\xi$ by dominated convergence.
+
+(3) Let $h = \overline{\hat g}$; then $\hat h = \bar g$ by (2) and $\overline{\mathcal{F}\bar u} = \mathcal{F}^{-1}u$. The multiplication formula with $f$ and $h$ gives $\int\hat f\overline{\hat g} = \int f\bar g$.
+The space $\mathcal{S}$ is dense in $L^2$: it contains $C_c^\infty$, and every continuous function with compact support is a uniform limit of its convolutions with a smooth approximate identity
+(Exercise~\ref{measure-theory:exercise-convolution}), which lie in $C_c^\infty$, while such functions are dense in $L^2$ by Proposition~\ref{measure-theory:proposition-density}. Hence $\mathcal{F}$ extends
+uniquely to an isometry of $L^2$,
+which is surjective because its image contains the dense subspace $\mathcal{S}$.
+\end{proof}
+
+\begin{proposition}\label{distributions:proposition-fourier-l1}
+For $f \in L^1(\RR^n)$ the integral $\hat f(\xi) = \int f(x)e^{-2\pi ix\cdot\xi}\,dx$ defines a continuous function with $\|\hat f\|_\infty \leq \|f\|_1$ and $\hat f(\xi) \to 0$ as $|\xi| \to \infty$ (the
+\emph{Riemann--Lebesgue lemma}). For $f, g \in L^1$, $\widehat{f * g} = \hat f\,\hat g$.
+\end{proposition}
+
+\begin{proof}
+The bound is clear, and continuity follows from dominated convergence. For $f \in \mathcal{S}$, $\hat f \in \mathcal{S}$ tends to $0$ at infinity. In general choose $f_k \in \mathcal{S}$ with $\|f - f_k\|_1 \to 0$
+($C_c^\infty$ is dense in $L^1$, by the argument in the proof of Theorem~\ref{distributions:theorem-fourier-schwartz}(3)); then $\hat f_k \to \hat f$ uniformly, and a uniform limit of functions tending to
+$0$ at infinity tends to $0$ at infinity. For the convolution, $f * g \in L^1$ (Exercise~\ref{measure-theory:exercise-convolution}), and by Fubini's theorem
+$\int\int f(x - y)g(y)e^{-2\pi ix\cdot\xi}\,dy\,dx = \int g(y)e^{-2\pi iy\cdot\xi}\int f(x - y)e^{-2\pi i(x - y)\cdot\xi}\,dx\,dy = \hat f(\xi)\hat g(\xi)$.
+\end{proof}
+
+\begin{example}\label{distributions:example-fourier-computations}
+\begin{enumerate}
+\item The indicator of $[-\frac12, \frac12]$ has $\hat f(\xi) = \int_{-1/2}^{1/2}e^{-2\pi ix\xi}\,dx = \frac{\sin\pi\xi}{\pi\xi}$, which is continuous and tends to $0$, but is not integrable: by the inversion theorem it
+cannot be, since $f$ is not continuous.
+\item $f(x) = e^{-2\pi|x|}$ on $\RR$: $\hat f(\xi) = 2\int_0^\infty e^{-2\pi x}\cos(2\pi x\xi)\,dx = 2\operatorname{Re}\frac{1}{2\pi(1 - i\xi)} = \frac{1}{\pi(1 + \xi^2)}$. A kink of $f$ at $0$ gives a decay
+$|\xi|^{-2}$ only; smoothness of $f$ corresponds to decay of $\hat f$, and decay of $f$ to smoothness of $\hat f$.
+\item Scaling and translation: $\widehat{f(\lambda x)}(\xi) = \lambda^{-n}\hat f(\xi/\lambda)$ and $\widehat{f(x - a)}(\xi) = e^{-2\pi ia\cdot\xi}\hat f(\xi)$. With
+Theorem~\ref{distributions:theorem-fourier-schwartz}(1), $\widehat{e^{-\pi t|x|^2}} = t^{-n/2}e^{-\pi|\xi|^2/t}$ for $t > 0$: the narrower the Gaussian, the wider its transform.
+\end{enumerate}
+\end{example}
+
+\begin{proposition}[Poisson summation]\label{distributions:proposition-poisson}
+For $f \in \mathcal{S}(\RR)$, $\sum_{n \in \ZZ}f(x + n) = \sum_{k \in \ZZ}\hat f(k)e^{2\pi ikx}$ for all $x$; in particular $\sum_nf(n) = \sum_k\hat f(k)$.
+\end{proposition}
+
+\begin{proof}
+The periodisation $P(x) = \sum_nf(x + n)$ converges uniformly with all derivatives on compact sets, as $f$ and its derivatives decay faster than $|x|^{-2}$; so $P$ is a smooth function on $\RR/\ZZ$. Its
+Fourier coefficients are $\int_0^1P(x)e^{-2\pi ikx}\,dx = \sum_n\int_n^{n+1}f(y)e^{-2\pi iky}\,dy = \hat f(k)$. These decay rapidly, so the Fourier series converges absolutely and uniformly to a continuous
+function, which equals $P$ almost everywhere, being its $L^2$ limit (Example~\ref{functional-analysis:example-fourier}), hence everywhere.
+\end{proof}
+
+For $f(x) = e^{-\pi tx^2}$ this gives the transformation formula of the theta function, $\sum_ne^{-\pi tn^2} = t^{-1/2}\sum_ke^{-\pi k^2/t}$ for $t > 0$, which relates large and small $t$ and is
+the starting point of the functional equation of the Riemann zeta function.
+
+\begin{proposition}[Heisenberg's uncertainty principle]\label{distributions:proposition-heisenberg}
+For $f \in \mathcal{S}(\RR)$, $\|f\|_2^2 \leq 4\pi\|xf\|_2\,\|\xi\hat f\|_2$. So $f$ and $\hat f$ cannot both be concentrated near $0$.
+\end{proposition}
+
+\begin{proof}
+Integrating by parts, $\|f\|_2^2 = \int|f|^2\,dx = -\int x\frac{d}{dx}|f|^2\,dx = -2\operatorname{Re}\int x\bar ff^{\prime}\,dx \leq 2\|xf\|_2\|f^{\prime}\|_2$ by Cauchy--Schwarz, and
+$\|f^{\prime}\|_2 = \|2\pi\xi\hat f\|_2$ by Plancherel and Theorem~\ref{distributions:theorem-fourier-schwartz}.
+\end{proof}
+
+Equality holds for the Gaussians $e^{-\pi tx^2}$; after normalising $\|f\|_2 = 1$, the inequality says that the variances of $|f|^2$ and $|\hat f|^2$ have product at least $1/(16\pi^2)$, the mathematical
+content of the uncertainty relation of quantum mechanics.
+
+\begin{definition}\label{distributions:definition-fourier-tempered}
+For $T \in \mathcal{S}'$, $\hat T(\varphi) = T(\hat\varphi)$. By Theorem~\ref{distributions:theorem-fourier-schwartz} this defines a linear bijection of $\mathcal{S}'$ extending the transform on $\mathcal{S}$
+and on $L^2$, with $\mathcal{F}(D^\alpha T) = (2\pi i\xi)^\alpha\hat T$.
+\end{definition}
+
+\begin{example}\label{distributions:example-fourier-delta}
+$\hat\delta_0 = 1$ and $\hat 1 = \delta_0$; the Fourier transform of a polynomial is a combination of derivatives of $\delta_0$. Compactly supported distributions are tempered, and so are the functions in
+$L^p(\RR^n)$ for $1 \leq p \leq \infty$.
+\end{example}
+
+\section{Sobolev spaces}\label{distributions:section-sobolev}
+
+\begin{definition}\label{distributions:definition-sobolev}
+For $s \in \RR$, $H^s(\RR^n) = \{u \in \mathcal{S}' : \hat u \in L^1_{\mathrm{loc}} \text{ and } \|u\|_s^2 = \int\langle\xi\rangle^{2s}|\hat u(\xi)|^2\,d\xi < \infty\}$, a Hilbert space with the evident inner
+product. On the torus $T^n = \RR^n/\ZZ^n$, a distribution $u$ has Fourier coefficients $\hat u(k) = u(e^{-2\pi ik\cdot x})$, $k \in \ZZ^n$, and
+$H^s(T^n) = \{u : \|u\|_s^2 = \sum_{k \in \ZZ^n}\langle k \rangle^{2s}|\hat u(k)|^2 < \infty\}$.
+\end{definition}
+
+\begin{proposition}\label{distributions:proposition-sobolev-basic}
+$H^0 = L^2$, and for a non-negative integer $m$, $H^m$ is the space of $u \in L^2$ whose distributional derivatives of order $\leq m$ lie in $L^2$, with an equivalent norm
+$(\sum_{|\alpha| \leq m}\|D^\alpha u\|_2^2)^{1/2}$. The spaces $H^s$ decrease in $s$, $C^\infty$ functions (with compact support, respectively on the torus) are dense in each, and the pairing
+$(u, v) \mapsto \int u\bar v$ identifies $H^{-s}$ with the dual of $H^s$.
+\end{proposition}
+
+\begin{proof}
+$H^0 = L^2$ is Plancherel's theorem (Theorem~\ref{distributions:theorem-fourier-schwartz}), or Parseval's identity on the torus (Example~\ref{functional-analysis:example-fourier}). For integer $m$,
+$\mathcal{F}(D^\alpha u) = (2\pi i\xi)^\alpha\hat u$, and $\sum_{|\alpha| \leq m}|(2\pi\xi)^\alpha|^2$ is bounded above and below by multiples of $\langle\xi\rangle^{2m}$. Density follows by truncating and
+smoothing the Fourier transform, and duality from the Riesz representation theorem applied to the weighted $L^2$ spaces.
+\end{proof}
+
+\begin{theorem}[Sobolev embedding]\label{distributions:theorem-sobolev-embedding}
+If $s > k + n/2$, then every $u \in H^s$ (on $\RR^n$ or on $T^n$) has a representative of class $C^k$, and $\|u\|_{C^k} \leq C\|u\|_s$. Hence $\bigcap_sH^s$ consists of the smooth functions.
+\end{theorem}
+
+\begin{proof}
+On the torus, for $|\alpha| \leq k$,
+$\sum_k|(2\pi ik)^\alpha\hat u(k)| \leq \left(\sum_k\langle k\rangle^{2s}|\hat u(k)|^2\right)^{1/2}\left(\sum_k\langle k\rangle^{2(|\alpha| - s)}\right)^{1/2}$ by Cauchy--Schwarz, and the second factor is
+finite because $2(s - |\alpha|) > n$ (compare with $\int\langle\xi\rangle^{2(|\alpha|-s)}d\xi$, which converges by polar coordinates). So the Fourier series of $D^\alpha u$ converges absolutely and
+uniformly, and $u$ is $C^k$ with the stated bound. On $\RR^n$ the same computation with integrals shows that $\widehat{D^\alpha u} \in L^1$, so $D^\alpha u$ is continuous and bounded by Fourier inversion.
+\end{proof}
+
+The embedding theorem trades $n/2$ derivatives in $L^2$ for continuity. With $L^p$ norms one can do better, and the exponents are dictated by scaling: for $u_\lambda(x) = u(\lambda x)$,
+$\|u_\lambda\|_q = \lambda^{-n/q}\|u\|_q$ and $\|\nabla u_\lambda\|_p = \lambda^{1 - n/p}\|\nabla u\|_p$, so an inequality $\|u\|_q \leq C\|\nabla u\|_p$ for all $u \in C_c^1(\RR^n)$ can only hold if
+$-n/q = 1 - n/p$, that is, $q = p^* = np/(n - p)$, the \emph{Sobolev exponent}, which requires $p < n$.
+
+\begin{theorem}[Gagliardo--Nirenberg--Sobolev]\label{distributions:theorem-gns}
+Let $n \geq 2$ and $1 \leq p < n$. For $u \in C_c^1(\RR^n)$, $\|u\|_{n/(n-1)} \leq \|\nabla u\|_1$, and $\|u\|_{p^*} \leq C_{n,p}\|\nabla u\|_p$ with $p^* = np/(n - p)$.
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+\emph{Case $p = 1$, $n = 2$.} By the fundamental theorem of calculus in each variable, $|u(x_1, x_2)| \leq \int_\RR|\partial_1u(y_1, x_2)|\,dy_1 =: g_1(x_2)$ and $|u(x_1, x_2)| \leq g_2(x_1)$ similarly. So
+$|u(x)|^2 \leq g_1(x_2)g_2(x_1)$, and integrating, $\int|u|^2 \leq \int g_1\int g_2 = \|\partial_1u\|_1\|\partial_2u\|_1 \leq \|\nabla u\|_1^2$. For general $n$ the same bounds give
+$|u(x)|^{n/(n-1)} \leq \prod_i g_i^{1/(n-1)}$, where $g_i$ does not depend on $x_i$, and one integrates in $x_1, \ldots, x_n$ in turn, using at each step the generalised H\"older inequality
+$\int\prod_{j=1}^{n-1}|h_j| \leq \prod_j\|h_j\|_{n-1}$; this omitted computation gives $\int|u|^{n/(n-1)} \leq \prod_i\|\partial_iu\|_1^{1/(n-1)}$ \cite[Chapter 9]{brezis-functional}.
+
+\emph{From $p = 1$ to $p > 1$.} Apply the case $p = 1$ to $v = |u|^\gamma$ with $\gamma = p(n - 1)/(n - p) > 1$, which is $C^1$ with $|\nabla v| \leq \gamma|u|^{\gamma - 1}|\nabla u|$. By H\"older's inequality
+(Proposition~\ref{measure-theory:proposition-holder}) with $p^{\prime} = p/(p - 1)$,
+\[
+\Bigl(\int|u|^{\gamma n/(n-1)}\Bigr)^{(n-1)/n} \leq \gamma\int|u|^{\gamma - 1}|\nabla u| \leq \gamma\Bigl(\int|u|^{(\gamma - 1)p^{\prime}}\Bigr)^{1/p^{\prime}}\|\nabla u\|_p .
+\]
+The choice of $\gamma$ makes $\gamma n/(n - 1) = (\gamma - 1)p^{\prime} = p^*$, and dividing gives $\|u\|_{p^*}^{\gamma - p^*/p^{\prime}} \leq \gamma\|\nabla u\|_p$ with $\gamma - p^*/p^{\prime} = 1$.
+\end{proof}
+
+For $p = n$ the inequality fails, $p^* = \infty$: in $\RR^2$ the function $\log\log(1/|x|)$, cut off near $|x| = e^{-1}$, has $\nabla u \in L^2$ but is unbounded near $0$. For $p > n$, functions with
+$\nabla u \in L^p$ are H\"older continuous (Morrey's inequality \cite[Chapter 9]{brezis-functional}), the $L^p$ analogue of Theorem~\ref{distributions:theorem-sobolev-embedding}.
+
+\begin{theorem}[Rellich]\label{distributions:theorem-rellich}
+For $s > t$ the inclusion $H^s(T^n) \to H^t(T^n)$ is a compact operator.
+\end{theorem}
+
+\begin{proof}
+Let $P_N$ be the truncation $\widehat{P_Nu}(k) = \hat u(k)$ for $|k| \leq N$ and $0$ otherwise, a finite rank operator. For $u \in H^s$,
+\[
+\|u - P_Nu\|_t^2 = \sum_{|k| > N}\langle k\rangle^{2t}|\hat u(k)|^2 \leq \langle N\rangle^{2(t-s)}\sum_{|k| > N}\langle k\rangle^{2s}|\hat u(k)|^2 \leq \langle N\rangle^{2(t-s)}\|u\|_s^2,
+\]
+so the inclusion is the norm limit of finite rank operators, hence compact (Proposition~\ref{functional-analysis:proposition-compact-operators}).
+\end{proof}
+
+\begin{counterexample}\label{distributions:counterexample-rellich-rn}
+Rellich's theorem fails on $\RR^n$: translates $u_j(x) = u(x - j)$ of a fixed nonzero $u \in C_c^\infty$ have constant $H^s$ norms and no subsequence converging in $H^t$, since they are eventually supported
+in disjoint sets. Compactness holds for the inclusions $H^s_K \to H^t$ of the subspaces of distributions supported in a fixed compact $K$, which is the form used on manifolds.
+\end{counterexample}
+
+\subsection{Poincar\'e inequalities}\label{distributions:subsection-poincare}
+
+A function is not controlled by its derivative alone: adding a constant changes the function and not its derivative. The \emph{Poincar\'e inequalities} say that, once the constants are excluded,
+the $L^2$ norm of a function is bounded by the $L^2$ norm of its gradient. There are two ways to exclude the constants: by asking that the function vanish on the boundary, or by asking that its mean
+be zero. The inequalities are used constantly in analysis. They make $\int|\nabla u|^2$, the \emph{Dirichlet energy}, a norm, which is the starting point of the variational solution of
+the Dirichlet problem (Proposition~\ref{distributions:proposition-dirichlet-weak} below). The best constants are eigenvalues of the Laplacian, a spectral gap that reappears in Hodge theory. We start
+with one variable, where the best constants come from Fourier series.
+
+Below, a continuous function $f \colon [a, b] \to \CC$ is \emph{piecewise $C^1$} if there is a subdivision $a = t_0 < t_1 < \cdots < t_m = b$ such that $f$ is $C^1$ on each $[t_{i-1}, t_i]$, with one-sided
+derivatives at the ends; $f^{\prime}$ is then defined except at the $t_i$, which does not affect its integrals. A function on $\RR$ is piecewise $C^1$ if it is so on every bounded interval.
+
+\begin{proposition}[Wirtinger's inequality]\label{distributions:proposition-wirtinger}
+Let $L > 0$ and let $f \colon \RR \to \CC$ be continuous, piecewise $C^1$ and $L$-periodic, with $\int_0^Lf = 0$. Then
+\[
+\int_0^L|f|^2 \leq \Bigl(\frac{L}{2\pi}\Bigr)^2\int_0^L|f^{\prime}|^2,
+\]
+with equality if and only if $f(x) = ae^{2\pi ix/L} + be^{-2\pi ix/L}$ for constants $a, b \in \CC$.
+\end{proposition}
+
+\begin{proof}
+First let $L = 1$. Write $\hat f(n) = \int_0^1f(t)e^{-2\pi int}\,dt$. Integrating by parts on each interval of $C^1$-ness, the boundary terms cancel, because $fe^{-2\pi int}$ is continuous and
+$1$-periodic; so
+\[
+\widehat{f^{\prime}}(n) = \int_0^1f^{\prime}(t)e^{-2\pi int}\,dt = 2\pi in\int_0^1f(t)e^{-2\pi int}\,dt = 2\pi in\,\hat f(n).
+\]
+Also $\hat f(0) = \int_0^1f = 0$. By Parseval's identity (Example~\ref{functional-analysis:example-fourier}), applied to $f$ and to the bounded function $f^{\prime}$,
+\[
+\int_0^1|f^{\prime}|^2 = \sum_{n \in \ZZ}4\pi^2n^2|\hat f(n)|^2 \geq 4\pi^2\sum_{n \neq 0}|\hat f(n)|^2 = 4\pi^2\int_0^1|f|^2,
+\]
+with equality if and only if $\hat f(n) = 0$ for all $|n| \geq 2$, that is, $f = ae^{2\pi it} + be^{-2\pi it}$ (a function in $L^2$ is determined by its Fourier coefficients). For general $L$ apply
+this to $g(t) = f(Lt)$: then $\int_0^L|f|^2 = L\int_0^1|g|^2$, and $g^{\prime}(t) = Lf^{\prime}(Lt)$ gives $\int_0^L|f^{\prime}|^2 = L^{-1}\int_0^1|g^{\prime}|^2$. So
+$\int_0^L|f|^2 = L\int_0^1|g|^2 \leq \frac{L}{4\pi^2}\int_0^1|g^{\prime}|^2 = \frac{L^2}{4\pi^2}\int_0^L|f^{\prime}|^2$.
+\end{proof}
+
+The extremal functions are the trigonometric functions of the longest period allowed: the inequality says that among periodic functions with mean zero, the slowest oscillation is the cheapest one
+in terms of $\int|f^{\prime}|^2$. On an interval the two boundary conditions are handled by extending the function to a periodic one.
+
+\begin{corollary}\label{distributions:corollary-poincare-interval}
+Let $f \colon [0, L] \to \CC$ be continuous and piecewise $C^1$.
+\begin{enumerate}
+\item (\emph{Dirichlet condition.}) If $f(0) = f(L) = 0$, then $\int_0^L|f|^2 \leq (L/\pi)^2\int_0^L|f^{\prime}|^2$, with equality if and only if $f(x) = c\sin(\pi x/L)$.
+\item (\emph{Mean zero.}) With $\bar f = \frac1L\int_0^Lf$, $\int_0^L|f - \bar f|^2 \leq (L/\pi)^2\int_0^L|f^{\prime}|^2$, with equality if and only if $f(x) = a + b\cos(\pi x/L)$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(1) Let $F$ be the odd extension of $f$ to $[-L, L]$, $F(-x) = -F(x)$, continued $2L$-periodically. Since $f(0) = f(L) = 0$, $F$ is continuous, and it is piecewise $C^1$. Its mean over a
+period is $0$ because $F$ is odd, and $\int_{-L}^L|F|^2 = 2\int_0^L|f|^2$, $\int_{-L}^L|F^{\prime}|^2 = 2\int_0^L|f^{\prime}|^2$. Proposition~\ref{distributions:proposition-wirtinger} with period $2L$ gives
+the inequality with constant $(2L/2\pi)^2 = (L/\pi)^2$. Equality holds if and only if $F(x) = ae^{\pi ix/L} + be^{-\pi ix/L}$; this is odd exactly when $b = -a$, that is, $F(x) = 2ia\sin(\pi x/L)$.
+
+(2) Let $F$ be the even extension, $F(x) = f(|x|)$ on $[-L, L]$, continued $2L$-periodically; it is continuous because $F(-L) = F(L)$, and piecewise $C^1$. Apply
+Proposition~\ref{distributions:proposition-wirtinger} to $F - \bar f$, whose mean over a period is $\frac{1}{2L}\cdot 2\int_0^Lf - \bar f = 0$. The integrals double as in (1), and the extremal functions
+$ae^{\pi ix/L} + be^{-\pi ix/L}$ are even exactly when $a = b$, giving $f - \bar f = 2a\cos(\pi x/L)$.
+\end{proof}
+
+The constant is the same in both cases, but the extremals differ: for the Dirichlet condition the best function is half a sine wave, which vanishes at both ends; for the mean zero condition it
+is half a cosine wave, which is free at the ends. In both cases the constant $(L/\pi)^2$ is the inverse of the smallest positive eigenvalue of $-d^2/dx^2$ on $[0, L]$ with the corresponding
+boundary condition: $-(\sin(\pi x/L))^{\prime\prime} = (\pi/L)^2\sin(\pi x/L)$, and similarly for the cosine. In higher dimensions the two versions are the following.
+
+\begin{theorem}[Poincar\'e inequality]\label{distributions:theorem-poincare-dirichlet}
+Let $\Omega \subseteq \RR^n$ be open and contained in a slab $\{x : a < x_1 < a + L\}$. Then for every $u \in C^1_c(\Omega)$,
+\[
+\int_\Omega|u|^2 \leq \Bigl(\frac{L}{\pi}\Bigr)^2\int_\Omega|\partial_1u|^2 \leq \Bigl(\frac{L}{\pi}\Bigr)^2\int_\Omega|\nabla u|^2,
+\]
+where $|\nabla u|^2 = \sum_j|\partial_ju|^2$.
+\end{theorem}
+
+\begin{proof}
+Extend $u$ by zero to $\RR^n$; it is $C^1$ with compact support in the open slab. For fixed $x^{\prime} = (x_2, \ldots, x_n)$ the function $f(t) = u(t, x^{\prime})$ is $C^1$ on $[a, a + L]$ and vanishes
+near both ends, so Corollary~\ref{distributions:corollary-poincare-interval}(1) (translated to $[a, a + L]$) gives $\int_a^{a+L}|u(t, x^{\prime})|^2\,dt \leq (L/\pi)^2\int_a^{a+L}|\partial_1u(t, x^{\prime})|^2\,dt$.
+Integrating over $x^{\prime} \in \RR^{n-1}$ and using Fubini's theorem (Theorem~\ref{measure-theory:theorem-fubini}) gives the first inequality; the second is $|\partial_1u|^2 \leq |\nabla u|^2$.
+\end{proof}
+
+Only the width of $\Omega$ in one direction matters: the inequality holds on an infinite strip. Some boundedness is needed, though.
+
+\begin{counterexample}\label{distributions:counterexample-poincare-unbounded}
+There is no Poincar\'e inequality $\int|u|^2 \leq C\int|\nabla u|^2$ for $u \in C^1_c(\RR^n)$. Fix $u \neq 0$ and put $u_R(x) = u(x/R)$. Substituting $x = Ry$,
+$\int|u_R|^2 = R^n\int|u|^2$ and $\int|\nabla u_R|^2 = R^{n-2}\int|\nabla u|^2$, so the ratio $\int|u_R|^2/\int|\nabla u_R|^2 = R^2\int|u|^2/\int|\nabla u|^2$ is unbounded as $R \to \infty$. Spreading a bump
+out over a large region makes it flat without making it small.
+\end{counterexample}
+
+\begin{theorem}[Poincar\'e--Wirtinger inequality on a cube]\label{distributions:theorem-poincare-cube}
+Let $Q = (0, L)^n$ and $u \in C^1(\bar Q)$, and let $u_Q = L^{-n}\int_Qu$ be its mean. Then
+\[
+\int_Q|u - u_Q|^2 \leq \Bigl(\frac{L}{\pi}\Bigr)^2\int_Q|\nabla u|^2,
+\]
+and equality holds for $u(x) = \cos(\pi x_1/L)$.
+\end{theorem}
+
+\begin{proof}
+We induct on $n$; the case $n = 1$ is Corollary~\ref{distributions:corollary-poincare-interval}(2). Let $n \geq 2$, write $x = (y, t)$ with $y \in Q^{\prime} = (0, L)^{n-1}$ and $t \in (0, L)$, and let
+\[
+m(t) = L^{1-n}\int_{Q^{\prime}}u(y, t)\,dy
+\]
+be the mean of $u$ on the slice at height $t$. For each $t$ the function $y \mapsto u(y, t) - m(t)$ has mean zero on $Q^{\prime}$, so it is orthogonal in $L^2(Q^{\prime})$ to the constant $m(t) - u_Q$, and
+\[
+\int_{Q^{\prime}}|u(y, t) - u_Q|^2\,dy = \int_{Q^{\prime}}|u(y, t) - m(t)|^2\,dy + L^{n-1}|m(t) - u_Q|^2 .
+\]
+Integrate over $t$. By the induction hypothesis on each slice, the first term contributes at most $(L/\pi)^2\int_Q\sum_{j < n}|\partial_ju|^2$. For the second, $m$ is $C^1$ on $[0, L]$ with
+$m^{\prime}(t) = L^{1-n}\int_{Q^{\prime}}\partial_tu(y, t)\,dy$, by differentiation under the integral sign (dominated convergence, Theorem~\ref{measure-theory:theorem-dominated-convergence}, applied to difference
+quotients, which are bounded by $\sup|\partial_tu|$ by the mean value theorem). Its mean over $(0, L)$ is $u_Q$, so by Corollary~\ref{distributions:corollary-poincare-interval}(2) and the
+Cauchy--Schwarz inequality $|m^{\prime}(t)|^2 \leq L^{1-n}\int_{Q^{\prime}}|\partial_tu(y, t)|^2\,dy$,
+\[
+L^{n-1}\int_0^L|m(t) - u_Q|^2\,dt \leq L^{n-1}\Bigl(\frac{L}{\pi}\Bigr)^2\int_0^L|m^{\prime}(t)|^2\,dt \leq \Bigl(\frac{L}{\pi}\Bigr)^2\int_Q|\partial_tu|^2 .
+\]
+Adding the two contributions gives the inequality. For $u = \cos(\pi x_1/L)$ the mean is $0$, $\int_Q|u|^2 = L^n/2$ and $\int_Q|\nabla u|^2 = (\pi/L)^2L^n/2$.
+\end{proof}
+
+The argument shows a general principle, the \emph{tensorisation} of Poincar\'e inequalities: on a product, the variance splits into the variance within the slices and the variance of the slice
+means, and each is controlled by derivatives in its own directions. So the constant for the cube equals the constant for the interval, independently of the dimension.
+
+\begin{counterexample}\label{distributions:counterexample-poincare-disconnected}
+The mean zero version fails on disconnected sets: on the union $\Omega$ of two disjoint open cubes of the same size, the function equal to $1$ on one and $-1$ on the other has mean zero and gradient
+zero. On a connected domain made of two cubes joined by a thin tube, the inequality holds, but the best constant becomes large as the tube gets thinner: a function close to $\pm1$ on the two
+cubes, changing sign along the tube, has small Dirichlet energy. The best constant of the Poincar\'e--Wirtinger inequality measures how well connected a domain is.
+\end{counterexample}
+
+\begin{remark}\label{distributions:remark-poincare-general}
+For a bounded connected open set $\Omega$ with Lipschitz boundary, $\int_\Omega|u - u_\Omega|^2 \leq C_\Omega\int_\Omega|\nabla u|^2$ for all $u$ in the Sobolev space of $L^2$ functions with $L^2$
+gradient; the proof is by contradiction, using a compactness theorem of Rellich type for such domains \cite[Chapter 9]{brezis-functional}, \cite{evans-gariepy}. The best constants are $1/\lambda$,
+where $\lambda$ is the smallest positive eigenvalue of $-\sum_j\partial_j^2$ with the corresponding boundary condition (zero boundary values, respectively zero normal derivative). For convex domains of
+diameter $D$, Payne and Weinberger proved the sharp bound $C_\Omega \leq (D/\pi)^2$ \cite{payne-weinberger-1960}, independent of the dimension, and the interval of length $D$ shows that it cannot be
+improved. On a compact connected Riemannian manifold the same inequality holds with $1/\lambda_1$, the inverse of the first nonzero eigenvalue of the Laplacian (Chapter~\ref{hodge-theorem}). The
+Poincar\'e inequality also has $L^p$ versions, $\|u - u_\Omega\|_p \leq C\|\nabla u\|_p$, and it is related to the Sobolev inequality (Theorem~\ref{distributions:theorem-gns}), which improves the
+exponent on the left at the price of a gradient on all of $\RR^n$.
+\end{remark}
+
+The Dirichlet version gives the simplest existence theorem for an elliptic equation. Let $\Omega \subseteq \RR^n$ be open. We identify functions on $\Omega$ extended by zero with functions on
+$\RR^n$, and let $H^1_0(\Omega)$ be the closure of $C^\infty_c(\Omega)$ in $H^1(\RR^n)$, with the norm $\|u\|_{H^1}^2 = \|u\|_2^2 + \|\nabla u\|_2^2$
+(Proposition~\ref{distributions:proposition-sobolev-basic}). Its elements are the $L^2$ functions with $L^2$ distributional derivatives that ``vanish on $\partial\Omega$'' in a weak sense.
+
+\begin{proposition}[Dirichlet principle]\label{distributions:proposition-dirichlet-weak}
+Let $\Omega$ be contained in a slab of width $L$, as in Theorem~\ref{distributions:theorem-poincare-dirichlet}. Then:
+\begin{enumerate}
+\item $\int_\Omega|u|^2 \leq (L/\pi)^2\int_\Omega|\nabla u|^2$ for every $u \in H^1_0(\Omega)$, and $\langle u, v\rangle_\nabla = \int_\Omega\nabla u \cdot \overline{\nabla v}$ is an inner product on $H^1_0(\Omega)$ whose norm
+is equivalent to the $H^1$ norm.
+\item For every $f \in L^2(\Omega)$ there is a unique $u \in H^1_0(\Omega)$ with $\int_\Omega\nabla u \cdot \overline{\nabla v} = \int_\Omega f\bar v$ for all $v \in H^1_0(\Omega)$. In particular
+$-\sum_j\partial_j^2u = f$ as distributions on $\Omega$: $u$ is a \emph{weak solution} of the Dirichlet problem $-\sum_j\partial_j^2u = f$ in $\Omega$, $u = 0$ on $\partial\Omega$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) Both sides of the inequality are continuous for the $H^1$ norm, and it holds on the dense subspace $C^\infty_c(\Omega)$ by Theorem~\ref{distributions:theorem-poincare-dirichlet}; so it holds on
+$H^1_0(\Omega)$. Hence $\|\nabla u\|_2^2 \leq \|u\|_{H^1}^2 \leq (1 + (L/\pi)^2)\|\nabla u\|_2^2$, so $\langle -, - \rangle_\nabla$ is positive definite and its norm is equivalent to the $H^1$ norm. In
+particular $H^1_0(\Omega)$, a closed subspace of the Hilbert space $H^1(\RR^n)$, is a Hilbert space for $\langle -, - \rangle_\nabla$.
+
+(2) The functional $\Lambda(v) = \int_\Omega v\bar f$ is linear and bounded on $(H^1_0(\Omega), \langle -, - \rangle_\nabla)$: $|\Lambda(v)| \leq \|f\|_2\|v\|_2 \leq \|f\|_2(L/\pi)\|\nabla v\|_2$ by Cauchy--Schwarz
+and (1). By the Riesz representation theorem (Theorem~\ref{functional-analysis:theorem-riesz-representation}) there is a unique $u$ with $\Lambda(v) = \langle v, u\rangle_\nabla$ for all $v$; taking complex
+conjugates, this is the stated identity. For $v = \bar\varphi$ with $\varphi \in C^\infty_c(\Omega)$ it reads $\sum_j\int\partial_ju\,\partial_j\varphi = \int f\varphi$, and by the definition of distributional
+derivatives (Definition~\ref{distributions:definition-derivative}) the left hand side is $-\sum_j(\partial_j^2u)(\varphi)$.
+\end{proof}
+
+The solution is also the unique minimiser of the energy $E(v) = \frac12\int|\nabla v|^2 - \operatorname{Re}\int f\bar v$ on $H^1_0(\Omega)$ (Exercise~\ref{distributions:exercise-dirichlet-energy}). This is
+Dirichlet's principle, which Riemann used to construct harmonic and holomorphic functions; Weierstrass objected that a minimiser need not exist, and making the principle rigorous, which Hilbert
+began around 1900, was one of the origins of Sobolev spaces. Whether the weak solution is smooth, and takes its boundary values in the classical sense, is a question of regularity, for which the
+elliptic estimates of the next section are the basic tool.
+
+\section{Elliptic estimates}\label{distributions:section-elliptic}
+
+\begin{definition}\label{distributions:definition-elliptic-constant}
+Let $P(D) = \sum_{|\alpha| \leq m}a_\alpha D^\alpha$ with constant coefficients $a_\alpha \in \CC$. Its \emph{principal symbol} is $\sigma(\xi) = \sum_{|\alpha| = m}a_\alpha(2\pi i\xi)^\alpha$, and $P$ is
+\emph{elliptic} if $\sigma(\xi) \neq 0$ for $\xi \neq 0$.
+\end{definition}
+
+\begin{example}\label{distributions:example-laplacian}
+The Laplacian $\Delta = -\sum_j\partial_j^2$ has symbol $4\pi^2|\xi|^2$ and is elliptic; the heat operator $\partial_t - \Delta$ and the wave operator are not.
+\end{example}
+
+\begin{theorem}[Elliptic estimate and regularity]\label{distributions:theorem-elliptic-estimate}
+Let $P(D)$ be elliptic of order $m$ with constant coefficients, on the torus $T^n$. For every $s$ there is $C$ with
+\[
+\|u\|_{s+m} \leq C\left(\|P(D)u\|_s + \|u\|_s\right) \qquad \text{for all } u \in H^{s+m}(T^n).
+\]
+Moreover, if $u \in H^t(T^n)$ for some $t$ and $P(D)u \in H^s(T^n)$, then $u \in H^{s+m}(T^n)$; in particular $P(D)u \in C^\infty$ implies $u \in C^\infty$.
+\end{theorem}
+
+\begin{proof}
+On the Fourier side $P(D)$ is multiplication by $p(k) = \sum_{|\alpha| \leq m}a_\alpha(2\pi ik)^\alpha$. By homogeneity and compactness of the unit sphere, $|\sigma(\xi)| \geq c|\xi|^m$ for some $c > 0$, and the
+lower-order terms are $O(|\xi|^{m-1})$, so there are $c' > 0$ and $R$ with $|p(k)| \geq c'\langle k\rangle^m$ for $|k| \geq R$. Hence
+\[
+\sum_{|k| \geq R}\langle k\rangle^{2(s+m)}|\hat u(k)|^2 \leq c'^{-2}\sum_{|k| \geq R}\langle k\rangle^{2s}|p(k)\hat u(k)|^2 \leq c'^{-2}\|P(D)u\|_s^2,
+\]
+while the finitely many terms with $|k| < R$ are bounded by $\langle R\rangle^{2m}\|u\|_s^2$. This gives the estimate. For regularity, the same computation shows that
+$\sum_k\langle k\rangle^{2(s+m)}|\hat u(k)|^2$ is finite whenever $\sum_k\langle k\rangle^{2s}|p(k)\hat u(k)|^2$ is; smoothness follows from
+Theorem~\ref{distributions:theorem-sobolev-embedding}, since then $u \in H^s$ for all $s$.
+\end{proof}
+
+\begin{remark}\label{distributions:remark-variable-coefficients}
+For operators with variable coefficients the estimate is proved by freezing the coefficients at a point, using the constant-coefficient case and absorbing the error terms; on a compact manifold one patches
+the local estimates with a partition of unity. The result is that an elliptic operator $P$ of order $m$ between sections of vector bundles over a compact manifold satisfies
+$\|u\|_{s+m} \leq C(\|Pu\|_s + \|u\|_s)$, is Fredholm as an operator $H^{s+m} \to H^s$ by Rellich's theorem, and has smooth kernel; this is proved in Chapter~\ref{elliptic-operators} and applied to the
+Laplacian in Chapter~\ref{hodge-theorem}. The general theory is in \cite[Chapters 7--10]{hormander-pdo1} and \cite[Chapter 6]{warner-foundations}.
+\end{remark}
+
+\section{Exercises}\label{distributions:section-exercises}
+
+\begin{exercise}\label{distributions:exercise-delta-limit}
+Show that $\varepsilon^{-n}\rho(x/\varepsilon) \to \delta_0$ in $\mathcal{D}'(\RR^n)$ as $\varepsilon \to 0$, for any $\rho \in C_c^\infty$ with $\int\rho = 1$.
+\end{exercise}
+
+\begin{solution}
+$\int\varepsilon^{-n}\rho(x/\varepsilon)\varphi(x)\,dx = \int\rho(y)\varphi(\varepsilon y)\,dy \to \varphi(0)\int\rho$ by dominated convergence.
+\end{solution}
+
+\begin{exercise}\label{distributions:exercise-fundamental-solution}
+Show that $E(x) = \frac{1}{2}|x|$ satisfies $-E'' = -\delta_0$ on $\RR$, and that on $\RR^n$ with $n \geq 3$ the function $c_n|x|^{2-n}$ is a fundamental solution of the Laplacian for a suitable constant
+$c_n$.
+\end{exercise}
+
+\begin{exercise}\label{distributions:exercise-sobolev-sharp}
+Show that $H^{n/2}(T^n)$ is not contained in $C^0(T^n)$, so the condition $s > n/2$ in Theorem~\ref{distributions:theorem-sobolev-embedding} is sharp.
+\end{exercise}
+
+\begin{exercise}\label{distributions:exercise-heat-kernel}
+Using the Fourier transform, solve the heat equation $\partial_tu = -\Delta u$ on $T^n$ with initial datum $u_0 \in H^s$, and show that $u(t) \in C^\infty$ for every $t > 0$.
+\end{exercise}
+
+\begin{solution}
+$\hat u(k, t) = e^{-4\pi^2|k|^2t}\hat u_0(k)$ solves the equation coefficientwise, and for $t > 0$ the factors decay faster than any power of $\langle k\rangle$, so $u(t) \in H^r$ for all $r$ and
+Theorem~\ref{distributions:theorem-sobolev-embedding} applies.
+\end{solution}
+
+\begin{exercise}\label{distributions:exercise-poincare-elementary}
+Prove a Poincar\'e inequality without Fourier series: if $\Omega$ lies in the slab $\{a < x_1 < a + L\}$ and $u \in C^1_c(\Omega)$, then $\int_\Omega|u|^2 \leq \frac{L^2}{2}\int_\Omega|\partial_1u|^2$.
+Compare the constant with the optimal one, $(L/\pi)^2$.
+\end{exercise}
+
+\begin{solution}
+Extend $u$ by zero. For fixed $x^{\prime}$, $u(x_1, x^{\prime}) = \int_a^{x_1}\partial_1u(t, x^{\prime})\,dt$, so by Cauchy--Schwarz $|u(x_1, x^{\prime})|^2 \leq (x_1 - a)\int_a^{a+L}|\partial_1u(t, x^{\prime})|^2\,dt$.
+Integrating over $x_1 \in (a, a + L)$ gives the factor $\int_a^{a+L}(x_1 - a)\,dx_1 = L^2/2$, and then integrate over $x^{\prime}$. Since $\pi^2 \approx 9.87$, the elementary constant $L^2/2$ is about five times
+the optimal one.
+\end{solution}
+
+\begin{exercise}\label{distributions:exercise-dirichlet-energy}
+In the situation of Proposition~\ref{distributions:proposition-dirichlet-weak}(2), show that $E(v) = \frac12\int|\nabla v|^2 - \operatorname{Re}\int f\bar v$ satisfies
+$E(v) = \frac12\|v - u\|_\nabla^2 - \frac12\|u\|_\nabla^2$ for $v \in H^1_0(\Omega)$, so that $u$ is the unique minimiser of $E$.
+\end{exercise}
+
+\begin{solution}
+By the defining property of $u$, $\int f\bar v = \langle u, v\rangle_\nabla$. Hence $E(v) = \frac12\|v\|_\nabla^2 - \operatorname{Re}\langle u, v\rangle_\nabla$, while
+$\frac12\|v - u\|_\nabla^2 = \frac12\|v\|_\nabla^2 - \operatorname{Re}\langle u, v\rangle_\nabla + \frac12\|u\|_\nabla^2$. The minimum $-\frac12\|u\|_\nabla^2$ is attained exactly at $v = u$.
+\end{solution}
+
+\begin{exercise}\label{distributions:exercise-poincare-scaling}
+Let $\Omega \subseteq \RR^n$ be open, and suppose $\int_\Omega|u|^2 \leq C\int_\Omega|\nabla u|^2$ for all $u \in C^1_c(\Omega)$. Show that for $r > 0$ the same holds on $r\Omega$ with constant $r^2C$. Deduce
+that the Poincar\'e constant of a ball of radius $r$ is $c_nr^2$ for a constant $c_n$ depending only on $n$.
+\end{exercise}
+
+\begin{solution}
+For $u \in C^1_c(r\Omega)$ put $w(y) = u(ry)$, in $C^1_c(\Omega)$. Substituting $x = ry$, $\int_{r\Omega}|u|^2 = r^n\int_\Omega|w|^2$ and, since $\nabla w(y) = r(\nabla u)(ry)$,
+$\int_{r\Omega}|\nabla u|^2 = r^{n-2}\int_\Omega|\nabla w|^2$. So $\int_{r\Omega}|u|^2 \leq r^nC\int_\Omega|\nabla w|^2 = r^2C\int_{r\Omega}|\nabla u|^2$. Applying this to $r\Omega$ and $r^{-1}$ shows that the best constants
+satisfy $C(r\Omega) = r^2C(\Omega)$; take $\Omega$ the unit ball, whose best constant is finite by Theorem~\ref{distributions:theorem-poincare-dirichlet}, and the best constant is invariant under translations.
+\end{solution}

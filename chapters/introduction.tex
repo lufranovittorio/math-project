@@ -1,0 +1,291 @@
+\chapter{Introduction}\label{introduction}
+\chapterstatus{complete}
+
+\section{What this project is}\label{introduction:section-aim}
+
+The Hodge Project is a cumulative reference whose goal is to develop, with
+complete proofs, all the mathematics needed to state, understand and work with
+the Hodge conjecture, together with the theory that surrounds it.
+
+Informally, the Hodge conjecture says the following: on a smooth complex
+projective variety $X$, every rational cohomology class of type $(p,p)$ is a
+rational linear combination of the classes of algebraic subvarieties of $X$. A
+precise statement is given in Chapter~\ref{hodge-conjecture}. Each word of the
+informal statement hides a substantial theory: rational cohomology classes
+come from algebraic topology (Chapter~\ref{singular-cohomology}), the type
+$(p,p)$ comes from the Hodge decomposition of a compact K\"ahler manifold
+(Chapter~\ref{hodge-decomposition}), which rests on the analysis of elliptic
+operators (Chapter~\ref{elliptic-operators}), and the classes of subvarieties
+come from algebraic geometry (Chapters~\ref{varieties} and~\ref{cycle-class}).
+This project builds all of it, starting from logic and set theory.
+
+The organisation is modelled on the Stacks project: the text is written in a
+strict logical order, every result has a permanent tag, and the whole project
+is a single document that can be read as a book or browsed as a website.
+
+\section{How the project is organised}\label{introduction:section-organisation}
+
+The chapters are grouped into parts.
+\begin{itemize}
+\item Part~\ref{part-foundations}, \emph{Foundations}: logic, set theory, the
+number systems and category theory.
+\item Part~\ref{part-algebra}, \emph{Algebra}: from groups to derived
+categories, including a chapter of elementary number theory.
+\item Part~\ref{part-topology}, \emph{Topology}: general topology, homotopy
+theory, singular homology and cohomology, Poincar\'e duality.
+\item Part~\ref{part-sheaves}, \emph{Sheaves}: sheaves and sheaf cohomology.
+\item Part~\ref{part-analysis}, \emph{Analysis}: real, complex and functional
+analysis, several complex variables and Sobolev spaces.
+\item Part~\ref{part-differential-geometry}, \emph{Differential Geometry}: from
+smooth manifolds to the Hodge theorem for harmonic forms.
+\item Part~\ref{part-complex-geometry}, \emph{Complex Geometry}: complex and
+K\"ahler manifolds, the Hodge decomposition, the Lefschetz theorems, the
+Kodaira vanishing and embedding theorems, deformations of complex structures and
+moduli, and Calabi--Yau manifolds.
+\item Part~\ref{part-algebraic-geometry}, \emph{Algebraic Geometry}: varieties,
+schemes, coherent cohomology, GAGA, curves, algebraic groups, abelian
+varieties, algebraic cycles, the cycle class map and \'etale cohomology.
+\item Part~\ref{part-hodge-theory}, \emph{Hodge Theory}: Hodge structures and
+Mumford--Tate groups, the Hodge conjecture, the evidence for it, its failed
+variants, mixed Hodge structures, absolute Hodge classes, and the Tate and
+standard conjectures around it.
+\end{itemize}
+The order of the chapters is the logical order of the project, not a
+recommended reading order. Section~\ref{introduction:section-path} describes
+how to read the book, and in particular the shortest route to the Hodge
+conjecture.
+
+\section{How to read this book}\label{introduction:section-path}
+
+There are three ways to use the book.
+\begin{itemize}
+\item \emph{As a reference.} Look up a result by its tag or with the search page of the website, and follow its references backwards. The \textbf{Prerequisites} line at the start of
+each chapter lists the chapters it depends on, and the dependency graph of the website shows, for every result, the results that its statement and proof use.
+\item \emph{As a direct route to the Hodge conjecture}, reading only what is needed to understand its statement and the one case that is proved in full, the Lefschetz $(1,1)$ theorem. This
+route is described below.
+\item \emph{As a course}, from the foundations onwards, in the order of the chapters. The book is written so that this is possible: nothing is used before it is proved
+(Remark~\ref{introduction:remark-no-forward-references}).
+\end{itemize}
+
+\subsection{The direct route}\label{introduction:subsection-direct-route}
+
+The direct route ends with Chapter~\ref{hodge-conjecture}, which states the conjecture, and Chapter~\ref{lefschetz-11}, which proves it for divisors. Every chapter begins,
+after its Prerequisites line, with a paragraph \textbf{On the way to the Hodge conjecture}, which says which of its sections the direct route uses and which can be postponed.
+These paragraphs are based on the references between results, so they say what is actually used; a reader who skips a section and later meets a reference to it can go back.
+Part by part, the route is as follows.
+\begin{itemize}
+\item \emph{Foundations.} Read Chapter~\ref{sets} for the language of sets, functions, cardinals and Zorn's lemma, and Chapter~\ref{categories} for the language of categories,
+functors, limits and adjoint functors. A reader who knows the real and complex numbers can skim Chapter~\ref{number-systems}. Chapters~\ref{logic} and~\ref{model-theory} are
+not needed.
+\item \emph{Algebra.} Linear and multilinear algebra are needed in full: the complex structures of Chapter~\ref{linear-algebra} and the exterior algebra and forms of type $(p,q)$ of
+Chapter~\ref{multilinear-algebra} are the linear algebra of the Hodge decomposition. From Chapters~\ref{rings}, \ref{fields} and~\ref{commutative-algebra} one needs ideals,
+modules and tensor products, transcendence degree, and the commutative algebra behind dimension and smoothness of varieties. Homological algebra and the spectral sequences of filtered
+and double complexes are needed for sheaf cohomology; derived categories only for hypercohomology. From Chapter~\ref{representation-theory} only the representations of
+$\mathfrak{sl}_2$ are used, for hard Lefschetz. Chapter~\ref{number-theory}, most of Chapter~\ref{groups}, Galois theory and the structure of semisimple Lie algebras can be
+postponed.
+\item \emph{Topology.} General topology up to partitions of unity; homotopy, the fundamental group and covering spaces; singular homology and cohomology with cup and cap products;
+Poincar\'e duality and fundamental classes. Chapter~\ref{cohomology-operations} is not needed.
+\item \emph{Sheaves.} Both chapters: sheaves and their images, sheaf cohomology through flasque and soft resolutions, \v{C}ech cohomology and the comparison with singular cohomology.
+\item \emph{Analysis.} Real analysis up to the inverse and implicit function theorems; the Lebesgue integral, $L^p$ spaces and Fubini's theorem; Cauchy's theorem in one and several
+complex variables, and the Dolbeault--Grothendieck lemma; Banach and Hilbert spaces and compact operators; Sobolev spaces. The geometric measure theory at the end of
+Chapter~\ref{measure-theory} and the second half of Chapter~\ref{functional-analysis} are not on the route.
+\item \emph{Differential geometry.} Smooth manifolds, vector bundles, differential forms and Stokes' theorem, de Rham's theorem, connections and curvature, Chern--Weil theory,
+the Hodge star, elliptic operators (whose estimates can be taken on faith on a first reading) and the Hodge theorem. Chapter~\ref{lie-groups}, most of
+Chapter~\ref{riemannian-geometry} and Chapter~\ref{symplectic-geometry} can be postponed.
+\item \emph{Complex geometry.} Complex manifolds, holomorphic bundles, Dolbeault cohomology, K\"ahler manifolds, the Hodge decomposition, hard Lefschetz and the Hodge--Riemann
+relations, positive line bundles and the Kodaira theorems. Chapters~\ref{deformations} and~\ref{calabi-yau} are not needed.
+\item \emph{Algebraic geometry.} Varieties; schemes, mainly as a language; coherent sheaves and their cohomology; divisors and line bundles; GAGA, which makes smooth projective
+varieties into compact K\"ahler manifolds; algebraic cycles and the cycle class map. Chapters~\ref{curves}, \ref{abelian-varieties}, \ref{index-theorems}
+and~\ref{etale-cohomology} are not needed; from Chapter~\ref{algebraic-groups} only the Deligne torus is used.
+\item \emph{Hodge theory.} The definitions of Chapter~\ref{hodge-structures}, then Chapters~\ref{hodge-conjecture} and~\ref{lefschetz-11}. The remaining chapters of the part are the
+surrounding theory, to be read afterwards.
+\end{itemize}
+
+\subsection{The main line}\label{introduction:subsection-main-line}
+
+Seen from above, the direct route has the following stages; everything else in the book supports them or grows out of them.
+\begin{enumerate}
+\item \emph{Cohomology.} Singular cohomology and Poincar\'e duality
+(Chapters~\ref{singular-cohomology} and~\ref{poincare-duality}), sheaf
+cohomology (Chapter~\ref{sheaf-cohomology}) and de Rham's theorem
+(Chapter~\ref{de-rham}) give the rational cohomology of a manifold and its
+description by differential forms.
+\item \emph{Harmonic theory.} Elliptic operators
+(Chapter~\ref{elliptic-operators}) give the Hodge theorem: every de Rham class
+has a unique harmonic representative (Chapter~\ref{hodge-theorem}).
+\item \emph{K\"ahler geometry.} On a compact K\"ahler manifold
+(Chapter~\ref{kahler}) the Laplacian respects the bidegree of forms, which gives
+the Hodge decomposition $H^k = \bigoplus_{p+q=k}H^{p,q}$
+(Chapter~\ref{hodge-decomposition}), hard Lefschetz and the Hodge--Riemann
+relations (Chapter~\ref{lefschetz-theorems}).
+\item \emph{Algebraic geometry.} Projective varieties are K\"ahler, and GAGA
+identifies analytic and algebraic objects on them (Chapter~\ref{gaga}).
+Subvarieties have cohomology classes, which are rational and of type $(p,p)$
+(Chapter~\ref{cycle-class}).
+\item \emph{The conjecture.} Hodge structures (Chapter~\ref{hodge-structures})
+isolate the linear algebra, and the Hodge conjecture asserts the converse of
+the last statement (Chapter~\ref{hodge-conjecture}). It is a theorem for
+divisors (Chapter~\ref{lefschetz-11}), it is known in further cases
+(Chapter~\ref{known-cases}), and its natural strengthenings are false
+(Chapter~\ref{failures}).
+\item \emph{The surrounding theory.} Variations of Hodge structure and normal
+functions (Chapters~\ref{vhs} and~\ref{intermediate-jacobians}), mixed Hodge
+structures (Chapter~\ref{mixed-hodge-structures}), absolute Hodge classes
+(Chapter~\ref{absolute-hodge}), and the Tate and standard conjectures
+(Chapters~\ref{tate-conjecture} and~\ref{standard-conjectures}) place the
+conjecture in its wider landscape.
+\end{enumerate}
+
+\begin{remark}\label{introduction:remark-first-reading}
+The book also contains much material that is not needed on the way to the Hodge conjecture, and is there because it belongs to the same circle of ideas, because the book
+aims to be a complete guide to the mathematics around it, or because it is beautiful: model theory and number theory, geometric measure theory, Riemannian and symplectic geometry
+for their own sake, Calabi--Yau manifolds, curves and abelian varieties. The paragraphs \textbf{On the way to the Hodge conjecture} say where it is, and it can be read at any
+time after its prerequisites.
+\end{remark}
+
+\section{A map of the integrals}\label{introduction:section-integration}
+
+Many integrals appear in the book: the Riemann integral, the Lebesgue integral, volumes, lengths and areas, line integrals of two kinds, complex line integrals, integrals of differential forms,
+integrals on Riemannian manifolds and on Lie groups. They are defined where they are first needed, often by an explicit formula, but they are not independent notions. All of them are special cases
+of two constructions, and the second is built from the first.
+\begin{enumerate}
+\item \emph{The integral of a function against a measure}, $\int_Xf\,d\mu$ (Chapter~\ref{measure-theory}, Section~\ref{measure-theory:section-integral}). It needs a measure on $X$, that is, a way to assign a size to
+subsets, and no orientation: reversing a curve does not change its length. Integrals of this kind are written with $d\mu$, $dx$, $ds$, $dA$ or $d\mathcal{H}^k$.
+\item \emph{The integral of a differential $k$-form over an oriented $k$-dimensional manifold}, $\int_M\omega$ (Definition~\ref{differential-forms:definition-integral}). It needs an orientation, and no measure or metric:
+in a positively oriented chart, $\omega = f\,dx^1 \wedge \cdots \wedge dx^k$ and $\int_M\omega$ is the Lebesgue integral $\int f\,d\lambda^k$, patched together with a partition of unity. Reversing the orientation
+changes the sign.
+\end{enumerate}
+On an oriented Riemannian manifold the two meet: a $k$-form is a function times the volume form, and $\int_M\omega = \int_M\langle\omega, \xi\rangle\,d\mu_g$ with the orienting $k$-vector $\xi$
+(Proposition~\ref{riemannian-geometry:proposition-orienting-vector}). Here is how the individual integrals of the book fit into this picture.
+\begin{itemize}
+\item \emph{The Riemann integral} $\int_a^bf$ (Definition~\ref{real-analysis:definition-riemann}) comes first because it needs no measure theory, and it is enough for continuous functions on intervals. It is the
+Lebesgue integral $\int_{[a,b]}f\,d\lambda$ for every Riemann integrable $f$ (Propositions~\ref{measure-theory:proposition-riemann-lebesgue} and~\ref{measure-theory:proposition-riemann-integrable}), so nothing proved
+with it has to be redone. Vector- and complex-valued functions are integrated componentwise, $\int(u + iv) = \int u + i\int v$.
+\item \emph{Multiple integrals and volumes} $\int_{\RR^n}f\,d\lambda^n$: Lebesgue measure on $\RR^n$, computed by Fubini's theorem and the change of variables formula
+(Sections~\ref{measure-theory:section-fubini} and~\ref{measure-theory:section-change-of-variables}), with Cavalieri's principle and solids of revolution as special cases
+(Subsection~\ref{measure-theory:subsection-volumes}).
+\item \emph{Length and line integrals of the first kind} $\int_\gamma f\,ds$ (Section~\ref{real-analysis:section-curves}): defined by the formula $\int_a^bf(\gamma(t))|\gamma^{\prime}(t)|\,dt$. They are integrals of the first
+construction: for an injective regular curve, $\int_\gamma f\,ds = \int_{\gamma([a,b])}f\,d\mathcal{H}^1$, the integral against one-dimensional Hausdorff measure on the image (Theorem~\ref{measure-theory:theorem-area-formula} and
+Example~\ref{measure-theory:example-area-formula}(1)), which depends only on the set.
+\item \emph{Areas and surface integrals} $\int_\Sigma f\,dA$: the integral against $\mathcal{H}^2$, or $\mathcal{H}^k$ for $k$-dimensional submanifolds, computed from a parametrisation by the area formula
+(Section~\ref{measure-theory:section-area-formula}); equivalently, the Riemannian measure of the induced metric (Propositions~\ref{riemannian-geometry:proposition-riemannian-measure}
+and~\ref{riemannian-geometry:proposition-hausdorff-measure}). The theorems of Pappus--Guldin are examples.
+\item \emph{Line integrals of the second kind} $\int_\gamma F \cdot d\gamma$ (Definition~\ref{real-analysis:definition-second-kind}): the integral of the $1$-form $F_1\,dx_1 + \cdots + F_n\,dx_n$ over the oriented
+curve (Definition~\ref{differential-forms:definition-line-integral}), an integral of the second construction. For a regular curve it is $\int_\gamma\langle F, T\rangle\,ds$, a first-kind integral of the tangential component
+(Proposition~\ref{real-analysis:proposition-second-kind}(3)): choosing the unit tangent $T$ is choosing an orientation.
+\item \emph{Complex line integrals} $\int_\gamma f\,dz$ (Definition~\ref{complex-analysis:definition-path-integral}): the integral of the complex-valued $1$-form $f\,dz$, which splits into two real line integrals of the
+second kind, $\int_\gamma(u\,dx - v\,dy) + i\int_\gamma(v\,dx + u\,dy)$ (Proposition~\ref{complex-analysis:proposition-path-integral-real}).
+\item \emph{Flux integrals and integrals of $k$-forms} over oriented submanifolds, $\int_M\omega$, with Stokes' theorem (Theorem~\ref{differential-forms:theorem-stokes}) and its classical cases, the theorems of Green, Gauss and
+Kelvin--Stokes (Chapter~\ref{riemannian-geometry}): the second construction.
+\item \emph{Integrals on Riemannian manifolds} $\int_Mf\,d\mu_g$, and on Lie groups against Haar measure (Theorem~\ref{lie-groups:theorem-haar}): the first construction, for the Riemannian measure and the Haar measure. On an
+oriented manifold, $\int_Mf\,d\mu_g = \int_Mf\,\mathrm{vol}_g$.
+\item \emph{Integration in cohomology}: $\int_M \colon H^n_{\mathrm{dR}}(M) \to \RR$ on a compact oriented manifold, periods of closed forms over cycles, and the integrals of characteristic forms that compute Chern
+numbers: the second construction applied to closed forms, which depends only on cohomology classes by Stokes' theorem (Chapters~\ref{de-rham} and~\ref{characteristic-classes}).
+\item \emph{Distributions and currents} (Chapter~\ref{distributions} and Section~\ref{de-rham:section-currents}) are not integrals but generalise them: a function $f$ gives the functional $\varphi \mapsto \int f\varphi$
+and a submanifold $Z$ the functional $\varphi \mapsto \int_Z\varphi$, and the theory keeps only the functional.
+\end{itemize}
+In short: if an integral ignores orientation, look for the measure; if it changes sign when the orientation is reversed, it is the integral of a form. The Lebesgue integral underlies both.
+
+\section{Sources and status}\label{introduction:section-sources}
+
+The mathematics in this project is standard, and each chapter lists the
+references it follows; the bibliography collects them. The chapters of
+Part~\ref{part-hodge-theory} follow the original papers and the surveys cited in
+each of them. Where a theorem is quoted
+rather than proved, the text says so and gives a reference
+(Remark~\ref{introduction:remark-proofs}). All chapters are written; none has
+yet been checked by an independent reader, which is the condition for the status
+\emph{checked} (Remark~\ref{introduction:remark-status}).
+
+\section{Conventions of the text}\label{introduction:section-conventions}
+
+\begin{notation}\label{introduction:notation-numbering}
+All numbered items of a section share a single counter: Lemma~5.2.3 is the
+third numbered item of Section~5.2, and it is followed by Example~5.2.4.
+Chapters are numbered consecutively through all the parts.
+\end{notation}
+
+\begin{notation}\label{introduction:notation-environments}
+The text uses the following kinds of numbered items.
+\begin{itemize}
+\item \textbf{Definition}: introduces a notion.
+\item \textbf{Theorem}, \textbf{Proposition}, \textbf{Lemma},
+\textbf{Corollary}: proved statements, in roughly decreasing order of
+importance.
+\item \textbf{Conjecture}: a statement that is not known to be true.
+\item \textbf{Example}: an instance of a definition or a result.
+\item \textbf{Counterexample}: shows that a hypothesis cannot be dropped, or
+that a plausible statement is false.
+\item \textbf{Remark}: context, motivation or intuition. Remarks are never used
+in proofs.
+\item \textbf{Notation}: fixes notation or a convention.
+\item \textbf{Exercise}: a statement for the reader to prove, sometimes followed
+by a solution.
+\end{itemize}
+\end{notation}
+
+\begin{remark}\label{introduction:remark-proofs}
+A result followed by \emph{Proof} has a complete proof that uses only earlier
+material. A result followed by \emph{Sketch of proof} has an argument whose
+main ideas are given but whose omitted verifications are named. A result
+followed by no proof is quoted from the literature, with a reference.
+Sketches and quotations are temporary: the aim of the project is to replace
+all of them with complete proofs.
+\end{remark}
+
+\begin{remark}\label{introduction:remark-no-forward-references}
+The project has no forward references: a proof may only use definitions and
+results that appear before it. Examples, counterexamples, remarks and
+exercises may mention notions that are defined later (for instance, the
+category of topological spaces appears as an example in
+Chapter~\ref{categories}), but such mentions are never used in a proof. The
+only exception is this introduction, which refers forward freely.
+\end{remark}
+
+\begin{remark}\label{introduction:remark-tags}
+Every labelled item (chapter, section, definition, result, example, and so on)
+carries a permanent four-character \emph{tag}, shown next to it on the
+website. The number of an item changes whenever material is inserted before
+it; its tag never changes. To refer to an item from outside the project, cite
+its tag.
+\end{remark}
+
+\begin{remark}\label{introduction:remark-status}
+Each chapter has a status. \emph{Planned}: only an outline exists.
+\emph{Draft}: the chapter is being written, and its proofs have not been
+checked. \emph{Complete}: all planned material is written, and the proofs
+await independent checking. \emph{Checked}: every proof in the chapter has been
+checked by a reader other than its author.
+\end{remark}
+
+\section{Mathematical conventions}\label{introduction:section-mathematical-conventions}
+
+\begin{notation}\label{introduction:notation-universe}
+We work in ZFC set theory together with the assumption that a Grothendieck
+universe exists, and we fix such a universe $\mathcal{U}$ once and for all. A
+set is \emph{small} if it is an element of $\mathcal{U}$. Chapter~\ref{sets}
+develops these notions; Chapter~\ref{categories} explains why they are needed.
+\end{notation}
+
+\begin{notation}\label{introduction:notation-numbers}
+The natural numbers include zero: $\NN = \{0, 1, 2, \ldots\}$. This is the
+convention of set theory and logic, where $\NN$ is built starting from
+$0 = \emptyset$ and each natural number $n = \{0, 1, \ldots, n - 1\}$ is a set with
+$n$ elements (Remark~\ref{sets:remark-zero-natural}). Many texts, especially in
+analysis and number theory, start from $1$ instead; for the positive integers we
+write $\NN_{>0} = \{1, 2, 3, \ldots\}$, and more generally
+$\NN_{\geq k} = \{k, k + 1, \ldots\}$. A real number $x$ is \emph{positive} if
+$x > 0$ and \emph{non-negative} if $x \geq 0$.
+\end{notation}
+
+\begin{notation}\label{introduction:notation-maps}
+The composition of maps $f \colon X \to Y$ and $g \colon Y \to Z$ is written
+$g \circ f$ or $gf$. The identity map of $X$ is written $\id_X$.
+\end{notation}
+
+\begin{notation}\label{introduction:notation-rings}
+A ring is associative and has an identity element $1$, and ring homomorphisms
+preserve identity elements. Rings are not assumed to be commutative, except
+from Chapter~\ref{commutative-algebra} onwards, where ``ring'' means
+``commutative ring'' unless stated otherwise.
+\end{notation}
