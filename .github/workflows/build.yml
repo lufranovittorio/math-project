@@ -35,7 +35,7 @@ jobs:
             texlive-latex-base texlive-latex-recommended texlive-latex-extra \
             texlive-fonts-recommended texlive-fonts-extra texlive-pictures \
             texlive-science texlive-bibtex-extra latexmk poppler-utils \
-            texlive-binaries ghostscript dvisvgm
+            texlive-binaries texlive-plain-generic ghostscript dvisvgm
           dvisvgm --version
 
       - name: Install plasTeX
