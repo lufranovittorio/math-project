@@ -1,0 +1,76 @@
+# Build the PDF and the website on every push to main, and publish the
+# website (with the PDFs) on GitHub Pages.
+name: Build and publish
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time; a newer push waits for the running one.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install TeX Live and tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-fonts-recommended texlive-fonts-extra texlive-pictures \
+            texlive-science texlive-bibtex-extra latexmk poppler-utils \
+            texlive-binaries ghostscript
+          dvisvgm --version
+
+      - name: Install plasTeX
+        run: pip install "plasTeX==3.1"
+
+      - name: Check
+        run: python make.py check
+
+      - name: Build PDF and website
+        run: python make.py all
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs
+          path: |
+            output/*.log
+            output/pdf/*.log
+
+      - name: Prepare the website
+        run: |
+          rm -rf output/html/.cache output/html/.generated-by-make
+          touch output/html/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: output/html
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

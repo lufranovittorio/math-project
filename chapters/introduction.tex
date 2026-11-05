@@ -3,41 +3,82 @@
 
 \section{What this project is}\label{introduction:section-aim}
 
-The Hodge Project is a cumulative reference whose goal is to develop, with
-complete proofs, all the mathematics needed to state, understand and work with
-the Hodge conjecture, together with the theory that surrounds it.
-
-Informally, the Hodge conjecture says the following: on a smooth complex
-projective variety $X$, every rational cohomology class of type $(p,p)$ is a
-rational linear combination of the classes of algebraic subvarieties of $X$. A
-precise statement is given in Chapter~\ref{hodge-conjecture}. Each word of the
-informal statement hides a substantial theory: rational cohomology classes
-come from algebraic topology (Chapter~\ref{singular-cohomology}), the type
-$(p,p)$ comes from the Hodge decomposition of a compact K\"ahler manifold
-(Chapter~\ref{hodge-decomposition}), which rests on the analysis of elliptic
-operators (Chapter~\ref{elliptic-operators}), and the classes of subvarieties
-come from algebraic geometry (Chapters~\ref{varieties} and~\ref{cycle-class}).
-This project builds all of it, starting from logic and set theory.
+The Math Project is a cumulative reference whose goal is to develop
+mathematics, all of it, with complete proofs and in a single strict logical
+order: the foundations (logic, set theory, the number systems, categories),
+algebra, discrete mathematics, topology, analysis, probability and statistics,
+differential equations and dynamical systems, numerical analysis, optimisation
+and game theory, differential, complex and algebraic geometry, number theory,
+and research-level subjects such as Hodge theory. Every subject is meant to be
+treated in depth, in its natural generality and with the standard results that
+a working mathematician expects to find, and at the same time slowly: each
+definition is motivated and followed by examples, each hypothesis of a theorem
+is shown to be necessary by a counterexample, proofs are divided into named
+steps, and every chapter ends with exercises, most of them with solutions.
 
 The organisation is modelled on the Stacks project: the text is written in a
 strict logical order, every result has a permanent tag, and the whole project
-is a single document that can be read as a book or browsed as a website.
+is a single document that can be read as a book or browsed as a website. Like
+the Stacks project, it is meant to be used by following references backwards:
+any result can be traced, through the results its proof uses, down to the
+axioms of set theory.
+
+\begin{remark}\label{introduction:remark-history}
+The project began in November 2026 from the chapters of The Hodge Project, a
+reference whose goal was to develop, with complete proofs, all the mathematics
+needed to state and understand the Hodge conjecture. Informally, the Hodge
+conjecture says that on a smooth complex projective variety $X$ every rational
+cohomology class of type $(p,p)$ is a rational linear combination of the
+classes of algebraic subvarieties of $X$ (Chapter~\ref{hodge-conjecture}).
+Each word of this statement hides a substantial theory: rational cohomology
+classes come from algebraic topology (Chapter~\ref{singular-cohomology}), the
+type $(p,p)$ comes from the Hodge decomposition of a compact K\"ahler manifold
+(Chapter~\ref{hodge-decomposition}), which rests on the analysis of elliptic
+operators (Chapter~\ref{elliptic-operators}), and the classes of subvarieties
+come from algebraic geometry (Chapters~\ref{varieties} and~\ref{cycle-class}).
+This is why the parts on topology, analysis and geometry are, at present, the
+most developed, and why the route to the Hodge conjecture is the most detailed
+of the reading paths of Section~\ref{introduction:section-path}. The other
+parts are being written in the order of the plan of the project; the chapters
+that have not been written yet are present as outlines, with the status
+\emph{planned} (Remark~\ref{introduction:remark-status}).
+\end{remark}
 
 \section{How the project is organised}\label{introduction:section-organisation}
 
-The chapters are grouped into parts.
+The chapters are grouped into parts. Parts marked \emph{(planned)} consist,
+for now, of chapter outlines.
 \begin{itemize}
 \item Part~\ref{part-foundations}, \emph{Foundations}: logic, set theory, the
-number systems and category theory.
+number systems, model theory and category theory; computability and
+complexity (planned).
 \item Part~\ref{part-algebra}, \emph{Algebra}: from groups to derived
 categories, including a chapter of elementary number theory.
+\item Part~\ref{part-discrete-mathematics}, \emph{Discrete Mathematics}:
+combinatorics, generating functions, graph theory and the probabilistic
+method.
 \item Part~\ref{part-topology}, \emph{Topology}: general topology, homotopy
 theory, singular homology and cohomology, Poincar\'e duality.
 \item Part~\ref{part-sheaves}, \emph{Sheaves}: sheaves and sheaf cohomology.
 \item Part~\ref{part-analysis}, \emph{Analysis}: real, complex and functional
-analysis, several complex variables and Sobolev spaces.
+analysis, several complex variables and distributions; harmonic analysis and
+operator algebras (planned).
+\item Part~\ref{part-probability}, \emph{Probability and Statistics}
+(planned): probability theory, martingales, Markov chains, Brownian motion,
+stochastic calculus, statistics and information theory.
+\item Part~\ref{part-differential-equations}, \emph{Differential Equations and
+Dynamics} (planned): ordinary differential equations, dynamical systems,
+ergodic theory, Sobolev spaces, elliptic and evolution equations, the calculus
+of variations.
+\item Part~\ref{part-numerical-analysis}, \emph{Numerical Analysis}
+(planned): approximation and quadrature, numerical linear algebra, and the
+numerical solution of ordinary and partial differential equations.
+\item Part~\ref{part-optimisation}, \emph{Optimisation and Game Theory}
+(planned): convex analysis, linear programming, nonlinear optimisation and
+game theory.
 \item Part~\ref{part-differential-geometry}, \emph{Differential Geometry}: from
-smooth manifolds to the Hodge theorem for harmonic forms.
+smooth manifolds to the Hodge theorem for harmonic forms; topological
+$K$-theory (planned).
 \item Part~\ref{part-complex-geometry}, \emph{Complex Geometry}: complex and
 K\"ahler manifolds, the Hodge decomposition, the Lefschetz theorems, the
 Kodaira vanishing and embedding theorems, deformations of complex structures and
@@ -45,15 +86,20 @@ moduli, and Calabi--Yau manifolds.
 \item Part~\ref{part-algebraic-geometry}, \emph{Algebraic Geometry}: varieties,
 schemes, coherent cohomology, GAGA, curves, algebraic groups, abelian
 varieties, algebraic cycles, the cycle class map and \'etale cohomology.
+\item Part~\ref{part-number-theory}, \emph{Number Theory} (planned): analytic
+and algebraic number theory and modular forms, continuing the elementary
+number theory of Chapter~\ref{number-theory}.
 \item Part~\ref{part-hodge-theory}, \emph{Hodge Theory}: Hodge structures and
 Mumford--Tate groups, the Hodge conjecture, the evidence for it, its failed
 variants, mixed Hodge structures, absolute Hodge classes, and the Tate and
 standard conjectures around it.
 \end{itemize}
 The order of the chapters is the logical order of the project, not a
-recommended reading order. Section~\ref{introduction:section-path} describes
-how to read the book, and in particular the shortest route to the Hodge
-conjecture.
+recommended reading order: a part comes after the parts it uses, so discrete
+mathematics, which needs only algebra, comes before topology, and probability,
+which is built on measure theory, comes right after analysis.
+Section~\ref{introduction:section-path} describes how to read the book along
+several reading paths.
 
 \section{How to read this book}\label{introduction:section-path}
 
@@ -61,15 +107,50 @@ There are three ways to use the book.
 \begin{itemize}
 \item \emph{As a reference.} Look up a result by its tag or with the search page of the website, and follow its references backwards. The \textbf{Prerequisites} line at the start of
 each chapter lists the chapters it depends on, and the dependency graph of the website shows, for every result, the results that its statement and proof use.
-\item \emph{As a direct route to the Hodge conjecture}, reading only what is needed to understand its statement and the one case that is proved in full, the Lefschetz $(1,1)$ theorem. This
-route is described below.
+\item \emph{Along a reading path}, reading only what is needed to reach a chosen subject. The paths are described in
+Subsection~\ref{introduction:subsection-reading-paths}; the longest and most detailed one leads to the Hodge conjecture
+(Subsection~\ref{introduction:subsection-direct-route}).
 \item \emph{As a course}, from the foundations onwards, in the order of the chapters. The book is written so that this is possible: nothing is used before it is proved
 (Remark~\ref{introduction:remark-no-forward-references}).
 \end{itemize}
 
-\subsection{The direct route}\label{introduction:subsection-direct-route}
+\subsection{Reading paths}\label{introduction:subsection-reading-paths}
 
-The direct route ends with Chapter~\ref{hodge-conjecture}, which states the conjecture, and Chapter~\ref{lefschetz-11}, which proves it for divisors. Every chapter begins,
+A reading path starts from the foundations and ends at a subject. Every path begins in the same way: Chapter~\ref{sets} for the language of sets, functions, cardinals and Zorn's
+lemma, and Chapter~\ref{number-systems} for the integers, the rationals and the real and complex numbers (a reader who knows them can skim it). Chapter~\ref{logic} is needed only on
+the paths that lead to logic itself, to model theory and to computability. The paths below list, after this common start, the chapters they use; inside a chapter, its introduction
+says which sections are needed for what. Paths whose last part is still planned are described with the chapters already written that they will use.
+\begin{itemize}
+\item \emph{Algebra.} Chapters~\ref{groups}, \ref{rings}, \ref{fields} and~\ref{linear-algebra} are the common core; then multilinear algebra, representation theory and
+commutative algebra in any order, and homological algebra, spectral sequences and derived categories in this order. Chapter~\ref{categories} is the language of the last three.
+\item \emph{Elementary and algebraic number theory.} Chapters~\ref{groups}, \ref{rings} and~\ref{number-theory} (congruences, primitive roots, quadratic reciprocity, sums of
+squares, quadratic forms and the Heegner numbers); then Galois theory (Chapter~\ref{fields}) and commutative algebra (Chapter~\ref{commutative-algebra}) lead to the algebraic
+number theory of Part~\ref{part-number-theory}, and complex analysis (Chapter~\ref{complex-analysis}) to its analytic number theory and modular forms.
+\item \emph{Discrete mathematics.} Chapters~\ref{groups} (actions, for counting orbits), \ref{rings} (polynomial rings, which formal power series generalise)
+and~\ref{linear-algebra} (for spectral graph theory), then Part~\ref{part-discrete-mathematics}. The probabilistic method uses only finite probability spaces, defined there.
+\item \emph{Topology and geometry.} Chapters~\ref{general-topology}, \ref{homotopy}, \ref{singular-homology} and~\ref{singular-cohomology}, then manifolds
+(Chapters~\ref{topological-manifolds} and~\ref{smooth-manifolds}) and the rest of Part~\ref{part-differential-geometry}. Real analysis up to the inverse function theorem
+(Chapter~\ref{real-analysis}) is needed from smooth manifolds onwards.
+\item \emph{Analysis.} Chapters~\ref{real-analysis}, \ref{general-topology} (metric spaces, compactness and completeness), \ref{measure-theory}, \ref{complex-analysis},
+\ref{functional-analysis} and~\ref{distributions}, with Chapter~\ref{linear-algebra} for spectral theory in finite dimension.
+\item \emph{Probability and statistics.} The analysis path up to Chapter~\ref{measure-theory} (measures, the integral, $L^p$ spaces, modes of convergence, independence and the
+Borel--Cantelli lemmas, Fubini's theorem, the Radon--Nikodym theorem and weak convergence of measures), Hilbert spaces from Chapter~\ref{functional-analysis} (conditional
+expectation is an orthogonal projection), and the Fourier transform of Chapter~\ref{distributions} (characteristic functions); then Part~\ref{part-probability}.
+\item \emph{Differential equations and dynamics.} The analysis path, together with the existence theorem of Picard and Lindel\"of in Chapter~\ref{real-analysis} and the Jordan
+normal form of Chapter~\ref{linear-algebra}; then Part~\ref{part-differential-equations}. Flows on manifolds use Chapter~\ref{smooth-manifolds}, read informally until
+Part~\ref{part-differential-geometry}.
+\item \emph{Numerical analysis.} Chapters~\ref{real-analysis} and~\ref{linear-algebra}, then Part~\ref{part-numerical-analysis}; its second half uses
+Part~\ref{part-differential-equations}.
+\item \emph{Optimisation and game theory.} Chapter~\ref{real-analysis} (whose last sections already contain Lagrange multipliers, Farkas' lemma and the Karush--Kuhn--Tucker
+conditions), compactness from Chapter~\ref{general-topology}, convexity and separation from Chapter~\ref{functional-analysis}, and the Brouwer fixed point theorem from
+Chapter~\ref{singular-homology} (for Nash equilibria); then Part~\ref{part-optimisation}.
+\item \emph{The Hodge conjecture.} The path of the original Hodge Project, described in detail in Subsection~\ref{introduction:subsection-direct-route}.
+\end{itemize}
+
+\subsection{The route to the Hodge conjecture}\label{introduction:subsection-direct-route}
+
+The route to the Hodge conjecture reads only what is needed to understand its statement and the one case that is proved in full, the Lefschetz $(1,1)$ theorem: it ends with
+Chapter~\ref{hodge-conjecture}, which states the conjecture, and Chapter~\ref{lefschetz-11}, which proves it for divisors. Every chapter written before the project was enlarged begins,
 after its Prerequisites line, with a paragraph \textbf{On the way to the Hodge conjecture}, which says which of its sections the direct route uses and which can be postponed.
 These paragraphs are based on the references between results, so they say what is actually used; a reader who skips a section and later meets a reference to it can go back.
 Part by part, the route is as follows.
@@ -137,10 +218,10 @@ conjecture in its wider landscape.
 \end{enumerate}
 
 \begin{remark}\label{introduction:remark-first-reading}
-The book also contains much material that is not needed on the way to the Hodge conjecture, and is there because it belongs to the same circle of ideas, because the book
-aims to be a complete guide to the mathematics around it, or because it is beautiful: model theory and number theory, geometric measure theory, Riemannian and symplectic geometry
-for their own sake, Calabi--Yau manifolds, curves and abelian varieties. The paragraphs \textbf{On the way to the Hodge conjecture} say where it is, and it can be read at any
-time after its prerequisites.
+Most of the book is not needed on the way to the Hodge conjecture: everything in the parts on discrete mathematics, probability, differential equations, numerical analysis,
+optimisation and number theory, and, in the older parts, model theory and elementary number theory, geometric measure theory, Riemannian and symplectic geometry for their own
+sake, Calabi--Yau manifolds, curves and abelian varieties. The paragraphs \textbf{On the way to the Hodge conjecture} say where it is, and it can be read at any time after its
+prerequisites.
 \end{remark}
 
 \section{A map of the integrals}\label{introduction:section-integration}
@@ -193,9 +274,23 @@ references it follows; the bibliography collects them. The chapters of
 Part~\ref{part-hodge-theory} follow the original papers and the surveys cited in
 each of them. Where a theorem is quoted
 rather than proved, the text says so and gives a reference
-(Remark~\ref{introduction:remark-proofs}). All chapters are written; none has
-yet been checked by an independent reader, which is the condition for the status
-\emph{checked} (Remark~\ref{introduction:remark-status}).
+(Remark~\ref{introduction:remark-proofs}). The chapters inherited from The
+Hodge Project are written, and those of the new parts are being written; the
+status of every chapter is shown at its start on the website and in the table
+of contents. No chapter has yet been checked by an independent reader, which is
+the condition for the status \emph{checked}
+(Remark~\ref{introduction:remark-status}).
+
+\begin{remark}\label{introduction:remark-depth}
+The standard of depth is that of the Stacks project: a chapter on a subject
+should contain the definitions and results that a specialist expects to find
+there, in their natural generality, with complete proofs, and not only a
+selection. A chapter is \emph{complete} when it meets this standard. Around
+the core, chapters also collect the well-known results that a curious reader
+looks for (in number theory, for example, the Gaussian integers, the Heegner
+numbers and Euler's polynomial $n^2 + n + 41$), even when nothing later uses
+them.
+\end{remark}
 
 \section{Conventions of the text}\label{introduction:section-conventions}
 
