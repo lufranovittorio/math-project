@@ -1,17 +1,1711 @@
 \chapter{Continued Fractions and Diophantine Approximation}\label{continued-fractions}
-\chapterstatus{planned}
+\chapterstatus{complete}
 
-How well real numbers can be approximated by rationals, and what continued fractions say about it.
+\section{Introduction}\label{continued-fractions:section-introduction}
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{number-theory} (Elementary Number Theory) and Chapter~\ref{real-analysis} (Real Analysis).
+Every real number can be approximated by rational numbers as closely as we like, since $\QQ$ is dense in $\RR$. The interesting question is how well it can be approximated \emph{for the size of the
+denominator}: the decimal fraction $3.14 = 314/100$ approximates $\pi$ to within $0.0016$, while $22/7$, with a much smaller denominator, does about as well ($|\pi - 22/7| < 0.0013$), and $355/113$
+is correct to six decimal places. \emph{Diophantine approximation} studies the inequalities $|\alpha - p/q| < \psi(q)$ for given functions $\psi$; Dirichlet's theorem
+(Theorem~\ref{combinatorics:theorem-dirichlet-approximation}) says that $\psi(q) = 1/q^2$ always has infinitely many solutions when $\alpha$ is irrational.
 
-\noindent\textbf{Planned contents.}
+The tool that solves the problem completely in dimension one is the \emph{continued fraction}
+\[
+\alpha = a_0 + \cfrac{1}{a_1 + \cfrac{1}{a_2 + \cfrac{1}{a_3 + \cdots}}},
+\]
+obtained by repeatedly taking the integer part and inverting the remainder: it is the Euclidean algorithm applied to a real number. Its truncations, the \emph{convergents}, are the best
+approximations of $\alpha$ in a precise sense, and the integers $a_n$ measure how good they are: a large $a_{n+1}$ means an unusually good approximation, as $a_4 = 292$ in
+$\pi = [3; 7, 15, 1, 292, \ldots]$ explains the quality of $355/113$. From this one description follow the theorems of Lagrange, Legendre and Hurwitz on best approximations, Lagrange's theorem that
+the quadratic irrationals are exactly the numbers with eventually periodic expansion, and the complete solution of Pell's equation $x^2 - dy^2 = 1$.
+
+Numbers that are approximated \emph{too} well cannot be algebraic: this is Liouville's theorem, which produced the first explicit transcendental numbers. We go on to prove that $e$ and $\pi$ are
+transcendental (Hermite, Lindemann), which settles the ancient problem of squaring the circle. At the other end, the \emph{metric} theory asks what happens for almost every $\alpha$: almost all
+numbers are approximable to order $2$ and no better, and the partial quotients of a random number follow the Gauss distribution. The last section studies the fractional parts of $n\alpha$, which
+are equidistributed when $\alpha$ is irrational (Weyl), and whose gaps take at most three values (the three-gap theorem).
+
+The chapter is organised as follows.
 \begin{enumerate}
-\item Finite and infinite continued fractions, convergents and their recurrences; the Euclidean algorithm again.
-\item Best approximations; Dirichlet's approximation theorem, Hurwitz's theorem and the constant $\sqrt{5}$; Farey sequences and Ford circles.
-\item Quadratic irrationals: Euler's and Lagrange's theorems on periodic continued fractions; reduced quadratic irrationals (Galois).
-\item Pell's equation $x^2 - dy^2 = \pm 1$: existence of solutions, the fundamental solution, the group of solutions.
-\item Liouville's theorem and Liouville numbers; transcendence of $e$ and of $\pi$ (Hermite, Lindemann); the Thue--Siegel--Roth theorem (statement).
-\item Equidistribution modulo $1$: Weyl's criterion and $n\alpha$; the three-gap theorem.
-\item Exercises with solutions.
+\item Section~\ref{continued-fractions:section-finite}: finite continued fractions, convergents and their recurrences, the matrix formalism, the Euclidean algorithm and Lamé's theorem.
+\item Section~\ref{continued-fractions:section-infinite}: infinite continued fractions, the expansion of an irrational number, error estimates, and the expansions of the golden ratio, $\sqrt2$,
+$e$ and $\pi$.
+\item Section~\ref{continued-fractions:section-best}: best approximations; the theorems of Lagrange, Legendre, Vahlen and Hurwitz; equivalent numbers and Serret's theorem; badly approximable
+numbers.
+\item Section~\ref{continued-fractions:section-farey}: Farey sequences, mediants and Ford circles.
+\item Section~\ref{continued-fractions:section-quadratic}: quadratic irrationals, the theorems of Euler, Lagrange and Galois, and the expansion of $\sqrt d$.
+\item Section~\ref{continued-fractions:section-pell}: Pell's equation, its group of solutions and the equations $x^2 - dy^2 = N$.
+\item Section~\ref{continued-fractions:section-transcendence}: Liouville's theorem, Liouville numbers, symmetric polynomials, the transcendence of $e$ and $\pi$, and what is known beyond
+(Lindemann--Weierstrass, Gelfond--Schneider, Roth).
+\item Section~\ref{continued-fractions:section-metric}: the Gauss map and the Gauss measure, Khinchin's theorem on almost all numbers, and the statistics of partial quotients.
+\item Section~\ref{continued-fractions:section-equidistribution}: equidistribution modulo $1$, Weyl's criterion, van der Corput's theorem, polynomial sequences, Benford's law for $2^n$, and the
+three-gap theorem.
 \end{enumerate}
+References: \cite[Chapters III, X, XI]{hardy-wright}, \cite{khinchin-continued-fractions} for the classical and metric theory, \cite{baker-transcendental} and \cite{niven-irrational} for
+transcendence, \cite{kuipers-niederreiter} for equidistribution, \cite{einsiedler-ward} for the ergodic point of view.
+
+\noindent\textbf{Prerequisites.} Chapter~\ref{number-systems} (Number Systems), Chapter~\ref{fields} (Fields and Galois Theory), Chapter~\ref{number-theory} (Elementary Number Theory),
+Chapter~\ref{combinatorics} (Combinatorics), Chapter~\ref{generating-functions} (Generating Functions), Chapter~\ref{general-topology} (General Topology), Chapter~\ref{real-analysis} (Real Analysis)
+and Chapter~\ref{measure-theory} (Measure Theory).
+
+\begin{notation}\label{continued-fractions:notation-basic}
+For a real number $x$, $\lfloor x \rfloor$ is the largest integer $\leq x$, $\{x\} = x - \lfloor x \rfloor \in [0, 1)$ is its \emph{fractional part} (the braces never denote a one-element set in
+this chapter, except in set-builder notation, where the meaning is clear), and $\lVert x \rVert = \min_{m \in \ZZ}|x - m| \in [0, \frac12]$ is the distance from $x$ to the nearest integer. A
+\emph{fraction} $p/q$ always has $p, q \in \ZZ$ and $q \geq 1$; it is \emph{reduced} if $\gcd(p, q) = 1$. The Fibonacci numbers are $F_0 = 0$, $F_1 = 1$, $F_{n+1} = F_n + F_{n-1}$, and
+$\varphi = (1 + \sqrt5)/2$ is the golden ratio.
+\end{notation}
+
+\section{Finite continued fractions}\label{continued-fractions:section-finite}
+
+The Euclidean algorithm for $67$ and $29$ reads
+\[
+67 = 2 \cdot 29 + 9, \qquad 29 = 3 \cdot 9 + 2, \qquad 9 = 4 \cdot 2 + 1, \qquad 2 = 2 \cdot 1.
+\]
+Dividing each line by the divisor gives $67/29 = 2 + 9/29$, $29/9 = 3 + 2/9$, $9/2 = 4 + 1/2$, and substituting each equation into the previous one,
+\[
+\frac{67}{29} = 2 + \cfrac{1}{3 + \cfrac{1}{4 + \cfrac{1}{2}}}.
+\]
+The quotients $2, 3, 4, 2$ of the algorithm have become the building blocks of a nested fraction. Such expressions are the subject of this section; to handle them we need a compact notation and
+recurrences for their values.
+
+\begin{definition}\label{continued-fractions:definition-continued-fraction}
+Let $a_0$ be a real number and $a_1, \ldots, a_n$ positive real numbers ($n \geq 0$). The \emph{continued fraction} $[a_0; a_1, \ldots, a_n]$ is the real number defined by recursion on $n$:
+\[
+[a_0] = a_0, \qquad [a_0; a_1, \ldots, a_n] = a_0 + \frac{1}{[a_1; a_2, \ldots, a_n]} \quad (n \geq 1).
+\]
+The division is allowed: by induction on $n$, $[a_1; a_2, \ldots, a_n] \geq a_1 > 0$, with equality only for $n = 1$. The numbers $a_i$ are the \emph{partial quotients}. The continued fraction is
+\emph{simple} if $a_0 \in \ZZ$ and $a_1, \ldots, a_n$ are positive integers.
+\end{definition}
+
+\begin{notation}\label{continued-fractions:notation-continued-fraction}
+The semicolon separates the integer part $a_0$ from the other partial quotients; $[a_0; a_1, a_2, \ldots]$ denotes an infinite continued fraction
+(Definition~\ref{continued-fractions:definition-infinite}), and a bar marks a block repeated forever: $[1; \overline{2}] = [1; 2, 2, 2, \ldots]$ and
+$[3; \overline{1, 1, 1, 1, 6}] = [3; 1, 1, 1, 1, 6, 1, 1, 1, 1, 6, \ldots]$. In displayed formulas we also write the nested fraction itself, with $\cfrac{}{}$ as above. Unless said otherwise, a
+continued fraction is simple; real partial quotients appear only in the last place, where they are written $x$, $t$ or $\alpha_n$.
+\end{notation}
+
+\begin{example}\label{continued-fractions:example-first}
+\begin{enumerate}
+\item $[2; 3, 4, 2] = 67/29$, by the computation above: $[4; 2] = 9/2$, $[3; 4, 2] = 3 + 2/9 = 29/9$, and $[2; 3, 4, 2] = 2 + 9/29 = 67/29$.
+\item $[0; a_1, \ldots, a_n] = 1/[a_1; \ldots, a_n]$, so taking reciprocals shifts the partial quotients: $29/67 = [0; 2, 3, 4, 2]$.
+\item $[1; 1, 1, 1, 1] = 1 + 1/(1 + 1/(1 + 1/(1 + 1))) = 8/5$; we shall see that $[1; 1, \ldots, 1]$ with $n + 1$ ones is $F_{n+2}/F_{n+1}$.
+\item $[a_0; a_1, \ldots, a_n, 1] = [a_0; a_1, \ldots, a_n + 1]$, since the last two levels are $a_n + 1/1 = a_n + 1$. So the expansion of a number is not unique;
+Proposition~\ref{continued-fractions:proposition-rational} shows that this is the only ambiguity.
+\end{enumerate}
+\end{example}
+
+\begin{lemma}\label{continued-fractions:lemma-splitting}
+For $0 \leq k \leq n$, $[a_0; a_1, \ldots, a_n] = [a_0; a_1, \ldots, a_{k-1}, [a_k; a_{k+1}, \ldots, a_n]]$.
+\end{lemma}
+
+\begin{proof}
+For $k = 0$ both sides are $[[a_0; \ldots, a_n]]$, and for $k = 1$ this is the definition. If $k \geq 2$, apply the case $k - 1$ to $[a_1; \ldots, a_n]$, which gives
+$[a_1; \ldots, a_n] = [a_1; \ldots, a_{k-1}, [a_k; \ldots, a_n]]$, and substitute into $a_0 + 1/[a_1; \ldots, a_n]$.
+\end{proof}
+
+\begin{proposition}\label{continued-fractions:proposition-rational}
+Every finite simple continued fraction is a rational number. Conversely, every rational number $r$ has exactly two expansions as a finite simple continued fraction: one
+$[a_0; a_1, \ldots, a_n]$ with $n = 0$ or $a_n \geq 2$, called the \emph{normal} expansion, and $[a_0; a_1, \ldots, a_n - 1, 1]$. In the normal expansion $a_0 = \lfloor r \rfloor$, and the partial
+quotients are the quotients of the Euclidean algorithm applied to the numerator and denominator of $r$.
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1: rationality.} By induction on $n$: $[a_0] \in \ZZ$, and $[a_0; \ldots, a_n] = a_0 + 1/[a_1; \ldots, a_n]$ is rational if $[a_1; \ldots, a_n]$ is a nonzero rational.
+
+\emph{Step 2: existence of a normal expansion.} Write $r = a/b$ with $b \geq 1$; we argue by strong induction on $b$. Divide with remainder (Theorem~\ref{number-systems:theorem-division}):
+$a = a_0b + r_1$ with $0 \leq r_1 < b$. If $r_1 = 0$, then $r = [a_0]$. Otherwise $r = a_0 + r_1/b = a_0 + 1/(b/r_1)$, and $b/r_1 > 1$ has denominator $r_1 < b$, so by induction
+$b/r_1 = [c_0; c_1, \ldots, c_m]$ normally. Here $c_0 = \lfloor b/r_1 \rfloor \geq 1$, and if $m = 0$ then $c_0 = b/r_1$ is an integer $> 1$, so $c_0 \geq 2$. In either case
+$r = [a_0; c_0, \ldots, c_m]$ is a normal expansion. The partial quotients are the quotients $a_0, c_0, \ldots$ of the successive divisions $a = a_0b + r_1$, $b = c_0r_1 + r_2$, \ldots, which are
+the steps of the Euclidean algorithm.
+
+\emph{Step 3: the first partial quotient of a normal expansion.} Let $x = [a_0; a_1, \ldots, a_n]$ be normal with $n \geq 1$. Then $y = [a_1; \ldots, a_n] > 1$: for $n = 1$ because $a_1 \geq 2$, and
+for $n \geq 2$ because $y > a_1 \geq 1$ (Definition~\ref{continued-fractions:definition-continued-fraction}). So $x - a_0 = 1/y \in (0, 1)$, which gives $a_0 = \lfloor x \rfloor$ and
+$x \notin \ZZ$. For $n = 0$, $a_0 = x = \lfloor x \rfloor$ and $x \in \ZZ$.
+
+\emph{Step 4: uniqueness of the normal expansion.} Let $[a_0; \ldots, a_n] = [b_0; \ldots, b_m]$ be normal, say $n \leq m$, and induct on $n$. By Step 3, $a_0 = b_0$, and $n = 0$ if and only if
+the number is an integer, if and only if $m = 0$. If $n, m \geq 1$, subtracting $a_0$ and inverting gives $[a_1; \ldots, a_n] = [b_1; \ldots, b_m]$, two normal expansions, which agree by induction.
+
+\emph{Step 5: exactly two expansions.} If $[a_0; \ldots, a_n]$ is normal, then $[a_0; \ldots, a_n - 1, 1]$ is another expansion by Example~\ref{continued-fractions:example-first}(4) (the
+partial quotient $a_n - 1$ is $\geq 1$ if $n \geq 1$; if $n = 0$ it is the integer $a_0 - 1$). Conversely, an expansion that is not normal ends in $a_n = 1$ with $n \geq 1$, and it equals
+$[a_0; \ldots, a_{n-2}, a_{n-1} + 1]$, which is normal; by Step 4 it is the one obtained from the normal expansion by this construction.
+\end{proof}
+
+\begin{definition}\label{continued-fractions:definition-convergents}
+Let $a_0$ be real and $a_1, a_2, \ldots$ positive reals (finitely or infinitely many). Define
+\[
+\begin{aligned}
+p_{-2} &= 0, \quad p_{-1} = 1, \quad p_n = a_np_{n-1} + p_{n-2} \qquad (n \geq 0),\\
+q_{-2} &= 1, \quad q_{-1} = 0, \quad q_n = a_nq_{n-1} + q_{n-2} \qquad (n \geq 0).
+\end{aligned}
+\]
+The quotient $c_n = p_n/q_n = [a_0; a_1, \ldots, a_n]$ (Theorem~\ref{continued-fractions:theorem-recurrence}) is the $n$-th \emph{convergent}, and $p_n$, $q_n$ are its \emph{numerator} and
+\emph{denominator}.
+\end{definition}
+
+So $p_0 = a_0$, $q_0 = 1$, $p_1 = a_1a_0 + 1$, $q_1 = a_1$. The denominators do not depend on $a_0$, and $q_n > 0$ for $n \geq 0$, by induction. For a simple continued fraction the $p_n$ and $q_n$
+are integers, $1 = q_0 \leq q_1 < q_2 < q_3 < \cdots$ (for $n \geq 2$, $q_n \geq q_{n-1} + q_{n-2} > q_{n-1}$), and $q_n \geq F_{n+1}$ by comparison with the Fibonacci recurrence. The
+recurrences are convenient to run as a table:
+\[
+\begin{array}{c|cccccc}
+n & -2 & -1 & 0 & 1 & 2 & 3\\ \hline
+a_n & & & 2 & 3 & 4 & 2\\
+p_n & 0 & 1 & 2 & 7 & 30 & 67\\
+q_n & 1 & 0 & 1 & 3 & 13 & 29
+\end{array}
+\]
+each new entry being the partial quotient above it times the entry to its left, plus the entry two places to the left. The convergents of $67/29 = [2; 3, 4, 2]$ are $2$, $7/3$, $30/13$, $67/29$.
+
+\begin{theorem}\label{continued-fractions:theorem-recurrence}
+Let $a_0$ be real, $a_1, \ldots, a_n$ positive reals, and $p_k$, $q_k$ as in Definition~\ref{continued-fractions:definition-convergents}. For every real $x > 0$,
+\begin{equation}\label{continued-fractions:equation-moebius}
+[a_0; a_1, \ldots, a_{n-1}, x] = \frac{xp_{n-1} + p_{n-2}}{xq_{n-1} + q_{n-2}} \qquad (n \geq 1),
+\end{equation}
+and in particular $[a_0; a_1, \ldots, a_n] = p_n/q_n$ for every $n \geq 0$.
+\end{theorem}
+
+\begin{proof}
+Induction on $n$. For $n = 1$ the right side is $(xa_0 + 1)/(x \cdot 1 + 0) = a_0 + 1/x = [a_0; x]$. Assume the formula for $n$ and all $x > 0$. By
+Lemma~\ref{continued-fractions:lemma-splitting}, $[a_0; \ldots, a_n, x] = [a_0; \ldots, a_{n-1}, a_n + 1/x]$, and $a_n + 1/x > 0$, so by the induction hypothesis
+\[
+[a_0; \ldots, a_n, x] = \frac{(a_n + 1/x)p_{n-1} + p_{n-2}}{(a_n + 1/x)q_{n-1} + q_{n-2}} = \frac{p_n + p_{n-1}/x}{q_n + q_{n-1}/x} = \frac{xp_n + p_{n-1}}{xq_n + q_{n-1}}.
+\]
+Taking $x = a_n$ in \eqref{continued-fractions:equation-moebius} gives $[a_0; \ldots, a_n] = (a_np_{n-1} + p_{n-2})/(a_nq_{n-1} + q_{n-2}) = p_n/q_n$ for $n \geq 1$, and $p_0/q_0 = a_0$.
+\end{proof}
+
+The recurrences are a product of matrices in disguise, and this is the most efficient way to remember all the identities that follow.
+
+\begin{proposition}\label{continued-fractions:proposition-matrices}
+For $n \geq 0$,
+\[
+\begin{pmatrix} p_n & p_{n-1}\\ q_n & q_{n-1} \end{pmatrix} = \begin{pmatrix} a_0 & 1\\ 1 & 0 \end{pmatrix}\begin{pmatrix} a_1 & 1\\ 1 & 0 \end{pmatrix} \cdots \begin{pmatrix} a_n & 1\\ 1 & 0 \end{pmatrix}.
+\]
+Consequently:
+\begin{enumerate}
+\item $p_nq_{n-1} - p_{n-1}q_n = (-1)^{n-1}$ for $n \geq -1$;
+\item $p_nq_{n-2} - p_{n-2}q_n = (-1)^na_n$ for $n \geq 0$;
+\item for a simple continued fraction, $\gcd(p_n, q_n) = 1$: the convergents are reduced fractions;
+\item $c_n - c_{n-1} = (-1)^{n-1}/(q_nq_{n-1})$ for $n \geq 1$, and $c_n - c_{n-2} = (-1)^na_n/(q_nq_{n-2})$ for $n \geq 2$;
+\item $q_n/q_{n-1} = [a_n; a_{n-1}, \ldots, a_1]$ for $n \geq 1$, and $p_n/p_{n-1} = [a_n; a_{n-1}, \ldots, a_0]$ for $n \geq 1$ if $a_0 > 0$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+The matrix identity holds for $n = 0$, since $\begin{pmatrix} p_0 & p_{-1}\\ q_0 & q_{-1}\end{pmatrix} = \begin{pmatrix} a_0 & 1\\ 1 & 0\end{pmatrix}$, and multiplying
+$\begin{pmatrix} p_{n-1} & p_{n-2}\\ q_{n-1} & q_{n-2}\end{pmatrix}$ on the right by $\begin{pmatrix} a_n & 1\\ 1 & 0\end{pmatrix}$ gives
+$\begin{pmatrix} a_np_{n-1} + p_{n-2} & p_{n-1}\\ a_nq_{n-1} + q_{n-2} & q_{n-1}\end{pmatrix}$, which is the recurrence.
+
+(1) Each factor has determinant $-1$, so the left side has determinant $(-1)^{n+1} = (-1)^{n-1}$; for $n = -1$, $p_{-1}q_{-2} - p_{-2}q_{-1} = 1$. (2) Substituting the recurrences,
+$p_nq_{n-2} - p_{n-2}q_n = a_n(p_{n-1}q_{n-2} - p_{n-2}q_{n-1}) = a_n(-1)^{n-2}$ by (1). (3) A common divisor of $p_n$ and $q_n$ divides $(-1)^{n-1}$ by (1). (4) Divide (1) by $q_nq_{n-1}$ and (2) by
+$q_nq_{n-2}$. (5) For $n = 1$, $q_1/q_0 = a_1$. For $n \geq 2$, $q_n/q_{n-1} = a_n + q_{n-2}/q_{n-1} = a_n + 1/(q_{n-1}/q_{n-2})$, and induction gives the claim; the same argument works for
+$p_n/p_{n-1}$, starting from $p_0/p_{-1} = a_0 > 0$.
+\end{proof}
+
+\begin{example}\label{continued-fractions:example-bezout}
+\emph{Solving $ax + by = 1$.} Let $a/b = [a_0; \ldots, a_n]$ with $\gcd(a, b) = 1$, $b \geq 1$. Then $p_n/q_n = a/b$ with both fractions reduced and $q_n, b > 0$, so $p_n = a$, $q_n = b$, and
+Proposition~\ref{continued-fractions:proposition-matrices}(1) reads $aq_{n-1} - bp_{n-1} = (-1)^{n-1}$: the penultimate convergent gives a Bézout relation
+(Theorem~\ref{number-systems:theorem-bezout}) without any back-substitution. For $67/29$, with the table above, $67 \cdot 13 - 29 \cdot 30 = 871 - 870 = 1$. So $x = 13$, $y = -30$ solves
+$67x + 29y = 1$, and the general solution of $67x + 29y = c$ is $x = 13c + 29t$, $y = -30c - 67t$, $t \in \ZZ$.
+\end{example}
+
+\begin{example}\label{continued-fractions:example-fibonacci}
+For $a_0 = a_1 = \cdots = a_n = 1$, the recurrences are those of the Fibonacci numbers, with $p_0 = 1 = F_2$, $p_{-1} = 1 = F_1$, $q_0 = 1 = F_1$, $q_{-1} = 0 = F_0$; so $p_n = F_{n+2}$,
+$q_n = F_{n+1}$, and $[1; 1, \ldots, 1] = F_{n+2}/F_{n+1}$ ($n + 1$ ones). The matrix identity becomes $\begin{pmatrix}1 & 1\\ 1 & 0\end{pmatrix}^{n+1} = \begin{pmatrix}F_{n+2} & F_{n+1}\\ F_{n+1} & F_n\end{pmatrix}$
+and Proposition~\ref{continued-fractions:proposition-matrices}(1) is Cassini's identity $F_{n+2}F_n - F_{n+1}^2 = (-1)^{n+1}$, as in Proposition~\ref{generating-functions:proposition-fibonacci}.
+\end{example}
+
+The number of steps of the Euclidean algorithm is the length of the continued fraction, and the Fibonacci numbers are the worst case.
+
+\begin{theorem}[Lamé]\label{continued-fractions:theorem-lame}
+Let $a > b \geq 1$ be integers, and suppose the Euclidean algorithm for $(a, b)$ performs $N$ divisions with remainder (the last one with remainder $0$). Then $b \geq F_{N+1}$ and $a \geq F_{N+2}$.
+Consequently $N \leq 1 + \log_\varphi b$, and $N$ is at most five times the number of decimal digits of $b$. The bound is attained for $(a, b) = (F_{N+2}, F_{N+1})$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: reduction to coprime numbers.} Dividing $a$ and $b$ by $g = \gcd(a, b)$ divides all remainders by $g$, so the algorithm for $(a/g, b/g)$ has the same quotients and the same number of
+steps. We may assume $\gcd(a, b) = 1$.
+
+\emph{Step 2: the bound.} By Proposition~\ref{continued-fractions:proposition-rational}, $a/b = [a_0; \ldots, a_m]$ normally with $m = N - 1$, $a_0 = \lfloor a/b \rfloor \geq 1$, and as in
+Example~\ref{continued-fractions:example-bezout}, $b = q_m$ and $a = p_m$. If $m = 0$, then $b = 1 = F_2$ and $a = a_0 > b$, so $a \geq 2 = F_3$. Let $m \geq 1$. From $q_0 = 1$, $q_1 = a_1 \geq 1$
+and $q_k \geq q_{k-1} + q_{k-2}$ we get $q_k \geq F_{k+1}$ for all $k \geq 0$; from $p_{-1} = 1$, $p_0 = a_0 \geq 1$ and $p_k \geq p_{k-1} + p_{k-2}$ we get $p_k \geq F_{k+2}$ for $k \geq -1$. The
+last partial quotient is $a_m \geq 2$, so $q_m \geq 2q_{m-1} + q_{m-2} \geq 2F_m + F_{m-1} = F_{m+2}$ and $p_m \geq 2p_{m-1} + p_{m-2} \geq 2F_{m+1} + F_m = F_{m+3}$ (for $m = 1$ read
+$q_{-1} = 0 = F_0$). So $b \geq F_{N+1}$ and $a \geq F_{N+2}$.
+
+\emph{Step 3: the logarithmic bound.} By induction $F_k \geq \varphi^{k-2}$ for $k \geq 1$: $F_1 = 1 \geq \varphi^{-1}$, $F_2 = 1 = \varphi^0$, and
+$F_k = F_{k-1} + F_{k-2} \geq \varphi^{k-3} + \varphi^{k-4} = \varphi^{k-4}(\varphi + 1) = \varphi^{k-2}$, since $\varphi^2 = \varphi + 1$. So $b \geq F_{N+1} \geq \varphi^{N-1}$, that is,
+$N \leq 1 + \log_\varphi b$. If $b$ has $k$ decimal digits and $N \geq 5k + 1$, then $b \geq \varphi^{5k} > 10^k$ because $\varphi^5 = 5\varphi + 3 > 11$, a contradiction; so $N \leq 5k$.
+
+\emph{Step 4: sharpness.} By Example~\ref{continued-fractions:example-fibonacci} and Example~\ref{continued-fractions:example-first}(4), $F_{N+2}/F_{N+1} = [1; 1, \ldots, 1, 2]$ with $N$
+partial quotients, and $\gcd(F_{N+2}, F_{N+1}) = 1$ by Cassini's identity; so the algorithm for $(F_{N+2}, F_{N+1})$ takes exactly $N$ steps.
+\end{proof}
+
+\begin{remark}\label{continued-fractions:remark-history}
+Continued fractions were used by Bombelli (1572) to approximate $\sqrt{13}$, by Huygens to design the gear ratios of a planetarium, and by Brouncker, who found
+$4/\pi = 1 + 1^2/(2 + 3^2/(2 + 5^2/(2 + \cdots)))$, a \emph{generalised} continued fraction with numerators other than $1$. The systematic theory is due to Euler and Lagrange in the eighteenth century.
+Generalised continued fractions $b_0 + a_1/(b_1 + a_2/(b_2 + \cdots))$ obey the same recurrences $p_n = b_np_{n-1} + a_np_{n-2}$, $q_n = b_nq_{n-1} + a_nq_{n-2}$ (the proof of
+Theorem~\ref{continued-fractions:theorem-recurrence} goes through with the obvious changes), and they are a tool of analysis (Padé approximation, orthogonal polynomials); in this chapter only
+simple continued fractions occur, because they are the ones tied to the arithmetic of $\ZZ$.
+\end{remark}
+
+\section{Infinite continued fractions}\label{continued-fractions:section-infinite}
+
+For a rational number the Euclidean algorithm stops. For an irrational number the same procedure, ``take the integer part, invert the rest'', never stops, and produces an infinite sequence of
+partial quotients. We first show that every infinite sequence defines a number, then that the procedure recovers the sequence.
+
+\begin{theorem}\label{continued-fractions:theorem-infinite}
+Let $a_0 \in \ZZ$ and let $a_1, a_2, \ldots$ be positive integers, with convergents $c_n = p_n/q_n$. Then:
+\begin{enumerate}
+\item $c_0 < c_2 < c_4 < \cdots < c_5 < c_3 < c_1$: the even convergents increase, the odd ones decrease, and every even convergent is smaller than every odd one;
+\item the limit $\alpha = \lim_n c_n$ exists, and $c_{2k} < \alpha < c_{2k+1}$ for all $k$;
+\item $|\alpha - c_n| < 1/(q_nq_{n+1})$ for all $n \geq 0$, and $\alpha$ is irrational.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) By Proposition~\ref{continued-fractions:proposition-matrices}(4), $c_n - c_{n-2} = (-1)^na_n/(q_nq_{n-2})$ is positive for even $n$ and negative for odd $n$, and
+$c_{2k+1} - c_{2k} = 1/(q_{2k+1}q_{2k}) > 0$. If $j$ is even and $l$ is odd, choose $k$ with $2k \geq j$ and $2k + 1 \geq l$; then $c_j \leq c_{2k} < c_{2k+1} \leq c_l$.
+
+(2) The even convergents form an increasing sequence bounded above by $c_1$, so they converge (Proposition~\ref{real-analysis:proposition-monotone}); likewise the odd ones decrease and converge.
+Their limits agree because $c_{2k+1} - c_{2k} = 1/(q_{2k+1}q_{2k}) \to 0$, as $q_n \geq F_{n+1} \to \infty$. The strict inequalities hold because the even convergents strictly increase towards $\alpha$
+and the odd ones strictly decrease.
+
+(3) By (2), $\alpha$ lies strictly between $c_n$ and $c_{n+1}$, so $|\alpha - c_n| < |c_{n+1} - c_n| = 1/(q_nq_{n+1})$. If $\alpha = a/b$ with $b \geq 1$, then $aq_n - bp_n$ is an integer with
+$0 < |aq_n - bp_n| = bq_n|\alpha - c_n| < b/q_{n+1}$, which is $< 1$ for large $n$, a contradiction.
+\end{proof}
+
+\begin{definition}\label{continued-fractions:definition-infinite}
+In the situation of Theorem~\ref{continued-fractions:theorem-infinite}, the limit $\alpha$ is the value of the \emph{infinite continued fraction} $[a_0; a_1, a_2, \ldots]$. For $n \geq 0$, the number
+$\alpha_n = [a_n; a_{n+1}, a_{n+2}, \ldots]$ is the $n$-th \emph{complete quotient}; so $\alpha_0 = \alpha$.
+\end{definition}
+
+\begin{proposition}\label{continued-fractions:proposition-complete-quotients}
+Let $\alpha = [a_0; a_1, \ldots]$ be an infinite simple continued fraction. For all $n \geq 0$, $\alpha_{n+1} > 1$, $\alpha_n = a_n + 1/\alpha_{n+1}$, $a_n = \lfloor \alpha_n \rfloor$, and
+\[
+\alpha = [a_0; a_1, \ldots, a_n, \alpha_{n+1}] = \frac{\alpha_{n+1}p_n + p_{n-1}}{\alpha_{n+1}q_n + q_{n-1}}.
+\]
+\end{proposition}
+
+\begin{proof}
+By Theorem~\ref{continued-fractions:theorem-infinite}(2) applied to $[a_{n+1}; a_{n+2}, \ldots]$, its value exceeds its zeroth convergent: $\alpha_{n+1} > a_{n+1} \geq 1$. For $m > n$, the
+function $x \mapsto [a_0; \ldots, a_n, x]$ is continuous on $(0, \infty)$ by \eqref{continued-fractions:equation-moebius}, and $[a_0; \ldots, a_n, [a_{n+1}; \ldots, a_m]] = [a_0; \ldots, a_m]$ by
+Lemma~\ref{continued-fractions:lemma-splitting}. Letting $m \to \infty$, the inner continued fraction tends to $\alpha_{n+1}$ and the right side to $\alpha$, so
+$\alpha = [a_0; \ldots, a_n, \alpha_{n+1}]$; the formula is \eqref{continued-fractions:equation-moebius} with $x = \alpha_{n+1}$. Applied to the continued fraction $\alpha_n$, the case $n = 0$ gives
+$\alpha_n = a_n + 1/\alpha_{n+1}$ with $0 < 1/\alpha_{n+1} < 1$, so $a_n = \lfloor \alpha_n \rfloor$.
+\end{proof}
+
+The last statement tells us how to recover the partial quotients from $\alpha$: this is the algorithm.
+
+\begin{theorem}\label{continued-fractions:theorem-expansion}
+Let $\alpha$ be an irrational number. Define $\alpha_0 = \alpha$ and, recursively, $a_n = \lfloor \alpha_n \rfloor$ and $\alpha_{n+1} = 1/(\alpha_n - a_n)$. Then every $\alpha_n$ is irrational,
+$\alpha_{n+1} > 1$, $a_n \geq 1$ for $n \geq 1$, and $\alpha = [a_0; a_1, a_2, \ldots]$. This is the only infinite simple continued fraction with value $\alpha$; so
+$[a_0; a_1, \ldots] \mapsto \alpha$ is a bijection from the sequences with $a_0 \in \ZZ$ and $a_n \geq 1$ for $n \geq 1$ onto $\RR \setminus \QQ$. For a rational $\alpha$, the same algorithm stops
+after finitely many steps, when $\alpha_n$ is an integer, and produces the normal expansion of Proposition~\ref{continued-fractions:proposition-rational}.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: the algorithm runs forever.} If $\alpha_n$ is irrational, then $0 < \alpha_n - a_n < 1$, so $\alpha_{n+1} > 1$ is defined and irrational. Hence $a_{n+1} \geq 1$.
+
+\emph{Step 2: the finite identity.} $\alpha = [a_0; a_1, \ldots, a_n, \alpha_{n+1}]$ for all $n$, by induction: $\alpha = a_0 + 1/\alpha_1 = [a_0; \alpha_1]$, and substituting
+$\alpha_{n+1} = a_{n+1} + 1/\alpha_{n+2}$ in the last place and using Lemma~\ref{continued-fractions:lemma-splitting} gives the next case. So, with the convergents $p_n/q_n$ of the
+sequence $(a_n)$, $\alpha = (\alpha_{n+1}p_n + p_{n-1})/(\alpha_{n+1}q_n + q_{n-1})$ by \eqref{continued-fractions:equation-moebius}.
+
+\emph{Step 3: convergence to $\alpha$.} Using Proposition~\ref{continued-fractions:proposition-matrices}(1),
+\[
+\alpha - \frac{p_n}{q_n} = \frac{\alpha_{n+1}p_n + p_{n-1}}{\alpha_{n+1}q_n + q_{n-1}} - \frac{p_n}{q_n} = \frac{p_{n-1}q_n - p_nq_{n-1}}{q_n(\alpha_{n+1}q_n + q_{n-1})}
+= \frac{(-1)^n}{q_n(\alpha_{n+1}q_n + q_{n-1})},
+\]
+which tends to $0$. So $\alpha$ is the value of $[a_0; a_1, \ldots]$.
+
+\emph{Step 4: uniqueness.} If $\alpha = [b_0; b_1, \ldots]$, then $b_0 = \lfloor \alpha \rfloor = a_0$ and $[b_1; b_2, \ldots] = 1/(\alpha - a_0) = \alpha_1$ by
+Proposition~\ref{continued-fractions:proposition-complete-quotients}; by induction $b_n = a_n$ for all $n$. Together with Theorem~\ref{continued-fractions:theorem-infinite}(3), which says that every
+infinite continued fraction has an irrational value, this gives the bijection.
+
+\emph{Step 5: rational numbers.} For $\alpha = a/b$ the numbers $\alpha_n$ are rational, and their denominators are the successive remainders of the Euclidean algorithm for $(a, b)$, as in Step 2 of
+the proof of Proposition~\ref{continued-fractions:proposition-rational}; they strictly decrease, so some $\alpha_n$ is an integer, and the expansion produced is the normal one.
+\end{proof}
+
+The formula of Step 3 is the most useful single fact about continued fractions; we record it with its consequences.
+
+\begin{corollary}\label{continued-fractions:corollary-error}
+Let $\alpha = [a_0; a_1, \ldots]$ be irrational. For every $n \geq 0$,
+\begin{equation}\label{continued-fractions:equation-error}
+\alpha - \frac{p_n}{q_n} = \frac{(-1)^n}{q_n(\alpha_{n+1}q_n + q_{n-1})} = \frac{(-1)^n}{q_n^2(\alpha_{n+1} + q_{n-1}/q_n)},
+\end{equation}
+and consequently
+\[
+\frac{1}{q_n(q_{n+1} + q_n)} < \Bigl|\alpha - \frac{p_n}{q_n}\Bigr| < \frac{1}{q_nq_{n+1}} \leq \frac{1}{a_{n+1}q_n^2}, \qquad \frac{1}{q_{n+1} + q_n} < |q_n\alpha - p_n| < \frac{1}{q_{n+1}}.
+\]
+The numbers $|q_n\alpha - p_n|$ strictly decrease with $n$, and the convergents lie alternately below and above $\alpha$.
+\end{corollary}
+
+\begin{proof}
+Since $a_{n+1} < \alpha_{n+1} < a_{n+1} + 1$, we have $q_{n+1} = a_{n+1}q_n + q_{n-1} < \alpha_{n+1}q_n + q_{n-1} < q_{n+1} + q_n$, which gives the bounds, and $q_{n+1} \geq a_{n+1}q_n$. The bounds
+give $|q_{n+1}\alpha - p_{n+1}| < 1/q_{n+2} < 1/(q_{n+1} + q_n) < |q_n\alpha - p_n|$, because $q_{n+2} \geq q_{n+1} + q_n$. The sign of \eqref{continued-fractions:equation-error} is $(-1)^n$.
+\end{proof}
+
+\begin{example}\label{continued-fractions:example-quadratic-expansions}
+\begin{enumerate}
+\item \emph{The golden ratio.} $\varphi = (1 + \sqrt5)/2$ satisfies $\varphi = 1 + 1/\varphi$, so $\alpha_1 = 1/(\varphi - 1) = \varphi$, and all complete quotients equal $\varphi$:
+$\varphi = [1; 1, 1, 1, \ldots] = [\overline{1}]$. By Example~\ref{continued-fractions:example-fibonacci} the convergents are $F_{n+2}/F_{n+1}$, the ratios of consecutive Fibonacci numbers, which
+therefore tend to $\varphi$. All partial quotients are as small as possible, so by Corollary~\ref{continued-fractions:corollary-error} $\varphi$ is, in a sense made precise by
+Theorem~\ref{continued-fractions:theorem-hurwitz}, the irrational number hardest to approximate.
+\item \emph{$\sqrt2$.} $\lfloor \sqrt2 \rfloor = 1$ and $1/(\sqrt2 - 1) = \sqrt2 + 1 = 2 + (\sqrt2 - 1)$, so $\alpha_n = \sqrt2 + 1$ and $a_n = 2$ for all $n \geq 1$: $\sqrt2 = [1; \overline{2}]$.
+The convergents are $1, 3/2, 7/5, 17/12, 41/29, 99/70, \ldots$, with $p_n^2 - 2q_n^2 = (-1)^{n+1}$ (check: $9 - 8 = 1$, $49 - 50 = -1$, $289 - 288 = 1$); these are the ``side and diagonal numbers''
+of the Pythagoreans.
+\item \emph{$\sqrt3$.} $1/(\sqrt3 - 1) = (\sqrt3 + 1)/2 = 1 + (\sqrt3 - 1)/2$, and $2/(\sqrt3 - 1) = \sqrt3 + 1 = 2 + (\sqrt3 - 1)$, which repeats: $\sqrt3 = [1; \overline{1, 2}]$.
+\end{enumerate}
+All three expansions are periodic; Section~\ref{continued-fractions:section-quadratic} shows that this characterises the quadratic irrationals.
+\end{example}
+
+\begin{example}\label{continued-fractions:example-pi}
+From $\pi = 3.14159265358979\ldots$ the algorithm gives
+\[
+\pi = [3; 7, 15, 1, 292, 1, 1, 1, 2, 1, 3, \ldots]:
+\]
+indeed $\alpha_1 = 1/0.14159265\ldots = 7.0625133\ldots$, then $\alpha_2 = 1/0.0625133\ldots = 15.996594\ldots$, $\alpha_3 = 1/0.996594\ldots = 1.0034172\ldots$ and
+$\alpha_4 = 1/0.0034172\ldots = 292.6346\ldots$ (each step needs a few more digits of $\pi$, since the errors are amplified). The convergents are
+\[
+3, \quad \frac{22}{7}, \quad \frac{333}{106}, \quad \frac{355}{113}, \quad \frac{103993}{33102}, \quad \frac{104348}{33215}, \ldots
+\]
+By \eqref{continued-fractions:equation-error}, $|\pi - 355/113| = 1/(113(292.63 \cdot 113 + 106)) \approx 2.67 \cdot 10^{-7}$: the large partial quotient $a_4 = 292$ is why $355/113$ (Zu Chongzhi,
+fifth century) is so much better than its denominator suggests. No pattern is known in the partial quotients of $\pi$, in contrast with those of $e$.
+\end{example}
+
+\begin{theorem}[Euler]\label{continued-fractions:theorem-e}
+$e = [2; 1, 2, 1, 1, 4, 1, 1, 6, 1, 1, 8, \ldots]$: the partial quotients are $a_0 = 2$ and, for $k \geq 1$, $a_{3k-2} = 1$, $a_{3k-1} = 2k$, $a_{3k} = 1$. In particular $e$ is irrational.
+\end{theorem}
+
+\begin{proof}
+We follow \cite{cohn-e}. \emph{Step 1: a modified expansion.} Let $a_n$ be as in the statement, with convergents $p_k/q_k$. Consider the sequence $b_0, b_1, b_2, \ldots = 1, 0, 1, 1, 2, 1, 1, 4, 1, 1, 6, \ldots$, that
+is, $b_{3n} = 1$, $b_{3n+1} = 2n$, $b_{3n+2} = 1$ for $n \geq 0$, and let $P_m$, $Q_m$ be defined by the recurrences of Definition~\ref{continued-fractions:definition-convergents} with these $b_m$
+in place of the $a_m$ (the recurrences make sense although $b_1 = 0$, and so does the matrix identity of Proposition~\ref{continued-fractions:proposition-matrices}, whose proof uses only the
+recurrences). Heuristically, $[x; 0, y] = x + y$, so $[1; 0, 1, 1, 2, \ldots]$ should be $[2; 1, 2, \ldots]$. Precisely, $b_{k+2} = a_k$ for $k \geq 1$, and
+$\begin{pmatrix}1 & 1\\ 1 & 0\end{pmatrix}\begin{pmatrix}0 & 1\\ 1 & 0\end{pmatrix}\begin{pmatrix}1 & 1\\ 1 & 0\end{pmatrix} = \begin{pmatrix}2 & 1\\ 1 & 0\end{pmatrix}$, so the matrix identity
+for the $b_m$ and for the $a_k$ gives $P_m = p_{m-2}$ and $Q_m = q_{m-2}$ for $m \geq 2$. It suffices to show $P_m - Q_me \to 0$: since $Q_m = q_{m-2} \geq 1$, then $p_k/q_k \to e$, so $e$ is the
+value of $[a_0; a_1, a_2, \ldots]$, and this is the expansion of $e$ by Theorem~\ref{continued-fractions:theorem-expansion}.
+
+\emph{Step 2: three integrals.} For $n \geq 0$ put
+\[
+\begin{aligned}
+A_n &= \int_0^1\frac{x^n(x - 1)^n}{n!}e^x\,dx, \qquad B_n = \int_0^1\frac{x^{n+1}(x - 1)^n}{n!}e^x\,dx,\\
+C_n &= \int_0^1\frac{x^n(x - 1)^{n+1}}{n!}e^x\,dx.
+\end{aligned}
+\]
+We claim $A_n = Q_{3n}e - P_{3n}$, $B_n = P_{3n+1} - Q_{3n+1}e$, $C_n = P_{3n+2} - Q_{3n+2}e$. For $n = 0$: $A_0 = e - 1$, $B_0 = \int_0^1xe^x\,dx = 1$, $C_0 = \int_0^1(x - 1)e^x\,dx = 2 - e$, while
+$P_0 = 1$, $Q_0 = 1$, $P_1 = b_1P_0 + P_{-1} = 1$, $Q_1 = 0$, $P_2 = P_1 + P_0 = 2$, $Q_2 = Q_1 + Q_0 = 1$, which matches.
+
+\emph{Step 3: the recurrences.} For $n \geq 1$ we show
+\[
+A_n = -B_{n-1} - C_{n-1}, \qquad B_n = -2nA_n + C_{n-1}, \qquad C_n = B_n - A_n.
+\]
+The third follows from $x^n(x - 1)^{n+1} = x^{n+1}(x - 1)^n - x^n(x - 1)^n$. For the first, $\frac{d}{dx}\frac{x^n(x - 1)^n}{n!} = \frac{x^{n-1}(x - 1)^n + x^n(x - 1)^{n-1}}{(n - 1)!}$, so integration by parts
+(the boundary terms vanish since $x^n(x - 1)^n$ vanishes at $0$ and $1$) gives $C_{n-1} + B_{n-1} = -A_n$. For the second, let $f(x) = x^{n+1}(x - 1)^n/n!$, which vanishes at $0$ and $1$. Then
+$f^{\prime}(x) = \frac{(n + 1)x^n(x - 1)^n + nx^{n+1}(x - 1)^{n-1}}{n!}$, and writing $x^{n+1}(x - 1)^{n-1} = x^n(x - 1)^n + x^n(x - 1)^{n-1}$ gives
+$f^{\prime}(x) = (2n + 1)\frac{x^n(x - 1)^n}{n!} + \frac{x^n(x - 1)^{n-1}}{(n - 1)!}$. Integrating $f^{\prime}e^x$ by parts, $-B_n = (2n + 1)A_n + B_{n-1}$; substituting $B_{n-1} = -A_n - C_{n-1}$
+from the first relation gives $B_n = -2nA_n + C_{n-1}$.
+
+\emph{Step 4: the same recurrences for $P$ and $Q$.} Since $b_{3n} = 1$, $b_{3n+1} = 2n$, $b_{3n+2} = 1$, the recurrences give, for $R_m = P_m$ and for $R_m = Q_m$,
+$R_{3n} = R_{3n-1} + R_{3n-2}$, $R_{3n+1} = 2nR_{3n} + R_{3n-1}$, $R_{3n+2} = R_{3n+1} + R_{3n}$. So the triples $(Q_{3n}e - P_{3n}, P_{3n+1} - Q_{3n+1}e, P_{3n+2} - Q_{3n+2}e)$ satisfy the
+recurrences of Step 3: for instance $Q_{3n}e - P_{3n} = -(P_{3n-1} - Q_{3n-1}e) - (P_{3n-2} - Q_{3n-2}e)$. As the initial values agree, the claim of Step 2 holds for all $n$ by induction.
+
+\emph{Step 5: conclusion.} On $[0, 1]$, $|x^n(x - 1)^n e^x| \leq e$, so $|A_n|, |B_n|, |C_n| \leq e/n! \to 0$. Hence $P_m - Q_me \to 0$, and the theorem follows from Step 1. Irrationality follows from
+Theorem~\ref{continued-fractions:theorem-infinite}(3).
+\end{proof}
+
+\begin{remark}\label{continued-fractions:remark-e-variants}
+The same method gives other expansions: $(e - 1)/(e + 1) = [0; 2, 6, 10, 14, \ldots]$ and $e^{1/n} = [1; n - 1, 1, 1, 3n - 1, 1, 1, 5n - 1, \ldots]$ (Euler), and more generally
+$\tanh(1/n) = [0; n, 3n, 5n, \ldots]$ (Lambert) \cite{perron-kettenbrueche}. No pattern is known for $\pi$, nor for any algebraic number of degree $\geq 3$: for $\sqrt[3]2 = [1; 3, 1, 5, 1, 1, 4, 1, 1, 8, 1, 14, \ldots]$ it is not even known whether the partial quotients are bounded.
+\end{remark}
+
+\section{Best approximations}\label{continued-fractions:section-best}
+
+How should one compare two approximations $p/q$ and $r/s$ of $\alpha$? The error $|\alpha - p/q|$ alone is not enough, since larger denominators always do better; the natural comparison is
+among fractions with denominators up to a given bound. There are two versions, according to whether one measures $|\alpha - p/q|$ or $|q\alpha - p| = q|\alpha - p/q|$.
+
+\begin{definition}\label{continued-fractions:definition-best}
+Let $\alpha$ be a real number and $p/q$ a fraction. Then $p/q$ is a \emph{best approximation of the first kind} of $\alpha$ if $|\alpha - p/q| < |\alpha - r/s|$ for every fraction $r/s \neq p/q$
+with $1 \leq s \leq q$; and $p/q$ is a \emph{best approximation of the second kind} if $|q\alpha - p| < |s\alpha - r|$ for every pair of integers $(r, s) \neq (p, q)$ with $1 \leq s \leq q$.
+\end{definition}
+
+A best approximation of the second kind is one of the first kind: if $1 \leq s \leq q$ and $r/s \neq p/q$, then $|\alpha - r/s| = |s\alpha - r|/s > |q\alpha - p|/s \geq |q\alpha - p|/q$. It is
+also reduced, since $(p/g, q/g)$ would compete with $(p, q)$.
+
+\begin{example}\label{continued-fractions:example-first-kind}
+The converse fails. For $\alpha = \pi$, the fraction $13/4$ is a best approximation of the first kind: the fractions with denominator $\leq 4$ nearest to $\pi$ are $3$, $10/3$, $13/4$, at distances
+$0.1416$, $0.1917$, $0.1084$. It is not of the second kind, since $|4\pi - 13| = 0.434 > |\pi - 3| = 0.1416$; and indeed $13/4$ is not a convergent of $\pi$
+(Example~\ref{continued-fractions:example-pi}). Best approximations of the first kind are the convergents together with some of the \emph{intermediate fractions}
+$(p_{n-1} + kp_n)/(q_{n-1} + kq_n)$, $0 < k < a_{n+1}$ \cite{khinchin-continued-fractions}; here $13/4 = (p_{-1} + 4p_0)/(q_{-1} + 4q_0)$ with $a_1 = 7$.
+\end{example}
+
+\begin{theorem}[Lagrange]\label{continued-fractions:theorem-best}
+Let $\alpha = [a_0; a_1, \ldots]$ be irrational, $n \geq 0$, and let $p, q$ be integers with $1 \leq q < q_{n+1}$. Then $|q\alpha - p| \geq |q_n\alpha - p_n|$, with equality only if
+$(p, q) = (p_n, q_n)$. Consequently the best approximations of the second kind of $\alpha$ are exactly the convergents $p_n/q_n$, except $p_0/q_0$ when $a_1 = 1$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: coordinates.} The matrix $\begin{pmatrix} p_n & p_{n+1}\\ q_n & q_{n+1}\end{pmatrix}$ has determinant $\pm 1$ (Proposition~\ref{continued-fractions:proposition-matrices}(1)), so its
+inverse has integer entries and there are integers $u, v$ with $p = up_n + vp_{n+1}$, $q = uq_n + vq_{n+1}$. Then $q\alpha - p = u(q_n\alpha - p_n) + v(q_{n+1}\alpha - p_{n+1})$.
+
+\emph{Step 2: the cases.} If $v = 0$, then $q = uq_n$ with $u \geq 1$, and $|q\alpha - p| = u|q_n\alpha - p_n|$, which is $\geq |q_n\alpha - p_n|$ with equality only for $u = 1$. If $u = 0$, then
+$q = vq_{n+1}$ is a positive multiple of $q_{n+1}$, impossible. If $u, v \neq 0$, they have opposite signs: if both were positive then $q \geq q_n + q_{n+1} > q_{n+1}$, and if both were negative then
+$q < 0$; and if $v > 0 > u$ or $v < 0 < u$ this is what we claim. By Corollary~\ref{continued-fractions:corollary-error}, $q_n\alpha - p_n$ and $q_{n+1}\alpha - p_{n+1}$ also have opposite signs.
+So the two terms $u(q_n\alpha - p_n)$ and $v(q_{n+1}\alpha - p_{n+1})$ have the same sign, and
+\[
+|q\alpha - p| = |u||q_n\alpha - p_n| + |v||q_{n+1}\alpha - p_{n+1}| > |q_n\alpha - p_n|.
+\]
+
+\emph{Step 3: convergents are best.} Let $n \geq 1$, or $n = 0$ and $a_1 \geq 2$. Then $q_n < q_{n+1}$, so every $(r, s) \neq (p_n, q_n)$ with $1 \leq s \leq q_n$ satisfies
+$|s\alpha - r| > |q_n\alpha - p_n|$ by Steps 1--2: $p_n/q_n$ is a best approximation of the second kind. If $a_1 = 1$, then $q_1 = q_0 = 1$ and $|\alpha - p_1| < |\alpha - p_0|$ by
+Corollary~\ref{continued-fractions:corollary-error}, so $p_0/q_0$ is not.
+
+\emph{Step 4: best approximations are convergents.} Let $p/q$ be a best approximation of the second kind. As $q_0 = 1$ and $q_n \to \infty$, there is $n$ with $q_n \leq q < q_{n+1}$. By Step 2,
+$|q\alpha - p| \geq |q_n\alpha - p_n|$; by the definition, applied to $(r, s) = (p_n, q_n)$ with $q_n \leq q$, $|q_n\alpha - p_n| > |q\alpha - p|$ unless $(p_n, q_n) = (p, q)$. So $p/q = p_n/q_n$.
+\end{proof}
+
+How close must $p/q$ be to $\alpha$ to be a convergent? Dirichlet's bound $1/q^2$ is not enough, but half of it is.
+
+\begin{theorem}[Legendre]\label{continued-fractions:theorem-legendre}
+Let $\alpha$ be irrational and $p/q$ a fraction with $|\alpha - p/q| < 1/(2q^2)$. Then $p/q$ is equal to a convergent of $\alpha$.
+\end{theorem}
+
+\begin{proof}
+Write $p/q = p^{\prime}/q^{\prime}$ in lowest terms; since $q^{\prime} \leq q$, also $|\alpha - p^{\prime}/q^{\prime}| < 1/(2q^{\prime 2})$, so we may assume $\gcd(p, q) = 1$. We show that $p/q$ is a
+best approximation of the second kind; Theorem~\ref{continued-fractions:theorem-best} then finishes the proof. Let $(r, s) \neq (p, q)$ with $1 \leq s \leq q$, and suppose
+$|s\alpha - r| \leq |q\alpha - p|$. If $r/s = p/q$, then $s$ is a multiple of $q$ (the fraction $p/q$ being reduced), so $s = q$ and $r = p$, which is excluded. So $r/s \neq p/q$ and
+\[
+\begin{aligned}
+\frac{1}{qs} &\leq \frac{|ps - qr|}{qs} = \Bigl|\frac pq - \frac rs\Bigr| \leq \Bigl|\alpha - \frac pq\Bigr| + \frac{|s\alpha - r|}{s}\\
+&\leq \Bigl|\alpha - \frac pq\Bigr| + \frac{|q\alpha - p|}{s} < \frac{1}{2q^2} + \frac{1}{2qs}.
+\end{aligned}
+\]
+Multiplying by $2q^2s$ gives $2q < s + q$, that is, $q < s$, a contradiction.
+\end{proof}
+
+\begin{counterexample}\label{continued-fractions:counterexample-legendre}
+The constant $\frac12$ cannot be replaced by $1$: $|\pi - 19/6| = 0.02507\ldots < 1/36 = 0.02777\ldots$, but $19/6$ is not a convergent of $\pi$ (Example~\ref{continued-fractions:example-pi}). In fact
+$\frac12$ is optimal: for every $c > \frac12$ there are irrational $\alpha$ and fractions $p/q$ with $|\alpha - p/q| < c/q^2$ that are not convergents (Exercise~\ref{continued-fractions:exercise-legendre-sharp}).
+\end{counterexample}
+
+\begin{proposition}[Vahlen]\label{continued-fractions:proposition-vahlen}
+Let $\alpha$ be irrational. Of any two consecutive convergents $p_n/q_n$, $p_{n+1}/q_{n+1}$, at least one satisfies $|\alpha - p/q| < 1/(2q^2)$. In particular, infinitely many fractions satisfy
+this inequality.
+\end{proposition}
+
+\begin{proof}
+Since $\alpha$ lies between the two convergents, $|\alpha - c_n| + |\alpha - c_{n+1}| = |c_{n+1} - c_n| = 1/(q_nq_{n+1})$. If both errors were $\geq 1/(2q_n^2)$ and $\geq 1/(2q_{n+1}^2)$
+respectively, then $1/(q_nq_{n+1}) \geq 1/(2q_n^2) + 1/(2q_{n+1}^2)$, that is, $(q_{n+1} - q_n)^2 \leq 0$. Then $q_n = q_{n+1}$ and all inequalities are equalities; this forces $n = 0$,
+$q_0 = q_1 = 1$ and $|\alpha - c_0| = |\alpha - c_1| = \frac12$, so $\alpha = a_0 + \frac12$ is rational, a contradiction. The convergents are distinct, so there are infinitely many such fractions.
+\end{proof}
+
+Hurwitz's theorem improves Dirichlet's constant $1$ to $1/\sqrt5$, and shows that this is optimal. The proof uses \eqref{continued-fractions:equation-error} in the form
+\begin{equation}\label{continued-fractions:equation-lambda}
+q_n^2\Bigl|\alpha - \frac{p_n}{q_n}\Bigr| = \frac{1}{\lambda_n}, \qquad \lambda_n = \alpha_{n+1} + \beta_n, \qquad \beta_n = \frac{q_{n-1}}{q_n} = [0; a_n, a_{n-1}, \ldots, a_1],
+\end{equation}
+where the last expression comes from Proposition~\ref{continued-fractions:proposition-matrices}(5) (and $\beta_0 = 0$). So the quality of the $n$-th convergent is measured by the two-sided
+quantity $\lambda_n = [a_{n+1}; a_{n+2}, \ldots] + [0; a_n, \ldots, a_1]$, which looks forward and backward from position $n$.
+
+\begin{theorem}[Hurwitz]\label{continued-fractions:theorem-hurwitz}
+Let $\alpha$ be irrational. Of any three consecutive convergents of $\alpha$, at least one satisfies $|\alpha - p/q| < 1/(\sqrt5q^2)$; in particular there are infinitely many such fractions. The
+constant $\sqrt5$ is optimal: for $\alpha = \varphi$ and every $A > \sqrt5$, only finitely many fractions satisfy $|\varphi - p/q| < 1/(Aq^2)$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: two failures in a row.} By \eqref{continued-fractions:equation-lambda}, $|\alpha - c_n| < 1/(\sqrt5q_n^2)$ if and only if $\lambda_n > \sqrt5$. Suppose $\lambda_n \leq \sqrt5$ and
+$\lambda_{n+1} \leq \sqrt5$ for some $n \geq 0$. Since $\alpha_{n+1} = a_{n+1} + 1/\alpha_{n+2}$ and $1/\beta_{n+1} = q_{n+1}/q_n = a_{n+1} + \beta_n$,
+\[
+\lambda_n = \alpha_{n+1} + \beta_n = \frac{1}{\alpha_{n+2}} + \frac{1}{\beta_{n+1}}.
+\]
+With $x = \alpha_{n+2}$ and $y = \beta_{n+1}$ we have $x + y = \lambda_{n+1} \leq \sqrt5$ and $1/x + 1/y = \lambda_n \leq \sqrt5$. Multiplying the positive numbers $x \leq \sqrt5 - y$ and
+$1/x \leq \sqrt5 - 1/y$ gives $1 \leq 5 - \sqrt5(y + 1/y) + 1$, so $y + 1/y \leq \sqrt5$, that is, $y^2 - \sqrt5y + 1 \leq 0$, and $y$ lies between the roots $(\sqrt5 \mp 1)/2$. As $y$ is rational,
+$\beta_{n+1} > (\sqrt5 - 1)/2$.
+
+\emph{Step 2: three failures are impossible.} If $\lambda_n, \lambda_{n+1}, \lambda_{n+2} \leq \sqrt5$, Step 1 applied to $n$ and to $n + 1$ gives $\beta_{n+1}, \beta_{n+2} > (\sqrt5 - 1)/2$. But
+$a_{n+2} = 1/\beta_{n+2} - \beta_{n+1} < 2/(\sqrt5 - 1) - (\sqrt5 - 1)/2 = (\sqrt5 + 1)/2 - (\sqrt5 - 1)/2 = 1$, contradicting $a_{n+2} \geq 1$.
+
+\emph{Step 3: optimality.} For $\varphi = [\overline{1}]$, all $\alpha_{n+1} = \varphi$ and $\beta_n = F_n/F_{n+1} \to 1/\varphi$ (Example~\ref{continued-fractions:example-quadratic-expansions}), so
+$\lambda_n \to \varphi + 1/\varphi = \sqrt5$. Let $A > \sqrt5$. A fraction with $|\varphi - p/q| < 1/(Aq^2) < 1/(2q^2)$ equals a convergent $p_n/q_n$ (Theorem~\ref{continued-fractions:theorem-legendre})
+with $q_n \leq q$, so $|\varphi - p_n/q_n| < 1/(Aq_n^2)$, that is, $\lambda_n > A$; this happens only for finitely many $n$.
+\end{proof}
+
+\begin{remark}\label{continued-fractions:remark-markov}
+The golden ratio is extremal, but it is essentially the only obstruction: if $\alpha$ is not equivalent to $\varphi$ in the sense of Definition~\ref{continued-fractions:definition-equivalent}
+below, then $|\alpha - p/q| < 1/(\sqrt8q^2)$ has infinitely many solutions, and $\sqrt8$ is optimal for $\sqrt2$ (Exercise~\ref{continued-fractions:exercise-sqrt-two-constant}). Excluding also the
+numbers equivalent to $\sqrt2$, the constant becomes $\sqrt{221}/5$, and so on: Markov (1879) showed that the possible ``best constants'' below $3$ form the sequence
+$\sqrt5 < \sqrt8 < \sqrt{221}/5 < \cdots \to 3$, given by $\sqrt{9m^2 - 4}/m$ where $m = 1, 2, 5, 13, 29, \ldots$ runs over the \emph{Markov numbers}, the solutions of $x^2 + y^2 + z^2 = 3xyz$
+\cite{cusick-flahive}. The set of the values $\limsup_n\lambda_n$, over all irrational $\alpha$, is the \emph{Lagrange spectrum}; it is discrete below $3$, as just described, and contains a
+whole half-line (Hall's ray) \cite{cusick-flahive}.
+\end{remark}
+
+\subsection{Equivalent numbers}\label{continued-fractions:subsection-equivalent}
+
+The quantity $\lambda_n$ depends only on the partial quotients near position $n$, so for large $n$ only the tail of the expansion matters. The group $\mathrm{GL}_2(\ZZ)$ acts on irrational numbers by
+Möbius transformations, and the orbits are exactly the classes of numbers with the same tail.
+
+\begin{definition}\label{continued-fractions:definition-equivalent}
+Two irrational numbers $\alpha$, $\beta$ are \emph{equivalent} if $\beta = (a\alpha + b)/(c\alpha + d)$ for some integers $a, b, c, d$ with $ad - bc = \pm 1$.
+\end{definition}
+
+This is an equivalence relation, since the matrices $\begin{pmatrix} a & b\\ c & d\end{pmatrix}$ with $ad - bc = \pm 1$ form the group $\mathrm{GL}_2(\ZZ)$ and composing Möbius transformations
+multiplies the matrices. (The denominator $c\alpha + d$ is nonzero because $\alpha$ is irrational and $(c, d) \neq (0, 0)$.)
+
+\begin{lemma}\label{continued-fractions:lemma-serret}
+Let $\zeta = (P\zeta^{\prime} + R)/(Q\zeta^{\prime} + S)$, where $\zeta^{\prime} > 1$ is irrational and $P, Q, R, S$ are integers with $Q > S > 0$ and $PS - QR = \pm 1$. Then $R/S$ and $P/Q$ are
+consecutive convergents $p_{n-1}/q_{n-1}$, $p_n/q_n$ of $\zeta$, and $\zeta^{\prime} = \zeta_{n+1}$ is a complete quotient of $\zeta$.
+\end{lemma}
+
+\begin{proof}
+\emph{Step 1: choosing the expansion of $P/Q$.} By Proposition~\ref{continued-fractions:proposition-rational}, $P/Q$ has two expansions whose lengths differ by one; choose the one,
+$P/Q = [a_0; \ldots, a_n]$, with $(-1)^{n-1} = PS - QR$. Since $\gcd(P, Q) = 1$ (a common divisor divides $PS - QR$) and $Q > 0$, the last convergent of this expansion is $p_n = P$, $q_n = Q$.
+
+\emph{Step 2: identifying $R/S$.} By Proposition~\ref{continued-fractions:proposition-matrices}(1), $p_nq_{n-1} - p_{n-1}q_n = (-1)^{n-1} = p_nS - q_nR$, so $p_n(S - q_{n-1}) = q_n(R - p_{n-1})$ and
+$q_n$ divides $S - q_{n-1}$. Here $0 < S < Q = q_n$ and $0 \leq q_{n-1} \leq q_n$, so $|S - q_{n-1}| < q_n$, and therefore $S = q_{n-1}$ and $R = p_{n-1}$. (In particular $n \geq 1$, as $q_{-1} = 0$.)
+
+\emph{Step 3: the complete quotient.} Now $\zeta = (p_n\zeta^{\prime} + p_{n-1})/(q_n\zeta^{\prime} + q_{n-1}) = [a_0; \ldots, a_n, \zeta^{\prime}]$ by \eqref{continued-fractions:equation-moebius}.
+Expand $\zeta^{\prime} = [b_0; b_1, \ldots]$ with $b_0 \geq 1$ since $\zeta^{\prime} > 1$; then $[a_0; \ldots, a_n, b_0, b_1, \ldots]$ is an infinite simple continued fraction whose value is $\zeta$
+(as in the proof of Proposition~\ref{continued-fractions:proposition-complete-quotients}), so by uniqueness (Theorem~\ref{continued-fractions:theorem-expansion}) it is the expansion of $\zeta$, and
+$\zeta^{\prime} = \zeta_{n+1}$.
+\end{proof}
+
+\begin{theorem}[Serret]\label{continued-fractions:theorem-serret}
+Two irrational numbers are equivalent if and only if their continued fraction expansions eventually agree: $\alpha = [a_0; \ldots, a_m, c_0, c_1, \ldots]$ and
+$\beta = [b_0; \ldots, b_l, c_0, c_1, \ldots]$ for some $m, l$ and a common tail.
+\end{theorem}
+
+\begin{proof}
+\emph{If.} Let $\gamma = [c_0; c_1, \ldots]$. By Proposition~\ref{continued-fractions:proposition-complete-quotients}, $\alpha$ and $\beta$ are images of $\gamma$ under Möbius transformations with
+matrices $\begin{pmatrix} p_m & p_{m-1}\\ q_m & q_{m-1}\end{pmatrix}$, of determinant $\pm 1$; so both are equivalent to $\gamma$.
+
+\emph{Only if.} Let $\beta = (a\alpha + b)/(c\alpha + d)$ with $ad - bc = \pm 1$; replacing $(a, b, c, d)$ by $(-a, -b, -c, -d)$ we may assume $c\alpha + d > 0$. For $k \geq 1$,
+$\alpha = (p_k\alpha_{k+1} + p_{k-1})/(q_k\alpha_{k+1} + q_{k-1})$, and substituting,
+\[
+\beta = \frac{P\alpha_{k+1} + R}{Q\alpha_{k+1} + S}, \qquad \begin{pmatrix} P & R\\ Q & S\end{pmatrix} = \begin{pmatrix} a & b\\ c & d\end{pmatrix}\begin{pmatrix} p_k & p_{k-1}\\ q_k & q_{k-1}\end{pmatrix},
+\]
+so $PS - QR = \pm 1$. Write $p_k = q_k\alpha - \delta_k$ with $|\delta_k| < 1/q_{k+1}$ (Corollary~\ref{continued-fractions:corollary-error}). Then
+\[
+Q = cp_k + dq_k = (c\alpha + d)q_k - c\delta_k, \qquad S = (c\alpha + d)q_{k-1} - c\delta_{k-1},
+\]
+and $Q - S = (c\alpha + d)(q_k - q_{k-1}) - c(\delta_k - \delta_{k-1})$. As $k \to \infty$, $q_{k-1} \to \infty$, $q_k - q_{k-1} \geq q_{k-2} \to \infty$ and $\delta_k \to 0$, so for large $k$ we have
+$Q > S > 0$. By Lemma~\ref{continued-fractions:lemma-serret}, $\alpha_{k+1}$ is a complete quotient $\beta_{n+1}$ of $\beta$: the expansions of $\alpha$ and $\beta$ share the tail
+$[a_{k+1}; a_{k+2}, \ldots]$.
+\end{proof}
+
+\begin{example}\label{continued-fractions:example-equivalent}
+By Theorem~\ref{continued-fractions:theorem-serret}, the numbers equivalent to $\varphi$ are those whose partial quotients are eventually all $1$, such as $1/\varphi = [0; 1, 1, \ldots]$,
+$\varphi^2 = \varphi + 1 = [2; 1, 1, \ldots]$ and $(3\varphi + 1)/(2\varphi + 1)$. On the other hand $\sqrt5 = 2\varphi - 1 = [2; \overline{4}]$ has tail $[\overline{4}]$, so it is \emph{not}
+equivalent to $\varphi$, although $\QQ(\sqrt5) = \QQ(\varphi)$: the matrix $\begin{pmatrix} 2 & -1\\ 0 & 1\end{pmatrix}$ has determinant $2$. For $\sqrt5$, $\alpha_{n+1} = 2 + \sqrt5$ for all
+$n \geq 0$ and $\beta_n \to [0; \overline{4}] = \sqrt5 - 2$, so $\lambda_n \to 2\sqrt5$, and $q_n^2|\sqrt5 - p_n/q_n| \to 1/(2\sqrt5)$.
+\end{example}
+
+\subsection{Badly approximable numbers}\label{continued-fractions:subsection-badly}
+
+By Corollary~\ref{continued-fractions:corollary-error}, $q_n^2|\alpha - p_n/q_n|$ lies between $1/(a_{n+1} + 2)$ and $1/a_{n+1}$. So large partial quotients mean very good approximations, and bounded
+partial quotients mean that no approximation is much better than Dirichlet's.
+
+\begin{definition}\label{continued-fractions:definition-badly-approximable}
+An irrational number $\alpha$ is \emph{badly approximable} if there is $c > 0$ with $|\alpha - p/q| > c/q^2$ for all fractions $p/q$.
+\end{definition}
+
+\begin{proposition}\label{continued-fractions:proposition-badly-approximable}
+An irrational number is badly approximable if and only if its partial quotients are bounded. If $a_n \leq M$ for all $n \geq 1$, one can take $c = 1/(M + 2)$.
+\end{proposition}
+
+\begin{proof}
+If $|\alpha - p/q| > c/q^2$ for all $p/q$, then by Corollary~\ref{continued-fractions:corollary-error} $c/q_n^2 < |\alpha - p_n/q_n| < 1/(a_{n+1}q_n^2)$, so $a_{n+1} < 1/c$. Conversely let
+$a_n \leq M$ for $n \geq 1$, and let $p/q$ be a fraction. If $|\alpha - p/q| \geq 1/(2q^2)$, we are done since $\frac12 > 1/(M + 2)$. Otherwise $p/q = p_n/q_n$ for some $n$
+(Theorem~\ref{continued-fractions:theorem-legendre}), with $q$ a multiple of $q_n$, and since $q_{n+1} = a_{n+1}q_n + q_{n-1} \leq (M + 1)q_n$,
+\[
+\Bigl|\alpha - \frac pq\Bigr| = \Bigl|\alpha - \frac{p_n}{q_n}\Bigr| > \frac{1}{q_n(q_{n+1} + q_n)} \geq \frac{1}{(M + 2)q_n^2} \geq \frac{1}{(M + 2)q^2}. \qedhere
+\]
+\end{proof}
+
+Quadratic irrationals have periodic, hence bounded, partial quotients (Section~\ref{continued-fractions:section-quadratic}), so they are badly approximable; this also follows from Liouville's
+theorem (Theorem~\ref{continued-fractions:theorem-liouville}) with $d = 2$. On the other hand, badly approximable numbers are rare: they form a set of Lebesgue measure zero
+(Remark~\ref{continued-fractions:remark-metric-results}), although there are uncountably many of them, since every bounded sequence of partial quotients gives one.
+
+\section{Farey sequences and Ford circles}\label{continued-fractions:section-farey}
+
+A second, more geometric way to organise the rational numbers is by bounding the denominator. Its basic structure, the mediant, is the same as the one behind the recurrences of convergents.
+
+\begin{definition}\label{continued-fractions:definition-farey}
+For $N \geq 1$, the \emph{Farey sequence} $\mathcal{F}_N$ of order $N$ is the increasing sequence of reduced fractions $h/k \in [0, 1]$ with $1 \leq k \leq N$. Two fractions are \emph{neighbours} in
+$\mathcal{F}_N$ if they are consecutive in it. The \emph{mediant} of $h/k$ and $h^{\prime}/k^{\prime}$ is $(h + h^{\prime})/(k + k^{\prime})$.
+\end{definition}
+
+\begin{example}\label{continued-fractions:example-farey}
+\[
+\begin{aligned}
+\mathcal{F}_1 &: \tfrac01, \tfrac11; \qquad \mathcal{F}_2 : \tfrac01, \tfrac12, \tfrac11; \qquad \mathcal{F}_3 : \tfrac01, \tfrac13, \tfrac12, \tfrac23, \tfrac11; \qquad
+\mathcal{F}_4 : \tfrac01, \tfrac14, \tfrac13, \tfrac12, \tfrac23, \tfrac34, \tfrac11;\\
+\mathcal{F}_5 &: \tfrac01, \tfrac15, \tfrac14, \tfrac13, \tfrac25, \tfrac12, \tfrac35, \tfrac23, \tfrac34, \tfrac45, \tfrac11.
+\end{aligned}
+\]
+Each new fraction is the mediant of its two neighbours ($\frac25$ between $\frac13$ and $\frac12$), and for neighbours $h/k < h^{\prime}/k^{\prime}$ one always has $kh^{\prime} - hk^{\prime} = 1$
+($3 \cdot 2 - 1 \cdot 5 = 1$ for $\frac13, \frac25$). The number of terms is $|\mathcal{F}_N| = 1 + \sum_{k=1}^N\phi(k)$, since for each $k \geq 2$ there are $\phi(k)$ reduced fractions $h/k$ in
+$(0, 1)$, plus $\frac01$ and $\frac11$: $|\mathcal{F}_5| = 1 + 1 + 1 + 2 + 2 + 4 = 11$.
+\end{example}
+
+\begin{theorem}\label{continued-fractions:theorem-farey}
+Let $N \geq 1$.
+\begin{enumerate}
+\item If $h/k < h^{\prime}/k^{\prime}$ are neighbours in $\mathcal{F}_N$, then $kh^{\prime} - hk^{\prime} = 1$ and $k + k^{\prime} > N$.
+\item If $h/k < h^{\prime\prime}/k^{\prime\prime} < h^{\prime}/k^{\prime}$ are consecutive in $\mathcal{F}_N$, then $h^{\prime\prime}/k^{\prime\prime} = (h + h^{\prime})/(k + k^{\prime})$: each term
+is the mediant of its neighbours (as a rational number; the mediant need not be written in lowest terms, as $\frac14, \frac13, \frac25$ in $\mathcal{F}_5$ shows).
+\item $\mathcal{F}_{N+1}$ is obtained from $\mathcal{F}_N$ by inserting, between each pair of neighbours $h/k$, $h^{\prime}/k^{\prime}$ with $k + k^{\prime} = N + 1$, their mediant.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) Let $h/k \in \mathcal{F}_N$ with $h/k < 1$. Since $\gcd(h, k) = 1$, the solutions of $kx - hy = 1$ are $(x_0 + th, y_0 + tk)$, $t \in \ZZ$ (Theorem~\ref{number-systems:theorem-bezout}), and
+exactly one of them has $N - k < y \leq N$. Then $y \geq 1$, $x = (1 + hy)/k > 0$, and $x \leq (1 + (k - 1)y)/k \leq y$ since $h \leq k - 1$; the fraction $x/y$ is reduced (as $kx - hy = 1$), so
+$x/y \in \mathcal{F}_N$, and $x/y - h/k = 1/(ky) > 0$. We claim that $x/y$ is the successor of $h/k$. If $a/b \in \mathcal{F}_N$ with $h/k < a/b < x/y$, then $ka - hb \geq 1$ and $bx - ay \geq 1$,
+so
+\[
+\frac{1}{ky} = \frac xy - \frac hk = \Bigl(\frac xy - \frac ab\Bigr) + \Bigl(\frac ab - \frac hk\Bigr) \geq \frac{1}{by} + \frac{1}{kb} = \frac{k + y}{kby} > \frac{N}{kby} \geq \frac{1}{ky},
+\]
+using $k + y > N \geq b$, a contradiction. So the successor $h^{\prime}/k^{\prime}$ is $x/y$, which proves both claims.
+
+(2) By (1), $kh^{\prime\prime} - hk^{\prime\prime} = 1$ and $k^{\prime\prime}h^{\prime} - h^{\prime\prime}k^{\prime} = 1$. Subtracting, $h^{\prime\prime}(k + k^{\prime}) = k^{\prime\prime}(h + h^{\prime})$, which is
+the claim.
+
+(3) Let $h/k < h^{\prime}/k^{\prime}$ be neighbours in $\mathcal{F}_N$, so $kh^{\prime} - hk^{\prime} = 1$ by (1). A fraction $a/b$ strictly between them satisfies $ka - hb \geq 1$ and
+$bh^{\prime} - ak^{\prime} \geq 1$, so $b = b(kh^{\prime} - hk^{\prime}) = k^{\prime}(ka - hb) + k(bh^{\prime} - ak^{\prime}) \geq k + k^{\prime}$, with equality only if $ka - hb = bh^{\prime} - ak^{\prime} = 1$,
+which (solving for $a$ and $b$ by Cramer's rule) means $a/b$ is the mediant. So the only fraction of $\mathcal{F}_{N+1}$ that can lie between them is the mediant, and it does if and only if
+$k + k^{\prime} \leq N + 1$, that is (by (1)) $k + k^{\prime} = N + 1$.
+\end{proof}
+
+\begin{corollary}\label{continued-fractions:corollary-dirichlet-farey}
+Let $\alpha \in \RR$ and $N \geq 1$. There is a fraction $p/q$ with $1 \leq q \leq N$ and $|\alpha - p/q| \leq 1/(q(N + 1))$.
+\end{corollary}
+
+\begin{proof}
+Replacing $\alpha$ by $\alpha - \lfloor\alpha\rfloor$ we may assume $0 \leq \alpha < 1$. Then $\alpha$ lies in $[h/k, h^{\prime}/k^{\prime}]$ for neighbours $h/k < h^{\prime}/k^{\prime}$ of
+$\mathcal{F}_N$. Let $m = (h + h^{\prime})/(k + k^{\prime})$ be the mediant; by Theorem~\ref{continued-fractions:theorem-farey}(1), $k + k^{\prime} \geq N + 1$, $m - h/k = 1/(k(k + k^{\prime}))$ and
+$h^{\prime}/k^{\prime} - m = 1/(k^{\prime}(k + k^{\prime}))$. If $\alpha \leq m$, then $|\alpha - h/k| \leq 1/(k(N + 1))$; otherwise $|\alpha - h^{\prime}/k^{\prime}| < 1/(k^{\prime}(N + 1))$.
+\end{proof}
+
+This is a slight sharpening of Dirichlet's theorem (Theorem~\ref{combinatorics:theorem-dirichlet-approximation}), obtained by geometry instead of the pigeonhole principle. The geometry becomes
+visible with Ford's circles.
+
+\begin{definition}\label{continued-fractions:definition-ford}
+For a reduced fraction $h/k$, the \emph{Ford circle} $C(h/k)$ is the circle in the upper half-plane $\{(x, y) : y > 0\} \cup \{(h/k, 0)\}$ with centre $(h/k, 1/(2k^2))$ and radius $1/(2k^2)$: it
+touches the real axis at $h/k$.
+\end{definition}
+
+\begin{proposition}[Ford]\label{continued-fractions:proposition-ford}
+Two distinct Ford circles $C(h/k)$ and $C(h^{\prime}/k^{\prime})$ are either tangent or disjoint; they are tangent if and only if $|kh^{\prime} - hk^{\prime}| = 1$. In particular the Ford circles of
+neighbours in a Farey sequence are tangent, and the circle of the mediant is tangent to both.
+\end{proposition}
+
+\begin{proof}
+The squared distance of the centres minus the square of the sum of the radii is
+\[
+\begin{aligned}
+&\Bigl(\frac hk - \frac{h^{\prime}}{k^{\prime}}\Bigr)^2 + \Bigl(\frac{1}{2k^2} - \frac{1}{2k^{\prime 2}}\Bigr)^2 - \Bigl(\frac{1}{2k^2} + \frac{1}{2k^{\prime 2}}\Bigr)^2\\
+&\qquad = \frac{(hk^{\prime} - h^{\prime}k)^2}{k^2k^{\prime 2}} - \frac{1}{k^2k^{\prime 2}} = \frac{(hk^{\prime} - h^{\prime}k)^2 - 1}{k^2k^{\prime 2}}.
+\end{aligned}
+\]
+Since the fractions are distinct, $hk^{\prime} - h^{\prime}k$ is a nonzero integer, so the expression is $\geq 0$: the circles do not overlap, and they touch exactly when $|hk^{\prime} - h^{\prime}k| = 1$.
+The last statement follows from Theorem~\ref{continued-fractions:theorem-farey}(1) and from $k(h + h^{\prime}) - h(k + k^{\prime}) = kh^{\prime} - hk^{\prime}$.
+\end{proof}
+
+\begin{remark}\label{continued-fractions:remark-ford}
+Ford circles give a picture of Diophantine approximation: a vertical line $x = \alpha$ meets the circle $C(p/q)$ exactly when $|\alpha - p/q| < 1/(2q^2)$ (the circle has radius $1/(2q^2)$, and the
+condition for the line to cross it is that its distance from the centre is less than the radius), so Legendre's theorem says that the circles crossed by the line belong to convergents, and
+Proposition~\ref{continued-fractions:proposition-vahlen} that the line crosses infinitely many of them. The group $\mathrm{SL}_2(\ZZ)$, acting on the upper half-plane by Möbius transformations,
+permutes the Ford circles (together with the line $y = 1$, the ``circle'' of $1/0 = \infty$); this is the first appearance of the modular group, studied in Chapter~\ref{modular-forms}.
+\end{remark}
+
+\begin{remark}\label{continued-fractions:remark-stern-brocot}
+Starting from $\frac01$ and $\frac10$ and inserting mediants repeatedly, without bounding the denominator, produces every positive rational number exactly once, arranged in a binary tree, the
+\emph{Stern--Brocot tree}. The path from the root $\frac11$ to $r = [a_0; a_1, \ldots, a_n]$ consists of $a_0$ steps right, $a_1$ steps left, $a_2$ steps right, and so on, with $a_n - 1$ steps at the
+end \cite[Chapter 4]{graham-knuth-patashnik}: the continued fraction is the address of $r$ in the tree. For irrational $\alpha$ the infinite path converges to $\alpha$, and the fractions on it are
+the convergents and the intermediate fractions.
+\end{remark}
+
+\section{Quadratic irrationals}\label{continued-fractions:section-quadratic}
+
+The examples $\varphi = [\overline{1}]$, $\sqrt2 = [1; \overline{2}]$, $\sqrt3 = [1; \overline{1, 2}]$ suggest that square roots have periodic expansions. This is the content of Lagrange's theorem,
+the deepest of the classical results on continued fractions; Euler's theorem is the easy converse.
+
+\begin{definition}\label{continued-fractions:definition-quadratic-irrational}
+A \emph{quadratic irrational} is an irrational real number $\alpha$ that is a root of a polynomial $Ax^2 + Bx + C$ with $A, B, C \in \ZZ$, $A \neq 0$. Its \emph{conjugate} $\alpha^{\prime}$ is the
+other root. A continued fraction $[a_0; a_1, \ldots]$ is \emph{eventually periodic} if there are $N \geq 0$ and $r \geq 1$ with $a_{n+r} = a_n$ for all $n \geq N$, and \emph{purely periodic} if one
+can take $N = 0$; the least such $r$ is the \emph{period}.
+\end{definition}
+
+Equivalently, $\alpha$ is a quadratic irrational if and only if $\alpha = u + v\sqrt D$ with $u, v \in \QQ$, $v \neq 0$, and $D \geq 2$ a squarefree integer: the roots of $Ax^2 + Bx + C$ are
+$(-B \pm \sqrt{B^2 - 4AC})/(2A)$, irrational exactly when the discriminant $B^2 - 4AC$ is not a square, and conversely $u + v\sqrt D$ is a root of $(x - u)^2 - v^2D$. So the quadratic irrationals are
+the elements of $\QQ(\sqrt D) \setminus \QQ$ for the real quadratic fields $\QQ(\sqrt D)$, the conjugate of $u + v\sqrt D$ is $u - v\sqrt D$, and conjugation $\sigma(u + v\sqrt D) = u - v\sqrt D$ is a field
+automorphism of $\QQ(\sqrt D)$. In particular $\sigma$ commutes with Möbius transformations with rational coefficients: if $\beta = (a\alpha + b)/(c\alpha + d)$ then
+$\beta^{\prime} = (a\alpha^{\prime} + b)/(c\alpha^{\prime} + d)$.
+
+\begin{theorem}[Euler]\label{continued-fractions:theorem-euler-periodic}
+Every eventually periodic infinite simple continued fraction is a quadratic irrational.
+\end{theorem}
+
+\begin{proof}
+Let $\alpha = [a_0; \ldots, a_{N-1}, \overline{a_N, \ldots, a_{N+r-1}}]$ and $\gamma = \alpha_N = [\overline{a_N; \ldots, a_{N+r-1}}]$. By Proposition~\ref{continued-fractions:proposition-complete-quotients}
+applied to $\gamma$, whose complete quotient of index $r$ is $\gamma$ itself, $\gamma = (P\gamma + P^{\prime})/(Q\gamma + Q^{\prime})$ with integers $P, P^{\prime}, Q, Q^{\prime}$ (the last two convergents of
+the period) and $Q > 0$. So $Q\gamma^2 + (Q^{\prime} - P)\gamma - P^{\prime} = 0$ is a quadratic equation with integer coefficients, and $\gamma$ is irrational (Theorem~\ref{continued-fractions:theorem-infinite}).
+So $\gamma \in \QQ(\sqrt D) \setminus \QQ$ for some $D$. Then $\alpha = (p_{N-1}\gamma + p_{N-2})/(q_{N-1}\gamma + q_{N-2})$ lies in the field $\QQ(\sqrt D)$ and is irrational, so it is a quadratic
+irrational.
+\end{proof}
+
+\begin{theorem}[Lagrange]\label{continued-fractions:theorem-lagrange-periodic}
+The continued fraction expansion of every quadratic irrational is eventually periodic.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: the equations of the complete quotients.} Let $f(x) = Ax^2 + Bx + C$ with integer coefficients have the root $\alpha$, and $D = B^2 - 4AC > 0$. For $n \geq 1$,
+$\alpha = (p_{n-1}\alpha_n + p_{n-2})/(q_{n-1}\alpha_n + q_{n-2})$ (Proposition~\ref{continued-fractions:proposition-complete-quotients}). Substituting into $f(\alpha) = 0$ and multiplying by
+$(q_{n-1}\alpha_n + q_{n-2})^2$ gives $A_n\alpha_n^2 + B_n\alpha_n + C_n = 0$, where
+\[
+\begin{aligned}
+A_n &= Ap_{n-1}^2 + Bp_{n-1}q_{n-1} + Cq_{n-1}^2,\\
+C_n &= Ap_{n-2}^2 + Bp_{n-2}q_{n-2} + Cq_{n-2}^2 = A_{n-1},
+\end{aligned}
+\]
+and $B_n = 2Ap_{n-1}p_{n-2} + B(p_{n-1}q_{n-2} + p_{n-2}q_{n-1}) + 2Cq_{n-1}q_{n-2}$, all integers. In matrix terms, the quadratic form $F(x, y) = Ax^2 + Bxy + Cy^2$ has been replaced by
+$F(p_{n-1}x + p_{n-2}y, q_{n-1}x + q_{n-2}y)$. The discriminant of a form is $-4$ times the determinant of its symmetric matrix $\begin{pmatrix} A & B/2\\ B/2 & C\end{pmatrix}$, and the substitution
+replaces this matrix $S$ by $M^{\mathsf T}SM$ with $\det M = \pm 1$; so $B_n^2 - 4A_nC_n = D$ for all $n$.
+
+\emph{Step 2: the coefficients are bounded.} $A_n = q_{n-1}^2f(p_{n-1}/q_{n-1}) \neq 0$, since $f$ has no rational root. Writing $f(x) = A(x - \alpha)(x - \alpha^{\prime})$ and using
+$|\alpha - p_{n-1}/q_{n-1}| < 1/q_{n-1}^2 \leq 1$ (Corollary~\ref{continued-fractions:corollary-error}),
+\[
+|A_n| = |A|q_{n-1}^2\Bigl|\frac{p_{n-1}}{q_{n-1}} - \alpha\Bigr|\Bigl|\frac{p_{n-1}}{q_{n-1}} - \alpha^{\prime}\Bigr| < |A|\bigl(|\alpha - \alpha^{\prime}| + 1\bigr).
+\]
+So $|A_n|$ is bounded independently of $n$, hence so is $|C_n| = |A_{n-1}|$ (for $n \geq 2$), and $B_n^2 = D + 4A_nC_n$ is bounded too.
+
+\emph{Step 3: pigeonholes.} There are only finitely many triples $(A_n, B_n, C_n)$, each giving at most two numbers $\alpha_n$; so $\alpha_m = \alpha_n$ for some $m > n$. Then the expansions of
+$\alpha_m$ and $\alpha_n$ coincide (Theorem~\ref{continued-fractions:theorem-expansion}), that is, $a_{m+k} = a_{n+k}$ for all $k \geq 0$: the expansion of $\alpha$ is eventually periodic with
+period dividing $m - n$.
+\end{proof}
+
+\begin{example}\label{continued-fractions:example-lagrange}
+Let $\alpha = (1 + \sqrt{13})/3 = 1.5352\ldots$. Then $a_0 = 1$, $\alpha_1 = 3/(\sqrt{13} - 2) = (\sqrt{13} + 2)/3 = 1.8685\ldots$, $a_1 = 1$, $\alpha_2 = 3/(\sqrt{13} - 1) = (\sqrt{13} + 1)/4$,
+$a_2 = 1$, $\alpha_3 = 4/(\sqrt{13} - 3) = \sqrt{13} + 3$, $a_3 = 6$, $\alpha_4 = 1/(\sqrt{13} - 3) = (\sqrt{13} + 3)/4$, $a_4 = 1$, $\alpha_5 = 4/(\sqrt{13} - 1) = (\sqrt{13} + 1)/3 = \alpha$.
+So $\alpha = [\overline{1; 1, 1, 6, 1}]$, purely periodic of period $5$. The conjugate $\alpha^{\prime} = (1 - \sqrt{13})/3 = -0.868\ldots$ lies in $(-1, 0)$, in accordance with the next theorem.
+\end{example}
+
+\begin{definition}\label{continued-fractions:definition-reduced}
+A quadratic irrational $\alpha$ is \emph{reduced} if $\alpha > 1$ and $-1 < \alpha^{\prime} < 0$.
+\end{definition}
+
+\begin{theorem}[Galois]\label{continued-fractions:theorem-galois}
+A quadratic irrational $\alpha$ has a purely periodic expansion if and only if it is reduced. In that case, if $\alpha = [\overline{a_0; a_1, \ldots, a_{r-1}}]$, then
+$-1/\alpha^{\prime} = [\overline{a_{r-1}; a_{r-2}, \ldots, a_0}]$: the period of $-1/\alpha^{\prime}$ is that of $\alpha$ reversed.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: reduced numbers have reduced complete quotients.} Let $\alpha_n$ be reduced. Then $a_n = \lfloor\alpha_n\rfloor \geq 1$, and $\alpha_{n+1} = 1/(\alpha_n - a_n) > 1$, with conjugate
+$\alpha_{n+1}^{\prime} = 1/(\alpha_n^{\prime} - a_n)$. As $\alpha_n^{\prime} - a_n < -1$, we get $-1 < \alpha_{n+1}^{\prime} < 0$. So all complete quotients of a reduced $\alpha$ are reduced.
+
+\emph{Step 2: going backwards.} For reduced $\alpha_n$, the identity $\alpha_n^{\prime} = a_n + 1/\alpha_{n+1}^{\prime}$ gives $-1/\alpha_{n+1}^{\prime} = a_n - \alpha_n^{\prime}$ with
+$0 < -\alpha_n^{\prime} < 1$, so $a_n = \lfloor -1/\alpha_{n+1}^{\prime} \rfloor$. Thus $\alpha_{n+1}$ determines $a_n$, and hence $\alpha_n = a_n + 1/\alpha_{n+1}$.
+
+\emph{Step 3: reduced implies purely periodic.} By Lagrange's theorem $\alpha_m = \alpha_n$ for some $m > n$. If $n \geq 1$, Step 2 gives $\alpha_{m-1} = \alpha_{n-1}$, and repeating, $\alpha_{m-n} = \alpha_0$.
+So the expansion is purely periodic.
+
+\emph{Step 4: purely periodic implies reduced.} Let $\alpha = [\overline{a_0; \ldots, a_{r-1}}]$. Then $a_0 = a_r \geq 1$, so $\alpha > a_0 \geq 1$. By
+Proposition~\ref{continued-fractions:proposition-complete-quotients}, $\alpha = (p_{r-1}\alpha + p_{r-2})/(q_{r-1}\alpha + q_{r-2})$, so $\alpha$ is a root of
+$g(x) = q_{r-1}x^2 + (q_{r-2} - p_{r-1})x - p_{r-2}$. Here $g(0) = -p_{r-2} < 0$ (as $a_0 \geq 1$, all $p_k$ with $k \geq -1$ are positive), and
+$g(-1) = (q_{r-1} - q_{r-2}) + (p_{r-1} - p_{r-2})$. For $r = 1$ this is $1 + (a_0 - 1) > 0$; for $r \geq 2$, $q_{r-1} \geq q_{r-2}$ and $p_{r-1} - p_{r-2} \geq (a_{r-1} - 1)p_{r-2} + p_{r-3} > 0$. So
+$g$ has a root in $(-1, 0)$, which must be $\alpha^{\prime}$ since $\alpha > 1$.
+
+\emph{Step 5: the reversed period.} Let $\beta = [\overline{a_{r-1}; a_{r-2}, \ldots, a_0}]$. By the matrix identity of Proposition~\ref{continued-fractions:proposition-matrices}, the matrix attached to
+the block $a_{r-1}, \ldots, a_0$ is the product of the same symmetric factors in reverse order, that is, the transpose $\begin{pmatrix} p_{r-1} & q_{r-1}\\ p_{r-2} & q_{r-2}\end{pmatrix}$. So
+$\beta = (p_{r-1}\beta + q_{r-1})/(p_{r-2}\beta + q_{r-2})$, and $\beta$ is a root of $p_{r-2}x^2 + (q_{r-2} - p_{r-1})x - q_{r-1}$. Substituting $x = -1/y$ and multiplying by $-y^2$ shows that
+$-1/\beta$ is a root of $g$. As $\beta > 1$, $-1/\beta \in (-1, 0)$, so $-1/\beta = \alpha^{\prime}$.
+\end{proof}
+
+\subsection{The expansion of a square root}\label{continued-fractions:subsection-square-root}
+
+For $\sqrt d$, Galois's theorem gives a precise shape, and a simple algorithm computes the expansion with integer arithmetic only.
+
+\begin{corollary}\label{continued-fractions:corollary-sqrt}
+Let $d \geq 2$ be an integer that is not a square, and $a_0 = \lfloor\sqrt d\rfloor$. Then
+\[
+\sqrt d = [a_0; \overline{a_1, a_2, \ldots, a_{r-1}, 2a_0}],
+\]
+where the block $a_1, \ldots, a_{r-1}$ is a palindrome: $a_i = a_{r-i}$ for $1 \leq i \leq r - 1$.
+\end{corollary}
+
+\begin{proof}
+The number $\gamma = a_0 + \sqrt d$ is reduced: $\gamma > 1$ and $\gamma^{\prime} = a_0 - \sqrt d \in (-1, 0)$. By Theorem~\ref{continued-fractions:theorem-galois} it is purely periodic, and its first
+partial quotient is $\lfloor\gamma\rfloor = 2a_0$; write $\gamma = [\overline{2a_0; a_1, \ldots, a_{r-1}}]$. Then $\sqrt d = \gamma - a_0 = [a_0; \overline{a_1, \ldots, a_{r-1}, 2a_0}]$. By
+the second part of Theorem~\ref{continued-fractions:theorem-galois}, $-1/\gamma^{\prime} = [\overline{a_{r-1}; \ldots, a_1, 2a_0}]$. But $-1/\gamma^{\prime} = 1/(\sqrt d - a_0)$ is the first complete
+quotient of $\sqrt d$, which is $[\overline{a_1; \ldots, a_{r-1}, 2a_0}]$. By uniqueness of expansions, $a_i = a_{r-i}$ for $1 \leq i \leq r - 1$.
+\end{proof}
+
+\begin{proposition}\label{continued-fractions:proposition-sqrt-algorithm}
+Let $d \geq 2$ be a non-square and $a_0 = \lfloor\sqrt d\rfloor$. Define integers $m_0 = 0$, $d_0 = 1$ and, for $n \geq 0$,
+\[
+m_{n+1} = a_nd_n - m_n, \qquad d_{n+1} = \frac{d - m_{n+1}^2}{d_n}, \qquad a_{n+1} = \Bigl\lfloor \frac{a_0 + m_{n+1}}{d_{n+1}} \Bigr\rfloor.
+\]
+Then the $d_n$ are positive integers, the complete quotients of $\sqrt d$ are $\alpha_n = (m_n + \sqrt d)/d_n$, and the $a_n$ are its partial quotients. For $n \geq 1$,
+$0 < m_n < \sqrt d$ and $0 < d_n < 2\sqrt d$; in particular the period $r$ is less than $2d$.
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1: induction.} Suppose $\alpha_n = (m_n + \sqrt d)/d_n$ with integers $m_n$, $d_n > 0$ such that $d_n$ divides $d - m_n^2$; this holds for $n = 0$. Then
+$\alpha_n - a_n = (\sqrt d - m_{n+1})/d_n$ with $m_{n+1} = a_nd_n - m_n$, and
+\[
+\alpha_{n+1} = \frac{d_n}{\sqrt d - m_{n+1}} = \frac{d_n(\sqrt d + m_{n+1})}{d - m_{n+1}^2}.
+\]
+Now $d - m_{n+1}^2 = (d - m_n^2) - a_n^2d_n^2 + 2a_nd_nm_n$ is divisible by $d_n$, so $d_{n+1} = (d - m_{n+1}^2)/d_n$ is an integer, $\alpha_{n+1} = (m_{n+1} + \sqrt d)/d_{n+1}$, and $d_{n+1}$ divides
+$d - m_{n+1}^2 = d_nd_{n+1}$. Finally $d_{n+1} > 0$: $\alpha_{n+1} > 1$ and $\alpha_{n+1}^{\prime} < 0$ (all $\alpha_n$, $n \geq 1$, are reduced, by Step 1 of the proof of
+Theorem~\ref{continued-fractions:theorem-galois} applied to $\alpha_1 = 1/(\sqrt d - a_0)$, which is reduced since $\alpha_1^{\prime} = -1/(a_0 + \sqrt d) \in (-1, 0)$), so
+$\alpha_{n+1} - \alpha_{n+1}^{\prime} = 2\sqrt d/d_{n+1} > 0$.
+
+\emph{Step 2: the partial quotients.} For an integer $m$ and a positive integer $D$, $\lfloor (m + \sqrt d)/D \rfloor = \lfloor (m + a_0)/D \rfloor$, because $m + a_0 \leq m + \sqrt d < m + a_0 + 1$ and no
+multiple of $D$ lies in $(m + a_0, m + a_0 + 1)$. So $a_{n+1} = \lfloor\alpha_{n+1}\rfloor$ is as stated.
+
+\emph{Step 3: bounds.} For $n \geq 1$, $\alpha_n$ is reduced: $-1 < (m_n - \sqrt d)/d_n < 0$ gives $m_n < \sqrt d < m_n + d_n$, and $\alpha_n > 1$ gives $d_n < m_n + \sqrt d$. Hence $d_n < 2\sqrt d$,
+and $\sqrt d - m_n < d_n < m_n + \sqrt d$ gives $m_n > 0$. So the pair $(m_n, d_n)$ takes fewer than $\sqrt d \cdot 2\sqrt d = 2d$ values, and since it
+determines $\alpha_n$, the period is less than $2d$.
+\end{proof}
+
+\begin{example}\label{continued-fractions:example-sqrt-thirteen}
+For $d = 13$, $a_0 = 3$:
+\[
+\begin{array}{c|cccccc}
+n & 0 & 1 & 2 & 3 & 4 & 5\\ \hline
+m_n & 0 & 3 & 1 & 2 & 1 & 3\\
+d_n & 1 & 4 & 3 & 3 & 4 & 1\\
+a_n & 3 & 1 & 1 & 1 & 1 & 6
+\end{array}
+\]
+and from $n = 5$ on the table repeats from $n = 1$, so $\sqrt{13} = [3; \overline{1, 1, 1, 1, 6}]$, of period $5$. Other examples (computed the same way):
+\[
+\begin{aligned}
+&\sqrt5 = [2; \overline{4}], \quad \sqrt6 = [2; \overline{2, 4}], \quad \sqrt7 = [2; \overline{1, 1, 1, 4}], \quad \sqrt{19} = [4; \overline{2, 1, 3, 1, 2, 8}],\\
+&\sqrt{29} = [5; \overline{2, 1, 1, 2, 10}], \quad \sqrt{31} = [5; \overline{1, 1, 3, 5, 3, 1, 1, 10}],\\
+&\sqrt{61} = [7; \overline{1, 4, 3, 1, 2, 2, 1, 3, 4, 1, 14}].
+\end{aligned}
+\]
+The palindromes are visible, and the period can be long even for small $d$, varying irregularly with $d$.
+\end{example}
+
+\section{Pell's equation}\label{continued-fractions:section-pell}
+
+Let $d \geq 2$ be an integer that is not a square. \emph{Pell's equation} is
+\[
+x^2 - dy^2 = 1, \qquad x, y \in \ZZ.
+\]
+It has the trivial solutions $(\pm 1, 0)$. Brahmagupta (seventh century) and the Indian school (the \emph{chakravala} method of Bhāskara II, 1150) solved it in many cases; Fermat challenged the English
+mathematicians in 1657 with $d = 61$, whose smallest nontrivial solution is $(1766319049, 226153980)$; the first proof that a nontrivial solution always exists is Lagrange's (1768). The name comes
+from a confusion of Euler's. Continued fractions give both the existence and an algorithm.
+
+The basic identity behind everything is the following.
+
+\begin{proposition}\label{continued-fractions:proposition-pell-identity}
+Let $\sqrt d = [a_0; a_1, \ldots]$, with convergents $p_n/q_n$ and $d_n$ as in Proposition~\ref{continued-fractions:proposition-sqrt-algorithm}. For $n \geq 1$,
+\begin{equation}\label{continued-fractions:equation-pell-identity}
+p_{n-1}^2 - dq_{n-1}^2 = (-1)^nd_n.
+\end{equation}
+Moreover, if $r$ is the period of $\sqrt d$, then for $n \geq 1$, $d_n = 1$ if and only if $r$ divides $n$, and $d_n \neq 1$ otherwise.
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1: the identity.} By Proposition~\ref{continued-fractions:proposition-complete-quotients} and Proposition~\ref{continued-fractions:proposition-sqrt-algorithm},
+$\sqrt d(\alpha_nq_{n-1} + q_{n-2}) = \alpha_np_{n-1} + p_{n-2}$ with $\alpha_n = (m_n + \sqrt d)/d_n$. Multiplying by $d_n$,
+\[
+\sqrt d\bigl((m_n + \sqrt d)q_{n-1} + d_nq_{n-2}\bigr) = (m_n + \sqrt d)p_{n-1} + d_np_{n-2}.
+\]
+Since $\sqrt d$ is irrational, we may compare the rational parts and the coefficients of $\sqrt d$: $dq_{n-1} = m_np_{n-1} + d_np_{n-2}$ and $m_nq_{n-1} + d_nq_{n-2} = p_{n-1}$. Multiply the
+first by $q_{n-1}$, the second by $p_{n-1}$, and subtract:
+$p_{n-1}^2 - dq_{n-1}^2 = d_n(p_{n-1}q_{n-2} - p_{n-2}q_{n-1}) = d_n(-1)^{n-2}$ by Proposition~\ref{continued-fractions:proposition-matrices}(1).
+
+\emph{Step 2: when $d_n = 1$.} The complete quotients $\alpha_n$, $n \geq 1$, form the purely periodic sequence of $\alpha_1 = [\overline{a_1; \ldots, a_{r-1}, 2a_0}]$ (Corollary~\ref{continued-fractions:corollary-sqrt}),
+and $\alpha_r = [\overline{2a_0; a_1, \ldots}] = a_0 + \sqrt d$. As $r$ is the least period, $\alpha_n = \alpha_r$ for $n \geq 1$ if and only if $r \mid n$. If $d_n = 1$ with $n \geq 1$, then
+$\alpha_n = m_n + \sqrt d$ is reduced, so $-1 < m_n - \sqrt d < 0$, $m_n = a_0$ and $\alpha_n = \alpha_r$. Conversely $\alpha_{kr} = a_0 + \sqrt d$ has $d_{kr} = 1$.
+\end{proof}
+
+\begin{theorem}\label{continued-fractions:theorem-pell}
+Let $d \geq 2$ be a non-square, and $r$ the period of $\sqrt d$.
+\begin{enumerate}
+\item The solutions of $x^2 - dy^2 = \pm 1$ in positive integers are exactly the pairs $(p_{kr-1}, q_{kr-1})$, $k \geq 1$, and $p_{kr-1}^2 - dq_{kr-1}^2 = (-1)^{kr}$.
+\item If $r$ is even, $x^2 - dy^2 = -1$ has no solution, and the positive solutions of $x^2 - dy^2 = 1$ are $(p_{kr-1}, q_{kr-1})$, $k \geq 1$.
+\item If $r$ is odd, the positive solutions of $x^2 - dy^2 = -1$ are $(p_{kr-1}, q_{kr-1})$ with $k$ odd, and those of $x^2 - dy^2 = 1$ are those with $k$ even.
+\end{enumerate}
+In particular Pell's equation has infinitely many solutions.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: solutions are convergents.} Let $x, y \geq 1$ with $x^2 - dy^2 = \varepsilon = \pm 1$. Then $\gcd(x, y) = 1$ and
+\[
+\Bigl|\frac xy - \sqrt d\Bigr| = \frac{|x^2 - dy^2|}{y(x + y\sqrt d)} = \frac{1}{y^2(x/y + \sqrt d)}.
+\]
+If $\varepsilon = 1$, then $x/y > \sqrt d$, so $x/y + \sqrt d > 2\sqrt d > 2$. If $\varepsilon = -1$, then $x^2 = dy^2 - 1 \geq (d - 1)y^2$, so $x/y \geq \sqrt{d - 1} \geq 1$ and
+$x/y + \sqrt d > 1 + \sqrt2 > 2$. In both cases $|x/y - \sqrt d| < 1/(2y^2)$, so $x/y = p_m/q_m$ for some $m \geq 0$ by Theorem~\ref{continued-fractions:theorem-legendre}; both fractions being reduced
+with positive denominators, $x = p_m$ and $y = q_m$.
+
+\emph{Step 2: which convergents.} By \eqref{continued-fractions:equation-pell-identity}, $p_m^2 - dq_m^2 = (-1)^{m+1}d_{m+1}$, which is $\pm 1$ if and only if $d_{m+1} = 1$, if and only if
+$r \mid m + 1$ (Proposition~\ref{continued-fractions:proposition-pell-identity}); then the sign is $(-1)^{m+1}$. Writing $m + 1 = kr$ gives (1), and (2), (3) follow by looking at the parity of $kr$.
+\end{proof}
+
+\begin{example}\label{continued-fractions:example-pell}
+\begin{enumerate}
+\item $d = 2$, $r = 1$: the convergents $1/1, 3/2, 7/5, 17/12, \ldots$ alternately solve $x^2 - 2y^2 = -1$ and $= 1$.
+\item $d = 7$, $\sqrt7 = [2; \overline{1, 1, 1, 4}]$, $r = 4$: the convergents are $2, 3, 5/2, 8/3, \ldots$, and $(p_3, q_3) = (8, 3)$ gives $64 - 63 = 1$; $x^2 - 7y^2 = -1$ has no solution (as
+also follows modulo $4$, or modulo $7$, since $-1$ is not a square modulo $7$).
+\item $d = 13$, $r = 5$: the convergents $3, 4, 7/2, 11/3, 18/5$ give $18^2 - 13 \cdot 5^2 = 324 - 325 = -1$, and the smallest solution of $x^2 - 13y^2 = 1$ is $(p_9, q_9) = (649, 180)$.
+\item $d = 61$, $r = 11$: $(p_{10}, q_{10}) = (29718, 3805)$ solves $x^2 - 61y^2 = -1$, and $(p_{21}, q_{21}) = (1766319049, 226153980)$ is the smallest nontrivial solution of Pell's equation.
+\item $d = 94$, $r = 16$: the smallest solution is $(2143295, 221064)$. Small $d$ can have huge solutions, and there is no simple formula for their size.
+\end{enumerate}
+\end{example}
+
+The solutions form a group. Consider the ring $\ZZ[\sqrt d] = \{x + y\sqrt d : x, y \in \ZZ\}$ (a subring of $\RR$) with the \emph{norm} $N(x + y\sqrt d) = (x + y\sqrt d)(x - y\sqrt d) = x^2 - dy^2$.
+The norm is multiplicative, $N(uv) = N(u)N(v)$, because conjugation is a ring automorphism of $\ZZ[\sqrt d]$; written out, this is \emph{Brahmagupta's identity}
+\[
+(x_1^2 - dy_1^2)(x_2^2 - dy_2^2) = (x_1x_2 + dy_1y_2)^2 - d(x_1y_2 + x_2y_1)^2.
+\]
+An element $u$ is a unit of $\ZZ[\sqrt d]$ if and only if $N(u) = \pm 1$: if $uv = 1$ then $N(u)N(v) = 1$ with integer norms, and conversely $u^{-1} = N(u)u^{\prime}$. So the solutions of
+$x^2 - dy^2 = \pm 1$ are the units, and those of Pell's equation the units of norm $1$, a subgroup of index at most $2$.
+
+\begin{theorem}\label{continued-fractions:theorem-pell-group}
+Let $d \geq 2$ be a non-square. Let $\eta = p_{r-1} + q_{r-1}\sqrt d$, where $r$ is the period of $\sqrt d$; it is the smallest unit of $\ZZ[\sqrt d]$ greater than $1$ (the \emph{fundamental unit}).
+Then every unit is $\pm\eta^k$ with $k \in \ZZ$, uniquely, so $\ZZ[\sqrt d]^\times \cong \{\pm 1\} \times \ZZ$. The solutions of Pell's equation are $\pm\varepsilon^k$, where $\varepsilon = \eta$ if $r$ is
+even and $\varepsilon = \eta^2$ if $r$ is odd. Moreover $p_{kr-1} + q_{kr-1}\sqrt d = \eta^k$ for $k \geq 1$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: units greater than $1$.} Let $u = x + y\sqrt d$ be a unit with $u > 1$. Then $|u^{\prime}| = |N(u)|/u = 1/u < 1$, so $x = (u + u^{\prime})/2 > 0$ and $y\sqrt d = (u - u^{\prime})/2 > 0$. Conversely
+a unit with $x, y \geq 1$ is $> 1$. So the units $> 1$ are the $x + y\sqrt d$ with $(x, y)$ a positive solution of $x^2 - dy^2 = \pm 1$, which by Theorem~\ref{continued-fractions:theorem-pell} are the
+$p_{kr-1} + q_{kr-1}\sqrt d$; since $p_n$ and $q_n$ increase with $n$, the smallest is $\eta$.
+
+\emph{Step 2: every unit is $\pm\eta^k$.} Let $u$ be a unit; replacing $u$ by $-u$ we may assume $u > 0$. Since $\eta > 1$, there is a unique $k \in \ZZ$ with $\eta^k \leq u < \eta^{k+1}$. Then
+$u\eta^{-k}$ is a unit in $[1, \eta)$, so it equals $1$ by minimality of $\eta$. Uniqueness of the sign and of $k$ is clear since $\eta > 1$.
+
+\emph{Step 3: Pell's equation and the convergents.} $N(\pm\eta^k) = N(\eta)^k = (-1)^{rk}$, which gives the description of the solutions of norm $1$. The units $> 1$ are, in increasing order, both
+$\eta, \eta^2, \eta^3, \ldots$ and $p_{r-1} + q_{r-1}\sqrt d < p_{2r-1} + q_{2r-1}\sqrt d < \cdots$; so $\eta^k = p_{kr-1} + q_{kr-1}\sqrt d$.
+\end{proof}
+
+\begin{example}\label{continued-fractions:example-pell-group}
+For $d = 2$, $\eta = 1 + \sqrt2$ has norm $-1$, and $\varepsilon = \eta^2 = 3 + 2\sqrt2$; then $\varepsilon^2 = 17 + 12\sqrt2$, $\varepsilon^3 = 99 + 70\sqrt2$, giving the solutions $(3, 2)$, $(17, 12)$,
+$(99, 70)$ of $x^2 - 2y^2 = 1$. In general the solutions satisfy the linear recurrence $x_{k+1} = 2x_1x_k - x_{k-1}$, $y_{k+1} = 2x_1y_k - y_{k-1}$, because $\varepsilon + \varepsilon^{-1} = 2x_1$, so
+$\varepsilon^{k+1} = 2x_1\varepsilon^k - \varepsilon^{k-1}$.
+\end{example}
+
+\begin{remark}\label{continued-fractions:remark-cattle}
+The size of the fundamental unit is erratic and can be enormous compared with $d$. Archimedes' \emph{cattle problem}, a puzzle in verse attributed to Archimedes, leads to the Pell equation with
+$d = 410286423278424$, whose smallest solution produces a herd with a number of animals of $206545$ decimal digits \cite{lenstra-pell}; Lenstra's survey explains how such solutions are written
+compactly, as products of powers of small elements of $\ZZ[\sqrt d]$, and computed far faster than by expanding $\sqrt d$. The group $\ZZ[\sqrt d]^\times$ is the simplest
+instance of Dirichlet's unit theorem for rings of integers of number fields, proved in Chapter~\ref{geometry-of-numbers} by a geometric argument that does not use continued fractions.
+\end{remark}
+
+\subsection{Other values of the norm form}\label{continued-fractions:subsection-generalised-pell}
+
+\begin{proposition}\label{continued-fractions:proposition-small-norms}
+Let $d \geq 2$ be a non-square, $N$ an integer with $0 < |N| < \sqrt d$, and $x, y \geq 1$ coprime integers with $x^2 - dy^2 = N$. Then $x/y$ is a convergent $p_n/q_n$ of $\sqrt d$, and
+$N = (-1)^{n+1}d_{n+1}$. Consequently, the values $N$ with $|N| < \sqrt d$ taken by $x^2 - dy^2$ at coprime $(x, y)$ are exactly the numbers $(-1)^nd_n$ ($n \geq 1$) of absolute value $< \sqrt d$.
+\end{proposition}
+
+\begin{proof}
+If $N > 0$, then $x/y > \sqrt d$ and $|x/y - \sqrt d| = N/(y^2(x/y + \sqrt d)) < \sqrt d/(2\sqrt d\,y^2) = 1/(2y^2)$, so $x/y$ is a convergent by Theorem~\ref{continued-fractions:theorem-legendre}.
+If $N < 0$, put $M = -N$, so $dy^2 - x^2 = M$ and $y/x > 1/\sqrt d$; then
+\[
+\Bigl|\frac yx - \frac{1}{\sqrt d}\Bigr| = \frac{M}{dx^2(y/x + 1/\sqrt d)} < \frac{M}{dx^2 \cdot 2/\sqrt d} = \frac{M}{2\sqrt d\,x^2} < \frac{1}{2x^2},
+\]
+so $y/x$ is a convergent of $1/\sqrt d = [0; a_0, a_1, \ldots]$, whose convergents are $q_n/p_n$ (Example~\ref{continued-fractions:example-first}(2)); hence again $x/y = p_n/q_n$. In both cases
+$x = p_n$, $y = q_n$, and \eqref{continued-fractions:equation-pell-identity} gives $N = (-1)^{n+1}d_{n+1}$. Conversely each $(-1)^nd_n$ is the value at $(p_{n-1}, q_{n-1})$, which is coprime.
+\end{proof}
+
+\begin{example}\label{continued-fractions:example-small-norms}
+For $d = 13$, the $d_n$ are $4, 3, 3, 4, 1$ (Example~\ref{continued-fractions:example-sqrt-thirteen}), with signs $(-1)^n$: the values of $x^2 - 13y^2$ at coprime pairs with absolute value
+$< \sqrt{13}$ are exactly $\pm 1$ and $\pm 3$ ($4 > \sqrt{13}$ is not covered). For instance $4^2 - 13 = 3$ and $7^2 - 13 \cdot 2^2 = -3$, while $x^2 - 13y^2 = \pm 2$ has no coprime solution (as also
+follows modulo $13$: $\pm 2$ is not a square modulo $13$). Each solution generates infinitely many by multiplication with the units $\pm\varepsilon^k$ of norm $1$, and the solutions of
+$x^2 - dy^2 = N$ fall into finitely many such orbits for every $N \neq 0$: multiplying $u = x + y\sqrt d$ by a power of $\varepsilon$ and by $\pm 1$ brings it into $[\sqrt{|N|}, \varepsilon\sqrt{|N|})$,
+and then $|u^{\prime}| = |N|/u \leq \sqrt{|N|}$, so $x = (u + u^{\prime})/2$ and $y = (u - u^{\prime})/(2\sqrt d)$ are bounded. This is the starting point of the theory of binary quadratic forms of positive discriminant, complementing the definite theory of
+Section~\ref{number-theory:section-quadratic-forms}.
+\end{example}
+
+\section{Liouville's theorem and transcendence}\label{continued-fractions:section-transcendence}
+
+A complex number is \emph{algebraic} if it is a root of a nonzero polynomial with rational coefficients, and \emph{transcendental} otherwise (Definition~\ref{fields:definition-algebraic} with
+$K = \QQ$); the \emph{degree} of an algebraic number is the degree of its minimal polynomial (Proposition~\ref{fields:proposition-minimal-polynomial}). Since the algebraic numbers are countable
+(Exercise~\ref{fields:exercise-ahlfors-countable-algebraic}) and $\RR$ is not, almost all real numbers are transcendental (Cantor, 1874), but this argument does not exhibit a single one. Liouville
+(1844) found the first explicit examples by observing that algebraic numbers cannot be approximated too well.
+
+\begin{theorem}[Liouville]\label{continued-fractions:theorem-liouville}
+Let $\alpha$ be a real algebraic number of degree $d \geq 2$. There is a constant $c = c(\alpha) > 0$ such that $|\alpha - p/q| > c/q^d$ for every fraction $p/q$.
+\end{theorem}
+
+\begin{proof}
+Let $f \in \ZZ[x]$ be the minimal polynomial of $\alpha$ multiplied by a common denominator of its coefficients; it has degree $d$, is irreducible over $\QQ$, and so has no rational root as $d \geq 2$.
+Let $M = \max\{|f^{\prime}(x)| : |x - \alpha| \leq 1\}$, which is positive since $f$ is not constant near $\alpha$, and put $c = \frac12\min(1, 1/M)$. Let $p/q$ be a fraction. If $|\alpha - p/q| > 1$,
+then $|\alpha - p/q| > c/q^d$. Otherwise $q^df(p/q)$ is a nonzero integer, so $|f(p/q)| \geq q^{-d}$, while by the mean value theorem (Theorem~\ref{real-analysis:theorem-mean-value}),
+$|f(p/q)| = |f(p/q) - f(\alpha)| = |f^{\prime}(\xi)||p/q - \alpha| \leq M|\alpha - p/q|$ for some $\xi$ between $\alpha$ and $p/q$. So $|\alpha - p/q| \geq 1/(Mq^d) > c/q^d$.
+\end{proof}
+
+For $d = 2$ this says that quadratic irrationals are badly approximable, which we knew from their periodic expansions. For $d \geq 3$ the exponent $d$ is far from optimal
+(Remark~\ref{continued-fractions:remark-roth}), but even this crude bound suffices to produce transcendental numbers.
+
+\begin{definition}\label{continued-fractions:definition-liouville-number}
+A real number $\alpha$ is a \emph{Liouville number} if for every $n \geq 1$ there is a fraction $p/q$ with $q \geq 2$ and $0 < |\alpha - p/q| < 1/q^n$.
+\end{definition}
+
+A Liouville number is automatically irrational: if $\alpha = a/b$ and $p/q \neq \alpha$, then $|\alpha - p/q| \geq 1/(bq)$, which is $\geq 1/q^n$ as soon as $q^{n-1} \geq b$, and this holds for all
+$q \geq 2$ once $2^{n-1} \geq b$.
+
+\begin{theorem}[Liouville]\label{continued-fractions:theorem-liouville-numbers}
+Every Liouville number is transcendental. For example, $L = \sum_{k \geq 1}10^{-k!} = 0.110001000\ldots$ (with ones in the decimal places $1, 2, 6, 24, 120, \ldots$) is transcendental.
+\end{theorem}
+
+\begin{proof}
+Let $\alpha$ be a Liouville number. It is irrational, so if it were algebraic its degree $d$ would be $\geq 2$, and Theorem~\ref{continued-fractions:theorem-liouville} would give $c > 0$ with
+$c/q^d < |\alpha - p/q| < 1/q^n$ for the fractions of Definition~\ref{continued-fractions:definition-liouville-number}; then $c < q^{d-n} \leq 2^{d-n}$ for all $n > d$, which is false for large $n$.
+For $L$, let $q = 10^{n!}$ and $p = q\sum_{k \leq n}10^{-k!}$, an integer. Then
+\[
+0 < L - \frac pq = \sum_{k > n}10^{-k!} < 2 \cdot 10^{-(n+1)!} = \frac{2}{q^{n+1}} \leq \frac{1}{q^n},
+\]
+since the terms after the first form a series dominated by a geometric series of ratio $\frac1{10}$, and $q \geq 2$. So $L$ is a Liouville number.
+\end{proof}
+
+\begin{proposition}\label{continued-fractions:proposition-liouville-set}
+The set $\mathcal{L}$ of Liouville numbers is uncountable and dense in $\RR$, and has Lebesgue measure $0$.
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1: a $G_\delta$ set.} For $n \geq 1$ let $U_n = \bigcup_{q \geq 2}\bigcup_{p \in \ZZ}\{x : 0 < |x - p/q| < q^{-n}\}$. Each $U_n$ is open, and dense: every interval contains a fraction
+$p/q$ with $q \geq 2$, and points of $U_n$ arbitrarily close to it. By definition $\mathcal{L} = \bigcap_nU_n$.
+
+\emph{Step 2: uncountable and dense.} By the Baire category theorem (Theorem~\ref{general-topology:theorem-baire}) in the complete metric space $\RR$, $\mathcal{L}$ is dense. If it were countable,
+$\mathcal{L} = \{x_1, x_2, \ldots\}$, then the sets $U_n$ and $\RR \setminus \{x_k\}$ would be countably many dense open sets with empty intersection, contradicting the same theorem.
+
+\emph{Step 3: measure zero.} If $x \in [0, 1]$ and $|x - p/q| < q^{-n} \leq \frac12$, then $-q/2 < p < 3q/2$, so at most $2q + 1 \leq 3q$ values of $p$ are relevant. Hence
+\[
+\begin{aligned}
+\lambda(\mathcal{L} \cap [0, 1]) &\leq \lambda(U_n \cap [0, 1]) \leq \sum_{q \geq 2}3q \cdot \frac{2}{q^n} = 6\sum_{q \geq 2}q^{1-n}\\
+&\leq 6\Bigl(2^{1-n} + \int_2^\infty x^{1-n}\,dx\Bigr) = 6\Bigl(2^{1-n} + \frac{2^{2-n}}{n - 2}\Bigr)
+\end{aligned}
+\]
+for $n \geq 3$, which tends to $0$. So $\lambda(\mathcal{L} \cap [0, 1]) = 0$. As $\mathcal{L} + m = \mathcal{L}$ for $m \in \ZZ$ (shift the fractions by $m$), translation invariance of Lebesgue measure
+(Theorem~\ref{measure-theory:theorem-lebesgue-measure}) gives $\lambda(\mathcal{L}) = 0$.
+\end{proof}
+
+So Liouville numbers are plentiful topologically but negligible in measure, and in particular they are very special transcendental numbers: Corollary~\ref{continued-fractions:corollary-almost-all-exponent}
+shows that almost every number is approximable only to order $2$, like an algebraic one. Numbers such as $e$ and $\pi$ are not Liouville numbers
+(Proposition~\ref{continued-fractions:proposition-irrationality-exponent-e}), and their transcendence needs another idea.
+
+\subsection{Symmetric polynomials}\label{continued-fractions:subsection-symmetric}
+
+The proof of the transcendence of $\pi$ needs one algebraic tool: symmetric expressions in the roots of a polynomial can be computed from its coefficients.
+
+\begin{definition}\label{continued-fractions:definition-symmetric}
+Let $R$ be a commutative ring. A polynomial $S \in R[x_1, \ldots, x_n]$ is \emph{symmetric} if $S(x_{\sigma(1)}, \ldots, x_{\sigma(n)}) = S(x_1, \ldots, x_n)$ for every permutation $\sigma$ of
+$\{1, \ldots, n\}$. The \emph{elementary symmetric polynomials} are $e_k = \sum_{i_1 < \cdots < i_k}x_{i_1}\cdots x_{i_k}$ for $1 \leq k \leq n$; they satisfy
+$\prod_{i=1}^n(t - x_i) = t^n - e_1t^{n-1} + e_2t^{n-2} - \cdots + (-1)^ne_n$.
+\end{definition}
+
+\begin{theorem}[Fundamental theorem on symmetric polynomials]\label{continued-fractions:theorem-symmetric}
+Let $R$ be a commutative ring. Every symmetric polynomial $S \in R[x_1, \ldots, x_n]$ is a polynomial in $e_1, \ldots, e_n$ with coefficients in $R$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: an order on monomials.} Order the monomials $x^k = x_1^{k_1}\cdots x_n^{k_n}$ lexicographically: $x^k > x^l$ if the first nonzero difference $k_i - l_i$ is positive. This is a total order,
+compatible with multiplication: $x^k > x^l$ implies $x^kx^m > x^lx^m$. Consequently, if $f$ and $g$ have leading monomials (largest monomials with nonzero coefficient) $x^a$ and $x^b$ with
+coefficient $1$, then $fg$ has leading monomial $x^{a+b}$ with coefficient $1$: every other product $x^{a^{\prime}}x^{b^{\prime}}$ of monomials of $f$ and $g$ has $a^{\prime} \leq a$, $b^{\prime} \leq b$,
+not both equalities, and so is smaller.
+
+\emph{Step 2: the leading term of a symmetric polynomial.} Let $S \neq 0$ be symmetric with leading term $cx^k$. By symmetry the coefficient of $x_{\sigma(1)}^{k_1}\cdots x_{\sigma(n)}^{k_n}$ is $c$ for every
+$\sigma$, so if $k_i < k_{i+1}$ for some $i$, exchanging $x_i$ and $x_{i+1}$ would give a larger monomial with coefficient $c \neq 0$. Hence $k_1 \geq k_2 \geq \cdots \geq k_n$.
+
+\emph{Step 3: removing the leading term.} The leading monomial of $e_j$ is $x_1x_2\cdots x_j$, with coefficient $1$. By Step 1,
+$E = e_1^{k_1 - k_2}e_2^{k_2 - k_3}\cdots e_{n-1}^{k_{n-1} - k_n}e_n^{k_n}$ has leading term $x_1^{k_1}x_2^{k_2}\cdots x_n^{k_n} = x^k$, and $E$ is homogeneous of degree $k_1 + \cdots + k_n \leq \deg S$. So
+$S - cE$ is symmetric, all its monomials have degree $\leq \deg S$, and it is either $0$ or has a leading monomial smaller than $x^k$.
+
+\emph{Step 4: termination.} There are finitely many monomials of degree $\leq \deg S$, so after finitely many repetitions of Step 3 we reach $0$, and $S$ is an $R$-linear combination of products of
+the $e_j$.
+\end{proof}
+
+\begin{corollary}\label{continued-fractions:corollary-symmetric-roots}
+Let $P(t) = t^n + c_{n-1}t^{n-1} + \cdots + c_0$ be a monic polynomial with coefficients in $\ZZ$ (respectively $\QQ$), and $\theta_1, \ldots, \theta_n$ its complex roots, listed with multiplicity.
+For every symmetric $S \in \ZZ[x_1, \ldots, x_n]$ (respectively $\QQ[x_1, \ldots, x_n]$), $S(\theta_1, \ldots, \theta_n)$ lies in $\ZZ$ (respectively $\QQ$).
+\end{corollary}
+
+\begin{proof}
+Over $\CC$, $P(t) = \prod_i(t - \theta_i)$ (fundamental theorem of algebra, Corollary~\ref{complex-analysis:corollary-liouville}(2)), so comparing
+coefficients, $e_k(\theta_1, \ldots, \theta_n) = (-1)^kc_{n-k}$. By Theorem~\ref{continued-fractions:theorem-symmetric}, $S(\theta)$ is a polynomial with integer (rational) coefficients in these numbers.
+\end{proof}
+
+\begin{example}\label{continued-fractions:example-symmetric}
+The power sums $s_k = \theta_1^k + \cdots + \theta_n^k$ of the roots of a monic integer polynomial are integers. For $t^2 - t - 1$, with roots $\varphi$ and $1 - \varphi$, the power sums are the
+\emph{Lucas numbers} $s_k = \varphi^k + (1 - \varphi)^k = 1, 3, 4, 7, 11, 18, \ldots$; for instance $s_2 = e_1^2 - 2e_2 = 1 + 2 = 3$. Since $|1 - \varphi| < 1$, $\varphi^k$ is within
+$|1 - \varphi|^k$ of an integer: $\varphi^{20} = 15126.99993\ldots$. Such numbers, whose conjugates all lie inside the unit disc, are \emph{Pisot numbers}.
+\end{example}
+
+\subsection{The theorems of Hermite and Lindemann}\label{continued-fractions:subsection-e-pi}
+
+Both proofs follow Hermite's idea: an integral identity expresses an integer combination of values of $e^z$, which by arithmetic must be a nonzero integer, as something analysis shows to be tiny.
+
+\begin{lemma}[Hermite's identity]\label{continued-fractions:lemma-hermite}
+Let $f$ be a polynomial with complex coefficients, $F = f + f^{\prime} + f^{\prime\prime} + \cdots$ the sum of its derivatives, and for $t \in \CC$
+\[
+I_f(t) = \int_0^1 te^{t(1 - s)}f(st)\,ds,
+\]
+the integral of $e^{t - u}f(u)$ along the segment from $0$ to $t$. Then $I_f(t) = e^tF(0) - F(t)$, and $|I_f(t)| \leq |t|e^{|t|}\max_{|z| \leq |t|}|f(z)|$.
+\end{lemma}
+
+\begin{proof}
+Let $g(s) = -e^{t(1 - s)}F(st)$ for $s \in [0, 1]$. By the chain rule (applied to real and imaginary parts),
+$g^{\prime}(s) = te^{t(1 - s)}F(st) - te^{t(1 - s)}F^{\prime}(st) = te^{t(1 - s)}f(st)$, since $F - F^{\prime} = f$. So $I_f(t) = g(1) - g(0) = -F(t) + e^tF(0)$. The bound follows from
+$|e^{t(1 - s)}| = e^{(1 - s)\operatorname{Re}t} \leq e^{|t|}$ and $|st| \leq |t|$.
+\end{proof}
+
+\begin{theorem}[Hermite, 1873]\label{continued-fractions:theorem-e-transcendental}
+The number $e$ is transcendental.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: the assumption.} Suppose $a_0 + a_1e + \cdots + a_ne^n = 0$ with integers $a_k$ not all zero. Dividing by a power of $e$ we may assume $a_0 \neq 0$, and then $n \geq 1$. Let $p$ be a prime
+with $p > n$ and $p > |a_0|$, and
+\[
+f(x) = x^{p-1}(x - 1)^p(x - 2)^p\cdots(x - n)^p,
+\]
+a polynomial with integer coefficients of degree $(n + 1)p - 1$. Put $J = \sum_{k=0}^na_kI_f(k)$. By Lemma~\ref{continued-fractions:lemma-hermite} and the assumption,
+\[
+J = F(0)\sum_{k=0}^na_ke^k - \sum_{k=0}^na_kF(k) = -\sum_{k=0}^n\sum_{j \geq 0}a_kf^{(j)}(k).
+\]
+
+\emph{Step 2: divisibility.} For a polynomial $h$ with integer coefficients, $h^{(j)}/j!$ has integer coefficients, since $\frac{1}{j!}\frac{d^j}{dx^j}x^i = \binom ij x^{i-j}$; so $h^{(j)}(k)$ is divisible by
+$j!$ for integers $k$, hence by $p!$ if $j \geq p$. For $1 \leq k \leq n$, $f$ has a zero of order $p$ at $k$, so $f^{(j)}(k) = 0$ for $j < p$. At $0$, $f(x) = x^{p-1}h(x)$ with
+$h(x) = ((x - 1)\cdots(x - n))^p$, so $f^{(j)}(0) = 0$ for $j < p - 1$ and $f^{(p-1)}(0) = (p - 1)!h(0) = (p - 1)!\,((-1)^nn!)^p$. Therefore
+\[
+J = -a_0(p - 1)!\,((-1)^nn!)^p + p!\,N
+\]
+for some integer $N$. Since $p > n$ and $p > |a_0|$, $p$ does not divide $a_0(n!)^p$, so $J/(p - 1)!$ is an integer not divisible by $p$; in particular $|J| \geq (p - 1)!$.
+
+\emph{Step 3: the analytic bound.} For $|z| \leq n$ each factor of $f(z)$ has absolute value $\leq 2n$, so $|f(z)| \leq (2n)^{(n+1)p}$. By Lemma~\ref{continued-fractions:lemma-hermite},
+$|J| \leq \sum_k|a_k|\,ne^n(2n)^{(n+1)p} = AB^p$ with $A$ and $B$ independent of $p$.
+
+\emph{Step 4: contradiction.} So $(p - 1)! \leq AB^p$ for every prime $p > \max(n, |a_0|)$. But $AB^p/(p - 1)! \to 0$ as $p \to \infty$ (the ratio of consecutive terms of $AB^m/(m - 1)!$ is $B/m$), and there
+are infinitely many primes; contradiction.
+\end{proof}
+
+\begin{theorem}[Lindemann, 1882]\label{continued-fractions:theorem-pi-transcendental}
+The number $\pi$ is transcendental.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: an exponential relation.} Suppose $\pi$ is algebraic. Then so is $\theta_1 = i\pi$, since the algebraic numbers form a field (Proposition~\ref{fields:proposition-algebraic-closure-in-extension}).
+Let $\theta_1, \ldots, \theta_d$ be the roots of its minimal polynomial over $\QQ$. Since $e^{i\pi} = -1$ (Theorem~\ref{real-analysis:theorem-pi}), the factor $1 + e^{\theta_1}$ vanishes, so
+\[
+0 = \prod_{j=1}^d(1 + e^{\theta_j}) = \sum_{\epsilon \in \{0, 1\}^d}e^{\epsilon_1\theta_1 + \cdots + \epsilon_d\theta_d}.
+\]
+
+\emph{Step 2: the exponents.} Let $\Phi(t) = \prod_{\epsilon \in \{0, 1\}^d}(t - \epsilon_1\theta_1 - \cdots - \epsilon_d\theta_d)$, a monic polynomial of degree $2^d$. Permuting the $\theta_j$ permutes the
+factors, so each coefficient of $\Phi$ is a symmetric polynomial with integer coefficients in $\theta_1, \ldots, \theta_d$, hence rational by Corollary~\ref{continued-fractions:corollary-symmetric-roots}.
+Let $q \geq 1$ be the number of $\epsilon$ with $\epsilon \cdot \theta = 0$ (including $\epsilon = 0$). Then $\Phi(t) = t^q\Psi(t)$ with $\Psi \in \QQ[t]$ monic and $\Psi(0) \neq 0$; the roots of $\Psi$
+are the nonzero exponents $\beta_1, \ldots, \beta_m$ (with multiplicity), $m = 2^d - q \geq 1$ (as $\theta_1 \neq 0$). The relation of Step 1 becomes
+\[
+q + e^{\beta_1} + \cdots + e^{\beta_m} = 0.
+\]
+Choose an integer $c \geq 1$ such that $g = c\Psi$ has integer coefficients, and let $G(y) = c^{m-1}g(y/c)$. If $g(x) = cx^m + g_{m-1}x^{m-1} + \cdots + g_0$, then
+$G(y) = y^m + g_{m-1}y^{m-1} + cg_{m-2}y^{m-2} + \cdots + c^{m-1}g_0$ is a monic polynomial with integer coefficients, whose roots are $c\beta_1, \ldots, c\beta_m$, and $G(0) = c^{m-1}g_0 \neq 0$.
+
+\emph{Step 3: the auxiliary polynomial.} For a prime $p$ let $H(y) = y^{p-1}G(y)^p \in \ZZ[y]$, $f(x) = H(cx)/(p - 1)!$, and $J = \sum_{k=1}^mI_f(\beta_k)$. By
+Lemma~\ref{continued-fractions:lemma-hermite} and Step 2,
+\[
+J = F(0)\sum_ke^{\beta_k} - \sum_kF(\beta_k) = -qF(0) - \sum_{k=1}^mF(\beta_k).
+\]
+
+\emph{Step 4: arithmetic.} We have $f^{(j)}(x) = c^jH^{(j)}(cx)/(p - 1)!$, and as in the previous proof $H^{(j)} = j!\,K_j$ with $K_j \in \ZZ[y]$. At $0$: $H^{(j)}(0) = 0$ for $j < p - 1$,
+$H^{(p-1)}(0) = (p - 1)!\,G(0)^p$, and for $j \geq p$, $f^{(j)}(0) = c^j\frac{j!}{(p - 1)!}K_j(0)$ is an integer divisible by $p$. So $F(0) \equiv c^{p-1}G(0)^p \pmod p$. At the $\beta_k$: each
+$c\beta_k$ is a root of $G^p$, hence of $H$, of multiplicity $\geq p$, so $H^{(j)}(c\beta_k) = 0$ for $j < p$. For $j \geq p$,
+\[
+\sum_{k=1}^mf^{(j)}(\beta_k) = c^j\frac{j!}{(p - 1)!}\sum_{k=1}^mK_j(c\beta_k),
+\]
+and $\sum_kK_j(c\beta_k)$ is a symmetric polynomial with integer coefficients in the roots $c\beta_1, \ldots, c\beta_m$ of the monic integer polynomial $G$, hence an integer by
+Corollary~\ref{continued-fractions:corollary-symmetric-roots}. So $\sum_kF(\beta_k)$ is an integer divisible by $p$, and
+\[
+J \equiv -qc^{p-1}G(0)^p \pmod p.
+\]
+For $p > \max(q, c, |G(0)|)$ the right side is not divisible by $p$, so $J$ is a nonzero integer and $|J| \geq 1$.
+
+\emph{Step 5: analysis.} Let $\rho = \max_k|\beta_k|$ and $\mu = \max_{|z| \leq \rho}|G(cz)|$. For $|z| \leq \rho$, $|f(z)| \leq (c\rho)^{p-1}\mu^p/(p - 1)!$, so by Lemma~\ref{continued-fractions:lemma-hermite}
+$|J| \leq m\rho e^\rho(c\rho)^{p-1}\mu^p/(p - 1)! = AB^p/(p - 1)!$ with $A, B$ independent of $p$. This tends to $0$, contradicting $|J| \geq 1$ for large primes $p$.
+\end{proof}
+
+\begin{remark}\label{continued-fractions:remark-squaring-circle}
+\emph{Squaring the circle.} A real number constructible with ruler and compass from the unit length lies in a tower of quadratic extensions of $\QQ$, so it is algebraic
+(Exercise~\ref{fields:exercise-constructible}). A square with the area of the unit circle has side $\sqrt\pi$, which is transcendental (if $\sqrt\pi$ were algebraic, so would be $\pi$). So the
+circle cannot be squared, the last of the three classical construction problems of Greek geometry to be settled.
+\end{remark}
+
+\begin{remark}\label{continued-fractions:remark-transcendence-theorems}
+The method proves much more. The \emph{Lindemann--Weierstrass theorem} says that if $\beta_1, \ldots, \beta_m$ are distinct algebraic numbers, then $e^{\beta_1}, \ldots, e^{\beta_m}$ are linearly
+independent over the field of algebraic numbers \cite[Chapter 1]{baker-transcendental}; so $e^\beta$ is transcendental for algebraic $\beta \neq 0$, and so are $\log\beta$ for algebraic
+$\beta \neq 0, 1$ and $\sin\beta$, $\cos\beta$ for algebraic $\beta \neq 0$. The \emph{Gelfond--Schneider theorem} (1934, Hilbert's seventh problem) says that $\alpha^\beta$ is transcendental for
+algebraic $\alpha \neq 0, 1$ and algebraic irrational $\beta$ (any value of the power) \cite{baker-transcendental}; for example $2^{\sqrt2}$ and $e^\pi = (-1)^{-i}$ are transcendental.
+Baker's theorem on linear forms in logarithms extends it to several logarithms \cite{baker-transcendental}. On the other hand, it is unknown whether $e + \pi$, $e\pi$ or Euler's constant $\gamma$ are
+irrational.
+\end{remark}
+
+\subsection{The irrationality exponent}\label{continued-fractions:subsection-exponent}
+
+\begin{definition}\label{continued-fractions:definition-irrationality-exponent}
+The \emph{irrationality exponent} of an irrational number $\alpha$ is $\mu(\alpha) = \sup\{\mu \in \RR : |\alpha - p/q| < q^{-\mu}$ for infinitely many fractions $p/q\}$, an element of
+$[2, \infty]$.
+\end{definition}
+
+By Dirichlet's theorem $\mu(\alpha) \geq 2$; by Liouville's theorem $\mu(\alpha) \leq d$ if $\alpha$ is algebraic of degree $d$; Liouville numbers are those with $\mu = \infty$; and quadratic
+irrationals have $\mu = 2$. The continued fraction computes $\mu$: since $|\alpha - p_n/q_n|$ is about $1/(a_{n+1}q_n^2)$, a large irrationality exponent means partial quotients that are huge
+compared with the denominators.
+
+\begin{proposition}\label{continued-fractions:proposition-irrationality-exponent-e}
+Let $\alpha = [a_0; a_1, \ldots]$ be irrational with $\log a_{n+1}/\log q_n \to 0$. Then $\mu(\alpha) = 2$. In particular $\mu(e) = 2$, and $e$ is not a Liouville number.
+\end{proposition}
+
+\begin{proof}
+Let $\varepsilon > 0$, and suppose $|\alpha - p/q| < q^{-2-\varepsilon}$ for infinitely many fractions. For those with $q^\varepsilon > 2$ the fraction is a convergent $p_n/q_n$ with $q = tq_n$, $t \geq 1$
+(Theorem~\ref{continued-fractions:theorem-legendre}). For fixed $n$ only finitely many $t$ qualify, so infinitely many $n$ occur, and for them, by Corollary~\ref{continued-fractions:corollary-error},
+\[
+\frac{1}{q_n^2(a_{n+1} + 2)} < \Bigl|\alpha - \frac{p_n}{q_n}\Bigr| < q^{-2-\varepsilon} \leq q_n^{-2-\varepsilon},
+\]
+so $3a_{n+1} \geq a_{n+1} + 2 > q_n^\varepsilon$, that is, $\log(3a_{n+1})/\log q_n > \varepsilon$ for infinitely many $n$, contradicting the hypothesis. So $\mu(\alpha) \leq 2 + \varepsilon$ for every
+$\varepsilon$. For $e$, Theorem~\ref{continued-fractions:theorem-e} gives $a_{n+1} \leq n + 2$, while $q_n \geq F_{n+1} \geq \varphi^{n-1}$, so $\log a_{n+1}/\log q_n \leq \log(n + 2)/((n - 1)\log\varphi) \to 0$.
+\end{proof}
+
+\begin{remark}\label{continued-fractions:remark-roth}
+For algebraic numbers, Liouville's exponent $d$ was improved by Thue (1909) to $d/2 + 1$, by Siegel to about $2\sqrt d$, and finally by Roth (1955): \emph{for every algebraic irrational $\alpha$ and
+every $\varepsilon > 0$, $|\alpha - p/q| < q^{-2-\varepsilon}$ has only finitely many solutions}, so $\mu(\alpha) = 2$ \cite{roth-1955}. Thue's motivation was Diophantine equations: an approximation
+theorem with exponent $< d$ implies that $F(x, y) = m$ has only finitely many integer solutions for an irreducible binary form $F$ of degree $d \geq 3$ (Chapter~\ref{diophantine-equations}). These
+theorems are \emph{ineffective}: the proofs give the number of exceptions but not a bound on their size. Whether $\sqrt[3]2$ has bounded partial quotients, or whether $\mu(\pi) = 2$, is unknown.
+\end{remark}
+
+\section{The metric theory}\label{continued-fractions:section-metric}
+
+What do the partial quotients of a \emph{typical} real number look like? The question makes sense with Lebesgue measure $\lambda$ on $[0, 1)$ (Chapter~\ref{measure-theory}): we ask which properties
+hold for almost every $x$. Since the expansion of $x + m$ differs from that of $x$ only in $a_0$, we may restrict to $[0, 1)$. The rational numbers form a null set and play no role.
+
+\begin{definition}\label{continued-fractions:definition-gauss-map}
+The \emph{Gauss map} is $T \colon [0, 1) \to [0, 1)$, $T(x) = \{1/x\}$ for $x \neq 0$ and $T(0) = 0$. For irrational $x \in (0, 1)$ we write $a_n(x)$ for its partial quotients, so
+$x = [0; a_1(x), a_2(x), \ldots]$. The \emph{Gauss measure} is the probability measure $\mu(A) = \frac{1}{\log 2}\int_A\frac{dx}{1 + x}$ on the Borel subsets of $[0, 1)$.
+\end{definition}
+
+For irrational $x \in (0, 1)$, $a_1(x) = \lfloor 1/x \rfloor$ and $T(x) = [0; a_2(x), a_3(x), \ldots]$: the Gauss map shifts the partial quotients, and $a_n(x) = \lfloor 1/T^{n-1}(x) \rfloor$. So the
+statistics of the partial quotients are the statistics of the orbits of $T$, a dynamical system. The Gauss measure is the right way to measure them, because it is invariant.
+
+\begin{theorem}[Gauss]\label{continued-fractions:theorem-gauss-measure}
+The Gauss measure is $T$-invariant: $\mu(T^{-1}(A)) = \mu(A)$ for every Borel set $A \subseteq [0, 1)$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: intervals.} Let $A = [0, t)$ with $0 < t \leq 1$. For $x \neq 0$, $T(x) < t$ means $k \leq 1/x < k + t$ for the integer $k = \lfloor 1/x \rfloor \geq 1$, that is, $x \in (1/(k + t), 1/k]$.
+So $T^{-1}(A) = \{0\} \cup \bigcup_{k \geq 1}(1/(k + t), 1/k]$, a disjoint union, and since $\int_{1/(k+t)}^{1/k}\frac{dx}{1 + x} = \log\frac{k + 1}{k} - \log\frac{k + t + 1}{k + t}$,
+\[
+\begin{aligned}
+\log 2 \cdot \mu(T^{-1}(A)) &= \sum_{k=1}^\infty\bigl(\log(k + 1) - \log k - \log(k + t + 1) + \log(k + t)\bigr)\\
+&= \lim_{K \to \infty}\Bigl(\log(1 + t) + \log\frac{K + 1}{K + 1 + t}\Bigr) = \log(1 + t),
+\end{aligned}
+\]
+the partial sums telescoping. So $\mu(T^{-1}[0, t)) = \log(1 + t)/\log 2 = \mu([0, t))$.
+
+\emph{Step 2: all Borel sets.} $T$ is Borel measurable, being continuous on each interval $(1/(k + 1), 1/k]$, so $A \mapsto \mu(T^{-1}(A))$ is a probability measure. It agrees with $\mu$ on the
+intervals $[0, t)$, which are closed under finite intersections and generate the Borel $\sigma$-algebra of $[0, 1)$; by Dynkin's lemma (Lemma~\ref{measure-theory:lemma-dynkin}) the two measures are equal.
+\end{proof}
+
+The Gauss measure and Lebesgue measure have the same null sets, since $\frac{1}{2\log 2} \leq \frac{1}{(1 + x)\log 2} \leq \frac{1}{\log 2}$ on $[0, 1)$; so ``almost every $x$'' means the same for
+both. Next we describe the sets of numbers with prescribed first partial quotients.
+
+\begin{proposition}\label{continued-fractions:proposition-cylinders}
+Let $a_1, \ldots, a_n$ be positive integers, with convergents $p_k/q_k$ of $[0; a_1, \ldots, a_n]$. The irrational $x \in (0, 1)$ with $a_i(x) = a_i$ for $i \leq n$ are exactly the irrational points of the
+open interval $I(a_1, \ldots, a_n)$ with endpoints $p_n/q_n$ and $(p_n + p_{n-1})/(q_n + q_{n-1})$, which has length $1/(q_n(q_n + q_{n-1}))$. More precisely, for $s \geq 1$ those with moreover
+$\alpha_{n+1}(x) > s$ form the irrational points of the subinterval with endpoints $p_n/q_n$ and $(sp_n + p_{n-1})/(sq_n + q_{n-1})$, of length $1/(q_n(sq_n + q_{n-1}))$.
+\end{proposition}
+
+\begin{proof}
+By Theorem~\ref{continued-fractions:theorem-expansion} and Proposition~\ref{continued-fractions:proposition-complete-quotients}, an irrational $x$ has first partial quotients $a_1, \ldots, a_n$ if and only if
+$x = [0; a_1, \ldots, a_n, t]$ for an irrational $t > 1$ (then $t = \alpha_{n+1}(x)$; conversely, if $x = [0; a_1, \ldots, a_n, t]$, appending the expansion of $t$, whose first term is $\geq 1$, gives
+the expansion of $x$). By \eqref{continued-fractions:equation-moebius}, $x = h(t) = (p_nt + p_{n-1})/(q_nt + q_{n-1})$. The map $h$ is a Möbius transformation with integer coefficients and determinant
+$\pm 1$, so it maps irrationals to irrationals and rationals to rationals; it is monotone on $(0, \infty)$, since $h^{\prime}(t) = (p_nq_{n-1} - p_{n-1}q_n)/(q_nt + q_{n-1})^2$ has constant sign, with
+$h(1) = (p_n + p_{n-1})/(q_n + q_{n-1})$ and $h(t) \to p_n/q_n$ as $t \to \infty$. So $h$ maps the irrationals of $(s, \infty)$ onto the irrationals of the open interval between $h(s)$ and $p_n/q_n$, whose
+length is $|p_n/q_n - h(s)| = |p_nq_{n-1} - p_{n-1}q_n|/(q_n(sq_n + q_{n-1})) = 1/(q_n(sq_n + q_{n-1}))$.
+\end{proof}
+
+\begin{theorem}\label{continued-fractions:theorem-unbounded}
+For almost every $x \in \RR$ the partial quotients of $x$ are unbounded. Consequently the badly approximable numbers form a null set.
+\end{theorem}
+
+\begin{proof}
+Fix $M \geq 1$ and let $E_n = \{x \in (0, 1) \setminus \QQ : a_i(x) \leq M \text{ for } 1 \leq i \leq n\}$. We show $\lambda(E_n) \leq (M/(M + 1))^n$. For $n = 0$, $E_0$ has measure $1$. The set $E_n$ is
+the disjoint union of the irrational points of the intervals $I(a_1, \ldots, a_n)$ with all $a_i \leq M$. Inside one of them, by Proposition~\ref{continued-fractions:proposition-cylinders} with
+$s = M + 1$, the points with $a_{n+1}(x) > M$, that is $\alpha_{n+1}(x) > M + 1$, have measure
+\[
+\frac{1}{q_n((M + 1)q_n + q_{n-1})} \geq \frac{1}{M + 1} \cdot \frac{1}{q_n(q_n + q_{n-1})} = \frac{\lambda(I(a_1, \ldots, a_n))}{M + 1},
+\]
+because $(M + 1)(q_n + q_{n-1}) \geq (M + 1)q_n + q_{n-1}$. So $E_{n+1}$ meets each such interval in measure at most $\frac{M}{M + 1}$ of its length, and $\lambda(E_{n+1}) \leq \frac{M}{M + 1}\lambda(E_n)$.
+Hence the set of $x$ with all $a_i(x) \leq M$, contained in every $E_n$, is null. Taking the union over $M$ and over the translates by integers, the set of irrational numbers with bounded partial quotients
+is null; by Proposition~\ref{continued-fractions:proposition-badly-approximable} it is the set of badly approximable numbers.
+\end{proof}
+
+So almost every number has arbitrarily good approximations in Hurwitz's sense: for every $c > 0$, $|x - p/q| < c/q^2$ has infinitely many solutions. How much better than $1/q^2$ can one do almost
+everywhere? Khinchin's theorem gives a sharp answer; we prove the half that follows from the first Borel--Cantelli lemma.
+
+\begin{theorem}[Khinchin, convergence half]\label{continued-fractions:theorem-khinchin}
+Let $\psi \colon \{1, 2, \ldots\} \to (0, \infty)$ with $\sum_qq\psi(q) < \infty$. Then for almost every $x \in \RR$ the inequality $|x - p/q| < \psi(q)$ has only finitely many solutions in fractions
+$p/q$.
+\end{theorem}
+
+\begin{proof}
+It suffices to treat $x \in [0, 1]$, and then translate. Since $q\psi(q) \to 0$, there is $q_0$ with $q\psi(q) \leq 1$ for $q \geq q_0$. For such $q$ let
+$A_q = \{x \in [0, 1] : |x - p/q| < \psi(q) \text{ for some } p \in \ZZ\}$. A relevant $p$ satisfies $-q\psi(q) < p < q + q\psi(q)$, so there are at most $q + 3 \leq 4q$ of them, and
+$\lambda(A_q) \leq 4q \cdot 2\psi(q)$. As $\sum_q\lambda(A_q) < \infty$, the first Borel--Cantelli lemma (Theorem~\ref{measure-theory:theorem-borel-cantelli}(1)), applied to Lebesgue measure on $[0, 1]$,
+shows that almost every $x$ lies in only finitely many $A_q$. For such $x$ there are only finitely many denominators $q$ with a solution, and for each $q$ only finitely many $p$.
+\end{proof}
+
+\begin{corollary}\label{continued-fractions:corollary-almost-all-exponent}
+Almost every real number has irrationality exponent $2$: for every $\varepsilon > 0$ and almost every $x$, $|x - p/q| < q^{-2-\varepsilon}$ has only finitely many solutions. Also, for almost every $x$,
+$|x - p/q| < 1/(q^2(\log q)^2)$ has only finitely many solutions.
+\end{corollary}
+
+\begin{proof}
+Apply Theorem~\ref{continued-fractions:theorem-khinchin} with $\psi(q) = q^{-2-\varepsilon}$, for $\varepsilon = 1/k$, $k = 1, 2, \ldots$, and intersect the countably many sets of full measure; and with
+$\psi(q) = 1/(q^2(\log q)^2)$ for $q \geq 2$ (and $\psi(1) = 1$), for which $\sum_q1/(q(\log q)^2) < \infty$ by the integral test.
+\end{proof}
+
+\begin{remark}\label{continued-fractions:remark-metric-results}
+The deeper statistical theorems use the ergodic theory of the Gauss map (Chapter~\ref{ergodic-theory}): $T$ is \emph{ergodic} for $\mu$, so by Birkhoff's ergodic theorem, time averages along almost
+every orbit equal space averages. The main consequences, proved in \cite{khinchin-continued-fractions} and \cite{einsiedler-ward}, are:
+\begin{enumerate}
+\item (\emph{Khinchin, divergence half}) If $q \mapsto q\psi(q)$ is non-increasing and $\sum_qq\psi(q) = \infty$, then for almost every $x$, $|x - p/q| < \psi(q)$ has infinitely many solutions. With the
+convergence half, this gives a complete criterion; for example $|x - p/q| < 1/(q^2\log q)$ has infinitely many solutions for almost every $x$, in contrast with
+Corollary~\ref{continued-fractions:corollary-almost-all-exponent}.
+\item (\emph{Gauss--Kuzmin}) $\lambda(\{x : T^n(x) < t\}) \to \log(1 + t)/\log 2$ as $n \to \infty$, exponentially fast; Gauss stated this in a letter to Laplace in 1812, and Kuzmin proved it in 1928.
+\item (\emph{Digit frequencies}) For almost every $x$, the partial quotient $k$ occurs with frequency $\mu(\{a_1 = k\}) = \log_2(1 + 1/(k(k + 2)))$ (Exercise~\ref{continued-fractions:exercise-gauss-digits}): $41.5\%$
+of the partial quotients are $1$, $17.0\%$ are $2$, $9.3\%$ are $3$.
+\item (\emph{Khinchin's constant}) For almost every $x$, $(a_1(x)\cdots a_n(x))^{1/n} \to K_0 = \prod_{k \geq 1}(1 + 1/(k(k + 2)))^{\log_2k} = 2.6854\ldots$, while the arithmetic means
+$(a_1 + \cdots + a_n)/n$ tend to $\infty$.
+\item (\emph{Lévy's constant}) For almost every $x$, $q_n(x)^{1/n} \to e^{\pi^2/(12\log 2)} = 3.2758\ldots$, so the convergents improve at a fixed exponential rate.
+\end{enumerate}
+None of these is known for any specific classical constant such as $\pi$: it is not known whether the partial quotients of $\pi$ are unbounded, or whether their geometric means tend to $K_0$. The
+number $e$ is not typical: its partial quotients have geometric means tending to infinity.
+\end{remark}
+
+\section{Equidistribution modulo one}\label{continued-fractions:section-equidistribution}
+
+Kronecker's theorem says that for irrational $\alpha$ the fractional parts $\{n\alpha\}$ are dense in $[0, 1)$ (indeed $\ZZ + \alpha\ZZ$ is a non-cyclic subgroup of $\RR$, hence dense). Much more is
+true: the points $\{n\alpha\}$ visit every interval with the right frequency.
+
+\begin{definition}\label{continued-fractions:definition-equidistributed}
+A sequence $(x_n)_{n \geq 1}$ of real numbers is \emph{equidistributed modulo $1$} if for all $0 \leq a < b \leq 1$,
+\[
+\lim_{N \to \infty}\frac{1}{N}\#\{n \leq N : \{x_n\} \in [a, b)\} = b - a.
+\]
+\end{definition}
+
+\begin{example}\label{continued-fractions:example-equidistribution}
+\begin{enumerate}
+\item If $\alpha = r/s$ is rational, $\{n\alpha\}$ takes only the $s$ values $0, 1/s, \ldots, (s - 1)/s$, so it is not equidistributed: the interval $(0, 1/s)$ is never visited.
+\item The sequence $x_n = \log n$ is not equidistributed (Exercise~\ref{continued-fractions:exercise-log-not-equidistributed}): it grows too slowly, and spends long stretches in each half of $[0, 1)$.
+\item The sequence $0, \frac12, 0, \frac13, \frac23, 0, \frac14, \frac24, \frac34, \ldots$ (the fractions $j/k$, $0 \leq j < k$, listed for $k = 1, 2, \ldots$) is equidistributed: after the block $k$, an
+interval $[a, b)$ contains $\sum_{j \leq k}((b - a)j + O(1))$ of the $\sum_{j \leq k}j$ terms, and an incomplete block changes the count by $O(k)$, negligible against the number
+$N \geq k(k + 1)/2$ of terms.
+\end{enumerate}
+\end{example}
+
+\begin{theorem}[Weyl's criterion]\label{continued-fractions:theorem-weyl-criterion}
+For a real sequence $(x_n)$ the following are equivalent:
+\begin{enumerate}
+\item $(x_n)$ is equidistributed modulo $1$;
+\item for every continuous function $f \colon \RR \to \CC$ of period $1$, $\frac1N\sum_{n=1}^Nf(x_n) \to \int_0^1f(x)\,dx$;
+\item for every integer $h \neq 0$, $\frac1N\sum_{n=1}^Ne^{2\pi ihx_n} \to 0$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{(1) implies (2).} Condition (1) says that (2) holds for indicator functions of intervals $[a, b) \subseteq [0, 1)$ extended with period $1$, hence for their linear combinations, the step functions.
+Let $f$ be continuous of period $1$; treating real and imaginary parts separately we may assume $f$ real. Given $\varepsilon > 0$, uniform continuity on $[0, 1]$ gives $K$ such that $f$ varies by less
+than $\varepsilon$ on each $[j/K, (j + 1)/K)$. The step functions $s_\pm$ equal on these intervals to the infimum and supremum of $f$ there satisfy $s_- \leq f \leq s_+$ and
+$\int_0^1(s_+ - s_-) \leq \varepsilon$. Since $f(x_n) = f(\{x_n\})$,
+\[
+\begin{aligned}
+\int_0^1f - \varepsilon &\leq \int_0^1s_- = \lim\frac1N\sum s_-(x_n) \leq \liminf\frac1N\sum f(x_n)\\
+&\leq \limsup\frac1N\sum f(x_n) \leq \int_0^1s_+ \leq \int_0^1f + \varepsilon.
+\end{aligned}
+\]
+
+\emph{(2) implies (3).} Take $f(x) = e^{2\pi ihx}$, whose integral over $[0, 1]$ is $0$ for $h \neq 0$.
+
+\emph{(3) implies (2).} By (3), (2) holds for trigonometric polynomials $P(x) = \sum_{|h| \leq H}c_he^{2\pi ihx}$, with limit $c_0 = \int_0^1P$. A continuous function $f$ of period $1$ is
+$f(x) = \tilde{f}(e^{2\pi ix})$ for a continuous $\tilde{f}$ on the unit circle $S^1$ (Theorem~\ref{real-analysis:theorem-pi}: $x \mapsto e^{2\pi ix}$ is a covering map with fibres $x + \ZZ$, so
+$\tilde{f}$ is well defined, and continuous because it is locally $f$ composed with a continuous local inverse). The polynomials in $z$ and $\bar{z}$ form a subalgebra of $C(S^1, \CC)$ containing the
+constants, separating points and closed under conjugation, so by the Stone--Weierstrass theorem (Theorem~\ref{real-analysis:theorem-stone-weierstrass}) they are dense; and
+$z^j\bar{z}^l = e^{2\pi i(j - l)x}$ on $S^1$. So for $\varepsilon > 0$ there is a trigonometric polynomial $P$ with $|f - P| < \varepsilon$ everywhere, and then
+$\limsup|\frac1N\sum f(x_n) - \int_0^1f| \leq 2\varepsilon + \limsup|\frac1N\sum P(x_n) - \int_0^1P| = 2\varepsilon$.
+
+\emph{(2) implies (1).} Let $0 \leq a < b \leq 1$ and $\varepsilon > 0$ with $\varepsilon < (b - a)/2$. Let $g$ be the continuous function of period $1$ that is $1$ on $[a + \varepsilon, b - \varepsilon]$, $0$
+on $[0, 1] \setminus (a, b)$, and linear in between. If $b - a + 2\varepsilon \geq 1$ let $G = 1$; otherwise let $G$ be the continuous function of period $1$ that on the interval
+$[a - \varepsilon, a - \varepsilon + 1)$ is $1$ on $[a, b]$, $0$ on $[b + \varepsilon, a - \varepsilon + 1)$, and linear on $[a - \varepsilon, a]$ and $[b, b + \varepsilon]$. Then $g \leq \mathbf{1}_{[a, b)} \leq G$ on $[0, 1)$ and
+$b - a - 2\varepsilon \leq \int g \leq \int G \leq b - a + 2\varepsilon$, and the counting function is squeezed as in the first step.
+\end{proof}
+
+\begin{theorem}[Bohl, Sierpiński, Weyl]\label{continued-fractions:theorem-weyl-linear}
+For irrational $\alpha$ and every real $\beta$, the sequence $(n\alpha + \beta)_{n \geq 1}$ is equidistributed modulo $1$.
+\end{theorem}
+
+\begin{proof}
+Let $h \neq 0$. Then $e^{2\pi ih\alpha} \neq 1$ since $h\alpha \notin \ZZ$, so summing the geometric series,
+\[
+\Bigl|\sum_{n=1}^Ne^{2\pi ih(n\alpha + \beta)}\Bigr| = \Bigl|e^{2\pi ih(\alpha + \beta)}\frac{e^{2\pi ihN\alpha} - 1}{e^{2\pi ih\alpha} - 1}\Bigr| \leq \frac{2}{|e^{2\pi ih\alpha} - 1|},
+\]
+which is bounded in $N$. Dividing by $N$ gives Weyl's condition (3).
+\end{proof}
+
+\begin{example}\label{continued-fractions:example-benford}
+\emph{Leading digits of $2^n$.} The leading decimal digit of $2^n$ is $k$ if and only if $k \cdot 10^m \leq 2^n < (k + 1)10^m$ for some $m$, that is, $\{n\log_{10}2\} \in [\log_{10}k, \log_{10}(k + 1))$.
+The number $\log_{10}2$ is irrational, since $2^b = 10^a$ with $b \geq 1$ is impossible ($5$ does not divide $2^b$). By Theorem~\ref{continued-fractions:theorem-weyl-linear}, the digit $k$ occurs as leading
+digit of $2^n$ with frequency $\log_{10}(1 + 1/k)$: about $30.1\%$ of the powers of $2$ begin with $1$, $17.6\%$ with $2$, and only $4.6\%$ with $9$ (\emph{Benford's law}). Every finite string of digits
+occurs as the beginning of some power of $2$; for example $2^{46} = 70368744177664$ is the first power of $2$ beginning with $7$.
+\end{example}
+
+For polynomial sequences such as $n^2\alpha$ the sums no longer telescope. Van der Corput's idea is to reduce the degree by taking differences.
+
+\begin{lemma}[van der Corput's inequality]\label{continued-fractions:lemma-van-der-corput}
+Let $u_1, \ldots, u_N$ be complex numbers and $1 \leq H \leq N$. Then
+\[
+\begin{aligned}
+H^2\Bigl|\sum_{n=1}^Nu_n\Bigr|^2 &\leq H(N + H - 1)\sum_{n=1}^N|u_n|^2\\
+&\quad + 2(N + H - 1)\sum_{h=1}^{H-1}(H - h)\operatorname{Re}\sum_{n=1}^{N-h}u_{n+h}\bar{u}_n.
+\end{aligned}
+\]
+\end{lemma}
+
+\begin{proof}
+Put $u_n = 0$ for $n \leq 0$ and $n > N$. Each $u_m$ with $1 \leq m \leq N$ appears exactly $H$ times in the double sum $\sum_{n=1}^{N+H-1}\sum_{r=0}^{H-1}u_{n-r}$, so by the Cauchy--Schwarz
+inequality
+\[
+H^2\Bigl|\sum_mu_m\Bigr|^2 = \Bigl|\sum_{n=1}^{N+H-1}\sum_{r=0}^{H-1}u_{n-r}\Bigr|^2 \leq (N + H - 1)\sum_{n=1}^{N+H-1}\Bigl|\sum_{r=0}^{H-1}u_{n-r}\Bigr|^2.
+\]
+Expanding the square, $\sum_n|\sum_ru_{n-r}|^2 = \sum_{r,s=0}^{H-1}\sum_nu_{n-r}\bar{u}_{n-s}$; for fixed $r, s$, as $n$ runs over $[1, N + H - 1]$ the index $m = n - s$ covers $[1, N]$, so the inner sum is
+$c(s - r) = \sum_mu_{m+s-r}\bar{u}_m$. There are $H - |h|$ pairs $(r, s)$ with $s - r = h$, and $c(-h) = \overline{c(h)}$, so the total is
+$Hc(0) + \sum_{h=1}^{H-1}(H - h)2\operatorname{Re}c(h)$, with $c(0) = \sum|u_n|^2$ and $c(h) = \sum_{n=1}^{N-h}u_{n+h}\bar{u}_n$.
+\end{proof}
+
+\begin{theorem}[van der Corput's difference theorem]\label{continued-fractions:theorem-van-der-corput}
+If for every integer $h \geq 1$ the sequence $(x_{n+h} - x_n)_{n \geq 1}$ is equidistributed modulo $1$, then so is $(x_n)$.
+\end{theorem}
+
+\begin{proof}
+Fix an integer $k \neq 0$ and let $u_n = e^{2\pi ikx_n}$. Then $|u_n| = 1$ and $u_{n+h}\bar{u}_n = e^{2\pi ik(x_{n+h} - x_n)}$, so by Weyl's criterion applied to the difference sequences,
+$\frac1N\sum_{n=1}^{N-h}u_{n+h}\bar{u}_n \to 0$ for each $h \geq 1$. Dividing the inequality of Lemma~\ref{continued-fractions:lemma-van-der-corput} by $H^2N^2$, for fixed $H$,
+\[
+\Bigl|\frac1N\sum_{n=1}^Nu_n\Bigr|^2 \leq \frac{N + H - 1}{HN} + \frac{2(N + H - 1)}{H^2N}\sum_{h=1}^{H-1}(H - h)\Bigl|\frac1N\sum_{n=1}^{N-h}u_{n+h}\bar{u}_n\Bigr|.
+\]
+As $N \to \infty$ the right side tends to $1/H$. So the $\limsup$ of the left side is at most $1/H$ for every $H$, hence $0$, and Weyl's criterion applies.
+\end{proof}
+
+\begin{theorem}[Weyl]\label{continued-fractions:theorem-weyl-polynomial}
+Let $P(x) = c_dx^d + \cdots + c_1x + c_0$ be a real polynomial of degree $d \geq 1$ whose leading coefficient $c_d$ is irrational. Then $(P(n))_{n \geq 1}$ is equidistributed modulo $1$.
+\end{theorem}
+
+\begin{proof}
+Induction on $d$. For $d = 1$ this is Theorem~\ref{continued-fractions:theorem-weyl-linear}. For $d \geq 2$ and $h \geq 1$, $P(n + h) - P(n)$ is a polynomial in $n$ of degree $d - 1$ with leading
+coefficient $dhc_d$, which is irrational; by induction the difference sequences are equidistributed, and Theorem~\ref{continued-fractions:theorem-van-der-corput} concludes.
+\end{proof}
+
+So $\{n^2\sqrt2\}$ and $\{n^3e\}$ are equidistributed. The hypothesis can be weakened to ``some coefficient other than $c_0$ is irrational'' (Exercise~\ref{continued-fractions:exercise-weyl-general}),
+and this is optimal, since if all of $c_1, \ldots, c_d$ are rational, $P(n) - c_0$ takes finitely many values modulo $1$. Equidistribution of $\{n^2\alpha\}$ is the beginning of a long story: the
+exponential sums $\sum e^{2\pi iP(n)}$ (Weyl sums) are a main tool of analytic number theory, for instance in the Hardy--Littlewood circle method for Waring's problem.
+
+\subsection{The three-gap theorem}\label{continued-fractions:subsection-three-gap}
+
+Equidistribution concerns the long run. For a fixed $N$, the $N$ points $\{n\alpha\}$, $0 \leq n < N$, cut the circle $\RR/\ZZ$ into $N$ arcs, and their lengths are surprisingly rigid. On the circle we
+write $x + t$ for the point reached from $x$ by moving a distance $t$ counterclockwise; the counterclockwise distance from $x_n = n\alpha$ to $x_m = m\alpha$ is $\{(m - n)\alpha\}$.
+
+\begin{theorem}[Three-gap theorem]\label{continued-fractions:theorem-three-gap}
+Let $\alpha$ be irrational and $N \geq 2$. Let $u = \min_{1 \leq k < N}\{k\alpha\} = \{a\alpha\}$ and $v = \min_{1 \leq k < N}\{-k\alpha\} = \{-b\alpha\}$, with $1 \leq a, b < N$. Then the $N$ arcs into
+which the points $x_n = n\alpha \bmod 1$, $0 \leq n < N$, divide the circle have lengths in $\{u, v, u + v\}$. More precisely, the arc starting at $x_n$ (counterclockwise) has length
+\[
+u \text{ if } n + a < N, \qquad v \text{ if } n \geq b, \qquad u + v \text{ if } n + a \geq N \text{ and } n < b.
+\]
+Exactly one case applies to each $n$, so $a + b \geq N$, and there are $N - a$ arcs of length $u$, $N - b$ of length $v$ and $a + b - N$ of length $u + v$.
+\end{theorem}
+
+\begin{proof}
+For $1 \leq k < N$ we have $\{k\alpha\} \geq u$ and $\{-k\alpha\} \geq v$, with equality only for $k = a$, respectively $k = b$, since $\{k\alpha\} = \{l\alpha\}$ implies $k = l$. Let $g_n$ be the length of the
+arc starting at $x_n$, that is, the least of the distances $\{(m - n)\alpha\}$, $m \neq n$.
+
+\emph{Case $n + a < N$.} The point $x_{n+a} = x_n + u$ shows $g_n \leq u$. Suppose some $x_m$ is at distance $\delta = \{(m - n)\alpha\} < u$ from $x_n$. If $m > n$, this contradicts the minimality of $u$.
+If $m < n$, then $x_{n+a} = x_m + (u - \delta)$, so $\{(n + a - m)\alpha\} = u - \delta < u$ with $1 \leq n + a - m < N$, again a contradiction. So $g_n = u$.
+
+\emph{Case $n \geq b$.} Symmetrically, $x_{n-b} = x_n + v$ gives $g_n \leq v$. If $\delta = \{(m - n)\alpha\} < v$ for some $m$: for $m < n$ this says $\{-(n - m)\alpha\} < v$, a contradiction; for $m > n$,
+$x_{n-b} = x_m + (v - \delta)$, so $\{-(m - n + b)\alpha\} = v - \delta < v$ with $1 \leq m - n + b \leq m < N$, a contradiction. So $g_n = v$.
+
+\emph{Case $n + a \geq N$ and $n < b$.} Since $u$ and $1 - v$ are the least and the largest of the numbers $\{k\alpha\}$, $1 \leq k < N$, we have $u + v \leq 1$, with equality only if $N = 2$; but for
+$N = 2$ this case does not occur ($a = b = 1$), so $u + v < 1$. The index $c = n + a - b$ satisfies $1 \leq N - b \leq c < a < N$, and $x_c = x_n + u + v$, so $g_n \leq u + v$. Suppose
+$\delta = \{(m - n)\alpha\} < u + v$ for some $m \neq n$. If $m > n$, then $\delta \geq u$, with $\delta \neq u$ because $m = n + a \geq N$ is impossible; so $\{(m - n - a)\alpha\} = \delta - u \in (0, v)$,
+that is, $\{-j\alpha\} < v$ for $j = a - (m - n)$, and $1 \leq j < N$ because $m - n \leq N - 1 - n \leq a - 1$; a contradiction. If $m < n$, then $\delta = \{-(n - m)\alpha\} \geq v$, with $\delta \neq v$
+because $n - m = b$ would give $n \geq b$; so $\{(m - n + b)\alpha\} = \delta - v \in (0, u)$, and $j = m - n + b$ satisfies $1 \leq j \leq b - 1$, contradicting the minimality of $u$. So $g_n = u + v$.
+
+\emph{Counting.} The three conditions cover all $n$. If the first two held for the same $n$, we would get $u = v$, that is, $\{a\alpha\} = \{-b\alpha\}$, so $(a + b)\alpha \in \ZZ$, impossible. So the
+sets $\{n < N - a\}$ and $\{n \geq b\}$ are disjoint, which means $N - a \leq b$, and the counts follow.
+\end{proof}
+
+\begin{example}\label{continued-fractions:example-three-gap}
+Let $\alpha = \varphi - 1 = 0.6180\ldots$ and $N = 4$. The points are $0$, $0.618$, $0.236$, $0.854$; in increasing order $0, 0.236, 0.618, 0.854$, with arcs $0.236$, $0.382$, $0.236$, $0.146$. Here
+$u = \{2\alpha\} = 0.236$ ($a = 2$) and $v = \{-3\alpha\} = 0.146$ ($b = 3$): there are $N - a = 2$ arcs of length $u$, $N - b = 1$ of length $v$ and $a + b - N = 1$ of length $u + v = 0.382$. The
+smaller of $u$ and $v$ is $\min_{1 \leq k < N}\lVert k\alpha \rVert = |q_j\alpha - p_j|$, where $q_j < N \leq q_{j+1}$, by Theorem~\ref{continued-fractions:theorem-best}. The theorem was conjectured by Steinhaus
+and proved independently by Sós, Surányi and Świerczkowski in 1957--1958 \cite{sos-1958}.
+\end{example}
+
+As a by-product, comparing the total length with $1$ gives $(N - a)u + (N - b)v + (a + b - N)(u + v) = bu + av = 1$, a curious identity relating the two closest returns.
+
+\section{Exercises}\label{continued-fractions:section-exercises}
+
+\begin{exercise}\label{continued-fractions:exercise-denominator-bounds}
+Let $[a_0; a_1, \ldots, a_n]$ be a simple continued fraction. Show that $a_1a_2\cdots a_n \leq q_n \leq (a_1 + 1)(a_2 + 1)\cdots(a_n + 1)$.
+\end{exercise}
+
+\begin{solution}
+For $n \geq 1$, $q_n = a_nq_{n-1} + q_{n-2}$ with $0 \leq q_{n-2} \leq q_{n-1}$, so $a_nq_{n-1} \leq q_n \leq (a_n + 1)q_{n-1}$. Since $q_0 = 1$, induction gives both inequalities.
+\end{solution}
+
+\begin{exercise}\label{continued-fractions:exercise-negative}
+Let $\alpha = [a_0; a_1, a_2, \ldots]$ be irrational. Show that $-\alpha = [-a_0 - 1; 1, a_1 - 1, a_2, a_3, \ldots]$ if $a_1 \geq 2$, and $-\alpha = [-a_0 - 1; a_2 + 1, a_3, a_4, \ldots]$ if
+$a_1 = 1$. Find the expansion of $-\sqrt2$.
+\end{exercise}
+
+\begin{solution}
+Write $\alpha = a_0 + 1/\alpha_1$ with $\alpha_1 > 1$. Then $-\alpha = (-a_0 - 1) + (1 - 1/\alpha_1)$ and $0 < 1 - 1/\alpha_1 < 1$, so the integer part of $-\alpha$ is $-a_0 - 1$ and the next complete
+quotient is $\beta = 1/(1 - 1/\alpha_1) = \alpha_1/(\alpha_1 - 1) = 1 + 1/(\alpha_1 - 1)$. If $a_1 \geq 2$, then $\alpha_1 - 1 = [a_1 - 1; a_2, \ldots] > 1$, so $\beta = [1; a_1 - 1, a_2, \ldots]$. If
+$a_1 = 1$, then $\alpha_1 - 1 = 1/\alpha_2$ and $\beta = 1 + \alpha_2 = [a_2 + 1; a_3, \ldots]$. In both cases uniqueness of expansions gives the claim. For $\sqrt2 = [1; 2, 2, \ldots]$:
+$-\sqrt2 = [-2; 1, 1, 2, 2, 2, \ldots]$, and indeed $-2 + 1/(1 + 1/(1 + \sqrt2 - 1)) = -2 + \sqrt2/(\sqrt2 + 1) = -2 + 2 - \sqrt2$.
+\end{solution}
+
+\begin{exercise}\label{continued-fractions:exercise-square-roots}
+Let $n \geq 1$. Show that $\sqrt{n^2 + 1} = [n; \overline{2n}]$, $\sqrt{n^2 + 2} = [n; \overline{n, 2n}]$, and, for $n \geq 2$, $\sqrt{n^2 - 1} = [n - 1; \overline{1, 2n - 2}]$. Deduce the
+fundamental solutions of the corresponding Pell equations, and decide when $x^2 - dy^2 = -1$ is solvable for these $d$.
+\end{exercise}
+
+\begin{solution}
+(1) $\sqrt{n^2 + 1} - n = 1/(\sqrt{n^2 + 1} + n)$, and $\sqrt{n^2 + 1} + n = 2n + (\sqrt{n^2 + 1} - n)$ with $0 < \sqrt{n^2 + 1} - n < 1$; so every complete quotient after the first is
+$\sqrt{n^2 + 1} + n$, with partial quotient $2n$. The period is $1$, odd, so $\eta = n + \sqrt{n^2 + 1}$ has norm $-1$ and $\varepsilon = \eta^2 = 2n^2 + 1 + 2n\sqrt{n^2 + 1}$.
+(2) $\alpha_1 = 1/(\sqrt{n^2 + 2} - n) = (\sqrt{n^2 + 2} + n)/2$, which lies in $(n, n + 1)$ because $2n < \sqrt{n^2 + 2} + n < 2n + 2$; so $a_1 = n$,
+$\alpha_1 - n = (\sqrt{n^2 + 2} - n)/2$, $\alpha_2 = 2/(\sqrt{n^2 + 2} - n) = \sqrt{n^2 + 2} + n$, $a_2 = 2n$, and $\alpha_2 - 2n = \sqrt{n^2 + 2} - n$, so $\alpha_3 = \alpha_1$. The period is $2$ and
+$(p_1, q_1) = (n^2 + 1, n)$: indeed $(n^2 + 1)^2 - (n^2 + 2)n^2 = 1$; the equation with $-1$ is unsolvable. (3) $a_0 = n - 1$ for $n \geq 2$, $\alpha_1 = 1/(\sqrt{n^2 - 1} - (n - 1)) = (\sqrt{n^2 - 1} + n - 1)/(2n - 2)$,
+which lies in $(1, 2)$ because $n - 1 < \sqrt{n^2 - 1} < n$; so $a_1 = 1$, $\alpha_2 = (2n - 2)/(\sqrt{n^2 - 1} - (n - 1)) = \sqrt{n^2 - 1} + n - 1$, $a_2 = 2n - 2$, and the remainder
+$\sqrt{n^2 - 1} - (n - 1)$ repeats. The period is $2$, and $(p_1, q_1) = (n, 1)$, with $n^2 - (n^2 - 1) = 1$; the equation with $-1$ is unsolvable.
+\end{solution}
+
+\begin{exercise}\label{continued-fractions:exercise-pell-29}
+Compute the continued fraction of $\sqrt{29}$ with Proposition~\ref{continued-fractions:proposition-sqrt-algorithm}, and find the smallest positive solutions of $x^2 - 29y^2 = -1$ and of
+$x^2 - 29y^2 = 1$.
+\end{exercise}
+
+\begin{solution}
+With $a_0 = 5$: $(m_1, d_1, a_1) = (5, 4, 2)$, $(m_2, d_2, a_2) = (3, 5, 1)$, $(m_3, d_3, a_3) = (2, 5, 1)$, $(m_4, d_4, a_4) = (3, 4, 2)$, $(m_5, d_5, a_5) = (5, 1, 10)$, so
+$\sqrt{29} = [5; \overline{2, 1, 1, 2, 10}]$ with period $5$. The convergents are $5, 11/2, 16/3, 27/5, 70/13$, and $70^2 - 29 \cdot 13^2 = 4900 - 4901 = -1$. By
+Theorem~\ref{continued-fractions:theorem-pell-group}, the smallest solution of $x^2 - 29y^2 = 1$ comes from $(70 + 13\sqrt{29})^2 = 9801 + 1820\sqrt{29}$.
+\end{solution}
+
+\begin{exercise}\label{continued-fractions:exercise-pell-two}
+Show that the positive solutions of $x^2 - 2y^2 = -1$ are given by $x + y\sqrt2 = (1 + \sqrt2)^{2k+1}$, $k \geq 0$, and deduce that there are infinitely many triangular numbers $T_m = m(m + 1)/2$ that
+are perfect squares.
+\end{exercise}
+
+\begin{solution}
+By Theorem~\ref{continued-fractions:theorem-pell-group} with $\eta = 1 + \sqrt2$ of norm $-1$, the units of norm $-1$ greater than $1$ are the odd powers of $\eta$, and units greater than $1$ are exactly
+the $x + y\sqrt2$ with $x, y \geq 1$. For the triangular numbers, $m(m + 1)/2 = s^2$ is equivalent to $(2m + 1)^2 - 8s^2 = 1$, that is, $X^2 - 2Y^2 = 1$ with $X = 2m + 1$, $Y = 2s$. The solutions of
+$X^2 - 2Y^2 = 1$ are the even powers $(3 + 2\sqrt2)^k$, and in all of them $X$ is odd and $Y$ even (true for $(3, 2)$, and preserved by multiplication by $3 + 2\sqrt2$: $(X, Y) \mapsto (3X + 4Y, 2X + 3Y)$).
+So each gives a square triangular number: $T_1 = 1$, $T_8 = 36$, $T_{49} = 1225 = 35^2$, \ldots
+\end{solution}
+
+\begin{exercise}\label{continued-fractions:exercise-legendre-sharp}
+Let $k \geq 1$ and $\alpha = [0; \overline{k, 2}]$. Show that $1/(k + 1)$ is not a convergent of $\alpha$, and that $(k + 1)^2|\alpha - 1/(k + 1)| < (k + 1)^2/(k(2k + 1))$. Deduce that the constant
+$\frac12$ in Legendre's theorem (Theorem~\ref{continued-fractions:theorem-legendre}) cannot be replaced by any $c > \frac12$.
+\end{exercise}
+
+\begin{solution}
+The denominators of the convergents are $q_0 = 1$, $q_1 = k$, $q_2 = 2k + 1$, and they increase from then on; $k + 1$ is not among them, so the reduced fraction $1/(k + 1)$ is not a convergent. Write
+$\alpha = [0; k, \alpha_2]$ with $\alpha_2 = [2; k, 2, \ldots] \in (2, 2 + 1/k)$. Then $\alpha = \alpha_2/(k\alpha_2 + 1)$ and
+\[
+\alpha - \frac{1}{k + 1} = \frac{(k + 1)\alpha_2 - k\alpha_2 - 1}{(k\alpha_2 + 1)(k + 1)} = \frac{\alpha_2 - 1}{(k\alpha_2 + 1)(k + 1)},
+\]
+so $(k + 1)^2|\alpha - 1/(k + 1)| = (k + 1)(\alpha_2 - 1)/(k\alpha_2 + 1)$. Writing $\alpha_2 = 2 + \varepsilon$ with $0 < \varepsilon < 1/k$, this is
+$(k + 1)(1 + \varepsilon)/(2k + 1 + k\varepsilon) < (k + 1)(1 + 1/k)/(2k + 1) = (k + 1)^2/(k(2k + 1))$. The bound tends to $\frac12$ as $k \to \infty$; so for $c > \frac12$ and $k$ large,
+$|\alpha - 1/(k + 1)| < c/(k + 1)^2$ although $1/(k + 1)$ is not a convergent.
+\end{solution}
+
+\begin{exercise}\label{continued-fractions:exercise-sqrt-two-constant}
+Show that $|\sqrt2 - p/q| < 1/(Aq^2)$ has infinitely many solutions if $A < 2\sqrt2$ and finitely many if $A > 2\sqrt2$.
+\end{exercise}
+
+\begin{solution}
+For $\sqrt2 = [1; \overline{2}]$, $\alpha_{n+1} = 1 + \sqrt2$ for all $n \geq 0$, and $\beta_n = q_{n-1}/q_n = [0; 2, \ldots, 2] \to [0; \overline{2}] = \sqrt2 - 1$. So in
+\eqref{continued-fractions:equation-lambda}, $\lambda_n \to 2\sqrt2$, and $\lambda_n \neq 2\sqrt2$ since $\beta_n$ is rational. If $A < 2\sqrt2$, then $\lambda_n > A$ for large $n$, and the convergents give
+infinitely many solutions. If $A > 2\sqrt2 > 2$, every solution is equal to a convergent (Theorem~\ref{continued-fractions:theorem-legendre}), with $\lambda_n > A$ (as in Step 3 of the proof of
+Theorem~\ref{continued-fractions:theorem-hurwitz}), which happens for finitely many $n$ only.
+\end{solution}
+
+\begin{exercise}\label{continued-fractions:exercise-farey-sums}
+Let $N \geq 1$. Show that $\sum 1/(kk^{\prime}) = 1$, the sum over all pairs of neighbours $h/k < h^{\prime}/k^{\prime}$ in $\mathcal{F}_N$, and that the sum of all terms of $\mathcal{F}_N$ is
+$|\mathcal{F}_N|/2$.
+\end{exercise}
+
+\begin{solution}
+By Theorem~\ref{continued-fractions:theorem-farey}(1), $h^{\prime}/k^{\prime} - h/k = 1/(kk^{\prime})$ for neighbours, so the sum telescopes to $\frac11 - \frac01 = 1$. For the second claim, $h/k \mapsto (k - h)/k$
+is a bijection of $\mathcal{F}_N$ onto itself (reduced fractions go to reduced fractions), so the sum $S$ satisfies $S = \sum(1 - h/k) = |\mathcal{F}_N| - S$.
+\end{solution}
+
+\begin{exercise}\label{continued-fractions:exercise-liouville}
+(1) Show that $\sum_{k \geq 1}2^{-k!}$ is transcendental. (2) Let $\beta = \sum_{k \geq 0}10^{-2^k}$. Show that the truncations $p/q$ of the series satisfy $|\beta - p/q| \asymp q^{-2}$, so that the
+argument of Theorem~\ref{continued-fractions:theorem-liouville-numbers} does not apply. (The number $\beta$ is in fact transcendental, by a theorem of Mahler.)
+\end{exercise}
+
+\begin{solution}
+(1) With $q = 2^{n!}$ and $p/q$ the $n$-th partial sum, $0 < \sum_{k > n}2^{-k!} < 2 \cdot 2^{-(n+1)!} = 2q^{-(n+1)} \leq q^{-n}$, so the number is a Liouville number; apply
+Theorem~\ref{continued-fractions:theorem-liouville-numbers}. (2) With $q = 10^{2^n}$, $\beta - p/q = 10^{-2^{n+1}} + 10^{-2^{n+2}} + \cdots$ lies between $q^{-2}$ and $2q^{-2}$. So the truncations only
+give exponent $2$, as for almost every number (Corollary~\ref{continued-fractions:corollary-almost-all-exponent}).
+\end{solution}
+
+\begin{exercise}\label{continued-fractions:exercise-gauss-digits}
+Show that $\mu(\{x : a_1(x) = k\}) = \log_2\bigl(1 + \frac{1}{k(k + 2)}\bigr)$ for the Gauss measure $\mu$, that these numbers sum to $1$, and that $\mu(\{x : a_n(x) = k\})$ is the same for all $n \geq 1$.
+\end{exercise}
+
+\begin{solution}
+$a_1(x) = k$ means $x \in (1/(k + 1), 1/k]$ (up to the rational endpoints), so
+$\mu = \frac{1}{\log 2}\bigl(\log(1 + \frac1k) - \log(1 + \frac{1}{k+1})\bigr) = \log_2\frac{(k + 1)^2}{k(k + 2)} = \log_2(1 + \frac{1}{k(k + 2)})$. The sum over $k \leq K$ telescopes to
+$\log_2 2 - \log_2(1 + \frac{1}{K + 1}) \to 1$. Finally $\{a_n = k\} = T^{-(n-1)}\{a_1 = k\}$, which has the same Gauss measure by Theorem~\ref{continued-fractions:theorem-gauss-measure}.
+\end{solution}
+
+\begin{exercise}\label{continued-fractions:exercise-log-not-equidistributed}
+Show that $(\log n)_{n \geq 1}$ is not equidistributed modulo $1$: the proportion of $n \leq e^{K + 1/2}$ with $\{\log n\} < \frac12$ tends to $\sqrt e/(\sqrt e + 1) \approx 0.62$ as $K \to \infty$.
+\end{exercise}
+
+\begin{solution}
+$\{\log n\} < \frac12$ means $e^j \leq n < e^{j + 1/2}$ for some integer $j \geq 0$, and such an interval contains $e^{j + 1/2} - e^j + O(1)$ integers. For $N = \lfloor e^{K + 1/2} \rfloor$ the count is
+\[
+\sum_{j=0}^K(e^{j + 1/2} - e^j) + O(K) = (\sqrt e - 1)\frac{e^{K+1} - 1}{e - 1} + O(K).
+\]
+Dividing by $N = e^{K + 1/2} + O(1)$ and using $e - 1 = (\sqrt e - 1)(\sqrt e + 1)$, the proportion tends to $\sqrt e/(\sqrt e + 1) \neq \frac12$.
+\end{solution}
+
+\begin{exercise}\label{continued-fractions:exercise-weyl-general}
+Let $P(x) = c_dx^d + \cdots + c_0$ be a real polynomial such that some $c_j$ with $j \geq 1$ is irrational. Show that $(P(n))$ is equidistributed modulo $1$.
+\end{exercise}
+
+\begin{solution}
+Let $j \geq 1$ be the largest index with $c_j$ irrational, and $Q \geq 1$ a common denominator of $c_{j+1}, \ldots, c_d$. For $0 \leq r < Q$ and $n = Qm + r$, $(Qm + r)^i \equiv r^i$ modulo $Q$, so
+$c_i(Qm + r)^i - c_ir^i \in \ZZ$ for $i > j$. Hence $P(Qm + r) \equiv P_r(m) \pmod 1$, where $P_r(m) = \sum_{i \leq j}c_i(Qm + r)^i + \sum_{i > j}c_ir^i$ is a polynomial in $m$ of degree $j$ with
+irrational leading coefficient $c_jQ^j$. By Theorem~\ref{continued-fractions:theorem-weyl-polynomial} each subsequence $(P(Qm + r))_{m \geq 0}$ is equidistributed. For an interval $[a, b)$, the count up
+to $N$ is the sum over $r$ of the counts along the subsequences up to about $N/Q$, each $(b - a)N/Q + o(N)$; so the total is $(b - a)N + o(N)$.
+\end{solution}
+
+\begin{exercise}\label{continued-fractions:exercise-golden-powers}
+Show that $\lVert\varphi^n\rVert \to 0$, so that $(\varphi^n)$ is not equidistributed modulo $1$, although $\varphi$ is irrational and the sequence grows fast.
+\end{exercise}
+
+\begin{solution}
+By Example~\ref{continued-fractions:example-symmetric}, $\varphi^n + (1 - \varphi)^n$ is an integer (a Lucas number), and $|1 - \varphi| = 0.618\ldots < 1$. So $\lVert\varphi^n\rVert \leq |1 - \varphi|^n \to 0$,
+and for large $n$ the fractional parts lie in $[0, \frac14) \cup (\frac34, 1)$, so the interval $[\frac14, \frac34)$ is visited only finitely often.
+\end{solution}
+
+\begin{exercise}\label{continued-fractions:exercise-three-gap-small}
+Using Theorem~\ref{continued-fractions:theorem-three-gap}, find the arc lengths and their multiplicities for $\alpha = \sqrt2 - 1$ and $N = 3, \ldots, 8$. For which of these $N$ do only two lengths occur?
+\end{exercise}
+
+\begin{solution}
+Here $\{k\alpha\} = 0.414, 0.828, 0.243, 0.657, 0.071, 0.485, 0.899$ for $k = 1, \ldots, 7$. For $N = 3$: $u = 0.414$ ($a = 1$), $v = 1 - 0.828 = 0.172$ ($b = 2$), so two arcs of $u$, one of $v$ and
+none of $u + v$. For $N = 4$ and $N = 5$: $u = 0.243$ ($a = 3$), $v = 0.172$ ($b = 2$); for $N = 4$ one arc of $u$, two of $v$, one of $u + v = 0.414$; for $N = 5$ two of $u$, three of $v$. For $N = 6$ and
+$N = 7$: $u = 0.071$ ($a = 5$), $v = 0.172$ ($b = 2$); for $N = 6$ one of $u$, four of $v$, one of $u + v = 0.243$; for $N = 7$ two of $u$ and five of $v$. For $N = 8$: $u = 0.071$ ($a = 5$),
+$v = 1 - 0.899 = 0.101$ ($b = 7$): three of $u$, one of $v$, four of $u + v = 0.172$. Two lengths occur exactly when $a + b = N$, here for $N = 3, 5, 7$. (In each case the lengths add up to $1$, as
+they should: for $N = 8$, $3 \cdot 0.071 + 0.101 + 4 \cdot 0.172 = 1.002$, up to rounding.)
+\end{solution}

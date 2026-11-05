@@ -84,7 +84,7 @@ counterexamples, exercises with solutions, citations for quoted results.
 ## Order of work (user, 2026-11-05)
 
 1. **Number theory** (Part Number Theory, rebuilt into 12 chapters):
-   ~~`prime-numbers`~~ (done), `continued-fractions`, `diophantine-equations`,
+   ~~`prime-numbers`~~ (done), ~~`continued-fractions`~~ (done), `diophantine-equations`,
    `p-adic-numbers`, `analytic-number-theory`, `algebraic-number-theory`
    (number fields, Dedekind domains, decomposition of primes),
    `geometry-of-numbers`, `cyclotomic-fields`, `local-fields`,
@@ -125,6 +125,23 @@ spectral-sequences 300 (then everything below about 800 lines).
   Chebyshev's bounds, Bertrand (Erdős), Abel summation and Mertens' three
   theorems, Chebyshev's limit theorem, Korselt, Miller–Rabin with proof of the
   1/2 bound, Lucas, AKS identity, Pollard p−1, open problems; 14 exercises.
+- [x] 2026-11-05: `continued-fractions` (complete, about 1700 lines, 131 tags):
+  finite and infinite continued fractions, matrices, Lamé; the expansions of
+  $\varphi$, $\sqrt2$, $\pi$ and $e$ (Cohn's proof); best approximations
+  (Lagrange, Legendre, Vahlen, Hurwitz with the optimal $\sqrt5$), Markov
+  spectrum (remark), Serret's theorem on equivalent numbers, badly
+  approximable numbers; Farey sequences and Ford circles; quadratic
+  irrationals (Euler, Lagrange, Galois, the palindrome of $\sqrt d$, the
+  integer algorithm); Pell's equation with the group of units, $x^2 - dy^2 = N$
+  for $|N| < \sqrt d$; Liouville, Liouville numbers (Baire, measure zero),
+  symmetric polynomials, transcendence of $e$ and $\pi$ with full proofs,
+  irrationality exponent ($\mu(e) = 2$), Roth (statement); Gauss map and Gauss
+  measure, a.e. unbounded partial quotients, Khinchin's convergence theorem;
+  Weyl's criterion, Weyl's theorem for $n\alpha$ and for polynomials (van der
+  Corput), Benford for $2^n$, the three-gap theorem with proof; 14 exercises.
+  When `ergodic-theory` is written, it should prove the ergodicity of the Gauss
+  map and the results of `continued-fractions:remark-metric-results`, and can
+  refer back to Weyl's criterion here.
 - [x] 2026-11-05: removed the paragraphs "On the way to the Hodge conjecture"
   from all chapters (the route stays in the introduction); The Hodge Project
   is linked wherever it is mentioned.
@@ -132,8 +149,9 @@ spectral-sequences 300 (then everything below about 800 lines).
 ## Carried over from The Hodge Project (still open)
 
 - [ ] `number-theory`: Bertrand's postulate (Erdős's proof via central
-  binomial coefficients) and estimates of Chebyshev type; continued fractions
-  and Pell's equation, $p$-adic numbers, Dirichlet characters.
+  binomial coefficients) and estimates of Chebyshev type (done in
+  `prime-numbers`); continued fractions and Pell's equation (done in
+  `continued-fractions`); $p$-adic numbers, Dirichlet characters.
 - [ ] `fields`: constructible numbers as a section (ruler and compass
   constructions, the field of constructible numbers, Wantzel: doubling the
   cube and trisecting the angle are impossible, Gauss–Wantzel for regular
