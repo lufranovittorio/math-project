@@ -21,12 +21,23 @@ python make.py check    # labels, references (no forward references) and tags
 python make.py status   # status of every chapter
 python make.py tags     # give tags to new labels (also done by the builds)
 python make.py pdf      # output/pdf/book.pdf
+python make.py pdf-parts [part-...]  # one PDF per part in output/pdf/parts (after pdf)
 python make.py html     # website in output/html
-python make.py all      # both
+python make.py all      # pdf, pdf-parts and html
+python make.py preview combinatorics ...  # pages of some chapters only (after html)
 python make.py serve    # http://localhost:8000
 ```
 
 The builds stop if `check` finds errors; add `--force` to build anyway.
+
+A full build takes about 25 minutes. While writing a chapter, `python make.py
+preview <slug>` rebuilds only its pages, in about 20 seconds, into
+`output/html/preview/` (open http://localhost:8000/preview/<slug>.html): references to
+other chapters are resolved from `book.paux`, which the last full website
+build left in the root directory, and links to them lead to the pages of that
+build. The part PDFs keep the numbering of the full book; references to other
+parts are printed with their numbers, taken from the aux files of the full
+PDF build.
 
 ## The website
 
@@ -54,10 +65,16 @@ button cycles between light, dark and automatic (dark from 20:00 to 7:00).
 
 ## Publishing
 
-Not yet published. The plan (see `TODO.md`, phase 0) is a GitHub repository
-whose GitHub Actions workflow builds the book and the website on every push
-and deploys the website to GitHub Pages. Until then `python make.py pages`
-records `output/html` as a commit on a local `gh-pages` branch.
+The repository is https://github.com/lufranovittorio/math-project. On every
+push to `main`, the workflow `.github/workflows/build.yml` installs TeX Live
+and plasTeX on a GitHub runner, runs `python make.py check` and `python
+make.py all`, and deploys `output/html` to GitHub Pages:
+https://lufranovittorio.github.io/math-project/. So publishing is `git push`;
+the run takes about 15 minutes, and its log is under the Actions tab.
+
+Every page of the website ends with a link that opens a GitHub issue,
+prefilled with the address of the page, to report an error; section pages show
+the status of their chapter above the text.
 
 ## Writing
 

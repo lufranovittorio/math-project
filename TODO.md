@@ -10,36 +10,20 @@ Done with a short summary.
 
 ## Phase 0: infrastructure (first)
 
-- [ ] **Identity.** Rewrite `chapters/introduction.tex` for the new scope:
-  what the project is, how it is organised, and a reading guide with several
-  reading paths (the Hodge conjecture is one of them; add probability, PDE,
-  numerical analysis, ... as their parts appear). Check the site header, home
-  page, README and PDF title page.
-- [ ] **GitHub repository.** Ask the user for the name (suggestion:
-  `math-project`) and visibility, then create it and push `main`.
-- [ ] **Build in the cloud.** A GitHub Actions workflow that, on every push to
-  `main`, installs TeX Live (with `latexmk`, `dvisvgm`, `tikz-cd`) and plasTeX,
-  runs `python make.py check` and `python make.py all`, and deploys
-  `output/html` to GitHub Pages. Then publishing is just `git push`. Ask the
-  user before enabling it.
-- [ ] **Fast preview.** `python make.py preview <chapter>`: build the HTML of
-  one chapter only, resolving references to other chapters from the last full
-  build, so that writing does not need a 25-minute build.
-- [ ] **PDFs per part** in addition to the full book (the full PDF will become
-  very large).
-- [ ] **Report an error.** A link on every tag page that opens a GitHub issue
-  prefilled with the tag, and the chapter status shown clearly on every page.
-- [ ] **Organisation of `book.tex`.** Insert the new parts below at the place
-  their prerequisites require.
+All done (see Done). Possible later improvements:
+
+- [ ] A per-item "report" link (next to each tag badge) in `web/Themes/math/js/site.js`,
+  prefilling the issue with the tag; the page footer already does it per page.
+- [ ] In the part PDFs, make references to other parts links to the website
+  (now they are printed with the right number but are not links).
 
 ## Phase 1: new parts (one at a time, each chapter complete before the next)
 
 Each new chapter: Prerequisites line, introduction, slow sections, examples,
 counterexamples, exercises with solutions, citations for quoted results.
 
-- [ ] **Discrete mathematics** (after Algebra): `combinatorics` (counting,
-  binomial identities, inclusion–exclusion, pigeonhole, double counting,
-  partitions), `generating-functions` (formal power series, recurrences,
+- [ ] **Discrete mathematics** (after Algebra): ~~`combinatorics`~~ (done),
+  `generating-functions` (formal power series, recurrences,
   Catalan numbers, exponential generating functions, Lagrange inversion),
   `graph-theory` (trees, Euler and Hamilton, matchings and Hall, Menger,
   colourings, planarity and Euler's formula, Ramsey theory, spectral graph
@@ -120,3 +104,33 @@ counterexamples, exercises with solutions, citations for quoted results.
 
 - [x] 2026-11-05: project created as a copy of The Hodge Project (chapters,
   tags, bibliography, `make.py`, website theme), renamed to The Math Project.
+- [x] 2026-11-05: **Identity.** New introduction (aim, history, organisation
+  with the new parts, three ways to read, reading paths for every subject, the
+  Stacks standard of depth); bibliography header renamed.
+- [x] 2026-11-05: **GitHub repository** `lufranovittorio/math-project` (public),
+  `main` pushed.
+- [x] 2026-11-05: **Build in the cloud.** `.github/workflows/build.yml`: on every
+  push to `main` it installs TeX Live and plasTeX, runs `make.py check` and
+  `make.py all`, and deploys `output/html` to GitHub Pages
+  (https://lufranovittorio.github.io/math-project/). Publishing is `git push`.
+- [x] 2026-11-05: **Organisation of `book.tex`.** New parts Discrete
+  Mathematics, Probability and Statistics, Differential Equations and
+  Dynamics, Numerical Analysis, Optimisation and Game Theory, Number Theory,
+  and 33 planned chapters (summary, prerequisites, planned contents).
+- [x] 2026-11-05: **Fast preview.** `python make.py preview <chapter>...`
+  builds the pages of some chapters in about 20 seconds into
+  `output/html/preview/`, with references to other chapters resolved from
+  `book.paux` of the last full build and the whole bibliography.
+- [x] 2026-11-05: **PDFs per part.** `python make.py pdf-parts [part-...]` builds
+  one PDF per part with the numbering of the full book (labels of the other
+  parts from the aux files of the full build); `make.py all` builds them and the
+  table of contents of the website links them.
+- [x] 2026-11-05: **Report an error and status.** Every page ends with a link that
+  opens a prefilled GitHub issue; section pages show the chapter status above
+  the text (chapter pages already showed it under the title).
+- [x] 2026-11-05: `combinatorics` (complete, 1900 lines): basic rules, binomial
+  coefficients (also modulo primes: Lucas, Legendre, Kummer), multisets and the
+  twelvefold way, inclusion–exclusion, Möbius inversion on posets, pigeonhole
+  (Dirichlet, Erdős–Szekeres, R(3,3)), double counting and extremal set theory
+  (LYM, Sperner, Erdős–Ko–Rado), Stirling, Bell, Lah and Eulerian numbers,
+  partitions, Burnside and Pólya; 18 exercises with solutions.

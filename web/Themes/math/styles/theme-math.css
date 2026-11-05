@@ -259,6 +259,27 @@ a.tag:hover { color: var(--accent); border-color: var(--accent); text-decoration
   font-family: var(--sans);
   font-size: 0.8125rem;
 }
+.status-banner.status-compact { margin: 0 auto 1rem; padding: 0.35rem 0.7rem; font-size: 0.75rem; }
+.report-error {
+  margin: 2.5rem 0 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-2);
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+}
+a.part-pdf {
+  margin-left: 0.5rem;
+  padding: 0 0.35rem;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+}
+a.part-pdf:hover { border-color: var(--accent); text-decoration: none; }
 .status-planned { --status-color: var(--c-remark); }
 .status-draft { --status-color: var(--c-exercise); }
 .status-complete { --status-color: var(--c-definition); }
@@ -726,7 +747,7 @@ ol.graph-list { counter-reset: none; }
 
 @media print {
   .site-header, .toc, .breadcrumbs, .local-toc, .page-nav, .skip-link, .print-toolbar, .preview-box,
-  .expand-proof, .status-banner { display: none !important; }
+  .expand-proof, .status-banner, .report-error, a.part-pdf { display: none !important; }
   .layout { display: block; }
   .content, .print-content { max-width: none; margin: 0; padding: 0; }
   body { background: #fff; color: #000; }

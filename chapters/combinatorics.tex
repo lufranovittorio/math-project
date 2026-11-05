@@ -1,25 +1,1952 @@
 \chapter{Combinatorics}\label{combinatorics}
-\chapterstatus{planned}
+\chapterstatus{complete}
 
-Counting finite sets: the basic principles, the binomial and multinomial coefficients and their
-identities, inclusion--exclusion, the pigeonhole principle, double counting, and the numbers that count
-partitions and permutations.
+\section{Introduction}\label{combinatorics:section-introduction}
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{sets} (Set Theory), Chapter~\ref{number-systems} (Number Systems) and Chapter~\ref{groups} (Groups).
-
-\noindent\textbf{On the way to the Hodge conjecture.} This chapter is not needed on the direct
-route; it belongs to the reading path of discrete mathematics
-(Subsection~\ref{introduction:subsection-reading-paths}).
-
-\noindent\textbf{Planned contents.}
+Combinatorics, in its enumerative part, asks \emph{how many}: how many ways are there to choose a committee of $3$ people out of $10$, to seat $n$ guests so that nobody sits in their own place, to
+write $n$ as a sum of positive integers, to colour the faces of a cube with $3$ colours up to rotation? The answers are numbers defined by a counting problem, and the work is to find formulas,
+recurrences or estimates for them, and to understand why two different counting problems often have the same answer. The tools are few and elementary, but they are used with great ingenuity; this
+chapter develops them carefully, starting from the definition of a finite set, and then applies them to the classical families of numbers.
 \begin{enumerate}
-\item The rules of sum and product, bijective proofs, counting functions, injections and subsets.
-\item Binomial coefficients: Pascal's triangle, the binomial theorem, Vandermonde's identity, Lucas' theorem modulo a prime; multinomial coefficients.
-\item Inclusion--exclusion: derangements, surjections, Euler's function; M\"obius inversion on partially ordered sets.
-\item The pigeonhole principle and its strengthenings; Erd\H{o}s--Szekeres; Dirichlet's approximation theorem.
-\item Double counting; Sperner's theorem and the LYM inequality; the Erd\H{o}s--Ko--Rado theorem.
-\item Stirling numbers of both kinds, Bell numbers, Lah numbers; set partitions and cycles of permutations.
-\item Integer partitions: Ferrers diagrams, conjugation, Euler's theorem on odd and distinct parts.
-\item Counting under symmetry: Burnside's lemma and P\'olya enumeration.
-\item Exercises with solutions.
+\item The rules of sum and product, counting functions, injections and subsets, and the principle of double counting are proved from the definition of the number of elements of a finite set
+(Section~\ref{combinatorics:section-basic-rules}).
+\item Binomial coefficients count subsets; they satisfy Pascal's rule and the binomial theorem, and a long list of identities, each with a combinatorial meaning
+(Section~\ref{combinatorics:section-binomial}). Modulo a prime they have a surprising structure, described by the theorems of Lucas and Kummer (Section~\ref{combinatorics:section-binomial-primes}).
+\item Choosing with repetition leads to the ``stars and bars'' count of multisets, to compositions of integers, to multinomial coefficients and to lattice paths
+(Section~\ref{combinatorics:section-multisets}).
+\item The principle of inclusion and exclusion counts the elements of a union from the sizes of the intersections; it counts surjections and derangements, and gives Euler's function again
+(Section~\ref{combinatorics:section-inclusion-exclusion}). Its natural generality is M\"obius inversion on a partially ordered set, which contains both inclusion--exclusion and the M\"obius inversion
+of number theory (Section~\ref{combinatorics:section-posets}).
+\item The pigeonhole principle, in its many forms, proves existence without construction: Dirichlet's approximation theorem, the Erd\H{o}s--Szekeres theorem on monotone subsequences, and a first
+Ramsey number (Section~\ref{combinatorics:section-pigeonhole}).
+\item Double counting proves identities and inequalities; with it we prove the theorems of Sperner and of Erd\H{o}s, Ko and Rado on families of subsets (Section~\ref{combinatorics:section-double-counting}).
+\item Set partitions and cycles of permutations are counted by the Stirling numbers of the second and of the first kind, which change bases between powers and falling factorials; Bell, Lah and Eulerian
+numbers complete the picture (Section~\ref{combinatorics:section-stirling}).
+\item Partitions of integers are studied through Ferrers diagrams: conjugation, Euler's theorem that partitions into odd parts and into distinct parts are equinumerous, and the self-conjugate partitions
+(Section~\ref{combinatorics:section-partitions}).
+\item Counting objects up to symmetry is counting orbits of a group action: the lemma of Cauchy and Frobenius, necklaces, colourings of the cube, the cycle index and P\'olya's theorem, and the $11$
+graphs on four vertices (Section~\ref{combinatorics:section-symmetry}).
 \end{enumerate}
+Generating functions, which turn counting problems into algebra and are the most powerful single tool of enumeration, are the subject of Chapter~\ref{generating-functions}; this chapter uses only
+finite sums, and proves everything by counting. Graphs appear here only in examples; their theory is Chapter~\ref{graph-theory}. References: \cite{stanley-ec1}, \cite{van-lint-wilson},
+\cite{aigner-ziegler} and \cite{andrews-partitions}.
+
+\noindent\textbf{Prerequisites.} Chapter~\ref{sets} (Set Theory), Chapter~\ref{number-systems} (Number Systems), Chapter~\ref{groups} (Groups), Chapter~\ref{rings} (Rings and Modules) and
+Chapter~\ref{number-theory} (Elementary Number Theory).
+
+\noindent\textbf{On the way to the Hodge conjecture.} This chapter is not needed on the direct route; it opens the reading path of discrete mathematics
+(Subsection~\ref{introduction:subsection-reading-paths}). Binomial coefficients and the counting of subsets are used informally throughout the book.
+
+\begin{notation}\label{combinatorics:notation-basic}
+For a finite set $A$, $|A|$ denotes its number of elements, the natural number $n$ with $A \approx n$ (Definition~\ref{sets:definition-finite} and Example~\ref{sets:example-cardinals}). For
+$n \in \NN$ we write $[n] = \{1, 2, \ldots, n\}$, so $[0] = \emptyset$; the map $i \mapsto i + 1$ is a bijection from the von Neumann natural number $n = \{0, \ldots, n - 1\}$ onto $[n]$, so
+$|[n]| = n$. For sets $A$ and $B$, $B^A$ is the set of all maps $A \to B$, $\mathcal{P}(A)$ the set of subsets of $A$, and $\binom{A}{k}$ the set of subsets of $A$ with $k$ elements. For
+$n \in \NN$, $n! = 1 \cdot 2 \cdots n$ (with $0! = 1$) is the \emph{factorial} of $n$, and for $k \in \NN$ the \emph{falling factorial} and the \emph{rising factorial} are
+\[
+n^{\underline{k}} = n(n - 1) \cdots (n - k + 1), \qquad n^{\overline{k}} = n(n + 1) \cdots (n + k - 1),
+\]
+products of $k$ factors, equal to $1$ when $k = 0$. The same formulas define $x^{\underline{k}}$ and $x^{\overline{k}}$ for $x$ in any commutative ring. Sums and products over a finite set,
+$\sum_{a \in A}x_a$ and $\prod_{a \in A}x_a$, are defined in Lemma~\ref{combinatorics:lemma-finite-sums}; an empty sum is $0$ and an empty product is $1$.
+\end{notation}
+
+\section{The basic rules of counting}\label{combinatorics:section-basic-rules}
+
+Everything in this chapter rests on a handful of rules: the number of elements of a disjoint union is the sum of the numbers of elements, that of a product is the product, and so on. They are so
+familiar that one is tempted to take them for granted, but they are theorems about the natural numbers of Chapter~\ref{sets}, and proving them once shows exactly what they say, and when they fail.
+The only facts used are that $|A|$ is well defined, because distinct natural numbers are not equinumerous (Proposition~\ref{sets:proposition-pigeonhole}), and the definitions of addition and
+multiplication by recursion (Section~\ref{number-systems:section-natural-numbers}).
+
+\subsection{Removing and adding one element}\label{combinatorics:subsection-one-element}
+
+\begin{lemma}\label{combinatorics:lemma-one-element}
+Let $A$ be a finite set with $|A| = n$.
+\begin{enumerate}
+\item If $c \notin A$, then $A \cup \{c\}$ is finite with $|A \cup \{c\}| = n + 1$.
+\item If $n \geq 1$ and $a \in A$, then $A \setminus \{a\}$ is finite with $|A \setminus \{a\}| = n - 1$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Let $f \colon A \to n$ be a bijection. (1) Extend $f$ by $c \mapsto n$; since $n + 1 = n \cup \{n\}$ and $c \notin A$, this is a bijection $A \cup \{c\} \to n + 1$.
+
+(2) Write $n = m + 1$. Let $\tau$ be the bijection of $n$ that exchanges $f(a)$ and $m$ and fixes all other elements. Then $\tau \circ f$ is a bijection $A \to m + 1$ that sends $a$ to $m$, so it
+restricts to a bijection $A \setminus \{a\} \to (m + 1) \setminus \{m\} = m$.
+\end{proof}
+
+\begin{proposition}\label{combinatorics:proposition-subsets-finite}
+Let $A$ be a finite set and $B \subseteq A$. Then $B$ is finite, $|B| \leq |A|$, and $|B| = |A|$ if and only if $B = A$.
+\end{proposition}
+
+\begin{proof}
+We prove all three statements by induction on $n = |A|$. If $n = 0$, then $A = B = \emptyset$. Let $|A| = n + 1$. If $B = A$ there is nothing to prove. Otherwise choose $a \in A \setminus B$. Then
+$B \subseteq A \setminus \{a\}$, which has $n$ elements by Lemma~\ref{combinatorics:lemma-one-element}, so by induction $B$ is finite with $|B| \leq n < n + 1$.
+\end{proof}
+
+\begin{corollary}\label{combinatorics:corollary-injective-surjective}
+Let $A$ and $B$ be finite sets.
+\begin{enumerate}
+\item If $f \colon A \to B$ is injective, then $|A| \leq |B|$; if $f$ is surjective, then $|A| \geq |B|$.
+\item If $|A| = |B|$, a map $f \colon A \to B$ is injective if and only if it is surjective, if and only if it is bijective.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+If $f$ is injective, it is a bijection onto $f[A] \subseteq B$, so $|A| = |f[A]| \leq |B|$ by Proposition~\ref{combinatorics:proposition-subsets-finite}, with equality if and only if $f[A] = B$. If $f$ is
+surjective, choosing for every $b \in B$ an element of $f^{-1}(b)$ (this needs no axiom of choice: $B$ is finite, and one chooses by induction on $|B|$) gives an injection $g \colon B \to A$ with
+$f \circ g = \id_B$, so $|B| \leq |A|$; if $|A| = |B|$, then $g$ is a bijection by what we have shown, and $f = g^{-1}$ is injective.
+\end{proof}
+
+\begin{counterexample}\label{combinatorics:counterexample-dedekind}
+Corollary~\ref{combinatorics:corollary-injective-surjective}(2) characterises finite sets. The map $n \mapsto n + 1$ is an injection $\NN \to \NN$ that is not surjective, and
+$n \mapsto \lfloor n/2 \rfloor$ (the quotient in the division by $2$) is a surjection $\NN \to \NN$ that is not injective. The even numbers form a proper subset of $\NN$ equinumerous with
+$\NN$, so Proposition~\ref{combinatorics:proposition-subsets-finite} fails for infinite sets as well. Dedekind took this as the \emph{definition} of an infinite set: one equinumerous with a proper subset
+of itself (Exercise~\ref{combinatorics:exercise-dedekind-infinite}).
+\end{counterexample}
+
+\subsection{Finite sums}\label{combinatorics:subsection-finite-sums}
+
+To say that the number of elements of a union is the sum of the numbers of elements of its pieces, one needs sums $\sum_{b \in B}x_b$ over a finite set $B$, in which the order of the terms is not
+given. The following lemma shows that the order does not matter. It holds in any commutative monoid, written additively; we need it for $\NN$, $\ZZ$ and commutative rings, and multiplicatively for
+products.
+
+\begin{lemma}[General commutativity]\label{combinatorics:lemma-finite-sums}
+Let $(M, +, 0)$ be a commutative monoid, $B$ a finite set with $|B| = n$, and $(x_b)_{b \in B}$ a family of elements of $M$. For a bijection $e \colon [n] \to B$ put
+$S(e) = x_{e(1)} + x_{e(2)} + \cdots + x_{e(n)}$, defined by recursion as $S_0 = 0$ and $S_{i} = S_{i-1} + x_{e(i)}$. Then $S(e)$ does not depend on $e$; it is denoted $\sum_{b \in B}x_b$. These sums
+satisfy:
+\begin{enumerate}
+\item $\sum_{b \in B \cup C}x_b = \sum_{b \in B}x_b + \sum_{c \in C}x_c$ if $B \cap C = \emptyset$;
+\item $\sum_{b \in B}x_b = \sum_{a \in A}x_{g(a)}$ for every bijection $g \colon A \to B$;
+\item $\sum_{b \in B}c = n \cdot c$ for a constant family, where $n \cdot c = c + \cdots + c$ ($n$ terms);
+\item $\sum_{b \in B}(x_b + y_b) = \sum_{b \in B}x_b + \sum_{b \in B}y_b$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{Step 1: independence of the order.} By induction on $n$; for $n \leq 1$ there is only one bijection. Let $n \geq 2$, and let $e, e^{\prime} \colon [n] \to B$ be bijections. Let
+$b = e(n)$ and $j = e^{\prime\,-1}(b)$. Define a bijection $e^{\prime\prime} \colon [n] \to B$ by $e^{\prime\prime}(i) = e^{\prime}(i)$ for $i < j$, $e^{\prime\prime}(i) = e^{\prime}(i + 1)$ for
+$j \leq i < n$, and $e^{\prime\prime}(n) = b$; it lists the elements of $B$ in the order of $e^{\prime}$, except that $b$ is moved to the end. Both $e$ and $e^{\prime\prime}$ restrict to bijections
+$[n - 1] \to B \setminus \{b\}$, so by induction their partial sums $S_{n-1}$ agree, and $S(e) = S_{n-1} + x_b = S(e^{\prime\prime})$. It remains to see $S(e^{\prime}) = S(e^{\prime\prime})$.
+Write $u = x_{e^{\prime}(1)} + \cdots + x_{e^{\prime}(j-1)}$, $v = x_{e^{\prime}(j+1)} + \cdots + x_{e^{\prime}(n)}$ (sums in this order). By associativity (which allows us to group consecutive terms,
+by induction on the number of terms), $S(e^{\prime}) = u + x_b + v$ and $S(e^{\prime\prime}) = u + v + x_b$, and these are equal by commutativity.
+
+\emph{Step 2: the properties.} (1) If $e \colon [n] \to B$ and $e^{\prime} \colon [m] \to C$ are bijections, listing first $B$ by $e$ and then $C$ by $e^{\prime}$ is a bijection
+$[n + m] \to B \cup C$, whose sum is $S(e) + S(e^{\prime})$ by associativity. (2) If $e \colon [n] \to A$ is a bijection, so is $g \circ e \colon [n] \to B$, and both sides are computed by the same
+sequence of terms. (3) and (4) follow by induction on $n$ from (1), using commutativity and associativity for (4).
+\end{proof}
+
+\begin{remark}\label{combinatorics:remark-sum-notation}
+The usual notations are special cases: $\sum_{i=1}^{n}x_i = \sum_{i \in [n]}x_i$, and $\sum_{a \in A, \, P(a)}x_a$ is the sum over the subset of the $a \in A$ satisfying $P$. Grouping terms is
+the most frequent manipulation: if $A = \bigcup_{b \in B}A_b$ is a disjoint union of finite sets, then $\sum_{a \in A}x_a = \sum_{b \in B}\sum_{a \in A_b}x_a$, by
+Lemma~\ref{combinatorics:lemma-finite-sums}(1) and induction on $|B|$. Applied to $A \times C = \bigcup_{a \in A}\{a\} \times C$ in two ways, this gives the exchange of the order of summation,
+$\sum_{a \in A}\sum_{c \in C}x_{a,c} = \sum_{c \in C}\sum_{a \in A}x_{a,c}$.
+\end{remark}
+
+\subsection{The rules of sum and product}\label{combinatorics:subsection-sum-product}
+
+\begin{theorem}[Rule of sum]\label{combinatorics:theorem-rule-of-sum}
+Let $A$ and $B$ be finite sets.
+\begin{enumerate}
+\item If $A \cap B = \emptyset$, then $A \cup B$ is finite and $|A \cup B| = |A| + |B|$.
+\item In general $A \cup B$ is finite and $|A \cup B| + |A \cap B| = |A| + |B|$.
+\item If $A = \bigcup_{i \in I}A_i$ for a finite set $I$ and pairwise disjoint finite sets $A_i$, then $A$ is finite and $|A| = \sum_{i \in I}|A_i|$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) By induction on $m = |B|$. For $m = 0$, $A \cup B = A$. If $|B| = m + 1$, choose $b \in B$ and put $B^{\prime} = B \setminus \{b\}$, so $|B^{\prime}| = m$ by
+Lemma~\ref{combinatorics:lemma-one-element}. By induction $|A \cup B^{\prime}| = |A| + m$, and as $b \notin A \cup B^{\prime}$, Lemma~\ref{combinatorics:lemma-one-element} gives
+$|A \cup B| = |(A \cup B^{\prime}) \cup \{b\}| = |A| + m + 1$.
+
+(2) The sets $A$ and $B \setminus A$ are disjoint with union $A \cup B$, and $B \setminus A$ and $A \cap B$ are disjoint with union $B$; all are finite by
+Proposition~\ref{combinatorics:proposition-subsets-finite}. By (1), $|A \cup B| + |A \cap B| = |A| + |B \setminus A| + |A \cap B| = |A| + |B|$.
+
+(3) By induction on $|I|$, using (1) and Lemma~\ref{combinatorics:lemma-finite-sums}(1).
+\end{proof}
+
+\begin{theorem}[Fibres]\label{combinatorics:theorem-fibres}
+Let $f \colon A \to B$ be a map of finite sets. Then
+\[
+|A| = \sum_{b \in B}|f^{-1}(b)|.
+\]
+In particular, if every fibre $f^{-1}(b)$ has exactly $m$ elements, then $|A| = m \cdot |B|$ (the \emph{shepherd's principle}: to count sheep, count legs and divide by four).
+\end{theorem}
+
+\begin{proof}
+$A$ is the disjoint union of the fibres $f^{-1}(b)$, $b \in B$; apply Theorem~\ref{combinatorics:theorem-rule-of-sum}(3), and Lemma~\ref{combinatorics:lemma-finite-sums}(3) for the constant case.
+\end{proof}
+
+\begin{theorem}[Rule of product]\label{combinatorics:theorem-rule-of-product}
+Let $A$ and $B$ be finite sets. Then $A \times B$ is finite and $|A \times B| = |A| \cdot |B|$. More generally $|A_1 \times \cdots \times A_k| = |A_1| \cdots |A_k|$ for finite sets $A_1, \ldots, A_k$.
+\end{theorem}
+
+\begin{proof}
+The projection $A \times B \to A$ has fibres $\{a\} \times B$, each in bijection with $B$; by Theorem~\ref{combinatorics:theorem-fibres}, $|A \times B| = |A| \cdot |B|$ (finiteness: $A \times B$ is a
+finite union of the finite sets $\{a\} \times B$). The general statement follows by induction on $k$, as $A_1 \times \cdots \times A_k \approx (A_1 \times \cdots \times A_{k-1}) \times A_k$.
+\end{proof}
+
+The rule of product is usually applied in the form of a sequence of choices.
+
+\begin{corollary}[Successive choices]\label{combinatorics:corollary-successive-choices}
+Let $S$ be a set of sequences $(s_1, \ldots, s_k)$, and suppose that for each $i$ and each choice of $(s_1, \ldots, s_{i-1})$ that is the beginning of an element of $S$, the number of possible $s_i$
+(that is, of $s_i$ such that $(s_1, \ldots, s_i)$ is the beginning of an element of $S$) is a number $n_i$ that does not depend on $(s_1, \ldots, s_{i-1})$. Then $|S| = n_1n_2 \cdots n_k$.
+\end{corollary}
+
+\begin{proof}
+Let $S_i$ be the set of beginnings $(s_1, \ldots, s_i)$ of elements of $S$, so $S_0 = \{()\}$ and $S_k = S$. The map $S_i \to S_{i-1}$ forgetting the last term has fibres of size $n_i$, so
+$|S_i| = n_i|S_{i-1}|$ by Theorem~\ref{combinatorics:theorem-fibres}, and $|S| = n_1 \cdots n_k$ by induction.
+\end{proof}
+
+\begin{example}\label{combinatorics:example-rule-of-product}
+\begin{enumerate}
+\item A licence plate made of $2$ letters (out of $26$), $3$ digits and $2$ letters can be formed in $26^2 \cdot 10^3 \cdot 26^2 = 456\,976\,000$ ways.
+\item The number of words of length $k$ over an alphabet with $n$ letters in which no two consecutive letters are equal is $n(n - 1)^{k-1}$ for $k \geq 1$: the first letter can be chosen in $n$
+ways, and each later letter in $n - 1$ ways, whatever the previous letters were.
+\item A positive divisor of $n = p_1^{k_1} \cdots p_r^{k_r}$ is $p_1^{j_1} \cdots p_r^{j_r}$ with $0 \leq j_i \leq k_i$, uniquely by Theorem~\ref{number-systems:theorem-fundamental-arithmetic}. So $n$
+has $(k_1 + 1) \cdots (k_r + 1)$ divisors; for instance $720 = 2^4 \cdot 3^2 \cdot 5$ has $5 \cdot 3 \cdot 2 = 30$.
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{combinatorics:counterexample-dependent-choices}
+The hypothesis of Corollary~\ref{combinatorics:corollary-successive-choices} that the number of choices at each step does not depend on the earlier choices is essential. Count the pairs $(a, b)$ of
+elements of $[n]$ with $a < b$. The first element $a$ can be chosen in $n - 1$ ways ($a = n$ has no possible $b$), and then $b$ in $n - a$ ways, a number that depends on $a$; the product
+$(n - 1)(n - a)$ makes no sense. Grouping by $a$ instead (Theorem~\ref{combinatorics:theorem-fibres}) gives $\sum_{a=1}^{n}(n - a) = 0 + 1 + \cdots + (n - 1) = n(n - 1)/2$. Alternatively, the ordered pairs
+$(a, b)$ with $a \neq b$ are counted by the corollary as $n(n - 1)$, and each pair with $a < b$ corresponds to exactly two of them, $(a, b)$ and $(b, a)$: the shepherd's principle gives $n(n - 1)/2$
+again. Both methods prove the formula $1 + 2 + \cdots + (n - 1) = n(n - 1)/2$, a first instance of double counting.
+\end{counterexample}
+
+\begin{counterexample}\label{combinatorics:counterexample-infinite-sum}
+For infinite sets the rule of sum holds in the form $|A \sqcup B| = |A| + |B|$ with cardinal addition, but it can no longer be used to subtract: $|\NN \sqcup \NN| = |\NN| = |\NN \sqcup [1]|$
+(Corollary~\ref{sets:corollary-cardinal-arithmetic}), although $|\NN| \neq |[1]|$. This is the content of ``Hilbert's hotel'': a full hotel with rooms numbered $0, 1, 2, \ldots$ can accommodate a new
+guest by moving the guest in room $n$ to room $n + 1$, and even infinitely many new guests, by moving the guest in room $n$ to room $2n$. Everything in this chapter that uses subtraction, such as
+Theorem~\ref{combinatorics:theorem-rule-of-sum}(2) in the form $|A \cup B| = |A| + |B| - |A \cap B|$, is special to finite sets.
+\end{counterexample}
+
+\subsection{Counting maps}\label{combinatorics:subsection-maps}
+
+\begin{theorem}\label{combinatorics:theorem-counting-maps}
+Let $A$ and $B$ be finite sets with $|A| = k$ and $|B| = n$.
+\begin{enumerate}
+\item There are $n^k$ maps $A \to B$: $|B^A| = |B|^{|A|}$. In particular $|\mathcal{P}(A)| = 2^{k}$.
+\item There are $n^{\underline{k}} = n(n - 1) \cdots (n - k + 1)$ injective maps $A \to B$. In particular there is no injection if $k > n$, and there are $n!$ bijections $A \to A$ if $k = n$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) By induction on $k$. If $k = 0$, then $A = \emptyset$ and the only map $A \to B$ is the empty map, so $|B^A| = 1 = n^0$ (also when $n = 0$). If $k \geq 1$, choose $a \in A$ and put
+$A^{\prime} = A \setminus \{a\}$. Restriction $B^A \to B^{A^{\prime}}$ is surjective, and the fibre over $g \colon A^{\prime} \to B$ consists of the $n$ extensions of $g$, one for each value at $a$.
+By Theorem~\ref{combinatorics:theorem-fibres} and induction, $|B^A| = n \cdot n^{k-1} = n^k$. The map sending a subset $S \subseteq A$ to its \emph{indicator function} $1_S \colon A \to \{0, 1\}$,
+$1_S(a) = 1$ if $a \in S$ and $0$ otherwise, is a bijection $\mathcal{P}(A) \to \{0, 1\}^A$, whose inverse sends $f$ to $f^{-1}(1)$.
+
+(2) By induction on $k$, as in (1). For $k = 0$ the empty map is injective and $n^{\underline{0}} = 1$. If $k \geq 1$, restriction sends injections $A \to B$ to injections $A^{\prime} \to B$, and the
+injections extending a given injection $g \colon A^{\prime} \to B$ are given by the values at $a$ outside $g[A^{\prime}]$, which has $k - 1$ elements. So each fibre has $n - (k - 1)$ elements if
+$k - 1 \leq n$ (and the fibres are empty if $k - 1 \geq n$), and by induction the number of injections is $n^{\underline{k-1}}(n - k + 1) = n^{\underline{k}}$. If $k > n$, one factor of
+$n^{\underline{k}}$ is $n - n = 0$. Bijections $A \to A$ are the injections, by Corollary~\ref{combinatorics:corollary-injective-surjective}.
+\end{proof}
+
+In the language of words: there are $n^k$ words of length $k$ over an alphabet of $n$ letters, and $n^{\underline{k}}$ of them have distinct letters. The bijections $A \to A$ are the
+\emph{permutations} of $A$; they form the symmetric group, and $|S_n| = n!$.
+
+\begin{example}\label{combinatorics:example-counting-maps}
+\begin{enumerate}
+\item A \emph{binary relation} on a set $A$ with $n$ elements is a subset of $A \times A$; there are $2^{n^2}$ of them, of which $2^{n(n-1)}$ are reflexive (the $n$ pairs $(a, a)$ are forced, the
+other $n^2 - n$ pairs are free) and $2^{n(n+1)/2}$ symmetric (choose freely the pairs $(a, b)$ with $a \leq b$ for some ordering of $A$; there are $n(n + 1)/2$ of them by
+Counterexample~\ref{combinatorics:counterexample-dependent-choices}).
+\item There are $n^{n^2}$ binary operations $A \times A \to A$, so already $3^9 = 19\,683$ on a three-element set; only a few of them are group laws.
+\item The \emph{birthday problem}: among $k$ people with birthdays chosen independently and uniformly among $365$ days, the probability that all birthdays are distinct is the proportion of injective
+maps $[k] \to [365]$ among all maps, $365^{\underline{k}}/365^k$. For $k = 23$ it is about $0.493$, so in a group of $23$ people two of them share a birthday more often than not.
+\item The number of ways to seat $n$ people at a round table, if two seatings that differ by a rotation are considered equal, is $(n - 1)!$: the $n!$ seatings in numbered chairs fall into classes of
+$n$ rotations each, all distinct (by the shepherd's principle; here each class has $n$ elements because a rotation moves every person).
+\end{enumerate}
+\end{example}
+
+\begin{remark}\label{combinatorics:remark-bijective-proofs}
+Two finite sets have the same number of elements if and only if there is a bijection between them. Many identities between numbers defined by counting are best proved by finding such a bijection,
+a \emph{bijective} or \emph{combinatorial} proof; it explains the identity, rather than only verifying it. The proof of Theorem~\ref{combinatorics:theorem-counting-maps}(1) contains the first
+example: subsets of $A$ correspond to their indicator functions. Most identities of this chapter will be proved twice, by a computation and by a bijection or a double count.
+\end{remark}
+
+\subsection{Double counting}\label{combinatorics:subsection-double-counting}
+
+\begin{proposition}[Double counting]\label{combinatorics:proposition-double-counting}
+Let $A$ and $B$ be finite sets and $R \subseteq A \times B$ a relation. For $a \in A$ let $R(a) = \{b : (a, b) \in R\}$, and for $b \in B$ let $R^{-1}(b) = \{a : (a, b) \in R\}$. Then
+\[
+\sum_{a \in A}|R(a)| = |R| = \sum_{b \in B}|R^{-1}(b)|.
+\]
+\end{proposition}
+
+\begin{proof}
+Apply Theorem~\ref{combinatorics:theorem-fibres} to the two projections $R \to A$ and $R \to B$, whose fibres are $\{a\} \times R(a)$ and $R^{-1}(b) \times \{b\}$.
+\end{proof}
+
+\begin{example}\label{combinatorics:example-handshake}
+\begin{enumerate}
+\item (Handshake lemma.) At a party, let $A = B$ be the set of guests and $R$ the set of pairs $(a, b)$ such that $a$ shook hands with $b$; $R$ is symmetric and contains no $(a, a)$. Then
+$\sum_a|R(a)| = |R|$ is twice the number of handshakes, so it is even, and the number of guests who shook an odd number of hands is even.
+\item (Divisors.) Let $A = B = [n]$ and $R = \{(d, m) : d \mid m\}$. Each $d$ divides the $\lfloor n/d \rfloor$ multiples $d, 2d, \ldots$ in $[n]$, and $m$ has $\tau(m)$ divisors, so
+$\sum_{m=1}^{n}\tau(m) = \sum_{d=1}^{n}\lfloor n/d \rfloor$. For $n = 6$: $1 + 2 + 2 + 3 + 2 + 4 = 14 = 6 + 3 + 2 + 1 + 1 + 1$. This identity is the starting point of Dirichlet's estimate of the
+average order of $\tau$ (Chapter~\ref{analytic-number-theory}).
+\end{enumerate}
+\end{example}
+
+\section{Binomial coefficients}\label{combinatorics:section-binomial}
+
+How many committees of $k$ members can be formed from $n$ people? Choosing the members one after the other gives $n^{\underline{k}}$ ordered choices, but a committee does not remember the order in which its
+members were chosen. The number of committees is the number of $k$-element subsets of an $n$-element set, the most important number of combinatorics.
+
+\subsection{Definition and first properties}\label{combinatorics:subsection-binomial-definition}
+
+\begin{definition}\label{combinatorics:definition-binomial}
+For $n, k \in \NN$, the \emph{binomial coefficient} $\binom{n}{k}$ (read ``$n$ choose $k$'') is the number of $k$-element subsets of an $n$-element set: $\binom{n}{k} = \bigl|\binom{A}{k}\bigr|$ for any
+set $A$ with $|A| = n$. For $k \in \ZZ$ negative we put $\binom{n}{k} = 0$.
+\end{definition}
+
+The definition does not depend on $A$: a bijection $A \to A^{\prime}$ induces a bijection $\binom{A}{k} \to \binom{A^{\prime}}{k}$, $S \mapsto f[S]$. By
+Proposition~\ref{combinatorics:proposition-subsets-finite}, $\binom{n}{k} = 0$ for $k > n$.
+
+\begin{example}\label{combinatorics:example-binomial-small}
+The subsets of $[4]$ with two elements are $\{1,2\}, \{1,3\}, \{1,4\}, \{2,3\}, \{2,4\}, \{3,4\}$, so $\binom{4}{2} = 6$. Always $\binom{n}{0} = \binom{n}{n} = 1$ (the empty set and the whole set) and
+$\binom{n}{1} = n$ (the singletons).
+\end{example}
+
+\begin{theorem}\label{combinatorics:theorem-binomial-formula}
+For $0 \leq k \leq n$,
+\[
+\binom{n}{k} = \frac{n^{\underline{k}}}{k!} = \frac{n!}{k!\,(n - k)!}.
+\]
+In particular $k!\,(n - k)!$ divides $n!$.
+\end{theorem}
+
+\begin{proof}
+Let $|A| = n$. Consider the map $\Phi$ from the set of injections $[k] \to A$ to $\binom{A}{k}$ that sends an injection to its image. For $S \in \binom{A}{k}$, the injections with image $S$ are the
+bijections $[k] \to S$, and there are $k!$ of them by Theorem~\ref{combinatorics:theorem-counting-maps}(2). By Theorem~\ref{combinatorics:theorem-fibres}, $n^{\underline{k}} = k!\binom{n}{k}$. Finally
+$n^{\underline{k}}\,(n - k)! = n!$.
+\end{proof}
+
+\begin{proposition}\label{combinatorics:proposition-binomial-basic}
+For all $n, k \in \NN$:
+\begin{enumerate}
+\item (Symmetry) $\binom{n}{k} = \binom{n}{n - k}$ for $k \leq n$.
+\item (Pascal's rule) $\binom{n + 1}{k + 1} = \binom{n}{k} + \binom{n}{k + 1}$.
+\item (Row sums) $\sum_{k=0}^{n}\binom{n}{k} = 2^n$.
+\item (Absorption) $k\binom{n}{k} = n\binom{n - 1}{k - 1}$ for $n \geq 1$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Let $A$ be a set with $n$ elements.
+
+(1) Complementation $S \mapsto A \setminus S$ is a bijection $\binom{A}{k} \to \binom{A}{n - k}$ (Theorem~\ref{combinatorics:theorem-rule-of-sum}(1)); it is its own inverse.
+
+(2) Let $c \notin A$, so $A^{+} = A \cup \{c\}$ has $n + 1$ elements. The $(k + 1)$-element subsets of $A^{+}$ either contain $c$, and then they are $T \cup \{c\}$ with $T \in \binom{A}{k}$, or do not,
+and then they are the elements of $\binom{A}{k+1}$. The rule of sum gives the claim.
+
+(3) $\mathcal{P}(A)$ is the disjoint union of the sets $\binom{A}{k}$, $0 \leq k \leq n$, and has $2^n$ elements by Theorem~\ref{combinatorics:theorem-counting-maps}(1).
+
+(4) Count the pairs $(S, a)$ with $S \in \binom{A}{k}$ and $a \in S$ (a committee with its chair). Choosing $S$ first gives $k\binom{n}{k}$; choosing $a$ first and then the other $k - 1$ members among the
+$n - 1$ remaining elements gives $n\binom{n - 1}{k - 1}$ (Proposition~\ref{combinatorics:proposition-double-counting}).
+\end{proof}
+
+Pascal's rule computes the binomial coefficients row by row, each entry being the sum of the two entries above it; this is \emph{Pascal's triangle} (known long before Pascal, to the Indian
+mathematician Pingala, to al-Karaji and to Yang Hui):
+\[
+\begin{array}{ccccccccccccc}
+ & & & & & & 1 & & & & & & \\
+ & & & & & 1 & & 1 & & & & & \\
+ & & & & 1 & & 2 & & 1 & & & & \\
+ & & & 1 & & 3 & & 3 & & 1 & & & \\
+ & & 1 & & 4 & & 6 & & 4 & & 1 & & \\
+ & 1 & & 5 & & 10 & & 10 & & 5 & & 1 & \\
+1 & & 6 & & 15 & & 20 & & 15 & & 6 & & 1
+\end{array}
+\]
+Row $n$ (counting from $n = 0$) lists $\binom{n}{0}, \ldots, \binom{n}{n}$. The symmetry of the rows is Proposition~\ref{combinatorics:proposition-binomial-basic}(1), and the row sums are $1, 2, 4, 8, \ldots$
+
+\begin{remark}\label{combinatorics:remark-binomial-integer}
+Theorem~\ref{combinatorics:theorem-binomial-formula} has a number-theoretic content that is not obvious from the formula: the product of $k$ consecutive integers $n(n - 1) \cdots (n - k + 1)$ is
+divisible by $k!$. Pascal's rule gives a second proof that $\binom{n}{k}$ is an integer, without counting: by induction on $n$, the entries of each row are sums of entries of the previous row.
+\end{remark}
+
+\subsection{The binomial theorem}\label{combinatorics:subsection-binomial-theorem}
+
+\begin{theorem}[Binomial theorem]\label{combinatorics:theorem-binomial}
+Let $R$ be a ring and $x, y \in R$ elements with $xy = yx$. For every $n \in \NN$,
+\[
+(x + y)^n = \sum_{k=0}^{n}\binom{n}{k}x^ky^{n-k},
+\]
+where an integer $m$ acts on $R$ by $m \cdot r = r + \cdots + r$ ($m$ terms).
+\end{theorem}
+
+\begin{proof}
+We give two proofs.
+
+\emph{By induction}, using Pascal's rule. For $n = 0$ both sides are $1$. Assume the formula for $n$. Then, since $x$ commutes with $y$,
+\[
+(x + y)^{n+1} = (x + y)\sum_{k=0}^{n}\binom{n}{k}x^ky^{n-k} = \sum_{k=0}^{n}\binom{n}{k}x^{k+1}y^{n-k} + \sum_{k=0}^{n}\binom{n}{k}x^ky^{n+1-k}.
+\]
+The coefficient of $x^jy^{n+1-j}$ is $\binom{n}{j-1} + \binom{n}{j} = \binom{n+1}{j}$ by Proposition~\ref{combinatorics:proposition-binomial-basic}(2) (for $j = 0$ and $j = n + 1$ one of the two terms
+is $0$).
+
+\emph{By counting.} Expanding the product $(x + y)(x + y) \cdots (x + y)$ of $n$ factors by distributivity gives the sum, over all words $w = w_1 \cdots w_n$ in the letters $x$ and $y$, of the products
+$w_1w_2 \cdots w_n$ in $R$. Since $x$ and $y$ commute, each such product equals $x^ky^{n-k}$, where $k$ is the number of positions $i$ with $w_i = x$. A word is determined by the set of these positions,
+so exactly $\binom{n}{k}$ words give $x^ky^{n-k}$.
+\end{proof}
+
+\begin{counterexample}\label{combinatorics:counterexample-binomial-noncommuting}
+The hypothesis $xy = yx$ is necessary. In the ring of $2 \times 2$ real matrices take $x = \bigl(\begin{smallmatrix}0 & 1\\0 & 0\end{smallmatrix}\bigr)$ and $y = \bigl(\begin{smallmatrix}0 & 0\\1 & 0\end{smallmatrix}\bigr)$.
+Then $x^2 = y^2 = 0$, while $(x + y)^2 = \bigl(\begin{smallmatrix}1 & 0\\0 & 1\end{smallmatrix}\bigr)$ and $x^2 + 2xy + y^2 = 2xy = \bigl(\begin{smallmatrix}2 & 0\\0 & 0\end{smallmatrix}\bigr)$. In general
+$(x + y)^2 = x^2 + xy + yx + y^2$, and the counting proof shows that $(x + y)^n$ is the sum of all $2^n$ words, which can only be collected into binomial coefficients when the letters commute.
+\end{counterexample}
+
+\begin{corollary}\label{combinatorics:corollary-binomial-consequences}
+For $n \geq 1$:
+\begin{enumerate}
+\item $\sum_{k=0}^{n}(-1)^k\binom{n}{k} = 0$; equivalently, a nonempty finite set has as many subsets of even size as of odd size, namely $2^{n-1}$ of each.
+\item $\sum_{k=0}^{n}k\binom{n}{k} = n2^{n-1}$ and $\sum_{k=0}^{n}k(k - 1)\binom{n}{k} = n(n - 1)2^{n-2}$ (for $n \geq 2$ in the second formula).
+\item $(1 + x)^n = \sum_k\binom{n}{k}x^k$ in the polynomial ring $\ZZ[x]$, so $\binom{n}{k}$ is the coefficient of $x^k$ in $(1 + x)^n$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(1) Put $x = -1$, $y = 1$ in Theorem~\ref{combinatorics:theorem-binomial}. The two kinds of subsets are exchanged by the bijection $S \mapsto S \bigtriangleup \{a\}$ (add $a$ if it is absent, remove
+it if it is present), for a fixed $a \in A$; this is a bijective proof. (2) By absorption, $\sum_kk\binom{n}{k} = n\sum_k\binom{n-1}{k-1} = n2^{n-1}$; applying absorption twice,
+$k(k - 1)\binom{n}{k} = n(n - 1)\binom{n-2}{k-2}$. (3) is the binomial theorem in $\ZZ[x]$ (Definition~\ref{rings:definition-polynomials}).
+\end{proof}
+
+\subsection{Identities}\label{combinatorics:subsection-binomial-identities}
+
+There are thousands of identities between binomial coefficients; the following are the ones used most often. Each has a short combinatorial proof.
+
+\begin{proposition}\label{combinatorics:proposition-binomial-identities}
+For $m, n, k, r \in \NN$:
+\begin{enumerate}
+\item (Vandermonde's identity) $\binom{m + n}{r} = \sum_{k=0}^{r}\binom{m}{k}\binom{n}{r - k}$.
+\item (Sum of squares) $\sum_{k=0}^{n}\binom{n}{k}^2 = \binom{2n}{n}$.
+\item (Hockey stick) $\sum_{j=k}^{n}\binom{j}{k} = \binom{n + 1}{k + 1}$.
+\item (Parallel summation) $\sum_{j=0}^{r}\binom{n + j}{j} = \binom{n + r + 1}{r}$.
+\item (Subset of a subset) $\binom{n}{m}\binom{m}{k} = \binom{n}{k}\binom{n - k}{m - k}$ for $k \leq m \leq n$.
+\item (Alternating partial sums) $\sum_{j=0}^{k}(-1)^j\binom{n}{j} = (-1)^k\binom{n - 1}{k}$ for $n \geq 1$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) Let $A$ and $B$ be disjoint sets with $m$ and $n$ elements. An $r$-element subset $S$ of $A \cup B$ is the same as a pair $(S \cap A, S \cap B)$, where $S \cap A$ has some number $k$ of elements and
+$S \cap B$ has $r - k$. Grouping the subsets by $k$ gives the identity.
+
+(2) Put $m = n = r$ in (1) and use symmetry: $\binom{n}{n - k} = \binom{n}{k}$.
+
+(3) The $(k + 1)$-element subsets of $[n + 1]$ are grouped according to their largest element $j + 1$, with $k \leq j \leq n$; the remaining $k$ elements form an arbitrary $k$-element subset of $[j]$.
+
+(4) By symmetry $\binom{n + j}{j} = \binom{n + j}{n}$, and $\binom{n + r + 1}{r} = \binom{n + r + 1}{n + 1}$; so (4) is (3) with $k = n$ and summation index $n + j$.
+
+(5) Both sides count the pairs $(T, S)$ with $T \subseteq S \subseteq [n]$, $|T| = k$ and $|S| = m$: choosing $S$ first and then $T$ inside it gives the left side; choosing $T$ first and then the
+$m - k$ elements of $S \setminus T$ among the $n - k$ elements outside $T$ gives the right side.
+
+(6) By induction on $k$: for $k = 0$ both sides are $1$, and by Pascal's rule
+$(-1)^{k}\binom{n-1}{k} + (-1)^{k+1}\binom{n}{k+1} = (-1)^{k+1}\bigl(\binom{n}{k+1} - \binom{n-1}{k}\bigr) = (-1)^{k+1}\binom{n-1}{k+1}$.
+\end{proof}
+
+\begin{example}\label{combinatorics:example-hockey-stick}
+The hockey stick identity with $k = 1$ is $1 + 2 + \cdots + n = \binom{n + 1}{2}$, and with $k = 2$ it gives $\sum_{j=2}^{n}\binom{j}{2} = \binom{n+1}{3}$. Since $j^2 = 2\binom{j}{2} + \binom{j}{1}$, this
+yields
+\[
+1^2 + 2^2 + \cdots + n^2 = 2\binom{n + 1}{3} + \binom{n + 1}{2} = \frac{n(n + 1)(2n + 1)}{6}.
+\]
+In the same way every polynomial in $j$ can be written as an integer combination of the $\binom{j}{k}$, and its sum over $j \leq n$ is obtained from the hockey stick identity; this is the discrete
+analogue of integrating a polynomial (Exercise~\ref{combinatorics:exercise-sum-of-cubes}). The name comes from the shape of the entries in Pascal's triangle: a column $\binom{k}{k}, \ldots, \binom{n}{k}$
+(the stick) and the entry $\binom{n+1}{k+1}$ below and to the side (the blade).
+\end{example}
+
+\begin{proposition}[Unimodality]\label{combinatorics:proposition-unimodal}
+Let $n \geq 1$. The sequence $\binom{n}{0}, \binom{n}{1}, \ldots, \binom{n}{n}$ is strictly increasing up to the middle and strictly decreasing afterwards: $\binom{n}{k} < \binom{n}{k+1}$ for
+$k < (n - 1)/2$ and $\binom{n}{k} > \binom{n}{k+1}$ for $k > (n - 1)/2$, with equality $\binom{n}{k} = \binom{n}{k+1}$ only for $k = (n - 1)/2$ when $n$ is odd. Its largest term is the central
+coefficient $\binom{n}{\lfloor n/2 \rfloor}$, and
+\[
+\frac{4^m}{2m + 1} \leq \binom{2m}{m} \leq 4^m \qquad (m \geq 0).
+\]
+\end{proposition}
+
+\begin{proof}
+By Theorem~\ref{combinatorics:theorem-binomial-formula}, $\binom{n}{k+1}\big/\binom{n}{k} = (n - k)/(k + 1)$, which is $> 1$, $= 1$ or $< 1$ according as $k < $, $=$ or $> (n - 1)/2$. For the estimate,
+$\binom{2m}{m}$ is one of the $2m + 1$ terms of row $2m$, whose sum is $4^m$, and it is the largest one.
+\end{proof}
+
+\subsection{Binomial coefficients as polynomials}\label{combinatorics:subsection-binomial-polynomials}
+
+The formula $\binom{n}{k} = n^{\underline{k}}/k!$ makes sense when $n$ is replaced by any element of a ring in which $k!$ is invertible. This extension, due to Newton, is used in the binomial series
+and in the calculus of finite differences.
+
+\begin{definition}\label{combinatorics:definition-binomial-polynomial}
+For $k \in \NN$, the \emph{binomial polynomial} is $\binom{x}{k} = \frac{x^{\underline{k}}}{k!} = \frac{x(x - 1) \cdots (x - k + 1)}{k!} \in \QQ[x]$. For $a$ in a commutative ring containing $\QQ$,
+$\binom{a}{k}$ is its value at $a$.
+\end{definition}
+
+\begin{proposition}\label{combinatorics:proposition-binomial-polynomial}
+\begin{enumerate}
+\item For $n \in \NN$, $\binom{x}{k}$ evaluated at $n$ is the binomial coefficient $\binom{n}{k}$ (including the value $0$ for $k > n$).
+\item Pascal's rule $\binom{x + 1}{k + 1} = \binom{x}{k} + \binom{x}{k + 1}$ and Vandermonde's identity $\binom{x + y}{r} = \sum_k\binom{x}{k}\binom{y}{r - k}$ hold in $\QQ[x]$ and $\QQ[x, y]$.
+\item (Upper negation) $\binom{-x}{k} = (-1)^k\binom{x + k - 1}{k}$; in particular $\binom{-n}{k} = (-1)^k\binom{n + k - 1}{k}$ for $n \in \NN$.
+\item $\binom{a}{k} \in \ZZ$ for every $a \in \ZZ$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) For $k \leq n$ this is Theorem~\ref{combinatorics:theorem-binomial-formula}; for $k > n$ the factor $n - n$ occurs in $n^{\underline{k}}$.
+
+(2) Both sides of each identity are polynomials (in one or two variables) that agree whenever the variables are natural numbers, by (1) and Propositions~\ref{combinatorics:proposition-binomial-basic}
+and~\ref{combinatorics:proposition-binomial-identities}. A nonzero polynomial over the field $\QQ$ has at most as many roots as its degree (Corollary~\ref{rings:corollary-roots}), so a polynomial in one variable vanishing on $\NN$ is zero; for two variables, view
+the difference as a polynomial in $y$ with coefficients in $\QQ[x]$, whose values at every $x = m \in \NN$ are polynomials in $y$ vanishing on $\NN$, hence zero; so each coefficient vanishes at all
+$m \in \NN$ and is zero.
+
+(3) $(-x)(-x - 1) \cdots (-x - k + 1) = (-1)^kx(x + 1) \cdots (x + k - 1) = (-1)^k(x + k - 1)^{\underline{k}}$.
+
+(4) For $a \geq 0$ by (1), and for $a < 0$ by (3).
+\end{proof}
+
+\begin{remark}\label{combinatorics:remark-newton-series}
+Proposition~\ref{combinatorics:proposition-binomial-polynomial}(3) is behind Newton's binomial series: formally $(1 + x)^{a} = \sum_{k \geq 0}\binom{a}{k}x^k$, and for $a = -n$ this is
+$(1 + x)^{-n} = \sum_k(-1)^k\binom{n + k - 1}{k}x^k$, an identity of formal power series (Chapter~\ref{generating-functions}); for real $a$ and $|x| < 1$ it is an identity of convergent series (a
+classical result of analysis, Chapter~\ref{real-analysis}). The polynomials $\binom{x}{k}$ form a basis of $\QQ[x]$, and a polynomial takes integer values at all integers if and only if it is an integer
+combination of them (Exercise~\ref{combinatorics:exercise-integer-valued}).
+\end{remark}
+
+\section{Binomial coefficients modulo a prime}\label{combinatorics:section-binomial-primes}
+
+Look at Pascal's triangle modulo $2$, writing a dot for an even entry:
+\[
+\begin{array}{cccccccccccccccc}
+1 \\
+1 & 1 \\
+1 & \cdot & 1 \\
+1 & 1 & 1 & 1 \\
+1 & \cdot & \cdot & \cdot & 1 \\
+1 & 1 & \cdot & \cdot & 1 & 1 \\
+1 & \cdot & 1 & \cdot & 1 & \cdot & 1 \\
+1 & 1 & 1 & 1 & 1 & 1 & 1 & 1
+\end{array}
+\]
+The pattern repeats at every scale, and in the limit it becomes the Sierpi\'nski triangle (Chapter~\ref{measure-theory} studies such self-similar sets). Row $2^j - 1$ consists of odd numbers only, and
+row $2^j$ has odd numbers only at its ends. This section explains these patterns, for every prime.
+
+\subsection{The Frobenius identity and Lucas' theorem}\label{combinatorics:subsection-lucas}
+
+\begin{proposition}\label{combinatorics:proposition-prime-row}
+Let $p$ be a prime.
+\begin{enumerate}
+\item $p$ divides $\binom{p}{k}$ for $0 < k < p$.
+\item In a commutative ring $R$ in which $p \cdot 1 = 0$, $(x + y)^p = x^p + y^p$ for all $x, y \in R$, and hence $(x + y)^{p^j} = x^{p^j} + y^{p^j}$ for all $j \geq 0$.
+\item In the polynomial ring $\mathbb{F}_p[x]$, where $\mathbb{F}_p = \ZZ/p\ZZ$, $(1 + x)^{p^j} = 1 + x^{p^j}$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) $p$ divides $p! = k!\,(p - k)!\binom{p}{k}$, but not $k!$ or $(p - k)!$, which are products of numbers smaller than $p$; by Euclid's lemma (Lemma~\ref{number-systems:lemma-euclid}) it divides
+$\binom{p}{k}$. (2) follows from the binomial theorem and (1), and by induction on $j$. (3) is the case $R = \mathbb{F}_p[x]$, $y = 1$.
+\end{proof}
+
+Part (2) says that $x \mapsto x^p$ is a ring homomorphism of $R$, the \emph{Frobenius endomorphism} (Chapter~\ref{fields}). Part (2) with $R = \mathbb{F}_p$ gives a proof of Fermat's little theorem,
+$a^p \equiv a \pmod p$, by induction on $a \geq 0$: $(a + 1)^p \equiv a^p + 1 \equiv a + 1$; a second, purely combinatorial proof is given in Section~\ref{combinatorics:section-symmetry}.
+
+\begin{theorem}[Lucas]\label{combinatorics:theorem-lucas}
+Let $p$ be a prime, and write $n = \sum_{i=0}^{r}n_ip^i$ and $k = \sum_{i=0}^{r}k_ip^i$ in base $p$, with digits $0 \leq n_i, k_i < p$. Then
+\[
+\binom{n}{k} \equiv \prod_{i=0}^{r}\binom{n_i}{k_i} \pmod p .
+\]
+In particular $p$ divides $\binom{n}{k}$ if and only if some digit $k_i$ of $k$ exceeds the corresponding digit $n_i$ of $n$.
+\end{theorem}
+
+\begin{proof}
+In $\mathbb{F}_p[x]$, by Proposition~\ref{combinatorics:proposition-prime-row}(3),
+\[
+(1 + x)^n = \prod_{i=0}^{r}\bigl((1 + x)^{p^i}\bigr)^{n_i} = \prod_{i=0}^{r}(1 + x^{p^i})^{n_i} = \prod_{i=0}^{r}\sum_{j_i=0}^{n_i}\binom{n_i}{j_i}x^{j_ip^i}.
+\]
+Expanding the product, the monomials are $x^{\sum_ij_ip^i}$ with $0 \leq j_i \leq n_i < p$. By uniqueness of the base $p$ expansion, the exponent $k$ arises from exactly one choice of the $j_i$, namely
+$j_i = k_i$, if $k_i \leq n_i$ for all $i$, and from none otherwise. Comparing with the coefficient $\binom{n}{k}$ of $x^k$ in $(1 + x)^n$ (Corollary~\ref{combinatorics:corollary-binomial-consequences}(3)),
+reduced modulo $p$, gives the theorem, with $\binom{n_i}{k_i} = 0$ when $k_i > n_i$. The last statement holds because $\binom{n_i}{k_i}$ is not divisible by $p$ when $k_i \leq n_i < p$ (it divides
+$n_i!$, a product of numbers smaller than $p$).
+\end{proof}
+
+\begin{example}\label{combinatorics:example-lucas}
+\begin{enumerate}
+\item For $p = 2$: $\binom{n}{k}$ is odd if and only if every binary digit $1$ of $k$ is also a digit $1$ of $n$, that is, the set of positions of the $1$s of $k$ is a subset of that of $n$. So row $n$ of
+Pascal's triangle contains exactly $2^{s(n)}$ odd numbers, where $s(n)$ is the number of $1$s in the binary expansion of $n$. Row $2^j - 1 = 11\cdots1_2$ is entirely odd, and row $2^j$ has only two odd
+entries: this explains the picture above.
+\item $\binom{1000}{300} \bmod 7$: in base $7$, $1000 = 2626_7$ ($2 \cdot 343 + 6 \cdot 49 + 2 \cdot 7 + 6$) and $300 = 0606_7$ ($6 \cdot 49 + 6$). Then
+$\binom{1000}{300} \equiv \binom{2}{0}\binom{6}{6}\binom{2}{0}\binom{6}{6} = 1 \pmod 7$.
+\end{enumerate}
+\end{example}
+
+\subsection{Legendre's formula and Kummer's theorem}\label{combinatorics:subsection-kummer}
+
+Lucas' theorem decides whether $p$ divides $\binom{n}{k}$; Kummer's theorem gives the exact power of $p$ that does. For a prime $p$ and an integer $m \neq 0$, let $v_p(m)$ be the exponent of $p$ in the
+prime factorisation of $m$ (Theorem~\ref{number-systems:theorem-fundamental-arithmetic}), so $v_p(ab) = v_p(a) + v_p(b)$. For $n \in \NN$ let $s_p(n)$ be the sum of the digits of $n$ in base $p$.
+
+\begin{theorem}[Legendre's formula]\label{combinatorics:theorem-legendre}
+For a prime $p$ and $n \in \NN$,
+\[
+v_p(n!) = \sum_{i \geq 1}\Bigl\lfloor\frac{n}{p^i}\Bigr\rfloor = \frac{n - s_p(n)}{p - 1},
+\]
+where the sum is finite, since its terms vanish for $p^i > n$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: the sum.} By additivity of $v_p$, $v_p(n!) = \sum_{m=1}^{n}v_p(m)$. Count the set of pairs $(m, i)$ with $1 \leq m \leq n$, $i \geq 1$ and $p^i \mid m$ in two ways
+(Proposition~\ref{combinatorics:proposition-double-counting}): for fixed $m$ there are $v_p(m)$ values of $i$; for fixed $i$ there are $\lfloor n/p^i \rfloor$ multiples of $p^i$ in $[n]$.
+
+\emph{Step 2: the digit sum.} Write $n = \sum_{j=0}^{r}n_jp^j$. Then $\lfloor n/p^i \rfloor = \sum_{j \geq i}n_jp^{j-i}$, because the remaining part $\sum_{j < i}n_jp^j$ is at most
+$\sum_{j<i}(p - 1)p^j = p^i - 1$. Hence
+\[
+\sum_{i \geq 1}\Bigl\lfloor\frac{n}{p^i}\Bigr\rfloor = \sum_{j=0}^{r}n_j(p^{j-1} + p^{j-2} + \cdots + 1) = \sum_{j=0}^{r}n_j\frac{p^j - 1}{p - 1} = \frac{n - s_p(n)}{p - 1},
+\]
+where the term $j = 0$ is $0$.
+\end{proof}
+
+\begin{example}\label{combinatorics:example-legendre}
+The number $100!$ ends with $\lfloor 100/5 \rfloor + \lfloor 100/25 \rfloor = 24$ zeros: the exponent of $10$ is $\min(v_2, v_5)$, and $v_5(100!) = 24$ is smaller than
+$v_2(100!) = 50 + 25 + 12 + 6 + 3 + 1 = 97$. The second formula gives $v_2(100!) = 100 - s_2(100) = 100 - 3 = 97$, since $100 = 1100100_2$.
+\end{example}
+
+\begin{theorem}[Kummer]\label{combinatorics:theorem-kummer}
+For a prime $p$ and $0 \leq k \leq n$, $v_p\binom{n}{k}$ is the number of carries when $k$ and $n - k$ are added in base $p$. Equivalently, $v_p\binom{n}{k} = \bigl(s_p(k) + s_p(n - k) - s_p(n)\bigr)/(p - 1)$.
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{combinatorics:theorem-binomial-formula} and Theorem~\ref{combinatorics:theorem-legendre},
+$v_p\binom{n}{k} = v_p(n!) - v_p(k!) - v_p((n - k)!) = \bigl(s_p(k) + s_p(n - k) - s_p(n)\bigr)/(p - 1)$. It remains to relate this to carries. Add $a = k$ and $b = n - k$ digit by digit: with
+$c_{-1} = 0$, at position $i$ one computes $a_i + b_i + c_{i-1} = n_i + pc_i$, where $c_i \in \{0, 1\}$ is the carry. Summing over all positions, $s_p(a) + s_p(b) + \sum_ic_{i} = s_p(n) + p\sum_ic_i$
+(the last carry is $0$, because $a + b = n$ has no more digits than $n$). Hence $s_p(a) + s_p(b) - s_p(n) = (p - 1)\sum_ic_i$.
+\end{proof}
+
+\begin{corollary}\label{combinatorics:corollary-central-binomial-primes}
+Let $m \geq 1$ and let $p$ be a prime.
+\begin{enumerate}
+\item $p^{v_p\binom{2m}{m}} \leq 2m$: every prime power dividing $\binom{2m}{m}$ is at most $2m$.
+\item If $m \geq 3$ and $\frac{2m}{3} < p \leq m$, then $p$ does not divide $\binom{2m}{m}$; if $m < p \leq 2m$, then $p$ divides $\binom{2m}{m}$ exactly once.
+\end{enumerate}
+The hypothesis $m \geq 3$ is needed: for $m = 2$ and $p = 2$, $\frac43 < 2 \leq 2$ but $2$ divides $\binom{4}{2} = 6$.
+\end{corollary}
+
+\begin{proof}
+(1) Adding $m$ to itself in base $p$, a carry can only occur at a position $i$ with $p^i \leq 2m$, since there are no carries beyond the digits of $2m$; so the number of carries is at most the number of
+$i \geq 1$ with $p^i \leq 2m$, and $p^{v_p} \leq 2m$. Alternatively, by Legendre's formula $v_p\binom{2m}{m} = \sum_{i \geq 1}\bigl(\lfloor 2m/p^i \rfloor - 2\lfloor m/p^i \rfloor\bigr)$, and each term is
+$0$ or $1$ (as $\lfloor 2t \rfloor - 2\lfloor t \rfloor \in \{0, 1\}$ for real $t \geq 0$) and vanishes for $p^i > 2m$.
+
+(2) If $m \geq 3$ and $\frac{2m}{3} < p \leq m$, then $p^2 > 2m$: for $m \geq 5$ because $p^2 > \frac{4m^2}{9} \geq 2m$, and for $m \in \{3, 4\}$ because then $p = 3$. So only $i = 1$ contributes, with
+$\lfloor 2m/p \rfloor - 2\lfloor m/p \rfloor = 2 - 2 = 0$ because $1 \leq m/p < 3/2$ and $2 \leq 2m/p < 3$. If $m < p \leq 2m$, then $p^2 > 2m$ (as $p > m \geq 1$ gives $p^2 \geq (m + 1)^2 > 2m$), and the
+$i = 1$ term is $1 - 0 = 1$.
+\end{proof}
+
+\begin{remark}\label{combinatorics:remark-bertrand}
+Corollary~\ref{combinatorics:corollary-central-binomial-primes} and the bounds of Proposition~\ref{combinatorics:proposition-unimodal} are the ingredients of Erd\H{o}s' proof of Bertrand's postulate,
+that there is a prime between $m$ and $2m$ for every $m \geq 1$: if there were none, all prime factors of $\binom{2m}{m}$ would be at most $2m/3$, each contributing at most $2m$, and the product would
+be smaller than $4^m/(2m + 1)$ for large $m$. The proof, with Chebyshev's estimates for the number of primes, belongs to Chapter~\ref{analytic-number-theory}.
+\end{remark}
+
+\section{Multisets, compositions and multinomial coefficients}\label{combinatorics:section-multisets}
+
+A binomial coefficient counts choices without order and without repetition. Allowing repetition, or remembering how many times each element was chosen, leads to the other basic counts.
+
+\subsection{Multisets and stars and bars}\label{combinatorics:subsection-stars-bars}
+
+\begin{definition}\label{combinatorics:definition-multiset}
+A \emph{multiset} on a set $A$ is a map $m \colon A \to \NN$; $m(a)$ is the \emph{multiplicity} of $a$, and if $A$ is finite, the \emph{size} of $m$ is $\sum_{a \in A}m(a)$. A multiset of size $k$
+on $A$ is also called a \emph{$k$-combination with repetition} of elements of $A$. The number of multisets of size $k$ on a set with $n$ elements is denoted $\left(\!\binom{n}{k}\!\right)$
+(read ``$n$ multichoose $k$'').
+\end{definition}
+
+\begin{notation}\label{combinatorics:notation-multiset}
+A multiset is written by listing its elements with repetition, in any order, between double braces or simply in brackets: $\{a, a, b\}$ is the multiset with $m(a) = 2$, $m(b) = 1$ and $m = 0$
+elsewhere. Thus a multiset of size $k$ on $[n]$ is the same as a weakly increasing sequence $1 \leq a_1 \leq a_2 \leq \cdots \leq a_k \leq n$, or a solution of $x_1 + \cdots + x_n = k$ in
+natural numbers (with $x_i = m(i)$).
+\end{notation}
+
+\begin{theorem}[Stars and bars]\label{combinatorics:theorem-stars-bars}
+For $n \geq 1$ and $k \geq 0$, the number of multisets of size $k$ on an $n$-element set, equivalently the number of solutions of $x_1 + x_2 + \cdots + x_n = k$ in natural numbers, is
+\[
+\left(\!\binom{n}{k}\!\right) = \binom{n + k - 1}{k} = \binom{n + k - 1}{n - 1}.
+\]
+For $k \geq 1$, the number of solutions in positive integers $x_i \geq 1$ is $\binom{k - 1}{n - 1}$.
+\end{theorem}
+
+\begin{proof}
+We give a bijective proof. Represent a solution $(x_1, \ldots, x_n)$ by a word of $k$ stars and $n - 1$ bars: $x_1$ stars, a bar, $x_2$ stars, a bar, and so on, ending with $x_n$ stars. For instance,
+for $n = 4$ and $k = 5$, the solution $(2, 0, 3, 0)$ becomes $\ast\ast\,|\,|\,\ast\ast\ast\,|$. Conversely, every word with $k$ stars and $n - 1$ bars determines a solution: $x_i$ is the number of stars
+between the $(i - 1)$-th and the $i$-th bar. A word of length $n + k - 1$ is determined by the set of positions of its bars, which is an arbitrary $(n - 1)$-element subset of $[n + k - 1]$. This gives
+$\binom{n + k - 1}{n - 1}$, which equals $\binom{n + k - 1}{k}$ by symmetry.
+
+For positive solutions, substitute $y_i = x_i - 1 \geq 0$: the solutions of $x_1 + \cdots + x_n = k$ with $x_i \geq 1$ correspond to the solutions of $y_1 + \cdots + y_n = k - n$ with $y_i \geq 0$, and
+there are $\binom{n + (k - n) - 1}{n - 1} = \binom{k - 1}{n - 1}$ of them if $k \geq n$, and none if $k < n$, in agreement with $\binom{k-1}{n-1} = 0$ for $1 \leq k < n$.
+\end{proof}
+
+\begin{example}\label{combinatorics:example-stars-bars}
+\begin{enumerate}
+\item A bakery sells $4$ kinds of doughnuts. A box of $12$ doughnuts can be filled in $\binom{15}{3} = 455$ ways; if every kind must appear, in $\binom{11}{3} = 165$ ways.
+\item The number of monomials $x_1^{a_1} \cdots x_n^{a_n}$ of degree $k$ in $n$ variables is $\binom{n + k - 1}{k}$; for instance there are $\binom{4}{2} = 6$ quadratic monomials in $3$ variables,
+$x^2, y^2, z^2, xy, xz, yz$, so the space of quadratic forms in three variables has dimension $6$. The number of monomials of degree at most $k$ is $\binom{n + k}{k}$ (add a slack variable).
+\item Throwing three dice, the number of possible outcomes up to order (multisets of size $3$ on $[6]$) is $\binom{8}{3} = 56$; the number of ordered outcomes is $6^3 = 216$. The two counts must not be
+confused when computing probabilities: the $56$ multisets are not equally likely.
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{combinatorics:counterexample-stars-bars-bounded}
+Stars and bars does not apply directly when the variables are bounded above. The number of solutions of $x_1 + x_2 + x_3 = 10$ with $0 \leq x_i \leq 4$ is not $\binom{12}{2} = 66$; the true number,
+$6$, is computed by inclusion--exclusion in Example~\ref{combinatorics:example-bounded-solutions}.
+\end{counterexample}
+
+\subsection{Compositions}\label{combinatorics:subsection-compositions}
+
+\begin{definition}\label{combinatorics:definition-composition}
+A \emph{composition} of $k \in \NN$ is a finite sequence $(c_1, \ldots, c_n)$ of positive integers with $c_1 + \cdots + c_n = k$; the $c_i$ are its \emph{parts}. A \emph{weak composition} allows
+parts equal to $0$ (and then one fixes the number $n$ of parts).
+\end{definition}
+
+\begin{proposition}\label{combinatorics:proposition-compositions}
+For $k \geq 1$, the number of compositions of $k$ with $n$ parts is $\binom{k - 1}{n - 1}$, and the total number of compositions of $k$ is $2^{k-1}$.
+\end{proposition}
+
+\begin{proof}
+The first count is the second part of Theorem~\ref{combinatorics:theorem-stars-bars}. Bijectively: write $k$ as a row of $k$ dots; there are $k - 1$ gaps between consecutive dots, and a composition is
+the same as the set of gaps where the row is cut. A set of $n - 1$ gaps gives $n$ parts. All subsets of the $k - 1$ gaps together give $2^{k-1}$ compositions.
+\end{proof}
+
+\begin{example}\label{combinatorics:example-compositions}
+The $2^3 = 8$ compositions of $4$ are $4$, $3 + 1$, $1 + 3$, $2 + 2$, $2 + 1 + 1$, $1 + 2 + 1$, $1 + 1 + 2$ and $1 + 1 + 1 + 1$. If the order of the parts is forgotten, only the $5$ \emph{partitions}
+$4$, $3 + 1$, $2 + 2$, $2 + 1 + 1$, $1 + 1 + 1 + 1$ remain; partitions are much harder to count (Section~\ref{combinatorics:section-partitions}). The compositions of $k$ with all parts equal to $1$ or
+$2$ are counted by the Fibonacci numbers (Exercise~\ref{combinatorics:exercise-fibonacci-compositions}).
+\end{example}
+
+\subsection{Multinomial coefficients}\label{combinatorics:subsection-multinomial}
+
+\begin{definition}\label{combinatorics:definition-multinomial}
+For $k_1, \ldots, k_r \in \NN$ with $k_1 + \cdots + k_r = n$, the \emph{multinomial coefficient} $\binom{n}{k_1, \ldots, k_r}$ is the number of maps $f \colon [n] \to [r]$ with
+$|f^{-1}(i)| = k_i$ for every $i$; equivalently, the number of ordered decompositions $[n] = A_1 \cup \cdots \cup A_r$ into pairwise disjoint sets with $|A_i| = k_i$, or the number of words of length
+$n$ containing the letter $i$ exactly $k_i$ times.
+\end{definition}
+
+\begin{theorem}\label{combinatorics:theorem-multinomial}
+\begin{enumerate}
+\item $\binom{n}{k_1, \ldots, k_r} = \dfrac{n!}{k_1!\,k_2! \cdots k_r!} = \binom{n}{k_1}\binom{n - k_1}{k_2} \cdots \binom{n - k_1 - \cdots - k_{r-1}}{k_r}$; for $r = 2$,
+$\binom{n}{k, n - k} = \binom{n}{k}$.
+\item (Multinomial theorem) If $x_1, \ldots, x_r$ are pairwise commuting elements of a ring, then
+\[
+(x_1 + \cdots + x_r)^n = \sum_{k_1 + \cdots + k_r = n}\binom{n}{k_1, \ldots, k_r}x_1^{k_1} \cdots x_r^{k_r},
+\]
+the sum running over all $(k_1, \ldots, k_r) \in \NN^r$ with sum $n$.
+\item $\sum_{k_1 + \cdots + k_r = n}\binom{n}{k_1, \ldots, k_r} = r^n$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) Choose $A_1$ among the $\binom{n}{k_1}$ subsets of size $k_1$ of $[n]$, then $A_2$ among the subsets of size $k_2$ of the remaining $n - k_1$ elements, and so on; the number of choices at each step
+does not depend on the earlier choices, so Corollary~\ref{combinatorics:corollary-successive-choices} gives the product of binomial coefficients, which telescopes to $n!/(k_1! \cdots k_r!)$ by
+Theorem~\ref{combinatorics:theorem-binomial-formula}. Alternatively: the symmetric group $S_n$ acts on the words with the given letter counts by permuting positions; each word is obtained from the
+word $1^{k_1}2^{k_2} \cdots r^{k_r}$ by exactly $k_1! \cdots k_r!$ permutations (those that permute the positions of each letter among themselves and then move them into place), so the shepherd's principle
+gives $n!/(k_1! \cdots k_r!)$.
+
+(2) Expanding the product of $n$ factors gives the sum over all words $w \in [r]^n$ of $x_{w_1} \cdots x_{w_n}$, which equals $x_1^{k_1} \cdots x_r^{k_r}$ when the letter $i$ occurs $k_i$ times,
+because the $x_i$ commute. (3) is (2) with all $x_i = 1$, or the rule of sum applied to $[r]^{[n]}$ grouped by the letter counts.
+\end{proof}
+
+\begin{example}\label{combinatorics:example-multinomial}
+The word MISSISSIPPI has $11$ letters: M once, I four times, S four times and P twice. Its letters can be rearranged in $\binom{11}{1, 4, 4, 2} = \frac{11!}{1!\,4!\,4!\,2!} = 34\,650$ distinguishable
+ways. The coefficient of $x^2y^3z$ in $(x + y + z)^6$ is $\binom{6}{2, 3, 1} = 60$.
+\end{example}
+
+\subsection{Lattice paths}\label{combinatorics:subsection-lattice-paths}
+
+\begin{definition}\label{combinatorics:definition-lattice-path}
+A \emph{lattice path} from $(0, 0)$ to $(a, b) \in \NN^2$ is a sequence of $a + b$ unit steps, each either $E = (1, 0)$ (east) or $N = (0, 1)$ (north), with exactly $a$ steps $E$ and $b$ steps $N$.
+\end{definition}
+
+\begin{proposition}\label{combinatorics:proposition-lattice-paths}
+There are $\binom{a + b}{a}$ lattice paths from $(0, 0)$ to $(a, b)$. Among the lattice paths from $(0, 0)$ to $(n, n)$, the number of those that never go above the diagonal (that is, every initial
+segment has at least as many steps $E$ as steps $N$) is the \emph{Catalan number}
+\[
+C_n = \binom{2n}{n} - \binom{2n}{n + 1} = \frac{1}{n + 1}\binom{2n}{n}.
+\]
+\end{proposition}
+
+\begin{proof}
+A path is a word with $a$ letters $E$ and $b$ letters $N$, determined by the positions of the $E$s. For the second statement we count the \emph{bad} paths to $(n, n)$, those that reach the line $y = x + 1$
+somewhere, and show that they are in bijection with all paths from $(0, 0)$ to $(n - 1, n + 1)$ (André's reflection principle). Given a bad path, let $t$ be the first time it touches the line $y = x + 1$,
+and replace each step after time $t$ by the other kind of step ($E \leftrightarrow N$); this reflects the rest of the path in the line $y = x + 1$, so the new path ends at the reflection $(n - 1, n + 1)$ of
+$(n, n)$. Conversely every path from $(0, 0)$ to $(n - 1, n + 1)$ must cross the line $y = x + 1$, since it starts below it and ends above it; reflecting its part after the first contact gives a bad path to
+$(n, n)$, and the two operations are inverse to each other. Hence there are $\binom{2n}{n - 1} = \binom{2n}{n + 1}$ bad paths, and $C_n = \binom{2n}{n} - \binom{2n}{n+1}$. Finally
+$\binom{2n}{n+1} = \binom{2n}{n}\frac{n}{n + 1}$, so $C_n = \binom{2n}{n}\bigl(1 - \frac{n}{n+1}\bigr) = \frac{1}{n + 1}\binom{2n}{n}$.
+\end{proof}
+
+\begin{example}\label{combinatorics:example-catalan}
+The Catalan numbers begin $C_0, C_1, \ldots = 1, 1, 2, 5, 14, 42, 132, 429, 1430, 4862$. They count a remarkable number of different objects; for $n = 3$ the $5$ paths
+$EEENNN$, $EENENN$, $EENNEN$, $ENEENN$, $ENENEN$ correspond to the $5$ ways to bracket a product of four factors, $((ab)c)d$, $(a(bc))d$, $(ab)(cd)$, $a((bc)d)$, $a(b(cd))$, and to the $5$
+triangulations of a convex pentagon by non-crossing diagonals. These bijections, the recurrence $C_{n+1} = \sum_{i=0}^{n}C_iC_{n-i}$ and the generating function of the Catalan numbers are developed in
+Chapter~\ref{generating-functions}; the ballot problem is Exercise~\ref{combinatorics:exercise-ballot}.
+\end{example}
+
+\begin{remark}\label{combinatorics:remark-twelvefold-way}
+The counts of this and the following sections fit into the \emph{twelvefold way} of Rota: count the maps $f \colon K \to N$ between sets with $|K| = k$ and $|N| = n$, either all maps, or the injective,
+or the surjective ones, where the elements of $K$ (the balls) and of $N$ (the boxes) may each be distinguishable or not, that is, maps are counted up to permutations of $K$, of $N$, of both, or of
+neither. With $S(k, n)$ the Stirling numbers of the second kind (Definition~\ref{combinatorics:definition-stirling-second}) and $p_n(k)$ the number of partitions of $k$ into exactly $n$ parts
+(Definition~\ref{combinatorics:definition-partition}), the answers are:
+\[
+\begin{array}{l|ccc}
+ & \text{any } f & \text{injective } f & \text{surjective } f \\ \hline
+\text{balls and boxes distinguishable} & n^k & n^{\underline{k}} & n!\,S(k, n) \\
+\text{balls alike, boxes distinguishable} & \binom{n + k - 1}{k} & \binom{n}{k} & \binom{k - 1}{n - 1} \\
+\text{balls distinguishable, boxes alike} & \sum_{j \leq n}S(k, j) & [k \leq n] & S(k, n) \\
+\text{balls and boxes alike} & \sum_{j \leq n}p_j(k) & [k \leq n] & p_n(k)
+\end{array}
+\]
+where $[k \leq n]$ is $1$ if $k \leq n$ and $0$ otherwise. The first two rows are proved in this section and in Theorem~\ref{combinatorics:theorem-counting-maps}; the entries with Stirling numbers
+are proved in Section~\ref{combinatorics:section-stirling}, and those with partitions in Section~\ref{combinatorics:section-partitions}.
+\end{remark}
+
+\section{Inclusion--exclusion}\label{combinatorics:section-inclusion-exclusion}
+
+By the rule of sum, $|A \cup B| = |A| + |B| - |A \cap B|$: adding $|A|$ and $|B|$ counts the elements of $A \cap B$ twice, and one subtracts them once. For three sets,
+$|A \cup B \cup C| = |A| + |B| + |C| - |A \cap B| - |A \cap C| - |B \cap C| + |A \cap B \cap C|$, as one checks by drawing a Venn diagram. The general formula alternates between adding and subtracting
+the sizes of intersections.
+
+\subsection{The principle}\label{combinatorics:subsection-inclusion-exclusion}
+
+\begin{notation}\label{combinatorics:notation-intersections}
+Let $A_1, \ldots, A_n$ be subsets of a finite set $X$. For $I \subseteq [n]$ put $A_I = \bigcap_{i \in I}A_i$, with the convention $A_\emptyset = X$. For a subset $A \subseteq X$ we write
+$\bar{A} = X \setminus A$ for its complement in $X$.
+\end{notation}
+
+\begin{theorem}[Inclusion--exclusion]\label{combinatorics:theorem-inclusion-exclusion}
+Let $A_1, \ldots, A_n$ be subsets of a finite set $X$. Then
+\[
+\Bigl|X \setminus \bigcup_{i=1}^{n}A_i\Bigr| = \sum_{I \subseteq [n]}(-1)^{|I|}|A_I|, \qquad \Bigl|\bigcup_{i=1}^{n}A_i\Bigr| = \sum_{\emptyset \neq I \subseteq [n]}(-1)^{|I|+1}|A_I|.
+\]
+More generally, if $w \colon X \to M$ is a map to an abelian group, then $\sum_{x \notin \bigcup_iA_i}w(x) = \sum_{I \subseteq [n]}(-1)^{|I|}\sum_{x \in A_I}w(x)$.
+\end{theorem}
+
+\begin{proof}
+We prove the weighted statement; the first formula is the case $w = 1$, and the second follows from the first since $|\bigcup_iA_i| = |X| - |X \setminus \bigcup_iA_i|$ and $A_\emptyset = X$.
+Exchanging the order of summation (Remark~\ref{combinatorics:remark-sum-notation}),
+\[
+\sum_{I \subseteq [n]}(-1)^{|I|}\sum_{x \in A_I}w(x) = \sum_{x \in X}w(x)\sum_{I \subseteq J(x)}(-1)^{|I|},
+\]
+where $J(x) = \{i : x \in A_i\}$, because $x \in A_I$ if and only if $I \subseteq J(x)$. The inner sum is $\sum_{k}(-1)^k\binom{|J(x)|}{k}$, which is $1$ if $J(x) = \emptyset$ and $0$ otherwise
+(Corollary~\ref{combinatorics:corollary-binomial-consequences}(1)). So the right side is the sum of $w(x)$ over the $x$ that lie in no $A_i$.
+\end{proof}
+
+\begin{corollary}[Symmetric form]\label{combinatorics:corollary-inclusion-exclusion-symmetric}
+If $|A_I|$ depends only on $|I|$, say $|A_I| = N_k$ when $|I| = k$, then $\bigl|X \setminus \bigcup_iA_i\bigr| = \sum_{k=0}^{n}(-1)^k\binom{n}{k}N_k$.
+\end{corollary}
+
+\begin{proof}
+Group the terms of Theorem~\ref{combinatorics:theorem-inclusion-exclusion} by $k = |I|$; there are $\binom{n}{k}$ sets $I$ of size $k$.
+\end{proof}
+
+\begin{proposition}[Bonferroni inequalities]\label{combinatorics:proposition-bonferroni}
+In the situation of Theorem~\ref{combinatorics:theorem-inclusion-exclusion}, let $\Sigma_k = \sum_{|I| = k}|A_I|$. For every $m \geq 0$, the truncated sum
+$\sum_{k=0}^{m}(-1)^k\Sigma_k$ is $\geq |X \setminus \bigcup_iA_i|$ if $m$ is even and $\leq |X \setminus \bigcup_iA_i|$ if $m$ is odd.
+\end{proposition}
+
+\begin{proof}
+As in the proof of Theorem~\ref{combinatorics:theorem-inclusion-exclusion}, an element $x$ with $|J(x)| = j$ contributes $\sum_{k=0}^{m}(-1)^k\binom{j}{k}$ to the truncated sum. For $j = 0$ this is $1$,
+which is also its contribution to the left side. For $j \geq 1$ it is $(-1)^m\binom{j - 1}{m}$ by Proposition~\ref{combinatorics:proposition-binomial-identities}(6), which is $\geq 0$ for $m$ even
+and $\leq 0$ for $m$ odd, while the contribution to the left side is $0$.
+\end{proof}
+
+The case $m = 1$ is the \emph{union bound} $|\bigcup_iA_i| \leq \sum_i|A_i|$, the most used inequality of probabilistic combinatorics (Chapter~\ref{probabilistic-method}).
+
+\begin{counterexample}\label{combinatorics:counterexample-bonferroni}
+The truncated sums need not approach the true value monotonically from both sides in absolute terms. Take $X = [4]$ and $A_1 = A_2 = A_3 = A_4 = [4]$. Then $|X \setminus \bigcup A_i| = 0$, and the
+truncated sums are $\Sigma_0 = 4$, then $4 - 16 = -12$, then $-12 + 24 = 12$, then $12 - 16 = -4$, and finally $-4 + 4 = 0$. They oscillate with large amplitude before ending at $0$; truncating
+inclusion--exclusion only gives useful estimates when the higher intersections are small.
+\end{counterexample}
+
+\subsection{Surjections, derangements and Euler's function}\label{combinatorics:subsection-applications-inclusion-exclusion}
+
+\begin{theorem}[Surjections]\label{combinatorics:theorem-surjections}
+The number of surjective maps from a $k$-element set onto an $n$-element set is
+\[
+\operatorname{Surj}(k, n) = \sum_{j=0}^{n}(-1)^j\binom{n}{j}(n - j)^k .
+\]
+In particular $\sum_{j=0}^{n}(-1)^j\binom{n}{j}(n - j)^k = 0$ for $k < n$, and $= n!$ for $k = n$.
+\end{theorem}
+
+\begin{proof}
+Let $X$ be the set of all maps $[k] \to [n]$ and $A_i$ the set of maps whose image does not contain $i$. A map is surjective if it lies in no $A_i$. For $|I| = j$, $A_I$ is the set of maps into
+$[n] \setminus I$, with $(n - j)^k$ elements. Apply Corollary~\ref{combinatorics:corollary-inclusion-exclusion-symmetric}. For $k < n$ there are no surjections, and for $k = n$ the surjections are the
+$n!$ bijections (Corollary~\ref{combinatorics:corollary-injective-surjective}).
+\end{proof}
+
+\begin{example}\label{combinatorics:example-surjections}
+$\operatorname{Surj}(4, 3) = 3^4 - 3 \cdot 2^4 + 3 \cdot 1^4 - 0 = 81 - 48 + 3 = 36$. Directly: a surjection $[4] \to [3]$ has one value taken twice; choose that value ($3$ ways), the two elements mapped
+to it ($\binom{4}{2} = 6$ ways), and the bijection of the remaining two elements onto the remaining two values ($2$ ways): $3 \cdot 6 \cdot 2 = 36$.
+\end{example}
+
+\begin{definition}\label{combinatorics:definition-derangement}
+A \emph{derangement} of a set $A$ is a permutation of $A$ without fixed points. The number of derangements of an $n$-element set is denoted $D_n$.
+\end{definition}
+
+\begin{theorem}[Derangements]\label{combinatorics:theorem-derangements}
+For $n \geq 0$,
+\[
+D_n = n!\sum_{j=0}^{n}\frac{(-1)^j}{j!} = n! - \frac{n!}{1!} + \frac{n!}{2!} - \cdots + (-1)^n\frac{n!}{n!}.
+\]
+The numbers $D_n$ satisfy $D_0 = 1$, $D_1 = 0$, $D_n = (n - 1)(D_{n-1} + D_{n-2})$ for $n \geq 2$, and $D_n = nD_{n-1} + (-1)^n$ for $n \geq 1$.
+\end{theorem}
+
+\begin{proof}
+\emph{The formula.} Let $X = S_n$ and $A_i = \{\sigma : \sigma(i) = i\}$. For $|I| = j$, $A_I$ consists of the permutations fixing $I$ pointwise, which are the permutations of $[n] \setminus I$: there
+are $(n - j)!$ of them. By Corollary~\ref{combinatorics:corollary-inclusion-exclusion-symmetric},
+$D_n = \sum_j(-1)^j\binom{n}{j}(n - j)! = \sum_j(-1)^jn!/j!$.
+
+\emph{The second recurrence} follows from the formula: $nD_{n-1} = n!\sum_{j=0}^{n-1}(-1)^j/j!$, and the missing term is $n!(-1)^n/n! = (-1)^n$.
+
+\emph{The first recurrence, bijectively.} Let $n \geq 2$ and fix $i \in [n - 1]$; we count the derangements $\sigma$ of $[n]$ with $\sigma(n) = i$, and show that there are $D_{n-1} + D_{n-2}$ of
+them. Since every derangement has $\sigma(n) \neq n$, summing over the $n - 1$ values of $i$ gives the recurrence.
+\begin{itemize}
+\item If moreover $\sigma(i) = n$, then $\sigma$ exchanges $i$ and $n$, and its restriction to $[n] \setminus \{i, n\}$ is an arbitrary derangement of this $(n - 2)$-element set: $D_{n-2}$ possibilities.
+\item If $\sigma(i) \neq n$, let $k = \sigma^{-1}(n)$; then $k \neq n$, and $k \neq i$. Define $\sigma^{\prime}$ on $[n - 1]$ by $\sigma^{\prime}(k) = i$ and $\sigma^{\prime}(j) = \sigma(j)$ for $j \neq k$:
+it is obtained by cutting $n$ out of its cycle $\cdots \to k \to n \to i \to \cdots$. It is a permutation of $[n - 1]$ without fixed points ($\sigma^{\prime}(k) = i \neq k$). Conversely, given a
+derangement $\tau$ of $[n - 1]$, let $k = \tau^{-1}(i)$, and define $\sigma(k) = n$, $\sigma(n) = i$ and $\sigma(j) = \tau(j)$ otherwise: this inserts $n$ into the cycle of $\tau$ just before $i$, and
+gives a derangement of $[n]$ with $\sigma(n) = i$ and $\sigma(i) = \tau(i) \neq n$. The two constructions are inverse to each other, so there are $D_{n-1}$ such $\sigma$.
+\end{itemize}
+\end{proof}
+
+\begin{example}\label{combinatorics:example-derangements}
+$D_0, D_1, \ldots, D_8 = 1, 0, 1, 2, 9, 44, 265, 1854, 14833$. If $n$ letters are put at random into $n$ addressed envelopes (the \emph{probl\`eme des rencontres} of Montmort, 1708), the probability that
+no letter is in its envelope is $D_n/n! = \sum_{j=0}^{n}(-1)^j/j!$. These numbers are $1, 0, 0.5, 0.333, 0.375, 0.367, 0.368, \ldots$ and settle very quickly: they are the partial sums of the series of
+$e^{-1} = 0.3679\ldots$, so $D_n$ is the integer nearest to $n!/e$ for $n \geq 1$ (Exercise~\ref{combinatorics:exercise-derangements-nearest}, which uses the exponential series of
+Chapter~\ref{real-analysis}). Remarkably, the probability hardly depends on $n$.
+\end{example}
+
+\begin{proposition}[Euler's function]\label{combinatorics:proposition-euler-inclusion-exclusion}
+If $p_1, \ldots, p_r$ are the distinct prime factors of $n \geq 1$, then
+$\varphi(n) = \sum_{I \subseteq [r]}(-1)^{|I|}\frac{n}{\prod_{i \in I}p_i} = n\prod_{i=1}^{r}\Bigl(1 - \frac{1}{p_i}\Bigr)$.
+\end{proposition}
+
+\begin{proof}
+Let $X = [n]$ and $A_i$ the set of multiples of $p_i$ in $X$. An element of $X$ is coprime to $n$ if and only if it lies in no $A_i$. For $I \subseteq [r]$, $A_I$ is the set of multiples of
+$d_I = \prod_{i \in I}p_i$ (the $p_i$ being distinct primes, an integer is divisible by all $p_i$, $i \in I$, if and only if it is divisible by their product), and it has $n/d_I$ elements. Theorem~\ref{combinatorics:theorem-inclusion-exclusion}
+gives the sum, and expanding the product $\prod_i(1 - 1/p_i)$ gives the same sum.
+\end{proof}
+
+This recovers Proposition~\ref{number-theory:proposition-euler-function}(3) without the Chinese remainder theorem. The same argument with $X = [N]$ for arbitrary $N$ is the \emph{sieve of Eratosthenes}
+in quantitative form: the number of integers in $[N]$ not divisible by any of the primes $p_1, \ldots, p_r$ is $\sum_{I}(-1)^{|I|}\lfloor N/d_I \rfloor$ (Legendre's sieve), the starting point of sieve
+theory.
+
+\begin{example}\label{combinatorics:example-bounded-solutions}
+We count the solutions of $x_1 + x_2 + x_3 = 10$ with $0 \leq x_i \leq 4$ (Counterexample~\ref{combinatorics:counterexample-stars-bars-bounded}). Let $X$ be the set of all solutions in $\NN$, with
+$|X| = \binom{12}{2} = 66$, and $A_i$ the set of solutions with $x_i \geq 5$. Substituting $x_i^{\prime} = x_i - 5$, $|A_i| = \binom{7}{2} = 21$; similarly $|A_i \cap A_j| = \binom{2}{2} = 1$ (the solution
+with $x_i = x_j = 5$), and $A_1 \cap A_2 \cap A_3 = \emptyset$. So the number of bounded solutions is $66 - 3 \cdot 21 + 3 \cdot 1 - 0 = 6$: they are the permutations of $(4, 4, 2)$ and of $(4, 3, 3)$.
+\end{example}
+
+\begin{example}[Probl\`eme des m\'enages]\label{combinatorics:example-menages}
+A classical refinement: in how many ways can $n$ married couples be seated at a round table with $2n$ numbered chairs, alternating men and women, so that nobody sits next to their spouse? Seat the women
+first, in $2 \cdot n!$ ways. Touchard's formula (1934; see \cite{van-lint-wilson}), obtained by inclusion--exclusion over the $2n$ ``forbidden adjacencies'', says that the men can then be seated in
+$U_n = \sum_{k=0}^{n}(-1)^k\frac{2n}{2n - k}\binom{2n - k}{k}(n - k)!$ ways; the key point is that the number of ways to choose $k$ pairwise disjoint pairs of neighbours among $2n$ chairs in a circle is
+$\frac{2n}{2n-k}\binom{2n-k}{k}$ (Exercise~\ref{combinatorics:exercise-circular-choices}). For $n = 3, 4, 5$ one gets $U_n = 1, 2, 13$.
+\end{example}
+
+\section{M\"obius inversion on partially ordered sets}\label{combinatorics:section-posets}
+
+Inclusion--exclusion and the M\"obius inversion of number theory (Theorem~\ref{number-theory:theorem-mobius-inversion}) look different, but both invert a summation over a partial order: over the subsets of
+a set ordered by inclusion, and over the divisors of an integer ordered by divisibility. Rota showed in 1964 that every locally finite partially ordered set has a M\"obius function, which inverts summation
+over it. This is the natural setting of inclusion--exclusion.
+
+\subsection{Partially ordered sets and the incidence algebra}\label{combinatorics:subsection-incidence-algebra}
+
+\begin{definition}\label{combinatorics:definition-poset}
+A \emph{partially ordered set} (or \emph{poset}) is a set $P$ with a relation $\leq$ that is reflexive, antisymmetric and transitive; $x < y$ means $x \leq y$ and $x \neq y$. For $x \leq y$ the
+\emph{interval} $[x, y]$ is $\{z \in P : x \leq z \leq y\}$. The poset is \emph{locally finite} if every interval is finite. A \emph{chain} is a subset on which $\leq$ is total, and an
+\emph{antichain} a subset of pairwise incomparable elements.
+\end{definition}
+
+\begin{example}\label{combinatorics:example-posets}
+\begin{enumerate}
+\item The \emph{Boolean lattice} $B_n = \mathcal{P}([n])$, ordered by inclusion. Its intervals $[S, T]$ are in bijection with $\mathcal{P}(T \setminus S)$.
+\item The positive integers ordered by divisibility, $d \preceq m$ if $d \mid m$; it is locally finite, as $[d, m]$ is a subset of the divisors of $m$.
+\item A chain $\{0 < 1 < 2 < \cdots\}$, that is, $\NN$ with its usual order.
+\item The set $\Pi_n$ of partitions of $[n]$ into nonempty blocks, ordered by refinement: $\pi \leq \sigma$ if every block of $\pi$ is contained in a block of $\sigma$.
+\end{enumerate}
+\end{example}
+
+\begin{definition}\label{combinatorics:definition-incidence-algebra}
+Let $P$ be a locally finite poset and $K$ a commutative ring. The \emph{incidence algebra} $I(P)$ is the set of functions $f \colon \{(x, y) \in P \times P : x \leq y\} \to K$, with pointwise addition
+and the \emph{convolution}
+\[
+(f \ast g)(x, y) = \sum_{x \leq z \leq y}f(x, z)\,g(z, y).
+\]
+Its elements include the \emph{delta function} $\delta(x, y) = 1$ if $x = y$ and $0$ otherwise, and the \emph{zeta function} $\zeta(x, y) = 1$ for all $x \leq y$.
+\end{definition}
+
+\begin{proposition}\label{combinatorics:proposition-incidence-algebra}
+$I(P)$ is a ring (in general not commutative) with identity $\delta$. An element $f$ is invertible if and only if $f(x, x)$ is invertible in $K$ for every $x \in P$.
+\end{proposition}
+
+\begin{proof}
+The sum defining $f \ast g$ is finite since intervals are finite. Associativity: both $((f \ast g) \ast h)(x, y)$ and $(f \ast (g \ast h))(x, y)$ equal $\sum f(x, z)g(z, w)h(w, y)$ over the pairs
+$x \leq z \leq w \leq y$, by exchanging the order of summation. Distributivity is clear, and $\delta \ast f = f = f \ast \delta$.
+
+If $f \ast g = \delta$, then $f(x, x)g(x, x) = 1$. Conversely, suppose each $f(x, x)$ is invertible. Define $g(x, y)$ by induction on the number of elements of $[x, y]$: $g(x, x) = f(x, x)^{-1}$ and,
+for $x < y$,
+\[
+g(x, y) = -f(x, x)^{-1}\sum_{x < z \leq y}f(x, z)\,g(z, y),
+\]
+which only uses values $g(z, y)$ on smaller intervals $[z, y] \subsetneq [x, y]$. This says precisely that $f \ast g = \delta$. In the same way there is $h$ with $h \ast f = \delta$, defined by a recursion
+on the other side, and then $h = h \ast (f \ast g) = (h \ast f) \ast g = g$.
+\end{proof}
+
+\begin{definition}\label{combinatorics:definition-mobius-function}
+The \emph{M\"obius function} $\mu = \mu_P$ of a locally finite poset $P$ is the inverse of $\zeta$ in $I(P)$, with $K = \ZZ$. Explicitly, $\mu(x, x) = 1$ and
+$\mu(x, y) = -\sum_{x \leq z < y}\mu(x, z)$ for $x < y$; equivalently, $\sum_{x \leq z \leq y}\mu(z, y) = 0$ for $x < y$.
+\end{definition}
+
+The explicit recursion is $\mu \ast \zeta = \delta$, and the equivalent one is $\zeta \ast \mu = \delta$; both hold since a two-sided inverse is unique.
+
+\begin{theorem}[M\"obius inversion]\label{combinatorics:theorem-mobius-inversion-posets}
+Let $P$ be a poset in which every principal ideal $\{y : y \leq x\}$ is finite, $M$ an abelian group, and $f, g \colon P \to M$. Then
+\[
+g(x) = \sum_{y \leq x}f(y) \ \text{ for all } x \qquad\text{if and only if}\qquad f(x) = \sum_{y \leq x}\mu(y, x)\,g(y) \ \text{ for all } x .
+\]
+Dually, if every principal filter $\{y : y \geq x\}$ is finite, $g(x) = \sum_{y \geq x}f(y)$ for all $x$ if and only if $f(x) = \sum_{y \geq x}\mu(x, y)g(y)$ for all $x$.
+\end{theorem}
+
+\begin{proof}
+Such a poset is locally finite. Suppose $g(x) = \sum_{y \leq x}f(y)$. Then
+\[
+\begin{aligned}
+\sum_{y \leq x}\mu(y, x)g(y) &= \sum_{y \leq x}\mu(y, x)\sum_{z \leq y}f(z) = \sum_{z \leq x}f(z)\sum_{z \leq y \leq x}\mu(y, x)\\
+&= \sum_{z \leq x}f(z)\,(\zeta \ast \mu)(z, x) = f(x),
+\end{aligned}
+\]
+since $(\zeta \ast \mu)(z, x) = \delta(z, x)$. The converse is the same computation with $\mu \ast \zeta = \delta$:
+$\sum_{y \leq x}\sum_{z \leq y}\mu(z, y)g(z) = \sum_{z \leq x}g(z)(\mu \ast \zeta)(z, x) = g(x)$. The dual statement is the same argument in the opposite poset, whose M\"obius function is
+$\mu^{\op}(x, y) = \mu(y, x)$.
+\end{proof}
+
+\subsection{Computing M\"obius functions}\label{combinatorics:subsection-computing-mobius}
+
+\begin{proposition}\label{combinatorics:proposition-mobius-examples}
+\begin{enumerate}
+\item For a chain, $\mu(x, x) = 1$, $\mu(x, y) = -1$ if $y$ covers $x$ (that is, $x < y$ with nothing in between), and $\mu(x, y) = 0$ otherwise.
+\item (Products) If $P$ and $Q$ are locally finite posets and $P \times Q$ has the product order, then $\mu_{P \times Q}((x, x^{\prime}), (y, y^{\prime})) = \mu_P(x, y)\,\mu_Q(x^{\prime}, y^{\prime})$.
+\item For the Boolean lattice $B_n$, $\mu(S, T) = (-1)^{|T \setminus S|}$ for $S \subseteq T$.
+\item For the divisibility order on the positive integers, $\mu(d, m) = \mu(m/d)$, the classical M\"obius function of number theory.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) The recursion gives $\mu(x, y) = -1$ if $[x, y] = \{x, y\}$, and then $\mu(x, y) = -(1 - 1 + 0 + \cdots) = 0$ for longer intervals, by induction on their length.
+
+(2) The function $\nu((x, x^{\prime}), (y, y^{\prime})) = \mu_P(x, y)\mu_Q(x^{\prime}, y^{\prime})$ satisfies, for $(x, x^{\prime}) \leq (y, y^{\prime})$,
+\[
+\begin{aligned}
+\sum_{(x,x^{\prime}) \leq (z,z^{\prime}) \leq (y,y^{\prime})}\nu((x, x^{\prime}), (z, z^{\prime}))
+&= \Bigl(\sum_{x \leq z \leq y}\mu_P(x, z)\Bigr)\Bigl(\sum_{x^{\prime} \leq z^{\prime} \leq y^{\prime}}\mu_Q(x^{\prime}, z^{\prime})\Bigr)\\
+&= \delta_P(x, y)\,\delta_Q(x^{\prime}, y^{\prime}),
+\end{aligned}
+\]
+because the interval $[(x, x^{\prime}), (y, y^{\prime})]$ is the product $[x, y] \times [x^{\prime}, y^{\prime}]$. So $\nu \ast \zeta = \delta$ in $I(P \times Q)$, and $\nu = \mu_{P \times Q}$ by uniqueness of inverses.
+
+(3) $B_n$ is isomorphic to the product of $n$ copies of the chain $\{0 < 1\}$, via indicator functions. By (1) and (2), $\mu(S, T)$ is the product over $i \in [n]$ of $1$ if $1_S(i) = 1_T(i)$ and $-1$ if
+$1_S(i) = 0 < 1 = 1_T(i)$.
+
+(4) The interval $[d, m]$ is isomorphic to $[1, m/d]$ by $e \mapsto e/d$. If $n = p_1^{k_1} \cdots p_r^{k_r}$, the divisors of $n$ form a poset isomorphic to the product of the chains
+$\{0 < 1 < \cdots < k_i\}$ (unique factorisation, Theorem~\ref{number-systems:theorem-fundamental-arithmetic}). By (1) and (2), $\mu(1, n)$ is $(-1)^r$ if all $k_i = 1$ and $0$ if some $k_i \geq 2$,
+which is the classical $\mu(n)$.
+\end{proof}
+
+\begin{corollary}\label{combinatorics:corollary-mobius-special-cases}
+\begin{enumerate}
+\item Theorem~\ref{combinatorics:theorem-mobius-inversion-posets} for the Boolean lattice is the principle of inclusion--exclusion: if $g(T) = \sum_{S \subseteq T}f(S)$ for all $T \subseteq [n]$,
+then $f(T) = \sum_{S \subseteq T}(-1)^{|T \setminus S|}g(S)$.
+\item For the divisibility order it is the classical M\"obius inversion formula.
+\item For the chain $\NN$ it says that $g(n) = \sum_{k \leq n}f(k)$ is inverted by $f(n) = g(n) - g(n - 1)$: summation and the difference operator are inverse to each other.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+Combine Theorem~\ref{combinatorics:theorem-mobius-inversion-posets} with Proposition~\ref{combinatorics:proposition-mobius-examples}. To see that (1) contains Theorem~\ref{combinatorics:theorem-inclusion-exclusion},
+let $A_1, \ldots, A_n \subseteq X$, and for $T \subseteq [n]$ let $f(T)$ be the number of $x \in X$ with $J(x) = \{i : x \in A_i\}$ equal to $[n] \setminus T$; then $g(T) = \sum_{S \subseteq T}f(S)$ is
+the number of $x$ with $J(x) \supseteq [n] \setminus T$, that is, $|A_{[n] \setminus T}|$, and $f([n])$ is the number of $x$ in no $A_i$. Then (1) gives
+$f([n]) = \sum_{S}(-1)^{n - |S|}|A_{[n] \setminus S}| = \sum_{I}(-1)^{|I|}|A_I|$.
+\end{proof}
+
+\begin{example}\label{combinatorics:example-mobius-partitions}
+For the partition lattice $\Pi_n$ of Example~\ref{combinatorics:example-posets}(4), let $\hat{0}$ be the partition into singletons and $\hat{1}$ the partition with one block. Then
+$\mu(\hat{0}, \hat{1}) = (-1)^{n-1}(n - 1)!$. For $n = 3$: $\Pi_3$ has $\hat{0}$, three partitions with blocks of sizes $2, 1$, and $\hat{1}$; the recursion gives $\mu(\hat{0}, \hat{0}) = 1$,
+$\mu(\hat{0}, \pi) = -1$ for the three middle elements, and $\mu(\hat{0}, \hat{1}) = -(1 - 3) = 2 = (-1)^2 2!$. The general formula is proved in Exercise~\ref{combinatorics:exercise-mobius-partition-lattice};
+it is used to count connected graphs and to invert the relation between moments and cumulants in probability.
+\end{example}
+
+\begin{example}[Counting irreducible polynomials]\label{combinatorics:example-irreducible-polynomials}
+Let $q$ be a prime power and $N_d$ the number of monic irreducible polynomials of degree $d$ over the finite field $\mathbb{F}_q$. Every element of $\mathbb{F}_{q^n}$ is a root of $x^{q^n} - x$, and this
+polynomial is the product of all monic irreducible polynomials whose degree divides $n$ (Chapter~\ref{fields}); comparing degrees, $q^n = \sum_{d \mid n}dN_d$. M\"obius inversion in the divisibility order
+gives Gauss' formula
+\[
+N_n = \frac{1}{n}\sum_{d \mid n}\mu(d)\,q^{n/d}.
+\]
+For $q = 2$: $N_1 = 2$, $N_2 = (4 - 2)/2 = 1$ (only $x^2 + x + 1$), $N_3 = (8 - 2)/3 = 2$, $N_4 = (16 - 4)/4 = 3$. Since $N_n \geq 1$, there is a field with $q^n$ elements for every $n$; the formula also
+shows that $N_n \approx q^n/n$, the analogue for polynomials of the prime number theorem.
+\end{example}
+
+\section{The pigeonhole principle}\label{combinatorics:section-pigeonhole}
+
+If more than $n$ pigeons fly into $n$ holes, some hole contains at least two pigeons. This obvious statement, Proposition~\ref{sets:proposition-pigeonhole} in the language of set theory, proves the
+existence of objects that one cannot easily construct, and many of its applications are surprising.
+
+\subsection{The principle and its strong form}\label{combinatorics:subsection-pigeonhole-principle}
+
+\begin{theorem}[Pigeonhole principle]\label{combinatorics:theorem-pigeonhole}
+Let $f \colon A \to B$ be a map of finite sets with $B \neq \emptyset$.
+\begin{enumerate}
+\item If $|A| > |B|$, then $f$ is not injective: some fibre $f^{-1}(b)$ has at least two elements.
+\item (Strong form) If $|A| > k|B|$ for some $k \in \NN$, then some fibre has at least $k + 1$ elements. More generally, some fibre has at least $|A|/|B|$ elements, and some fibre has at most
+$|A|/|B|$ elements.
+\item (Infinite form) If $A$ is infinite and $B$ is finite, then some fibre is infinite.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) is the case $k = 1$ of (2). For (2), if every fibre had at most $k$ elements, Theorem~\ref{combinatorics:theorem-fibres} would give $|A| = \sum_b|f^{-1}(b)| \leq k|B|$. Similarly
+$|A| = \sum_b|f^{-1}(b)|$ is at most $|B|$ times the largest fibre and at least $|B|$ times the smallest. (3) If all fibres were finite, $A$ would be a finite union of finite sets, hence finite by
+Theorem~\ref{combinatorics:theorem-rule-of-sum}.
+\end{proof}
+
+\begin{example}\label{combinatorics:example-pigeonhole-elementary}
+\begin{enumerate}
+\item Among any $13$ people, two were born in the same month; among any $367$, two share a birthday. In a city of $1\,000\,000$ inhabitants, each with at most $200\,000$ hairs, some $5$ have the
+same number of hairs, by the strong form with $200\,001$ holes: $1\,000\,000 > 4 \cdot 200\,001$.
+\item Choose $n + 1$ numbers from $[2n]$. Then two of them are consecutive, hence coprime: the $n$ holes are the pairs $\{1, 2\}, \{3, 4\}, \ldots, \{2n - 1, 2n\}$. Also one of them divides another:
+write each number as $2^ja$ with $a$ odd; there are only $n$ odd numbers $a$ in $[2n]$, so two chosen numbers $2^ja$ and $2^{j^{\prime}}a$ have the same odd part, and the smaller divides the larger.
+Both statements fail for $n$ numbers: take $\{1, 3, \ldots, 2n - 1\}$ for the first and $\{n + 1, \ldots, 2n\}$ for the second.
+\item Among any $n$ integers $a_1, \ldots, a_n$, the sum of some nonempty run $a_{i+1} + \cdots + a_j$ is divisible by $n$: two of the $n + 1$ prefix sums $s_0 = 0, s_1 = a_1, \ldots, s_n$ are congruent
+modulo $n$, and their difference is such a run.
+\end{enumerate}
+\end{example}
+
+\subsection{Dirichlet's approximation theorem}\label{combinatorics:subsection-dirichlet}
+
+For a real number $x$, let $\lfloor x \rfloor$ be the largest integer $\leq x$ (it exists: the integers $> x$ form a nonempty set bounded below by the Archimedean property,
+Proposition~\ref{number-systems:proposition-complete-archimedean}, and $\lfloor x \rfloor$ is one less than its least element), and $\{x\} = x - \lfloor x \rfloor \in [0, 1)$ its fractional part.
+
+\begin{theorem}[Dirichlet]\label{combinatorics:theorem-dirichlet-approximation}
+Let $\alpha$ be a real number and $N \geq 1$ an integer. There are integers $p$ and $q$ with $1 \leq q \leq N$ and $|q\alpha - p| < 1/N$; in particular $|\alpha - p/q| < 1/(qN) \leq 1/q^2$. If $\alpha$ is
+irrational, there are infinitely many fractions $p/q$ with $q \geq 1$ and $|\alpha - p/q| < 1/q^2$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: pigeons and holes.} The $N + 1$ numbers $\{q\alpha\}$, $0 \leq q \leq N$, lie in $[0, 1)$, which is the union of the $N$ intervals $[j/N, (j + 1)/N)$, $0 \leq j < N$. By the pigeonhole
+principle two of them, $\{q_1\alpha\}$ and $\{q_2\alpha\}$ with $q_1 < q_2$, lie in the same interval, so differ by less than $1/N$. Put $q = q_2 - q_1 \in [1, N]$ and
+$p = \lfloor q_2\alpha \rfloor - \lfloor q_1\alpha \rfloor$. Then $q\alpha - p = \{q_2\alpha\} - \{q_1\alpha\}$, so $|q\alpha - p| < 1/N$.
+
+\emph{Step 2: infinitely many pairs.} Let $\alpha$ be irrational. Then $q\alpha - p \neq 0$ for all integers $p$ and $q \geq 1$. Apply Step 1 with $N_1 = 1$ to get a pair $(p_1, q_1)$, and
+recursively, given $(p_j, q_j)$, apply it with an $N_{j+1} > 1/|q_j\alpha - p_j|$ to get $(p_{j+1}, q_{j+1})$ with $|q_{j+1}\alpha - p_{j+1}| < 1/N_{j+1} < |q_j\alpha - p_j|$. The numbers
+$|q_j\alpha - p_j|$ strictly decrease, so the pairs $(p_j, q_j)$ are pairwise distinct, and each satisfies $|\alpha - p_j/q_j| < 1/q_j^2$.
+
+\emph{Step 3: infinitely many fractions.} For each $q$ only finitely many $p$ satisfy $|q\alpha - p| < 1$, so infinitely many distinct pairs have unbounded denominators $q_j$. Then
+$|\alpha - p_j/q_j| < 1/q_j^2$ becomes arbitrarily small, while a fixed rational number $r$ has $|\alpha - r| > 0$; so each value $r$ occurs only finitely often among the $p_j/q_j$, and there are
+infinitely many distinct fractions.
+\end{proof}
+
+\begin{counterexample}\label{combinatorics:counterexample-dirichlet-rational}
+For rational $\alpha$ the last statement is false. Let $\alpha = a/b$ with $b \geq 1$. If $p/q \neq \alpha$, then $aq - bp$ is a nonzero integer, so
+$|\alpha - p/q| = |aq - bp|/(bq) \geq 1/(bq)$, which is $\geq 1/q^2$ as soon as $q \geq b$. So a fraction $p/q \neq \alpha$ with $|\alpha - p/q| < 1/q^2$ has $q < b$, and for each such $q$ only
+finitely many $p$ qualify: apart from $\alpha$ itself there are only finitely many such fractions. Irrationality is exactly what makes good approximations accumulate.
+\end{counterexample}
+
+\begin{remark}\label{combinatorics:remark-hurwitz}
+The exponent $2$ in $1/q^2$ cannot be improved for all numbers: for an algebraic irrational $\alpha$ and $\varepsilon > 0$, Roth's theorem says that $|\alpha - p/q| < 1/q^{2+\varepsilon}$ has only
+finitely many solutions, while Liouville constructed transcendental numbers, such as $\sum_k10^{-k!}$, with much better approximations. The constant can be improved: by Hurwitz's theorem every irrational
+$\alpha$ has infinitely many approximations with $|\alpha - p/q| < 1/(\sqrt{5}q^2)$, and $\sqrt5$ cannot be replaced by any larger constant, as the golden ratio shows. The best approximations are the
+convergents of the continued fraction of $\alpha$. For all of this see \cite[Chapters X and XI]{hardy-wright}. The pigeonhole argument extends to several numbers at once
+(Exercise~\ref{combinatorics:exercise-dirichlet-simultaneous}).
+\end{remark}
+
+\subsection{Monotone subsequences}\label{combinatorics:subsection-erdos-szekeres}
+
+\begin{theorem}[Erd\H{o}s--Szekeres]\label{combinatorics:theorem-erdos-szekeres}
+Let $m, n \geq 1$. Every sequence of $mn + 1$ distinct real numbers has an increasing subsequence of length $m + 1$ or a decreasing subsequence of length $n + 1$. The bound is sharp: there are sequences
+of $mn$ distinct numbers with neither.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: labels.} Let $a_1, \ldots, a_{mn+1}$ be the sequence, and let $\ell_i$ be the length of the longest increasing subsequence that begins with $a_i$. Suppose there is no increasing
+subsequence of length $m + 1$; then $\ell_i \in [m]$ for all $i$.
+
+\emph{Step 2: pigeonhole.} By the strong form of the pigeonhole principle, since $mn + 1 > n \cdot m$, some label $\ell$ is taken by at least $n + 1$ indices $i_1 < i_2 < \cdots < i_{n+1}$.
+
+\emph{Step 3: these terms decrease.} If $i < j$ and $\ell_i = \ell_j$, then $a_i > a_j$: otherwise $a_i < a_j$, and $a_i$ followed by a longest increasing subsequence beginning with $a_j$ would be an
+increasing subsequence of length $\ell_j + 1$ beginning with $a_i$. So $a_{i_1} > a_{i_2} > \cdots > a_{i_{n+1}}$.
+
+\emph{Sharpness.} Take $n$ blocks of $m$ numbers each, the blocks decreasing and each block increasing: $(n - 1)m + 1, \ldots, nm$, then $(n - 2)m + 1, \ldots, (n - 1)m$, and so on down to
+$1, \ldots, m$. An increasing subsequence stays within one block, so has length $\leq m$; a decreasing subsequence takes at most one term from each block, so has length $\leq n$.
+\end{proof}
+
+\begin{example}\label{combinatorics:example-erdos-szekeres}
+For $m = n = 2$: every sequence of $5$ distinct numbers has a monotone subsequence of length $3$, while $3, 4, 1, 2$ has none. Every arrangement of $101$ different heights in a row contains $11$ people
+standing in increasing or decreasing order of height. Erd\H{o}s and Szekeres proved the theorem in 1935 in a paper on convex polygons, where it gives that every set of points in general position contains
+the vertices of a convex $k$-gon once it is large enough.
+\end{example}
+
+\subsection{A first Ramsey number}\label{combinatorics:subsection-ramsey-first}
+
+\begin{proposition}\label{combinatorics:proposition-party}
+Among any $6$ people there are $3$ who all know each other or $3$ who all do not know each other. This fails for $5$ people.
+\end{proposition}
+
+\begin{proof}
+Fix a person $a$. By the pigeonhole principle, among the other $5$ people at least $3$ know $a$, or at least $3$ do not know $a$; by symmetry, suppose $b, c, d$ know $a$. If two of $b, c, d$ know each
+other, they form with $a$ three people who all know each other. Otherwise $b, c, d$ are three people who do not know each other. For $5$ people, seat them at a round table and suppose that everybody knows
+exactly their two neighbours: three people always include two neighbours and two non-neighbours.
+\end{proof}
+
+In the language of graphs (Chapter~\ref{graph-theory}): every colouring of the edges of the complete graph on $6$ vertices with two colours contains a monochromatic triangle, so the Ramsey number
+$R(3, 3)$ is $6$. Ramsey's theorem says that for every $k$ there is such a number $R(k, k)$; it is a deep generalisation of the pigeonhole principle, and only $R(3, 3) = 6$ and $R(4, 4) = 18$ are known
+among the diagonal ones with $k \geq 3$.
+
+\section{Double counting and extremal set theory}\label{combinatorics:section-double-counting}
+
+Proposition~\ref{combinatorics:proposition-double-counting} says that a relation can be counted from either side. Used for identities, it is a bookkeeping device; used for inequalities, it is one of the
+main methods of \emph{extremal combinatorics}, which asks how large a family of finite sets can be under some restriction.
+
+\subsection{Identities by double counting}\label{combinatorics:subsection-identities-double-counting}
+
+\begin{proposition}\label{combinatorics:proposition-fixed-points-average}
+\begin{enumerate}
+\item The permutations of $[n]$ have, in total, $n!$ fixed points; so a permutation has on average one fixed point, for every $n \geq 1$.
+\item The total number of cycles of all permutations of $[n]$ is $n!\,H_n$, where $H_n = 1 + \frac12 + \cdots + \frac1n$; so a permutation has on average $H_n$ cycles.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) Count the pairs $(\sigma, i)$ with $\sigma(i) = i$: for each of the $n$ points $i$ there are $(n - 1)!$ permutations fixing $i$, so there are $n \cdot (n - 1)! = n!$ pairs.
+
+(2) Count the pairs $(\sigma, C)$ with $C$ a cycle of $\sigma$ (including cycles of length $1$, the fixed points). The number of permutations having a given cycle $C = (a_1 \, \cdots \, a_k)$ is $(n - k)!$,
+the number of permutations of the other elements. The number of cycles of length $k$ on $[n]$ is $n^{\underline{k}}/k$: an injective sequence $(a_1, \ldots, a_k)$ and its $k$ rotations give the same
+cycle. So the number of pairs is $\sum_{k=1}^{n}\frac{n^{\underline{k}}}{k}(n - k)! = \sum_{k=1}^{n}\frac{n!}{k}$.
+\end{proof}
+
+\subsection{Sperner's theorem}\label{combinatorics:subsection-sperner}
+
+How many subsets of $[n]$ can one choose so that none contains another? All $k$-element subsets, for a fixed $k$, form such a family, and the largest of these has $\binom{n}{\lfloor n/2 \rfloor}$
+elements (Proposition~\ref{combinatorics:proposition-unimodal}). Sperner proved in 1928 that one cannot do better.
+
+\begin{theorem}[Lubell--Yamamoto--Meshalkin inequality]\label{combinatorics:theorem-lym}
+Let $\mathcal{F}$ be an antichain in the Boolean lattice $B_n$, that is, a family of subsets of $[n]$ none of which contains another. Then
+\[
+\sum_{S \in \mathcal{F}}\frac{1}{\binom{n}{|S|}} \leq 1 .
+\]
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: maximal chains.} A \emph{maximal chain} in $B_n$ is a sequence $\emptyset = C_0 \subsetneq C_1 \subsetneq \cdots \subsetneq C_n = [n]$ with $|C_i| = i$. It is determined by the permutation
+$\sigma$ of $[n]$ with $C_i = \{\sigma(1), \ldots, \sigma(i)\}$, and every permutation gives one, so there are $n!$ maximal chains.
+
+\emph{Step 2: double count.} Count the pairs $(S, C)$ with $S \in \mathcal{F}$ and $C$ a maximal chain containing $S$. A maximal chain contains at most one member of $\mathcal{F}$, because any two members
+of a chain are comparable. So there are at most $n!$ pairs. On the other hand, the maximal chains through a set $S$ with $|S| = k$ are obtained by listing first the elements of $S$ in any order and then
+the others: there are $k!\,(n - k)!$ of them. Hence $\sum_{S \in \mathcal{F}}|S|!\,(n - |S|)! \leq n!$, which is the inequality after division by $n!$.
+\end{proof}
+
+\begin{corollary}[Sperner]\label{combinatorics:corollary-sperner}
+An antichain in $B_n$ has at most $\binom{n}{\lfloor n/2 \rfloor}$ elements, and the family of all $\lfloor n/2 \rfloor$-element subsets is an antichain of this size.
+\end{corollary}
+
+\begin{proof}
+Every term of the LYM sum is at least $1/\binom{n}{\lfloor n/2 \rfloor}$, by Proposition~\ref{combinatorics:proposition-unimodal}; so $|\mathcal{F}|/\binom{n}{\lfloor n/2 \rfloor} \leq 1$.
+\end{proof}
+
+\begin{remark}\label{combinatorics:remark-sperner-equality}
+The proof also shows when equality can hold: all members of $\mathcal{F}$ must have the size of a largest binomial coefficient, and every maximal chain must meet $\mathcal{F}$. One deduces that the extremal
+antichains are the middle level $\binom{[n]}{n/2}$ for even $n$, and one of the two middle levels for odd $n$ (Exercise~\ref{combinatorics:exercise-sperner-equality}). Sperner's theorem has
+applications far from set theory: Littlewood and Offord, and Erd\H{o}s, used it to bound the number of the $2^n$ signed sums $\pm a_1 \pm \cdots \pm a_n$ of real numbers $|a_i| \geq 1$ that can
+lie in an interval of length $2$ (Exercise~\ref{combinatorics:exercise-littlewood-offord}).
+\end{remark}
+
+\subsection{The Erd\H{o}s--Ko--Rado theorem}\label{combinatorics:subsection-ekr}
+
+A family of sets is \emph{intersecting} if any two of its members have a common element. If $n \geq 2k$, the family of all $k$-element subsets of $[n]$ containing a fixed element $1$ (a \emph{star}) is
+intersecting and has $\binom{n-1}{k-1}$ members. Erd\H{o}s, Ko and Rado proved (in 1938, published in 1961) that no intersecting family is larger; the following proof is due to Katona (1972).
+
+\begin{lemma}\label{combinatorics:lemma-katona-arcs}
+Let $n \geq 2k \geq 2$, and for $i \in \ZZ/n\ZZ$ let $I_i = \{i, i + 1, \ldots, i + k - 1\} \subseteq \ZZ/n\ZZ$ (an \emph{arc} of $k$ consecutive residues). A family of pairwise intersecting arcs
+contains at most $k$ arcs.
+\end{lemma}
+
+\begin{proof}
+Let $\mathcal{A}$ be such a family, and suppose (rotating if necessary) that $I_0 = \{0, \ldots, k - 1\} \in \mathcal{A}$. The arcs that meet $I_0$, other than $I_0$, are the $I_i$ with
+$1 \leq i \leq k - 1$ (starting inside $I_0$) and the $I_{i-k}$ with $1 \leq i \leq k - 1$ (ending at $i - 1$, inside $I_0$); these $2k - 2$ arcs are distinct because $n \geq 2k$. For each
+$i \in [k - 1]$, the arcs $I_{i-k} = \{i - k, \ldots, i - 1\}$ and $I_i = \{i, \ldots, i + k - 1\}$ are disjoint, since together they consist of $2k \leq n$ consecutive residues. So $\mathcal{A}$ contains at
+most one arc of each of these $k - 1$ pairs, and $|\mathcal{A}| \leq 1 + (k - 1) = k$.
+\end{proof}
+
+\begin{theorem}[Erd\H{o}s--Ko--Rado]\label{combinatorics:theorem-ekr}
+Let $n \geq 2k \geq 2$, and let $\mathcal{F}$ be an intersecting family of $k$-element subsets of $[n]$. Then $|\mathcal{F}| \leq \binom{n - 1}{k - 1}$.
+\end{theorem}
+
+\begin{proof}
+Identify $[n]$ with $\ZZ/n\ZZ$ by any bijection. Count the pairs $(\pi, i)$ where $\pi$ is a permutation of $\ZZ/n\ZZ$ and $i \in \ZZ/n\ZZ$ is such that $\pi(I_i) \in \mathcal{F}$.
+
+For fixed $\pi$, the arcs $I_i$ with $\pi(I_i) \in \mathcal{F}$ are pairwise intersecting, because their images are; by Lemma~\ref{combinatorics:lemma-katona-arcs} there are at most $k$ such $i$. So
+there are at most $k \cdot n!$ pairs.
+
+For fixed $i$ and $A \in \mathcal{F}$, the permutations with $\pi(I_i) = A$ are obtained by mapping $I_i$ bijectively onto $A$ and the complement onto the complement, so there are $k!\,(n - k)!$ of
+them. Summing over the $n$ values of $i$ and the members of $\mathcal{F}$, there are exactly $|\mathcal{F}| \cdot n \cdot k!\,(n - k)!$ pairs. Hence $|\mathcal{F}| \cdot n \cdot k!\,(n - k)! \leq k \cdot n!$,
+that is,
+\[
+|\mathcal{F}| \leq \frac{k\,(n - 1)!}{k!\,(n - k)!} = \binom{n - 1}{k - 1}.
+\]
+\end{proof}
+
+\begin{counterexample}\label{combinatorics:counterexample-ekr}
+The hypothesis $n \geq 2k$ is necessary. If $n < 2k$, any two $k$-element subsets of $[n]$ intersect (their sizes add up to more than $n$), so the family of all of them is intersecting, and
+$\binom{n}{k} > \binom{n - 1}{k - 1}$ for $k < n$. For instance all $3$ two-element subsets of $[3]$ pairwise intersect, while a star has only $2$ members. For $n = 2k$ the bound is attained by
+many families other than the stars: choose one set from each of the $\frac12\binom{2k}{k} = \binom{2k-1}{k-1}$ complementary pairs.
+\end{counterexample}
+
+\section{Stirling numbers and permutations}\label{combinatorics:section-stirling}
+
+Binomial coefficients count subsets. The next most important families of numbers count the ways to cut a set into pieces: into unordered blocks (Stirling numbers of the second kind), into cycles
+(Stirling numbers of the first kind), and into ordered lists (Lah numbers). Each family changes bases between the powers $x^n$, the falling factorials $x^{\underline{n}}$ and the rising factorials
+$x^{\overline{n}}$ in the polynomial ring.
+
+\subsection{Set partitions and Stirling numbers of the second kind}\label{combinatorics:subsection-stirling-second}
+
+\begin{definition}\label{combinatorics:definition-stirling-second}
+A \emph{partition} of a set $A$ is a set $\pi$ of nonempty, pairwise disjoint subsets of $A$, the \emph{blocks} of $\pi$, whose union is $A$; equivalently, the set of equivalence classes of an
+equivalence relation on $A$. For $n, k \in \NN$, the \emph{Stirling number of the second kind} $S(n, k)$ is the number of partitions of $[n]$ into exactly $k$ blocks, and the \emph{Bell number}
+$B_n = \sum_kS(n, k)$ is the number of all partitions of $[n]$.
+\end{definition}
+
+\begin{notation}\label{combinatorics:notation-stirling}
+Other common notations are $\left\{ n \atop k \right\}$ for $S(n, k)$ and $\left[ n \atop k \right]$ for the Stirling number of the first kind $c(n, k)$ defined below (Karamata's and Knuth's
+notation). We use $S(n, k)$ and $c(n, k)$, and $s(n, k) = (-1)^{n-k}c(n, k)$ for the signed Stirling numbers of the first kind.
+\end{notation}
+
+\begin{proposition}\label{combinatorics:proposition-stirling-second}
+\begin{enumerate}
+\item $S(0, 0) = 1$, $S(n, 0) = 0$ for $n \geq 1$, $S(n, k) = 0$ for $k > n$, and for $n \geq 0$, $k \geq 1$,
+\[
+S(n + 1, k) = S(n, k - 1) + k\,S(n, k).
+\]
+\item The number of surjections $[n] \to [k]$ is $k!\,S(n, k)$; hence $S(n, k) = \frac{1}{k!}\sum_{j=0}^{k}(-1)^j\binom{k}{j}(k - j)^n$.
+\item $S(n, 1) = 1$ and $S(n, 2) = 2^{n-1} - 1$ for $n \geq 1$, and $S(n, n - 1) = \binom{n}{2}$, $S(n, n) = 1$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) The boundary values are clear (a partition of $\emptyset$ is the empty set of blocks). Consider a partition of $[n + 1]$ into $k$ blocks. If $\{n + 1\}$ is a block, removing it leaves a partition of
+$[n]$ into $k - 1$ blocks. Otherwise, removing $n + 1$ from its block leaves a partition of $[n]$ into $k$ blocks, and each such partition arises from exactly $k$ partitions of $[n + 1]$, one for each block
+to which $n + 1$ can be added.
+
+(2) A surjection $f \colon [n] \to [k]$ determines the partition of $[n]$ into its $k$ nonempty fibres, together with the bijection from the set of blocks to $[k]$ sending $f^{-1}(i)$ to $i$; conversely a
+partition into $k$ blocks and a bijection from its blocks to $[k]$ determine a surjection. So there are $k!\,S(n, k)$ surjections, and Theorem~\ref{combinatorics:theorem-surjections} gives the formula.
+
+(3) A partition into two blocks is determined by the block not containing $n$, which is a nonempty subset of $[n - 1]$, and every such subset occurs: $2^{n-1} - 1$. A partition into $n - 1$ blocks has
+one block with two elements and singletons otherwise.
+\end{proof}
+
+The recurrence gives the \emph{Stirling triangle}, with rows $n = 1, \ldots, 7$ and $k = 1, \ldots, n$, and the Bell numbers as row sums:
+\[
+\begin{array}{c|ccccccc|c}
+n \backslash k & 1 & 2 & 3 & 4 & 5 & 6 & 7 & B_n \\ \hline
+1 & 1 & & & & & & & 1 \\
+2 & 1 & 1 & & & & & & 2 \\
+3 & 1 & 3 & 1 & & & & & 5 \\
+4 & 1 & 7 & 6 & 1 & & & & 15 \\
+5 & 1 & 15 & 25 & 10 & 1 & & & 52 \\
+6 & 1 & 31 & 90 & 65 & 15 & 1 & & 203 \\
+7 & 1 & 63 & 301 & 350 & 140 & 21 & 1 & 877
+\end{array}
+\]
+
+\begin{theorem}\label{combinatorics:theorem-powers-falling}
+In $\ZZ[x]$, for every $n \in \NN$,
+\[
+x^n = \sum_{k=0}^{n}S(n, k)\,x^{\underline{k}} .
+\]
+\end{theorem}
+
+\begin{proof}
+Both sides are polynomials, so it suffices to prove the identity for $x = m \in \NN$ (Corollary~\ref{rings:corollary-roots}: the difference has infinitely many roots in the integral domain $\ZZ$). The left
+side $m^n$ counts all maps $f \colon [n] \to [m]$. Group them by their image $f[[n]]$, a subset of $[m]$ with some number $k$ of elements; for each of the $\binom{m}{k}$ such subsets $T$ there are
+$k!\,S(n, k)$ maps from $[n]$ onto $T$ (Proposition~\ref{combinatorics:proposition-stirling-second}(2)). So $m^n = \sum_k\binom{m}{k}k!\,S(n, k) = \sum_kS(n, k)m^{\underline{k}}$.
+\end{proof}
+
+\begin{proposition}[Bell numbers]\label{combinatorics:proposition-bell}
+$B_0 = 1$ and $B_{n+1} = \sum_{k=0}^{n}\binom{n}{k}B_k$ for $n \geq 0$. The sequence begins $1, 1, 2, 5, 15, 52, 203, 877, 4140, 21147$.
+\end{proposition}
+
+\begin{proof}
+In a partition of $[n + 1]$, let $T$ be the set of elements of $[n]$ not in the block of $n + 1$. The partition is determined by $T$ and by a partition of $T$; grouping by $k = |T|$ gives
+$\sum_k\binom{n}{k}B_k$.
+\end{proof}
+
+\subsection{Cycles and Stirling numbers of the first kind}\label{combinatorics:subsection-stirling-first}
+
+By Proposition~\ref{groups:proposition-cycle-decomposition}, a permutation of $[n]$ is a product of disjoint cycles, uniquely up to order. Counting fixed points as cycles of length $1$, the cycles of
+$\sigma$ are its orbits on $[n]$ with the cyclic order given by $\sigma$.
+
+\begin{definition}\label{combinatorics:definition-stirling-first}
+The \emph{Stirling number of the first kind} $c(n, k)$ is the number of permutations of $[n]$ with exactly $k$ cycles, fixed points included.
+\end{definition}
+
+\begin{theorem}\label{combinatorics:theorem-stirling-first}
+\begin{enumerate}
+\item $c(0, 0) = 1$, $c(n, 0) = 0$ for $n \geq 1$, and $c(n + 1, k) = c(n, k - 1) + n\,c(n, k)$ for $n \geq 0$, $k \geq 1$.
+\item In $\ZZ[x]$, $x^{\overline{n}} = x(x + 1) \cdots (x + n - 1) = \sum_{k=0}^{n}c(n, k)x^k$, and $x^{\underline{n}} = \sum_{k=0}^{n}s(n, k)x^k$.
+\item $\sum_kc(n, k) = n!$, $c(n, 1) = (n - 1)!$ and $c(n, n - 1) = \binom{n}{2}$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) Let $\sigma$ be a permutation of $[n + 1]$ with $k$ cycles. If $n + 1$ is a fixed point, removing it leaves a permutation of $[n]$ with $k - 1$ cycles. Otherwise let $j = \sigma^{-1}(n + 1) \in [n]$ and
+define $\tau$ on $[n]$ by $\tau(j) = \sigma(n + 1)$ and $\tau(i) = \sigma(i)$ for $i \neq j$; this removes $n + 1$ from its cycle, which keeps the number of cycles. Conversely, a permutation $\tau$ of $[n]$
+and an element $j \in [n]$ give back $\sigma$, by inserting $n + 1$ after $j$: $\sigma(j) = n + 1$, $\sigma(n + 1) = \tau(j)$. So the permutations of the second kind correspond bijectively to pairs $(\tau, j)$,
+and there are $n\,c(n, k)$ of them.
+
+(2) By induction on $n$: $x^{\overline{0}} = 1$, and
+$x^{\overline{n+1}} = x^{\overline{n}}(x + n) = \sum_kc(n, k)x^{k+1} + n\sum_kc(n, k)x^k$, whose coefficient of $x^k$ is $c(n, k - 1) + n\,c(n, k) = c(n + 1, k)$ by (1). Replacing $x$ by $-x$,
+$(-x)^{\overline{n}} = (-1)^nx^{\underline{n}}$, so $x^{\underline{n}} = (-1)^n\sum_kc(n, k)(-1)^kx^k = \sum_ks(n, k)x^k$.
+
+(3) The first statement is $x = 1$ in (2). A single cycle through all of $[n]$ is $(1 \; a_2 \; \cdots \; a_n)$ with $(a_2, \ldots, a_n)$ an arbitrary ordering of $\{2, \ldots, n\}$. A permutation with
+$n - 1$ cycles is a transposition.
+\end{proof}
+
+\[
+\begin{array}{c|cccccc}
+n \backslash k & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline
+1 & 1 & & & & & \\
+2 & 1 & 1 & & & & \\
+3 & 2 & 3 & 1 & & & \\
+4 & 6 & 11 & 6 & 1 & & \\
+5 & 24 & 50 & 35 & 10 & 1 & \\
+6 & 120 & 274 & 225 & 85 & 15 & 1
+\end{array}
+\]
+
+\begin{corollary}[Orthogonality]\label{combinatorics:corollary-stirling-orthogonality}
+For all $n, m \in \NN$, $\sum_kS(n, k)\,s(k, m) = \delta_{nm}$ and $\sum_ks(n, k)\,S(k, m) = \delta_{nm}$, where $\delta_{nm}$ is $1$ if $n = m$ and $0$ otherwise. In other words, the lower triangular
+matrices $(S(n, k))$ and $(s(n, k))$, $0 \leq n, k \leq N$, are inverse to each other.
+\end{corollary}
+
+\begin{proof}
+By Theorems~\ref{combinatorics:theorem-powers-falling} and~\ref{combinatorics:theorem-stirling-first}(2), $x^n = \sum_kS(n, k)x^{\underline{k}} = \sum_m\bigl(\sum_kS(n, k)s(k, m)\bigr)x^m$. The
+monomials are linearly independent (Lemma~\ref{rings:lemma-polynomial-basics}), which gives the first identity. The second follows in the same way, since the $x^{\underline{k}}$ are also linearly
+independent (the polynomial $x^{\underline{k}}$ has degree $k$).
+\end{proof}
+
+\begin{proposition}[Cycle types]\label{combinatorics:proposition-cycle-type}
+Let $m_1, \ldots, m_n \in \NN$ with $\sum_jjm_j = n$. The number of permutations of $[n]$ with exactly $m_j$ cycles of length $j$ for every $j$ is
+\[
+\frac{n!}{\prod_{j=1}^{n}j^{m_j}\,m_j!} .
+\]
+\end{proposition}
+
+\begin{proof}
+Write down a template consisting of $m_1$ pairs of parentheses of length $1$, then $m_2$ of length $2$, and so on, and fill the $n$ places with an ordering of $[n]$; each of the $n!$ fillings defines a
+permutation with the given cycle type, and every such permutation arises. A permutation arises from exactly $\prod_jj^{m_j}m_j!$ fillings: each cycle of length $j$ can be written starting at any of its
+$j$ elements, and the $m_j$ cycles of length $j$ can be put in any order. By the shepherd's principle, the number of permutations is $n!/\prod_jj^{m_j}m_j!$.
+\end{proof}
+
+\begin{example}\label{combinatorics:example-cycle-types}
+In $S_4$ the cycle types are $1^4$, $2\,1^2$, $2^2$, $3\,1$ and $4$, with $\frac{24}{24} = 1$, $\frac{24}{2 \cdot 2} = 6$, $\frac{24}{4 \cdot 2} = 3$, $\frac{24}{3} = 8$ and $\frac{24}{4} = 6$ elements;
+$1 + 6 + 3 + 8 + 6 = 24$. By Proposition~\ref{groups:proposition-cycle-decomposition} these are the sizes of the conjugacy classes of $S_4$, and the formula is the orbit--stabiliser theorem for the
+conjugation action: the centraliser of a permutation of type $\prod_jj^{m_j}$ has $\prod_jj^{m_j}m_j!$ elements.
+\end{example}
+
+\begin{definition}\label{combinatorics:definition-lah}
+The \emph{Lah number} $L(n, k)$ is the number of partitions of $[n]$ into $k$ nonempty blocks, each equipped with a linear order (a set of $k$ nonempty lists using every element of $[n]$ once).
+\end{definition}
+
+\begin{proposition}\label{combinatorics:proposition-lah}
+For $1 \leq k \leq n$, $L(n, k) = \binom{n - 1}{k - 1}\dfrac{n!}{k!}$.
+\end{proposition}
+
+\begin{proof}
+Arrange $[n]$ in a sequence ($n!$ ways) and cut it into $k$ nonempty consecutive pieces ($\binom{n-1}{k-1}$ ways, by Proposition~\ref{combinatorics:proposition-compositions}); this gives an ordered
+sequence of $k$ lists. Every set of $k$ lists arises from exactly $k!$ sequences of lists, one for each ordering of the lists (which are distinct, being nonempty and disjoint). The shepherd's principle
+gives the formula.
+\end{proof}
+
+\subsection{Descents and Eulerian numbers}\label{combinatorics:subsection-eulerian}
+
+\begin{definition}\label{combinatorics:definition-eulerian}
+A \emph{descent} of a permutation $\sigma$ of $[n]$, written as the word $\sigma(1)\sigma(2) \cdots \sigma(n)$, is a position $i \in [n - 1]$ with $\sigma(i) > \sigma(i + 1)$. The \emph{Eulerian
+number} $A(n, k)$ is the number of permutations of $[n]$ with exactly $k$ descents.
+\end{definition}
+
+\begin{proposition}\label{combinatorics:proposition-eulerian}
+Let $n \geq 1$.
+\begin{enumerate}
+\item (Symmetry) $A(n, k) = A(n, n - 1 - k)$.
+\item (Recurrence) $A(1, 0) = 1$ and $A(n, k) = (k + 1)A(n - 1, k) + (n - k)A(n - 1, k - 1)$ for $n \geq 2$.
+\item (Worpitzky's identity) $x^n = \sum_{k=0}^{n-1}A(n, k)\binom{x + k}{n}$ in $\QQ[x]$.
+\end{enumerate}
+The rows are $1$; $1, 1$; $1, 4, 1$; $1, 11, 11, 1$; $1, 26, 66, 26, 1$; $1, 57, 302, 302, 57, 1$.
+\end{proposition}
+
+\begin{proof}
+(1) Reversing the word, $\sigma \mapsto \sigma \circ w_0$ with $w_0(i) = n + 1 - i$, turns the descents into ascents; a permutation with $k$ descents has $n - 1 - k$ ascents.
+
+(2) Every permutation of $[n]$ is obtained in exactly one way by inserting $n$ into one of the $n$ slots (before the first letter, between two letters, after the last) of a permutation $\tau$ of
+$[n - 1]$. Inserting $n$ at the end, or between $\tau(i) > \tau(i + 1)$ at a descent, does not change the number of descents (the descent at $i$ moves to $n > \tau(i + 1)$). Inserting it at the beginning or
+in an ascent $\tau(i) < \tau(i + 1)$ adds one descent. If $\tau$ has $j$ descents, there are $j + 1$ slots of the first kind and $n - 1 - j$ of the second. So the permutations of $[n]$ with $k$ descents
+come from $\tau$ with $k$ descents in $k + 1$ ways and from $\tau$ with $k - 1$ descents in $n - 1 - (k - 1) = n - k$ ways.
+
+(3) It suffices to prove $m^n = \sum_kA(n, k)\binom{m + k}{n}$ for $m \in \NN$. \emph{Step 1: sorting.} For a map $f \colon [n] \to [m]$ let $\sigma_f$ be the permutation that sorts $f$ stably: the
+values $f(\sigma_f(1)) \leq \cdots \leq f(\sigma_f(n))$ are weakly increasing, and equal values are listed in increasing order of their positions, $\sigma_f(i) < \sigma_f(i + 1)$ whenever
+$f(\sigma_f(i)) = f(\sigma_f(i + 1))$. Then $b_i = f(\sigma_f(i))$ is weakly increasing, and strictly increasing at every descent of $\sigma_f$. Conversely, given a permutation $\sigma$ and a sequence
+$1 \leq b_1 \leq \cdots \leq b_n \leq m$ that increases strictly at the descents of $\sigma$, the map $f = b \circ \sigma^{-1}$ has $\sigma_f = \sigma$. \emph{Step 2: counting the $b$.} If $\sigma$ has $k$
+descents, subtracting from $b_i$ the number of descents before position $i$ is a bijection onto the weakly increasing sequences with values in $[m - k]$, of which there are
+$\binom{(m - k) + n - 1}{n}$ (Theorem~\ref{combinatorics:theorem-stars-bars}; if $m \leq k$ there are none, and the binomial coefficient is $0$ as well). Hence $m^n = \sum_kA(n, k)\binom{m - k + n - 1}{n}$, and replacing $k$ by $n - 1 - k$ with (1) gives the identity.
+\end{proof}
+
+\section{Integer partitions}\label{combinatorics:section-partitions}
+
+A partition of a number is a way of writing it as a sum of positive integers, without regard to order. Partitions are the subject of a deep theory, initiated by Euler and continued by Ramanujan,
+Hardy and many others; this section develops its combinatorial part.
+
+\subsection{Partitions and Ferrers diagrams}\label{combinatorics:subsection-ferrers}
+
+\begin{definition}\label{combinatorics:definition-partition}
+A \emph{partition} of $n \in \NN$ is a finite weakly decreasing sequence $\lambda = (\lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_k)$ of positive integers, its \emph{parts}, with
+$\lambda_1 + \cdots + \lambda_k = n$; we write $\lambda \vdash n$, and $\ell(\lambda) = k$ is its \emph{length}. The number of partitions of $n$ is $p(n)$ (with $p(0) = 1$, for the empty partition), and
+the number of partitions of $n$ into exactly $k$ parts is $p_k(n)$.
+\end{definition}
+
+\begin{notation}\label{combinatorics:notation-partition}
+A partition is also written as a sum, $7 = 3 + 2 + 2$, or with exponents for repeated parts, $(3, 2^2)$ or $3\,2^2$. Its \emph{Ferrers diagram} is the set
+$\{(i, j) \in \NN_{>0}^2 : j \leq \lambda_i\}$, drawn as rows of dots, $\lambda_i$ dots in row $i$, aligned on the left; for $(4, 2, 1)$:
+\[
+\begin{array}{llll}
+\bullet & \bullet & \bullet & \bullet \\
+\bullet & \bullet & & \\
+\bullet & & &
+\end{array}
+\]
+\end{notation}
+
+\begin{definition}\label{combinatorics:definition-conjugate}
+The \emph{conjugate} of a partition $\lambda$ is the partition $\lambda^{\prime}$ whose diagram is the reflection of that of $\lambda$ in the diagonal: $\lambda^{\prime}_j = |\{i : \lambda_i \geq j\}|$ is the
+number of dots in column $j$. A partition is \emph{self-conjugate} if $\lambda^{\prime} = \lambda$.
+\end{definition}
+
+\begin{proposition}\label{combinatorics:proposition-conjugate}
+Conjugation is an involution of the set of partitions of $n$. The number of parts of $\lambda^{\prime}$ is the largest part of $\lambda$, and the largest part of $\lambda^{\prime}$ is the number of parts of
+$\lambda$. Consequently the number of partitions of $n$ into exactly $k$ parts equals the number of partitions of $n$ with largest part $k$, and the number of partitions into at most $k$ parts equals the
+number with all parts at most $k$.
+\end{proposition}
+
+\begin{proof}
+The diagram $D$ of $\lambda$ is a finite subset of $\NN_{>0}^2$ with the property that $(i, j) \in D$, $i^{\prime} \leq i$, $j^{\prime} \leq j$ imply $(i^{\prime}, j^{\prime}) \in D$, and partitions of $n$
+correspond bijectively to such sets with $n$ elements (the rows of such a set have weakly decreasing lengths). The reflection $(i, j) \mapsto (j, i)$ preserves this property and the number of elements,
+and is its own inverse; it maps the diagram of $\lambda$ to that of $\lambda^{\prime}$. The number of rows of $D$ is the length of its first column, and conversely.
+\end{proof}
+
+\begin{proposition}\label{combinatorics:proposition-partition-recurrence}
+For $n, k \geq 1$, $p_k(n) = p_{k-1}(n - 1) + p_k(n - k)$, with $p_0(0) = 1$, $p_0(n) = 0$ for $n \geq 1$, and $p_k(n) = 0$ for $n < k$.
+\end{proposition}
+
+\begin{proof}
+A partition of $n$ into $k$ parts either has a part equal to $1$, and removing one such part gives a partition of $n - 1$ into $k - 1$ parts, or all its parts are at least $2$, and subtracting $1$ from
+each part gives a partition of $n - k$ into $k$ parts. Both operations are bijections onto their targets.
+\end{proof}
+
+\begin{example}\label{combinatorics:example-partition-values}
+The values of $p(n)$ for $n = 0, 1, \ldots, 15$ are
+\[
+1, \ 1, \ 2, \ 3, \ 5, \ 7, \ 11, \ 15, \ 22, \ 30, \ 42, \ 56, \ 77, \ 101, \ 135, \ 176;
+\]
+for instance the $7$ partitions of $5$ are $5$, $4 + 1$, $3 + 2$, $3 + 1 + 1$,
+$2 + 2 + 1$, $2 + 1 + 1 + 1$ and $1 + 1 + 1 + 1 + 1$, and their conjugates are, in the same order, $1^5$, $2\,1^3$, $2^2\,1$, $3\,1^2$, $3\,2$, $4\,1$ and $5$. The partitions of $n$ into at most two parts
+are $n$ and the $(n - j) + j$ with $1 \leq j \leq n/2$, so there are $\lfloor n/2 \rfloor + 1$ of them.
+\end{example}
+
+\begin{remark}\label{combinatorics:remark-hardy-ramanujan}
+The numbers $p(n)$ grow faster than any polynomial and slower than any exponential $c^n$ with $c > 1$: Hardy and Ramanujan proved in 1918 that
+$p(n) \sim \frac{1}{4n\sqrt3}\exp\bigl(\pi\sqrt{2n/3}\bigr)$, and Rademacher later found an exact convergent series for $p(n)$. Ramanujan discovered the congruences $p(5n + 4) \equiv 0 \pmod 5$,
+$p(7n + 5) \equiv 0 \pmod 7$ and $p(11n + 6) \equiv 0 \pmod{11}$; for instance $p(4) = 5$, $p(9) = 30$ and $p(14) = 135$ are divisible by $5$. See \cite{andrews-partitions} for these results; the
+generating function $\sum_np(n)x^n = \prod_{k \geq 1}(1 - x^k)^{-1}$ and Euler's pentagonal number theorem are proved in Chapter~\ref{generating-functions}.
+\end{remark}
+
+\subsection{Euler's theorem on odd and distinct parts}\label{combinatorics:subsection-euler-partitions}
+
+\begin{theorem}[Euler]\label{combinatorics:theorem-odd-distinct}
+For every $n$, the number of partitions of $n$ into odd parts equals the number of partitions of $n$ into distinct parts.
+\end{theorem}
+
+\begin{proof}
+We give Glaisher's bijection. Every positive integer is uniquely $2^ja$ with $j \geq 0$ and $a$ odd (Theorem~\ref{number-systems:theorem-fundamental-arithmetic}), and every natural number $m$ is uniquely a
+sum of distinct powers of $2$ (its binary expansion).
+
+\emph{From distinct to odd parts.} Replace each part $2^ja$ ($a$ odd) of a partition into distinct parts by $2^j$ parts equal to $a$. The sum is unchanged and all parts are odd.
+
+\emph{From odd to distinct parts.} In a partition into odd parts, let the odd number $a$ occur $m_a$ times, and write $m_a = 2^{j_1} + \cdots + 2^{j_r}$ in binary, with $j_1 > \cdots > j_r$. Replace the
+$m_a$ parts equal to $a$ by the $r$ parts $2^{j_1}a, \ldots, 2^{j_r}a$. The sum is unchanged, and the new parts are distinct: a number $2^ja$ determines $a$ and $j$, and for fixed $a$ the exponents $j_i$
+are distinct.
+
+\emph{The maps are inverse to each other.} Starting from distinct parts, the parts with odd part $a$ are $2^ja$ for a set $J_a$ of exponents, and they become $\sum_{j \in J_a}2^j$ parts equal to $a$;
+the binary expansion of this multiplicity recovers $J_a$. Conversely, the binary expansion of $m_a$ gives parts whose number of copies of $a$, after splitting, is $\sum_i2^{j_i} = m_a$.
+\end{proof}
+
+\begin{example}\label{combinatorics:example-odd-distinct}
+For $n = 6$ the four partitions into distinct parts are $6$, $5 + 1$, $4 + 2$, $3 + 2 + 1$, and the four into odd parts are $5 + 1$, $3 + 3$, $3 + 1 + 1 + 1$, $1^6$. Glaisher's bijection sends
+$6 = 2 \cdot 3 \mapsto 3 + 3$, $5 + 1 \mapsto 5 + 1$, $4 + 2 = 2^2 \cdot 1 + 2 \cdot 1 \mapsto 1^{4 + 2} = 1^6$ and $3 + 2 + 1 \mapsto 3 + 1 + 1 + 1$.
+\end{example}
+
+\begin{proposition}\label{combinatorics:proposition-self-conjugate}
+The number of self-conjugate partitions of $n$ equals the number of partitions of $n$ into distinct odd parts.
+\end{proposition}
+
+\begin{proof}
+Let $\lambda$ be self-conjugate, and let $d$ be the number of $i$ with $\lambda_i \geq i$ (the size of the \emph{Durfee square}, the diagonal of the diagram). For $i \leq d$, the $i$-th \emph{diagonal
+hook} consists of the dots $(i, j)$ with $j \geq i$ and $(j, i)$ with $j > i$; since $\lambda^{\prime} = \lambda$, it has $(\lambda_i - i + 1) + (\lambda_i - i) = 2(\lambda_i - i) + 1$ dots, an odd number,
+and these numbers strictly decrease with $i$ because $\lambda_i - i$ does. The hooks partition the diagram, so this gives a partition of $n$ into distinct odd parts. Conversely, distinct odd parts
+$h_1 > \cdots > h_d$ are bent into nested symmetric hooks of arm and leg length $(h_i - 1)/2$ around the diagonal positions $(i, i)$; the condition $h_i > h_{i+1}$, that is
+$h_i \geq h_{i+1} + 2$, is exactly what is needed for the result to be the diagram of a partition, which is then self-conjugate. The two constructions are inverse.
+\end{proof}
+
+\begin{example}\label{combinatorics:example-self-conjugate}
+For $n = 9$ the self-conjugate partitions are $5\,1^4$, $4\,2\,1^2$ and $3^3$, and the partitions into distinct odd parts are $9$, $7 + 1$ and $5 + 3 + 1$. The bijection of the proof sends
+$5\,1^4$ (a single hook of $9$ dots) to $9$; $4\,2\,1^2$ (hooks of $2 \cdot 3 + 1 = 7$ and $2 \cdot 0 + 1 = 1$ dots) to $7 + 1$; and $3^3$ (hooks of $5$, $3$ and $1$ dots) to $5 + 3 + 1$.
+\end{example}
+
+\section{Counting under symmetry}\label{combinatorics:section-symmetry}
+
+How many different necklaces can be made with $6$ beads in $2$ colours? Two necklaces are the same if one can be rotated into the other, so the question asks for the number of orbits of the cyclic group
+$\ZZ/6\ZZ$ on the $2^6$ colourings of the beads. Counting orbits is the general form of counting ``up to symmetry''.
+
+\subsection{The lemma of Cauchy and Frobenius}\label{combinatorics:subsection-burnside}
+
+\begin{lemma}[Cauchy--Frobenius]\label{combinatorics:lemma-burnside}
+Let a finite group $G$ act on a finite set $X$, and for $g \in G$ let $X^g = \{x \in X : gx = x\}$. More generally let $w \colon X \to M$ be a map to a $\QQ$-vector space that is constant on orbits,
+and write $w(O)$ for its value on an orbit $O$. Then the number of orbits is
+\[
+|X/G| = \frac{1}{|G|}\sum_{g \in G}|X^g|,
+\]
+and more generally
+\[
+\sum_{O \in X/G}w(O) = \frac{1}{|G|}\sum_{g \in G}\sum_{x \in X^g}w(x).
+\]
+\end{lemma}
+
+\begin{proof}
+Count the pairs $(g, x)$ with $gx = x$, weighted by $w(x)$, in two ways. Grouping by $g$ gives $\sum_g\sum_{x \in X^g}w(x)$. Grouping by $x$ gives $\sum_x|G_x|w(x)$, where $G_x$ is the stabiliser.
+By the orbit--stabiliser theorem (Theorem~\ref{groups:theorem-orbit-stabiliser}), $|G_x| = |G|/|Gx|$, so an orbit $O$ contributes $\sum_{x \in O}\frac{|G|}{|O|}w(O) = |G|\,w(O)$. Taking $w = 1$ gives the
+first formula.
+\end{proof}
+
+The lemma is often called Burnside's lemma (it is Exercise~\ref{groups:exercise-burnside-lemma}); its point is that fixed points of single group elements are usually easy to count, while orbits are not.
+
+\subsection{Necklaces}\label{combinatorics:subsection-necklaces}
+
+\begin{definition}\label{combinatorics:definition-necklace}
+Let $n \geq 1$ and $C$ a finite set of $k$ colours. The cyclic group $\ZZ/n\ZZ$ acts on the set $C^{\ZZ/n\ZZ}$ of words of length $n$ by rotation, $(r \cdot f)(i) = f(i - r)$. A \emph{necklace} of length
+$n$ with $k$ colours is an orbit of this action. A word is \emph{aperiodic} (or \emph{primitive}) if its stabiliser is trivial, and an aperiodic necklace is the orbit of an aperiodic word.
+\end{definition}
+
+\begin{theorem}[Necklaces]\label{combinatorics:theorem-necklaces}
+Let $n \geq 1$ and $k \geq 1$.
+\begin{enumerate}
+\item The number of necklaces of length $n$ with $k$ colours is $\displaystyle N(n, k) = \frac{1}{n}\sum_{d \mid n}\varphi(d)\,k^{n/d}$.
+\item The number of aperiodic necklaces of length $n$ with $k$ colours is $\displaystyle M(n, k) = \frac{1}{n}\sum_{d \mid n}\mu(d)\,k^{n/d}$.
+\end{enumerate}
+In particular both sums are divisible by $n$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: fixed words.} The words fixed by a rotation $r$ are those constant on the orbits of the subgroup $\langle r \rangle$ on $\ZZ/n\ZZ$. This subgroup is generated by $e = \gcd(r, n)$ (by
+B\'ezout's theorem, Theorem~\ref{number-systems:theorem-bezout}, $e$ is a combination of $r$ and $n$, and $r$ is a multiple of $e$), so its orbits are the $e$ cosets of $e\ZZ/n\ZZ$, and $r$ fixes
+$k^{\gcd(r, n)}$ words.
+
+\emph{Step 2: (1).} By Lemma~\ref{combinatorics:lemma-burnside}, $N(n, k) = \frac1n\sum_{r=1}^{n}k^{\gcd(r, n)}$. As in the proof of Proposition~\ref{number-theory:proposition-euler-function}(4), the number
+of $r \in [n]$ with $\gcd(r, n) = n/d$ is $\varphi(d)$, for each divisor $d$ of $n$. Grouping the terms gives the formula.
+
+\emph{Step 3: (2).} The stabiliser $H$ of a word is a subgroup of $\ZZ/n\ZZ$. Let $e$ be the least element of $[n]$ whose class lies in $H$ ($n$ itself qualifies). Dividing $n$, and any $r$ with
+class in $H$, by $e$ with remainder shows that $e \mid n$ and $H = \langle e \rangle$; so $H = \langle e \rangle$ for a unique divisor $e$ of $n$. For $e \mid n$, let $w(e)$ be the number of words of
+length $n$ with stabiliser exactly $\langle e \rangle$. A word fixed by the rotation $e$ is $u^{n/e}$, the word $u$ of its first $e$ letters repeated $n/e$ times, and its stabiliser is
+$\langle e^{\prime} \rangle$ for some $e^{\prime} \mid e$; the stabiliser is larger than $\langle e \rangle$ exactly when $e^{\prime} < e$, that is, when $u$ is fixed by a nontrivial rotation of
+$\ZZ/e\ZZ$. So $w(e)$ is the number $a(e)$ of aperiodic words of length $e$. A word is fixed by the rotation $d$, for $d \mid n$, if and only if its stabiliser
+$\langle e \rangle$ contains $d$, that is, $e \mid d$; the words fixed by $d$ are determined by their first $d$ letters, so $k^d = \sum_{e \mid d}a(e)$ for all $d \mid n$, in particular for $d = n$
+and all its divisors. M\"obius inversion (Theorem~\ref{number-theory:theorem-mobius-inversion}) gives $a(n) = \sum_{d \mid n}\mu(n/d)k^d = \sum_{d \mid n}\mu(d)k^{n/d}$. Finally the orbits of aperiodic
+words have exactly $n$ elements (orbit--stabiliser), so $M(n, k) = a(n)/n$.
+\end{proof}
+
+\begin{example}\label{combinatorics:example-necklaces}
+\begin{enumerate}
+\item With $n = 6$ and $k = 2$: $N(6, 2) = \frac16(\varphi(1)2^6 + \varphi(2)2^3 + \varphi(3)2^2 + \varphi(6)2) = \frac16(64 + 8 + 8 + 4) = 14$.
+\item (Fermat's little theorem, combinatorially.) For $n = p$ prime, $N(p, k) = \frac1p(k^p + (p - 1)k)$ is an integer, so $p$ divides $k^p - k$. Directly: the $k^p - k$ non-constant words fall into
+orbits of size exactly $p$, since a non-constant word of prime length has trivial stabiliser.
+\item $M(n, q)$ equals the number $N_n$ of monic irreducible polynomials of degree $n$ over $\mathbb{F}_q$ (Example~\ref{combinatorics:example-irreducible-polynomials}): the two formulas coincide. The
+aperiodic necklaces are represented by the \emph{Lyndon words}, the aperiodic words that are lexicographically smallest in their orbit; they play an important role in the theory of free Lie algebras.
+\end{enumerate}
+\end{example}
+
+\subsection{P\'olya's theorem}\label{combinatorics:subsection-polya}
+
+\begin{definition}\label{combinatorics:definition-cycle-index}
+Let a finite group $G$ act on a finite set $D$ with $|D| = n$. For $g \in G$ and $j \geq 1$ let $c_j(g)$ be the number of cycles of length $j$ of the permutation $d \mapsto gd$ of $D$. The
+\emph{cycle index} of the action is the polynomial
+\[
+Z_G(x_1, \ldots, x_n) = \frac{1}{|G|}\sum_{g \in G}x_1^{c_1(g)}x_2^{c_2(g)} \cdots x_n^{c_n(g)} \in \QQ[x_1, \ldots, x_n].
+\]
+\end{definition}
+
+\begin{theorem}[P\'olya]\label{combinatorics:theorem-polya}
+Let a finite group $G$ act on a finite set $D$, let $C$ be a finite set of colours with weights $w \colon C \to R$ in a commutative ring $R$ containing $\QQ$, and let $G$ act on the colourings
+$f \colon D \to C$ by $(gf)(d) = f(g^{-1}d)$. The weight $W(f) = \prod_{d \in D}w(f(d))$ is constant on orbits, and
+\[
+\sum_{\text{orbits } O}W(O) = Z_G(p_1, p_2, \ldots, p_n), \qquad p_j = \sum_{c \in C}w(c)^j .
+\]
+In particular, with all weights $1$, the number of colourings with $k$ colours up to the action of $G$ is $Z_G(k, k, \ldots, k)$.
+\end{theorem}
+
+\begin{proof}
+$W(gf) = \prod_dw(f(g^{-1}d)) = W(f)$, because $d \mapsto g^{-1}d$ is a bijection of $D$ (Lemma~\ref{combinatorics:lemma-finite-sums}(2), multiplicatively). By the weighted form of
+Lemma~\ref{combinatorics:lemma-burnside}, the left side is $\frac{1}{|G|}\sum_g\sum_{f \in X^g}W(f)$, where $X^g$ is the set of colourings fixed by $g$. A colouring is fixed by $g$ if and only if
+$f(gd) = f(d)$ for all $d$, that is, if it is constant on each cycle of $g$ on $D$. Choosing the colour $c$ of a cycle of length $j$ contributes $w(c)^j$ to the weight, so, by distributivity,
+$\sum_{f \in X^g}W(f) = \prod_{\text{cycles}}\sum_cw(c)^{\text{length}} = \prod_jp_j^{c_j(g)}$.
+\end{proof}
+
+\begin{example}[Colouring the faces of a cube]\label{combinatorics:example-cube}
+The rotations of a cube form a group of order $24$ acting on the $6$ faces. Its elements are: the identity (six $1$-cycles); $6$ rotations by $\pm 90^\circ$ about axes through the centres of opposite faces
+(two fixed faces and a $4$-cycle); $3$ rotations by $180^\circ$ about the same axes (two fixed faces and two $2$-cycles); $8$ rotations by $\pm 120^\circ$ about the $4$ diagonals (two $3$-cycles); and $6$
+rotations by $180^\circ$ about axes through the midpoints of opposite edges (three $2$-cycles). So
+\[
+Z = \tfrac{1}{24}\bigl(x_1^6 + 6x_1^2x_4 + 3x_1^2x_2^2 + 8x_3^2 + 6x_2^3\bigr),
+\]
+and the number of colourings of the faces with $k$ colours up to rotation is $\frac{1}{24}(k^6 + 3k^4 + 12k^3 + 8k^2)$: $10$ for $k = 2$ and $57$ for $k = 3$. With two colours of weights $1$ and $t$
+(white and black), $Z(1 + t, 1 + t^2, \ldots) = 1 + t + 2t^2 + 2t^3 + 2t^4 + t^5 + t^6$: for instance there are $2$ ways to colour two faces black, adjacent or opposite.
+\end{example}
+
+\begin{example}[Graphs on four vertices]\label{combinatorics:example-graphs-four-vertices}
+A graph on the vertex set $[4]$ is a subset of the set $D = \binom{[4]}{2}$ of $6$ possible edges, that is, a colouring of $D$ with the colours ``edge'' and ``non-edge''; isomorphism classes of graphs
+are the orbits of $S_4$ acting on $D$. The cycle types of the five conjugacy classes of $S_4$ (Example~\ref{combinatorics:example-cycle-types}) on the $6$ pairs are: identity, $x_1^6$; a transposition
+$(1\,2)$ fixes $\{1, 2\}$ and $\{3, 4\}$ and swaps $\{1, 3\} \leftrightarrow \{2, 3\}$, $\{1, 4\} \leftrightarrow \{2, 4\}$, giving $x_1^2x_2^2$; a double transposition $(1\,2)(3\,4)$ also gives
+$x_1^2x_2^2$; a $3$-cycle gives $x_3^2$; a $4$-cycle $(1\,2\,3\,4)$ permutes $\{1,2\} \to \{2,3\} \to \{3,4\} \to \{1,4\}$ cyclically and swaps $\{1,3\} \leftrightarrow \{2,4\}$, giving $x_2x_4$. So
+\[
+Z = \tfrac{1}{24}\bigl(x_1^6 + 9x_1^2x_2^2 + 8x_3^2 + 6x_2x_4\bigr).
+\]
+Substituting $x_j = 1 + t^j$ gives $1 + t + 2t^2 + 3t^3 + 2t^4 + t^5 + t^6$: up to isomorphism there are $11$ graphs on four vertices, of which $1, 1, 2, 3, 2, 1, 1$ have $0, 1, \ldots, 6$ edges (for
+instance the three graphs with three edges are the triangle, the path and the star).
+\end{example}
+
+\begin{counterexample}\label{combinatorics:counterexample-orbits-average}
+Dividing the number of colourings by $|G|$ does not count orbits: it would give $2^6/24 = 8/3$ graphs on four vertices. The shepherd's principle applies only when all orbits have the same size $|G|$,
+that is, when the action is free; here the empty graph is fixed by all of $S_4$. Lemma~\ref{combinatorics:lemma-burnside} is the correct replacement: orbits with large stabilisers are compensated by
+their many fixed points.
+\end{counterexample}
+
+\section{Exercises}\label{combinatorics:section-exercises}
+
+\begin{exercise}\label{combinatorics:exercise-dedekind-infinite}
+Show that a set $A$ is infinite if and only if it is equinumerous with a proper subset of itself.
+\end{exercise}
+
+\begin{solution}
+If $A$ is finite and $f \colon A \to B$ is a bijection onto a subset $B \subseteq A$, then $|B| = |A|$, so $B = A$ by Proposition~\ref{combinatorics:proposition-subsets-finite}. If $A$ is infinite, it
+can be well-ordered (we work in ZFC), so $A \approx |A|$ with $|A|$ an infinite cardinal, which contains $\omega$; this gives an injection $e \colon \NN \to A$. Define $f \colon A \to A$ by
+$f(e(n)) = e(n + 1)$ and $f(a) = a$ for $a$ outside the image of $e$. Then $f$ is a bijection from $A$ onto $A \setminus \{e(0)\}$.
+\end{solution}
+
+\begin{exercise}\label{combinatorics:exercise-sum-of-cubes}
+Show that $j^3 = 6\binom{j}{3} + 6\binom{j}{2} + \binom{j}{1}$, and deduce that $1^3 + 2^3 + \cdots + n^3 = \binom{n + 1}{2}^2 = (1 + 2 + \cdots + n)^2$.
+\end{exercise}
+
+\begin{solution}
+$6\binom{j}{3} + 6\binom{j}{2} + j = j(j - 1)(j - 2) + 3j(j - 1) + j = (j^3 - 3j^2 + 2j) + (3j^2 - 3j) + j = j^3$. By the hockey stick identity
+(Proposition~\ref{combinatorics:proposition-binomial-identities}(3)),
+\[
+\begin{aligned}
+\sum_{j=1}^{n}j^3 &= 6\binom{n + 1}{4} + 6\binom{n + 1}{3} + \binom{n + 1}{2}\\
+&= (n + 1)n\Bigl(\frac{(n - 1)(n - 2)}{4} + (n - 1) + \frac12\Bigr) = \frac{n^2(n + 1)^2}{4},
+\end{aligned}
+\]
+since $(n - 1)(n - 2) + 4(n - 1) + 2 = n^2 + n$.
+\end{solution}
+
+\begin{exercise}\label{combinatorics:exercise-integer-valued}
+For a polynomial $P \in \QQ[x]$ let $(\Delta P)(x) = P(x + 1) - P(x)$. Show that $\Delta\binom{x}{k} = \binom{x}{k-1}$ for $k \geq 1$, that every $P$ of degree $\leq d$ satisfies
+$P = \sum_{k=0}^{d}(\Delta^kP)(0)\binom{x}{k}$ (Newton's interpolation formula), and that $P$ takes integer values at all integers if and only if it is an integer linear combination of the
+$\binom{x}{k}$. Give an example of an integer-valued polynomial whose coefficients are not integers.
+\end{exercise}
+
+\begin{solution}
+$\Delta\binom{x}{k} = \binom{x+1}{k} - \binom{x}{k} = \binom{x}{k-1}$ by Pascal's rule in $\QQ[x]$ (Proposition~\ref{combinatorics:proposition-binomial-polynomial}(2)). Since $\binom{x}{k}$ has degree
+$k$, the polynomials $\binom{x}{0}, \ldots, \binom{x}{d}$ form a basis of the polynomials of degree $\leq d$ (by induction on $d$, subtracting a multiple of $\binom{x}{d}$ to lower the degree). Write
+$P = \sum_ka_k\binom{x}{k}$; then $\Delta^jP = \sum_ka_k\binom{x}{k-j}$, and evaluating at $0$ gives $(\Delta^jP)(0) = a_j$, since $\binom{0}{i} = 0$ for $i \geq 1$. If $P$ is integer-valued on
+$\ZZ$, so are all $\Delta^jP$, hence the $a_j$ are integers. Conversely integer combinations of the $\binom{x}{k}$ are integer-valued by Proposition~\ref{combinatorics:proposition-binomial-polynomial}(4).
+For example $\binom{x}{2} = \frac12x^2 - \frac12x$.
+\end{solution}
+
+\begin{exercise}\label{combinatorics:exercise-fibonacci-compositions}
+Let $f_n$ be the number of compositions of $n$ all of whose parts are $1$ or $2$ (with $f_0 = 1$). Show that $f_n = f_{n-1} + f_{n-2}$ for $n \geq 2$, so that $f_n = F_{n+1}$, the Fibonacci numbers
+$F_1 = F_2 = 1$, $F_{m+1} = F_m + F_{m-1}$. Deduce that $F_{n+1} = \sum_{k \geq 0}\binom{n - k}{k}$.
+\end{exercise}
+
+\begin{solution}
+Classify the compositions of $n \geq 2$ by their last part: if it is $1$, removing it leaves a composition of $n - 1$, and if it is $2$, a composition of $n - 2$; both maps are bijective. With
+$f_0 = f_1 = 1$ we get $f_n = F_{n+1}$. A composition of $n$ with $k$ parts equal to $2$ has $n - 2k$ parts equal to $1$, hence $n - k$ parts in all, and is determined by the positions of the $2$s among
+them: $\binom{n-k}{k}$ choices. Summing over $k$ gives the formula; it says that the Fibonacci numbers are the sums of the ``shallow diagonals'' of Pascal's triangle.
+\end{solution}
+
+\begin{exercise}[Bertrand's ballot problem]\label{combinatorics:exercise-ballot}
+In an election candidate $A$ receives $a$ votes and candidate $B$ receives $b < a$ votes, and the votes are counted one by one in a random order. Show that the number of orders of counting (as
+words with $a$ letters $A$ and $b$ letters $B$) in which $A$ is strictly ahead of $B$ throughout the count is $\frac{a - b}{a + b}\binom{a + b}{a}$.
+\end{exercise}
+
+\begin{solution}
+Represent an order of counting as a lattice path from $(0, 0)$ to $(a, b)$, a vote for $A$ being a step $E$ and a vote for $B$ a step $N$. The good paths stay strictly below the diagonal $y = x$ after
+the start; they begin with $E$, so they correspond to paths from $(1, 0)$ to $(a, b)$ that never touch the diagonal. There are $\binom{a + b - 1}{a - 1}$ paths from $(1, 0)$ to $(a, b)$. A path from
+$(1, 0)$ that touches the diagonal can be reflected in the line $y = x$ up to its first contact; this gives a path from $(0, 1)$ to $(a, b)$, and every path from $(0, 1)$ to $(a, b)$ arises exactly once,
+because it starts above the diagonal and ends below it ($a > b$), so it meets the diagonal. Hence the number of good paths is
+$\binom{a+b-1}{a-1} - \binom{a+b-1}{a} = \binom{a+b}{a}\bigl(\frac{a}{a+b} - \frac{b}{a+b}\bigr)$, using $\binom{a+b-1}{a-1} = \frac{a}{a+b}\binom{a+b}{a}$ and
+$\binom{a+b-1}{a} = \frac{b}{a+b}\binom{a+b}{a}$ (absorption). For $a = n + 1$, $b = n$ this gives $\frac{1}{2n+1}\binom{2n+1}{n} = C_n$, the Catalan number.
+\end{solution}
+
+\begin{exercise}\label{combinatorics:exercise-derangements-nearest}
+Show that for $n \geq 1$ and every $N \geq n$,
+\[
+0 \leq (-1)^{n+1}\Bigl(n!\sum_{j=0}^{N}\frac{(-1)^j}{j!} - D_n\Bigr) \leq \frac{1}{n + 1}.
+\]
+(With the exponential series, this shows that $|n!/e - D_n| \leq 1/(n + 1)$, so that $D_n$ is the integer nearest to $n!/e$.)
+\end{exercise}
+
+\begin{solution}
+By Theorem~\ref{combinatorics:theorem-derangements} the difference is the tail $T = \sum_{j=n+1}^{N}(-1)^ja_j$ with $a_j = n!/j!$, and $(-1)^{n+1}T = a_{n+1} - a_{n+2} + a_{n+3} - \cdots \pm a_N$.
+The $a_j$ are positive and decreasing, with $a_{n+1} = 1/(n + 1)$. Grouping the alternating sum as $(a_{n+1} - a_{n+2}) + (a_{n+3} - a_{n+4}) + \cdots$ shows that it is $\geq 0$, and grouping it as
+$a_{n+1} - (a_{n+2} - a_{n+3}) - \cdots$ shows that it is $\leq a_{n+1}$ (in each case a possible last unpaired term has the right sign).
+\end{solution}
+
+\begin{exercise}\label{combinatorics:exercise-circular-choices}
+Show that the number of ways to choose $k$ pairwise disjoint pairs of adjacent positions among $m$ positions on a line is $\binom{m - k}{k}$, and among $m$ positions on a circle (with $m \geq 2k$,
+$m \geq 3$) is $\frac{m}{m - k}\binom{m - k}{k}$. (This is the key count in Touchard's solution of the m\'enage problem, Example~\ref{combinatorics:example-menages}.)
+\end{exercise}
+
+\begin{solution}
+On a line, a choice of $k$ disjoint adjacent pairs is the same as a word made of $k$ dominoes (each covering two positions) and $m - 2k$ single positions, read from left to right: $m - k$ symbols, of
+which $k$ are dominoes, so $\binom{m - k}{k}$ choices. On a circle, either the pair $\{m, 1\}$ is not chosen, and then the choice is one on the line $1, \ldots, m$: $\binom{m - k}{k}$; or it is chosen, and
+the other $k - 1$ pairs are a choice on the line $2, \ldots, m - 1$ of $m - 2$ positions: $\binom{m - k - 1}{k - 1}$. Since $\binom{m-k-1}{k-1} = \frac{k}{m-k}\binom{m-k}{k}$, the total is
+$\binom{m-k}{k}\bigl(1 + \frac{k}{m-k}\bigr) = \frac{m}{m-k}\binom{m-k}{k}$.
+\end{solution}
+
+\begin{exercise}\label{combinatorics:exercise-mobius-partition-lattice}
+Let $\Pi_n$ be the lattice of partitions of $[n]$ ordered by refinement (Example~\ref{combinatorics:example-posets}), $\hat0$ the partition into singletons and $\hat1$ the partition with one block. For
+$\pi \in \Pi_n$ let $|\pi|$ be its number of blocks. By counting the maps $[n] \to [m]$ according to the partition of $[n]$ into their nonempty fibres, show that
+$m^{\underline{|\pi|}} = \sum_{\sigma \geq \pi}\mu(\pi, \sigma)m^{|\sigma|}$, and deduce that $\mu(\hat0, \hat1) = (-1)^{n-1}(n - 1)!$.
+\end{exercise}
+
+\begin{solution}
+For $f \colon [n] \to [m]$ let $\ker f \in \Pi_n$ be the partition into the nonempty fibres. For $\pi \in \Pi_n$, the maps with $\ker f \geq \pi$ are those constant on each block of $\pi$, so there are
+$m^{|\pi|}$ of them; those with $\ker f = \pi$ are those taking distinct values on distinct blocks, $m^{\underline{|\pi|}}$ of them (Theorem~\ref{combinatorics:theorem-counting-maps}). Hence
+$m^{|\pi|} = \sum_{\sigma \geq \pi}m^{\underline{|\sigma|}}$, and the dual form of Theorem~\ref{combinatorics:theorem-mobius-inversion-posets} gives
+$m^{\underline{|\pi|}} = \sum_{\sigma \geq \pi}\mu(\pi, \sigma)m^{|\sigma|}$. For $\pi = \hat0$, both sides are polynomials in $m$ agreeing for all $m \in \NN$, hence equal
+(Corollary~\ref{rings:corollary-roots}). The only $\sigma$ with $|\sigma| = 1$ is $\hat1$, so $\mu(\hat0, \hat1)$ is the coefficient of $m$ in $m^{\underline{n}} = m(m - 1) \cdots (m - n + 1)$, which is
+$(-1)(-2) \cdots (-(n - 1)) = (-1)^{n-1}(n - 1)!$.
+\end{solution}
+
+\begin{exercise}\label{combinatorics:exercise-sperner-equality}
+Show that if equality holds in Sperner's theorem (Corollary~\ref{combinatorics:corollary-sperner}), then the antichain $\mathcal{F}$ consists of all subsets of size $n/2$ if $n$ is even, and of all
+subsets of size $(n - 1)/2$ or of all subsets of size $(n + 1)/2$ if $n$ is odd.
+\end{exercise}
+
+\begin{solution}
+If $|\mathcal{F}| = \binom{n}{\lfloor n/2 \rfloor}$, the proof of Corollary~\ref{combinatorics:corollary-sperner} shows that equality holds in the LYM inequality and that every member of $\mathcal{F}$ has a
+size $s$ with $\binom{n}{s} = \binom{n}{\lfloor n/2 \rfloor}$; by Proposition~\ref{combinatorics:proposition-unimodal}, $s \in \{\lfloor n/2 \rfloor, \lceil n/2 \rceil\}$. Equality in the LYM inequality
+means, by its proof, that every maximal chain meets $\mathcal{F}$ (exactly once). Let $L_s$ be the set of $s$-subsets.
+
+Let $m = \lfloor n/2 \rfloor$ and suppose $S \in \mathcal{F} \cap L_m$. Let $S^{\prime} = (S \setminus \{a\}) \cup \{b\}$ with $a \in S$, $b \notin S$, and $U = S \cup \{b\}$. Then $U \notin \mathcal{F}$, as
+$S \subsetneq U$. A maximal chain through $S \cap S^{\prime}$, $S^{\prime}$ and $U$ (these are nested, of sizes $m - 1$, $m$, $m + 1$) meets $\mathcal{F}$ only in $L_m \cup L_{m+1}$ (all members of
+$\mathcal{F}$ have size $m$ or $m + 1$), that is, in $S^{\prime}$ or $U$; so $S^{\prime} \in \mathcal{F}$. Any two $m$-subsets are connected by a sequence of such exchanges, so $L_m \subseteq \mathcal{F}$,
+and then $\mathcal{F} = L_m$, since $|\mathcal{F}| = |L_m|$. If $\mathcal{F} \cap L_m = \emptyset$, then $\mathcal{F} \subseteq L_{\lceil n/2 \rceil}$ has the same number of elements as this level, so
+it is the whole level. For $n$ even both cases give the middle level.
+\end{solution}
+
+\begin{exercise}[Littlewood--Offord problem]\label{combinatorics:exercise-littlewood-offord}
+Let $a_1, \ldots, a_n$ be real numbers with $|a_i| \geq 1$, and $J$ an open interval of length $2$. Show that at most $\binom{n}{\lfloor n/2 \rfloor}$ of the $2^n$ sums
+$\varepsilon_1a_1 + \cdots + \varepsilon_na_n$, $\varepsilon_i \in \{1, -1\}$, lie in $J$.
+\end{exercise}
+
+\begin{solution}
+Replacing $a_i$ by $-a_i$ and $\varepsilon_i$ by $-\varepsilon_i$ does not change the set of sums, so we may assume $a_i \geq 1$ for all $i$. To a sign vector associate $S = \{i : \varepsilon_i = 1\}$.
+If $S \subsetneq T$, the sums $x_S$ and $x_T$ satisfy $x_T - x_S = 2\sum_{i \in T \setminus S}a_i \geq 2$, so they cannot both lie in $J$. Hence the sets $S$ whose sums lie in $J$ form an antichain, and
+Sperner's theorem gives the bound.
+\end{solution}
+
+\begin{exercise}[Simultaneous approximation]\label{combinatorics:exercise-dirichlet-simultaneous}
+Let $\alpha_1, \ldots, \alpha_d$ be real numbers and $N \geq 1$. Show that there are integers $1 \leq q \leq N^d$ and $p_1, \ldots, p_d$ with $|q\alpha_i - p_i| < 1/N$ for all $i$.
+\end{exercise}
+
+\begin{solution}
+Divide $[0, 1)^d$ into the $N^d$ boxes $\prod_i[j_i/N, (j_i + 1)/N)$. The $N^d + 1$ points $(\{q\alpha_1\}, \ldots, \{q\alpha_d\})$, $0 \leq q \leq N^d$, lie in these boxes, so two of them, for
+$q_1 < q_2$, lie in the same box. As in Theorem~\ref{combinatorics:theorem-dirichlet-approximation}, $q = q_2 - q_1$ and $p_i = \lfloor q_2\alpha_i \rfloor - \lfloor q_1\alpha_i \rfloor$ work.
+\end{solution}
+
+\begin{exercise}\label{combinatorics:exercise-equal-degrees}
+Show that in every group of $n \geq 2$ people there are two who have the same number of acquaintances in the group (acquaintance being symmetric).
+\end{exercise}
+
+\begin{solution}
+The possible numbers are $0, 1, \ldots, n - 1$, but $0$ and $n - 1$ cannot both occur: someone who knows everybody is known by everybody. So the $n$ numbers take at most $n - 1$ values, and the
+pigeonhole principle applies.
+\end{solution}
+
+\begin{exercise}\label{combinatorics:exercise-involutions}
+Let $I_n$ be the number of involutions of $[n]$, permutations with $\sigma^2 = \id$. Show that $I_0 = I_1 = 1$, $I_n = I_{n-1} + (n - 1)I_{n-2}$ for $n \geq 2$, and
+$I_n = \sum_{k \geq 0}\frac{n!}{2^kk!\,(n - 2k)!}$. Compute $I_1, \ldots, I_6$.
+\end{exercise}
+
+\begin{solution}
+An involution is a product of disjoint transpositions. Either $n$ is fixed, leaving an involution of $[n - 1]$, or $n$ is exchanged with one of the $n - 1$ other elements, leaving an involution of the
+remaining $n - 2$. The formula is Proposition~\ref{combinatorics:proposition-cycle-type} with $m_2 = k$ and $m_1 = n - 2k$. The values are $1, 2, 4, 10, 26, 76$.
+\end{solution}
+
+\begin{exercise}\label{combinatorics:exercise-lah-rising}
+Show that $x^{\overline{n}} = \sum_{k=1}^{n}L(n, k)\,x^{\underline{k}}$ for $n \geq 1$, by counting the ways to hang $n$ distinct flags on $m$ distinct flagpoles, where the order of the flags on each
+pole matters.
+\end{exercise}
+
+\begin{solution}
+Hang the flags $1, \ldots, n$ one after the other. When $i$ flags are already hung, the next one can be put in one of $m + i$ positions: at the bottom of one of the $m$ poles, or directly above one of
+the $i$ flags already hung (a pole with $j$ flags offers $j + 1$ positions). Every arrangement arises exactly once in this way. So there are $m(m + 1) \cdots (m + n - 1) = m^{\overline{n}}$
+arrangements. Grouping them by the set of nonempty poles: the flags on the nonempty poles form a set of $k$ nonempty lists ($L(n, k)$ possibilities), which are put on $k$ distinct poles in
+$m^{\underline{k}}$ ways. So $m^{\overline{n}} = \sum_kL(n, k)m^{\underline{k}}$ for all $m \in \NN$, and the identity holds in $\ZZ[x]$ by Corollary~\ref{rings:corollary-roots}.
+\end{solution}
+
+\begin{exercise}\label{combinatorics:exercise-central-binomial-two}
+Show that $v_2\binom{2n}{n}$ is the number of digits $1$ in the binary expansion of $n$. Deduce that $\binom{2n}{n}$ is even for $n \geq 1$, and divisible by $4$ unless $n$ is a power of $2$.
+\end{exercise}
+
+\begin{solution}
+By Theorem~\ref{combinatorics:theorem-kummer}, $v_2\binom{2n}{n} = s_2(n) + s_2(n) - s_2(2n) = s_2(n)$, since the binary expansion of $2n$ is that of $n$ followed by a $0$. For $n \geq 1$, $s_2(n) \geq 1$,
+with equality exactly when $n$ is a power of $2$.
+\end{solution}
+
+\begin{exercise}\label{combinatorics:exercise-bracelets}
+Count the necklaces of $6$ beads in $2$ colours up to rotation and reflection (the dihedral group of order $12$ acting on the vertices of a regular hexagon), and compare with
+Example~\ref{combinatorics:example-necklaces}.
+\end{exercise}
+
+\begin{solution}
+The six rotations $r = 0, 1, \ldots, 5$ contribute $64 + 2 + 4 + 8 + 4 + 2 = 84$ fixed colourings (rotation by $r$ fixes $2^{\gcd(r, 6)}$). The three reflections through opposite vertices have $2$ fixed vertices and two
+$2$-cycles, fixing $2^4 = 16$ colourings each; the three reflections through midpoints of opposite edges have three $2$-cycles, fixing $2^3 = 8$ each. By Lemma~\ref{combinatorics:lemma-burnside} the
+number of orbits is $(84 + 48 + 24)/12 = 13$: one less than the $14$ necklaces up to rotation, because exactly one pair of necklaces, the two ``chiral'' arrangements $110100$ and $110010$ (read around the
+circle), are mirror images of each other but not rotations of each other.
+\end{solution}
+
+\begin{exercise}\label{combinatorics:exercise-vandermonde-paths}
+Give a lattice path proof of Vandermonde's identity: count the paths from $(0, 0)$ to $(r, m + n - r)$ according to the point where they cross the line $x + y = m$.
+\end{exercise}
+
+\begin{solution}
+Every such path passes through exactly one point $(k, m - k)$ of the line $x + y = m$, after $m$ steps. The number of paths from $(0, 0)$ to $(k, m - k)$ is $\binom{m}{k}$, and from $(k, m - k)$ to
+$(r, m + n - r)$ it is $\binom{n}{r - k}$ (the second part has $n$ steps, of which $r - k$ are $E$). The total is $\binom{m + n}{r}$ by Proposition~\ref{combinatorics:proposition-lattice-paths}.
+\end{solution}
+
+\begin{exercise}\label{combinatorics:exercise-partitions-three-parts}
+Show that the number of partitions of $n$ into at most $3$ parts equals the number of partitions of $n + 3$ into exactly $3$ parts, and also the number of solutions of $a + 2b + 3c = n$ in natural
+numbers. Compute it for $n \leq 6$.
+\end{exercise}
+
+\begin{solution}
+Adding $1$ to each of the $3$ parts of a partition of $n$ into at most $3$ parts (padded with zeros to length $3$) gives a partition of $n + 3$ into exactly $3$ parts, bijectively. By conjugation (Proposition~\ref{combinatorics:proposition-conjugate}), partitions of $n$
+into at most $3$ parts correspond to partitions with all parts at most $3$, which are determined by the numbers $a, b, c$ of parts equal to $1$, $2$ and $3$, with $a + 2b + 3c = n$. For $n = 0, \ldots, 6$ the numbers are $1, 1, 2, 3, 4, 5, 7$ (for $n = 6$:
+$6$, $5 + 1$, $4 + 2$, $4 + 1 + 1$, $3 + 3$, $3 + 2 + 1$, $2 + 2 + 2$).
+\end{solution}

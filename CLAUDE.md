@@ -126,8 +126,17 @@ material, free to be reorganised, split, merged and expanded. The plan is in
   build takes about 25 minutes: run it in the background, never edit the
   sources while it runs, and wait with a loop on the log (delete the old log
   first, so that a stale "exit=" line is not matched).
-- After a build, check the changed pages in the browser: zero MathJax errors
-  (`.MathJax_Error`, `merror`) and no `??` from unresolved references. Find the
+- While writing a chapter, use `python make.py preview <slug>` (about 20
+  seconds; pages in `output/html/preview/`, served at
+  http://localhost:8000/preview/<slug>.html) instead of a full build; it needs
+  `book.paux` from a full `html` build. `python make.py pdf-parts [part-...]`
+  rebuilds part PDFs after a full `pdf` build.
+- Publishing is `git push` to `main`: the GitHub Actions workflow builds and
+  deploys to https://lufranovittorio.github.io/math-project/ (about 15
+  minutes; check with `gh run list`). No local full build is needed to publish.
+- After a build or preview, check the changed pages in the browser: zero MathJax errors
+  (`.MathJax_Error`, `merror`), no `??` from unresolved references, and no
+  display wider than the text column (736 px). Find the
   page of a label with `grep -l 'id="<label>"' output/html/*-section-*.html`.
 - The website must use MathJax **2.7.9** (HTML-CSS output), because the user
   wants formulas to be selectable text. Do not upgrade to MathJax 3/4.
