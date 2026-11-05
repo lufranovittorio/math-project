@@ -68,6 +68,15 @@ operator algebras (planned).
 \item Part~\ref{part-probability}, \emph{Probability and Statistics}
 (planned): probability theory, martingales, Markov chains, Brownian motion,
 stochastic calculus, statistics and information theory.
+\item Part~\ref{part-number-theory}, \emph{Number Theory}, continuing the
+elementary number theory of Chapter~\ref{number-theory}: prime numbers
+(Chebyshev, Bertrand, Mertens, primality tests), continued fractions and
+Diophantine approximation, the geometry of numbers, analytic number theory
+(the prime number theorem, Dirichlet's theorem), $p$-adic numbers and the
+local-global principle, and Diophantine equations.
+\item Part~\ref{part-algebraic-number-theory}, \emph{Algebraic Number Theory}
+(planned): number fields and Dedekind domains, class groups and units,
+cyclotomic fields, local fields and class field theory.
 \item Part~\ref{part-differential-equations}, \emph{Differential Equations and
 Dynamics} (planned): ordinary differential equations, dynamical systems,
 ergodic theory, Sobolev spaces, elliptic and evolution equations, the calculus
@@ -88,13 +97,8 @@ moduli, and Calabi--Yau manifolds.
 \item Part~\ref{part-algebraic-geometry}, \emph{Algebraic Geometry}: varieties,
 schemes, coherent cohomology, GAGA, curves, algebraic groups, abelian
 varieties, algebraic cycles, the cycle class map and \'etale cohomology.
-\item Part~\ref{part-number-theory}, \emph{Number Theory}, continuing the
-elementary number theory of Chapter~\ref{number-theory}: prime numbers
-(Chebyshev, Bertrand, Mertens, primality tests), continued fractions and
-Diophantine approximation, Diophantine equations, $p$-adic numbers, analytic
-number theory, algebraic number theory (number fields, geometry of numbers,
-cyclotomic and local fields, class field theory), modular forms and the
-arithmetic of elliptic curves.
+\item Part~\ref{part-arithmetic-geometry}, \emph{Arithmetic Geometry}
+(planned): modular forms and the arithmetic of elliptic curves.
 \item Part~\ref{part-hodge-theory}, \emph{Hodge Theory}: Hodge structures and
 Mumford--Tate groups, the Hodge conjecture, the evidence for it, its failed
 variants, mixed Hodge structures, absolute Hodge classes, and the Tate and
@@ -102,8 +106,12 @@ standard conjectures around it.
 \end{itemize}
 The order of the chapters is the logical order of the project, not a
 recommended reading order: a part comes after the parts it uses, so discrete
-mathematics, which needs only algebra, comes before topology, and probability,
-which is built on measure theory, comes right after analysis.
+mathematics, which needs only algebra, comes before topology; probability,
+which is built on measure theory, comes right after analysis; number theory,
+which uses algebra and analysis but no geometry, comes next, divided into an
+elementary and analytic part and an algebraic part; and the arithmetic of
+curves (modular forms, elliptic curves) comes after algebraic geometry, whose
+language it needs.
 Section~\ref{introduction:section-path} describes how to read the book along
 several reading paths.
 
@@ -130,10 +138,12 @@ says which sections are needed for what. Paths whose last part is still planned 
 \item \emph{Algebra.} Chapters~\ref{groups}, \ref{rings}, \ref{fields} and~\ref{linear-algebra} are the common core; then multilinear algebra, representation theory and
 commutative algebra in any order, and homological algebra, spectral sequences and derived categories in this order. Chapter~\ref{categories} is the language of the last three.
 \item \emph{Elementary and algebraic number theory.} Chapters~\ref{groups}, \ref{rings} and~\ref{number-theory} (congruences, primitive roots, quadratic reciprocity, sums of
-squares, quadratic forms and the Heegner numbers); then Galois theory (Chapter~\ref{fields}) and commutative algebra (Chapter~\ref{commutative-algebra}) lead to the algebraic
-number theory of Part~\ref{part-number-theory}, and complex analysis (Chapter~\ref{complex-analysis}) to its analytic number theory and modular forms. Within the part,
-Chapter~\ref{prime-numbers} needs only real analysis besides these, and Chapters~\ref{continued-fractions}, \ref{diophantine-equations} and~\ref{p-adic-numbers} can be read
-next; the algebraic chapters from Chapter~\ref{algebraic-number-theory} on form a sequence.
+squares, quadratic forms and the Heegner numbers); then Part~\ref{part-number-theory}. In it, Chapter~\ref{prime-numbers} needs only real analysis besides these;
+Chapters~\ref{continued-fractions} and~\ref{geometry-of-numbers} add measure theory (Chapter~\ref{measure-theory}) for their metric results and volumes;
+Chapter~\ref{analytic-number-theory} needs complex analysis (Chapter~\ref{complex-analysis}); Chapter~\ref{p-adic-numbers} uses the previous two, and
+Chapter~\ref{diophantine-equations} uses the whole part. Galois theory (Chapter~\ref{fields}) and commutative algebra (Chapter~\ref{commutative-algebra}) then lead to
+Part~\ref{part-algebraic-number-theory}, whose chapters form a sequence, and algebraic curves (Chapter~\ref{curves}) to the modular forms and elliptic curves of
+Part~\ref{part-arithmetic-geometry}.
 \item \emph{Discrete mathematics.} Chapters~\ref{groups} (actions, for counting orbits), \ref{rings} (polynomial rings, which formal power series generalise)
 and~\ref{linear-algebra} (for spectral graph theory), then Part~\ref{part-discrete-mathematics}. The probabilistic method uses only finite probability spaces, defined there.
 \item \emph{Topology and geometry.} Chapters~\ref{general-topology}, \ref{homotopy}, \ref{singular-homology} and~\ref{singular-cohomology}, then manifolds

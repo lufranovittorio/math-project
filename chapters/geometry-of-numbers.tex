@@ -1,16 +1,1476 @@
 \chapter{Geometry of Numbers}\label{geometry-of-numbers}
-\chapterstatus{planned}
+\chapterstatus{complete}
 
-Lattices and convex bodies, and the two finiteness theorems of algebraic number theory.
+\section{Introduction}\label{geometry-of-numbers:section-introduction}
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{algebraic-number-theory} (Algebraic Number Theory) and Chapter~\ref{measure-theory} (Measure and Integration).
+Many questions about integers are questions about the points of the lattice $\ZZ^n$ inside a region of $\RR^n$. Is the prime $p$ a sum of two squares? It is if the disc $x^2 + y^2 < 2p$ contains
+a nonzero point of the lattice $\{(x, y) \in \ZZ^2 : y \equiv ux \pmod p\}$, where $u^2 \equiv -1 \pmod p$: for such a point $x^2 + y^2$ is a multiple of $p$ strictly between $0$ and $2p$, hence equal to
+$p$. Does $\alpha \in \RR$ have good rational approximations? It does if the thin parallelogram $|q| \leq Q$, $|q\alpha - p| < 1/Q$ contains a nonzero point of $\ZZ^2$. In both cases the region is convex and
+symmetric about the origin, and the question is whether its area is large enough to force a lattice point inside it. Minkowski's theorem (Theorem~\ref{geometry-of-numbers:theorem-minkowski}), the
+starting point of the subject, says that a convex region symmetric about $0$ with volume larger than $2^n$ times the volume of a cell of the lattice always contains a nonzero lattice point. Minkowski
+created the subject in the 1890s and gave it its name, \emph{Geometrie der Zahlen}; he used it to prove that the class group of a number field is finite and that the discriminant of a number field
+other than $\QQ$ is larger than $1$ in absolute value (Chapter~\ref{class-groups-and-units}).
 
-\noindent\textbf{Planned contents.}
+This chapter develops the geometry of numbers from the beginning, slowly, with the arithmetic applications that need no algebraic number theory.
+\begin{itemize}
+\item Section~\ref{geometry-of-numbers:section-lattices}: lattices in $\RR^n$, their bases and covolumes, fundamental domains, sublattices and their index, the dual lattice, and the theorem that the
+lattices are exactly the discrete subgroups that span $\RR^n$.
+\item Section~\ref{geometry-of-numbers:section-minkowski}: Blichfeldt's lemma, Minkowski's convex body theorem and its sharpness, Minkowski's theorem on linear forms, simultaneous Diophantine
+approximation, and Siegel's lemma on small solutions of linear equations.
+\item Section~\ref{geometry-of-numbers:section-squares}: the sums of two and four squares, and Legendre's theorem on the equation $ax^2 + by^2 = cz^2$, proved with lattices.
+\item Section~\ref{geometry-of-numbers:section-successive-minima}: successive minima, and Minkowski's second theorem.
+\item Section~\ref{geometry-of-numbers:section-reduction}: positive definite quadratic forms, Hermite's constant, reduction of lattices in the plane (Lagrange and Gauss), the densest lattice packing
+of discs, and the LLL algorithm.
+\item Section~\ref{geometry-of-numbers:section-counting}: counting lattice points in convex bodies, the Gauss circle problem, Leibniz's series for $\pi$ obtained from lattice points, and Pick's theorem.
+\item Section~\ref{geometry-of-numbers:section-existence}: the theorem of Minkowski and Hlawka, which produces lattices without short vectors, and its consequences for sphere packings.
+\item Section~\ref{geometry-of-numbers:section-covering}: the covering radius, and the imaginary quadratic rings in which division with remainder works.
+\end{itemize}
+
+\noindent\textbf{Prerequisites.} Chapter~\ref{groups} (Groups), Chapter~\ref{rings} (Rings), Chapter~\ref{linear-algebra} (Linear Algebra), Chapter~\ref{number-theory} (Elementary Number
+Theory), Chapter~\ref{combinatorics} (Combinatorics), Chapter~\ref{general-topology} (General Topology), Chapter~\ref{real-analysis} (Real Analysis), Chapter~\ref{measure-theory} (Measure and
+Integration) and Chapter~\ref{continued-fractions} (Continued Fractions and Diophantine Approximation).
+
+From linear algebra we use determinants and the Gram--Schmidt process (Theorem~\ref{linear-algebra:theorem-gram-schmidt}); from group theory, that subgroups of $\ZZ^n$ are free
+(Proposition~\ref{groups:proposition-subgroups-free}) and the structure of finitely generated abelian groups (Theorem~\ref{groups:theorem-structure-abelian}); from measure theory, Lebesgue
+measure, its behaviour under linear maps (Lemma~\ref{measure-theory:lemma-linear-change}) and Fubini's theorem (Theorem~\ref{measure-theory:theorem-fubini}).
+
+\begin{notation}\label{geometry-of-numbers:notation-basic}
+Throughout the chapter:
 \begin{enumerate}
-\item Lattices in $\RR^n$, covolume; Minkowski's convex body theorem and the theorems on successive minima (statement).
-\item Applications: sums of two and four squares again, Legendre's theorem.
-\item The Minkowski embedding; the Minkowski bound and the finiteness of the class number; computation of class groups of quadratic fields.
-\item Hermite's theorem on fields of bounded discriminant; Minkowski's theorem that $|d_K| > 1$ for $K \neq \QQ$.
-\item Dirichlet's unit theorem, regulators; units of real quadratic fields and Pell's equation.
-\item Exercises with solutions.
+\item $\RR^n$ carries the standard inner product $\langle x, y \rangle = \sum_i x_iy_i$ and the Euclidean norm $|x| = \langle x, x \rangle^{1/2}$; we also use $|x|_\infty = \max_i|x_i|$. The closed
+ball of centre $a$ and radius $r$ is $B(a, r) = \{x : |x - a| \leq r\}$, and $\omega_n = \pi^{n/2}/\Gamma(\frac n2 + 1)$ is the volume of the unit ball (Example~\ref{measure-theory:example-polar}):
+$\omega_1 = 2$, $\omega_2 = \pi$, $\omega_3 = \frac43\pi$, $\omega_4 = \frac{\pi^2}{2}$.
+\item $\operatorname{vol}(A)$ is the Lebesgue measure $\lambda^n(A)$ of a measurable set $A \subseteq \RR^n$ (Chapter~\ref{measure-theory}); we call it the \emph{volume} (the \emph{area} when $n = 2$).
+The letter $\lambda$ is kept for the successive minima of Section~\ref{geometry-of-numbers:section-successive-minima}.
+\item For $A, A^{\prime} \subseteq \RR^n$, $x \in \RR^n$ and $t \in \RR$ we write $x + A = \{x + a : a \in A\}$, $tA = \{ta : a \in A\}$, $-A = (-1)A$ and
+$A + A^{\prime} = \{a + a^{\prime} : a \in A, a^{\prime} \in A^{\prime}\}$. The interior of $A$ is $A^\circ$.
+\item Matrices act on column vectors. For an $n \times n$ matrix $B$ with columns $b_1, \ldots, b_n$, $B\ZZ^n = \{\sum_im_ib_i : m_i \in \ZZ\}$. $\GL_n(\ZZ)$ is the group of integer matrices with
+integer inverse, that is, with determinant $\pm1$.
+\item $\lfloor x \rceil$ denotes an integer nearest to $x \in \RR$ (for half-integers, either choice will do), so that $|x - \lfloor x \rceil| \leq \frac12$.
 \end{enumerate}
+\end{notation}
+
+\section{Lattices}\label{geometry-of-numbers:section-lattices}
+
+A lattice is a copy of $\ZZ^n$ placed linearly in $\RR^n$: the integer combinations of a basis. The same lattice has many bases, and the first task is to find the quantities that do not depend
+on the choice. The most important one is the volume of a cell, the \emph{covolume}, which measures how dense the lattice is.
+
+\begin{definition}\label{geometry-of-numbers:definition-lattice}
+A \emph{lattice} in $\RR^n$ is a subset of the form
+\[
+\Lambda = B\ZZ^n = \ZZ b_1 + \cdots + \ZZ b_n,
+\]
+where $b_1, \ldots, b_n$ is a basis of the vector space $\RR^n$ and $B$ is the matrix with columns $b_1, \ldots, b_n$. Such a family $(b_1, \ldots, b_n)$ is called a \emph{basis} of $\Lambda$ and $B$
+a \emph{basis matrix}. A \emph{sublattice} of $\Lambda$ is a lattice $M \subseteq \Lambda$.
+\end{definition}
+
+A lattice is a subgroup of $(\RR^n, +)$, and a basis of $\Lambda$ is a basis of the free abelian group $\Lambda$ in the sense of Definition~\ref{groups:definition-free-abelian}: the map
+$\ZZ^n \to \Lambda$, $m \mapsto Bm$, is surjective by definition and injective because the $b_i$ are linearly independent over $\RR$. So $\Lambda \cong \ZZ^n$ is free of rank $n$
+(Definition~\ref{groups:definition-rank}). Some authors allow fewer than $n$ independent generators; in our terminology such a group is a lattice in the subspace it spans (see
+Corollary~\ref{geometry-of-numbers:corollary-discrete}).
+
+\begin{example}\label{geometry-of-numbers:example-lattices}
+\begin{enumerate}
+\item The \emph{integer lattice} $\ZZ^n$, with the standard basis $e_1, \ldots, e_n$.
+\item The \emph{hexagonal lattice} $A_2 = \ZZ(1, 0) + \ZZ(\frac12, \frac{\sqrt3}{2}) \subseteq \RR^2$. Identifying $\RR^2$ with $\CC$, it is the ring $\ZZ[\omega]$ of Eisenstein integers,
+$\omega = e^{2\pi i/3} = -\frac12 + \frac{\sqrt3}{2}i$: indeed $\ZZ[\omega] = \ZZ + \ZZ\omega = \ZZ + \ZZ(1 + \omega)$ and $1 + \omega = \frac12 + \frac{\sqrt3}{2}i$. Every point of $A_2$ has six nearest neighbours at distance $1$, the vertices of a regular
+hexagon. Similarly the Gaussian integers $\ZZ[i] = \ZZ + \ZZ i$ are the lattice $\ZZ^2$.
+\item The \emph{checkerboard lattice} $D_n = \{x \in \ZZ^n : x_1 + \cdots + x_n \text{ even}\}$, $n \geq 2$, with basis $e_1 + e_2, e_2 - e_1, e_3 - e_2, \ldots, e_n - e_{n-1}$. Indeed these vectors lie
+in $D_n$; conversely, if $x \in D_n$, subtracting $x_n(e_n - e_{n-1})$, then a multiple of $e_{n-1} - e_{n-2}$, and so on down to $e_3 - e_2$, leaves a vector $(y_1, y_2, 0, \ldots, 0)$ with $y_1 + y_2$
+even (each step preserves the parity of the coordinate sum), and $(y_1, y_2) = \frac{y_1 + y_2}{2}(1, 1) + \frac{y_2 - y_1}{2}(-1, 1)$ with integer coefficients. $D_3$ is the
+face-centred cubic lattice of crystallography, and $D_4$ will reappear in Example~\ref{geometry-of-numbers:example-hermite-dn}.
+\item For $\alpha \in \RR$, $\Lambda_\alpha = \ZZ(1, 0) + \ZZ(\alpha, 1) = \{(p + q\alpha, q) : p, q \in \ZZ\}$; its points of small first coordinate correspond to good approximations
+$|q\alpha + p|$, and this lattice links the chapter to Chapter~\ref{continued-fractions}.
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{geometry-of-numbers:counterexample-not-lattice}
+Two subgroups of $\RR^n$ that are free of rank $n$, or span $\RR^n$, without being lattices.
+\begin{enumerate}
+\item $G = \ZZ + \ZZ\sqrt2 \subseteq \RR$ is free of rank $2$ ($1$ and $\sqrt2$ are linearly independent over $\QQ$), but it is not a lattice in $\RR$: it is dense. Indeed, by Dirichlet's
+theorem (Theorem~\ref{combinatorics:theorem-dirichlet-approximation}) for every $N$ there are integers $p$, $q$ with $0 < |q\sqrt2 - p| < 1/N$ (nonzero since $\sqrt2$ is irrational), so $G$ contains
+elements of absolute value less than $1/N$, and their multiples come within $1/N$ of every real number.
+\item $\ZZ^2 \times \{0\} \subseteq \RR^3$ is a lattice in the plane $\RR^2 \times \{0\}$ but not in $\RR^3$: it does not span.
+\end{enumerate}
+The first example shows that a lattice is not just an abstract group; what distinguishes $\ZZ^n$ from $\ZZ + \ZZ\sqrt2$ is a topological property, discreteness, which
+Theorem~\ref{geometry-of-numbers:theorem-discrete} shows to be the only one.
+\end{counterexample}
+
+\begin{proposition}\label{geometry-of-numbers:proposition-change-of-basis}
+Let $B$ be a basis matrix of a lattice $\Lambda$. An $n \times n$ real matrix $B^{\prime}$ is a basis matrix of $\Lambda$ if and only if $B^{\prime} = BU$ for some $U \in \GL_n(\ZZ)$.
+\end{proposition}
+
+\begin{proof}
+If $U \in \GL_n(\ZZ)$, the columns of $BU$ are integer combinations of the $b_i$, so $BU\ZZ^n \subseteq \Lambda$; as $U^{-1}$ is also an integer matrix, $\Lambda = BU(U^{-1}\ZZ^n) \subseteq BU\ZZ^n$.
+Moreover $\det(BU) = \pm\det B \neq 0$. Conversely, let $B^{\prime}$ be a basis matrix of $\Lambda$. Every column of $B^{\prime}$ lies in $\Lambda = B\ZZ^n$, so $B^{\prime} = BU$ with $U$ an integer
+matrix, and likewise $B = B^{\prime}V$ with $V$ an integer matrix. Then $B = BUV$, and since $B$ is invertible, $UV = I$; so $U \in \GL_n(\ZZ)$.
+\end{proof}
+
+\begin{definition}\label{geometry-of-numbers:definition-covolume}
+The \emph{covolume} (or \emph{determinant}) of a lattice $\Lambda = B\ZZ^n$ is $d(\Lambda) = |\det B|$. The \emph{fundamental parallelepiped} of the basis $b_1, \ldots, b_n$ is
+\[
+P(B) = B[0, 1)^n = \Bigl\{\sum_it_ib_i : 0 \leq t_i < 1\Bigr\}.
+\]
+The \emph{Gram matrix} of the basis is $G = B^TB = (\langle b_i, b_j \rangle)_{i,j}$.
+\end{definition}
+
+By Proposition~\ref{geometry-of-numbers:proposition-change-of-basis}, $d(\Lambda)$ does not depend on the basis: $|\det(BU)| = |\det B||\det U| = |\det B|$. By
+Lemma~\ref{measure-theory:lemma-linear-change}, $\operatorname{vol}(P(B)) = |\det B|\operatorname{vol}([0, 1)^n) = d(\Lambda)$, and $\det G = (\det B)^2 = d(\Lambda)^2$. The Gram matrix
+depends only on the lengths of the basis vectors and the angles between them; so does $d(\Lambda) = \sqrt{\det G}$, which is therefore unchanged when $\Lambda$ is rotated or reflected.
+
+\begin{example}\label{geometry-of-numbers:example-covolumes}
+\begin{enumerate}
+\item $d(\ZZ^n) = 1$, and $d(c\Lambda) = |c|^nd(\Lambda)$ for $c \neq 0$.
+\item $d(A_2) = |\det\bigl(\begin{smallmatrix}1 & 1/2\\ 0 & \sqrt3/2\end{smallmatrix}\bigr)| = \frac{\sqrt3}{2}$, the area of a rhombus made of two equilateral triangles of side $1$.
+\item $d(D_2) = |\det\bigl(\begin{smallmatrix}1 & -1\\ 1 & 1\end{smallmatrix}\bigr)| = 2$, and in general $d(D_n) = 2$, because $D_n$ has index $2$ in $\ZZ^n$
+(Proposition~\ref{geometry-of-numbers:proposition-index} and Example~\ref{geometry-of-numbers:example-congruence-lattice} below).
+\item $d(\Lambda_\alpha) = 1$ for every $\alpha$.
+\end{enumerate}
+\end{example}
+
+\subsection{Discrete subgroups}\label{geometry-of-numbers:subsection-discrete}
+
+A lattice is discrete: around each of its points there is a ball containing no other point of it. This property characterises lattices among subgroups that span $\RR^n$, and it is the key to
+their finiteness properties.
+
+\begin{definition}\label{geometry-of-numbers:definition-discrete}
+A subset $D \subseteq \RR^n$ is \emph{discrete} if every bounded subset of $\RR^n$ contains only finitely many points of $D$.
+\end{definition}
+
+For a subgroup $G$ of $\RR^n$ this is equivalent to the topological notion: if some ball $B(0, \varepsilon)$ meets $G$ only in $0$, then two points of $G$ in a bounded set $A$ are at distance
+$\geq \varepsilon$ (their difference lies in $G$), so the balls of radius $\varepsilon/2$ around them are disjoint, and only finitely many of them fit in the bounded set $A + B(0, \varepsilon/2)$,
+by comparing volumes.
+
+\begin{lemma}\label{geometry-of-numbers:lemma-lattice-discrete}
+Every lattice is discrete.
+\end{lemma}
+
+\begin{proof}
+Let $\Lambda = B\ZZ^n$ and let $A$ be bounded, say $A \subseteq B(0, R)$. The linear map $B^{-1}$ is bounded: $|B^{-1}x|_\infty \leq c|x|$ for a constant $c$. So $Bm \in A$ implies
+$|m|_\infty \leq cR$, and there are finitely many such $m \in \ZZ^n$.
+\end{proof}
+
+\begin{theorem}\label{geometry-of-numbers:theorem-discrete}
+A subgroup $\Lambda$ of $\RR^n$ is a lattice if and only if it is discrete and spans $\RR^n$ as a vector space.
+\end{theorem}
+
+\begin{proof}
+A lattice is discrete by Lemma~\ref{geometry-of-numbers:lemma-lattice-discrete} and spans $\RR^n$ since it contains a basis. Conversely, let $\Lambda$ be a discrete subgroup spanning $\RR^n$.
+
+\emph{Step 1: a sublattice.} Since $\Lambda$ spans $\RR^n$, it contains a basis $v_1, \ldots, v_n$ of $\RR^n$. Let $M = \ZZ v_1 + \cdots + \ZZ v_n \subseteq \Lambda$, a lattice with basis matrix $V$.
+
+\emph{Step 2: $\Lambda/M$ is finite.} Every $x \in \RR^n$ can be written $x = Vt$ with $t \in \RR^n$, and then $x = V\lfloor t \rfloor + V\{t\}$ (componentwise integer and fractional parts), with
+$V\lfloor t \rfloor \in M$ and $V\{t\} \in P(V)$. So every coset of $M$ in $\Lambda$ contains a point of $\Lambda \cap P(V)$. As $P(V)$ is bounded and $\Lambda$ is discrete, this intersection
+is finite, and so is $\Lambda/M$. Let $N = |\Lambda/M|$.
+
+\emph{Step 3: $\Lambda$ is free of rank $n$.} By Lagrange's theorem in the finite group $\Lambda/M$, $Nx \in M$ for all $x \in \Lambda$; so $\Lambda \subseteq \frac1NM$. The group $\frac1NM$ is
+isomorphic to $\ZZ^n$, so by Proposition~\ref{groups:proposition-subgroups-free}, $\Lambda$ is free of some rank $r \leq n$. It contains the free group $M$ of rank $n$, so $r \geq n$ (again by
+Proposition~\ref{groups:proposition-subgroups-free}, applied to $M \subseteq \Lambda \cong \ZZ^r$). Thus $\Lambda = \ZZ b_1 + \cdots + \ZZ b_n$ for some $b_i$.
+
+\emph{Step 4: the $b_i$ are linearly independent.} They span the same real vector space as $\Lambda$, which is $\RR^n$; $n$ vectors spanning $\RR^n$ form a basis. So $\Lambda$ is a lattice.
+\end{proof}
+
+\begin{corollary}\label{geometry-of-numbers:corollary-discrete}
+Every discrete subgroup $G$ of $\RR^n$ is of the form $\ZZ v_1 + \cdots + \ZZ v_k$ with $v_1, \ldots, v_k$ linearly independent over $\RR$ (and $k \leq n$).
+\end{corollary}
+
+\begin{proof}
+Let $W$ be the subspace spanned by $G$, of dimension $k$, and choose a linear isomorphism $\phi \colon W \to \RR^k$. Then $\phi(G)$ is a discrete subgroup spanning $\RR^k$ ($\phi$ and $\phi^{-1}$ map
+bounded sets to bounded sets), hence a lattice by Theorem~\ref{geometry-of-numbers:theorem-discrete}; pull back a basis by $\phi^{-1}$.
+\end{proof}
+
+A discrete subgroup $G$ spanning a subspace $W$ is called a \emph{lattice in $W$}. When $W$ carries the restriction of the inner product, we define its covolume $d(G)$ as $|\det|$ of the matrix of a
+basis of $G$ in an orthonormal basis of $W$; it does not depend on the orthonormal basis (two of them differ by an orthogonal matrix, of determinant $\pm1$), and it equals $\sqrt{\det G}$ for the Gram
+matrix $(\langle v_i, v_j \rangle)$ of any basis $(v_i)$ of $G$, by the computation after Definition~\ref{geometry-of-numbers:definition-covolume}.
+
+\begin{example}\label{geometry-of-numbers:example-discrete-subgroups}
+The discrete subgroups of $\RR$ are $\{0\}$ and $\ZZ v$, $v > 0$. The subgroup $\ZZ(1, \sqrt2) \subseteq \RR^2$ is discrete, of rank $1$; the subgroup $\ZZ(1, 0) + \ZZ(\sqrt2, 0)$ is not.
+The closed subgroups of $\RR^n$ that are not discrete, such as $\RR \times \ZZ$, contain lines; we do not need them.
+\end{example}
+
+\subsection{Fundamental domains and index}\label{geometry-of-numbers:subsection-fundamental-domains}
+
+The covolume was defined through one particular cell, the parallelepiped of a basis. Any region whose translates by the lattice tile space has the same volume, and comparing two such regions
+computes indices of sublattices.
+
+\begin{definition}\label{geometry-of-numbers:definition-fundamental-domain}
+A \emph{fundamental domain} for a lattice $\Lambda$ is a measurable set $F \subseteq \RR^n$ such that the translates $v + F$, $v \in \Lambda$, cover $\RR^n$ up to a null set and are pairwise disjoint up to
+null sets: $\operatorname{vol}(\RR^n \setminus \bigcup_v(v + F)) = 0$ and $\operatorname{vol}((v + F) \cap (w + F)) = 0$ for $v \neq w$.
+\end{definition}
+
+Every fundamental parallelepiped $P(B)$ is a fundamental domain, with exactly disjoint translates covering all of $\RR^n$: Step 2 of the proof of Theorem~\ref{geometry-of-numbers:theorem-discrete} writes
+every $x$ as $x = v + p$ with $v \in \Lambda$ and $p \in P(B)$, and the decomposition is unique because $t \mapsto (\lfloor t \rfloor, \{t\})$ is.
+
+\begin{proposition}\label{geometry-of-numbers:proposition-fundamental-domain}
+Every fundamental domain $F$ of a lattice $\Lambda$ has volume $\operatorname{vol}(F) = d(\Lambda)$. More generally, for every measurable $S \subseteq \RR^n$ and fundamental domain $F$,
+\[
+\operatorname{vol}(S) = \sum_{v \in \Lambda}\operatorname{vol}\bigl((S - v) \cap F\bigr).
+\]
+\end{proposition}
+
+\begin{proof}
+The sets $S \cap (v + F)$, $v \in \Lambda$, cover $S$ up to a null set and pairwise intersect in null sets, so by countable additivity (the lattice is countable)
+$\operatorname{vol}(S) = \sum_v\operatorname{vol}(S \cap (v + F))$, and $\operatorname{vol}(S \cap (v + F)) = \operatorname{vol}((S - v) \cap F)$ by translation invariance of Lebesgue measure. If $F^{\prime}$ is a
+second fundamental domain, apply this with $S = F^{\prime}$:
+\[
+\begin{aligned}
+\operatorname{vol}(F^{\prime}) &= \sum_v\operatorname{vol}\bigl((F^{\prime} - v) \cap F\bigr) = \sum_v\operatorname{vol}\bigl(F \cap (F^{\prime} - v)\bigr)\\
+&= \sum_v\operatorname{vol}\bigl((F + v) \cap F^{\prime}\bigr) = \operatorname{vol}(F),
+\end{aligned}
+\]
+where the third equality translates by $v$ and the last one is the first formula with the roles of $F$ and $F^{\prime}$ exchanged (the sum over $v$ is the same as the sum over $-v$). Taking
+$F^{\prime} = P(B)$ gives $\operatorname{vol}(F) = d(\Lambda)$.
+\end{proof}
+
+\begin{example}\label{geometry-of-numbers:example-voronoi}
+The \emph{Voronoi cell} $V(\Lambda) = \{x \in \RR^n : |x| \leq |x - v| \text{ for all } v \in \Lambda\}$, the set of points at least as close to $0$ as to any other lattice point, is a fundamental
+domain. Every $x$ has a nearest lattice point $v$ (only finitely many lattice points lie within distance $|x|$ of $x$, by discreteness), and then $x - v \in V(\Lambda)$; and a point of
+$(v + V(\Lambda)) \cap (w + V(\Lambda))$ with $v \neq w$ is equidistant from $v$ and $w$, so it lies on the hyperplane bisecting them, a null set (and countably many such hyperplanes occur). For
+$\ZZ^2$ the Voronoi cell is the square $[-\frac12, \frac12]^2$; for $A_2$ it is a regular hexagon, of area $\frac{\sqrt3}{2}$, which explains the honeycomb.
+\end{example}
+
+\begin{proposition}\label{geometry-of-numbers:proposition-index}
+Let $M \subseteq \Lambda$ be a sublattice. Then the index $[\Lambda : M]$ is finite and
+\[
+[\Lambda : M] = \frac{d(M)}{d(\Lambda)}.
+\]
+In particular $d(M) \geq d(\Lambda)$, with equality only if $M = \Lambda$; and if $M = BC\ZZ^n$ where $B$ is a basis matrix of $\Lambda$ and $C$ an integer matrix, then $[\Lambda : M] = |\det C|$.
+\end{proposition}
+
+\begin{proof}
+Finiteness is Step 2 of the proof of Theorem~\ref{geometry-of-numbers:theorem-discrete}. Let $r_1, \ldots, r_N$ be representatives of the cosets of $M$ in $\Lambda$, and $F$ a fundamental
+domain of $\Lambda$. Then $F^{\prime} = \bigcup_j(r_j + F)$ is a fundamental domain of $M$: as $u$ runs over $M$ and $j$ over $1, \ldots, N$, $u + r_j$ runs over $\Lambda$ exactly once, so the
+translates $u + F^{\prime}$ are the translates $v + F$, $v \in \Lambda$, regrouped. By Proposition~\ref{geometry-of-numbers:proposition-fundamental-domain},
+$d(M) = \operatorname{vol}(F^{\prime}) = N\operatorname{vol}(F) = Nd(\Lambda)$, the union being disjoint up to null sets. For the last statement, $d(M) = |\det B||\det C|$.
+\end{proof}
+
+\begin{example}\label{geometry-of-numbers:example-congruence-lattice}
+\emph{Congruence lattices.} Let $m \geq 1$ and $a \in \ZZ^n$ with $\gcd(a_1, \ldots, a_n, m) = 1$. Then
+\[
+L = \{x \in \ZZ^n : a_1x_1 + \cdots + a_nx_n \equiv 0 \pmod m\}
+\]
+is a sublattice of $\ZZ^n$ of index $m$, hence of covolume $m$. Indeed $L$ is the kernel of the homomorphism $\ZZ^n \to \ZZ/m\ZZ$, $x \mapsto \sum a_ix_i \bmod m$, which is surjective: by B\'ezout's
+identity there are integers with $\sum a_iy_i + mz = 1$, so $1$ is in the image. Then $\ZZ^n/L \cong \ZZ/m\ZZ$; and $L \supseteq m\ZZ^n$ spans $\RR^n$ and is discrete, so it is a lattice by
+Theorem~\ref{geometry-of-numbers:theorem-discrete}. For instance $D_n$ is the case $m = 2$, $a = (1, \ldots, 1)$; and for a prime $p$ and an integer $u$, the lattice
+$\{(x, y) : y \equiv ux \pmod p\}$ has basis $(1, u), (0, p)$ and covolume $p$. The intersection of two such lattices, for $(a, m)$ and $(a^{\prime}, m^{\prime})$ with $\gcd(m, m^{\prime}) = 1$, has index $mm^{\prime}$: the map
+$\ZZ^n \to \ZZ/m\ZZ \times \ZZ/m^{\prime}\ZZ$, $x \mapsto (\sum a_ix_i, \sum a_i^{\prime}x_i)$, is surjective, because given $x$ and $x^{\prime}$ hitting the two components separately, the Chinese
+remainder theorem (Theorem~\ref{number-theory:theorem-crt}), applied to each coordinate, gives $z$ with $z \equiv x \pmod m$ and $z \equiv x^{\prime} \pmod{m^{\prime}}$; the intersection is
+the kernel. The same holds for more than two coprime moduli.
+\end{example}
+
+\subsection{Primitive vectors and adapted bases}\label{geometry-of-numbers:subsection-primitive}
+
+Which lattice vectors can be the first vector of a basis? Not $2e_1 \in \ZZ^2$, since $\ZZ(2e_1) + \ZZ w$ always has even first coordinates. The obstruction is divisibility, and it is the only one.
+
+\begin{definition}\label{geometry-of-numbers:definition-primitive}
+A nonzero vector $v$ of a lattice $\Lambda$ is \emph{primitive} if it is not of the form $kw$ with $w \in \Lambda$ and an integer $k \geq 2$. A subgroup $M \subseteq \Lambda$ is \emph{primitive} if
+$M = \Lambda \cap W$ for the subspace $W$ spanned by $M$.
+\end{definition}
+
+In $\ZZ^n$, $v$ is primitive if and only if $\gcd(v_1, \ldots, v_n) = 1$. A vector $v$ is primitive exactly when the subgroup $\ZZ v$ is primitive: if $\Lambda \cap \RR v$, a discrete subgroup of the line
+$\RR v$, is $\ZZ w$ (Corollary~\ref{geometry-of-numbers:corollary-discrete}), then $v = kw$ with $k \in \ZZ$, and $v$ is primitive if and only if $k = \pm1$.
+
+\begin{proposition}\label{geometry-of-numbers:proposition-extend-basis}
+Let $W$ be a subspace of $\RR^n$ spanned by vectors of a lattice $\Lambda$, of dimension $k$. Then $\Lambda \cap W$ is a lattice in $W$, and every basis $w_1, \ldots, w_k$ of $\Lambda \cap W$ extends to a
+basis $w_1, \ldots, w_n$ of $\Lambda$. In particular every primitive vector of $\Lambda$ is the first vector of a basis.
+\end{proposition}
+
+\begin{proof}
+$\Lambda \cap W$ is a discrete subgroup spanning $W$, hence a lattice in $W$ by Corollary~\ref{geometry-of-numbers:corollary-discrete} (its rank is $\dim W = k$). The quotient
+$Q = \Lambda/(\Lambda \cap W)$ is finitely generated and torsion-free: if $mx \in \Lambda \cap W$ with $m \geq 1$, then $x \in W$ since $W$ is a subspace. By
+Theorem~\ref{groups:theorem-structure-abelian}, $Q \cong \ZZ^r$; choose $w_{k+1}, \ldots, w_{k+r} \in \Lambda$ mapping to a basis of $Q$. For $x \in \Lambda$, write its image in $Q$ in this basis
+and subtract the corresponding combination of $w_{k+1}, \ldots, w_{k+r}$: the result lies in $\Lambda \cap W$. So $w_1, \ldots, w_{k+r}$ generate $\Lambda$, and they are independent over $\ZZ$ (a
+relation, mapped to $Q$, has zero coefficients on $w_{k+1}, \ldots, w_{k+r}$, and then zero coefficients on $w_1, \ldots, w_k$). Hence $k + r = n$ by Proposition~\ref{groups:proposition-free-abelian}.
+\end{proof}
+
+\begin{corollary}\label{geometry-of-numbers:corollary-adapted-basis}
+Let $v_1, \ldots, v_n \in \Lambda$ be linearly independent. There is a basis $b_1, \ldots, b_n$ of $\Lambda$ with $\operatorname{span}(b_1, \ldots, b_j) = \operatorname{span}(v_1, \ldots, v_j)$ for
+$j = 1, \ldots, n$.
+\end{corollary}
+
+\begin{proof}
+Let $W_j = \operatorname{span}(v_1, \ldots, v_j)$. By induction on $j$ we construct a basis $b_1, \ldots, b_j$ of $\Lambda \cap W_j$. For $j = 1$, $\Lambda \cap W_1 = \ZZ b_1$. Given a basis $b_1, \ldots, b_j$
+of $\Lambda \cap W_j$, the lattice $\Lambda \cap W_{j+1}$ of the space $W_{j+1}$ contains $\Lambda \cap W_j = (\Lambda \cap W_{j+1}) \cap W_j$, and by
+Proposition~\ref{geometry-of-numbers:proposition-extend-basis} applied inside $W_{j+1}$, $b_1, \ldots, b_j$ extends by one vector $b_{j+1}$ to a basis of $\Lambda \cap W_{j+1}$.
+\end{proof}
+
+\begin{counterexample}\label{geometry-of-numbers:counterexample-independent-not-basis}
+Linearly independent lattice vectors need not extend to a basis, even when each of them is primitive: $(1, 0)$ and $(1, 2)$ are primitive in $\ZZ^2$, but they generate a sublattice of index $2$. In the
+same way $n$ linearly independent vectors of $\Lambda$ form a basis exactly when the sublattice they generate has covolume $d(\Lambda)$, by Proposition~\ref{geometry-of-numbers:proposition-index}.
+\end{counterexample}
+
+\subsection{Projections}\label{geometry-of-numbers:subsection-projections}
+
+Projecting a lattice along one of its vectors gives a lattice of one dimension less; this is the basic step of the inductive arguments of Section~\ref{geometry-of-numbers:section-reduction}.
+
+\begin{lemma}\label{geometry-of-numbers:lemma-projection}
+Let $v$ be a primitive vector of a lattice $\Lambda \subseteq \RR^n$, $n \geq 2$, and let $\pi \colon \RR^n \to v^\perp$ be the orthogonal projection, $\pi(x) = x - \frac{\langle x, v \rangle}{|v|^2}v$. Then
+$\pi(\Lambda)$ is a lattice in the $(n - 1)$-dimensional space $v^\perp$, and
+\[
+d(\Lambda) = |v|\,d(\pi(\Lambda)).
+\]
+Moreover, for every $y \in \pi(\Lambda)$ there is $x \in \Lambda$ with $\pi(x) = y$ and $|x - y| \leq \frac12|v|$.
+\end{lemma}
+
+\begin{proof}
+By Proposition~\ref{geometry-of-numbers:proposition-extend-basis} there is a basis $v, b_2, \ldots, b_n$ of $\Lambda$. Since $\pi(v) = 0$, $\pi(\Lambda) = \ZZ\pi(b_2) + \cdots + \ZZ\pi(b_n)$, and the
+vectors $\pi(b_i)$ are linearly independent: a relation $\sum_ic_i\pi(b_i) = 0$ means $\sum_ic_ib_i \in \RR v$, so all $c_i = 0$. So $\pi(\Lambda)$ is a lattice in $v^\perp$. In an orthonormal basis
+$u_1 = v/|v|, u_2, \ldots, u_n$ of $\RR^n$ with $u_2, \ldots, u_n \in v^\perp$ (Theorem~\ref{linear-algebra:theorem-gram-schmidt}), the vectors $v, \pi(b_2), \ldots, \pi(b_n)$ have the matrix
+$\bigl(\begin{smallmatrix}|v| & 0\\ 0 & C\end{smallmatrix}\bigr)$, where $C$ is the matrix of $\pi(b_2), \ldots, \pi(b_n)$ in $u_2, \ldots, u_n$, and $|\det C| = d(\pi(\Lambda))$. This matrix is obtained from
+the matrix of $v, b_2, \ldots, b_n$ by subtracting multiples of the first column from the others, which does not change the determinant; so $d(\Lambda) = |v||\det C|$.
+
+For the last statement, let $y = \pi(x_0)$ with $x_0 \in \Lambda$. The points of $\Lambda$ with image $y$ are $x_0 + kv$, $k \in \ZZ$, and $x_0 + kv - y = (t + k)v$ with $t = \langle x_0, v \rangle/|v|^2$;
+choose $k = -\lfloor t \rceil$.
+\end{proof}
+
+\subsection{The dual lattice}\label{geometry-of-numbers:subsection-dual}
+
+\begin{definition}\label{geometry-of-numbers:definition-dual}
+The \emph{dual lattice} of a lattice $\Lambda \subseteq \RR^n$ is $\Lambda^* = \{y \in \RR^n : \langle x, y \rangle \in \ZZ \text{ for all } x \in \Lambda\}$.
+\end{definition}
+
+\begin{proposition}\label{geometry-of-numbers:proposition-dual}
+If $\Lambda = B\ZZ^n$, then $\Lambda^* = (B^T)^{-1}\ZZ^n$; its basis $b_1^*, \ldots, b_n^*$ (the columns of $(B^T)^{-1}$) is characterised by $\langle b_i, b_j^* \rangle = \delta_{ij}$. Consequently
+$\Lambda^*$ is a lattice, $d(\Lambda^*) = 1/d(\Lambda)$, $(\Lambda^*)^* = \Lambda$, and $M \subseteq \Lambda$ implies $\Lambda^* \subseteq M^*$, with $[M^* : \Lambda^*] = [\Lambda : M]$.
+\end{proposition}
+
+\begin{proof}
+$y \in \Lambda^*$ if and only if $\langle b_i, y \rangle \in \ZZ$ for all $i$, that is, $B^Ty \in \ZZ^n$, that is, $y \in (B^T)^{-1}\ZZ^n$. The matrix identity $B^T(B^T)^{-1} = I$ says
+$\langle b_i, b_j^* \rangle = \delta_{ij}$. Then $d(\Lambda^*) = |\det B|^{-1}$, and applying the first statement to $(B^T)^{-1}$ gives $(\Lambda^*)^* = B\ZZ^n$. The inclusion reversal is clear from the
+definition, and the index formula follows from Proposition~\ref{geometry-of-numbers:proposition-index}: $[M^* : \Lambda^*] = d(\Lambda^*)/d(M^*) = d(M)/d(\Lambda)$.
+\end{proof}
+
+\begin{example}\label{geometry-of-numbers:example-dual}
+\begin{enumerate}
+\item $(\ZZ^n)^* = \ZZ^n$: the integer lattice is \emph{unimodular}, equal to its dual.
+\item $(c\Lambda)^* = c^{-1}\Lambda^*$; for instance $(2\ZZ)^* = \frac12\ZZ$.
+\item $D_n^* = \ZZ^n \cup \bigl(\ZZ^n + (\frac12, \ldots, \frac12)\bigr)$. Indeed $D_n^* \supseteq (\ZZ^n)^* = \ZZ^n$ with index $[\ZZ^n : D_n] = 2$, and $h = (\frac12, \ldots, \frac12)$ lies in $D_n^*$
+since $\langle x, h \rangle = \frac12\sum x_i \in \ZZ$ for $x \in D_n$, while $h \notin \ZZ^n$; so $D_n^* = \ZZ^n + \ZZ h$.
+\item $A_2^*$ is $A_2$ rotated by $30^\circ$ and scaled by $2/\sqrt3$: the dual basis of $(1, 0), (\frac12, \frac{\sqrt3}{2})$ is $(1, -\frac1{\sqrt3}), (0, \frac2{\sqrt3})$, two vectors of length $\frac2{\sqrt3}$ at
+an angle of $120^\circ$, whose sum $(1, \frac1{\sqrt3})$ has the same length; so $A_2^*$ is again hexagonal, with covolume $\frac{2}{\sqrt3} = 1/d(A_2)$.
+\end{enumerate}
+\end{example}
+
+\section{Minkowski's theorem}\label{geometry-of-numbers:section-minkowski}
+
+A region of small volume can avoid all lattice points but one, however it is placed; a region of large volume cannot, if it is convex and symmetric. The proof is a pigeonhole argument with volume
+in place of counting: Blichfeldt's lemma.
+
+\begin{definition}\label{geometry-of-numbers:definition-convex}
+A set $K \subseteq \RR^n$ is \emph{convex} if $tx + (1 - t)y \in K$ for all $x, y \in K$ and $t \in [0, 1]$, and \emph{symmetric} (about the origin) if $-K = K$. A \emph{convex body} is a compact convex
+set with nonempty interior.
+\end{definition}
+
+\begin{lemma}\label{geometry-of-numbers:lemma-convex-basic}
+Let $K \subseteq \RR^n$ be convex.
+\begin{enumerate}
+\item $sK + tK = (s + t)K$ for $s, t \geq 0$.
+\item If $K$ is symmetric and $x, y \in K$, then $\frac12(x - y) \in K$.
+\item If $K$ is symmetric with nonempty interior, then $0 \in K^\circ$.
+\item If $K$ is a symmetric convex body, then $\|x\|_K = \min\{t \geq 0 : x \in tK\}$ is a norm on $\RR^n$, the \emph{gauge} of $K$, with $K = \{x : \|x\|_K \leq 1\}$ and
+$K^\circ = \{x : \|x\|_K < 1\}$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) $sK + tK \supseteq (s + t)K$ always, as $(s + t)k = sk + tk$. Conversely, if $s + t > 0$, then $sx + ty = (s + t)\bigl(\frac{s}{s + t}x + \frac{t}{s + t}y\bigr) \in (s + t)K$ for $x, y \in K$; if
+$s = t = 0$ both sides are $\{0\}$ (for $K \neq \emptyset$).
+
+(2) $\frac12(x - y) = \frac12x + \frac12(-y)$ with $-y \in K$.
+
+(3) If $B(a, r) \subseteq K$, then $B(-a, r) = -B(a, r) \subseteq K$, and every $z \in B(0, r)$ is $z = \frac12(a + z) + \frac12(-a + z)$ with $a + z \in B(a, r)$ and $-a + z \in B(-a, r)$.
+
+(4) By (3), $B(0, r) \subseteq K$ for some $r > 0$, so $x \in (|x|/r)K$, and the set of $t$ with $x \in tK$ is nonempty; it is an interval $[\|x\|_K, \infty)$, closed because $K$ is closed, and an interval
+because $tK \subseteq t^{\prime}K$ for $0 \leq t \leq t^{\prime}$ (convexity and $0 \in K$). Since $K$ is bounded, $K \subseteq B(0, R)$, $x \in tK$ implies $|x| \leq tR$, so $\|x\|_K \geq |x|/R$ and
+$\|x\|_K = 0$ only for $x = 0$. Symmetry gives $\|cx\|_K = |c|\|x\|_K$, and (1) gives the triangle inequality: $x \in sK$, $y \in tK$ imply $x + y \in (s + t)K$. Clearly $K = \{\|x\|_K \leq 1\}$. The
+estimate $\|x\|_K \leq |x|/r$ and the triangle inequality show that $\|\cdot\|_K$ is continuous, so $\{\|x\|_K < 1\}$ is open and contained in $K^\circ$. Conversely, if $x \in K^\circ$, then
+$(1 + \varepsilon)x \in K$ for some $\varepsilon > 0$, so $\|x\|_K \leq (1 + \varepsilon)^{-1} < 1$.
+\end{proof}
+
+Convex sets are not always measurable for free in our setting, but the ones we use (convex bodies, which are compact, and their interiors, which are open) are Borel sets; we state the theorems for
+measurable convex sets.
+
+\begin{lemma}[Blichfeldt]\label{geometry-of-numbers:lemma-blichfeldt}
+Let $\Lambda$ be a lattice in $\RR^n$ and $S \subseteq \RR^n$ measurable with $\operatorname{vol}(S) > d(\Lambda)$. Then there are $x \neq y$ in $S$ with $x - y \in \Lambda$. The same holds if $S$ is
+compact and $\operatorname{vol}(S) \geq d(\Lambda)$.
+\end{lemma}
+
+\begin{proof}
+Let $F$ be a fundamental parallelepiped of $\Lambda$. By Proposition~\ref{geometry-of-numbers:proposition-fundamental-domain},
+\[
+\sum_{v \in \Lambda}\operatorname{vol}\bigl((S - v) \cap F\bigr) = \operatorname{vol}(S) > d(\Lambda) = \operatorname{vol}(F).
+\]
+If the sets $(S - v) \cap F$ were pairwise disjoint, the left side would be the volume of their union, a subset of $F$, hence $\leq \operatorname{vol}(F)$. So there are $v \neq w$ in $\Lambda$ and a point
+$z \in (S - v) \cap (S - w)$; then $x = z + v$ and $y = z + w$ lie in $S$, $x \neq y$, and $x - y = v - w \in \Lambda$.
+
+Now let $S$ be compact with $\operatorname{vol}(S) \geq d(\Lambda)$, and let $S_k = S + B(0, 1/k)$. Then $\operatorname{vol}(S_k) > \operatorname{vol}(S)$: if $p \in S$ has the largest first coordinate, the
+open ball of radius $\frac1{2k}$ around $p + \frac1{2k}e_1$ lies in $S_k$ and misses $S$. By the first part there are $x_k \neq y_k$ in $S_k$ with $v_k = x_k - y_k \in \Lambda \setminus \{0\}$. The
+$v_k$ lie in the bounded set $S_1 - S_1$, so they take finitely many values (Lemma~\ref{geometry-of-numbers:lemma-lattice-discrete}), and some value $v \neq 0$ occurs for infinitely many $k$. Along
+these $k$, the bounded sequence $x_k$ has a convergent subsequence, with limit $x \in \bigcap_kS_k = S$ ($S$ is closed). Then $y_k = x_k - v \to x - v$, which lies in $S$ for the same reason. So $x$
+and $x - v$ are two distinct points of $S$ with difference $v \in \Lambda$.
+\end{proof}
+
+\begin{theorem}[Minkowski's convex body theorem]\label{geometry-of-numbers:theorem-minkowski}
+Let $\Lambda$ be a lattice in $\RR^n$ and $K \subseteq \RR^n$ a measurable, convex, symmetric set with
+\[
+\operatorname{vol}(K) > 2^nd(\Lambda).
+\]
+Then $K$ contains a point of $\Lambda \setminus \{0\}$. If $K$ is moreover compact, $\operatorname{vol}(K) \geq 2^nd(\Lambda)$ suffices.
+\end{theorem}
+
+\begin{proof}
+The set $S = \frac12K$ has $\operatorname{vol}(S) = 2^{-n}\operatorname{vol}(K) > d(\Lambda)$ (Lemma~\ref{measure-theory:lemma-linear-change}). By Blichfeldt's lemma there are $x \neq y$ in $S$
+with $x - y \in \Lambda$. Then $2x$, $2y \in K$, and $x - y = \frac12(2x - 2y) \in K$ by Lemma~\ref{geometry-of-numbers:lemma-convex-basic}(2); it is a nonzero lattice point of $K$. In the compact case
+$S$ is compact and the second part of Blichfeldt's lemma applies.
+\end{proof}
+
+For $\Lambda = \ZZ^n$ the theorem reads: a symmetric convex set of volume larger than $2^n$ contains a nonzero integer point. The constant $2^n$ is the volume of the cube $[-1, 1]^n$, and the
+first part of the next counterexample shows that it cannot be lowered.
+
+\begin{counterexample}\label{geometry-of-numbers:counterexample-minkowski}
+Each hypothesis of Theorem~\ref{geometry-of-numbers:theorem-minkowski} is needed. Take $\Lambda = \ZZ^n$.
+\begin{enumerate}
+\item \emph{The bound.} The open cube $(-1, 1)^n$ is convex and symmetric, of volume exactly $2^n$, and contains no nonzero integer point. So the strict inequality is needed for non-compact sets, and
+$2^n$ cannot be replaced by any smaller number, even for compact sets: the cubes $[-c, c]^n$ with $c < 1$ have volume $(2c)^n$, as close to $2^n$ as we like, and contain only $0$.
+\item \emph{Symmetry.} The box $(0, 1) \times (-N, N)^{n-1}$ is convex, of volume $(2N)^{n-1}$, and contains no integer point at all, since its first coordinate is never an integer.
+\item \emph{Convexity.} In $\RR^2$, let $S$ be the union of the open square $(-1, 1)^2$ and of the open unit squares $(k, k + 1) \times (0, 1)$ and $(-k - 1, -k) \times (-1, 0)$ for
+$k = 1, \ldots, N$. It is symmetric, of area $4 + 2N$, and its only integer point is $0$: open unit squares with integer corners contain no integer point.
+\end{enumerate}
+The convex body theorem also gives nothing about where the lattice point is: for a thin symmetric convex set it can lie anywhere along it.
+\end{counterexample}
+
+To use the theorem we need volumes of a few convex bodies.
+
+\begin{lemma}\label{geometry-of-numbers:lemma-cross-polytope}
+For $t \geq 0$, the simplex $\Delta_n(t) = \{x \in \RR^n : x_i \geq 0, \ x_1 + \cdots + x_n \leq t\}$ has volume $t^n/n!$, and the \emph{cross-polytope} $C_n(t) = \{x : |x_1| + \cdots + |x_n| \leq t\}$
+has volume $2^nt^n/n!$. More generally, for linearly independent $u_1, \ldots, u_n$, the convex hull of $\pm u_1, \ldots, \pm u_n$ has volume $\frac{2^n}{n!}|\det(u_1, \ldots, u_n)|$.
+\end{lemma}
+
+\begin{proof}
+By induction on $n$; for $n = 1$, $\operatorname{vol}([0, t]) = t$. By Fubini's theorem (Theorem~\ref{measure-theory:theorem-fubini}), slicing by the last coordinate $s = x_n \in [0, t]$, whose slice is
+$\Delta_{n-1}(t - s)$,
+\[
+\operatorname{vol}(\Delta_n(t)) = \int_0^t\frac{(t - s)^{n-1}}{(n - 1)!}\,ds = \frac{t^n}{n!}.
+\]
+The cross-polytope is the union of the $2^n$ reflections of $\Delta_n(t)$ by sign changes of the coordinates, which overlap only in coordinate hyperplanes (null sets). Finally, the convex hull of the
+$\pm u_i$ is the image of $C_n(1)$ under the linear map $e_i \mapsto u_i$, so its volume is $|\det(u_1, \ldots, u_n)|\cdot 2^n/n!$ by Lemma~\ref{measure-theory:lemma-linear-change}. (That $C_n(1)$ is the
+convex hull of $\pm e_1, \ldots, \pm e_n$: it is convex and contains these points; conversely $x \in C_n(1)$ is the convex combination $\sum_i|x_i|(\operatorname{sign}(x_i)e_i) + (1 - \sum_i|x_i|)\cdot 0$,
+and $0 = \frac12e_1 + \frac12(-e_1)$.)
+\end{proof}
+
+\begin{corollary}\label{geometry-of-numbers:corollary-short-vector}
+Every lattice $\Lambda \subseteq \RR^n$ contains a nonzero vector $v$ with
+\[
+|v|_\infty \leq d(\Lambda)^{1/n}, \qquad |v|_1 = \sum_i|v_i| \leq (n!\,d(\Lambda))^{1/n}, \qquad |v| \leq 2\Bigl(\frac{d(\Lambda)}{\omega_n}\Bigr)^{1/n}.
+\]
+\end{corollary}
+
+\begin{proof}
+Apply the compact case of Theorem~\ref{geometry-of-numbers:theorem-minkowski} to the cube $[-c, c]^n$ with $(2c)^n = 2^nd(\Lambda)$, to $C_n(t)$ with $2^nt^n/n! = 2^nd(\Lambda)$
+(Lemma~\ref{geometry-of-numbers:lemma-cross-polytope}), and to the ball $B(0, r)$ with $\omega_nr^n = 2^nd(\Lambda)$.
+\end{proof}
+
+The three bounds are of different strength: since $|v| \leq |v|_1$ and $|v| \leq \sqrt n|v|_\infty$, each gives a bound for $|v|$, and the one from the ball is the best for large $n$, as
+$2\omega_n^{-1/n} \sim \sqrt{2n/(\pi e)}$ (by Stirling's formula for $\Gamma$), against $(n!)^{1/n} \sim n/e$ and $\sqrt n$.
+
+\begin{corollary}[Minkowski's linear forms theorem]\label{geometry-of-numbers:corollary-linear-forms}
+Let $A = (a_{ij})$ be an invertible real $n \times n$ matrix, $L_i(x) = \sum_ja_{ij}x_j$, and $c_1, \ldots, c_n > 0$ with $c_1c_2\cdots c_n \geq |\det A|$. Then there is $x \in \ZZ^n \setminus \{0\}$ with
+\[
+|L_1(x)| \leq c_1, \qquad |L_i(x)| < c_i \quad (2 \leq i \leq n).
+\]
+\end{corollary}
+
+\begin{proof}
+For $0 < \varepsilon \leq \frac12$ let $K_\varepsilon = \{x : |L_1(x)| \leq c_1(1 - \varepsilon)^{1-n}, \ |L_i(x)| \leq (1 - \varepsilon)c_i \text{ for } i \geq 2\}$. It is the preimage under $A$ of a box, a
+compact convex symmetric set, of volume $2^n\prod_ic_i/|\det A| \geq 2^n$ by Lemma~\ref{measure-theory:lemma-linear-change}. By Theorem~\ref{geometry-of-numbers:theorem-minkowski} it contains some
+$x_\varepsilon \in \ZZ^n \setminus \{0\}$. All $x_\varepsilon$ lie in the bounded set $\{|L_1(x)| \leq 2^{n-1}c_1, \ |L_i(x)| \leq c_i \text{ for } i \geq 2\}$, so one integer vector $x$ equals $x_\varepsilon$ for a sequence $\varepsilon \to 0$. Then
+$|L_i(x)| \leq (1 - \varepsilon)c_i < c_i$ for $i \geq 2$, and $|L_1(x)| \leq c_1(1 - \varepsilon)^{1-n}$ for $\varepsilon$ arbitrarily small, so $|L_1(x)| \leq c_1$.
+\end{proof}
+
+\subsection{Simultaneous approximation}\label{geometry-of-numbers:subsection-simultaneous}
+
+Dirichlet's theorem (Theorem~\ref{combinatorics:theorem-dirichlet-approximation}) approximates one real number by fractions $p/q$ with error less than $1/q^2$. Several real numbers can be
+approximated by fractions with a common denominator, with a weaker exponent; the linear forms theorem gives the best general exponent at once.
+
+\begin{theorem}[Dirichlet's simultaneous approximation theorem]\label{geometry-of-numbers:theorem-simultaneous}
+Let $\alpha_1, \ldots, \alpha_m$ be real numbers and $Q \geq 1$ an integer. There are integers $q, p_1, \ldots, p_m$ with
+\[
+1 \leq q \leq Q^m \qquad\text{and}\qquad |q\alpha_i - p_i| < \frac1Q \quad (1 \leq i \leq m).
+\]
+If at least one $\alpha_i$ is irrational, there are infinitely many $q \geq 1$ for which some integers $p_i$ satisfy $|\alpha_i - p_i/q| < q^{-1-1/m}$ for all $i$.
+\end{theorem}
+
+\begin{proof}
+Apply Corollary~\ref{geometry-of-numbers:corollary-linear-forms} in $\RR^{m+1}$ to the variables $(q, p_1, \ldots, p_m)$ and the linear forms $L_0 = q$, $L_i = q\alpha_i - p_i$, with $c_0 = Q^m$ and
+$c_i = 1/Q$. The matrix of the forms is triangular with diagonal $(1, -1, \ldots, -1)$, of determinant $\pm1 = \prod c_i$. We get $(q, p) \neq 0$ with $|q| \leq Q^m$ and $|q\alpha_i - p_i| < 1/Q$. If
+$q = 0$, then $|p_i| < 1/Q \leq 1$ forces all $p_i = 0$, which is excluded; replacing $(q, p)$ by $-(q, p)$ we get $q \geq 1$.
+
+From $q \leq Q^m$ we get $1/Q \leq q^{-1/m}$, so $|\alpha_i - p_i/q| < q^{-1-1/m}$. Suppose $\alpha_1$ is irrational and only finitely many $q$ occur, forming a set $E$. Writing $\|x\|$ for the
+distance from $x$ to the nearest integer, $\delta = \min_{q \in E}\|q\alpha_1\|$ is positive, since $q\alpha_1 \notin \ZZ$. Choosing $Q > 1/\delta$ produces a solution with
+$\|q\alpha_1\| \leq |q\alpha_1 - p_1| < 1/Q < \delta$, so $q \notin E$, a contradiction.
+\end{proof}
+
+\begin{remark}\label{geometry-of-numbers:remark-simultaneous}
+For $m = 1$ we recover Dirichlet's theorem, and the exponent $2$ cannot be improved, by Hurwitz's theorem (Theorem~\ref{continued-fractions:theorem-hurwitz}). The \emph{dual} problem asks for
+small values of a linear form $q_1\alpha_1 + \cdots + q_m\alpha_m - p$ with $|q_i| \leq Q$; the linear forms theorem, with $c_0 = Q^{-m}$ and $c_1 = \cdots = c_m = Q$, gives a nonzero integer
+vector with $|q_1\alpha_1 + \cdots + q_m\alpha_m - p| \leq Q^{-m}$ and all $|q_i| < Q$ (Exercise~\ref{geometry-of-numbers:exercise-dual-dirichlet}). The two problems are related by
+transference theorems \cite{cassels-geometry-numbers}. A famous open problem in this area is \emph{Littlewood's conjecture}: for all real $\alpha$, $\beta$,
+$\liminf_{q \to \infty}q\|q\alpha\|\|q\beta\| = 0$, where $\|x\|$ is the distance to the nearest integer.
+\end{remark}
+
+\subsection{Siegel's lemma}\label{geometry-of-numbers:subsection-siegel}
+
+A system of $M$ homogeneous linear equations in $N > M$ unknowns with integer coefficients has nonzero integer solutions (clear denominators in a rational solution). How small can they be chosen?
+The answer, Siegel's lemma, is the basic tool for constructing auxiliary polynomials in transcendence theory.
+
+\begin{theorem}[Siegel's lemma]\label{geometry-of-numbers:theorem-siegel}
+Let $1 \leq M < N$ and let $a_{ij}$ ($1 \leq i \leq M$, $1 \leq j \leq N$) be integers with $|a_{ij}| \leq A$, where $A \geq 1$. Then the system $\sum_ja_{ij}x_j = 0$ ($1 \leq i \leq M$) has a solution
+$x \in \ZZ^N \setminus \{0\}$ with
+\[
+|x_j| \leq (NA)^{M/(N-M)} \qquad (1 \leq j \leq N).
+\]
+\end{theorem}
+
+\begin{proof}
+Let $H = \lfloor(NA)^{M/(N-M)}\rfloor$, so $H + 1 > (NA)^{M/(N-M)}$, that is, $(H + 1)^{N-M} > (NA)^M$. For $x \in \{0, 1, \ldots, H\}^N$, the $i$-th coordinate of $y = (\sum_ja_{ij}x_j)_i$ lies in
+the interval $[-n_i^-AH, n_i^+AH]$, where $n_i^\pm$ is the number of $j$ with $\pm a_{ij} > 0$; since $n_i^+ + n_i^- \leq N$, the interval contains at most $NAH + 1$ integers. So $y$ takes at most
+$(NAH + 1)^M$ values, while there are $(H + 1)^N$ vectors $x$. Now $NAH + 1 < NA(H + 1)$, because $NA \geq N \geq 2$, so
+\[
+(NAH + 1)^M < (NA)^M(H + 1)^M < (H + 1)^{N-M}(H + 1)^M = (H + 1)^N.
+\]
+By the pigeonhole principle two different vectors $x^{\prime}$, $x^{\prime\prime}$ have the same image; their difference $x = x^{\prime} - x^{\prime\prime} \neq 0$ solves the system, and
+$|x_j| \leq H$.
+\end{proof}
+
+\begin{remark}\label{geometry-of-numbers:remark-siegel}
+The exponent $M/(N - M)$ is the natural one: the solutions in a box of side $2H$ number about $(2H)^N/(\text{size of the image})$, and the image has size about $(NAH)^M$. Siegel's lemma is used to
+construct polynomials that vanish to high order at given points with controlled coefficients, which is the first step of the proofs of the theorems of Gelfond and Schneider and of Baker
+mentioned in Remark~\ref{continued-fractions:remark-transcendence-theorems}; see \cite{baker-transcendental}. A sharper version, in which the bound is expressed through the covolume of the lattice of integer
+solutions and which is proved with Minkowski's second theorem (Section~\ref{geometry-of-numbers:section-successive-minima}), is due to Bombieri and Vaaler \cite{bombieri-vaaler}.
+\end{remark}
+
+\section{Sums of squares and Legendre's theorem}\label{geometry-of-numbers:section-squares}
+
+The classical theorems on sums of squares (Section~\ref{number-theory:section-squares}) were proved there by descent. Minkowski's theorem gives short proofs with a common pattern: find a lattice on which
+the quadratic form takes only multiples of $m$, then use the volume of an ellipsoid to find a nonzero lattice point where the form is less than $2m$.
+
+\begin{theorem}[Fermat]\label{geometry-of-numbers:theorem-two-squares}
+Every prime $p \equiv 1 \pmod 4$ is a sum of two squares.
+\end{theorem}
+
+\begin{proof}
+By Corollary~\ref{number-theory:corollary-minus-one} there is an integer $u$ with $u^2 \equiv -1 \pmod p$. The lattice $L = \{(x, y) \in \ZZ^2 : y \equiv ux \pmod p\}$ has covolume $p$
+(Example~\ref{geometry-of-numbers:example-congruence-lattice}), and for $(x, y) \in L$,
+\[
+x^2 + y^2 \equiv x^2 + u^2x^2 = (1 + u^2)x^2 \equiv 0 \pmod p.
+\]
+The open disc $x^2 + y^2 < 2p$ is convex and symmetric, of area $2\pi p > 4p = 2^2d(L)$. By Theorem~\ref{geometry-of-numbers:theorem-minkowski} it contains a point $(x, y) \in L \setminus \{0\}$.
+Then $x^2 + y^2$ is a multiple of $p$ with $0 < x^2 + y^2 < 2p$, so $x^2 + y^2 = p$.
+\end{proof}
+
+\begin{example}\label{geometry-of-numbers:example-two-squares}
+For $p = 13$, $u = 5$ ($25 + 1 = 2 \cdot 13$); the lattice $\{y \equiv 5x \pmod{13}\}$ has basis $(1, 5)$, $(0, 13)$, and its point $(2, 10 - 13) = (2, -3)$ gives $13 = 2^2 + 3^2$. For $p = 29$, $u = 12$
+($144 + 1 = 5 \cdot 29$), and $(2, 24 - 29) = (2, -5)$ gives $29 = 2^2 + 5^2$. The proof does not say how to find the short vector; the reduction algorithm of
+Section~\ref{geometry-of-numbers:section-reduction} finds it quickly, which turns the proof into an efficient algorithm (Exercise~\ref{geometry-of-numbers:exercise-cornacchia}).
+\end{example}
+
+\begin{lemma}\label{geometry-of-numbers:lemma-two-squares-plus-one}
+For every prime $p$ there are integers $a$, $b$ with $a^2 + b^2 + 1 \equiv 0 \pmod p$.
+\end{lemma}
+
+\begin{proof}
+For $p = 2$ take $a = 1$, $b = 0$. For odd $p$, the $\frac{p+1}{2}$ residues $a^2$, $0 \leq a \leq \frac{p-1}{2}$, are distinct modulo $p$ (if $a^2 \equiv a^{\prime2}$, then $p$ divides
+$(a - a^{\prime})(a + a^{\prime})$ with $|a - a^{\prime}| < p$ and $0 \leq a + a^{\prime} < p$, so $a = a^{\prime}$), and so are the $\frac{p+1}{2}$ residues $-1 - b^2$. Since there are only $p$ residues and
+$\frac{p+1}{2} + \frac{p+1}{2} > p$, some $a^2 \equiv -1 - b^2$.
+\end{proof}
+
+\begin{theorem}[Lagrange]\label{geometry-of-numbers:theorem-four-squares}
+Every positive integer is a sum of four squares.
+\end{theorem}
+
+\begin{proof}
+By Euler's identity (Lemma~\ref{number-theory:lemma-four-squares-identity}) a product of sums of four squares is a sum of four squares, and $1 = 1^2$, so it suffices to treat a prime $p$; and
+$2 = 1^2 + 1^2$. Let $p$ be odd and choose $a$, $b$ as in Lemma~\ref{geometry-of-numbers:lemma-two-squares-plus-one}. Let
+\[
+L = \{x \in \ZZ^4 : x_3 \equiv ax_1 + bx_2, \ x_4 \equiv bx_1 - ax_2 \pmod p\}.
+\]
+It is the kernel of the map $\ZZ^4 \to (\ZZ/p\ZZ)^2$, $x \mapsto (x_3 - ax_1 - bx_2, x_4 - bx_1 + ax_2)$, which is surjective (already on the vectors with $x_1 = x_2 = 0$), so $[\ZZ^4 : L] = p^2$ and
+$d(L) = p^2$; $L$ is a lattice as in Example~\ref{geometry-of-numbers:example-congruence-lattice}, since $p\ZZ^4 \subseteq L$. For $x \in L$,
+\[
+\begin{aligned}
+x_1^2 + x_2^2 + x_3^2 + x_4^2 &\equiv x_1^2 + x_2^2 + (ax_1 + bx_2)^2 + (bx_1 - ax_2)^2\\
+&= (1 + a^2 + b^2)(x_1^2 + x_2^2) \equiv 0 \pmod p.
+\end{aligned}
+\]
+The open ball $|x|^2 < 2p$ has volume $\omega_4(2p)^2 = \frac{\pi^2}{2}\cdot 4p^2 = 2\pi^2p^2 > 16p^2 = 2^4d(L)$, since $2\pi^2 > 19$. By Theorem~\ref{geometry-of-numbers:theorem-minkowski} it contains
+a nonzero $x \in L$, and $|x|^2$ is a multiple of $p$ strictly between $0$ and $2p$, so $|x|^2 = p$.
+\end{proof}
+
+The same method decides when a ternary quadratic form $ax^2 + by^2 - cz^2$ has a nontrivial zero. By homogeneity this is the question whether the conic $aX^2 + bY^2 = c$ has a rational point
+($X = x/z$, $Y = y/z$; a solution with $z = 0$ would need $ax^2 + by^2 = 0$, impossible for $a, b > 0$ unless $x = y = 0$). It was answered by Legendre in 1785.
+
+\begin{theorem}[Legendre]\label{geometry-of-numbers:theorem-legendre}
+Let $a$, $b$, $c$ be positive, squarefree, pairwise coprime integers. The equation
+\[
+ax^2 + by^2 = cz^2
+\]
+has a solution in integers $(x, y, z) \neq (0, 0, 0)$ if and only if $bc$ is a square modulo $a$, $ca$ is a square modulo $b$, and $-ab$ is a square modulo $c$. (A condition modulo $1$ is empty.)
+\end{theorem}
+
+\begin{proof}
+\emph{Necessity.} Let $(x, y, z) \neq 0$ be a solution; dividing by $\gcd(x, y, z)$ we may assume $\gcd(x, y, z) = 1$. Let $p$ be a prime dividing $a$. If $p$ divided $y$ or $z$, then from
+$by^2 \equiv cz^2 \pmod p$ and $p \nmid bc$ it would divide both; then $p^2 \mid cz^2 - by^2 = ax^2$, and as $p^2 \nmid a$ ($a$ squarefree), $p \mid x$, contradicting $\gcd(x, y, z) = 1$. So
+$y$ and $z$ are invertible modulo every prime factor of $a$, hence modulo $a$, and multiplying $by^2 \equiv cz^2$ by $b$ gives $bc \equiv (byz^{-1})^2 \pmod a$. In the same way $x$ and $z$ are invertible
+modulo $b$, and $ca \equiv (axz^{-1})^2 \pmod b$; and $x$, $y$ are invertible modulo $c$, and $ax^2 \equiv -by^2$ gives $-ab \equiv (axy^{-1})^2 \pmod c$.
+
+\emph{Sufficiency, Step 1: a lattice of index $abc$.} Choose integers $r$, $s$, $t$ with $r^2 \equiv bc \pmod a$, $s^2 \equiv ca \pmod b$, $t^2 \equiv -ab \pmod c$, and let
+\[
+L = \{(x, y, z) \in \ZZ^3 : by \equiv rz \pmod a, \ ax \equiv sz \pmod b, \ ax \equiv ty \pmod c\}.
+\]
+Each of the three conditions defines a congruence lattice as in Example~\ref{geometry-of-numbers:example-congruence-lattice}, of index $a$, $b$, $c$ respectively (the gcd condition holds because
+$\gcd(b, a) = 1$, $\gcd(a, b) = 1$, $\gcd(a, c) = 1$), and as $a$, $b$, $c$ are pairwise coprime, $L$ has index $abc$, so $d(L) = abc$.
+
+\emph{Step 2: the form is divisible by $abc$ on $L$.} Let $f = ax^2 + by^2 - cz^2$ and $(x, y, z) \in L$. Modulo $a$, $bf \equiv (by)^2 - bcz^2 \equiv r^2z^2 - r^2z^2 = 0$, and $b$ is invertible modulo $a$,
+so $a \mid f$. Modulo $b$, $af \equiv (ax)^2 - acz^2 \equiv s^2z^2 - s^2z^2 = 0$, so $b \mid f$. Modulo $c$, $af \equiv (ax)^2 + aby^2 \equiv t^2y^2 - t^2y^2 = 0$, so $c \mid f$. Hence $abc \mid f$.
+
+\emph{Step 3: a short vector.} The box $K = \{|x| \leq \sqrt{bc}, \ |y| \leq \sqrt{ca}, \ |z| \leq \sqrt{ab}\}$ is compact, convex and symmetric, of volume $8\sqrt{bc \cdot ca \cdot ab} = 8abc = 2^3d(L)$. By
+Theorem~\ref{geometry-of-numbers:theorem-minkowski} it contains a point $(x, y, z) \in L \setminus \{0\}$.
+
+\emph{Step 4: the boundary.} If $|x| = \sqrt{bc}$, then $bc$ is a perfect square; as $b$ and $c$ are squarefree and coprime, $b = c = 1$, and $(0, 1, 1)$ solves $ax^2 + y^2 = z^2$. If $|y| = \sqrt{ca}$,
+similarly $c = a = 1$, and $(1, 0, 1)$ is a solution. If $|z| = \sqrt{ab}$, then $a = b = 1$, and the hypothesis says that $-1$ is a square modulo $c$; then every odd prime factor of $c$ is $\equiv 1 \pmod 4$
+(Corollary~\ref{number-theory:corollary-minus-one}) and $c$ is squarefree, so $c = u^2 + v^2$ by Theorem~\ref{number-theory:theorem-two-squares}, and $(u, v, 1)$ is a solution. We may therefore assume
+$|x| < \sqrt{bc}$, $|y| < \sqrt{ca}$, $|z| < \sqrt{ab}$.
+
+\emph{Step 5: conclusion.} Then $0 \leq ax^2 < abc$, $0 \leq by^2 < abc$ and $0 \leq cz^2 < abc$, so $-abc < f < 2abc$; as $abc \mid f$, either $f = 0$ or $f = abc$. If $f = 0$, $(x, y, z)$ is the required
+solution. If $f = abc$, then $ax^2 + by^2 = c(z^2 + ab)$, and the identity
+\[
+a(xz + by)^2 + b(yz - ax)^2 = (ax^2 + by^2)(z^2 + ab),
+\]
+checked by expanding (the terms $\pm2abxyz$ cancel), shows that $X = xz + by$, $Y = yz - ax$, $Z = z^2 + ab$ satisfy $aX^2 + bY^2 = c(z^2 + ab)^2 = cZ^2$, with $Z \geq ab \geq 1$.
+\end{proof}
+
+\begin{example}\label{geometry-of-numbers:example-legendre}
+\begin{enumerate}
+\item $x^2 + y^2 = 3z^2$ has only the trivial solution: $-ab = -1$ is not a square modulo $3$. (Directly: modulo $3$, a nontrivial primitive solution would force $3 \mid x$ and $3 \mid y$, then $3 \mid z$.)
+\item $2x^2 + 3y^2 = 5z^2$: $bc = 15 \equiv 1 \pmod 2$, $ca = 10 \equiv 1 \pmod 3$ and $-ab = -6 \equiv 4 = 2^2 \pmod 5$, so a solution exists; indeed $(1, 1, 1)$.
+\item $3x^2 + 5y^2 = 7z^2$ has no nontrivial solution: $bc = 35 \equiv 2 \pmod 3$ is not a square.
+\item $x^2 + 2y^2 = 11z^2$: the conditions modulo $1$ and $2$ are empty or trivial, and $-2 \equiv 9 = 3^2 \pmod{11}$; a solution is $(3, 1, 1)$. So the ellipse $X^2 + 2Y^2 = 11$ has the rational point
+$(3, 1)$, and then infinitely many, obtained by intersecting it with the lines through $(3, 1)$ of rational slope.
+\end{enumerate}
+\end{example}
+
+\begin{remark}\label{geometry-of-numbers:remark-legendre}
+\begin{enumerate}
+\item \emph{Normalisation.} Every equation $ax^2 + by^2 + cz^2 = 0$ with nonzero integer coefficients, not all of the same sign, reduces to the case of the theorem: change signs and order so that it reads
+$ax^2 + by^2 = cz^2$ with $a, b, c > 0$; absorb square factors of the coefficients into the variables; and if a prime $p$ divides two coefficients, say $a = pa^{\prime}$, $b = pb^{\prime}$, then
+$p \mid cz^2$, so $p \mid z$, and dividing by $p$ gives $a^{\prime}x^2 + b^{\prime}y^2 = pcz^{\prime2}$ with $z = pz^{\prime}$, which has the same solvability and a smaller product of coefficients after the
+square factors are absorbed again.
+\item \emph{Small solutions.} The proof finds a solution in the box of Step 3 when $f = 0$. In fact a nontrivial solution, when one exists, can always be found with $|x| \leq \sqrt{bc}$,
+$|y| \leq \sqrt{ca}$, $|z| \leq \sqrt{ab}$; this is Holzer's theorem \cite{mordell-diophantine}.
+\item \emph{The local-global principle.} The three conditions say that the equation has nontrivial solutions modulo every power of every prime and in $\RR$; Legendre's theorem says that these
+local conditions suffice for a global solution. This is the first case of the theorem of Hasse and Minkowski, proved in Chapter~\ref{p-adic-numbers} for quadratic forms in any number of variables.
+\end{enumerate}
+\end{remark}
+
+\section{Successive minima}\label{geometry-of-numbers:section-successive-minima}
+
+Minkowski's theorem finds one short lattice vector. Often we need $n$ linearly independent ones, for instance a basis of short vectors. The successive minima measure how far a convex body must
+be dilated to contain $1, 2, \ldots, n$ independent lattice vectors.
+
+\begin{definition}\label{geometry-of-numbers:definition-successive-minima}
+Let $\Lambda \subseteq \RR^n$ be a lattice and $K$ a symmetric convex body. For $1 \leq j \leq n$, the \emph{$j$-th successive minimum} of $K$ with respect to $\Lambda$ is
+\[
+\lambda_j = \lambda_j(K, \Lambda) = \inf\{\lambda > 0 : \lambda K \text{ contains } j \text{ linearly independent vectors of } \Lambda\}.
+\]
+When $K = B(0, 1)$ we write $\lambda_j(\Lambda)$; then $\lambda_1(\Lambda)$ is the length of a shortest nonzero vector of $\Lambda$.
+\end{definition}
+
+\begin{proposition}\label{geometry-of-numbers:proposition-successive-minima}
+Let $\|\cdot\|_K$ be the gauge of $K$ (Lemma~\ref{geometry-of-numbers:lemma-convex-basic}). There are linearly independent $v_1, \ldots, v_n \in \Lambda$ with $\|v_j\|_K = \lambda_j$ for all $j$, and,
+writing $W_j = \operatorname{span}(v_1, \ldots, v_j)$ ($W_0 = 0$):
+\begin{enumerate}
+\item $0 < \lambda_1 \leq \lambda_2 \leq \cdots \leq \lambda_n < \infty$, and every infimum in the definition is a minimum;
+\item every $v \in \Lambda$ with $\|v\|_K < \lambda_j$ lies in $W_{j-1}$;
+\item $\lambda_1 = \min\{\|v\|_K : v \in \Lambda \setminus \{0\}\}$, and $\lambda_1^n\operatorname{vol}(K) \leq 2^nd(\Lambda)$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1: a greedy choice.} Choose recursively $v_j \in \Lambda \setminus W_{j-1}$ with $\|v_j\|_K$ as small as possible. This is possible: $\Lambda \setminus W_{j-1}$ is nonempty because $\Lambda$ spans
+$\RR^n$ and $W_{j-1} \neq \RR^n$ for $j \leq n$; and if $w$ is any element of it, the lattice vectors with $\|v\|_K \leq \|w\|_K$ form a finite set, since $\|v\|_K \geq |v|/R$ when
+$K \subseteq B(0, R)$, and Lemma~\ref{geometry-of-numbers:lemma-lattice-discrete} applies. As $v_j \notin W_{j-1}$, the vectors $v_1, \ldots, v_j$ are independent. Moreover
+$\|v_{j-1}\|_K \leq \|v_j\|_K$, since $v_j \notin W_{j-2}$ was a candidate at step $j - 1$.
+
+\emph{Step 2: $\lambda_j = \|v_j\|_K$.} The vectors $v_1, \ldots, v_j$ lie in $\|v_j\|_K\cdot K$ and are independent, so $\lambda_j \leq \|v_j\|_K$, and the infimum is attained if equality holds.
+Conversely, if $\lambda K$ contains independent lattice vectors $w_1, \ldots, w_j$, at least one of them, $w$, is not in the $(j - 1)$-dimensional space $W_{j-1}$, so
+$\|v_j\|_K \leq \|w\|_K \leq \lambda$ by the choice of $v_j$. Hence $\lambda_j = \|v_j\|_K$, which gives (1), positivity because $v_1 \neq 0$.
+
+(2) If $v \in \Lambda \setminus W_{j-1}$ had $\|v\|_K < \lambda_j = \|v_j\|_K$, it would contradict the choice of $v_j$.
+
+(3) The formula for $\lambda_1$ is Step 1 for $j = 1$. For $0 < t < \lambda_1$ the compact convex symmetric set $tK$ contains no nonzero lattice vector, so $t^n\operatorname{vol}(K) < 2^nd(\Lambda)$ by
+Theorem~\ref{geometry-of-numbers:theorem-minkowski}; let $t \to \lambda_1$.
+\end{proof}
+
+\begin{example}\label{geometry-of-numbers:example-successive-minima}
+\begin{enumerate}
+\item For $\ZZ^n$ and the unit ball, $\lambda_1 = \cdots = \lambda_n = 1$, realised by $e_1, \ldots, e_n$.
+\item For $\ZZ^2$ and the ellipse $K = \{x^2 + 4y^2 \leq 1\}$, $\|(x, y)\|_K = \sqrt{x^2 + 4y^2}$, so $\lambda_1 = 1$ (realised by $e_1$; every nonzero integer vector has $x^2 + 4y^2 \geq 1$) and
+$\lambda_2 = 2$ (vectors independent of $e_1$ have $y \neq 0$, so $x^2 + 4y^2 \geq 4$, with equality for $e_2$).
+\item For the lattice $\Lambda_\alpha$ of Example~\ref{geometry-of-numbers:example-lattices}(4) and the box $K_Q = \{|x| \leq 1/Q, \ |y| \leq Q\}$, of area $4 = 2^2d(\Lambda_\alpha)$, the
+compact case of Minkowski's theorem gives $\lambda_1(K_Q, \Lambda_\alpha) \leq 1$: some $(p, q) \neq 0$ has $|p + q\alpha| \leq 1/Q$ and $|q| \leq Q$, which is Dirichlet's theorem
+(Theorem~\ref{combinatorics:theorem-dirichlet-approximation}) up to the strictness of one inequality.
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{geometry-of-numbers:counterexample-minima-basis}
+Vectors realising the successive minima need not form a basis of the lattice. Let $h = (\frac12, \ldots, \frac12) \in \RR^n$ and $\Lambda = \ZZ^n + \ZZ h$, a lattice containing $\ZZ^n$ with index $2$
+(since $2h \in \ZZ^n$ and $h \notin \ZZ^n$), so $d(\Lambda) = \frac12$. Its nonzero vectors have length $\geq 1$ when $n \geq 4$: those in $\ZZ^n$ obviously, and those in $\ZZ^n + h$ have all coordinates
+in $\frac12 + \ZZ$, so length at least $\sqrt{n/4} \geq 1$. Hence $\lambda_1 = \cdots = \lambda_n = 1$, realised by $e_1, \ldots, e_n$, which generate only $\ZZ^n$.
+\begin{enumerate}
+\item For $n = 4$, $|h| = 1$ as well, and $h, e_1, e_2, e_3$ is a basis of $\Lambda$ made of vectors of length $1$: the greedy choice can miss a basis that exists.
+\item For $n \geq 5$, $|h| > 1$ and the vectors of length $1$ are only $\pm e_1, \ldots, \pm e_n$; so \emph{no} basis of $\Lambda$ consists of vectors realising the successive minima.
+\end{enumerate}
+In the plane, on the contrary, there is always a basis consisting of vectors realising the two minima for the Euclidean ball, by Theorem~\ref{geometry-of-numbers:theorem-gauss-reduction} below.
+\end{counterexample}
+
+Minkowski's \emph{second theorem} sharpens part (3) of the proposition, from $\lambda_1^n$ to the product of all minima, and complements it with a lower bound.
+
+\begin{proposition}\label{geometry-of-numbers:proposition-second-lower}
+For every lattice $\Lambda \subseteq \RR^n$ and symmetric convex body $K$,
+\[
+\frac{2^n}{n!}\,d(\Lambda) \leq \lambda_1\lambda_2\cdots\lambda_n\operatorname{vol}(K).
+\]
+\end{proposition}
+
+\begin{proof}
+With $v_j$ as in Proposition~\ref{geometry-of-numbers:proposition-successive-minima}, the vectors $u_j = v_j/\lambda_j$ satisfy $\|u_j\|_K = 1$, so $\pm u_j \in K$, and since $K$ is convex, $K$
+contains the convex hull of $\pm u_1, \ldots, \pm u_n$. By Lemma~\ref{geometry-of-numbers:lemma-cross-polytope},
+\[
+\operatorname{vol}(K) \geq \frac{2^n}{n!}|\det(u_1, \ldots, u_n)| = \frac{2^n}{n!}\cdot\frac{|\det(v_1, \ldots, v_n)|}{\lambda_1\cdots\lambda_n}.
+\]
+Finally $|\det(v_1, \ldots, v_n)|$ is the covolume of the sublattice $\ZZ v_1 + \cdots + \ZZ v_n$, which is $\geq d(\Lambda)$ by Proposition~\ref{geometry-of-numbers:proposition-index}.
+\end{proof}
+
+\begin{proposition}\label{geometry-of-numbers:proposition-second-ellipsoid}
+Let $E = A\,B(0, 1)$ be an ellipsoid, with $A \in \GL_n(\RR)$. For every lattice $\Lambda \subseteq \RR^n$,
+\[
+\lambda_1(E, \Lambda)\cdots\lambda_n(E, \Lambda)\operatorname{vol}(E) \leq 2^nd(\Lambda).
+\]
+In particular $\lambda_1(\Lambda)\cdots\lambda_n(\Lambda)\,\omega_n \leq 2^nd(\Lambda)$.
+\end{proposition}
+
+\begin{proof}
+Since $x \in \lambda E$ if and only if $A^{-1}x \in \lambda B(0, 1)$, we have $\lambda_j(E, \Lambda) = \lambda_j(A^{-1}\Lambda)$, while $\operatorname{vol}(E) = |\det A|\omega_n$ and
+$d(A^{-1}\Lambda) = d(\Lambda)/|\det A|$. So it suffices to treat the ball. Let $v_1, \ldots, v_n$ and $W_j$ be as in Proposition~\ref{geometry-of-numbers:proposition-successive-minima}, write
+$\lambda_j = \lambda_j(\Lambda)$, and let $u_1, \ldots, u_n$ be the orthonormal basis obtained from $v_1, \ldots, v_n$ by the Gram--Schmidt process, so that
+$\operatorname{span}(u_1, \ldots, u_j) = W_j$ (Theorem~\ref{linear-algebra:theorem-gram-schmidt}). Consider the open ellipsoid
+\[
+E^{\prime} = \Bigl\{x \in \RR^n : \sum_{i=1}^n\frac{\langle x, u_i \rangle^2}{\lambda_i^2} < 1\Bigr\}.
+\]
+It is the image of the open unit ball under the linear map $x \mapsto \sum_i\lambda_i\langle x, u_i \rangle u_i$, of determinant $\lambda_1\cdots\lambda_n$, so it is convex, symmetric and of volume
+$\omega_n\lambda_1\cdots\lambda_n$.
+
+We claim that $E^{\prime}$ contains no nonzero vector of $\Lambda$. Let $w \in \Lambda \setminus \{0\}$ and let $j$ be the least index with $w \in W_j$. Since $w \notin W_{j-1}$,
+Proposition~\ref{geometry-of-numbers:proposition-successive-minima}(2) gives $|w| \geq \lambda_j$. Since $w \in W_j$, $\langle w, u_i \rangle = 0$ for $i > j$ and
+$\sum_{i \leq j}\langle w, u_i \rangle^2 = |w|^2$. As $\lambda_i \leq \lambda_j$ for $i \leq j$,
+\[
+\sum_{i=1}^n\frac{\langle w, u_i \rangle^2}{\lambda_i^2} \geq \sum_{i \leq j}\frac{\langle w, u_i \rangle^2}{\lambda_j^2} = \frac{|w|^2}{\lambda_j^2} \geq 1,
+\]
+so $w \notin E^{\prime}$. By Theorem~\ref{geometry-of-numbers:theorem-minkowski}, $\omega_n\lambda_1\cdots\lambda_n = \operatorname{vol}(E^{\prime}) \leq 2^nd(\Lambda)$.
+\end{proof}
+
+For a general convex body the upper bound is still true, but the proof is subtler: the ellipsoid $E^{\prime}$ must be replaced by a body obtained from $K$ by a nonlinear transformation that stretches
+it by different factors along the flag $W_1 \subset W_2 \subset \cdots$.
+
+\begin{theorem}[Minkowski's second theorem]\label{geometry-of-numbers:theorem-minkowski-second}
+For every lattice $\Lambda \subseteq \RR^n$ and symmetric convex body $K$,
+\[
+\frac{2^n}{n!}\,d(\Lambda) \leq \lambda_1(K, \Lambda)\cdots\lambda_n(K, \Lambda)\operatorname{vol}(K) \leq 2^nd(\Lambda).
+\]
+\end{theorem}
+
+The lower bound is Proposition~\ref{geometry-of-numbers:proposition-second-lower}, and the upper bound for ellipsoids is Proposition~\ref{geometry-of-numbers:proposition-second-ellipsoid}; for the upper
+bound in general see \cite{cassels-geometry-numbers} or \cite{gruber-lekkerkerker}. Both bounds are attained: for $\ZZ^n$, the cube $[-1, 1]^n$ has all $\lambda_j = 1$ and volume $2^n$, and the
+cross-polytope $C_n(1)$ has all $\lambda_j = 1$ (it contains the $e_j$, and nonzero integer vectors have $|x|_1 \geq 1$) and volume $2^n/n!$.
+
+\section{Quadratic forms and reduction}\label{geometry-of-numbers:section-reduction}
+
+A basis matrix $B$ of a lattice determines the positive definite quadratic form $q(m) = |Bm|^2 = m^TGm$ on $\ZZ^n$, with Gram matrix $G = B^TB$. Lattices and positive definite forms are two
+languages for the same objects, and both are used: the lattice is geometric, the form is arithmetic.
+
+\begin{proposition}\label{geometry-of-numbers:proposition-forms-lattices}
+\begin{enumerate}
+\item Every positive definite real symmetric matrix $G$ is the Gram matrix $B^TB$ of a basis of some lattice.
+\item Two bases $B$, $B^{\prime}$ have the same Gram matrix if and only if $B^{\prime} = OB$ for an orthogonal matrix $O$.
+\item Two positive definite forms $q$, $q^{\prime}$ with matrices $G$, $G^{\prime}$ are \emph{equivalent}, $G^{\prime} = U^TGU$ with $U \in \GL_n(\ZZ)$, if and only if the corresponding lattices differ by an
+orthogonal transformation.
+\end{enumerate}
+Under this dictionary $\min\{q(m) : m \in \ZZ^n \setminus \{0\}\} = \lambda_1(\Lambda)^2$ and $\det G = d(\Lambda)^2$.
+\end{proposition}
+
+\begin{proof}
+(1) $G$ defines an inner product $\langle x, y \rangle_G = x^TGy$ on $\RR^n$; let $c_1, \ldots, c_n$ be an orthonormal basis for it (Theorem~\ref{linear-algebra:theorem-gram-schmidt}) and $C$ the matrix
+with these columns, so $C^TGC = I$. Then $B = C^{-1}$ satisfies $B^TB = (C^{-1})^T C^{-1} = G$, because $G = (C^T)^{-1}C^{-1}$. (2) If $B^TB = B^{\prime T}B^{\prime}$, then $O = B^{\prime}B^{-1}$ satisfies
+$O^TO = (B^{-1})^TB^{\prime T}B^{\prime}B^{-1} = I$; the converse is clear. (3) By Proposition~\ref{geometry-of-numbers:proposition-change-of-basis}, $BU$ is another basis of $B\ZZ^n$, with Gram matrix
+$U^TGU$; combine with (2). The last statement holds because $q(m) = |Bm|^2$ and $\det G = (\det B)^2$.
+\end{proof}
+
+\begin{definition}\label{geometry-of-numbers:definition-hermite}
+\emph{Hermite's constant} $\gamma_n$ is the least number such that every lattice $\Lambda \subseteq \RR^n$ satisfies $\lambda_1(\Lambda)^2 \leq \gamma_n\,d(\Lambda)^{2/n}$; equivalently, every
+positive definite quadratic form $q$ in $n$ variables takes a value $q(m) \leq \gamma_n(\det G)^{1/n}$ at some $m \in \ZZ^n \setminus \{0\}$. Thus
+$\gamma_n = \sup_\Lambda\lambda_1(\Lambda)^2/d(\Lambda)^{2/n}$.
+\end{definition}
+
+The supremum is finite by Corollary~\ref{geometry-of-numbers:corollary-short-vector}: $\gamma_n \leq 4/\omega_n^{2/n}$. The ratio $\lambda_1^2/d^{2/n}$ is unchanged when $\Lambda$ is scaled or rotated,
+and $\gamma_1 = 1$.
+
+\begin{theorem}[Hermite]\label{geometry-of-numbers:theorem-hermite}
+For every $n \geq 2$, $\gamma_n \leq (\frac43\gamma_{n-1})^{(n-1)/n}$. Consequently $\gamma_n \leq (\frac43)^{(n-1)/2}$.
+\end{theorem}
+
+\begin{proof}
+Let $\Lambda \subseteq \RR^n$ be a lattice and $v$ a shortest nonzero vector, so $|v| = \lambda_1(\Lambda)$; $v$ is primitive, since $v = kw$ with $k \geq 2$ would give a shorter $w$. Let $\pi$ be the
+projection onto $v^\perp$. By Lemma~\ref{geometry-of-numbers:lemma-projection}, $\pi(\Lambda)$ is a lattice in the $(n - 1)$-dimensional space $v^\perp$ with $d(\pi(\Lambda)) = d(\Lambda)/|v|$. Identifying
+$v^\perp$ with $\RR^{n-1}$ by an orthonormal basis, the definition of $\gamma_{n-1}$ gives $y \in \pi(\Lambda) \setminus \{0\}$ with $|y|^2 \leq \gamma_{n-1}(d(\Lambda)/|v|)^{2/(n-1)}$. By the same lemma
+there is $x \in \Lambda$ with $\pi(x) = y$ and $|x - y| \leq \frac12|v|$; since $x - y$ is parallel to $v$ and $y \perp v$, $|x|^2 = |y|^2 + |x - y|^2 \leq |y|^2 + \frac14|v|^2$. As $y \neq 0$, $x \neq 0$, so
+$|v|^2 \leq |x|^2$, and therefore
+\[
+\frac34|v|^2 \leq \gamma_{n-1}\,d(\Lambda)^{2/(n-1)}|v|^{-2/(n-1)},
+\]
+that is, $|v|^{2n/(n-1)} \leq \frac43\gamma_{n-1}\,d(\Lambda)^{2/(n-1)}$.
+Raising to the power $(n - 1)/n$ gives $\lambda_1(\Lambda)^2 \leq (\frac43\gamma_{n-1})^{(n-1)/n}d(\Lambda)^{2/n}$. The second statement follows by induction from $\gamma_1 = 1$: if
+$\gamma_{n-1} \leq (\frac43)^{(n-2)/2}$, then $\frac43\gamma_{n-1} \leq (\frac43)^{n/2}$, and $((\frac43)^{n/2})^{(n-1)/n} = (\frac43)^{(n-1)/2}$.
+\end{proof}
+
+Hermite's bound grows exponentially with $n$, Minkowski's bound $4\omega_n^{-2/n} \sim \frac{2n}{\pi e}$ only linearly; Hermite's is the better one for $n \leq 8$ and Minkowski's from $n = 9$ on
+(for $n = 2$, $1.155$ against $1.273$; for $n = 9$, $3.161$ against $3.068$). Hermite's argument has the advantage of being algorithmic, and it is the germ of the LLL algorithm below.
+
+\subsection{Reduction in the plane}\label{geometry-of-numbers:subsection-plane}
+
+In dimension $2$ everything can be made explicit: there is a basis consisting of a shortest vector and a shortest vector independent of it, it is found by a variant of the Euclidean algorithm, and
+the exact value of $\gamma_2$ follows.
+
+\begin{definition}\label{geometry-of-numbers:definition-reduced-basis}
+A basis $b_1, b_2$ of a lattice in $\RR^2$ is \emph{reduced} if $|b_1| \leq |b_2|$ and $2|\langle b_1, b_2 \rangle| \leq |b_1|^2$.
+\end{definition}
+
+\begin{theorem}[Lagrange, Gauss]\label{geometry-of-numbers:theorem-gauss-reduction}
+Let $\Lambda \subseteq \RR^2$ be a lattice.
+\begin{enumerate}
+\item $\Lambda$ has a reduced basis.
+\item If $b_1, b_2$ is a reduced basis, then $|b_1| = \lambda_1(\Lambda)$ and $|b_2| = \lambda_2(\Lambda)$.
+\item $\lambda_1(\Lambda)^2 \leq \frac{2}{\sqrt3}\,d(\Lambda)$, with equality if and only if $\Lambda$ is a hexagonal lattice (a rotated and scaled copy of $A_2$). Hence $\gamma_2 = 2/\sqrt3$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) Let $b_1$ be a shortest nonzero vector of $\Lambda$; it is primitive, so it extends to a basis $b_1, b$ (Proposition~\ref{geometry-of-numbers:proposition-extend-basis}). Put
+$b_2 = b - kb_1$ with $k = \lfloor\langle b, b_1 \rangle/|b_1|^2\rceil$; then $b_1, b_2$ is still a basis, $\langle b_2, b_1 \rangle = \langle b, b_1 \rangle - k|b_1|^2$ has absolute value at most
+$\frac12|b_1|^2$, and $|b_2| \geq |b_1|$ by the choice of $b_1$.
+
+(2) Let $x = mb_1 + kb_2$ with integers $m$, $k$, not both $0$. Using $2|\langle b_1, b_2 \rangle| \leq |b_1|^2$,
+\[
+|x|^2 = m^2|b_1|^2 + 2mk\langle b_1, b_2 \rangle + k^2|b_2|^2 \geq (m^2 - |mk|)|b_1|^2 + k^2|b_2|^2.
+\]
+If $k = 0$, this is $m^2|b_1|^2 \geq |b_1|^2$. Let $k \neq 0$. If $|m| \geq |k|$, the first term is $\geq 0$ and $|x|^2 \geq k^2|b_2|^2 \geq |b_2|^2$. If $|m| < |k|$, the coefficient $m^2 - |mk|$ is $\leq 0$, so
+we may replace $|b_1|^2$ by the larger $|b_2|^2$: $|x|^2 \geq (m^2 - |mk| + k^2)|b_2|^2 \geq |b_2|^2$, since $m^2 - |mk| + k^2$ is a positive integer. So every nonzero vector has length $\geq |b_1|$, and every
+vector independent of $b_1$ (that is, with $k \neq 0$) has length $\geq |b_2|$; this means $\lambda_1 = |b_1|$ and $\lambda_2 = |b_2|$.
+
+(3) Let $\theta$ be the angle between $b_1$ and $b_2$. Then $d(\Lambda)^2 = \det\bigl(\begin{smallmatrix}|b_1|^2 & \langle b_1, b_2 \rangle\\ \langle b_1, b_2 \rangle & |b_2|^2\end{smallmatrix}\bigr) =
+|b_1|^2|b_2|^2\sin^2\theta$, and $|\cos\theta| = |\langle b_1, b_2 \rangle|/(|b_1||b_2|) \leq |b_1|/(2|b_2|) \leq \frac12$, so $\sin\theta \geq \frac{\sqrt3}{2}$ and
+\[
+d(\Lambda) = |b_1||b_2|\sin\theta \geq \frac{\sqrt3}{2}|b_1|^2 = \frac{\sqrt3}{2}\lambda_1^2.
+\]
+Equality forces $|b_1| = |b_2|$ and $|\cos\theta| = \frac12$: two vectors of the same length at an angle of $60^\circ$ or $120^\circ$, which span a hexagonal lattice. Conversely, $A_2$ has $\lambda_1 = 1$
+and $d = \frac{\sqrt3}{2}$, with equality.
+\end{proof}
+
+\begin{remark}\label{geometry-of-numbers:remark-reduced-forms}
+In the language of forms, the basis $b_1, b_2$ gives $q(x, y) = |xb_1 + yb_2|^2 = ax^2 + bxy + cy^2$ with $a = |b_1|^2$, $b = 2\langle b_1, b_2 \rangle$, $c = |b_2|^2$, and the basis is reduced exactly
+when $|b| \leq a \leq c$: this is the reduction of binary quadratic forms of Theorem~\ref{number-theory:theorem-reduction}, now for real coefficients. The discriminant is $b^2 - 4ac = -4d(\Lambda)^2$,
+and the bound $a \leq \sqrt{|D|/3}$ proved there is part (3) of the theorem.
+\end{remark}
+
+The proof of (1) assumed that a shortest vector is known. The following algorithm finds one, starting from any basis; it is to bases what the Euclidean algorithm is to pairs of integers.
+
+\begin{proposition}[Gauss's reduction algorithm]\label{geometry-of-numbers:proposition-gauss-algorithm}
+Starting from any basis $b_1, b_2$ of a lattice in $\RR^2$, repeat: replace $b_2$ by $b_2 - kb_1$ with $k = \lfloor\langle b_2, b_1 \rangle/|b_1|^2\rceil$; then, if $|b_2| < |b_1|$, exchange $b_1$ and
+$b_2$ and repeat, and otherwise stop. The procedure stops after finitely many steps, with a reduced basis.
+\end{proposition}
+
+\begin{proof}
+Each step replaces a basis by a basis (Proposition~\ref{geometry-of-numbers:proposition-change-of-basis}). Each exchange strictly decreases $|b_1|$; the values taken by $|b_1|$ are lengths of lattice
+vectors at most the initial $|b_1|$, and there are finitely many such vectors (Lemma~\ref{geometry-of-numbers:lemma-lattice-discrete}). So only finitely many exchanges occur, and the procedure stops.
+When it stops, $|\langle b_2, b_1 \rangle| \leq \frac12|b_1|^2$ because of the last subtraction, and $|b_2| \geq |b_1|$: the basis is reduced.
+\end{proof}
+
+\begin{example}\label{geometry-of-numbers:example-gauss-algorithm}
+Start from $b_1 = (5, 2)$, $b_2 = (8, 3)$. Here $\langle b_2, b_1 \rangle/|b_1|^2 = \frac{46}{29}$ rounds to $2$, and $b_2 - 2b_1 = (-2, -1)$, shorter than $b_1$: exchange. Now $b_1 = (-2, -1)$,
+$b_2 = (5, 2)$, $\langle b_2, b_1 \rangle/|b_1|^2 = -\frac{12}{5}$ rounds to $-2$, and $b_2 + 2b_1 = (1, 0)$: exchange. Now $b_1 = (1, 0)$, $b_2 = (-2, -1)$, the quotient $-2$ gives
+$b_2 + 2b_1 = (0, -1)$, of the same length as $b_1$: stop. The reduced basis $(1, 0), (0, -1)$ shows that the lattice is $\ZZ^2$, as $\det(b_1, b_2) = -1$ predicted. The quotients $2, -2, -2$ play the role
+of the partial quotients of a continued fraction.
+\end{example}
+
+\begin{definition}\label{geometry-of-numbers:definition-packing-density}
+Let $\Lambda \subseteq \RR^n$ be a lattice. The balls $v + B(0, r)$, $v \in \Lambda$, have pairwise disjoint interiors if and only if $2r \leq \lambda_1(\Lambda)$. The \emph{density} of the
+\emph{lattice packing} with the largest radius $r = \lambda_1(\Lambda)/2$ is
+\[
+\Delta(\Lambda) = \frac{\omega_n(\lambda_1(\Lambda)/2)^n}{d(\Lambda)} = \frac{\omega_n}{2^n}\Bigl(\frac{\lambda_1(\Lambda)^2}{d(\Lambda)^{2/n}}\Bigr)^{n/2},
+\]
+the volume of one ball divided by the volume of a cell, that is, the proportion of space covered by the balls.
+\end{definition}
+
+(The first statement: the open balls of radius $r$ around $v$ and $w$ are disjoint if and only if $|v - w| \geq 2r$, and the differences $v - w$ run over $\Lambda \setminus \{0\}$.) So the densest lattice
+packing of balls in $\RR^n$ has density $\omega_n\gamma_n^{n/2}/2^n$, and computing Hermite's constant is the same as finding the densest lattice packing.
+
+\begin{corollary}[Lagrange]\label{geometry-of-numbers:corollary-hexagonal-packing}
+The density of a lattice packing of discs in the plane is at most $\frac{\pi}{2\sqrt3} = \frac{\pi}{\sqrt{12}} \approx 0.9069$, with equality exactly for the hexagonal lattice.
+\end{corollary}
+
+\begin{proof}
+By Theorem~\ref{geometry-of-numbers:theorem-gauss-reduction}(3), $\Delta(\Lambda) = \frac{\pi}{4}\lambda_1^2/d \leq \frac{\pi}{4}\cdot\frac{2}{\sqrt3}$.
+\end{proof}
+
+\begin{example}\label{geometry-of-numbers:example-hermite-dn}
+\begin{enumerate}
+\item The checkerboard lattice $D_n$ ($n \geq 2$) has $\lambda_1(D_n)^2 = 2$: its shortest vectors are the $2n(n - 1)$ vectors $\pm e_i \pm e_j$ ($i < j$), because a nonzero integer vector of length $1$ is
+$\pm e_i$, whose coordinate sum is odd. With $d(D_n) = 2$, this gives $\gamma_n \geq 2/2^{2/n} = 2^{1 - 2/n}$: $\gamma_3 \geq 2^{1/3}$, $\gamma_4 \geq \sqrt2$, $\gamma_5 \geq 8^{1/5}$.
+\item The lattice $E_8 = D_8 \cup (D_8 + h)$, $h = (\frac12, \ldots, \frac12) \in \RR^8$, is a lattice since $2h = (1, \ldots, 1) \in D_8$; it contains $D_8$ with index $2$, so $d(E_8) = 1$. Its nonzero vectors
+have $|x|^2 \geq 2$: for $x \in D_8$ by (1), and for $x \in D_8 + h$ because its eight coordinates lie in $\frac12 + \ZZ$. So $\gamma_8 \geq 2$. Moreover $\langle x, y \rangle \in \ZZ$ for $x, y \in E_8$ and
+$|x|^2$ is even: $E_8$ is an \emph{even unimodular} lattice.
+\end{enumerate}
+\end{example}
+
+\begin{remark}\label{geometry-of-numbers:remark-hermite-values}
+The exact values of Hermite's constant are known only for $n \leq 8$ and $n = 24$ \cite{conway-sloane}: $\gamma_2^2 = \frac43$ (Lagrange, Gauss), $\gamma_3^3 = 2$ (Gauss), $\gamma_4^4 = 4$ and
+$\gamma_5^5 = 8$ (Korkine and Zolotarev), $\gamma_6^6 = \frac{64}{3}$, $\gamma_7^7 = 64$, $\gamma_8^8 = 256$ (Blichfeldt), and $\gamma_{24} = 4$, attained by the Leech lattice \cite{cohn-kumar-leech}.
+So $D_3$, $D_4$, $D_5$ and $E_8$ of the example are optimal. For packings that are not required to be lattices the problem is harder: in the plane the hexagonal packing is still the densest (Thue,
+Fejes T\'oth); in $\RR^3$ the face-centred cubic packing, from $D_3$, is the densest (the Kepler conjecture, proved by Hales \cite{hales-kepler}); and in dimensions $8$ and $24$ the packings from
+$E_8$ and the Leech lattice are the densest \cite{viazovska-8, ckmrv-24}.
+\end{remark}
+
+\subsection{The LLL algorithm}\label{geometry-of-numbers:subsection-lll}
+
+In higher dimensions no efficient algorithm is known that finds a shortest lattice vector, and the problem is believed to be hard. The algorithm of A.\ K.\ Lenstra, H.\ W.\ Lenstra and L.\ Lov\'asz
+\cite{lll-1982} finds, in polynomial time, a basis whose first vector is at most $2^{(n-1)/2}$ times longer than the shortest one. This exponential factor is harmless in many applications, which made
+LLL one of the most useful algorithms of computational number theory.
+
+Let $b_1, \ldots, b_n$ be a basis of $\Lambda \subseteq \RR^n$. Its \emph{Gram--Schmidt vectors} are defined recursively by
+\[
+b_i^* = b_i - \sum_{j < i}\mu_{ij}b_j^*, \qquad \mu_{ij} = \frac{\langle b_i, b_j^* \rangle}{|b_j^*|^2} \quad (j < i);
+\]
+they are the vectors $u_j^{\prime}$ of the proof of Theorem~\ref{linear-algebra:theorem-gram-schmidt}, not normalised: $b_i^*$ is the projection of $b_i$ orthogonal to
+$\operatorname{span}(b_1, \ldots, b_{i-1})$, the $b_i^*$ are pairwise orthogonal, and $\operatorname{span}(b_1^*, \ldots, b_i^*) = \operatorname{span}(b_1, \ldots, b_i)$. We put $\mu_{ii} = 1$.
+
+\begin{lemma}\label{geometry-of-numbers:lemma-gram-schmidt}
+\begin{enumerate}
+\item $d(\Lambda) = \prod_i|b_i^*|$; more generally $\prod_{j \leq i}|b_j^*|^2$ is the determinant of the Gram matrix of $b_1, \ldots, b_i$, the square of the covolume of the lattice
+$\ZZ b_1 + \cdots + \ZZ b_i$ in its span.
+\item Every nonzero $v \in \Lambda$ satisfies $|v| \geq \min_i|b_i^*|$. Hence $\lambda_1(\Lambda) \geq \min_i|b_i^*|$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) $b_i = b_i^* + \sum_{j<i}\mu_{ij}b_j^*$, so the matrix of $b_1, \ldots, b_i$ is the matrix of $b_1^*, \ldots, b_i^*$ times a unipotent upper triangular matrix. Hence both have the same Gram
+determinant, and for the orthogonal vectors $b_j^*$ the Gram matrix is diagonal with entries $|b_j^*|^2$. (2) Write $v = \sum_ic_ib_i$ with integers $c_i$ and let $k$ be the largest index with $c_k \neq 0$.
+Since $\langle b_i, b_k^* \rangle = 0$ for $i < k$ and $\langle b_k, b_k^* \rangle = |b_k^*|^2$, we get $\langle v, b_k^* \rangle = c_k|b_k^*|^2$, and by the Cauchy--Schwarz inequality
+$|v||b_k^*| \geq |c_k||b_k^*|^2 \geq |b_k^*|^2$.
+\end{proof}
+
+\begin{definition}\label{geometry-of-numbers:definition-lll}
+A basis $b_1, \ldots, b_n$ is \emph{LLL-reduced} if
+\begin{enumerate}
+\item (size reduction) $|\mu_{ij}| \leq \frac12$ for all $1 \leq j < i \leq n$, and
+\item (Lov\'asz condition) $|b_i^*|^2 \geq (\frac34 - \mu_{i,i-1}^2)|b_{i-1}^*|^2$ for $2 \leq i \leq n$.
+\end{enumerate}
+\end{definition}
+
+The Lov\'asz condition says that $|b_i^* + \mu_{i,i-1}b_{i-1}^*|^2 \geq \frac34|b_{i-1}^*|^2$: exchanging $b_{i-1}$ and $b_i$ would not shorten the $(i-1)$-st Gram--Schmidt vector by more than the
+factor $\frac34$. In dimension $2$, since $|b_2|^2 = |b_2^*|^2 + \mu_{21}^2|b_1|^2$, the Lov\'asz condition reads $|b_2|^2 \geq \frac34|b_1|^2$, a weakening of the condition $|b_2| \geq |b_1|$ of
+Definition~\ref{geometry-of-numbers:definition-reduced-basis}.
+
+\begin{proposition}\label{geometry-of-numbers:proposition-lll-properties}
+Let $b_1, \ldots, b_n$ be an LLL-reduced basis of $\Lambda$. Then
+\begin{enumerate}
+\item $|b_j^*|^2 \geq 2^{i-j}|b_i^*|^2$ for $i \leq j$, and $|b_i|^2 \leq 2^{i-1}|b_i^*|^2$ for all $i$;
+\item $|b_1| \leq 2^{(n-1)/2}\lambda_1(\Lambda)$;
+\item $|b_1| \leq 2^{(n-1)/4}d(\Lambda)^{1/n}$ and $|b_1||b_2|\cdots|b_n| \leq 2^{n(n-1)/4}d(\Lambda)$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) The two conditions give $|b_i^*|^2 \geq (\frac34 - \frac14)|b_{i-1}^*|^2 = \frac12|b_{i-1}^*|^2$, and the first claim follows by induction. For the second, by orthogonality and size reduction,
+\[
+\begin{aligned}
+|b_i|^2 &= |b_i^*|^2 + \sum_{j<i}\mu_{ij}^2|b_j^*|^2 \leq |b_i^*|^2 + \frac14\sum_{j<i}2^{i-j}|b_i^*|^2\\
+&= \Bigl(1 + \frac{2^i - 2}{4}\Bigr)|b_i^*|^2 \leq 2^{i-1}|b_i^*|^2.
+\end{aligned}
+\]
+(2) By (1), $|b_i^*|^2 \geq 2^{1-i}|b_1^*|^2 \geq 2^{1-n}|b_1|^2$ for all $i$ (note $b_1^* = b_1$), and by Lemma~\ref{geometry-of-numbers:lemma-gram-schmidt}(2), $\lambda_1^2 \geq \min_i|b_i^*|^2 \geq 2^{1-n}|b_1|^2$.
+
+(3) By (1), $|b_1|^2 \leq 2^{i-1}|b_i^*|^2$ for each $i$; multiplying over $i$ and using Lemma~\ref{geometry-of-numbers:lemma-gram-schmidt}(1), $|b_1|^{2n} \leq 2^{n(n-1)/2}d(\Lambda)^2$. Likewise
+$\prod_i|b_i|^2 \leq \prod_i2^{i-1}|b_i^*|^2 = 2^{n(n-1)/2}d(\Lambda)^2$.
+\end{proof}
+
+\begin{theorem}[Lenstra, Lenstra, Lov\'asz]\label{geometry-of-numbers:theorem-lll}
+The following procedure, started from any basis $b_1, \ldots, b_n$ of $\Lambda$, stops after finitely many steps with an LLL-reduced basis of $\Lambda$. Set $k = 2$. While $k \leq n$:
+\begin{enumerate}
+\item (size-reduce $b_k$) for $j = k - 1, k - 2, \ldots, 1$, replace $b_k$ by $b_k - \lfloor\mu_{kj}\rceil b_j$;
+\item if the Lov\'asz condition holds for $i = k$, increase $k$ by $1$; otherwise exchange $b_{k-1}$ and $b_k$, and replace $k$ by $\max(k - 1, 2)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+All operations replace a basis by a basis. Replacing $b_k$ by $b_k - cb_j$ with $j < k$ does not change any Gram--Schmidt vector (it changes $b_k$ by a vector of $\operatorname{span}(b_1, \ldots, b_{k-1})$), it
+changes $\mu_{kj}$ into $\mu_{kj} - c$, changes $\mu_{ki}$ only for $i < j$, and changes no other $\mu$. So after step (1), $|\mu_{kj}| \leq \frac12$ for all $j < k$: each $\mu_{kj}$ is reduced once, and
+later subtractions with smaller $j$ do not alter it.
+
+\emph{Invariant.} When step (1) begins, $b_1, \ldots, b_{k-1}$ is LLL-reduced (as a basis of the lattice it generates). This holds for $k = 2$. If the Lov\'asz condition holds at $k$, then after
+step (1) the vectors $b_1, \ldots, b_k$ are LLL-reduced, and $k$ increases. An exchange changes neither $b_1, \ldots, b_{k-2}$ nor their $\mu$'s. So the invariant persists, and when the procedure
+stops, with $k = n + 1$, the basis is LLL-reduced.
+
+\emph{Termination.} Let $\delta_i = \prod_{j \leq i}|b_j^*|^2$ and $D = \delta_1\delta_2\cdots\delta_{n-1}$. By Lemma~\ref{geometry-of-numbers:lemma-gram-schmidt}(1), $\delta_i$ is the squared covolume of the
+lattice $\Lambda_i = \ZZ b_1 + \cdots + \ZZ b_i$. Size reduction does not change $D$. An exchange at $k$ does not change $\Lambda_i$ for $i \neq k - 1$ (the set $\{b_1, \ldots, b_i\}$ is the same), so it
+changes only $\delta_{k-1}$. The new $(k-1)$-st Gram--Schmidt vector is the projection of $b_k$ orthogonal to $b_1, \ldots, b_{k-2}$, namely $b_k^* + \mu_{k,k-1}b_{k-1}^*$, whose squared length is
+$|b_k^*|^2 + \mu_{k,k-1}^2|b_{k-1}^*|^2 < \frac34|b_{k-1}^*|^2$ because the Lov\'asz condition failed. So each exchange multiplies $D$ by a factor less than $\frac34$. On the other hand $D$ is bounded below by
+a positive constant depending only on $\Lambda$: $\Lambda_i$ is a lattice in an $i$-dimensional space, contained in $\Lambda$, so by Definition~\ref{geometry-of-numbers:definition-hermite},
+$\delta_i = d(\Lambda_i)^2 \geq (\lambda_1(\Lambda_i)^2/\gamma_i)^i \geq (\lambda_1(\Lambda)^2/\gamma_i)^i$. Hence there are finitely many exchanges. Between them $k$ only increases, and it cannot exceed
+$n + 1$; so there are finitely many steps.
+\end{proof}
+
+For a basis of integer vectors, every $\delta_i$ is a positive integer (a Gram determinant of integer vectors), the initial $D$ is bounded in terms of the entries, and a refinement of the argument shows
+that the number of arithmetic operations, and the size of the numbers involved, are polynomial in $n$ and in the number of digits of the entries \cite{lll-1982}.
+
+\begin{example}\label{geometry-of-numbers:example-lll}
+\emph{Recognising algebraic numbers.} Suppose we know only the eight decimals $\alpha = 1.41421356\ldots$, and suspect that $\alpha$ satisfies a quadratic equation with small integer coefficients. Let
+$N = 10^8$ and consider the vectors
+\[
+\bigl(c_0, c_1, c_2, c_0N + c_1\lfloor N\alpha\rceil + c_2\lfloor N\alpha^2\rceil\bigr) \in \RR^4, \qquad c_i \in \ZZ,
+\]
+a lattice of rank $3$ in the $3$-dimensional subspace it spans, with basis given by $(c_0, c_1, c_2) = e_1, e_2, e_3$. (The algorithm and its proof apply verbatim to a lattice in a subspace, since
+only inner products are used.) A relation $c_0 + c_1\alpha + c_2\alpha^2 \approx 0$ with small $c_i$ makes the last coordinate small, hence the whole vector short, while vectors with large $c_i$ or a
+large last coordinate are long. The LLL algorithm returns as first vector $(-2, 0, 1, -1)$, which reveals the relation $\alpha^2 - 2 = 0$. With $\alpha = 1.25992105\ldots$ and the analogous lattice of rank $4$
+built from $1, \alpha, \alpha^2, \alpha^3$, it returns $(-2, 0, 0, 1, 0)$, that is, $\alpha^3 = 2$. The same method finds integer relations among any real numbers known to high precision.
+\end{example}
+
+\begin{remark}\label{geometry-of-numbers:remark-lll}
+The LLL algorithm was invented to factor polynomials with rational coefficients in polynomial time \cite{lll-1982}. It also breaks knapsack-type cryptosystems, finds small roots of polynomial
+congruences, and solves simultaneous Diophantine approximation problems up to the factor $2^{(n-1)/2}$. In the opposite direction, the presumed difficulty of finding \emph{very} short vectors in
+lattices of high dimension is the basis of lattice-based cryptography.
+\end{remark}
+
+\section{Counting lattice points}\label{geometry-of-numbers:section-counting}
+
+How many lattice points lie in a large convex body? To first order, its volume divided by the covolume: each lattice point "owns" one cell of volume $d(\Lambda)$. The error comes from the cells that
+cross the boundary, and is of the order of the surface area.
+
+\begin{theorem}\label{geometry-of-numbers:theorem-counting}
+Let $\Lambda \subseteq \RR^n$ be a lattice and $K$ a convex body with $0 \in K^\circ$, and let $N(t) = \#(\Lambda \cap tK)$ for $t > 0$. There is a constant $c > 0$, depending on $K$ and $\Lambda$,
+such that
+\[
+(t - c)^n\operatorname{vol}(K) \leq d(\Lambda)N(t) \leq (t + c)^n\operatorname{vol}(K) \qquad (t \geq c).
+\]
+In particular $N(t) = \frac{\operatorname{vol}(K)}{d(\Lambda)}t^n + O(t^{n-1})$ as $t \to \infty$.
+\end{theorem}
+
+\begin{proof}
+Choose $r > 0$ with $B(0, r) \subseteq K$, a fundamental parallelepiped $P$ of $\Lambda$, and $\rho > 0$ with $P \subseteq B(0, \rho)$; put $c = \rho/r$, so that $B(0, \rho) \subseteq cK$. Let
+$U = \bigcup_{v \in \Lambda \cap tK}(v + P)$, a disjoint union of $N(t)$ translates of $P$, so $\operatorname{vol}(U) = N(t)d(\Lambda)$.
+
+\emph{Upper bound.} $U \subseteq tK + B(0, \rho) \subseteq tK + cK = (t + c)K$ by Lemma~\ref{geometry-of-numbers:lemma-convex-basic}(1).
+
+\emph{Lower bound.} Let $x \in (t - c)K$. Write $x = v + p$ with $v \in \Lambda$ and $p \in P$. Then $v = x - p \in (t - c)K + B(0, \rho) \subseteq (t - c)K + cK = tK$, so $v \in \Lambda \cap tK$ and
+$x \in v + P \subseteq U$. Hence $(t - c)K \subseteq U$.
+
+Taking volumes, with $\operatorname{vol}(sK) = s^n\operatorname{vol}(K)$, gives the inequalities, and $(t \pm c)^n = t^n + O(t^{n-1})$.
+\end{proof}
+
+\begin{example}\label{geometry-of-numbers:example-gauss-circle}
+\emph{The circle problem.} Let $N(t)$ be the number of $(x, y) \in \ZZ^2$ with $x^2 + y^2 \leq t^2$. Here $K$ is the unit disc, $r = 1$, and $P = [0, 1)^2 \subseteq B(0, \sqrt2)$, so $c = \sqrt2$ and
+\[
+|N(t) - \pi t^2| \leq \pi\bigl((t + \sqrt2)^2 - t^2\bigr) = \pi(2\sqrt2\,t + 2) \qquad (t \geq \sqrt2).
+\]
+For $t = 10$ the exact count is $N(10) = 317$, against $100\pi \approx 314.16$; the error $2.84$ is far below the bound $\approx 95$. Gauss computed such counts to estimate $\pi$. The true size of the
+error is a famous open problem (Gauss's circle problem); the bound $O(t)$ obtained here is improved by the methods of analytic number theory (Chapter~\ref{analytic-number-theory}).
+\end{example}
+
+The circle problem is an average of the function $r_2(n) = \#\{(x, y) \in \ZZ^2 : x^2 + y^2 = n\}$ of Jacobi's theorem (Theorem~\ref{number-theory:theorem-jacobi-two-squares}). Combining the two
+results gives a surprising proof of Leibniz's series.
+
+\begin{proposition}[Leibniz's series from lattice points]\label{geometry-of-numbers:proposition-leibniz}
+\[
+1 - \frac13 + \frac15 - \frac17 + \cdots = \frac{\pi}{4}.
+\]
+\end{proposition}
+
+\begin{proof}
+Let $\chi$ be the function of Theorem~\ref{number-theory:theorem-jacobi-two-squares} ($\chi(d) = 0$ for even $d$, $\chi(d) = (-1)^{(d-1)/2}$ for odd $d$), let $L = \sum_{d \geq 1}\chi(d)/d$ (an alternating series
+with terms decreasing in absolute value, hence convergent), and $S(u) = \sum_{d \leq u}\chi(d)$, which is $0$ or $1$ for every $u \geq 0$.
+
+\emph{Step 1: the geometric count.} For $x \geq 2$, $A(x) = \sum_{1 \leq n \leq x}r_2(n) = N(\sqrt x) - 1$, so $A(x) = \pi x + O(\sqrt x)$ by Example~\ref{geometry-of-numbers:example-gauss-circle}.
+
+\emph{Step 2: the arithmetic count.} By Jacobi's theorem, $A(x) = 4\sum_{n \leq x}\sum_{d \mid n}\chi(d) = 4\sum_{dm \leq x}\chi(d)$, the sum over pairs of positive integers. Split the pairs with
+$dm \leq x$ according to whether $d \leq y$ or $d > y$, where $y = \sqrt x$; in the second case $m \leq x/d < x/y$, and for fixed $m$ the $d$ run over $y < d \leq x/m$. So
+\[
+\sum_{dm \leq x}\chi(d) = \sum_{d \leq y}\chi(d)\Bigl\lfloor\frac xd\Bigr\rfloor + \sum_{m \leq x/y}\Bigl(S\bigl(\tfrac xm\bigr) - S(y)\Bigr).
+\]
+The second sum has at most $x/y = \sqrt x$ terms, each of absolute value $\leq 1$. In the first, $\lfloor x/d \rfloor = x/d + O(1)$ gives $x\sum_{d \leq y}\chi(d)/d + O(\sqrt x)$. Finally
+$\sum_{d \leq y}\chi(d)/d = L + O(1/y)$, because the tail of an alternating series with decreasing terms is bounded by its first term. Altogether $A(x) = 4Lx + O(\sqrt x)$.
+
+\emph{Step 3.} Comparing, $(\pi - 4L)x = O(\sqrt x)$ as $x \to \infty$, which forces $4L = \pi$.
+\end{proof}
+
+\subsection{Pick's theorem}\label{geometry-of-numbers:subsection-pick}
+
+In the plane, the area of a polygon with vertices in $\ZZ^2$ is determined exactly by counting lattice points: no error term at all.
+
+\begin{definition}\label{geometry-of-numbers:definition-lattice-polygon}
+A \emph{convex lattice polygon} is the convex hull $P \subseteq \RR^2$ of finitely many points of $\ZZ^2$, with nonempty interior. We write $I(P)$ for the number of lattice points in its interior
+and $B(P)$ for the number on its boundary.
+\end{definition}
+
+We use the elementary geometry of convex polygons: $P$ has vertices $v_1, \ldots, v_m$ ($m \geq 3$, in cyclic order) that are lattice points, its boundary is the union of the sides
+$[v_i, v_{i+1}]$ (indices modulo $m$), it is the union of the triangles $v_1v_iv_{i+1}$ ($2 \leq i \leq m - 1$), any two of which meet in a segment or a point, and the sum of its interior angles is
+$(m - 2)\pi$. The number of lattice points on a segment $[u, w]$ with $u, w \in \ZZ^2$ is $\gcd(w_1 - u_1, w_2 - u_2) + 1$: the point $u + s(w - u)$, $0 \leq s \leq 1$, is a lattice point if and only if
+$s(w - u) \in \ZZ^2$, that is (by B\'ezout's identity) $sg \in \ZZ$ where $g$ is that gcd.
+
+\begin{lemma}\label{geometry-of-numbers:lemma-primitive-triangle}
+A triangle with vertices in $\ZZ^2$ and no other lattice points (in its interior or on its sides) has area $\frac12$.
+\end{lemma}
+
+\begin{proof}
+Translate it so that its vertices are $0$, $u$, $w$. The parallelogram $\Pi = \{su + tw : 0 \leq s, t \leq 1\}$ is the union of the triangle $T$ and of its image under the point reflection
+$x \mapsto u + w - x$, which maps $\ZZ^2$ to itself (a point $su + tw$ with $s + t \geq 1$ is the image of $(1 - s)u + (1 - t)w \in T$). So the only lattice points of $\Pi$ are $0$, $u$, $w$, $u + w$, and the
+half-open parallelogram $\{su + tw : 0 \leq s, t < 1\}$, a fundamental parallelepiped of the lattice $\ZZ u + \ZZ w$, contains only the lattice point $0$. Now every $z \in \ZZ^2$ is $z = \alpha u + \beta w$
+with real $\alpha$, $\beta$, and $z - \lfloor\alpha\rfloor u - \lfloor\beta\rfloor w$ is a lattice point of that half-open parallelogram, hence $0$; so $\alpha, \beta \in \ZZ$ and $\ZZ u + \ZZ w = \ZZ^2$.
+Hence $|\det(u, w)| = d(\ZZ^2) = 1$, and the area of $T$ is $\frac12|\det(u, w)| = \frac12$.
+\end{proof}
+
+\begin{theorem}[Pick]\label{geometry-of-numbers:theorem-pick}
+For every convex lattice polygon $P$,
+\[
+\operatorname{area}(P) = I(P) + \frac{B(P)}{2} - 1.
+\]
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: weights.} For a convex polygon $Q$ and $x \in \RR^2$ let $w_Q(x) = \lim_{\rho \to 0}\operatorname{vol}(Q \cap B(x, \rho))/(\pi\rho^2)$. For small $\rho$, $Q \cap B(x, \rho)$ is empty, the
+whole disc, a half-disc, or a circular sector, according as $x \notin Q$, $x \in Q^\circ$, $x$ lies on a side but is not a vertex, or $x$ is a vertex; so $w_Q(x)$ is $0$, $1$, $\frac12$, or
+$\theta/(2\pi)$ where $\theta$ is the interior angle at the vertex $x$. Let $W(Q) = \sum_{x \in \ZZ^2}w_Q(x)$. For our polygon $P$ with $m$ vertices,
+\[
+W(P) = I(P) + \frac{B(P) - m}{2} + \frac{(m - 2)\pi}{2\pi} = I(P) + \frac{B(P)}{2} - 1.
+\]
+
+\emph{Step 2: additivity.} If $Q = Q_1 \cup \cdots \cup Q_k$ with convex polygons $Q_j$ whose pairwise intersections have area $0$, then $\operatorname{vol}(Q \cap B(x, \rho)) = \sum_j\operatorname{vol}(Q_j \cap B(x, \rho))$,
+so $w_Q = \sum_jw_{Q_j}$ pointwise, $W(Q) = \sum_jW(Q_j)$, and of course $\operatorname{area}(Q) = \sum_j\operatorname{area}(Q_j)$.
+
+\emph{Step 3: primitive triangles.} Every lattice triangle $T$ (vertices in $\ZZ^2$) is a union of triangles as in Lemma~\ref{geometry-of-numbers:lemma-primitive-triangle}, with pairwise intersections of
+area $0$. We argue by induction on the (finite) number of lattice points of $T$. If $T$ has a lattice point $q$ other than its vertices $a, b, c$: if $q$ lies inside, $T$ is the union of the triangles
+$qab$, $qbc$, $qca$; if $q$ lies on the side $[a, b]$, $T$ is the union of $qac$ and $qbc$. Each new triangle is a lattice triangle missing at least one vertex of $T$, so it has fewer lattice points, and
+the induction hypothesis applies to it.
+
+\emph{Step 4.} For a primitive triangle $\Delta$, $W(\Delta) = (\theta_1 + \theta_2 + \theta_3)/(2\pi) = \frac12 = \operatorname{area}(\Delta)$ by the lemma. Decompose $P$ into the triangles $v_1v_iv_{i+1}$ and
+these into primitive triangles $\Delta_j$ (Step 3). By Step 2, $\operatorname{area}(P) = \sum_j\operatorname{area}(\Delta_j) = \sum_jW(\Delta_j) = W(P)$, and Step 1 concludes.
+\end{proof}
+
+\begin{example}\label{geometry-of-numbers:example-pick}
+The triangle with vertices $(0, 0)$, $(5, 2)$, $(2, 7)$ has area $\frac12|5 \cdot 7 - 2 \cdot 2| = \frac{31}{2}$. Its sides have direction vectors $(5, 2)$, $(-3, 5)$, $(-2, -7)$, with coprime coordinates,
+so $B = 3$; and Pick's theorem predicts $I = \frac{31}{2} - \frac32 + 1 = 15$ interior lattice points, which a direct count confirms.
+\end{example}
+
+\begin{counterexample}[Reeve's tetrahedra]\label{geometry-of-numbers:counterexample-reeve}
+There is no analogue of Pick's theorem in dimension $3$ expressing the volume through the numbers of interior and boundary lattice points. For an integer $h \geq 1$, the tetrahedron $T_h$ with vertices
+$(0, 0, 0)$, $(1, 0, 0)$, $(0, 1, 0)$, $(1, 1, h)$ has volume $\frac16|\det| = \frac h6$, but its only lattice points are its four vertices. Indeed a point of $T_h$ is $\alpha(1, 0, 0) + \beta(0, 1, 0) + \gamma(1, 1, h)$
+with $\alpha, \beta, \gamma \geq 0$ and $\alpha + \beta + \gamma \leq 1$, that is, $(\alpha + \gamma, \beta + \gamma, h\gamma)$. If this is a lattice point with $0 < \gamma < 1$, then $\alpha + \gamma$ is an integer in
+$(0, 1]$, so $\alpha = 1 - \gamma$, and likewise $\beta = 1 - \gamma$; but then $\alpha + \beta + \gamma = 2 - \gamma > 1$. So $\gamma \in \{0, 1\}$: $\gamma = 1$ gives the vertex $(1, 1, h)$, and $\gamma = 0$ gives
+the lattice points of the triangle $(0,0,0), (1,0,0), (0,1,0)$, which are its vertices. All $T_h$ have $I = 0$, $B = 4$, and different volumes.
+\end{counterexample}
+
+\begin{remark}\label{geometry-of-numbers:remark-ehrhart}
+Pick's theorem holds for all simple lattice polygons, convex or not, with the same proof once one knows that such polygons can be triangulated. In every dimension a weaker statement survives: for a
+polytope $P \subseteq \RR^n$ with vertices in $\ZZ^n$, the number $\#(tP \cap \ZZ^n)$, for integers $t \geq 1$, is a polynomial in $t$ of degree $n$ whose leading coefficient is $\operatorname{vol}(P)$
+(Ehrhart's theorem, \cite{beck-robins}); Reeve's tetrahedra show that the other coefficients are not determined by $I$ and $B$ alone. For convex lattice polygons the polynomial is
+$\operatorname{area}(P)t^2 + \frac{B(P)}{2}t + 1$ (Exercise~\ref{geometry-of-numbers:exercise-ehrhart-polygon}).
+\end{remark}
+
+\section{Lattices without short vectors}\label{geometry-of-numbers:section-existence}
+
+Minkowski's theorem says that a lattice of covolume $1$ meets every symmetric convex body of volume $> 2^n$ in a nonzero point. Is $2^n$ the truth? For the cube it is
+(Counterexample~\ref{geometry-of-numbers:counterexample-minkowski}), but for a fixed body, say a ball, one may ask whether some cleverly chosen lattice avoids it although its volume is larger. The
+theorem of Minkowski and Hlawka says that \emph{every} symmetric convex body of volume less than $2$ is avoided by some lattice of covolume $1$. Its proof is an averaging argument: the average number of
+nonzero points of a "random" lattice in $K$ is about $\operatorname{vol}(K)$.
+
+\begin{theorem}[Minkowski, Hlawka]\label{geometry-of-numbers:theorem-minkowski-hlawka}
+Let $n \geq 2$ and let $K \subseteq \RR^n$ be a symmetric convex body with $\operatorname{vol}(K) < 2$. There is a lattice $\Lambda \subseteq \RR^n$ with $d(\Lambda) = 1$ and $\Lambda \cap K = \{0\}$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: a family of lattices.} Let $p$ be a prime and $\mathbb{F}_p = \ZZ/p\ZZ$. For each line (one-dimensional subspace) $\ell$ of $\mathbb{F}_p^n$ let $L_\ell = \{x \in \ZZ^n : x \bmod p \in \ell\}$. It is the
+kernel of $\ZZ^n \to \mathbb{F}_p^n/\ell$, a surjection onto a group of order $p^{n-1}$, and contains $p\ZZ^n$; so it is a lattice of covolume $p^{n-1}$. With $c_p = p^{-(n-1)/n}$, the lattices $\Lambda_\ell = c_pL_\ell$
+have covolume $c_p^np^{n-1} = 1$. There are $\frac{p^n - 1}{p - 1}$ lines, since each contains $p - 1$ nonzero vectors and each nonzero vector lies on exactly one.
+
+\emph{Step 2: the total count.} Let $K \subseteq B(0, R)$ and $t_p = 1/c_p = p^{(n-1)/n}$. Then
+\[
+\sum_\ell\#\bigl((\Lambda_\ell \setminus \{0\}) \cap K\bigr) = \sum_\ell\#\bigl((L_\ell \setminus \{0\}) \cap t_pK\bigr).
+\]
+A vector $x \in \ZZ^n$ with $x \not\equiv 0 \pmod p$ lies in $L_\ell$ for exactly one line, $\ell = \mathbb{F}_p\bar x$. A nonzero vector $x \in p\ZZ^n$ has $|x| \geq p$, while $t_pK \subseteq B(0, Rp^{(n-1)/n})$;
+so when $p > R^n$, no such $x$ lies in $t_pK$. For these $p$ the total count is $\#(\ZZ^n \cap t_pK) - 1$, which by Theorem~\ref{geometry-of-numbers:theorem-counting} (with $d(\ZZ^n) = 1$) is at most
+$(t_p + c)^n\operatorname{vol}(K)$ for a constant $c$.
+
+\emph{Step 3: averaging.} The average number of nonzero points of $\Lambda_\ell$ in $K$, over the $\frac{p^n - 1}{p - 1}$ lines, is therefore at most
+\[
+\operatorname{vol}(K)\,\frac{(t_p + c)^n}{t_p^n}\cdot\frac{p^{n-1}(p - 1)}{p^n - 1},
+\]
+using $t_p^n = p^{n-1}$. As $p \to \infty$, $t_p \to \infty$ and both fractions tend to $1$, so for large $p$ the average is less than $2$. Hence some $\Lambda_\ell$ has fewer than $2$ nonzero points in
+$K$. But the nonzero points of a lattice in a symmetric set come in pairs $\{x, -x\}$ with $x \neq -x$, so their number is even; it is $0$.
+\end{proof}
+
+\begin{corollary}\label{geometry-of-numbers:corollary-hermite-bounds}
+For every $n \geq 2$,
+\[
+\Bigl(\frac{2}{\omega_n}\Bigr)^{2/n} \leq \gamma_n \leq \frac{4}{\omega_n^{2/n}},
+\]
+and the densest lattice packing of balls in $\RR^n$ has density at least $2^{1-n}$.
+\end{corollary}
+
+\begin{proof}
+The upper bound is Corollary~\ref{geometry-of-numbers:corollary-short-vector}. For $r > 0$ with $\omega_nr^n < 2$, Theorem~\ref{geometry-of-numbers:theorem-minkowski-hlawka} applied to $B(0, r)$ gives
+a lattice of covolume $1$ with $\lambda_1 > r$; so $\gamma_n \geq r^2$, and letting $\omega_nr^n \to 2$ gives the lower bound. The packing of this lattice has density
+$\omega_n(\lambda_1/2)^n > \omega_nr^n/2^n$, which tends to $2/2^n$.
+\end{proof}
+
+\begin{remark}\label{geometry-of-numbers:remark-minkowski-hlawka}
+By Stirling's formula, $\omega_n^{2/n} \sim 2\pi e/n$, so the corollary says $\frac{n}{2\pi e}(1 + o(1)) \leq \gamma_n \leq \frac{2n}{\pi e}(1 + o(1))$: Hermite's constant grows linearly, and the gap between
+the two bounds is a factor of about $4$. The proof is not constructive: no explicit family of lattices with density close to $2^{-n}$ in all dimensions is known. In small dimensions explicit lattices do
+much better, for instance $E_8$ has density $\omega_8(\sqrt2/2)^8 = \pi^4/384 \approx 0.254$, against $2^{-7} \approx 0.008$. The lower bound has been improved only by factors growing polynomially in $n$,
+while the best upper bounds for packing densities are exponentially smaller than $1$ \cite{conway-sloane}.
+\end{remark}
+
+\section{Covering radius and Euclidean rings}\label{geometry-of-numbers:section-covering}
+
+Dual to the packing problem is the covering problem: how far can a point of space be from the lattice?
+
+\begin{definition}\label{geometry-of-numbers:definition-covering-radius}
+The \emph{covering radius} of a lattice $\Lambda \subseteq \RR^n$ is $\mu(\Lambda) = \sup_{x \in \RR^n}\operatorname{dist}(x, \Lambda)$, where $\operatorname{dist}(x, \Lambda) = \min_{v \in \Lambda}|x - v|$ (a
+minimum by discreteness). Equivalently, $\mu(\Lambda)$ is the least $\mu$ such that the balls $v + B(0, \mu)$, $v \in \Lambda$, cover $\RR^n$.
+\end{definition}
+
+\begin{proposition}\label{geometry-of-numbers:proposition-covering-radius}
+For every lattice $\Lambda$ with basis $b_1, \ldots, b_n$,
+\[
+\frac12\lambda_1(\Lambda) \leq \mu(\Lambda) \leq \frac12\sum_i|b_i| \qquad\text{and}\qquad \omega_n\mu(\Lambda)^n \geq d(\Lambda).
+\]
+\end{proposition}
+
+\begin{proof}
+Every $x$ is $x = \sum_it_ib_i$ with real $t_i$; then $v = \sum_i\lfloor t_i\rceil b_i \in \Lambda$ has $|x - v| \leq \sum_i|t_i - \lfloor t_i\rceil||b_i| \leq \frac12\sum_i|b_i|$. For the lower bound, let $u$ be a
+shortest nonzero vector, which is primitive. For $v \in \Lambda$, $|\frac12u - v| = \frac12|u - 2v| \geq \frac12\lambda_1$, because $u - 2v \neq 0$ (otherwise $u = 2v$ would not be primitive). Finally the
+Voronoi cell (Example~\ref{geometry-of-numbers:example-voronoi}) consists of points $x$ with $|x| = \operatorname{dist}(x, \Lambda) \leq \mu$, so it lies in $B(0, \mu)$, and its volume is $d(\Lambda)$ by
+Proposition~\ref{geometry-of-numbers:proposition-fundamental-domain}.
+\end{proof}
+
+\begin{example}\label{geometry-of-numbers:example-covering-zn}
+$\mu(\ZZ^n) = \frac{\sqrt n}{2}$: rounding each coordinate moves a point by at most $\frac{\sqrt n}{2}$, and the point $(\frac12, \ldots, \frac12)$ is at distance at least $\frac{\sqrt n}{2}$ from
+$\ZZ^n$, since $|(\frac12, \ldots, \frac12) - m|^2 = \sum_i(\frac12 - m_i)^2 \geq \frac n4$ for $m \in \ZZ^n$. For $n \geq 5$ the covering radius exceeds $1$,
+while $\lambda_1 = 1$: points of space can be farther from $\ZZ^n$ than its own points are from each other.
+\end{example}
+
+The covering radius decides whether division with remainder is possible in a ring of algebraic integers whose elements form a lattice in $\CC$. For a squarefree integer $m \geq 1$ let
+\[
+\begin{aligned}
+\mathcal{O}_m &= \ZZ[\sqrt{-m}] = \ZZ + \ZZ\sqrt{-m} &&\text{if } m \equiv 1, 2 \pmod 4,\\
+\mathcal{O}_m &= \ZZ + \ZZ\,\omega_m, \quad \omega_m = \frac{1 + \sqrt{-m}}{2}, &&\text{if } m \equiv 3 \pmod 4,
+\end{aligned}
+\]
+where $\sqrt{-m} = i\sqrt m$. These are subrings of $\CC$: for $m \equiv 3 \pmod 4$, $\omega_m^2 = \omega_m - \frac{1 + m}{4}$ with $\frac{1 + m}{4} \in \ZZ$. The norm $N(z) = |z|^2$ takes integer values on
+$\mathcal{O}_m$: $N(a + b\sqrt{-m}) = a^2 + mb^2$ and $N(a + b\omega_m) = a^2 + ab + \frac{1 + m}{4}b^2$; and it is multiplicative. (These are the rings of integers of the imaginary quadratic fields
+$\QQ(\sqrt{-m})$, Chapter~\ref{algebraic-number-theory}; for $m = 1$ and $m = 3$ they are the Gaussian and Eisenstein integers of Section~\ref{number-theory:section-gaussian}.) Every element of the field
+$\QQ(\sqrt{-m}) = \{x + y\sqrt{-m} : x, y \in \QQ\}$ is $z/k$ with $z \in \mathcal{O}_m$ and $k$ a positive integer.
+
+\begin{lemma}\label{geometry-of-numbers:lemma-euclidean-criterion}
+$\mathcal{O}_m$ is a Euclidean domain with respect to $N$ (Definition~\ref{rings:definition-irreducible}) if and only if for every $\xi \in \QQ(\sqrt{-m})$ there is $q \in \mathcal{O}_m$ with $|\xi - q| < 1$.
+In particular it is Euclidean if $\mu(\mathcal{O}_m) < 1$.
+\end{lemma}
+
+\begin{proof}
+Suppose the condition holds, and let $a, b \in \mathcal{O}_m$ with $b \neq 0$. Then $\xi = a/b = a\bar b/N(b) \in \QQ(\sqrt{-m})$; choose $q$ with $|\xi - q| < 1$ and put $r = a - qb \in \mathcal{O}_m$. Then
+$N(r) = |b|^2|\xi - q|^2 < N(b)$. Conversely, suppose $\mathcal{O}_m$ is Euclidean for $N$ and let $\xi = z/k$ as above. Dividing $z$ by $k$ gives $z = qk + r$ with $r = 0$ or $N(r) < N(k)$, so
+$|\xi - q| = |r|/k < 1$.
+\end{proof}
+
+\begin{theorem}\label{geometry-of-numbers:theorem-euclidean-imaginary}
+Let $m \geq 1$ be squarefree. The ring $\mathcal{O}_m$ is Euclidean with respect to the norm if and only if $m \in \{1, 2, 3, 7, 11\}$. In particular these five rings are unique factorisation domains.
+\end{theorem}
+
+\begin{proof}
+\emph{Case $m \equiv 1, 2 \pmod 4$.} Here $\mathcal{O}_m$ is the rectangular lattice with basis $1$, $i\sqrt m$. For $z \in \CC$ choose integers $a$, $b$ nearest to $\operatorname{Re}z$ and to
+$\operatorname{Im}z/\sqrt m$; then $|z - a - bi\sqrt m|^2 \leq \frac14 + \frac m4$, which is $< 1$ for $m = 1, 2$. For the other $m$ of this case, $m \geq 5$, the point $\xi = \frac{1 + \sqrt{-m}}{2}$ of
+$\QQ(\sqrt{-m})$ satisfies $|\xi - a - b\sqrt{-m}|^2 = (\frac12 - a)^2 + m(\frac12 - b)^2 \geq \frac{1 + m}{4} > 1$ for all integers $a$, $b$.
+
+\emph{Case $m \equiv 3 \pmod 4$.} Write $h = \frac{\sqrt m}{2}$, so $\omega_m = \frac12 + ih$ and $a + b\omega_m = (a + \frac b2) + ibh$. Given $z$, choose $b \in \ZZ$ with $|\operatorname{Im}z - bh| \leq \frac h2$, then
+$a \in \ZZ$ with $|\operatorname{Re}(z - b\omega_m) - a| \leq \frac12$; the point $z^{\prime} = z - a - b\omega_m$ has $|z^{\prime}|^2 \leq \frac14 + \frac{h^2}{4} = \frac14 + \frac{m}{16}$, which is $< 1$ for
+$m = 3, 7, 11$. For the other $m$ of this case, $m \geq 15$, consider $\xi = \frac12 + iy_0$ with $y_0 = \frac{h^2 - 1/4}{2h} = \frac{m - 1}{4\sqrt m}$; it lies in $\QQ(\sqrt{-m})$, as
+$iy_0 = \frac{m - 1}{4m}\sqrt{-m}$. Put $R = h - y_0 = \frac{h^2 + 1/4}{2h}$; one checks $\frac14 + y_0^2 = R^2$ by expanding. For $a + b\omega_m$,
+\[
+|\xi - a - b\omega_m|^2 = \Bigl(\frac12 - a - \frac b2\Bigr)^2 + (y_0 - bh)^2,
+\]
+and we bound it below by $R^2$ in all cases: for $b = 0$ by $\frac14 + y_0^2 = R^2$; for $b = 1$ by $(h - y_0)^2 = R^2$; for $b \leq -1$ by $(y_0 + h)^2 \geq R^2$; for $b \geq 2$ by $(2h - y_0)^2 \geq R^2$.
+Finally $R \geq 1$ means $h^2 - 2h + \frac14 \geq 0$, which holds for $h \geq 1 + \frac{\sqrt3}{2}$, that is, $m = 4h^2 \geq 7 + 4\sqrt3 \approx 13.93$. So for $m \geq 15$ the point $\xi$ is at distance at least $1$ from
+$\mathcal{O}_m$.
+
+In both cases Lemma~\ref{geometry-of-numbers:lemma-euclidean-criterion} concludes, and Euclidean domains are unique factorisation domains by Theorem~\ref{rings:theorem-euclidean-pid-ufd}.
+\end{proof}
+
+\begin{remark}\label{geometry-of-numbers:remark-euclidean}
+The points $\xi$ of the proof are the \emph{deep holes} of the lattices: the centres of the rectangles, and the circumcentres of the triangles $0, 1, \omega_m$. Unique factorisation holds in exactly four
+more rings $\mathcal{O}_m$, for $m = 19, 43, 67, 163$ (Remark~\ref{number-theory:remark-heegner}); by the theorem these rings are not Euclidean for the norm, so their unique factorisation has a
+deeper reason, the triviality of the class group (Chapter~\ref{class-groups-and-units}). The non-maximal ring $\ZZ[\sqrt{-3}]$ sits exactly on the borderline: its covering radius is $1$, and it is not a
+unique factorisation domain (Exercise~\ref{geometry-of-numbers:exercise-z-sqrt-minus-three}).
+\end{remark}
+
+\section{Exercises}\label{geometry-of-numbers:section-exercises}
+
+\begin{exercise}\label{geometry-of-numbers:exercise-index-two}
+Show that $\ZZ^2$ has exactly three sublattices of index $2$, and find them.
+\end{exercise}
+
+\begin{solution}
+A subgroup of index $2$ is the kernel of a surjective homomorphism $\ZZ^2 \to \ZZ/2\ZZ$, and conversely; such a homomorphism factors through $\ZZ^2/2\ZZ^2 = \mathbb{F}_2^2$, so it is a nonzero linear form on
+$\mathbb{F}_2^2$, of which there are $3$: $x_1$, $x_2$, $x_1 + x_2$. The sublattices are $\{x_1 \text{ even}\}$, $\{x_2 \text{ even}\}$ and $D_2 = \{x_1 + x_2 \text{ even}\}$; each contains $2\ZZ^2$, so it is a
+lattice by Theorem~\ref{geometry-of-numbers:theorem-discrete}.
+\end{solution}
+
+\begin{exercise}\label{geometry-of-numbers:exercise-dual-dirichlet}
+Let $\alpha_1, \ldots, \alpha_m$ be real and $Q \geq 2$ an integer. Show that there are integers $q_1, \ldots, q_m$, not all $0$, and $p$, with $|q_i| < Q$ and
+$|q_1\alpha_1 + \cdots + q_m\alpha_m - p| \leq Q^{-m}$.
+\end{exercise}
+
+\begin{solution}
+Apply Corollary~\ref{geometry-of-numbers:corollary-linear-forms} in $\RR^{m+1}$ to the variables $(p, q_1, \ldots, q_m)$ and the forms $L_0 = q_1\alpha_1 + \cdots + q_m\alpha_m - p$, $L_i = q_i$, with
+$c_0 = Q^{-m}$ and $c_i = Q$. The matrix of the forms has determinant $\pm1 = \prod_ic_i$. We get $(p, q) \neq 0$ with $|L_0| \leq Q^{-m}$ and $|q_i| < Q$. If all $q_i$ were $0$, then $|p| \leq Q^{-m} < 1$,
+so $p = 0$ too, which is excluded.
+\end{solution}
+
+\begin{exercise}\label{geometry-of-numbers:exercise-eisenstein-minkowski}
+Let $p \equiv 1 \pmod 3$ be prime. Using Minkowski's theorem, show that $p = x^2 + xy + y^2$ for some integers $x$, $y$. (Compare Corollary~\ref{number-theory:corollary-eisenstein-primes}.)
+\end{exercise}
+
+\begin{solution}
+The group $(\ZZ/p\ZZ)^\times$ is cyclic of order $p - 1$ (Theorem~\ref{number-theory:theorem-primitive-roots}), divisible by $3$, so it contains an element $u$ of order $3$; then $u \neq 1$ and
+$u^3 - 1 = (u - 1)(u^2 + u + 1) \equiv 0$, so $u^2 + u + 1 \equiv 0 \pmod p$. On the lattice $L = \{y \equiv ux \pmod p\}$, of covolume $p$, $x^2 + xy + y^2 \equiv (1 + u + u^2)x^2 \equiv 0 \pmod p$. The form
+$q(x, y) = x^2 + xy + y^2$ has matrix $G = \bigl(\begin{smallmatrix}1 & 1/2\\ 1/2 & 1\end{smallmatrix}\bigr)$ of determinant $\frac34$; writing $G = C^TC$ (Proposition~\ref{geometry-of-numbers:proposition-forms-lattices}),
+$\{q < s\} = C^{-1}\{|y|^2 < s\}$ has area $\pi s/|\det C| = \pi s/\sqrt{\det G}$. For $s = 2p$ this is $\frac{4\pi}{\sqrt3}p > 7p > 4p = 2^2d(L)$. So Minkowski's theorem gives $(x, y) \in L \setminus \{0\}$ with
+$0 < q(x, y) < 2p$ and $p \mid q(x, y)$; hence $q(x, y) = p$.
+\end{solution}
+
+\begin{exercise}\label{geometry-of-numbers:exercise-x2-2y2}
+Let $p$ be a prime with $p \equiv 1$ or $3 \pmod 8$. Show with Minkowski's theorem that $p = x^2 + 2y^2$.
+\end{exercise}
+
+\begin{solution}
+By Corollary~\ref{number-theory:corollary-minus-one} and Proposition~\ref{number-theory:proposition-two}, $(\frac{-2}{p}) = (\frac{-1}{p})(\frac2p) = 1$ for these $p$, so $u^2 \equiv -2 \pmod p$ for some $u$. On
+$L = \{x \equiv uy \pmod p\}$, of covolume $p$, $x^2 + 2y^2 \equiv (u^2 + 2)y^2 \equiv 0 \pmod p$. The ellipse $x^2 + 2y^2 < 2p$ has area $2\pi p/\sqrt2 = \sqrt2\pi p > 4.4p > 4p$, so it contains a nonzero point of $L$,
+where $x^2 + 2y^2$ is a multiple of $p$ in $(0, 2p)$, hence $p$.
+\end{solution}
+
+\begin{exercise}\label{geometry-of-numbers:exercise-three-squares-necessary}
+Show that no integer of the form $4^a(8b + 7)$, with $a, b \geq 0$, is a sum of three squares. (The converse, Legendre's three-square theorem, is proved in Chapter~\ref{diophantine-equations}.)
+\end{exercise}
+
+\begin{solution}
+Squares are $\equiv 0, 1, 4 \pmod 8$, so a sum of three squares is $\not\equiv 7 \pmod 8$; this is the case $a = 0$. If $4n = x^2 + y^2 + z^2$, then, as squares are $\equiv 0, 1 \pmod 4$ according to parity, all
+of $x$, $y$, $z$ are even, and $n = (x/2)^2 + (y/2)^2 + (z/2)^2$. By induction on $a$, $4^a(8b + 7)$ is not a sum of three squares.
+\end{solution}
+
+\begin{exercise}\label{geometry-of-numbers:exercise-a2-minima}
+Compute the successive minima of the hexagonal lattice $A_2$ for the unit disc, and check both inequalities of Minkowski's second theorem. Do the same for the square $[-1, 1]^2$.
+\end{exercise}
+
+\begin{solution}
+For the disc, $\lambda_1 = \lambda_2 = 1$: $(1, 0)$ and $(\frac12, \frac{\sqrt3}{2})$ have length $1$, and no nonzero vector of $A_2$ is shorter (its basis is reduced, Theorem~\ref{geometry-of-numbers:theorem-gauss-reduction}).
+Then $\lambda_1\lambda_2\pi = \pi$ lies between $\frac{4}{2}d(A_2) = \sqrt3 \approx 1.73$ and $4d(A_2) = 2\sqrt3 \approx 3.46$. For the square, $\|x\|_K = |x|_\infty$; the vectors of $A_2$ are
+$(a + \frac b2, \frac{\sqrt3}{2}b)$, and $|x|_\infty < 1$ forces $|b| \leq 1$, and then $b = 0$, $a = 0$, or $b = \pm1$ with $|a \pm \frac12| < 1$, so $x = \pm(\frac12, \frac{\sqrt3}{2})$ or $\pm(-\frac12, \frac{\sqrt3}{2})$,
+two independent vectors with $|x|_\infty = \frac{\sqrt3}{2}$. Since $(1, 0)$ has $|x|_\infty = 1$, we get $\lambda_1 = \lambda_2 = \frac{\sqrt3}{2}$, and $\lambda_1\lambda_2\cdot 4 = 3$ lies between $\sqrt3$ and $2\sqrt3$.
+\end{solution}
+
+\begin{exercise}\label{geometry-of-numbers:exercise-cornacchia}
+Let $p \equiv 1 \pmod 4$ be prime and $u^2 \equiv -1 \pmod p$. Show that Gauss's reduction algorithm (Proposition~\ref{geometry-of-numbers:proposition-gauss-algorithm}), started from the basis $(1, u)$,
+$(0, p)$, ends with a first vector $(x, y)$ satisfying $x^2 + y^2 = p$. Carry it out for $p = 13$, $u = 5$.
+\end{exercise}
+
+\begin{solution}
+The basis generates the lattice $L = \{y \equiv ux \pmod p\}$ of Theorem~\ref{geometry-of-numbers:theorem-two-squares}, on which $|v|^2$ is always a multiple of $p$, and which contains a vector with
+$|v|^2 = p$ by that theorem. So $\lambda_1(L)^2 = p$, and the first vector $b_1$ of the reduced basis has $|b_1| = \lambda_1$ by Theorem~\ref{geometry-of-numbers:theorem-gauss-reduction}(2). For $p = 13$:
+$\langle(0, 13), (1, 5)\rangle/26 = \frac52$, rounding to $2$ gives $(0, 13) - 2(1, 5) = (-2, 3)$, of squared length $13 < 26$; exchange. Then $\langle(1, 5), (-2, 3)\rangle/13 = 1$ and
+$(1, 5) - (-2, 3) = (3, 2)$, of squared length $13$, not shorter: stop. The first vector $(-2, 3)$ gives $13 = 2^2 + 3^2$.
+\end{solution}
+
+\begin{exercise}\label{geometry-of-numbers:exercise-legendre-examples}
+Decide with Theorem~\ref{geometry-of-numbers:theorem-legendre} whether $5x^2 + 7y^2 = 13z^2$ and $3x^2 + 7y^2 = 5z^2$ have nontrivial integer solutions, and find one when it exists.
+\end{exercise}
+
+\begin{solution}
+For $(a, b, c) = (5, 7, 13)$: $bc = 91 \equiv 1 \pmod 5$, $ca = 65 \equiv 2 \equiv 3^2 \pmod 7$, and $-ab = -35 \equiv 4 = 2^2 \pmod{13}$; all three are squares, so a solution exists, for instance
+$(x, y, z) = (3, 1, 2)$: $45 + 7 = 52 = 13 \cdot 4$. For $(3, 7, 5)$: $bc = 35 \equiv 2 \pmod 3$ is not a square, so there is only the trivial solution.
+\end{solution}
+
+\begin{exercise}\label{geometry-of-numbers:exercise-pick-equilateral}
+Show that there is no equilateral triangle whose vertices lie in $\ZZ^2$.
+\end{exercise}
+
+\begin{solution}
+If the vertices are $0$, $u$, $w$ (after a translation), the area is $\frac12|\det(u, w)|$, a rational number. The side length $s$ satisfies $s^2 = |u|^2 \in \ZZ$, and an equilateral triangle of side $s$ has area
+$\frac{\sqrt3}{4}s^2$, which is irrational for $s \neq 0$. (In $\ZZ^3$ equilateral lattice triangles exist, for instance $e_1, e_2, e_3$.)
+\end{solution}
+
+\begin{exercise}\label{geometry-of-numbers:exercise-ehrhart-polygon}
+Let $P$ be a convex lattice polygon of area $A$ with $B$ lattice points on its boundary. Show that $\#(tP \cap \ZZ^2) = At^2 + \frac B2t + 1$ for all integers $t \geq 1$.
+\end{exercise}
+
+\begin{solution}
+$tP$ is a convex lattice polygon of area $At^2$. A side $[u, w]$ of $P$ with $g = \gcd(w - u) $ (the gcd of the coordinates) contains $g$ lattice points other than $u$; the corresponding side of $tP$ has
+$\gcd(t(w - u)) = tg$ of them. Summing over the sides, $B(tP) = tB$. By Pick's theorem $I(tP) = At^2 - \frac{tB}{2} + 1$, and $\#(tP \cap \ZZ^2) = I(tP) + B(tP) = At^2 + \frac{B}{2}t + 1$.
+\end{solution}
+
+\begin{exercise}\label{geometry-of-numbers:exercise-r4-average}
+Let $r_4(n)$ be the number of $x \in \ZZ^4$ with $|x|^2 = n$. Show that $\sum_{n \leq X}r_4(n) = \frac{\pi^2}{2}X^2 + O(X^{3/2})$.
+\end{exercise}
+
+\begin{solution}
+The sum is $\#(\ZZ^4 \cap \sqrt X\,B(0, 1)) - 1$ (the term $n = 0$ is excluded). By Theorem~\ref{geometry-of-numbers:theorem-counting} with $t = \sqrt X$ it equals
+$\omega_4X^2 + O(X^{3/2})$, and $\omega_4 = \frac{\pi^2}{2}$. (By Lagrange's theorem $r_4(n) > 0$ for all $n$, and on average $r_4(n)$ is about $\pi^2n$.)
+\end{solution}
+
+\begin{exercise}\label{geometry-of-numbers:exercise-z-sqrt-minus-three}
+Show that the ring $\ZZ[\sqrt{-3}]$ is not a unique factorisation domain, that its covering radius as a lattice in $\CC$ is exactly $1$, and that division with remainder fails for $1 + \sqrt{-3}$ divided by $2$.
+\end{exercise}
+
+\begin{solution}
+The norm $N(a + b\sqrt{-3}) = a^2 + 3b^2$ never equals $2$, so $2$ and $1 \pm \sqrt{-3}$ (all of norm $4$) are irreducible: a proper factor would have norm $2$. The units are the elements of norm $1$,
+$\pm1$. So $4 = 2 \cdot 2 = (1 + \sqrt{-3})(1 - \sqrt{-3})$ are two factorisations into irreducibles that do not correspond, $2$ not being associate to $1 \pm \sqrt{-3}$. The lattice is rectangular with basis
+$1$, $i\sqrt3$; as in the first case of the proof of Theorem~\ref{geometry-of-numbers:theorem-euclidean-imaginary}, every point is within $\sqrt{\frac14 + \frac34} = 1$ of it, and
+$\xi = \frac{1 + \sqrt{-3}}{2}$ is at distance $\geq 1$ from every $a + b\sqrt{-3}$. So $\mu = 1$, and for every $q$, $N(1 + \sqrt{-3} - 2q) = 4|\xi - q|^2 \geq 4 = N(2)$.
+\end{solution}
+
+\begin{exercise}\label{geometry-of-numbers:exercise-hermite-three}
+Show that $2^{1/3} \leq \gamma_3 \leq \frac43$.
+\end{exercise}
+
+\begin{solution}
+The lower bound is Example~\ref{geometry-of-numbers:example-hermite-dn}(1) for $D_3$. For the upper bound, Theorem~\ref{geometry-of-numbers:theorem-hermite} with $\gamma_2 = 2/\sqrt3$ gives
+$\gamma_3 \leq (\frac43 \cdot \frac{2}{\sqrt3})^{2/3} = (\frac{8}{3\sqrt3})^{2/3} = \frac{8^{2/3}}{(3^{3/2})^{2/3}} = \frac43$. (The true value is $2^{1/3} \approx 1.26$, by Remark~\ref{geometry-of-numbers:remark-hermite-values}.)
+\end{solution}
+
+\begin{exercise}\label{geometry-of-numbers:exercise-covering-a2}
+Show that the covering radius of the hexagonal lattice $A_2$ is $1/\sqrt3$, and compare with Proposition~\ref{geometry-of-numbers:proposition-covering-radius}.
+\end{exercise}
+
+\begin{solution}
+The plane is tiled by the equilateral triangles of side $1$ with vertices in $A_2$ (the translates of $0, 1, \omega^{\prime}$ and of $1, \omega^{\prime}, 1 + \omega^{\prime}$, where $\omega^{\prime} = \frac12 + \frac{\sqrt3}{2}i$, tile
+each fundamental parallelogram). Let $T$ be such a triangle, with circumcentre $O$ (its centroid) and circumradius $R = 1/\sqrt3$. The segments from $O$ to the midpoints of the sides cut $T$ into three
+quadrilaterals, each with a vertex $V$ of $T$ and two right angles at the midpoints; such a quadrilateral lies in the disc with diameter $VO$ (a right angle subtends a diameter), hence within distance
+$|VO| = R$ of $V$. So every point of $T$ is within $R$ of a vertex, and $\mu(A_2) \leq R$. The point $O$ itself is at distance $\geq R$ from every lattice point: in the proof of
+Theorem~\ref{geometry-of-numbers:theorem-euclidean-imaginary} the lower bound $|\xi - a - b\omega_m| \geq R$ was proved for every $m \equiv 3 \pmod 4$ (the restriction $m \geq 15$ was used only to get
+$R \geq 1$); for $m = 3$, where $\mathcal{O}_3 = \ZZ[\omega] = A_2$, the point $\xi = \frac12 + \frac{i}{2\sqrt3}$ is $O$ and $R^2 = (m + 1)^2/(16m) = \frac13$. Hence $\mu(A_2) = 1/\sqrt3$. The
+bounds of the proposition read $\frac12 \leq \frac1{\sqrt3}$ and $\omega_2\mu^2 = \frac{\pi}{3} \approx 1.047 \geq \frac{\sqrt3}{2} \approx 0.866$.
+\end{solution}

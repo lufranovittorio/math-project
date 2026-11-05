@@ -83,13 +83,22 @@ counterexamples, exercises with solutions, citations for quoted results.
 
 ## Order of work (user, 2026-11-05)
 
-1. **Number theory** (Part Number Theory, rebuilt into 12 chapters):
-   ~~`prime-numbers`~~ (done), ~~`continued-fractions`~~ (done), `diophantine-equations`,
-   `p-adic-numbers`, `analytic-number-theory`, `algebraic-number-theory`
-   (number fields, Dedekind domains, decomposition of primes),
-   `geometry-of-numbers`, `cyclotomic-fields`, `local-fields`,
-   `class-field-theory`, `modular-forms`, `elliptic-curves-arithmetic`; also
-   revisit the elementary `number-theory` chapter (Algebra part).
+1. **Number theory**, in three parts since 2026-11-05 (user: put new chapters
+   in an organised part of their own, in the logical order):
+   - Part *Number Theory* (after Probability, uses algebra and analysis only):
+     ~~`prime-numbers`~~ (done), ~~`continued-fractions`~~ (done),
+     ~~`geometry-of-numbers`~~ (done), `analytic-number-theory`,
+     `p-adic-numbers` (Hasse–Minkowski needs Dirichlet's theorem),
+     `diophantine-equations` (uses all of the part: three squares via
+     Hasse–Minkowski, Skolem, Thue).
+   - Part *Algebraic Number Theory*: `algebraic-number-theory` (number fields,
+     Dedekind domains, decomposition of primes), `class-groups-and-units`
+     (new: Minkowski bound, class number, Dirichlet's unit theorem, class
+     number formula), `cyclotomic-fields`, `local-fields`, `class-field-theory`.
+   - Part *Arithmetic Geometry* (after Algebraic Geometry, needs curves):
+     `modular-forms`, `elliptic-curves-arithmetic`.
+   Also revisit the elementary `number-theory` chapter (Algebra part; it stays
+   there because combinatorics and later algebra use it).
 2. **Differential geometry** (rebuild the part, thinnest chapters first).
 3. **Measure theory**.
 4. **Algebraic geometry**.
@@ -142,6 +151,25 @@ spectral-sequences 300 (then everything below about 800 lines).
   When `ergodic-theory` is written, it should prove the ergodicity of the Gauss
   map and the results of `continued-fractions:remark-metric-results`, and can
   refer back to Weyl's criterion here.
+- [x] 2026-11-05: **Number theory reorganised into three parts** (Number Theory
+  after Probability; Algebraic Number Theory; Arithmetic Geometry after
+  Algebraic Geometry), new planned chapter `class-groups-and-units`; the
+  introduction's list of parts and reading path updated.
+- [x] 2026-11-05: `geometry-of-numbers` (complete, about 1470 lines, 124 tags):
+  lattices (bases, covolume, discrete subgroups, fundamental domains and
+  Voronoi cells, index, congruence lattices, primitive vectors and adapted
+  bases, projections, dual lattice); Blichfeldt, Minkowski's convex body
+  theorem with counterexamples, linear forms, simultaneous approximation,
+  Siegel's lemma; two and four squares and Legendre's theorem on
+  $ax^2+by^2=cz^2$ via lattices; successive minima, Minkowski's second
+  theorem (lower bound and ellipsoids proved, general upper bound cited);
+  Hermite's constant and inequality, Lagrange–Gauss reduction and algorithm,
+  hexagonal packing, $D_n$ and $E_8$, the LLL algorithm with proof of
+  termination; lattice point counting, Gauss circle, Leibniz's series from
+  $r_2$, Pick's theorem, Reeve tetrahedra, Ehrhart (cited); Minkowski–Hlawka
+  with proof, bounds for $\gamma_n$; covering radius and the norm-Euclidean
+  imaginary quadratic rings ($m = 1, 2, 3, 7, 11$); 14 exercises. Open: a
+  full proof of the general upper bound of Minkowski's second theorem.
 - [x] 2026-11-05: removed the paragraphs "On the way to the Hodge conjecture"
   from all chapters (the route stays in the introduction); The Hodge Project
   is linked wherever it is mentioned.
