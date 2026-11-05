@@ -1,0 +1,858 @@
+\chapter{Prime Numbers}\label{prime-numbers}
+\chapterstatus{complete}
+
+\section{Introduction}\label{prime-numbers:section-introduction}
+
+Every integer $n \geq 2$ is a product of primes in essentially one way (Theorem~\ref{number-systems:theorem-fundamental-arithmetic}), so the primes are the atoms of arithmetic. This
+chapter studies them with elementary means: how many there are, how they are distributed, which special forms they can take, and how one decides whether a given large number is prime. The
+answers mix three kinds of mathematics. Some are \emph{algebraic}, using congruences and the structure of the groups $(\ZZ/n\ZZ)^\times$ from Chapter~\ref{number-theory}: primes in special
+arithmetic progressions, the Lucas--Lehmer test for Mersenne numbers, Pépin's test for Fermat numbers, the Miller--Rabin test. Some are \emph{combinatorial}, using the divisibility of
+binomial coefficients: Chebyshev's estimates and Bertrand's postulate. And some are \emph{analytic}, using logarithms, sums and integrals from Chapter~\ref{real-analysis}: the theorems of
+Mertens, which say how the primes are distributed on average.
+
+The guiding fact, which we do not prove here, is the \emph{prime number theorem}: the number $\pi(x)$ of primes up to $x$ satisfies $\pi(x) \sim x/\log x$. Its proof needs complex analysis and
+is given in Chapter~\ref{analytic-number-theory}. This chapter proves everything short of it: that $\pi(x)$ has the order of magnitude $x/\log x$ (Chebyshev), that if $\pi(x)\log x/x$ has a limit
+then the limit is $1$, that $\sum_{p \leq x}1/p = \log\log x + O(1)$ (Mertens), and that there is always a prime between $n$ and $2n$ (Bertrand).
+
+The chapter is organised as follows.
+\begin{enumerate}
+\item Section~\ref{prime-numbers:section-infinitude}: several proofs that there are infinitely many primes (Euclid, Goldbach, Euler, Erd\H{o}s), each giving a different quantitative bound, and
+the divergence of $\sum 1/p$.
+\item Section~\ref{prime-numbers:section-progressions}: primes in the progressions $4k + 3$, $4k + 1$, $6k + 5$, $8k \pm 1$, $8k \pm 3$ and, via cyclotomic polynomials, $nk + 1$; polynomials cannot
+take only prime values; gaps between primes.
+\item Section~\ref{prime-numbers:section-special}: Mersenne primes and perfect numbers, the Lucas--Lehmer test, Fermat numbers and Pépin's test, and the constructibility of regular polygons.
+\item Section~\ref{prime-numbers:section-chebyshev}: the functions $\theta$, $\psi$, $\pi$; Chebyshev's bounds; Bertrand's postulate with Erd\H{o}s's proof; consequences.
+\item Section~\ref{prime-numbers:section-mertens}: Abel summation and Mertens' three theorems.
+\item Section~\ref{prime-numbers:section-primality}: Fermat pseudoprimes and Carmichael numbers, the Miller--Rabin test, Lucas' converse of Fermat's theorem and Pratt certificates, the AKS
+theorem (statement), and factoring methods.
+\item Section~\ref{prime-numbers:section-open}: what is known and what is not: twin primes, Goldbach, bounded gaps, arithmetic progressions of primes.
+\end{enumerate}
+References: \cite{hardy-wright}, \cite{ireland-rosen}, \cite{crandall-pomerance} for the computational part, and \cite{aigner-ziegler} for the proofs of Bertrand's postulate and of the
+infinitude of primes.
+
+\noindent\textbf{Prerequisites.} Chapter~\ref{number-systems} (Number Systems), Chapter~\ref{groups} (Groups), Chapter~\ref{fields} (Fields and Galois Theory),
+Chapter~\ref{number-theory} (Elementary Number Theory), Chapter~\ref{combinatorics} (Combinatorics) and Chapter~\ref{real-analysis} (Real Analysis).
+
+\begin{notation}\label{prime-numbers:notation-basic}
+The letter $p$ (also $q$, $p_i$) always denotes a prime, and sums and products over $p$ run over primes: $\sum_{p \leq x}$ is a sum over the primes $p \leq x$. The $n$-th prime is $p_n$, so
+$p_1 = 2$, $p_2 = 3$. For a real number $x$, $\lfloor x\rfloor$ is the largest integer $\leq x$. $v_p(n)$ is the exponent of $p$ in $n$, and $\log$ is the natural logarithm. We write
+$f(x) = O(g(x))$ if $|f(x)| \leq Cg(x)$ for some constant $C$ and all $x$ in the stated range ($x \geq 2$ unless said otherwise), $f \ll g$ for the same thing, $f \asymp g$ if $f \ll g$ and
+$g \ll f$, and $f \sim g$ if $f(x)/g(x) \to 1$ as $x \to \infty$.
+\end{notation}
+
+\section{There are infinitely many primes}\label{prime-numbers:section-infinitude}
+
+Euclid's proof (Theorem~\ref{number-systems:theorem-infinitely-many-primes}) is the first theorem about primes, and it has inspired many others. We give several proofs, because each shows a
+different reason, and each gives a different lower bound for the number of primes up to $x$.
+
+\begin{definition}\label{prime-numbers:definition-pi}
+For a real number $x$, $\pi(x)$ is the number of primes $p \leq x$.
+\end{definition}
+
+\begin{proposition}[Euclid]\label{prime-numbers:proposition-euclid}
+For every $n \geq 1$, $p_{n+1} \leq p_1p_2 \cdots p_n + 1$. Consequently $p_n \leq 2^{2^{n-1}}$, and $\pi(x) \geq \log_2\log_2 x$ for $x \geq 2$.
+\end{proposition}
+
+\begin{proof}
+The number $N = p_1 \cdots p_n + 1$ is $\geq 2$, so it has a prime factor $q$ (Theorem~\ref{number-systems:theorem-fundamental-arithmetic}); $q$ is not one of $p_1, \ldots, p_n$, since
+those leave remainder $1$ when dividing $N$. So some prime other than $p_1, \ldots, p_n$ is at most $N$, and $p_{n+1} \leq N$. By induction, if $p_i \leq 2^{2^{i-1}}$ for $i \leq n$, then
+$p_{n+1} \leq 2^{1 + 2 + \cdots + 2^{n-1}} + 1 = 2^{2^n - 1} + 1 \leq 2^{2^n}$. For the last claim, let $n \geq 1$ be such that $2^{2^{n-1}} \leq x < 2^{2^n}$; then $p_1, \ldots, p_n \leq x$, so
+$\pi(x) \geq n > \log_2\log_2 x$.
+\end{proof}
+
+\begin{counterexample}\label{prime-numbers:counterexample-euclid-numbers}
+The numbers $p_1 \cdots p_n + 1$ need not themselves be prime: $2 + 1 = 3$, $7$, $31$, $211$, $2311$ are prime, but $2 \cdot 3 \cdot 5 \cdot 7 \cdot 11 \cdot 13 + 1 = 30031 = 59 \cdot 509$. The proof
+only uses that they have a prime factor outside $\{p_1, \ldots, p_n\}$. It is not known whether infinitely many of them are prime.
+\end{counterexample}
+
+\begin{definition}\label{prime-numbers:definition-fermat-numbers}
+The \emph{Fermat numbers} are $F_k = 2^{2^k} + 1$, $k \geq 0$: $F_0, \ldots, F_4 = 3, 5, 17, 257, 65537$.
+\end{definition}
+
+\begin{proposition}[Goldbach]\label{prime-numbers:proposition-fermat-coprime}
+$F_0F_1 \cdots F_{k-1} = F_k - 2$ for $k \geq 1$, and distinct Fermat numbers are coprime. Hence there are infinitely many primes, and $p_n \leq F_{n-1}$.
+\end{proposition}
+
+\begin{proof}
+By induction: $F_0 = 3 = F_1 - 2$, and $F_0 \cdots F_k = (F_k - 2)F_k = (2^{2^k} - 1)(2^{2^k} + 1) = 2^{2^{k+1}} - 1 = F_{k+1} - 2$. If $d$ divides $F_j$ and $F_k$ with $j < k$, then $d$ divides
+$F_0 \cdots F_{k-1}$ and $F_k$, hence their difference $2$; but $F_k$ is odd, so $d = 1$. Choosing a prime factor of each of $F_0, \ldots, F_{n-1}$ gives $n$ distinct primes, all at most
+$F_{n-1}$.
+\end{proof}
+
+Fermat conjectured that all $F_k$ are prime; Euler found $F_5 = 641 \cdot 6700417$ (Example~\ref{prime-numbers:example-euler-641}), and no prime $F_k$ with $k \geq 5$ is known.
+
+\begin{theorem}[Euler]\label{prime-numbers:theorem-euler-primes}
+For $x \geq 2$,
+\[
+\prod_{p \leq x}\Bigl(1 - \frac{1}{p}\Bigr)^{-1} \geq \sum_{n \leq x}\frac{1}{n} > \log x.
+\]
+In particular there are infinitely many primes, since $\log x \to \infty$.
+\end{theorem}
+
+\begin{proof}
+Each factor is a convergent geometric series, $(1 - 1/p)^{-1} = \sum_{k \geq 0}p^{-k}$, so the finite product of these absolutely convergent series is the sum of $1/(p_1^{k_1} \cdots p_r^{k_r})$ over
+all exponent vectors, where $p_1, \ldots, p_r$ are the primes $\leq x$ (Proposition~\ref{real-analysis:proposition-series}). By unique factorisation these are exactly the reciprocals $1/n$ of
+the integers $n$ all of whose prime factors are $\leq x$, each once; this includes all $n \leq x$. Finally $\sum_{n \leq x}1/n \geq \sum_{n \leq \lfloor x\rfloor}\int_n^{n+1}\frac{dt}{t} =
+\log(\lfloor x\rfloor + 1) > \log x$, since $1/n \geq 1/t$ on $[n, n + 1]$.
+\end{proof}
+
+\begin{corollary}[Euler]\label{prime-numbers:corollary-reciprocals-diverge}
+$\sum_{p \leq x}\frac{1}{p} > \log\log x - 1$ for $x \geq 2$; in particular $\sum_p1/p = \infty$.
+\end{corollary}
+
+\begin{proof}
+For $0 \leq t \leq \frac12$, $-\log(1 - t) \leq t + t^2$: the difference $t + t^2 + \log(1 - t)$ vanishes at $0$ and has derivative $1 + 2t - \frac{1}{1 - t} = \frac{t(1 - 2t)}{1 - t} \geq 0$. Taking
+logarithms in Theorem~\ref{prime-numbers:theorem-euler-primes},
+\[
+\begin{aligned}
+\log\log x &< \sum_{p \leq x}-\log\Bigl(1 - \frac1p\Bigr) \leq \sum_{p \leq x}\frac1p + \sum_{p}\frac{1}{p^2}\\
+&< \sum_{p \leq x}\frac1p + \sum_{n \geq 2}\frac{1}{n(n - 1)} = \sum_{p \leq x}\frac1p + 1,
+\end{aligned}
+\]
+using $\frac{1}{n^2} < \frac{1}{n(n - 1)} = \frac{1}{n - 1} - \frac1n$, a telescoping sum.
+\end{proof}
+
+The divergence of $\sum 1/p$ says that the primes are much denser than, for example, the squares, for which $\sum 1/n^2 < \infty$. It is the first instance of a statement about the
+\emph{distribution} of primes rather than their number. The next proof gives a much better lower bound than Euclid's.
+
+\begin{theorem}[Erd\H{o}s]\label{prime-numbers:theorem-erdos-lower-bound}
+For $N \geq 1$, $\pi(N) \geq \frac{1}{2}\log_2 N$. Moreover the same counting gives a second proof that $\sum_p1/p$ diverges.
+\end{theorem}
+
+\begin{proof}
+\emph{The bound.} Every $n \leq N$ can be written uniquely as $n = rs^2$ with $r$ squarefree (a product of distinct primes): take $s^2$ the largest square dividing $n$. If $p_1, \ldots, p_k$ are the
+primes up to $N$, then $r$ is one of the $2^k$ products of a subset of them, and $s \leq \sqrt{N}$. So $N \leq 2^k\sqrt{N}$, that is, $2^k \geq \sqrt{N}$ and $k \geq \frac12\log_2N$.
+\emph{Divergence.} Suppose $\sum_p1/p$ converges. Choose $k$ with $\sum_{i > k}1/p_i < \frac12$, and let $N = 2^{2k+2}$. The number of $n \leq N$ divisible by some $p_i$ with $i > k$ is at most
+$\sum_{i > k}\lfloor N/p_i\rfloor < N/2$. The remaining $n \leq N$ have all prime factors among $p_1, \ldots, p_k$, so by the argument above there are at most $2^k\sqrt{N} = 2^{2k+1} = N/2$ of
+them. Together fewer than $N$ integers, a contradiction.
+\end{proof}
+
+\begin{remark}\label{prime-numbers:remark-furstenberg}
+There are many more proofs \cite[Chapter~1]{aigner-ziegler}. A curious one is Fürstenberg's: declare a subset $U \subseteq \ZZ$ open if it is a union of arithmetic progressions
+$a + b\ZZ$, $b \geq 1$. This is a topology (Chapter~\ref{general-topology}) in which every progression $a + b\ZZ$ is open and also closed, its complement being the union of the other
+progressions modulo $b$, and every nonempty open set is infinite. Since $\ZZ \setminus \{\pm 1\} = \bigcup_p p\ZZ$, if there were finitely many primes this set would be a finite union of closed sets,
+hence closed, and $\{\pm 1\}$ would be open and finite, which is absurd. Underneath the topology, this is Euclid's argument.
+\end{remark}
+
+\begin{example}\label{prime-numbers:example-small-pi}
+$\pi(10) = 4$, $\pi(100) = 25$, $\pi(1000) = 168$, $\pi(10^4) = 1229$, $\pi(10^5) = 9592$, $\pi(10^6) = 78498$. Compare $x/\log x$: $4.3$, $21.7$, $144.8$, $1085.7$, $8685.9$, $72382.4$. The
+ratios $\pi(x)\log x/x$ are $0.92$, $1.15$, $1.16$, $1.13$, $1.10$, $1.08$, decreasing slowly towards $1$, as the prime number theorem predicts. Euclid's bound gives $\pi(10^6) \geq 4$ and
+Erd\H{o}s's gives $\pi(10^6) \geq 10$; Chebyshev's bounds (Theorem~\ref{prime-numbers:theorem-chebyshev}) give the right order of magnitude.
+\end{example}
+
+\section{Primes in arithmetic progressions and prime values}\label{prime-numbers:section-progressions}
+
+Every prime other than $2$ is odd, and every prime other than $2$ and $3$ is $\equiv \pm 1 \pmod 6$. Which residue classes contain infinitely many primes? A class $a + n\ZZ$ with
+$\gcd(a, n) > 1$ contains at most one prime. Dirichlet's theorem (Chapter~\ref{analytic-number-theory}) says that every class $a + n\ZZ$ with $\gcd(a, n) = 1$ contains infinitely many primes; its
+proof needs $L$-functions. Here we prove many special cases by variations of Euclid's argument.
+
+\begin{proposition}\label{prime-numbers:proposition-minus-one-classes}
+There are infinitely many primes $p \equiv 3 \pmod 4$, and infinitely many primes $p \equiv 5 \pmod 6$.
+\end{proposition}
+
+\begin{proof}
+Let $q_1, \ldots, q_r$ be primes $\equiv 3 \pmod 4$ and $N = 4q_1 \cdots q_r - 1$. Then $N \equiv 3 \pmod 4$ is odd, so its prime factors are $\equiv \pm 1 \pmod 4$; a product of numbers
+$\equiv 1 \pmod 4$ is $\equiv 1$, so some prime factor $q$ of $N$ is $\equiv 3 \pmod 4$, and $q \neq q_i$ because $q_i$ does not divide $N$. The same argument with $N = 6q_1 \cdots q_r - 1$ works modulo
+$6$: the prime factors of $N$ are neither $2$ nor $3$, so they are $\equiv \pm 1 \pmod 6$, and not all can be $\equiv 1$.
+\end{proof}
+
+\begin{counterexample}\label{prime-numbers:counterexample-plus-one}
+The same argument does not work for primes $\equiv 1 \pmod 4$: a number $\equiv 1 \pmod 4$ can be a product of primes $\equiv 3 \pmod 4$, as $21 = 3 \cdot 7$. One needs a different idea: a
+polynomial whose prime factors are forced into the class, as in Theorem~\ref{prime-numbers:theorem-one-mod-n} and Proposition~\ref{prime-numbers:proposition-classes-mod-eight}.
+\end{counterexample}
+
+\begin{lemma}\label{prime-numbers:lemma-polynomial-primes}
+Let $f \in \ZZ[x]$ be a nonconstant polynomial. Then infinitely many primes divide some value $f(m)$, $m \in \ZZ$.
+\end{lemma}
+
+\begin{proof}
+If $f(0) = 0$, every prime divides $f(p)$. Otherwise let $c = f(0)$, and suppose only the primes $p_1, \ldots, p_r$ divide values of $f$. For $t \in \ZZ$ put $m = cp_1 \cdots p_rt$; then
+$f(m) = c(1 + p_1 \cdots p_rt\,g(t))$ for some $g \in \ZZ[t]$, since every nonconstant monomial of $f(m)$ is divisible by $c\,p_1 \cdots p_rt$. The polynomial $1 + p_1 \cdots p_rt\,g(t)$ is
+nonconstant (its degree is $\deg f$), so it takes a value different from $\pm 1$ at some integer $t$, as a nonconstant polynomial takes each value at most $\deg f$ times. That value has a prime
+factor, which divides $f(m)$ and is different from $p_1, \ldots, p_r$, since the value is $\equiv 1$ modulo each $p_i$. Contradiction.
+\end{proof}
+
+\begin{theorem}\label{prime-numbers:theorem-one-mod-n}
+For every $n \geq 1$ there are infinitely many primes $p \equiv 1 \pmod n$.
+\end{theorem}
+
+\begin{proof}
+Let $\Phi_n \in \ZZ[x]$ be the $n$-th cyclotomic polynomial (Theorem~\ref{fields:theorem-cyclotomic}). We show: if $p \nmid n$ is a prime dividing $\Phi_n(m)$ for some $m \in \ZZ$, then
+$p \equiv 1 \pmod n$. By Lemma~\ref{prime-numbers:lemma-polynomial-primes} infinitely many primes divide values of $\Phi_n$, and at most finitely many of them divide $n$, so this proves the theorem.
+Since $x^n - 1 = \prod_{d \mid n}\Phi_d$ and $\Phi_n(m) \equiv 0$, we have $m^n \equiv 1 \pmod p$, so the order $k$ of $m$ in $(\ZZ/p\ZZ)^\times$ divides $n$. Suppose $k < n$. Then $m$ is a root of
+$x^k - 1 = \prod_{d \mid k}\Phi_d$ modulo $p$, so $\Phi_d(m) \equiv 0$ for some $d \mid k$, $d < n$, $d \mid n$. Then $m$ is a root of both $\Phi_n$ and $\Phi_d$ in $\mathbb{F}_p$, so it is a multiple
+root of $x^n - 1 = \Phi_n\Phi_d \cdots$ in $\mathbb{F}_p$; but the derivative $nx^{n-1}$ of $x^n - 1$ does not vanish at $m \neq 0$ since $p \nmid n$, so $x^n - 1$ has no multiple roots in
+$\mathbb{F}_p$. Hence $k = n$, and by Lagrange's theorem $n$ divides $|(\ZZ/p\ZZ)^\times| = p - 1$.
+\end{proof}
+
+\begin{proposition}\label{prime-numbers:proposition-classes-mod-eight}
+There are infinitely many primes in each of the classes $1, 3, 5, 7$ modulo $8$, and in the class $1$ modulo $4$.
+\end{proposition}
+
+\begin{proof}
+Each statement uses a polynomial whose prime factors lie in the prescribed classes, together with Lemma~\ref{prime-numbers:lemma-polynomial-primes} (or a Euclid-type argument) and the
+supplementary laws of quadratic reciprocity (Corollary~\ref{number-theory:corollary-minus-one}, Proposition~\ref{number-theory:proposition-two}).
+\emph{$1 \bmod 4$ and $1 \bmod 8$.} These are Theorem~\ref{prime-numbers:theorem-one-mod-n} with $n = 4, 8$.
+\emph{$7 \bmod 8$.} Let $N = (4q_1 \cdots q_r)^2 - 2$ for primes $q_i \equiv 7 \pmod 8$. An odd prime $p \mid N$ has $\bigl(\frac{2}{p}\bigr) = 1$, so $p \equiv \pm 1 \pmod 8$. Now $N = 2M$ with
+$M = 8(q_1 \cdots q_r)^2 - 1 \equiv 7 \pmod 8$, and $M$ is odd; its prime factors are $\equiv \pm 1 \pmod 8$ and not all $\equiv 1$, so one is $\equiv 7 \pmod 8$, different from the $q_i$.
+\emph{$3 \bmod 8$.} Let $N = (q_1 \cdots q_r)^2 + 2$ for odd primes $q_i \equiv 3 \pmod 8$; then $N \equiv 3 \pmod 8$ is odd. A prime $p \mid N$ has $\bigl(\frac{-2}{p}\bigr) = 1$, so
+$p \equiv 1, 3 \pmod 8$, and not all prime factors are $\equiv 1$.
+\emph{$5 \bmod 8$.} Let $N = (q_1 \cdots q_r)^2 + 4$ for primes $q_i \equiv 5 \pmod 8$; then $N \equiv 5 \pmod 8$. Its prime factors have $\bigl(\frac{-1}{p}\bigr) = 1$, so they are $\equiv 1 \pmod 4$,
+that is $\equiv 1$ or $5 \pmod 8$, and not all are $\equiv 1$.
+Here $\bigl(\frac{-2}{p}\bigr) = \bigl(\frac{-1}{p}\bigr)\bigl(\frac{2}{p}\bigr)$ is $1$ exactly for $p \equiv 1, 3 \pmod 8$, by the two supplementary laws.
+\end{proof}
+
+\begin{proposition}\label{prime-numbers:proposition-composite-values}
+\begin{enumerate}
+\item (Goldbach) A nonconstant polynomial $f \in \ZZ[x]$ takes composite values (or the values $0, \pm 1$) at infinitely many positive integers; it cannot be prime at all $n \geq 1$.
+\item For every $k \geq 1$ the $k$ consecutive integers $(k + 1)! + 2, \ldots, (k + 1)! + k + 1$ are composite. So there are arbitrarily long gaps between consecutive primes.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) Suppose $f(n) = p$ is prime for some $n \geq 1$. For every $t$, $f(n + tp) \equiv f(n) \equiv 0 \pmod p$, so $f(n + tp)$ is divisible by $p$; it is prime only if it equals $\pm p$, which happens for
+at most $2\deg f$ values of $t$. So $f(n + tp)$ is composite or in $\{0, \pm 1\}$ for all but finitely many $t \geq 1$. If $f$ takes no prime value at positive integers, the claim is trivial.
+(2) $j$ divides $(k + 1)! + j$ for $2 \leq j \leq k + 1$, and $(k + 1)! + j > j$.
+\end{proof}
+
+\begin{example}\label{prime-numbers:example-euler-polynomial}
+Euler's polynomial $n^2 + n + 41$ is prime for $0 \leq n \leq 39$, and $40^2 + 40 + 41 = 41^2$ (Corollary~\ref{number-theory:corollary-euler-polynomial}); by the proof of
+Proposition~\ref{prime-numbers:proposition-composite-values}, $f(41t)$ is divisible by $41$ for all $t$. Gaps: the primes $113$ and $127$ have no prime between them, a gap of $14$, found far earlier than the factorial construction suggests (it would start at $14! + 2$); the first gap of length at least $100$ follows the prime $370261$.
+\end{example}
+
+\begin{remark}\label{prime-numbers:remark-prime-formulas}
+Nevertheless there are ``formulas'' for primes. Wilson's theorem and its converse (Exercise~\ref{number-theory:exercise-wilson-converse}) say that $n \geq 2$ is prime if and only if
+$n \mid (n - 1)! + 1$, which can be turned into a formula for $p_n$; Mills proved that there is a real number $A$ with $\lfloor A^{3^n}\rfloor$ prime for all $n \geq 1$ \cite{mills-prime-function}; and there is a polynomial in
+$26$ variables with integer coefficients whose positive values, as the variables range over $\NN$, are exactly the primes \cite{jones-sato-wada-wiens}, a consequence of Matiyasevich's theorem
+(Chapter~\ref{diophantine-equations}).
+None of these is useful for finding primes: they encode the primes rather than explain them.
+\end{remark}
+
+\section{Mersenne and Fermat primes}\label{prime-numbers:section-special}
+
+Numbers of the form $a^n \pm 1$ are the natural candidates for large primes, because the multiplicative structure of $(\ZZ/q\ZZ)^\times$ controls their prime factors. The largest known
+primes are Mersenne primes, found with the Lucas--Lehmer test.
+
+\subsection{Mersenne primes}\label{prime-numbers:subsection-mersenne}
+
+\begin{definition}\label{prime-numbers:definition-mersenne}
+The \emph{Mersenne numbers} are $M_n = 2^n - 1$, $n \geq 1$. A \emph{Mersenne prime} is a prime Mersenne number.
+\end{definition}
+
+\begin{proposition}\label{prime-numbers:proposition-mersenne-basic}
+\begin{enumerate}
+\item If $a^n - 1$ is prime with $a \geq 2$ and $n \geq 2$, then $a = 2$ and $n$ is prime.
+\item If $p$ is an odd prime, every prime factor $q$ of $M_p$ satisfies $q \equiv 1 \pmod{2p}$ and $q \equiv \pm 1 \pmod 8$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) $a - 1$ divides $a^n - 1$, and $a - 1 < a^n - 1$, so $a - 1 = 1$. If $n = rs$ with $1 < r < n$, then $2^r - 1$ divides $2^{rs} - 1 = (2^r)^s - 1$ and $1 < 2^r - 1 < 2^n - 1$.
+(2) $2^p \equiv 1 \pmod q$, so the order of $2$ modulo $q$ divides $p$; it is not $1$, so it is $p$, and $p \mid q - 1$ by Lagrange's theorem (Theorem~\ref{groups:theorem-lagrange}). As $q$ is odd,
+$2p \mid q - 1$. Also $2 \equiv 2^{p+1} = (2^{(p+1)/2})^2 \pmod q$ is a square, so $q \equiv \pm 1 \pmod 8$ by Proposition~\ref{number-theory:proposition-two}.
+\end{proof}
+
+\begin{example}\label{prime-numbers:example-mersenne}
+$M_2, M_3, M_5, M_7 = 3, 7, 31, 127$ are prime, and $M_{11} = 2047 = 23 \cdot 89$, with $23 = 2 \cdot 11 + 1$ and $89 = 8 \cdot 11 + 1$, as the proposition predicts. The candidates for a factor of
+$M_{11}$ are $23, 67, 89, \ldots$ ($\equiv 1 \pmod{22}$ and $\pm 1 \pmod 8$), so only $23$ needs to be tried below $\sqrt{2047} < 46$. The exponents $p$ of the known Mersenne primes begin
+$2, 3, 5, 7, 13, 17, 19, 31, 61, 89, 107, 127, 521, \ldots$; whether there are infinitely many is unknown. By Theorem~\ref{number-theory:theorem-perfect}, the even perfect numbers correspond
+exactly to the Mersenne primes.
+\end{example}
+
+\begin{theorem}[Lucas--Lehmer test]\label{prime-numbers:theorem-lucas-lehmer}
+Let $p$ be an odd prime. Define $s_0 = 4$ and $s_{k+1} = s_k^2 - 2$. Then $M_p$ is prime if and only if $M_p$ divides $s_{p-2}$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: a closed form.} Let $\omega = 2 + \sqrt{3}$ and $\bar{\omega} = 2 - \sqrt{3}$ in the ring $\ZZ[\sqrt{3}] = \{a + b\sqrt{3} : a, b \in \ZZ\}$; then $\omega\bar{\omega} = 1$. By induction
+$s_k = \omega^{2^k} + \bar{\omega}^{2^k}$: this holds for $k = 0$, and $(\omega^{2^k} + \bar{\omega}^{2^k})^2 - 2 = \omega^{2^{k+1}} + \bar{\omega}^{2^{k+1}} + 2(\omega\bar{\omega})^{2^k} - 2$.
+For a prime $q$, let $R_q = \ZZ[\sqrt{3}]/q\ZZ[\sqrt{3}]$, a ring with $q^2$ elements $a + b\sqrt{3}$, $a, b \in \mathbb{F}_q$. If $q \mid s_{p-2}$, then in $R_q$
+\[
+\omega^{2^{p-2}} + \bar{\omega}^{2^{p-2}} = 0, \quad\text{so, multiplying by } \omega^{2^{p-2}}, \quad \omega^{2^{p-1}} = -1. \qquad (\ast)
+\]
+\emph{Step 2: the test proves primality.} Suppose $M_p \mid s_{p-2}$ but $M_p$ is composite, and let $q$ be a prime factor of $M_p$ with $q^2 \leq M_p$. By $(\ast)$ in $R_q$, $\omega^{2^p} = 1$ and
+$\omega^{2^{p-1}} = -1 \neq 1$ ($q$ is odd), so $\omega$ is a unit of $R_q$ of order exactly $2^p$. But the unit group of $R_q$ has at most $q^2 - 1 < M_p < 2^p$ elements, a contradiction.
+\emph{Step 3: primes pass the test.} Let $q = M_p$ be prime. Since $p \geq 3$, $q \equiv 7 \pmod 8$, so $\bigl(\frac{2}{q}\bigr) = 1$ (Proposition~\ref{number-theory:proposition-two}); and
+$2^p \equiv 2 \pmod 3$, so $q \equiv 1 \pmod 3$, and by quadratic reciprocity (Theorem~\ref{number-theory:theorem-quadratic-reciprocity}), as $q \equiv 3 \pmod 4$,
+$\bigl(\frac{3}{q}\bigr) = -\bigl(\frac{q}{3}\bigr) = -\bigl(\frac{1}{3}\bigr) = -1$. So $3$ is not a square modulo $q$, $R_q = \mathbb{F}_q[x]/(x^2 - 3)$ is a field with $q^2$ elements, and the map
+$z \mapsto z^q$ is a ring homomorphism of $R_q$ (Frobenius) with $(\sqrt{3})^q = 3^{(q-1)/2}\sqrt{3} = -\sqrt{3}$ by Euler's criterion (Proposition~\ref{number-theory:proposition-euler-criterion}).
+Hence $(1 + \sqrt{3})^{q+1} = (1 + \sqrt{3})(1 - \sqrt{3}) = -2$. Now $(1 + \sqrt{3})^2 = 4 + 2\sqrt{3} = 2\omega$, so
+\[
+\omega^{(q+1)/2} = \frac{(1 + \sqrt{3})^{q+1}}{2^{(q+1)/2}} = \frac{-2}{2 \cdot 2^{(q-1)/2}} = \frac{-2}{2\bigl(\frac{2}{q}\bigr)} = -1,
+\]
+again by Euler's criterion. Since $(q + 1)/2 = 2^{p-1}$, this says $\omega^{2^{p-1}} = -1$; multiplying by $\bar{\omega}^{2^{p-2}}$ gives $\omega^{2^{p-2}} = -\bar{\omega}^{2^{p-2}}$, that is $s_{p-2} = 0$
+in $R_q$. As $s_{p-2} \in \ZZ$ and $\ZZ \cap q\ZZ[\sqrt{3}] = q\ZZ$, $q$ divides $s_{p-2}$.
+\end{proof}
+
+\begin{example}\label{prime-numbers:example-lucas-lehmer}
+For $p = 5$, $M_5 = 31$: modulo $31$, $s_0 = 4$, $s_1 = 14$, $s_2 = 194 \equiv 8$, $s_3 \equiv 62 \equiv 0$, so $31$ is prime. For $p = 11$, $M_{11} = 2047$: the residues are $4, 14, 194, 788, 701,
+119, 1877, 240, 282, 1736$, and $s_9 \equiv 1736 \neq 0$, so $2047$ is composite, as we know. The test needs $p - 2$ squarings of numbers below $M_p$, which is why it can decide the primality of
+numbers with millions of digits.
+\end{example}
+
+\subsection{Fermat primes}\label{prime-numbers:subsection-fermat}
+
+\begin{proposition}\label{prime-numbers:proposition-fermat-basic}
+\begin{enumerate}
+\item If $2^m + 1$ is prime with $m \geq 1$, then $m$ is a power of $2$.
+\item Every prime factor of $F_k$, $k \geq 2$, is $\equiv 1 \pmod{2^{k+2}}$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) If $m = rs$ with $s > 1$ odd, then $2^r + 1$ divides $(2^r)^s + 1$ (as $x + 1$ divides $x^s + 1$ for odd $s$), and $1 < 2^r + 1 < 2^m + 1$.
+(2) Let $q \mid F_k$. Then $2^{2^k} \equiv -1$ and $2^{2^{k+1}} \equiv 1 \pmod q$, so $2$ has order $2^{k+1}$ modulo $q$, and $2^{k+1} \mid q - 1$; for $k \geq 2$, $q \equiv 1 \pmod 8$, so $2$ is a square
+modulo $q$ (Proposition~\ref{number-theory:proposition-two}), $2 \equiv c^2$. Then $c$ has order $2^{k+2}$, so $2^{k+2} \mid q - 1$.
+\end{proof}
+
+\begin{example}[Euler]\label{prime-numbers:example-euler-641}
+The candidates for prime factors of $F_5 = 2^{32} + 1$ are $\equiv 1 \pmod{128}$: $257$ (which is $F_3$, coprime to $F_5$), then $641 = 5 \cdot 2^7 + 1$. And $641$ works: since also
+$641 = 5^4 + 2^4$, modulo $641$
+\[
+2^{32} = 2^4 \cdot 2^{28} \equiv -5^4 \cdot 2^{28} = -(5 \cdot 2^7)^4 \equiv -(-1)^4 = -1.
+\]
+So $F_5 = 641 \cdot 6700417$.
+\end{example}
+
+\begin{theorem}[P\'epin's test]\label{prime-numbers:theorem-pepin}
+For $k \geq 1$, $F_k$ is prime if and only if $3^{(F_k - 1)/2} \equiv -1 \pmod{F_k}$.
+\end{theorem}
+
+\begin{proof}
+If $F = F_k$ is prime, then $F \equiv 1 \pmod 4$ and $F \equiv 2 \pmod 3$ (as $2^{2^k} \equiv 1 \pmod 3$), so by quadratic reciprocity $\bigl(\frac{3}{F}\bigr) = \bigl(\frac{F}{3}\bigr) = \bigl(\frac{2}{3}\bigr) = -1$,
+and Euler's criterion gives $3^{(F-1)/2} \equiv -1$. Conversely, if $3^{(F-1)/2} \equiv -1 \pmod F$, then $3^{F-1} \equiv 1$, so the order of $3$ modulo $F$ divides $F - 1 = 2^{2^k}$ but not
+$(F - 1)/2$; it is $F - 1$. So $(\ZZ/F\ZZ)^\times$ has at least $F - 1$ elements, and $F$ is prime.
+\end{proof}
+
+\begin{remark}\label{prime-numbers:remark-gauss-polygons}
+The only known Fermat primes are $F_0, \ldots, F_4$; $F_5, \ldots, F_{32}$ are known to be composite. Their interest comes from geometry: Gauss proved that the regular $n$-gon can be constructed
+with ruler and compass when $n$ is a power of $2$ times a product of distinct Fermat primes, and Wantzel that these are the only such $n$ \cite{hardy-wright}. The construction of the
+$17$-gon rests on the fact that $\operatorname{Gal}(\QQ(\zeta_{17})/\QQ) \cong (\ZZ/17\ZZ)^\times$ is cyclic of order $16 = 2^4$ (Theorem~\ref{fields:theorem-cyclotomic}), so that $\zeta_{17}$ is
+reached by four successive quadratic extensions.
+\end{remark}
+
+\section{Chebyshev's estimates and Bertrand's postulate}\label{prime-numbers:section-chebyshev}
+
+The primes up to $x$ are counted more conveniently with weights $\log p$: the product of the primes up to $x$ is easier to handle than their number, and binomial coefficients give upper and lower
+bounds for it. Chebyshev found this method in 1850, and proved that $\pi(x)$ has the order of magnitude $x/\log x$ and that there is always a prime between $n$ and $2n$; the proofs below are
+Erd\H{o}s's simplifications.
+
+\begin{definition}\label{prime-numbers:definition-chebyshev-functions}
+For $x \geq 1$, the \emph{Chebyshev functions} are
+\[
+\theta(x) = \sum_{p \leq x}\log p, \qquad \psi(x) = \sum_{p^k \leq x,\ k \geq 1}\log p = \sum_{n \leq x}\Lambda(n),
+\]
+where the \emph{von Mangoldt function} is $\Lambda(n) = \log p$ if $n = p^k$ is a prime power ($k \geq 1$) and $\Lambda(n) = 0$ otherwise.
+\end{definition}
+
+So $e^{\theta(x)}$ is the product of the primes up to $x$, and $e^{\psi(n)} = \operatorname{lcm}(1, 2, \ldots, n)$: the exponent of $p$ in this least common multiple is the largest $k$ with
+$p^k \leq n$, and $\psi(n)$ counts $\log p$ once for each such $k$. Also $\sum_{d \mid n}\Lambda(d) = \log n$, which is unique factorisation written additively.
+
+\begin{lemma}\label{prime-numbers:lemma-central-binomial-primes}
+Let $n \geq 1$ and $N = \binom{2n}{n}$.
+\begin{enumerate}
+\item If $p^a$ is the exact power of $p$ dividing $N$, then $p^a \leq 2n$. In particular primes $p > \sqrt{2n}$ divide $N$ at most once.
+\item Every prime $p$ with $n < p \leq 2n$ divides $N$ exactly once.
+\item If $n \geq 3$, no prime $p$ with $\frac{2n}{3} < p \leq n$ divides $N$.
+\item $\frac{4^n}{2n} \leq N \leq 4^n$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+By Legendre's formula (Theorem~\ref{combinatorics:theorem-legendre}), $a = v_p((2n)!) - 2v_p(n!) = \sum_{i \geq 1}\bigl(\lfloor 2n/p^i\rfloor - 2\lfloor n/p^i\rfloor\bigr)$. For real $y$,
+$\lfloor 2y\rfloor - 2\lfloor y\rfloor \in \{0, 1\}$ (write $y = \lfloor y\rfloor + r$ with $0 \leq r < 1$; then it is $\lfloor 2r\rfloor$), and the term vanishes once $p^i > 2n$.
+(1) So $a$ is at most the number of $i \geq 1$ with $p^i \leq 2n$, and $p^a \leq 2n$. (2) For $n < p \leq 2n$, $\lfloor 2n/p\rfloor = 1$ and $\lfloor n/p\rfloor = 0$, so the term with $i = 1$ is $1$, and $p^2 > n^2 \geq 2n$ for $n \geq 2$ kills the others (for $n = 1$, $p = 2$ and $N = 2$). (3) Here $2 \leq 2n/p < 3$, so $\lfloor 2n/p\rfloor = 2$ and
+$\lfloor n/p\rfloor = 1$, and the $i = 1$ term is $0$; and $p^2 > 4n^2/9 > 2n$ when $n > 4.5$, while for $n = 3, 4$ the only candidates $p = 3$ give $\binom{6}{3} = 20$, $\binom{8}{4} = 70$,
+not divisible by $3$. (4) $N$ is the largest of the binomial coefficients $\binom{2n}{k}$ (Proposition~\ref{combinatorics:proposition-unimodal}); the $2n - 1$ middle terms $k = 1, \ldots, 2n - 1$
+and the sum $\binom{2n}{0} + \binom{2n}{2n} = 2 \leq N$ give $4^n = \sum_k\binom{2n}{k} \leq 2n \cdot N$, and $N \leq \sum_k\binom{2n}{k} = 4^n$.
+\end{proof}
+
+\begin{lemma}[Erd\H{o}s]\label{prime-numbers:lemma-primorial}
+For every real $x \geq 1$, $\prod_{p \leq x}p < 4^x$; that is, $\theta(x) < x\log 4$.
+\end{lemma}
+
+\begin{proof}
+It suffices to treat integers $x = n$, since $\prod_{p \leq x}p = \prod_{p \leq \lfloor x\rfloor}p$ and $4^{\lfloor x\rfloor} \leq 4^x$. Induction on $n$: for $n = 1, 2$ the products are $1 < 4$
+and $2 < 16$. For even $n > 2$, $n$ is not prime, and $\prod_{p \leq n}p = \prod_{p \leq n-1}p < 4^{n-1}$. For odd $n = 2m + 1 \geq 3$, every prime $p$ with $m + 2 \leq p \leq 2m + 1$ divides
+$\binom{2m+1}{m} = \frac{(2m + 1)!}{m!\,(m + 1)!}$ (it divides the numerator and not the denominator), and $\binom{2m+1}{m} = \binom{2m+1}{m+1} \leq \frac12 2^{2m+1} = 4^m$, as both appear in
+$\sum_k\binom{2m+1}{k} = 2^{2m+1}$. So
+\[
+\prod_{p \leq 2m+1}p = \prod_{p \leq m+1}p \cdot \prod_{m+2 \leq p \leq 2m+1}p < 4^{m+1} \cdot \binom{2m + 1}{m} \leq 4^{m+1} \cdot 4^m = 4^{2m+1},
+\]
+by the induction hypothesis for $m + 1 < n$.
+\end{proof}
+
+\begin{theorem}[Chebyshev]\label{prime-numbers:theorem-chebyshev}
+For every real $x \geq 2$,
+\[
+\frac{x}{6\log x} < \frac{\log 2}{4}\cdot\frac{x}{\log x} \leq \pi(x) < (2 + \log 16)\frac{x}{\log x} < \frac{5x}{\log x}.
+\]
+Moreover $\frac{\log 2}{4}x \leq \psi(x)$ for $x \geq 2$, $\theta(x) < x\log 4$, and $0 \leq \psi(x) - \theta(x) \leq 2\sqrt{x}\log x$.
+\end{theorem}
+
+\begin{proof}
+\emph{Lower bound.} Let $n = \lfloor x/2\rfloor \geq 1$. Every prime power $p^a$ exactly dividing $\binom{2n}{n}$ is at most $2n$ (Lemma~\ref{prime-numbers:lemma-central-binomial-primes}(1)), so
+$\binom{2n}{n}$ divides $\operatorname{lcm}(1, \ldots, 2n) = e^{\psi(2n)}$, and also $\binom{2n}{n} \leq \prod_{p \leq 2n}2n = (2n)^{\pi(2n)}$. With $\binom{2n}{n} = \prod_{i=1}^{n}\frac{n + i}{i} \geq 2^n$,
+\[
+\pi(2n)\log(2n) \geq \psi(2n) \geq \log\binom{2n}{n} \geq n\log 2.
+\]
+Since $x/2 < n + 1 \leq 2n$, we have $n > x/4$, and $2n \leq x$; so $\pi(x) \geq \pi(2n) \geq \frac{n\log 2}{\log(2n)} > \frac{\log 2}{4}\cdot\frac{x}{\log x}$, and $\psi(x) \geq \psi(2n) \geq n\log 2 >
+\frac{\log 2}{4}x$. Finally $\frac{\log 2}{4} = 0.173\ldots > \frac16$.
+\emph{Upper bound.} The primes in $(\sqrt{x}, x]$ have $\log p > \frac12\log x$, so by Lemma~\ref{prime-numbers:lemma-primorial}
+\[
+\pi(x) - \pi(\sqrt{x}) \leq \frac{2}{\log x}\sum_{\sqrt{x} < p \leq x}\log p \leq \frac{2\theta(x)}{\log x} < \frac{2\log 4 \cdot x}{\log x}.
+\]
+And $\pi(\sqrt{x}) \leq \sqrt{x} \leq \frac{2x}{\log x}$, because $\log x = 2\log\sqrt{x} \leq 2(\sqrt{x} - 1) < 2\sqrt{x}$ (using $\log y \leq y - 1$). Adding, $\pi(x) < (2 + 2\log 4)\frac{x}{\log x}$, and
+$2 + \log 16 = 4.77\ldots < 5$.
+\emph{$\psi$ versus $\theta$.} $\psi(x) = \sum_{k \geq 1}\theta(x^{1/k})$, grouping the prime powers $p^k$ by $k$; the terms with $k \geq 2$ vanish unless $x^{1/k} \geq 2$, that is
+$k \leq \log_2x$, and each is at most $\theta(\sqrt{x}) < \sqrt{x}\log 4$. So $\psi(x) - \theta(x) \leq \log_2 x \cdot \sqrt{x}\log 4 = 2\sqrt{x}\log x$.
+\end{proof}
+
+\begin{corollary}\label{prime-numbers:corollary-chebyshev}
+\begin{enumerate}
+\item $\pi(x)/x \to 0$: the primes have density zero.
+\item $\theta(x) \asymp \psi(x) \asymp x$ and $\pi(x) \asymp x/\log x$ for $x \geq 2$.
+\item $\frac15 n\log n < p_n$ for $n \geq 2$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(1) and (2) restate the theorem ($\theta(x) \geq \psi(x) - 2\sqrt{x}\log x \gg x$ for large $x$, and $\theta(x) \geq \log 2 > 0$ for $x \geq 2$). (3) By the theorem, $n = \pi(p_n) < 5p_n/\log p_n$, so
+$p_n > \frac15 n\log p_n \geq \frac15 n\log n$, as $p_n \geq n$.
+\end{proof}
+
+\begin{theorem}[Bertrand's postulate, Chebyshev]\label{prime-numbers:theorem-bertrand}
+For every integer $n \geq 1$ there is a prime $p$ with $n < p \leq 2n$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: small $n$.} Each prime in the list $2, 3, 5, 7, 13, 23, 43, 83, 163, 317, 631, 1259, 2503$ is smaller than twice its predecessor. For $1 \leq n < 2503$, let $q$ be the smallest prime in
+the list with $q > n$; if $q = 2$ then $n = 1$ and $p = 2$ works, and otherwise its predecessor $q^{\prime}$ satisfies $q^{\prime} \leq n$, so $n < q < 2q^{\prime} \leq 2n$. So the theorem holds for
+$n < 2503$, in particular for $n < 2048$.
+\emph{Step 2: the upper bound for $\binom{2n}{n}$ if there is no prime in $(n, 2n]$.} Let $n \geq 2048$, and suppose no prime lies in $(n, 2n]$. By
+Lemma~\ref{prime-numbers:lemma-central-binomial-primes}, every prime factor of $N = \binom{2n}{n}$ is at most $\frac{2n}{3}$; the primes $p \leq \sqrt{2n}$ contribute at most $2n$ each, and there
+are fewer than $\sqrt{2n}$ of them; the primes in $(\sqrt{2n}, \frac{2n}{3}]$ contribute at most $p$ each. With Lemma~\ref{prime-numbers:lemma-primorial},
+\[
+\frac{4^n}{2n} \leq N \leq (2n)^{\sqrt{2n}}\prod_{p \leq 2n/3}p < (2n)^{\sqrt{2n}}\,4^{2n/3}, \qquad\text{so}\qquad 4^{n/3} < (2n)^{1 + \sqrt{2n}}.
+\]
+\emph{Step 3: this is false for $n \geq 2048$.} With $M = 2n \geq 4096$, taking logarithms, the inequality says $\frac{M\log 2}{3} < (1 + \sqrt{M})\log M$, that is
+\[
+g(M) := \frac{\sqrt{M}}{\log M} < \frac{3}{\log 2}\Bigl(1 + \frac{1}{\sqrt{M}}\Bigr).
+\]
+The function $g$ is increasing for $M \geq e^2$, since $g^{\prime}(M) = \frac{\log M - 2}{2\sqrt{M}\log^2 M}$, while the right-hand side decreases. At $M = 4096 = 2^{12}$, $g(M) = \frac{64}{12\log 2} > 7.6$,
+and the right-hand side is $\frac{3}{\log 2} \cdot \frac{65}{64} < 4.4$. So the inequality fails for all $M \geq 4096$, a contradiction.
+\end{proof}
+
+\begin{counterexample}\label{prime-numbers:counterexample-bertrand-sharp}
+The interval cannot be shortened to $(n, 2n)$ for $n = 1$ (the only candidate is $2 = 2n$), and the factor $2$ cannot be replaced by a smaller constant for small $n$: there is no prime in
+$(7, 10.5)$, nor in $(23, 28.75)$ ($c = 1.25$, $n = 23$). For large $n$ the prime number theorem gives primes in $(n, (1 + \varepsilon)n]$ for every fixed $\varepsilon > 0$
+(Chapter~\ref{analytic-number-theory}). The step from Step 2 to Step 3 shows why small cases must be checked: the inequality $4^{n/3} < (2n)^{1 + \sqrt{2n}}$ is \emph{true} for $n = 100$, so the
+estimate alone does not exclude a counterexample there.
+\end{counterexample}
+
+\begin{corollary}\label{prime-numbers:corollary-bertrand}
+\begin{enumerate}
+\item $p_{n+1} < 2p_n$, and $p_n \leq 2^n$, for $n \geq 1$.
+\item For $n \geq 2$ and $k \geq 2$, $n!$ is not a $k$-th power.
+\item For $n \geq 2$, there is a prime $p$ with $v_p(n!) = 1$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(1) Apply the theorem to $p_n$: there is a prime in $(p_n, 2p_n]$, and $2p_n$ is not prime. Then $p_n \leq 2^{n-1}p_1 = 2^n$ by induction.
+(3) Let $m = \lfloor n/2\rfloor \geq 1$. There is a prime $p$ with $m < p \leq 2m \leq n$; then $p > n/2$ (as $p \geq m + 1 > n/2$), so $2p > n$, and $p$ is the only multiple of $p$ up to $n$:
+$v_p(n!) = 1$. (2) follows: a $k$-th power has all exponents divisible by $k$.
+\end{proof}
+
+\section{The theorems of Mertens}\label{prime-numbers:section-mertens}
+
+Chebyshev's bounds say how many primes there are up to $x$, up to a constant factor. Mertens' theorems (1874) say much more precisely how the primes are distributed \emph{on average},
+weighted by $1/p$ or $\log p/p$. The tool that passes between sums over primes with different weights is summation by parts.
+
+\begin{lemma}[Abel summation]\label{prime-numbers:lemma-abel-summation}
+Let $(a_n)_{n \geq 1}$ be real numbers, $A(t) = \sum_{n \leq t}a_n$, and $1 \leq y \leq x$ with $a_n = 0$ for $n < y$. If $f$ is continuously differentiable on $[y, x]$, then
+\[
+\sum_{n \leq x}a_nf(n) = A(x)f(x) - \int_y^xA(t)f^{\prime}(t)\,dt.
+\]
+\end{lemma}
+
+\begin{proof}
+For $n \leq x$ with $n \geq y$ (the other terms vanish), $f(n) = f(x) - \int_n^xf^{\prime}(t)\,dt$ by the fundamental theorem of calculus (Theorem~\ref{real-analysis:theorem-ftc}). Multiply by
+$a_n$ and sum: $\sum_{n \leq x}a_nf(n) = A(x)f(x) - \sum_{y \leq n \leq x}a_n\int_n^xf^{\prime}(t)\,dt$. The last sum is $\int_y^x\bigl(\sum_{y \leq n \leq t}a_n\bigr)f^{\prime}(t)\,dt = \int_y^xA(t)f^{\prime}(t)\,dt$,
+exchanging a finite sum with the integral; $A$ is a step function, so $Af^{\prime}$ is integrable on $[y, x]$ (it is continuous except at finitely many points).
+\end{proof}
+
+\begin{lemma}\label{prime-numbers:lemma-log-factorial}
+For $x \geq 2$, $\sum_{n \leq x}\log n = x\log x - x + R(x)$ with $|R(x)| \leq 2\log x + 1$. Consequently $\sum_{n \leq x}\Lambda(n)\bigl\lfloor\frac{x}{n}\bigr\rfloor = x\log x - x + R(x)$.
+\end{lemma}
+
+\begin{proof}
+Let $N = \lfloor x\rfloor \geq 2$. Since $\log$ is increasing, $\int_{n-1}^{n}\log t\,dt \leq \log n \leq \int_n^{n+1}\log t\,dt$. Summing the left inequality over $2 \leq n \leq N$ and the right one
+over $1 \leq n \leq N - 1$ gives $\int_1^N\log t\,dt \leq \sum_{n \leq N}\log n \leq \int_1^N\log t\,dt + \log N$, and $\int_1^N\log t\,dt = N\log N - N + 1$. By the mean value theorem
+(Theorem~\ref{real-analysis:theorem-mean-value}) applied to $h(t) = t\log t - t$, with $h^{\prime} = \log$, $0 \leq h(x) - h(N) \leq (x - N)\log x \leq \log x$. Together,
+$|R(x)| \leq \log x + 1 \leq 2\log x + 1$. For the second statement,
+$\log(N!) = \sum_pv_p(N!)\log p = \sum_p\sum_{k \geq 1}\lfloor N/p^k\rfloor\log p$ by Legendre's formula (Theorem~\ref{combinatorics:theorem-legendre}), which is $\sum_{n \leq x}\Lambda(n)\lfloor x/n\rfloor$.
+\end{proof}
+
+\begin{theorem}[Mertens' first theorem]\label{prime-numbers:theorem-mertens-first}
+For $x \geq 2$,
+\[
+\sum_{n \leq x}\frac{\Lambda(n)}{n} = \log x + O(1), \qquad \sum_{p \leq x}\frac{\log p}{p} = \log x + O(1).
+\]
+\end{theorem}
+
+\begin{proof}
+Write $\lfloor x/n\rfloor = x/n - \{x/n\}$ with $0 \leq \{x/n\} < 1$. By Lemma~\ref{prime-numbers:lemma-log-factorial},
+\[
+x\sum_{n \leq x}\frac{\Lambda(n)}{n} = x\log x - x + R(x) + \sum_{n \leq x}\Lambda(n)\Bigl\{\frac{x}{n}\Bigr\},
+\]
+and the last sum is between $0$ and $\psi(x) \ll x$ (Theorem~\ref{prime-numbers:theorem-chebyshev}). Dividing by $x$ gives the first formula. The two sums differ by the contribution of the
+prime powers $p^k$ with $k \geq 2$, which is at most $\sum_p\log p\sum_{k \geq 2}p^{-k} = \sum_p\frac{\log p}{p(p - 1)} \leq \sum_{n \geq 2}\frac{\log n}{n(n - 1)}$, a convergent series
+(its terms are at most $2n^{-3/2}$ for large $n$, since $\log n \leq \sqrt{n}$).
+\end{proof}
+
+\begin{theorem}[Mertens' second theorem]\label{prime-numbers:theorem-mertens-second}
+There is a constant $M$ (the \emph{Meissel--Mertens constant}, $M = 0.2614\ldots$) such that for $x \geq 2$
+\[
+\sum_{p \leq x}\frac1p = \log\log x + M + O\Bigl(\frac{1}{\log x}\Bigr).
+\]
+\end{theorem}
+
+\begin{proof}
+Let $a_n = \frac{\log p}{p}$ if $n = p$ is prime and $a_n = 0$ otherwise, so that $A(t) = \sum_{p \leq t}\frac{\log p}{p} = \log t + E(t)$ with $|E(t)| \leq C$ for $t \geq 2$
+(Theorem~\ref{prime-numbers:theorem-mertens-first}). Apply Lemma~\ref{prime-numbers:lemma-abel-summation} with $y = 2$ and $f(t) = 1/\log t$, $f^{\prime}(t) = -\frac{1}{t\log^2t}$:
+\[
+\sum_{p \leq x}\frac1p = \frac{A(x)}{\log x} + \int_2^x\frac{A(t)}{t\log^2t}\,dt = 1 + \frac{E(x)}{\log x} + \int_2^x\frac{dt}{t\log t} + \int_2^x\frac{E(t)}{t\log^2t}\,dt.
+\]
+Here $\int_2^x\frac{dt}{t\log t} = \log\log x - \log\log 2$. The function $t \mapsto \frac{1}{t\log^2t}$ has the antiderivative $-\frac{1}{\log t}$, so $\int_X^{X^{\prime}}\frac{|E(t)|}{t\log^2t}dt \leq
+C\bigl(\frac{1}{\log X} - \frac{1}{\log X^{\prime}}\bigr)$; hence $I(x) = \int_2^x\frac{E(t)}{t\log^2t}dt$ satisfies the Cauchy criterion and has a limit $I$ as $x \to \infty$, with
+$|I - I(x)| \leq \frac{C}{\log x}$. So the formula holds with $M = 1 - \log\log 2 + I$ and error at most $\frac{2C}{\log x}$.
+\end{proof}
+
+\begin{theorem}[Mertens' third theorem]\label{prime-numbers:theorem-mertens-third}
+There is a constant $c > 0$ such that for $x \geq 2$
+\[
+\prod_{p \leq x}\Bigl(1 - \frac1p\Bigr)^{-1} = c\log x\,\Bigl(1 + O\Bigl(\frac{1}{\log x}\Bigr)\Bigr).
+\]
+In fact $c = e^\gamma = 1.781\ldots$, where $\gamma = \lim_n(1 + \frac12 + \cdots + \frac1n - \log n)$ is Euler's constant \cite{hardy-wright}.
+\end{theorem}
+
+\begin{proof}
+As in Corollary~\ref{prime-numbers:corollary-reciprocals-diverge}, $0 \leq -\log(1 - t) - t \leq t^2$ for $0 \leq t \leq \frac12$. So the series $B = \sum_p\bigl(-\log(1 - \frac1p) - \frac1p\bigr)$ converges,
+with $0 \leq B - \sum_{p \leq x}\bigl(-\log(1 - \frac1p) - \frac1p\bigr) \leq \sum_{n > x}\frac{1}{n^2} \leq \frac{1}{x - 1}$. By Theorem~\ref{prime-numbers:theorem-mertens-second},
+\[
+\log\prod_{p \leq x}\Bigl(1 - \frac1p\Bigr)^{-1} = \sum_{p \leq x}\frac1p + B + O\Bigl(\frac1x\Bigr) = \log\log x + M + B + O\Bigl(\frac{1}{\log x}\Bigr).
+\]
+Exponentiating, with $c = e^{M+B}$ and $e^u = 1 + O(u)$ for bounded $u$ (mean value theorem), gives the claim.
+\end{proof}
+
+\begin{remark}\label{prime-numbers:remark-mertens-meaning}
+The third theorem has a probabilistic reading. The proportion of integers not divisible by any prime $p \leq y$ is $\prod_{p \leq y}(1 - \frac1p) \approx \frac{e^{-\gamma}}{\log y}$. If this applied with
+$y = \sqrt{x}$ to the integers up to $x$ (which have no prime factor $\leq \sqrt{x}$ exactly when they are $1$ or prime), it would predict $\pi(x) \approx \frac{2e^{-\gamma}x}{\log x} = 1.12\ldots\frac{x}{\log x}$,
+which contradicts the prime number theorem. The ``independence'' of divisibility by different primes fails when the primes are as large as $\sqrt{x}$: sieve methods have to account for this, and
+this is one reason why questions like the twin prime conjecture are hard.
+\end{remark}
+
+\begin{theorem}[Chebyshev]\label{prime-numbers:theorem-chebyshev-limit}
+If $\lim_{x \to \infty}\frac{\pi(x)\log x}{x} = L$ exists, then $L = 1$. Moreover $\liminf\frac{\pi(x)\log x}{x} \leq 1 \leq \limsup\frac{\pi(x)\log x}{x}$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: from $\pi$ to $\theta$.} By Lemma~\ref{prime-numbers:lemma-abel-summation} with $a_p = 1$, $f = \log$, $y = 2$: $\theta(x) = \pi(x)\log x - \int_2^x\frac{\pi(t)}{t}dt$, and by
+Theorem~\ref{prime-numbers:theorem-chebyshev} the integral is at most $5\int_2^x\frac{dt}{\log t} \leq 5\bigl(\frac{\sqrt{x}}{\log 2} + \frac{2x}{\log x}\bigr)$ (split at $\sqrt{x}$). So
+$\frac{\theta(x)}{x} = \frac{\pi(x)\log x}{x} + O\bigl(\frac{1}{\log x}\bigr)$, and it suffices to prove $\liminf\frac{\theta(x)}{x} \leq 1 \leq \limsup\frac{\theta(x)}{x}$.
+\emph{Step 2: from $\theta$ to Mertens.} By Lemma~\ref{prime-numbers:lemma-abel-summation} with $a_p = \log p$ and $f(t) = 1/t$,
+\[
+\sum_{p \leq x}\frac{\log p}{p} = \frac{\theta(x)}{x} + \int_2^x\frac{\theta(t)}{t^2}\,dt.
+\]
+Suppose $\theta(t)/t \geq 1 + \varepsilon$ for all $t \geq t_0$, with $\varepsilon > 0$. Then the right side is at least $(1 + \varepsilon)(\log x - \log t_0)$, while the left side is $\log x + O(1)$ by
+Theorem~\ref{prime-numbers:theorem-mertens-first}: impossible for large $x$. So $\liminf\theta(x)/x \leq 1$; similarly, $\theta(t)/t \leq 1 - \varepsilon$ for $t \geq t_0$ gives
+$\log x + O(1) \leq (1 - \varepsilon)\log x + O(1)$, impossible, so $\limsup\theta(x)/x \geq 1$.
+\end{proof}
+
+The prime number theorem says that the limit exists. Legendre had guessed $\pi(x) \approx \frac{x}{\log x - 1.08366}$, from tables; the best constant $A$ in $\pi(x) \approx \frac{x}{\log x - A}$ turns
+out to be $A = 1$, which follows from the more precise form $\pi(x) = \operatorname{li}(x) + O(xe^{-c\sqrt{\log x}})$ of the prime number theorem, where
+$\operatorname{li}(x) = \int_2^x\frac{dt}{\log t}$ (Chapter~\ref{analytic-number-theory}).
+
+\section{Primality tests and factoring}\label{prime-numbers:section-primality}
+
+Deciding whether a number $n$ is prime by trial division up to $\sqrt{n}$ takes about $\sqrt{n}$ steps, which is hopeless for numbers with hundreds of digits. The tests below take a number of steps
+polynomial in the number of digits $\log n$, because they use only modular exponentiation, which computes $a^e \bmod n$ with $O(\log e)$ multiplications by repeated squaring.
+
+\subsection{Fermat pseudoprimes and Carmichael numbers}\label{prime-numbers:subsection-carmichael}
+
+By Fermat's little theorem (Corollary~\ref{groups:corollary-euler-fermat}), if $n$ is prime then $a^{n-1} \equiv 1 \pmod n$ for every $a$ coprime to $n$. So a single $a$ with
+$a^{n-1} \not\equiv 1$ proves that $n$ is composite, without finding a factor.
+
+\begin{definition}\label{prime-numbers:definition-pseudoprime}
+A composite $n$ is a \emph{(Fermat) pseudoprime to the base $a$} if $\gcd(a, n) = 1$ and $a^{n-1} \equiv 1 \pmod n$. It is a \emph{Carmichael number} if it is a pseudoprime to every base $a$ coprime to
+$n$.
+\end{definition}
+
+\begin{example}\label{prime-numbers:example-341}
+$341 = 11 \cdot 31$ is a pseudoprime to the base $2$: $2^{10} = 1024 = 3 \cdot 341 + 1$, so $2^{340} = (2^{10})^{34} \equiv 1$. But $3^{340} \equiv 56 \pmod{341}$, so the base $3$ exposes it. The pseudoprimes to
+the base $a$ coprime to $n$ form a subgroup of $(\ZZ/n\ZZ)^\times$ (the kernel of $a \mapsto a^{n-1}$), so a composite $n$ that is not a Carmichael number is a pseudoprime to at most half of the bases
+in $(\ZZ/n\ZZ)^\times$ (Lagrange's theorem).
+\end{example}
+
+\begin{theorem}[Korselt's criterion]\label{prime-numbers:theorem-korselt}
+A composite number $n$ is a Carmichael number if and only if $n$ is squarefree and $p - 1$ divides $n - 1$ for every prime $p \mid n$. Every Carmichael number is odd and has at least three prime
+factors.
+\end{theorem}
+
+\begin{proof}
+\emph{If.} Let $\gcd(a, n) = 1$ and $p \mid n$. Then $a^{p-1} \equiv 1 \pmod p$, so $a^{n-1} \equiv 1 \pmod p$ since $p - 1 \mid n - 1$. As $n$ is the product of its distinct prime factors, the Chinese
+remainder theorem (Theorem~\ref{number-theory:theorem-crt}) gives $a^{n-1} \equiv 1 \pmod n$.
+\emph{Only if.} Let $n$ be a Carmichael number and $p^k \parallel n$, $k \geq 1$. For $p$ odd, $(\ZZ/p^k\ZZ)^\times$ is cyclic of order $p^{k-1}(p - 1)$
+(Theorem~\ref{number-theory:theorem-primitive-root-prime-power}); let $g$ be a generator, and by the Chinese remainder theorem choose $a \equiv g \pmod{p^k}$ and $a \equiv 1 \pmod{n/p^k}$. Then
+$\gcd(a, n) = 1$ and $a^{n-1} \equiv 1 \pmod{p^k}$, so $p^{k-1}(p - 1) \mid n - 1$. If $k \geq 2$, then $p \mid n - 1$ and $p \mid n$, which is absurd; so $k = 1$ and $p - 1 \mid n - 1$. If $p = 2$ divides
+$n$, take $a = -1$: $(-1)^{n-1} = -1 \not\equiv 1 \pmod n$ as $n - 1$ is odd and $n > 2$; so $n$ is odd. Finally, if $n = pq$ with $p < q$, then $q - 1 \mid n - 1 = p(q - 1) + (p - 1)$ forces
+$q - 1 \mid p - 1$, impossible as $0 < p - 1 < q - 1$.
+\end{proof}
+
+\begin{example}\label{prime-numbers:example-carmichael}
+$561 = 3 \cdot 11 \cdot 17$ is the smallest Carmichael number: $2$, $10$ and $16$ divide $560$. The next ones are $1105 = 5 \cdot 13 \cdot 17$ and $1729 = 7 \cdot 13 \cdot 19$. If $6k + 1$, $12k + 1$ and
+$18k + 1$ are all prime, their product is a Carmichael number (Exercise~\ref{prime-numbers:exercise-chernick}); $k = 1$ gives $1729$. There are infinitely many Carmichael numbers
+\cite{alford-granville-pomerance}, so the Fermat test alone can never be a proof of primality.
+\end{example}
+
+\subsection{The Miller--Rabin test}\label{prime-numbers:subsection-miller-rabin}
+
+The remedy is to use that in a field $x^2 = 1$ only for $x = \pm 1$. For an odd $n$, write $n - 1 = 2^st$ with $t$ odd; the sequence $a^t, a^{2t}, \ldots, a^{2^st} = a^{n-1}$ consists of successive
+squares.
+
+\begin{definition}\label{prime-numbers:definition-strong-liar}
+Let $n$ be odd, $n - 1 = 2^st$ with $t$ odd. An integer $a$ coprime to $n$ is a \emph{strong liar} for $n$ if $a^t \equiv 1 \pmod n$ or $a^{2^it} \equiv -1 \pmod n$ for some $0 \leq i < s$; otherwise
+$a$ is a \emph{witness} (to the compositeness of $n$). A composite $n$ with a strong liar $a$ is a \emph{strong pseudoprime to the base $a$}.
+\end{definition}
+
+\begin{theorem}\label{prime-numbers:theorem-miller-rabin}
+Let $n$ be odd.
+\begin{enumerate}
+\item If $n$ is prime, every $a$ coprime to $n$ is a strong liar.
+\item If $n$ is composite, the strong liars lie in a proper subgroup of $(\ZZ/n\ZZ)^\times$; so at most $\frac{n-1}{2}$ of the numbers $1 \leq a \leq n - 1$ are strong liars.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) In the field $\mathbb{F}_n$, the sequence $a^t, a^{2t}, \ldots, a^{2^st}$ ends with $1$ (Fermat). Either all its terms are $1$, or there is a last term $a^{2^it} \neq 1$ with $i < s$; its square is $1$, so it
+is $-1$, as $x^2 - 1 = (x - 1)(x + 1)$ has only the roots $\pm 1$ in a field.
+(2) \emph{Case 1: $n$ is not a Carmichael number.} Every strong liar satisfies $a^{n-1} \equiv 1$ (square the relevant term), so the strong liars lie in the kernel of $a \mapsto a^{n-1}$, a proper
+subgroup.
+\emph{Case 2: $n$ is a Carmichael number.} By Theorem~\ref{prime-numbers:theorem-korselt}, $n = n_1n_2$ with coprime $n_1, n_2 > 1$. Let $j$ be the largest index in $\{0, \ldots, s - 1\}$ such that
+some unit $b$ has $b^{2^jt} \equiv -1 \pmod n$; it exists, as $(-1)^t = -1$. Put $m = 2^jt$ and $H = \{a \in (\ZZ/n\ZZ)^\times : a^m \equiv \pm 1 \pmod n\}$, a subgroup. Every strong liar lies in $H$: if
+$a^t \equiv 1$, then $a^m \equiv 1$; if $a^{2^it} \equiv -1$ with $i < s$, then $i \leq j$ by the choice of $j$, and $a^m = (a^{2^it})^{2^{j-i}} \equiv \pm 1$. And $H$ is proper: by the Chinese remainder
+theorem take $c \equiv b \pmod{n_1}$ and $c \equiv 1 \pmod{n_2}$; then $c^m \equiv -1 \pmod{n_1}$ and $c^m \equiv 1 \pmod{n_2}$, so $c^m \not\equiv 1$ and $c^m \not\equiv -1 \pmod n$ (as $n_1$, $n_2$ are odd
+and $> 1$).
+In both cases the strong liars lie in a proper subgroup $H$, whose index is at least $2$, so $|H| \leq \varphi(n)/2 \leq (n - 1)/2$.
+\end{proof}
+
+So testing $k$ random bases, a composite number survives with probability at most $2^{-k}$; in fact at most $4^{-k}$, since for odd composite $n > 9$ at most $\varphi(n)/4$ bases are strong liars
+(the Monier--Rabin theorem, \cite{crandall-pomerance}).
+
+\begin{example}\label{prime-numbers:example-miller-rabin-561}
+For $n = 561$, $n - 1 = 2^4 \cdot 35$. Modulo $561$, $2^{35} \equiv 263$, $2^{70} \equiv 166$, $2^{140} \equiv 67$, $2^{280} \equiv 1$. No term is $-1 \equiv 560$ and the first is not $1$, so $2$ is a witness:
+$561$ is composite. The square root $67$ of $1$ other than $\pm 1$ even gives factors: $\gcd(67 - 1, 561) = 33$ and $\gcd(67 + 1, 561) = 17$.
+\end{example}
+
+\begin{counterexample}\label{prime-numbers:counterexample-strong-pseudoprime}
+Strong pseudoprimes exist: $2047 = 23 \cdot 89$ is a strong pseudoprime to the base $2$, since $2046 = 2 \cdot 1023$ and $2^{1023} = (2^{11})^{93} = 2048^{93} \equiv 1 \pmod{2047}$. A single base is
+therefore never enough for a proof. If the generalised Riemann hypothesis holds, every odd composite $n$ has a witness $a < 2\log^2n$ (Bach, see \cite{crandall-pomerance}), which would make the test deterministic.
+\end{counterexample}
+
+\subsection{Proving primality}\label{prime-numbers:subsection-proving}
+
+\begin{theorem}[Lucas]\label{prime-numbers:theorem-lucas}
+Let $n \geq 2$. If there is an integer $a$ with $a^{n-1} \equiv 1 \pmod n$ and $a^{(n-1)/q} \not\equiv 1 \pmod n$ for every prime $q \mid n - 1$, then $n$ is prime. Conversely, if $n$ is prime, every
+primitive root $a$ modulo $n$ has this property.
+\end{theorem}
+
+\begin{proof}
+The order $d$ of $a$ in $(\ZZ/n\ZZ)^\times$ divides $n - 1$; if $d < n - 1$, then $d$ divides $(n - 1)/q$ for some prime $q \mid n - 1$, contradicting $a^{(n-1)/q} \not\equiv 1$. So $d = n - 1$, the unit
+group has at least $n - 1$ elements, and every nonzero residue is a unit: $n$ is prime. The converse holds because a primitive root has order $n - 1$ (Theorem~\ref{number-theory:theorem-primitive-root-prime}).
+\end{proof}
+
+P\'epin's test is the case $n = F_k$, $a = 3$. Lucas' theorem gives a short \emph{certificate} of primality: the number $a$, the factorisation of $n - 1$, and certificates for the prime factors of
+$n - 1$, recursively. Pratt observed that such a certificate has size polynomial in $\log n$ \cite{pratt-certificates}, so that the primes belong to the complexity class NP (Chapter~\ref{computability-and-complexity}). The
+following identity is the starting point of a deterministic polynomial-time test.
+
+\begin{proposition}\label{prime-numbers:proposition-aks-identity}
+Let $n \geq 2$ and $a \in \ZZ$ with $\gcd(a, n) = 1$. Then $n$ is prime if and only if $(x + a)^n \equiv x^n + a \pmod n$ in $\ZZ[x]$, that is, all coefficients of the difference are divisible by $n$.
+\end{proposition}
+
+\begin{proof}
+The coefficient of $x^k$ in $(x + a)^n - x^n - a$ is $\binom{n}{k}a^{n-k}$ for $0 < k < n$, and $a^n - a$ for $k = 0$. If $n$ is prime, $n \mid \binom{n}{k}$ for $0 < k < n$ and $a^n \equiv a$ (Fermat).
+If $n$ is composite, let $q$ be a prime factor and $q^r \parallel n$. Then $\binom{n}{q} = \frac{n(n - 1) \cdots (n - q + 1)}{q!}$ is divisible by $q^{r-1}$ but not by $q^r$: the numerator has exactly
+the factor $q^r$ (from $n$; the other factors $n - i$, $0 < i < q$, are prime to $q$), and $q!$ has exactly one factor $q$. Since $q \nmid a$, the coefficient $\binom{n}{q}a^{n-q}$ is not divisible by
+$q^r$, hence not by $n$.
+\end{proof}
+
+\begin{theorem}[Agrawal--Kayal--Saxena]\label{prime-numbers:theorem-aks}
+There is a deterministic algorithm that decides whether $n$ is prime in a number of bit operations bounded by a polynomial in $\log n$ \cite{agrawal-kayal-saxena}.
+\end{theorem}
+
+The algorithm checks the congruence of Proposition~\ref{prime-numbers:proposition-aks-identity} modulo $x^r - 1$ for a suitable small $r$ and a few values of $a$; the proof that this suffices is
+an ingenious argument with cyclotomic polynomials over finite fields. In practice the Miller--Rabin test, followed if needed by certificates of elliptic curve type, is much faster.
+
+\subsection{Factoring}\label{prime-numbers:subsection-factoring}
+
+Factoring appears to be much harder than testing primality: no polynomial-time algorithm is known, and the security of the RSA cryptosystem (Proposition~\ref{number-theory:proposition-rsa})
+rests on this.
+
+\begin{proposition}\label{prime-numbers:proposition-factoring-methods}
+Let $n$ be odd and composite.
+\begin{enumerate}
+\item (Fermat) $n$ is a difference of two squares $x^2 - y^2$ with $x - y > 1$; if $n = ab$ with $a \leq b$ close together, the search over $x \geq \sqrt{n}$ finds $x = \frac{a + b}{2}$ quickly.
+\item (Pollard's $p - 1$ method) Let $p$ be a prime factor of $n$ such that $p - 1$ divides an integer $L$, and $a$ coprime to $n$. Then $p$ divides $\gcd(a^L - 1, n)$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) If $n = ab$ with $1 < a \leq b$, both odd, then $n = \bigl(\frac{a + b}{2}\bigr)^2 - \bigl(\frac{b - a}{2}\bigr)^2$ and $x - y = a > 1$; conversely $n = x^2 - y^2 = (x - y)(x + y)$ is a factorisation.
+(2) $a^{p-1} \equiv 1 \pmod p$, and $p - 1 \mid L$.
+\end{proof}
+
+The $p - 1$ method succeeds when some prime factor $p$ has $p - 1$ \emph{smooth} (all prime factors small), by taking $L = \operatorname{lcm}(1, \ldots, B)$; Lenstra's elliptic curve method replaces the
+group $(\ZZ/p\ZZ)^\times$ of order $p - 1$ by the group of an elliptic curve over $\mathbb{F}_p$, whose order varies with the curve (Chapter~\ref{elliptic-curves-arithmetic}). The fastest known general method,
+the number field sieve, uses arithmetic in number fields.
+
+\section{What is known and what is not}\label{prime-numbers:section-open}
+
+Many of the most famous open problems in mathematics are simple statements about primes. We list some, together with the strongest results known, which are quoted without proof.
+
+\begin{enumerate}
+\item \emph{Twin primes.} Are there infinitely many primes $p$ with $p + 2$ prime? Zhang proved that $\liminf(p_{n+1} - p_n) < 7 \cdot 10^7$ \cite{zhang-bounded-gaps}, and Maynard, with a different
+method, that $\liminf(p_{n+m} - p_n) < \infty$ for every $m$ \cite{maynard-small-gaps}.
+\item \emph{Goldbach's conjecture.} Is every even $n \geq 4$ a sum of two primes? Chen proved that every sufficiently large even number is the sum of a prime and a number with at most two prime factors
+\cite{chen-goldbach}. The ternary version, that every odd $n \geq 7$ is a sum of three primes, was proved by Vinogradov for large $n$ and completed by Helfgott \cite{helfgott-ternary}.
+\item \emph{Landau's problems.} Are there infinitely many primes of the form $n^2 + 1$? Is there always a prime between $n^2$ and $(n + 1)^2$ (Legendre's conjecture)? Both are open; Iwaniec showed that
+infinitely many $n^2 + 1$ have at most two prime factors \cite{iwaniec-almost-primes}.
+\item \emph{Progressions.} Green and Tao proved that the primes contain arithmetic progressions of every length \cite{green-tao}; for instance $5, 11, 17, 23, 29$.
+\item \emph{Mersenne and Fermat primes.} Are there infinitely many Mersenne primes? Finitely many Fermat primes? Both are open.
+\item \emph{The Riemann hypothesis} is equivalent to $|\pi(x) - \operatorname{li}(x)| \leq C\sqrt{x}\log x$ (Chapter~\ref{analytic-number-theory}).
+\end{enumerate}
+
+\section{Exercises}\label{prime-numbers:section-exercises}
+
+\begin{exercise}\label{prime-numbers:exercise-harmonic}
+Show that $H_n = 1 + \frac12 + \cdots + \frac1n$ is not an integer for $n \geq 2$.
+\end{exercise}
+
+\begin{solution}
+Let $2^k$ be the largest power of $2$ with $2^k \leq n$; then $k \geq 1$, and $2^k$ is the only $m \leq n$ with $v_2(m) = k$, since the next multiple of $2^k$ with $v_2 = k$ is $3 \cdot 2^k > n$. Let $L$ be
+the least common multiple of $1, \ldots, n$, so $v_2(L) = k$. Then $LH_n = \sum_{m \leq n}L/m$, where $L/m$ is even for $m \neq 2^k$ and odd for $m = 2^k$. So $LH_n$ is odd, while $L$ is even; if $H_n$
+were an integer, $LH_n$ would be even.
+\end{solution}
+
+\begin{exercise}\label{prime-numbers:exercise-mersenne-factors}
+Using Proposition~\ref{prime-numbers:proposition-mersenne-basic}, find a prime factor of $M_{23}$, and show that $M_{13} = 8191$ is prime.
+\end{exercise}
+
+\begin{solution}
+Prime factors of $M_{23}$ are $\equiv 1 \pmod{46}$ and $\equiv \pm 1 \pmod 8$; the first candidate is $47$, and $2^{23} \equiv 1 \pmod{47}$ because $2$ is a square modulo $47$ ($47 \equiv 7 \pmod 8$), so
+$2^{23} = 2^{(47-1)/2} \equiv 1$ by Euler's criterion. So $47 \mid M_{23}$ (indeed $M_{23} = 47 \cdot 178481$). For $M_{13}$, a prime factor $q \leq \sqrt{8191} < 91$ would be $\equiv 1 \pmod{26}$
+and $\equiv \pm 1 \pmod 8$: the numbers $\equiv 1 \pmod{26}$ below $91$ are $27, 53, 79$, and $53 \equiv 5$, $79 \equiv 7 \pmod 8$, $27$ is not prime. Finally $8191 = 79 \cdot 103 + 54$, so $79 \nmid 8191$,
+and $8191$ is prime.
+\end{solution}
+
+\begin{exercise}\label{prime-numbers:exercise-lucas-lehmer-seven}
+Run the Lucas--Lehmer test for $p = 7$.
+\end{exercise}
+
+\begin{solution}
+Modulo $127$: $s_0 = 4$, $s_1 = 14$, $s_2 = 194 \equiv 67$, $s_3 \equiv 67^2 - 2 = 4487 \equiv 42$ ($4487 = 35 \cdot 127 + 42$), $s_4 \equiv 42^2 - 2 = 1762 \equiv 111$ ($1762 = 13 \cdot 127 + 111$),
+$s_5 \equiv 111^2 - 2 = 12319 = 97 \cdot 127 + 0 \equiv 0$. So $127$ is prime.
+\end{solution}
+
+\begin{exercise}\label{prime-numbers:exercise-pepin}
+Verify P\'epin's test for $F_2 = 17$ and $F_3 = 257$.
+\end{exercise}
+
+\begin{solution}
+$3^8 = 6561 = 385 \cdot 17 + 16 \equiv -1 \pmod{17}$. Modulo $257$: $3^2 = 9$, $3^4 = 81$, $3^8 = 6561 \equiv 6561 - 25 \cdot 257 = 136$, $3^{16} \equiv 136^2 = 18496 \equiv 18496 - 71 \cdot 257 = 249 \equiv -8$,
+$3^{32} \equiv 64$, $3^{64} \equiv 4096 \equiv 4096 - 15 \cdot 257 = 241 \equiv -16$, $3^{128} \equiv 256 \equiv -1$. Both are prime.
+\end{solution}
+
+\begin{exercise}\label{prime-numbers:exercise-chernick}
+Show that if $6k + 1$, $12k + 1$ and $18k + 1$ are all prime, then $n = (6k + 1)(12k + 1)(18k + 1)$ is a Carmichael number. Find the case $k = 1$, and check that $k = 6$ gives a Carmichael number.
+\end{exercise}
+
+\begin{solution}
+$n - 1 = 1296k^3 + 396k^2 + 36k = 36k(36k^2 + 11k + 1)$, which is divisible by $6k$, $12k$ and $18k$. By Korselt's criterion (Theorem~\ref{prime-numbers:theorem-korselt}) $n$ is a Carmichael number.
+$k = 1$: $7 \cdot 13 \cdot 19 = 1729$. $k = 6$: $37$, $73$, $109$ are prime, and $37 \cdot 73 \cdot 109 = 294409$ is a Carmichael number.
+\end{solution}
+
+\begin{exercise}\label{prime-numbers:exercise-pseudoprime-mersenne}
+Show that if $n$ is a pseudoprime to the base $2$, then so is $M_n = 2^n - 1$; deduce that there are infinitely many pseudoprimes to the base $2$.
+\end{exercise}
+
+\begin{solution}
+$M_n$ is composite, as $n$ is (Proposition~\ref{prime-numbers:proposition-mersenne-basic}(1)), and $M_n > n$. From $2^{n-1} \equiv 1 \pmod n$ and $n$ odd (a pseudoprime to the base $2$ is
+odd), $n \mid 2^{n-1} - 1$, so $n \mid 2^n - 2 = M_n - 1$, say $M_n - 1 = nk$. Then $2^{M_n - 1} = (2^n)^k \equiv 1 \pmod{M_n}$, since $2^n \equiv 1 \pmod{M_n}$. Starting from $341$ this gives an
+infinite increasing sequence.
+\end{solution}
+
+\begin{exercise}\label{prime-numbers:exercise-strong-pseudoprime}
+Show that $2047$ is a strong pseudoprime to the base $2$ but that $3$ is a witness for it.
+\end{exercise}
+
+\begin{solution}
+$2046 = 2 \cdot 1023$, and $2^{1023} = (2^{11})^{93} \equiv 1 \pmod{2047}$ since $2^{11} = 2048$; so $2$ is a strong liar. For $3$: here $s = 1$, so $3$ is a strong liar only if $3^{1023} \equiv \pm 1 \pmod{2047}$. Then
+$3^{1023} \equiv \pm 1 \pmod{89}$, so $3^{2046} \equiv 1 \pmod{89}$, and the order of $3$ modulo $89$ would divide $\gcd(2046, 88) = 22$. But modulo $89$: $3^4 = 81 \equiv -8$, $3^8 \equiv 64 \equiv -25$, $3^{11} \equiv -25 \cdot 27 = -675 \equiv -675 + 8 \cdot 89 = 37$, and $3^{22} \equiv 37^2 = 1369 \equiv
+1369 - 15 \cdot 89 = 34 \neq 1$. So $3$ is a witness.
+\end{solution}
+
+\begin{exercise}\label{prime-numbers:exercise-pollard}
+Factor $299$ with Pollard's $p - 1$ method and $L = 12$, $a = 2$.
+\end{exercise}
+
+\begin{solution}
+$2^{12} - 1 = 4095 = 3^2 \cdot 5 \cdot 7 \cdot 13$, and $\gcd(4095, 299) = 13$ since $299 = 13 \cdot 23$. It works because $13 - 1 = 12$ divides $L$, while $23 - 1 = 22$ does not, so the gcd is not $299$.
+\end{solution}
+
+\begin{exercise}\label{prime-numbers:exercise-one-mod-four-direct}
+Prove directly, with the polynomial $x^2 + 1$, that there are infinitely many primes $\equiv 1 \pmod 4$.
+\end{exercise}
+
+\begin{solution}
+If $p_1, \ldots, p_r$ are primes $\equiv 1 \pmod 4$, let $N = (2p_1 \cdots p_r)^2 + 1$. It is odd, and any prime $q \mid N$ has $-1$ a square modulo $q$, so $q \equiv 1 \pmod 4$
+(Corollary~\ref{number-theory:corollary-minus-one}); and $q \neq p_i$ since $N \equiv 1 \pmod{p_i}$.
+\end{solution}
+
+\begin{exercise}\label{prime-numbers:exercise-middle-primes}
+Show that the product of the primes $p$ with $n < p \leq 2n$ divides $\binom{2n}{n}$ and is at most $4^n$, and deduce that $\pi(2n) - \pi(n) \leq \frac{n\log 4}{\log n}$ for $n \geq 2$.
+\end{exercise}
+
+\begin{solution}
+Each such $p$ divides $(2n)!$ and not $(n!)^2$, so the product of these distinct primes divides $\binom{2n}{n} \leq 4^n$ (Lemma~\ref{prime-numbers:lemma-central-binomial-primes}). Each factor exceeds $n$,
+so $n^{\pi(2n) - \pi(n)} < 4^n$, and taking logarithms gives the bound.
+\end{solution}
+
+\begin{exercise}\label{prime-numbers:exercise-lcm}
+Show that $\operatorname{lcm}(1, 2, \ldots, n) = e^{\psi(n)}$, and deduce from Theorem~\ref{prime-numbers:theorem-chebyshev} that $\operatorname{lcm}(1, \ldots, n) \geq 2^{n/4}$ for $n \geq 2$ and
+$\operatorname{lcm}(1, \ldots, n) \leq 4^n \cdot n^{2\sqrt{n}}$.
+\end{exercise}
+
+\begin{solution}
+The exponent of $p$ in the lcm is the largest $k$ with $p^k \leq n$, which is the number of prime powers $p^j \leq n$, $j \geq 1$, each contributing $\log p$ to $\psi(n)$. Then
+$\psi(n) \geq \frac{\log 2}{4}n$ gives the lower bound, and $\psi(n) \leq \theta(n) + 2\sqrt{n}\log n < n\log 4 + 2\sqrt{n}\log n$ the upper.
+\end{solution}
+
+\begin{exercise}\label{prime-numbers:exercise-factorial-power}
+Show that $\binom{2k}{k}$ is not a perfect power (a $j$-th power with $j \geq 2$) for any $k \geq 1$.
+\end{exercise}
+
+\begin{solution}
+By Bertrand's postulate there is a prime $p$ with $k < p \leq 2k$, and it divides $\binom{2k}{k}$ exactly once (Lemma~\ref{prime-numbers:lemma-central-binomial-primes}(2)), so $\binom{2k}{k}$ is not a square
+(nor any perfect power).
+\end{solution}
+
+\begin{exercise}\label{prime-numbers:exercise-mertens-average}
+Use Theorem~\ref{prime-numbers:theorem-mertens-second} to show that the average number of distinct prime factors of the integers $n \leq x$, $\frac{1}{x}\sum_{n \leq x}\omega(n)$, is $\log\log x + O(1)$, where $\omega(n)$ is the number of distinct primes dividing $n$.
+\end{exercise}
+
+\begin{solution}
+Counting pairs $(p, n)$ with $p \mid n$, $\sum_{n \leq x}\omega(n) = \sum_{p \leq x}\#\{n \leq x : p \mid n\} = \sum_{p \leq x}\lfloor x/p\rfloor$, which lies between
+$x\sum_{p \leq x}\frac1p - \pi(x)$ and $x\sum_{p \leq x}\frac1p$. Dividing by $x$, and using $\pi(x) \leq x$ and Theorem~\ref{prime-numbers:theorem-mertens-second}, the average is
+$\log\log x + O(1)$. (Hardy and Ramanujan showed more: almost all $n$ have about $\log\log n$ prime factors.)
+\end{solution}

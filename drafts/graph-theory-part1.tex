@@ -1,0 +1,328 @@
+\chapter{Graph Theory}\label{graph-theory}
+\chapterstatus{complete}
+
+\section{Introduction}\label{graph-theory:section-introduction}
+
+A graph is the simplest mathematical model of a relation between objects: a set of \emph{vertices} and a set of \emph{edges}, each edge joining two vertices. Road and railway networks,
+molecules, social networks, the moves of a game, the dependencies between the results of this book (which the website draws as a graph) are all graphs, and many questions about them,
+whether one can get from anywhere to anywhere, how robustly, whether a tour visiting every place once exists, how to pair up objects, how many resources are needed to avoid conflicts,
+have a precise graph-theoretic formulation. Graph theory began with Euler's solution of the problem of the bridges of K\"onigsberg in 1736 (Section~\ref{graph-theory:section-euler-hamilton}).
+
+This chapter develops the structural theory of finite graphs:
+\begin{enumerate}
+\item the basic notions (subgraphs, degrees, isomorphism) and the handshake lemma, with the characterisation of degree sequences (Section~\ref{graph-theory:section-graphs});
+\item walks, paths, cycles, connectedness, distance and bipartite graphs (Section~\ref{graph-theory:section-paths});
+\item trees: their many equivalent definitions, spanning trees, Pr\"ufer's proof of Cayley's formula and minimum spanning trees (Section~\ref{graph-theory:section-trees});
+\item Euler tours and Hamilton cycles: Euler's theorem, de Bruijn sequences, the theorems of Dirac, Ore and Bondy--Chv\'atal (Section~\ref{graph-theory:section-euler-hamilton});
+\item matchings: Berge's augmenting paths, the theorems of Hall, K\"onig, Tutte and Petersen, and stable matchings (Section~\ref{graph-theory:section-matchings});
+\item connectivity: blocks, ear decompositions, Menger's theorem and the max-flow min-cut theorem (Section~\ref{graph-theory:section-connectivity});
+\item colourings: greedy colouring and degeneracy, Brooks' theorem, graphs of large chromatic number without triangles, the chromatic polynomial, edge colourings (K\"onig and Vizing),
+and an overview of perfect graphs (Section~\ref{graph-theory:section-colourings}).
+\end{enumerate}
+Planar graphs, extremal and Ramsey theory and spectral graph theory have chapters of their own (Chapters~\ref{planar-graphs}, \ref{extremal-graph-theory}
+and~\ref{spectral-graph-theory}); random graphs appear in Chapter~\ref{probabilistic-method}. We follow mostly \cite{diestel-graph-theory}, and also \cite{bondy-murty} and \cite{west-graph-theory};
+\cite{lovasz-plummer} is the reference for matchings.
+
+\noindent\textbf{Prerequisites.} Chapter~\ref{sets} (Sets) and Chapter~\ref{combinatorics} (Combinatorics); Section~\ref{graph-theory:section-trees} compares with
+Chapter~\ref{generating-functions} (Generating Functions).
+
+\begin{notation}\label{graph-theory:notation-basic}
+As in Chapter~\ref{combinatorics}, $[n] = \{1, \ldots, n\}$, $|A|$ is the number of elements of a finite set $A$, and $\binom{A}{2}$ is the set of $2$-element subsets of $A$. A partition of a
+set into two pieces is written $A \sqcup B$. Graphs are finite unless said otherwise; the conventions for writing edges, degrees and subgraphs are fixed in
+Notation~\ref{graph-theory:notation-graphs}.
+\end{notation}
+
+\section{Graphs}\label{graph-theory:section-graphs}
+
+\subsection{Definitions and first examples}\label{graph-theory:subsection-definitions}
+
+\begin{definition}\label{graph-theory:definition-graph}
+A \emph{graph} is a pair $G = (V, E)$ of a finite set $V$, the set of \emph{vertices}, and a set $E \subseteq \binom{V}{2}$ of $2$-element subsets of $V$, the \emph{edges}. We write $V(G) = V$ and
+$E(G) = E$. Two vertices $u, v$ are \emph{adjacent}, or \emph{neighbours}, if $\{u, v\} \in E$; the edge $\{u, v\}$ \emph{joins} $u$ and $v$, which are its \emph{ends}, and is \emph{incident}
+with them. The \emph{order} of $G$ is $|V|$, and its \emph{size} is $|E|$.
+\end{definition}
+
+\begin{notation}\label{graph-theory:notation-graphs}
+We write the edge $\{u, v\}$ as $uv$ (so $uv = vu$), and $u \sim v$ when $uv \in E$. For a vertex $v$:
+\begin{enumerate}
+\item $N(v) = N_G(v) = \{u \in V : uv \in E\}$ is its \emph{neighbourhood}, and $d(v) = d_G(v) = |N(v)|$ is its \emph{degree};
+\item $\delta(G) = \min_vd(v)$ and $\Delta(G) = \max_vd(v)$ are the \emph{minimum} and \emph{maximum degree} (for $V \neq \emptyset$), and $\bar{d}(G) = \frac{1}{|V|}\sum_vd(v)$ is the
+\emph{average degree};
+\item a vertex of degree $0$ is \emph{isolated}, and a vertex of degree $1$ is a \emph{leaf}; $G$ is \emph{$k$-regular} if $d(v) = k$ for every $v$, and \emph{cubic} if it is $3$-regular.
+\end{enumerate}
+For a set $S \subseteq V$, $N(S) = \bigcup_{v \in S}N(v)$. When several graphs are around we write $N_G$, $d_G$, and we always write $n = |V|$ and $m = |E|$ when one graph is fixed.
+\end{notation}
+
+The definition excludes \emph{loops} (an edge from a vertex to itself) and \emph{multiple edges} (several edges with the same ends): these are the \emph{simple graphs}, and they are what
+``graph'' means in this chapter. The excluded objects are useful too (Definition~\ref{graph-theory:definition-multigraph}). A graph is usually drawn with points for the vertices and curves
+for the edges; the drawing is not part of the graph, and the same graph has many drawings (Example~\ref{graph-theory:example-petersen}).
+
+\begin{example}[Standard graphs]\label{graph-theory:example-standard}
+\begin{enumerate}
+\item The \emph{complete graph} $K_n$ has vertex set $[n]$ and all $\binom{n}{2}$ edges; it is $(n - 1)$-regular. The \emph{empty graph} $\overline{K_n}$ on $[n]$ has no edges.
+\item The \emph{path} $P_n$ ($n \geq 1$) has vertices $1, \ldots, n$ and edges $\{i, i + 1\}$, $1 \leq i < n$; it has $n - 1$ edges, two leaves when $n \geq 2$, and \emph{length} $n - 1$.
+\item The \emph{cycle} $C_n$ ($n \geq 3$) has vertices $1, \ldots, n$ and the edges of $P_n$ together with $\{n, 1\}$; it is $2$-regular with $n$ edges. $C_3 = K_3$ is the \emph{triangle}.
+\item The \emph{complete bipartite graph} $K_{r,s}$ has vertex set $A \sqcup B$ with $|A| = r$, $|B| = s$, and the $rs$ edges $ab$, $a \in A$, $b \in B$. The \emph{star} $K_{1,s}$ has a
+\emph{centre} joined to $s$ leaves.
+\item The \emph{$d$-dimensional cube} $Q_d$ has vertex set $\{0, 1\}^d$, two words being adjacent if they differ in exactly one coordinate; it is $d$-regular with $2^d$ vertices and
+$d2^{d-1}$ edges.
+\item For a group $\Gamma$ and a subset $S \subseteq \Gamma$ with $1 \notin S$ and $S = S^{-1}$, the \emph{Cayley graph} has vertex set $\Gamma$ (assumed finite) and the edges $\{g, gs\}$,
+$s \in S$; it is $|S|$-regular. The cycle $C_n$ is the Cayley graph of $\ZZ/n\ZZ$ with $S = \{\pm 1\}$, and $Q_d$ that of $(\ZZ/2\ZZ)^d$ with $S$ the standard basis.
+\end{enumerate}
+\end{example}
+
+\begin{example}[The Petersen graph]\label{graph-theory:example-petersen}
+The \emph{Petersen graph} $P$ has as vertices the $10$ two-element subsets of $[5]$, two being adjacent when they are disjoint. Each $2$-subset is disjoint from $\binom{3}{2} = 3$ others, so
+$P$ is cubic with $15$ edges. It is usually drawn as a pentagon $\{1,2\}, \{3,4\}, \{5,1\}, \{2,3\}, \{4,5\}$ (consecutive ones disjoint), a pentagram inside it, and five spokes joining
+each outer vertex $\{a, b\}$ to the inner vertex $\{c, d\}$ disjoint from it. The Petersen graph is the source of many counterexamples in graph theory: it is cubic, has no cycle of length
+$3$ or $4$ (two disjoint $2$-subsets of $[5]$ have exactly one common neighbour... in fact none, see Exercise~\ref{graph-theory:exercise-petersen}), and is not Hamiltonian
+(Example~\ref{graph-theory:example-petersen-not-hamiltonian}).
+\end{example}
+
+\begin{definition}\label{graph-theory:definition-isomorphism}
+An \emph{isomorphism} $G \to H$ of graphs is a bijection $\phi \colon V(G) \to V(H)$ with $uv \in E(G) \iff \phi(u)\phi(v) \in E(H)$ for all $u, v$. Graphs are \emph{isomorphic},
+$G \cong H$, if there is an isomorphism between them. An isomorphism $G \to G$ is an \emph{automorphism}; the automorphisms form a group $\operatorname{Aut}(G)$ under composition, a subgroup of the
+symmetric group of $V(G)$. A \emph{graph property} is a property of graphs that is invariant under isomorphism.
+\end{definition}
+
+Isomorphic graphs differ only in the names of their vertices; in pictures, one usually draws an \emph{unlabelled} graph, that is, an isomorphism class. The number of vertices, the number of
+edges, the multiset of degrees, connectedness and the number of triangles are graph properties; the statement ``vertex $1$ is a leaf'' is not. The number of graphs on the vertex set $[n]$ is
+$2^{\binom{n}{2}}$, while the number of isomorphism classes was computed for $n = 4$ in Example~\ref{combinatorics:example-graphs-four-vertices}: there are $11$.
+
+\begin{example}\label{graph-theory:example-automorphisms}
+$\operatorname{Aut}(K_n) = \operatorname{Aut}(\overline{K_n}) = S_n$; $\operatorname{Aut}(C_n)$ is the dihedral group of order $2n$ (the rotations and reflections of a regular $n$-gon),
+since an automorphism of $C_n$ is determined by the image of the vertex $1$ and of its neighbour $2$, which must be a neighbour of the image of $1$; and $\operatorname{Aut}(P)$, for the Petersen
+graph, contains $S_5$, acting on $2$-subsets of $[5]$ (it is in fact equal to $S_5$, Exercise~\ref{graph-theory:exercise-petersen}).
+\end{example}
+
+\begin{counterexample}\label{graph-theory:counterexample-same-degrees}
+Graphs with the same degree multiset need not be isomorphic. The disjoint union of two triangles and the cycle $C_6$ are both $2$-regular on $6$ vertices with $6$ edges, but the
+second is connected and the first is not. Similarly, $K_{3,3}$ and the \emph{triangular prism} (two triangles $abc$ and $a^{\prime}b^{\prime}c^{\prime}$ joined by $aa^{\prime}$, $bb^{\prime}$, $cc^{\prime}$)
+are connected cubic graphs on $6$ vertices, but the prism contains triangles and $K_{3,3}$ does not (Proposition~\ref{graph-theory:proposition-bipartite}). No simple list of numerical
+invariants is known that decides isomorphism.
+\end{counterexample}
+
+\subsection{Subgraphs and operations}\label{graph-theory:subsection-subgraphs}
+
+\begin{definition}\label{graph-theory:definition-subgraph}
+A graph $H$ is a \emph{subgraph} of $G$, written $H \subseteq G$, if $V(H) \subseteq V(G)$ and $E(H) \subseteq E(G)$. It is a \emph{spanning} subgraph if $V(H) = V(G)$, and an
+\emph{induced} subgraph if $E(H) = E(G) \cap \binom{V(H)}{2}$; the induced subgraph on $U \subseteq V(G)$ is written $G[U]$. We write:
+\begin{enumerate}
+\item $G - U = G[V \setminus U]$ for $U \subseteq V$, and $G - v = G - \{v\}$;
+\item $G - F = (V, E \setminus F)$ for $F \subseteq E$, $G - e = G - \{e\}$, and $G + e = (V, E \cup \{e\})$ for $e \in \binom{V}{2}$;
+\item $\overline{G} = (V, \binom{V}{2} \setminus E)$ for the \emph{complement} of $G$;
+\item $G \cup H = (V(G) \cup V(H), E(G) \cup E(H))$, and $G \sqcup H$ when $V(G) \cap V(H) = \emptyset$ (the \emph{disjoint union}).
+\end{enumerate}
+A set of pairwise adjacent vertices is a \emph{clique}, and a set of pairwise non-adjacent vertices is an \emph{independent} (or \emph{stable}) set; $\omega(G)$ and $\alpha(G)$ are the
+largest sizes of a clique and of an independent set. Cliques of $G$ are independent sets of $\overline{G}$, so $\omega(G) = \alpha(\overline{G})$.
+\end{definition}
+
+\begin{example}\label{graph-theory:example-subgraphs}
+In $C_5$ the path $P_5$ obtained by deleting one edge is a spanning subgraph that is not induced; deleting a vertex gives the induced subgraph $P_4$. The complement of $C_5$ is again a
+$5$-cycle (join each vertex to the two vertices at distance $2$), so $C_5$ is \emph{self-complementary}; so is $P_4$. Since $\binom{n}{2}$ must be even for a self-complementary graph on
+$n$ vertices (the graph and its complement have the same number of edges), $n \equiv 0$ or $1 \pmod 4$.
+\end{example}
+
+\begin{definition}\label{graph-theory:definition-multigraph}
+A \emph{multigraph} is a triple $(V, E, \iota)$ of finite sets $V$, $E$ and a map $\iota$ assigning to each $e \in E$ a set $\iota(e) \subseteq V$ with one or two elements, its ends; edges with one
+end are \emph{loops}. The degree of $v$ counts the edges at $v$, each loop twice. A \emph{directed graph} (or \emph{digraph}) is a pair $(V, A)$ with $A \subseteq V \times V$ minus the diagonal;
+$(u, v) \in A$ is an \emph{arc} from its \emph{tail} $u$ to its \emph{head} $v$, and $d^+(v)$, $d^-(v)$ are the numbers of arcs with tail, resp.\ head, $v$ (\emph{out-} and \emph{in-degree}).
+\end{definition}
+
+Most statements of this chapter are about graphs; when multigraphs or digraphs are needed (Euler tours, flows, edge colourings), the text says so.
+
+\subsection{Degrees and the handshake lemma}\label{graph-theory:subsection-degrees}
+
+\begin{proposition}[Handshake lemma]\label{graph-theory:proposition-handshake}
+For every graph, $\sum_{v \in V}d(v) = 2|E|$. Consequently the number of vertices of odd degree is even, and $\delta(G) \leq \bar{d}(G) = \frac{2|E|}{|V|} \leq \Delta(G)$. The same formula holds for
+multigraphs (loops counted twice), and for digraphs $\sum_vd^+(v) = \sum_vd^-(v) = |A|$.
+\end{proposition}
+
+\begin{proof}
+Count the pairs $(v, e)$ with $v \in V$, $e \in E$ and $v \in e$ in two ways (double counting, Section~\ref{combinatorics:section-double-counting}): for each $v$ there are $d(v)$ of them, and
+for each edge there are $2$. Then $\sum_vd(v)$ is even, and the sum of the even degrees is even, so the sum of the odd degrees is even, which forces an even number of odd terms. The inequality
+is that between a minimum, a mean and a maximum. For multigraphs, a loop contributes $2$ to the degree of its end, and for digraphs each arc has one tail and one head.
+\end{proof}
+
+The name comes from the reading: at a party, the total number of hands shaken is even. The lemma is used constantly; for instance, a cubic graph has an even number of vertices, and
+there is no graph with degrees $3, 3, 3, 1$ (Example~\ref{graph-theory:example-havel-hakimi}).
+
+\begin{definition}\label{graph-theory:definition-degree-sequence}
+The \emph{degree sequence} of a graph with vertices $v_1, \ldots, v_n$ is the sequence $d(v_1) \geq d(v_2) \geq \cdots \geq d(v_n)$, for an ordering of the vertices by decreasing
+degree. A sequence $d_1 \geq \cdots \geq d_n$ of nonnegative integers is \emph{graphic} if it is the degree sequence of some graph.
+\end{definition}
+
+\begin{theorem}[Havel--Hakimi]\label{graph-theory:theorem-havel-hakimi}
+Let $n \geq 2$ and $d_1 \geq d_2 \geq \cdots \geq d_n \geq 0$ be integers with $d_1 \leq n - 1$. The sequence $(d_1, \ldots, d_n)$ is graphic if and only if the sequence
+\[
+(d_2 - 1, d_3 - 1, \ldots, d_{d_1+1} - 1, d_{d_1+2}, \ldots, d_n),
+\]
+obtained by deleting $d_1$ and subtracting $1$ from the $d_1$ next largest terms, is graphic (after reordering).
+\end{theorem}
+
+\begin{proof}
+\emph{If.} Given a graph on $v_2, \ldots, v_n$ with $d(v_i) = d_i - 1$ for $2 \leq i \leq d_1 + 1$ and $d(v_i) = d_i$ for $i > d_1 + 1$, add a vertex $v_1$ joined to $v_2, \ldots, v_{d_1+1}$.
+\emph{Only if.} Among all graphs on $v_1, \ldots, v_n$ with $d(v_i) = d_i$, choose one in which the number $t$ of neighbours of $v_1$ among $S = \{v_2, \ldots, v_{d_1+1}\}$ is as large as
+possible. We show that $t = d_1$, that is $N(v_1) = S$; then deleting $v_1$ gives a graph realising the second sequence. Suppose $t < d_1$. Then there are $v_i \in S$ with $v_1v_i \notin E$
+and $v_j \notin S$, $j \geq 2$, with $v_1v_j \in E$. Since $i < j$, $d_i \geq d_j$; but $v_j$ has the neighbour $v_1$ which $v_i$ lacks, so $v_i$ has a neighbour $w \neq v_1$ that is not a
+neighbour of $v_j$ (otherwise $N(v_i) \subseteq N(v_j) \setminus \{v_1\}$ and $d_i < d_j$). Replace the edges $v_1v_j$ and $v_iw$ by $v_1v_i$ and $v_jw$ (a \emph{$2$-switch}): the degrees are
+unchanged, the new edges were not present ($v_1v_i \notin E$, $v_jw \notin E$), and $v_1$ has gained the neighbour $v_i \in S$ and lost $v_j \notin S$, so $t$ increases, a contradiction.
+\end{proof}
+
+\begin{example}\label{graph-theory:example-havel-hakimi}
+Is $(4, 4, 3, 3, 2, 2)$ graphic? Apply the theorem repeatedly: $(4, 4, 3, 3, 2, 2) \to (3, 2, 2, 1, 2) = (3, 2, 2, 2, 1) \to (1, 1, 1, 1) \to (0, 1, 1) = (1, 1, 0) \to (0, 0)$, and
+$(0, 0)$ is realised by two isolated vertices; reversing the steps builds a graph. On the other hand $(3, 3, 3, 1) \to (2, 2, 0) \to (1, -1)$ fails, so $(3, 3, 3, 1)$ is not graphic, although its
+sum is even: the parity condition of the handshake lemma is necessary but not sufficient.
+\end{example}
+
+The proof gives more: any two graphs with the same degree sequence on the same vertex set are connected by a sequence of $2$-switches (Exercise~\ref{graph-theory:exercise-two-switches}).
+A closed criterion is the theorem of Erd\H{o}s and Gallai: $d_1 \geq \cdots \geq d_n$ with even sum is graphic if and only if $\sum_{i=1}^{k}d_i \leq k(k - 1) + \sum_{i=k+1}^{n}\min(d_i, k)$ for
+all $k$ (necessity is Exercise~\ref{graph-theory:exercise-erdos-gallai}; for sufficiency see \cite[Section~3.1]{west-graph-theory}).
+
+\section{Walks, paths and cycles}\label{graph-theory:section-paths}
+
+\subsection{Walks and connectedness}\label{graph-theory:subsection-walks}
+
+\begin{definition}\label{graph-theory:definition-walk}
+A \emph{walk} of length $k \geq 0$ in $G$ is a sequence $W = (v_0, v_1, \ldots, v_k)$ of vertices with $v_{i-1}v_i \in E$ for $1 \leq i \leq k$; it goes \emph{from} $v_0$ \emph{to} $v_k$ (a
+\emph{$v_0$--$v_k$ walk}) and is \emph{closed} if $v_0 = v_k$. It is a \emph{trail} if its $k$ edges $v_{i-1}v_i$ are distinct, and a \emph{path} if its $k + 1$ vertices are distinct. A \emph{cycle}
+of length $k \geq 3$ is a closed walk $(v_0, \ldots, v_k = v_0)$ whose vertices $v_0, \ldots, v_{k-1}$ are distinct. We identify a path or a cycle with the subgraph it traverses (isomorphic to
+$P_{k+1}$, resp.\ $C_k$), and say that $G$ \emph{contains} a path or cycle of length $k$ if it has such a subgraph.
+\end{definition}
+
+\begin{lemma}\label{graph-theory:lemma-walk-path}
+Every $u$--$v$ walk contains a $u$--$v$ path: there is a $u$--$v$ path whose vertices and edges are among those of the walk. Every closed walk of odd length contains a cycle of odd length.
+\end{lemma}
+
+\begin{proof}
+Induction on the length $k$ of the walk $(v_0, \ldots, v_k)$. If its vertices are distinct, it is a path. Otherwise $v_i = v_j$ for some $i < j$, and $(v_0, \ldots, v_i, v_{j+1}, \ldots, v_k)$ is a
+shorter $u$--$v$ walk with vertices and edges among the old ones. For the second claim, let $W$ be a closed walk of odd length $k$, minimal among the closed odd walks with edges in $W$. If
+$v_i = v_j$ for some $0 \leq i < j < k$, then $W$ splits into the two closed walks $(v_i, \ldots, v_j)$ and $(v_j, \ldots, v_k = v_0, \ldots, v_i)$ of lengths $j - i$ and $k - (j - i)$, one of
+which is odd and shorter. So $v_0, \ldots, v_{k-1}$ are distinct, and as $k$ is odd and a closed walk of length $1$ is impossible (no loops), $k \geq 3$: $W$ is an odd cycle.
+\end{proof}
+
+\begin{counterexample}\label{graph-theory:counterexample-even-walk}
+The second statement fails for even lengths: the closed walk $(u, v, u)$ of length $2$ contains no cycle at all, and in a tree (Section~\ref{graph-theory:section-trees}) there are closed walks of
+every even length and no cycles.
+\end{counterexample}
+
+\begin{definition}\label{graph-theory:definition-connected}
+A graph is \emph{connected} if it is nonempty and any two vertices are joined by a path. The relation ``$u$ and $v$ are joined by a walk'' is an equivalence relation on $V$ (reflexive by walks of
+length $0$, symmetric by reversing, transitive by concatenating); its classes are the vertex sets of the \emph{components} of $G$, the induced subgraphs on the classes. We write $c(G)$ for the
+number of components.
+\end{definition}
+
+By Lemma~\ref{graph-theory:lemma-walk-path} it makes no difference whether walks or paths are used. The components of $G$ are exactly its maximal connected subgraphs, and $G$ is the disjoint
+union of its components: an edge $uv$ joins two vertices of the same class.
+
+\begin{proposition}\label{graph-theory:proposition-connected-edges}
+\begin{enumerate}
+\item $G$ is connected if and only if for every partition $V = A \sqcup B$ into nonempty sets there is an edge with one end in $A$ and one in $B$.
+\item Deleting an edge $e$ increases the number of components by at most $1$: $c(G) \leq c(G - e) \leq c(G) + 1$. Consequently a graph with $n$ vertices and $m$ edges has at least $n - m$
+components, and a connected graph on $n$ vertices has at least $n - 1$ edges.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) If $G$ is connected and $a \in A$, $b \in B$, a path from $a$ to $b$ has a first vertex in $B$, and the edge entering it crosses. Conversely, if $G$ is not connected, take $A$ a component and $B$
+its complement: no edge crosses.
+(2) The components of $G - e$, $e = uv$, other than those of $u$ and $v$ are components of $G$; the component of $G$ containing $e$ is the union of the components of $u$ and $v$ in $G - e$, since
+every vertex of it is joined to $u$ by a path in $G$, which uses $e$ at most once. Starting from $\overline{K_n}$ ($n$ components) and adding the $m$ edges one at a time, the number of components
+drops by at most $1$ each time.
+\end{proof}
+
+\begin{definition}\label{graph-theory:definition-bridge}
+An edge $e$ is a \emph{bridge} if $c(G - e) > c(G)$, and a vertex $v$ is a \emph{cut vertex} if $c(G - v) > c(G)$.
+\end{definition}
+
+\begin{proposition}\label{graph-theory:proposition-bridge}
+An edge is a bridge if and only if it lies on no cycle.
+\end{proposition}
+
+\begin{proof}
+Let $e = uv$. If $e$ lies on a cycle, the rest of the cycle is a $u$--$v$ path in $G - e$, and any walk in $G$ using $e$ can be rerouted along it, so $c(G - e) = c(G)$. Conversely, if $e$ is not a
+bridge then $u$ and $v$ are in the same component of $G - e$ (by the proof of Proposition~\ref{graph-theory:proposition-connected-edges}(2)), and a $u$--$v$ path in $G - e$ together with $e$
+is a cycle through $e$ (the path has length at least $2$, since its only possible edge of length $1$ would be $e$).
+\end{proof}
+
+\subsection{Distance, diameter and girth}\label{graph-theory:subsection-distance}
+
+\begin{definition}\label{graph-theory:definition-distance}
+The \emph{distance} $d_G(u, v)$ is the length of a shortest $u$--$v$ path, or $\infty$ if there is none. The \emph{eccentricity} of $v$ is $\max_ud(u, v)$, the \emph{diameter}
+$\operatorname{diam}(G)$ is the largest eccentricity and the \emph{radius} $\operatorname{rad}(G)$ the smallest. The \emph{girth} $g(G)$ is the length of a shortest cycle ($\infty$ if $G$ has
+no cycle), and the \emph{circumference} is the length of a longest cycle.
+\end{definition}
+
+On a connected graph, $d_G$ is a metric on $V$ with integer values: $d(u, v) = 0$ only for $u = v$, it is symmetric, and the triangle inequality holds by concatenating paths
+(Lemma~\ref{graph-theory:lemma-walk-path}). Also $\operatorname{rad}(G) \leq \operatorname{diam}(G) \leq 2\operatorname{rad}(G)$, the second by the triangle inequality through a vertex of
+minimal eccentricity.
+
+\begin{proposition}\label{graph-theory:proposition-bfs}
+Let $G$ be connected and $r \in V$. Let $L_i = \{v : d(r, v) = i\}$ (the \emph{levels}, computed by breadth-first search). Every edge joins two vertices of the same level or of consecutive
+levels, and every $v \in L_i$, $i \geq 1$, has a neighbour in $L_{i-1}$.
+\end{proposition}
+
+\begin{proof}
+If $uv \in E$, then $|d(r, u) - d(r, v)| \leq 1$ by the triangle inequality. If $d(r, v) = i \geq 1$, the vertex before $v$ on a shortest $r$--$v$ path has distance $i - 1$ from $r$, since a shorter
+path to it would give a shorter path to $v$.
+\end{proof}
+
+\begin{proposition}\label{graph-theory:proposition-min-degree}
+Let $G$ be a graph with $\delta(G) = \delta \geq 2$. Then $G$ contains a path of length $\delta$ and a cycle of length at least $\delta + 1$. If moreover $G$ has girth $g$, then, with
+$r = \lfloor(g - 1)/2\rfloor$,
+\[
+|V| \geq 1 + \delta\sum_{i=0}^{r-1}(\delta - 1)^i \qquad \text{(the Moore bound)}.
+\]
+\end{proposition}
+
+\begin{proof}
+\emph{Paths and cycles.} Let $P = (v_0, \ldots, v_k)$ be a longest path. All neighbours of $v_k$ lie on $P$, since otherwise $P$ could be extended. So $k \geq d(v_k) \geq \delta$. If $v_i$ is the
+neighbour of $v_k$ with smallest index, then $i \leq k - \delta$, and $(v_i, \ldots, v_k, v_i)$ is a cycle of length $k - i + 1 \geq \delta + 1$.
+\emph{Moore bound.} Fix a vertex $r_0$ and let $L_i$ be the levels from $r_0$. For $i < r$, each vertex $v \in L_i$ ($i \geq 1$) has exactly one neighbour in $L_{i-1}$ and none in $L_i$:
+otherwise two shortest paths from $r_0$, or a shortest path and an edge inside a level, would close a cycle of length at most $2i + 1 \leq 2r - 1 < g$. Indeed, two different neighbours
+$u, u^{\prime} \in L_{i-1}$ of $v$, with shortest paths to $r_0$, give a closed walk of length $2i$ through $v$ that, followed from $v$ until the two paths meet, contains a cycle of length at most
+$2i \leq 2r - 2 < g$. So the vertices of $L_i$, $1 \leq i \leq r - 1$, have at least $\delta - 1$ neighbours in $L_{i+1}$, and these are distinct for distinct vertices of $L_i$ (a vertex of
+$L_{i+1}$ with two neighbours in $L_i$ would close a cycle of length at most $2(i + 1) \leq 2r < g$, as $2r \leq g - 1$). Hence $|L_1| \geq \delta$ and $|L_{i+1}| \geq (\delta - 1)|L_i|$
+for $i \leq r - 1$, and $|V| \geq \sum_{i=0}^{r}|L_i| \geq 1 + \delta\sum_{i=0}^{r-1}(\delta - 1)^i$.
+\end{proof}
+
+For $\delta = 3$ and $g = 5$ ($r = 2$) the bound is $1 + 3 + 3 \cdot 2 = 10$, attained by the Petersen graph: it is the unique smallest cubic graph of girth $5$. Graphs attaining the Moore bound with
+odd girth are rare: for $g = 5$ they exist only for $\delta = 2, 3, 7$ and possibly $57$ (the Hoffman--Singleton theorem, proved with the eigenvalues of the adjacency matrix,
+Chapter~\ref{spectral-graph-theory}).
+
+\begin{counterexample}\label{graph-theory:counterexample-min-degree}
+The bounds of Proposition~\ref{graph-theory:proposition-min-degree} are sharp and need $\delta \geq 2$: $K_{\delta+1}$ has minimum degree $\delta$, its longest paths have length $\delta$ and its
+longest cycles length $\delta + 1$. A graph with $\delta = 1$ need not contain any cycle (a path), and large average degree does not by itself bound the \emph{minimum} degree: a star $K_{1,s}$ has
+average degree close to $2$ but $\delta = 1$. (Every graph of average degree $d$ has a subgraph of minimum degree greater than $d/2$, Exercise~\ref{graph-theory:exercise-dense-subgraph}.)
+\end{counterexample}
+
+\subsection{Bipartite graphs}\label{graph-theory:subsection-bipartite}
+
+\begin{definition}\label{graph-theory:definition-bipartite}
+A graph is \emph{bipartite} if $V = A \sqcup B$ with every edge having one end in $A$ and one in $B$; $(A, B)$ is a \emph{bipartition}, and $A$, $B$ are its \emph{sides} (independent sets).
+More generally $G$ is \emph{$k$-partite} if $V$ is a union of $k$ independent sets.
+\end{definition}
+
+\begin{proposition}[K\"onig]\label{graph-theory:proposition-bipartite}
+A graph is bipartite if and only if it contains no cycle of odd length.
+\end{proposition}
+
+\begin{proof}
+A closed walk in a bipartite graph alternates between the sides, so it has even length; in particular there are no odd cycles. Conversely, suppose there is no odd cycle. It suffices to
+bipartition each component, so let $G$ be connected, fix $r$, and put $A = \{v : d(r, v) \text{ even}\}$, $B = \{v : d(r, v) \text{ odd}\}$. If an edge $uv$ had both ends in the same set, then
+$d(r, u) = d(r, v)$ by Proposition~\ref{graph-theory:proposition-bfs}, and shortest paths from $r$ to $u$ and to $v$ with the edge $uv$ form a closed walk of odd length $2d(r, u) + 1$, which
+contains an odd cycle by Lemma~\ref{graph-theory:lemma-walk-path}.
+\end{proof}
+
+The proof is an algorithm: breadth-first search either produces a bipartition or finds an edge inside a level, hence an odd cycle. Trees, even cycles, cubes $Q_d$ (colour a word by the parity of
+its number of $1$s) and grid graphs are bipartite; odd cycles, $K_n$ for $n \geq 3$ and the Petersen graph (which contains $5$-cycles) are not.
+
+\begin{proposition}\label{graph-theory:proposition-bipartite-subgraph}
+Every graph $G$ has a bipartite spanning subgraph with at least $|E|/2$ edges.
+\end{proposition}
+
+\begin{proof}
+Among all partitions $V = A \sqcup B$ choose one maximising the number of edges between $A$ and $B$. Every vertex $v$ then has at least half its neighbours on the other side: otherwise moving $v$ to
+the other side would increase the number of crossing edges by (neighbours on its own side) $-$ (neighbours on the other side) $> 0$. Summing over $v$, the crossing edges, counted twice, are at least
+half of $\sum_vd(v) = 2|E|$.
+\end{proof}

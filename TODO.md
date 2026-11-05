@@ -81,6 +81,25 @@ counterexamples, exercises with solutions, citations for quoted results.
   `cycle-class`, `tate-conjecture` have 2 each).
 - [ ] Finish `deformations` (status `draft`).
 
+## Order of work (user, 2026-11-05)
+
+1. **Number theory** (Part Number Theory, rebuilt into 12 chapters):
+   ~~`prime-numbers`~~ (done), `continued-fractions`, `diophantine-equations`,
+   `p-adic-numbers`, `analytic-number-theory`, `algebraic-number-theory`
+   (number fields, Dedekind domains, decomposition of primes),
+   `geometry-of-numbers`, `cyclotomic-fields`, `local-fields`,
+   `class-field-theory`, `modular-forms`, `elliptic-curves-arithmetic`; also
+   revisit the elementary `number-theory` chapter (Algebra part).
+2. **Differential geometry** (rebuild the part, thinnest chapters first).
+3. **Measure theory**.
+4. **Algebraic geometry**.
+5. Then free choice. Discrete mathematics is paused: the first part of
+   `graph-theory` is drafted in `drafts/graph-theory-part1.tex` (introduction,
+   graphs, degrees, Havel–Hakimi, walks, distance, Moore bound, bipartite
+   graphs; fix the Petersen sentence about common neighbours before use);
+   the plan is to split graph theory into `graph-theory`, `planar-graphs`,
+   `extremal-graph-theory`, `spectral-graph-theory`.
+
 ## Comprehensive rebuild of the existing chapters (user request, 2026-11-05)
 
 "Complete" is not final: chapters below the depth of the Stacks project are to
@@ -99,6 +118,13 @@ spectral-sequences 300 (then everything below about 800 lines).
 - [ ] For each: list what the Stacks project (or the standard reference) covers,
   plan the new chapter(s), rewrite, keep every existing label (tags are
   permanent; a removed result keeps its tag by staying, possibly as a remark).
+- [x] 2026-11-05: `prime-numbers` (complete, 860 lines): proofs of the
+  infinitude of primes (Euclid, Goldbach, Euler, Erdős, Fürstenberg), primes in
+  progressions (4k+3, 6k+5, 1 mod n via cyclotomic polynomials, all classes
+  mod 8), Mersenne and Fermat primes (Lucas–Lehmer, Pépin, Euler's 641),
+  Chebyshev's bounds, Bertrand (Erdős), Abel summation and Mertens' three
+  theorems, Chebyshev's limit theorem, Korselt, Miller–Rabin with proof of the
+  1/2 bound, Lucas, AKS identity, Pollard p−1, open problems; 14 exercises.
 - [x] 2026-11-05: removed the paragraphs "On the way to the Hodge conjecture"
   from all chapters (the route stays in the introduction); The Hodge Project
   is linked wherever it is mentioned.
