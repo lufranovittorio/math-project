@@ -23,8 +23,7 @@ Each new chapter: Prerequisites line, introduction, slow sections, examples,
 counterexamples, exercises with solutions, citations for quoted results.
 
 - [ ] **Discrete mathematics** (after Algebra): ~~`combinatorics`~~ (done),
-  `generating-functions` (formal power series, recurrences,
-  Catalan numbers, exponential generating functions, Lagrange inversion),
+  ~~`generating-functions`~~ (done),
   `graph-theory` (trees, Euler and Hamilton, matchings and Hall, Menger,
   colourings, planarity and Euler's formula, Ramsey theory, spectral graph
   theory), later `probabilistic-method`.
@@ -134,3 +133,14 @@ counterexamples, exercises with solutions, citations for quoted results.
   (Dirichlet, Erdős–Szekeres, R(3,3)), double counting and extremal set theory
   (LYM, Sperner, Erdős–Ko–Rado), Stirling, Bell, Lah and Eulerian numbers,
   partitions, Burnside and Pólya; 18 exercises with solutions.
+- [x] 2026-11-05: `generating-functions` (complete, 1800 lines): formal power
+  series (summable families, infinite products, composition and compositional
+  inverse, derivative, exp/log, Newton's binomial series), rational generating
+  functions and linear recurrences (partial fractions, Binet, transfer matrix),
+  Catalan numbers (binary trees and other interpretations, parity), partitions
+  (Euler, Gaussian binomials and subspaces of F_q^n, pentagonal theorem with
+  Franklin's involution, Jacobi triple product), exponential generating
+  functions and the exponential formula (set partitions, cycles, involutions,
+  connected graphs, Bernoulli numbers and Faulhaber), Lagrange inversion via
+  residues, the cycle lemma, Fuss–Catalan, Cayley's formula (two proofs),
+  elementary estimates; 16 exercises with solutions.

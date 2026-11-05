@@ -1,24 +1,1853 @@
 \chapter{Generating Functions}\label{generating-functions}
-\chapterstatus{planned}
+\chapterstatus{complete}
 
-A sequence of numbers can be packaged into a formal power series, and operations on sequences become
-algebra on series. This chapter develops formal power series rigorously and uses them to solve
-recurrences and to count trees, partitions and labelled structures.
+\section{Introduction}\label{generating-functions:section-introduction}
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{rings} (Rings and Modules) and Chapter~\ref{combinatorics} (Combinatorics).
+A sequence of numbers $a_0, a_1, a_2, \ldots$ is an infinite object, and a counting problem usually defines it one term at a time. The idea of a \emph{generating function} is to package the
+whole sequence into a single algebraic object, the formal power series $\sum_n a_nx^n$, and to translate operations on sequences into operations on series: adding sequences termwise is adding
+series, the convolution $\sum_{i+j=n}a_ib_j$ is multiplication, the partial sums are division by $1 - x$, and a recurrence becomes an equation that the series satisfies. Solving that equation, by
+the algebra of series, solves the counting problem. Wilf compares a generating function to a clothesline on which the sequence is hung up for display
+\cite{wilf-generatingfunctionology}: all the terms can be seen, and handled, at once.
 
-\noindent\textbf{On the way to the Hodge conjecture.} This chapter is not needed on the direct
-route; it belongs to the reading path of discrete mathematics
-(Subsection~\ref{introduction:subsection-reading-paths}).
+Here is the simplest example. The Fibonacci numbers $F_0 = 0$, $F_1 = 1$, $F_{n+2} = F_{n+1} + F_n$ have the generating function $F = \sum_nF_nx^n$, and the recurrence says that
+$F - xF - x^2F = x$, so $F = x/(1 - x - x^2)$. Splitting this rational function into partial fractions gives at once the formula $F_n = (\varphi^n - \bar{\varphi}^n)/\sqrt 5$ with
+$\varphi = (1 + \sqrt 5)/2$ and $\bar{\varphi} = (1 - \sqrt 5)/2$. Nothing here needs convergence: $x$ is a formal symbol, and every step is an identity in a ring of formal power series.
 
-\noindent\textbf{Planned contents.}
+The chapter is organised as follows.
 \begin{enumerate}
-\item The ring of formal power series $R[[x]]$: topology, invertibility, composition, formal derivative and logarithm.
-\item Linear recurrences with constant coefficients, rational generating functions, Fibonacci numbers.
-\item Catalan numbers and their many interpretations; the ballot problem.
-\item Partition generating functions: Euler's pentagonal number theorem, the Jacobi triple product, Rogers--Ramanujan (statement).
-\item Exponential generating functions and the exponential formula; labelled trees and Cayley's formula.
-\item Lagrange inversion, with its combinatorial and analytic proofs.
-\item Elementary estimates of coefficients, such as $4^n/(2n + 1) \leq \binom{2n}{n} \leq 4^n$; the analytic asymptotics of coefficients (singularity analysis, saddle points) needs complex analysis and belongs to a later chapter on analytic combinatorics.
-\item Exercises with solutions.
+\item The ring $R[[x]]$ of formal power series is developed with complete proofs: units, the order of a series, infinite sums and products, composition and compositional inverses, the formal
+derivative, and, over a ring containing $\QQ$, the exponential, the logarithm and the binomial series $(1 + x)^a$ for arbitrary exponents $a$
+(Section~\ref{generating-functions:section-formal-power-series}).
+\item The sequences satisfying a linear recurrence with constant coefficients are exactly those with a rational generating function, and partial fractions give their closed forms; Fibonacci and
+Lucas numbers, words avoiding a pattern, and P\'olya's problem of making change are worked out (Section~\ref{generating-functions:section-rational}).
+\item The Catalan numbers satisfy the quadratic equation $C = 1 + xC^2$; solving it gives $C_n = \frac{1}{n + 1}\binom{2n}{n}$, and bijections show that they count binary trees, plane trees, Dyck
+paths, bracketings, triangulations and non-crossing partitions (Section~\ref{generating-functions:section-catalan}).
+\item The generating function of the partitions of integers is an infinite product. From it we derive Euler's theorems again, the Gaussian binomial coefficients and the count of subspaces of a vector
+space over a finite field, Euler's pentagonal number theorem with Franklin's involution, the recurrence for $p(n)$, and Jacobi's triple product identity with its corollaries
+(Section~\ref{generating-functions:section-partitions}).
+\item Exponential generating functions count labelled structures: products of exponential series count pairs of structures on complementary sets, and the exponential formula says that the
+structures built from connected pieces have the exponential of the generating function of the pieces. Set partitions, permutations, involutions, derangements, connected graphs and Bernoulli numbers
+illustrate it (Section~\ref{generating-functions:section-exponential}).
+\item Lagrange's inversion formula computes the coefficients of a series defined implicitly by $T = x\phi(T)$; it gives Cayley's formula $n^{n-2}$ for the number of labelled trees, which we also
+prove by Pitman's double counting, and the Fuss--Catalan numbers, which we also obtain from the cycle lemma (Section~\ref{generating-functions:section-lagrange}).
+\item Elementary bounds for the coefficients, such as $4^n/(2\sqrt{n}) \leq \binom{2n}{n} \leq 4^n/\sqrt{2n + 1}$, conclude the chapter (Section~\ref{generating-functions:section-estimates}); the analytic theory
+of the growth of coefficients needs complex analysis and is only described.
 \end{enumerate}
+References: \cite{wilf-generatingfunctionology}, \cite{stanley-ec1}, \cite[Chapters 5 and 6]{stanley-ec2}, \cite{flajolet-sedgewick} and, for partitions, \cite{andrews-partitions}.
+
+\noindent\textbf{Prerequisites.} Chapter~\ref{rings} (Rings and Modules), Chapter~\ref{fields} (Fields and Galois Theory), Chapter~\ref{linear-algebra} (Linear Algebra) and
+Chapter~\ref{combinatorics} (Combinatorics).
+
+\noindent\textbf{On the way to the Hodge conjecture.} This chapter is not needed on the direct route; it belongs to the reading path of discrete mathematics
+(Subsection~\ref{introduction:subsection-reading-paths}). Formal power series reappear as completions of polynomial rings in commutative algebra and as the local rings of smooth points in
+algebraic geometry.
+
+\begin{notation}\label{generating-functions:notation-basic}
+Throughout, $R$ is a commutative ring with $1$ (Definition~\ref{rings:definition-ring}), and $K$ is a field. A ring \emph{contains $\QQ$} if it contains $\QQ$ as a subring with the same $1$;
+equivalently, every nonzero integer is a unit in it. We use the notation of Chapter~\ref{combinatorics}: $[n] = \{1, \ldots, n\}$, $\binom{A}{k}$ is the set of $k$-element subsets of $A$, and
+$x^{\underline{k}}$, $x^{\overline{k}}$ are the falling and rising factorials (Notation~\ref{combinatorics:notation-basic}). The binomial polynomials $\binom{x}{k} = x^{\underline{k}}/k!$
+(Definition~\ref{combinatorics:definition-binomial-polynomial}) give $\binom{a}{k}$ for $a$ in any ring containing $\QQ$.
+\end{notation}
+
+\section{Formal power series}\label{generating-functions:section-formal-power-series}
+
+A power series in analysis is a function, defined where the series converges. A \emph{formal} power series is just its sequence of coefficients, with the operations that the usual rules for
+series would give; whether it converges anywhere is irrelevant. This section sets up the algebra carefully, because the rest of the chapter computes with it constantly, and because a few
+operations that look harmless (substituting $1$ for $x$, taking $\exp$ of a series with nonzero constant term, multiplying infinitely many series) are meaningless and must be excluded.
+
+\subsection{The ring of formal power series}\label{generating-functions:subsection-ring}
+
+\begin{definition}\label{generating-functions:definition-power-series}
+A \emph{formal power series} over $R$ is a sequence $f = (a_0, a_1, a_2, \ldots)$ of elements of $R$; the set of them is $R[[x]]$. On $R[[x]]$ we define the \emph{sum} $+$ and the \emph{product}
+$\cdot$ by
+\[
+\begin{aligned}
+&(a_n)_n + (b_n)_n = (a_n + b_n)_n, \qquad (a_n)_n \cdot (b_n)_n = (c_n)_n,\\
+&\text{where}\quad c_n = \sum_{i + j = n}a_ib_j = \sum_{i=0}^{n}a_ib_{n-i}.
+\end{aligned}
+\]
+The element $a_n$ is the \emph{coefficient of $x^n$} in $f$, written $[x^n]f$; the coefficient $a_0$ is the \emph{constant term}, also written $f(0)$. For a sequence $(a_n)_{n \geq 0}$ of
+elements of $R$, the series $\sum_na_nx^n$ is its \emph{(ordinary) generating function}.
+\end{definition}
+
+\begin{notation}\label{generating-functions:notation-power-series}
+The product is written by juxtaposition, $fg = f \cdot g$. We identify $r \in R$ with $(r, 0, 0, \ldots)$, write $x = (0, 1, 0, 0, \ldots)$, and, as Proposition~\ref{generating-functions:proposition-summable}
+will justify, write the series $(a_n)_n$ as $\sum_{n \geq 0}a_nx^n$ or $a_0 + a_1x + a_2x^2 + \cdots$. A polynomial is a series with finitely many nonzero coefficients, so $R[x] \subseteq R[[x]]$
+(Definition~\ref{rings:definition-polynomials}). When a series is called $f$, its coefficients are usually called $f_n$, so that $f = \sum_nf_nx^n$. The variable may have another name:
+$R[[t]]$, $R[[q]]$, \ldots, are the same ring with the variable written $t$ or $q$.
+\end{notation}
+
+The product is the product of the familiar rule $(\sum a_ix^i)(\sum b_jx^j) = \sum_n(\sum_{i+j=n}a_ib_j)x^n$, obtained by multiplying out and collecting powers of $x$. The sum defining $c_n$ is finite,
+so the product needs no convergence at all; this is the point of the definition.
+
+\begin{lemma}\label{generating-functions:lemma-ring}
+$R[[x]]$ is a commutative ring with zero $(0, 0, \ldots)$ and unit $1 = (1, 0, 0, \ldots)$, and $R[x]$ and $R$ are subrings. For $k \geq 0$, $x^k$ is the sequence with $1$ in position $k$ and $0$
+elsewhere, and multiplication by $x^k$ shifts coefficients: $[x^n](x^kf) = [x^{n-k}]f$ for $n \geq k$, and $[x^n](x^kf) = 0$ for $n < k$.
+\end{lemma}
+
+\begin{proof}
+\emph{Addition} is termwise, so it is associative and commutative, with neutral element $0$ and inverse $(-a_n)_n$.
+\emph{Commutativity of the product}: $\sum_{i+j=n}a_ib_j = \sum_{j+i=n}b_ja_i$, since $R$ is commutative.
+\emph{Associativity}: for series $f, g, h$ with coefficients $a_i, b_j, c_k$, the coefficient of $x^n$ in $(fg)h$ is $\sum_{m+k=n}(\sum_{i+j=m}a_ib_j)c_k = \sum_{i+j+k=n}a_ib_jc_k$, the sum over
+the finitely many triples $(i, j, k) \in \NN^3$ with $i + j + k = n$; the same computation gives the same value for $f(gh)$.
+\emph{Distributivity}: $\sum_{i+j=n}a_i(b_j + c_j) = \sum_{i+j=n}a_ib_j + \sum_{i+j=n}a_ic_j$.
+\emph{Unit}: if $e = (1, 0, 0, \ldots)$ then $\sum_{i+j=n}e_ia_j = a_n$.
+\emph{Subrings}: the sum and product of two sequences with finitely many nonzero terms again have finitely many nonzero terms, and the operations restricted to $R[x]$ are those of
+Definition~\ref{rings:definition-polynomials}; the constant sequences $(r, 0, 0, \ldots)$ form a copy of $R$.
+\emph{Shifts}: $x^k$ is the sequence with $1$ in position $k$ by Lemma~\ref{rings:lemma-polynomial-basics}, and $[x^n](x^kf) = \sum_{i+j=n}[x^i]x^k \cdot f_j = f_{n-k}$ if $n \geq k$, and $0$
+otherwise.
+\end{proof}
+
+\begin{remark}\label{generating-functions:remark-formal}
+A formal power series is not a function, and $x$ is not a number. The series $\sum_nn!\,x^n \in \ZZ[[x]]$ is a perfectly good element of $\ZZ[[x]]$, although, read as a real power series, it
+converges only at $x = 0$. Conversely the real numbers $\sum_nx^n$ at $x = \frac12$ and at $x = -\frac12$ are irrelevant to the formal series $\sum_nx^n$. Identities between formal series are
+identities between their coefficients, and they hold over every ring $R$ for which they make sense. When the series happen to converge, the formal identities give identities between functions; that
+step uses analysis and is not taken in this chapter.
+\end{remark}
+
+\begin{definition}\label{generating-functions:definition-order}
+The \emph{order} of a nonzero series $f$ is $\operatorname{ord}(f) = \min\{n : f_n \neq 0\}$, and $\operatorname{ord}(0) = \infty$, with the conventions $\infty + n = \infty$ and $n < \infty$
+for $n \in \NN$.
+\end{definition}
+
+So $\operatorname{ord}(f) \geq k$ means that $f_0 = \cdots = f_{k-1} = 0$, that is, that $f = x^kg$ for a series $g$ (Lemma~\ref{generating-functions:lemma-ring}); the larger the order, the
+``smaller'' the series. The order plays the role of the absolute value in analysis, upside down.
+
+\begin{lemma}\label{generating-functions:lemma-order}
+For $f, g \in R[[x]]$:
+\begin{enumerate}
+\item $\operatorname{ord}(f + g) \geq \min(\operatorname{ord}(f), \operatorname{ord}(g))$, with equality if $\operatorname{ord}(f) \neq \operatorname{ord}(g)$;
+\item $\operatorname{ord}(fg) \geq \operatorname{ord}(f) + \operatorname{ord}(g)$, with equality if $R$ is an integral domain;
+\item if $R$ is an integral domain, so is $R[[x]]$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) If $n < \min(\operatorname{ord} f, \operatorname{ord} g)$ then $f_n + g_n = 0 + 0 = 0$. If $\operatorname{ord} f = m < \operatorname{ord} g$, then $(f + g)_m = f_m + 0 \neq 0$.
+(2) We may assume $f, g \neq 0$; let $m = \operatorname{ord} f$ and $k = \operatorname{ord} g$. A term $f_ig_j$ with $i + j < m + k$ has $i < m$ or $j < k$, so it vanishes; hence $(fg)_n = 0$ for
+$n < m + k$. The coefficient of $x^{m+k}$ is $\sum_{i+j=m+k}f_ig_j = f_mg_k$, since the other terms vanish for the same reason; if $R$ is a domain, $f_mg_k \neq 0$.
+(3) By (2), if $f, g \neq 0$ then $\operatorname{ord}(fg) < \infty$, that is, $fg \neq 0$.
+\end{proof}
+
+\begin{counterexample}\label{generating-functions:counterexample-order-zero-divisors}
+Over a ring with zero divisors the inequality in (2) can be strict: in $(\ZZ/4\ZZ)[[x]]$, $(2 + x)(2 + 3x) = 4 + 8x + 3x^2 = 3x^2$, of order $2 > 0 + 0$. And $R[[x]]$ is never a domain when $R$
+is not: $2 \cdot 2 = 0$ in $(\ZZ/4\ZZ)[[x]]$.
+\end{counterexample}
+
+The units of $R[[x]]$ were determined in Proposition~\ref{rings:proposition-power-series-units}: $f$ is invertible if and only if its constant term $f_0$ is invertible in $R$, and then the
+coefficients of $g = f^{-1}$ are found one at a time from $g_0 = f_0^{-1}$ and $g_n = -f_0^{-1}\sum_{i=1}^{n}f_ig_{n-i}$. We write $1/f$ or $f^{-1}$ for the inverse, and $g/f$ for $gf^{-1}$. The
+first examples are the most important.
+
+\begin{example}[Geometric series]\label{generating-functions:example-geometric}
+\begin{enumerate}
+\item $(1 - x)(1 + x + x^2 + \cdots) = 1$, since the coefficient of $x^n$ in the product is $1 - 1 = 0$ for $n \geq 1$. So $\frac{1}{1 - x} = \sum_{n \geq 0}x^n$: the sequence $1, 1, 1, \ldots$
+has the generating function $1/(1 - x)$.
+\item More generally, for $a \in R$, $\frac{1}{1 - ax} = \sum_na^nx^n$, by the same computation: $(1 - ax)\sum_na^nx^n = \sum_na^nx^n - \sum_na^{n+1}x^{n+1} = 1$.
+\item For $m \geq 1$,
+\[
+\frac{1}{(1 - x)^m} = \sum_{n \geq 0}\binom{n + m - 1}{m - 1}x^n.
+\]
+Indeed the coefficient of $x^n$ in the product of $m$ copies of $\sum_ex^e$ is the number of $m$-tuples $(e_1, \ldots, e_m) \in \NN^m$ with $e_1 + \cdots + e_m = n$, which is
+$\binom{n + m - 1}{m - 1}$ by stars and bars (Theorem~\ref{combinatorics:theorem-stars-bars}). For $m = 2$: $\frac{1}{(1 - x)^2} = 1 + 2x + 3x^2 + \cdots = \sum_n(n + 1)x^n$.
+\item Replacing $x$ by $ax$ (a substitution justified in Subsection~\ref{generating-functions:subsection-composition}, but here simply the same computation with $a^nx^n$ in place of $x^n$):
+$\frac{1}{(1 - ax)^m} = \sum_n\binom{n + m - 1}{m - 1}a^nx^n$.
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{generating-functions:counterexample-units}
+The hypothesis on the constant term depends on the ring of coefficients. The series $2 - x$ is a unit in $\QQ[[x]]$, with inverse $\frac12 \cdot \frac{1}{1 - x/2} = \sum_n2^{-n-1}x^n$, but not in
+$\ZZ[[x]]$: the constant term of $(2 - x)g$ is $2g_0 \neq 1$. And $x$ is not a unit in any $R[[x]]$ with $R \neq 0$: $xg$ has constant term $0$. In particular ``$1/x$'' is not a formal power series;
+it is a formal Laurent series (Definition~\ref{generating-functions:definition-laurent}).
+\end{counterexample}
+
+\begin{example}[Partial sums]\label{generating-functions:example-partial-sums}
+If $f = \sum_na_nx^n$, then $\frac{f}{1 - x} = f \cdot \sum_jx^j$ has coefficients $\sum_{i+j=n}a_i = a_0 + a_1 + \cdots + a_n$: dividing by $1 - x$ takes partial sums, and multiplying by
+$1 - x$ takes differences $a_n - a_{n-1}$. For instance the numbers $0 + 1 + \cdots + n$ have the generating function $\frac{1}{1 - x}\sum_nnx^n$. Since $\sum_nnx^n = x\sum_n(n + 1)x^n =
+\frac{x}{(1 - x)^2}$ by Example~\ref{generating-functions:example-geometric}(3), this is $\frac{x}{(1 - x)^3} = \sum_n\binom{n + 1}{2}x^n$, using (3) again with $m = 3$ and the shift of
+Lemma~\ref{generating-functions:lemma-ring}. So $0 + 1 + \cdots + n = \binom{n + 1}{2}$, the formula that, according to the anecdote, Gauss found as a schoolboy.
+\end{example}
+
+Over a field the structure of $K[[x]]$ is very simple: every series is a power of $x$ times a unit.
+
+\begin{proposition}\label{generating-functions:proposition-field-coefficients}
+Let $K$ be a field.
+\begin{enumerate}
+\item Every nonzero $f \in K[[x]]$ is uniquely $f = x^mu$ with $m = \operatorname{ord}(f)$ and $u$ a unit of $K[[x]]$.
+\item The ideals of $K[[x]]$ are $0$ and the ideals $(x^m)$, $m \geq 0$, which form the chain $K[[x]] = (1) \supsetneq (x) \supsetneq (x^2) \supsetneq \cdots$. In particular $K[[x]]$ is a principal
+ideal domain with exactly one maximal ideal, $(x)$, and $(x)$ is the set of non-units.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) Write $f = x^mu$ with $u_n = f_{n+m}$ (Lemma~\ref{generating-functions:lemma-ring}); then $u_0 = f_m \neq 0$ is invertible in $K$, so $u$ is a unit by
+Proposition~\ref{rings:proposition-power-series-units}. If $x^mu = x^{m^{\prime}}u^{\prime}$ with $u, u^{\prime}$ units, comparing orders (Lemma~\ref{generating-functions:lemma-order}(2), as $K$ is a domain)
+gives $m = m^{\prime}$, and cancelling $x^m$ in the domain $K[[x]]$ gives $u = u^{\prime}$.
+(2) Let $I \neq 0$ be an ideal and $m$ the smallest order of a nonzero element of $I$, say of $f = x^mu$. Then $x^m = fu^{-1} \in I$, so $(x^m) \subseteq I$; and every $g \in I$ has order at least $m$,
+hence $g = x^{\operatorname{ord} g}v \in (x^m)$. So $I = (x^m)$. These ideals are distinct, since $x^m \notin (x^{m+1})$ by comparing orders. A proper ideal is contained in $(x)$, so $(x)$ is the only
+maximal ideal; a series lies in $(x)$ exactly when its constant term is $0$, that is, when it is not a unit.
+\end{proof}
+
+\begin{remark}\label{generating-functions:remark-several-variables}
+Since $R$ is an arbitrary commutative ring, series in several variables need no new definition: $R[[x, y]] = R[[y]][[x]]$ consists of the families $(a_{m,n})$ indexed by $\NN^2$, written
+$\sum a_{m,n}x^my^n$, and $R[y][[x]]$, the series in $x$ whose coefficients are polynomials in $y$, is a subring. Bivariate generating functions, which record two statistics at once (for example the
+number of elements and the number of blocks of a set partition), live in such rings.
+\end{remark}
+
+\subsection{Infinite sums and products}\label{generating-functions:subsection-infinite-sums}
+
+The expression $\sum_na_nx^n$ is an infinite sum of series $a_nx^n$, and many generating functions are infinite products, such as $\prod_{k \geq 1}(1 - x^k)^{-1}$ for partitions. Both make sense,
+without any analysis, as long as each coefficient receives only finitely many contributions.
+
+\begin{definition}\label{generating-functions:definition-summable}
+A family $(f_i)_{i \in I}$ of series, indexed by an arbitrary set $I$, is \emph{summable} if for every $n$ there are only finitely many $i \in I$ with $[x^n]f_i \neq 0$. Its \emph{sum}
+$\sum_{i \in I}f_i$ is the series whose coefficient of $x^n$ is the finite sum $\sum_{i \in I}[x^n]f_i$ (over the finitely many $i$ with $[x^n]f_i \neq 0$).
+\end{definition}
+
+A family $(f_i)$ is summable as soon as $\operatorname{ord}(f_i) \to \infty$ in the sense that for every $N$ only finitely many $i$ have $\operatorname{ord}(f_i) \leq N$: then $[x^n]f_i \neq 0$
+forces $\operatorname{ord}(f_i) \leq n$. A finite family is always summable, with the usual sum. For example $(a_nx^n)_{n \in \NN}$ is summable, as $\operatorname{ord}(a_nx^n) \geq n$, and its sum
+is the series $(a_n)_n$: this is what the notation $\sum_na_nx^n$ means.
+
+\begin{proposition}\label{generating-functions:proposition-summable}
+Let $(f_i)_{i \in I}$ and $(g_j)_{j \in J}$ be summable families.
+\begin{enumerate}
+\item (Linearity) For $r, s \in R$, the family $(rf_i)_{i \in I} \sqcup (sg_j)_{j \in J}$ (indexed by the disjoint union) is summable, with sum $r\sum_if_i + s\sum_jg_j$.
+\item (Associativity) If $I = \bigsqcup_{\lambda \in \Lambda}I_\lambda$, then each $(f_i)_{i \in I_\lambda}$ is summable, the family of the sums $F_\lambda = \sum_{i \in I_\lambda}f_i$ is summable,
+and $\sum_\lambda F_\lambda = \sum_if_i$. In particular the sum does not depend on the order of the terms.
+\item (Distributivity) The family $(f_ig_j)_{(i, j) \in I \times J}$ is summable, and $\sum_{(i,j)}f_ig_j = (\sum_if_i)(\sum_jg_j)$.
+\item (Series as sums) A series $f$ is the sum of the summable family $(f_nx^n)_{n \in \NN}$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Let $I(n) = \{i : [x^n]f_i \neq 0\}$, a finite set; similarly $J(n)$.
+(1) The indices with a nonzero coefficient of $x^n$ lie in $I(n) \sqcup J(n)$, and the coefficient of the sum is $r\sum_{i \in I(n)}[x^n]f_i + s\sum_{j \in J(n)}[x^n]g_j$.
+(2) The family $(f_i)_{i \in I_\lambda}$ is summable since $I_\lambda \cap I(n) \subseteq I(n)$ is finite. The coefficient $[x^n]F_\lambda$ is nonzero only if $I_\lambda$ meets $I(n)$, which happens for
+finitely many $\lambda$ since $I(n)$ is finite and the $I_\lambda$ are disjoint; and $\sum_\lambda[x^n]F_\lambda = \sum_\lambda\sum_{i \in I_\lambda \cap I(n)}[x^n]f_i = \sum_{i \in I(n)}[x^n]f_i$ by
+the associativity of finite sums (Lemma~\ref{combinatorics:lemma-finite-sums}).
+(3) $[x^n](f_ig_j) = \sum_{p+q=n}[x^p]f_i[x^q]g_j$ is nonzero only if $i \in I(p)$ and $j \in J(q)$ for some $p + q = n$, which leaves finitely many pairs. Then
+\[
+\begin{aligned}
+\sum_{(i,j)}[x^n](f_ig_j) &= \sum_{p+q=n}\Bigl(\sum_{i \in I(p)}[x^p]f_i\Bigr)\Bigl(\sum_{j \in J(q)}[x^q]g_j\Bigr)\\
+&= \sum_{p+q=n}[x^p]\Bigl(\sum_if_i\Bigr)[x^q]\Bigl(\sum_jg_j\Bigr),
+\end{aligned}
+\]
+which is the coefficient of $x^n$ in the product.
+(4) $[x^m](f_nx^n)$ is $f_m$ for $n = m$ and $0$ otherwise.
+\end{proof}
+
+\begin{counterexample}\label{generating-functions:counterexample-not-summable}
+The family $(1)_{n \in \NN}$ is not summable: ``$1 + 1 + 1 + \cdots$'' has no constant term. On the other hand $((-1)^nx^n)_{n \in \NN}$ is summable, with sum $\frac{1}{1 + x}$
+(Example~\ref{generating-functions:example-geometric}(2)), although substituting $x = 1$ in it would give Grandi's series $1 - 1 + 1 - \cdots$, which has no sum. So one may never ``put $x = 1$'' in a
+formal identity unless the series involved are polynomials. Summability is a condition on each coefficient separately, and whenever it holds,
+Proposition~\ref{generating-functions:proposition-summable} allows any regrouping. This is unlike conditionally convergent series of real numbers, which can be rearranged to have any sum: a formal
+sum never needs a limit of numbers, only finitely many additions per coefficient.
+\end{counterexample}
+
+\begin{definition}\label{generating-functions:definition-convergence}
+A sequence $(f^{(k)})_{k \geq 0}$ of series \emph{converges} to $f$, written $f^{(k)} \to f$ or $f = \lim_kf^{(k)}$, if for every $n$ there is $k_0$ such that $[x^n]f^{(k)} = [x^n]f$ for all
+$k \geq k_0$; equivalently, $\operatorname{ord}(f - f^{(k)}) \to \infty$.
+\end{definition}
+
+So convergence means that each coefficient is eventually constant. The partial sums $\sum_{n \leq N}a_nx^n$ converge to $\sum_na_nx^n$; more generally, if $(f_i)_{i \in \NN}$ is summable, then
+$\sum_{i \leq N}f_i \to \sum_if_i$, since the coefficient of $x^n$ of the partial sum is final as soon as $N \geq \max I(n)$. Sums, products and, by
+Proposition~\ref{generating-functions:proposition-summable}, summable sums of convergent sequences converge to what one expects: if $f^{(k)} \to f$ and $g^{(k)} \to g$, then
+$f^{(k)}g^{(k)} \to fg$, because $[x^n](fg)$ involves only the coefficients of $x^0, \ldots, x^n$ of $f$ and $g$.
+
+\begin{definition}\label{generating-functions:definition-infinite-product}
+Let $(g_i)_{i \in I}$ be a family of series with $g_i(0) = 0$ for every $i$, such that for every $N$ only finitely many $i$ have $\operatorname{ord}(g_i) \leq N$. For a finite subset $S \subseteq I$
+put $g_S = \prod_{i \in S}g_i$ (with $g_\emptyset = 1$). The \emph{infinite product} is
+\[
+\prod_{i \in I}(1 + g_i) = \sum_{S \subseteq I \text{ finite}}g_S.
+\]
+\end{definition}
+
+\begin{proposition}\label{generating-functions:proposition-infinite-product}
+Under the hypotheses of Definition~\ref{generating-functions:definition-infinite-product}:
+\begin{enumerate}
+\item the family $(g_S)_S$ is summable, so the product is defined, and its constant term is $1$;
+\item if $I$ is finite, the infinite product is the usual product $\prod_{i \in I}(1 + g_i)$;
+\item if $I = \NN$ (or any countable set enumerated as $i_0, i_1, \ldots$), the finite partial products $\prod_{k \leq N}(1 + g_{i_k})$ converge to $\prod_{i \in I}(1 + g_i)$;
+\item if $I = I^{\prime} \sqcup I^{\prime\prime}$, then $\prod_I(1 + g_i) = \prod_{I^{\prime}}(1 + g_i) \cdot \prod_{I^{\prime\prime}}(1 + g_i)$; and the product of two such products,
+$\prod_I(1 + g_i)\prod_J(1 + h_j)$, is the product over $I \sqcup J$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Let $F_n = \{i \in I : \operatorname{ord}(g_i) \leq n\}$, a finite set.
+(1) By Lemma~\ref{generating-functions:lemma-order}(2), $\operatorname{ord}(g_S) \geq \sum_{i \in S}\operatorname{ord}(g_i)$. If $S$ contains an $i \notin F_n$, then $\operatorname{ord}(g_S) \geq \operatorname{ord}(g_i) > n$;
+so $[x^n]g_S \neq 0$ forces $S \subseteq F_n$, and there are finitely many such $S$. The constant term is that of $g_\emptyset = 1$, since $\operatorname{ord}(g_S) \geq |S|$ (every $g_i$ has order at
+least $1$).
+(2) By induction on $|I|$: for $I = \emptyset$ both sides are $1$, and if $I = I_0 \sqcup \{j\}$, then $\prod_I(1 + g_i) = (\sum_{S \subseteq I_0}g_S)(1 + g_j) = \sum_{S \subseteq I_0}g_S +
+\sum_{S \subseteq I_0}g_{S \cup \{j\}}$, which is the sum over all subsets of $I$, split according to whether they contain $j$.
+(3) Let $I_N = \{i_0, \ldots, i_N\}$. By (2) the partial product is $\sum_{S \subseteq I_N}g_S$. Once $I_N \supseteq F_n$, the subsets $S$ with $[x^n]g_S \neq 0$ are all subsets of $I_N$, so the
+coefficient of $x^n$ of the partial product equals that of the infinite product.
+(4) The finite subsets of $I^{\prime} \sqcup I^{\prime\prime}$ are the unions $S^{\prime} \sqcup S^{\prime\prime}$, and $g_{S^{\prime} \sqcup S^{\prime\prime}} = g_{S^{\prime}}g_{S^{\prime\prime}}$; apply
+Proposition~\ref{generating-functions:proposition-summable}(3). The second statement is the first for the family indexed by $I \sqcup J$, which satisfies the hypotheses of
+Definition~\ref{generating-functions:definition-infinite-product}.
+\end{proof}
+
+\begin{example}\label{generating-functions:example-product-distinct}
+The family $g_k = x^k$, $k \geq 1$, satisfies the hypotheses, and $\prod_{k \geq 1}(1 + x^k) = \sum_Sx^{\sum S}$, the sum over finite sets $S$ of positive integers. The coefficient of $x^n$ is the
+number of ways to write $n$ as a sum of distinct positive integers, that is, the number of partitions of $n$ into distinct parts (Definition~\ref{combinatorics:definition-partition}):
+\[
+\prod_{k \geq 1}(1 + x^k) = 1 + x + x^2 + 2x^3 + 2x^4 + 3x^5 + 4x^6 + 5x^7 + \cdots.
+\]
+Similarly, with $g_k = \frac{x^k}{1 - x^k} = x^k + x^{2k} + \cdots$ (of order $k$), each factor $1 + g_k = \frac{1}{1 - x^k}$, and the infinite product $\prod_{k \geq 1}\frac{1}{1 - x^k}$ is defined;
+Section~\ref{generating-functions:section-partitions} shows that it is the generating function of all partitions.
+\end{example}
+
+\begin{counterexample}\label{generating-functions:counterexample-products}
+\begin{enumerate}
+\item The product $\prod_{k \geq 1}(1 + x)$ of infinitely many copies of $1 + x$ is not defined: the coefficient of $x$ would be $1 + 1 + \cdots$. The condition that only finitely many $g_i$ have
+order $\leq N$ excludes it.
+\item The product $\prod_{k \geq 1}(1 + \frac{1}{2^k})$ of constants is not a formal product at all; it is a real number defined by a limit, and its value cannot be computed coefficientwise. The
+condition $g_i(0) = 0$ excludes such factors. (A single factor with nonzero constant term, or finitely many, can of course be multiplied in afterwards.)
+\end{enumerate}
+\end{counterexample}
+
+\begin{example}\label{generating-functions:example-binary-product}
+$\prod_{k \geq 0}(1 + x^{2^k}) = \frac{1}{1 - x}$. Indeed the product is $\sum_Sx^{\sum_{k \in S}2^k}$ over finite sets $S \subseteq \NN$, and every $n \in \NN$ is the sum $\sum_{k \in S}2^k$ for
+exactly one finite $S$, its binary expansion. So the infinite product of polynomials, none of which is a unit of finite order, is the geometric series: the uniqueness of binary expansions is a formal
+identity. Equivalently $(1 - x)(1 + x)(1 + x^2)(1 + x^4) \cdots = 1$, which can be seen directly from $(1 - x)(1 + x) \cdots (1 + x^{2^{N}}) = 1 - x^{2^{N+1}}$ and
+Proposition~\ref{generating-functions:proposition-infinite-product}(3).
+\end{example}
+
+\subsection{Composition}\label{generating-functions:subsection-composition}
+
+In analysis one substitutes a function into a power series. Formally, one can substitute a series $g$ into $f = \sum_nf_nx^n$ as long as the family $(f_ng^n)$ is summable, which is guaranteed when
+$g$ has no constant term.
+
+\begin{definition}\label{generating-functions:definition-composition}
+Let $f, g \in R[[x]]$ with $g(0) = 0$. The \emph{composition} of $f$ with $g$ is $f \circ g = f(g) = \sum_{n \geq 0}f_ng^n$, the sum of a summable family, since $\operatorname{ord}(f_ng^n) \geq n$
+(Lemma~\ref{generating-functions:lemma-order}(2)).
+\end{definition}
+
+For instance $\frac{1}{1 - x} \circ ax = \sum_na^nx^n$, which is $\frac{1}{1 - ax}$ by Example~\ref{generating-functions:example-geometric}(2), and $\frac{1}{1 - x} \circ x^2 = \sum_nx^{2n}$. That
+the composition with $g$ preserves all the algebra is the content of the next lemma.
+
+\begin{lemma}\label{generating-functions:lemma-composition}
+Let $g, h \in R[[x]]$ with $g(0) = h(0) = 0$.
+\begin{enumerate}
+\item The map $R[[x]] \to R[[x]]$, $f \mapsto f(g)$, is a ring homomorphism that is the identity on $R$ and sends $x$ to $g$. It preserves summable sums: if $(f_i)$ is summable, so is $(f_i(g))$,
+and $(\sum_if_i)(g) = \sum_if_i(g)$. If $f$ is a unit, $(1/f)(g) = 1/f(g)$.
+\item $\operatorname{ord}(f(g)) \geq \operatorname{ord}(f)$, and $f(g)(0) = f(0)$; so $f(g)(0) = 0$ when $f(0) = 0$, and then $(f \circ g) \circ h = f \circ (g \circ h)$.
+\item $x \circ g = g$ and $f \circ x = f$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) Additivity is Proposition~\ref{generating-functions:proposition-summable}(1). For products, by Proposition~\ref{generating-functions:proposition-summable}(3) and (2),
+\[
+f(g)\,k(g) = \sum_{(i,j)}f_ik_jg^{i+j} = \sum_n\Bigl(\sum_{i+j=n}f_ik_j\Bigr)g^n = (fk)(g).
+\]
+Constants go to themselves and $x$ to $g$. For a summable family $(f_i)$, the coefficient $[x^n](f_i(g)) = \sum_{m \leq n}[x^m]f_i \cdot [x^n]g^m$ (the terms with $m > n$ vanish since
+$\operatorname{ord}(g^m) \geq m$) is nonzero only if $[x^m]f_i \neq 0$ for some $m \leq n$, which happens for finitely many $i$; the family $(([x^m]f_i)\,g^m)_{(i,m)}$ is then summable, by the same argument, and regrouping it
+in two ways (Proposition~\ref{generating-functions:proposition-summable}(2)) gives $\sum_if_i(g) = \sum_m(\sum_i[x^m]f_i)g^m = (\sum_if_i)(g)$. A ring homomorphism sends inverses to inverses.
+(2) If $\operatorname{ord}(f) = m$, then $f(g) = \sum_{n \geq m}f_ng^n$ and each term has order at least $n \geq m$; the constant term of $f(g)$ is that of $f_0g^0 = f_0$. For associativity, both
+$f \mapsto (f \circ g) \circ h$ and $f \mapsto f \circ (g \circ h)$ are ring homomorphisms (compositions of the homomorphisms of (1)) that preserve summable sums and send $x$ to $g \circ h$. Two such
+maps agree on polynomials, being ring homomorphisms that agree on $R$ and on $x$, and hence on every $f = \sum_n f_nx^n$, the sum of the summable family $(f_nx^n)$.
+(3) $x \circ g = g^1 = g$, and $f \circ x = \sum f_nx^n = f$.
+\end{proof}
+
+\begin{counterexample}\label{generating-functions:counterexample-composition}
+The hypothesis $g(0) = 0$ cannot be dropped. Substituting $g = 1$ into $\frac{1}{1 - x} = \sum_nx^n$ would give $1 + 1 + \cdots$. Substituting $1 + x$ into $\sum_n\frac{x^n}{n!} \in \QQ[[x]]$ would give
+a constant term $\sum_n\frac1{n!}$, a real number that is not a finite combination of the coefficients. When $f$ is a polynomial, every $g$ may be substituted, since the sum $\sum_nf_ng^n$ is
+finite; for instance $(1 + x)^2 \circ (1 + x) = (2 + x)^2$.
+\end{counterexample}
+
+\begin{proposition}[Compositional inverse]\label{generating-functions:proposition-compositional-inverse}
+Let $f \in R[[x]]$ with $f(0) = 0$. There is a series $g$ with $g(0) = 0$ and $f \circ g = x$ if and only if $f_1$ is a unit of $R$. In that case $g$ is unique, $g_1 = f_1^{-1}$, and also
+$g \circ f = x$. The series with $f(0) = 0$ and $f_1$ a unit form a group under composition, with neutral element $x$.
+\end{proposition}
+
+\begin{proof}
+\emph{Necessity.} The coefficient of $x$ in $f(g) = \sum_{n \geq 1}f_ng^n$ is $f_1g_1$, since $g^n$ has order at least $n \geq 2$ for $n \geq 2$. So $f \circ g = x$ forces $f_1g_1 = 1$.
+\emph{Existence and uniqueness.} Suppose $f_1$ is a unit. For $n \geq 1$, the coefficient of $x^n$ in $f(g) = \sum_{m=1}^{n}f_mg^m + (\text{terms of order} > n)$ is
+\[
+[x^n]f(g) = f_1g_n + P_n(f_2, \ldots, f_n, g_1, \ldots, g_{n-1}),
+\]
+where $P_n$ is a polynomial with integer coefficients: in $g^m$ with $m \geq 2$, the coefficient of $x^n$ is a sum of products $g_{j_1} \cdots g_{j_m}$ with $j_1 + \cdots + j_m = n$ and all
+$j_i \geq 1$, so all $j_i \leq n - 1$. The conditions $[x^1]f(g) = 1$ and $[x^n]f(g) = 0$ for $n \geq 2$ therefore determine $g_1 = f_1^{-1}$ and then recursively
+$g_n = -f_1^{-1}P_n(f_2, \ldots, f_n, g_1, \ldots, g_{n-1})$: a solution exists and is unique.
+\emph{The group.} Let $G$ be the set of series with $f(0) = 0$ and $f_1$ a unit. If $f, h \in G$, then $f \circ h \in G$, as $[x](f \circ h) = f_1h_1$ by the computation above; composition is associative
+by Lemma~\ref{generating-functions:lemma-composition}(2), with neutral element $x$ by (3) of that lemma, and every $f \in G$ has a right inverse $g \in G$ ($g_1 = f_1^{-1}$ is a unit). In a monoid
+in which every element has a right inverse, right inverses are two-sided: if $f \circ g = x$ and $g \circ h = x$, then $f = f \circ (g \circ h) = (f \circ g) \circ h = h$, so $g \circ f = g \circ h = x$.
+\end{proof}
+
+\begin{example}\label{generating-functions:example-compositional-inverse}
+\begin{enumerate}
+\item The inverse of $f = \frac{x}{1 - x}$ is $g = \frac{x}{1 + x}$: indeed $1 - g = \frac{1}{1 + x}$, so $f(g) = g \cdot (1 + x) = x$, using Lemma~\ref{generating-functions:lemma-composition}(1)
+for $\frac{1}{1 - x} \circ g = \frac{1}{1 - g}$.
+\item The inverse of $f = x - x^2$ is the series $g$ with $g - g^2 = x$. Its coefficients, computed from the recursion of the proof, begin $g = x + x^2 + 2x^3 + 5x^4 + 14x^5 + \cdots$, the Catalan
+numbers; Section~\ref{generating-functions:section-catalan} solves this equation in closed form.
+\end{enumerate}
+\end{example}
+
+\subsection{The formal derivative}\label{generating-functions:subsection-derivative}
+
+\begin{definition}\label{generating-functions:definition-derivative}
+The \emph{formal derivative} of $f = \sum_nf_nx^n$ is $Df = \sum_{n \geq 1}nf_nx^{n-1} = \sum_n(n + 1)f_{n+1}x^n$. We also write $f^{\prime}$ for $Df$, and $D^k$ for the $k$-th iterate.
+\end{definition}
+
+\begin{lemma}\label{generating-functions:lemma-derivative}
+For $f, g \in R[[x]]$ and $r \in R$:
+\begin{enumerate}
+\item $D(f + g) = Df + Dg$, $D(rf) = rDf$, and $D$ preserves summable sums: $D\sum_if_i = \sum_iDf_i$;
+\item (Leibniz rule) $D(fg) = (Df)g + fDg$; hence $D(f^n) = nf^{n-1}Df$ for $n \geq 1$, and $D(1/f) = -Df/f^2$ if $f$ is a unit;
+\item (Chain rule) if $g(0) = 0$, then $D(f \circ g) = ((Df) \circ g) \cdot Dg$;
+\item $D^kf$ has constant term $k!\,f_k$; so, if $R$ contains $\QQ$, $f_k = (D^kf)(0)/k!$ (Taylor's formula).
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) Linearity is clear coefficientwise; for a summable family, $[x^n]D\sum_if_i = (n + 1)\sum_i[x^{n+1}]f_i = \sum_i[x^n]Df_i$.
+(2) Both sides of the Leibniz rule are additive in $f$ and in $g$ and preserve summable sums in each, by (1) and Proposition~\ref{generating-functions:proposition-summable}; writing $f$ and $g$ as sums of
+monomials, it suffices to check it for $f = x^i$, $g = x^j$, where both sides are $(i + j)x^{i+j-1}$ (read as $0$ if $i = j = 0$). The formula for $D(f^n)$ follows by induction on $n$, and applying the
+Leibniz rule to $f \cdot (1/f) = 1$ gives $(Df)/f + fD(1/f) = 0$.
+(3) Both sides are additive in $f$ and preserve summable sums (Lemma~\ref{generating-functions:lemma-composition}(1) and (1)), so it suffices to take $f = x^n$: then $D(g^n) = ng^{n-1}Dg$ by (2),
+and $(Dx^n) \circ g = ng^{n-1}$.
+(4) $D^kf = \sum_n(n + 1)(n + 2) \cdots (n + k)f_{n+k}x^n$, by induction on $k$; its constant term is $k!\,f_k$.
+\end{proof}
+
+\begin{counterexample}\label{generating-functions:counterexample-characteristic}
+In characteristic $p > 0$ the derivative loses information: in $\mathbb{F}_p[[x]]$, $D(x^p) = px^{p-1} = 0$, so a series with derivative $0$ need not be constant, and Taylor's formula is
+meaningless since $p! = 0$. Over a ring containing $\QQ$ this cannot happen: if $Df = 0$ then $(n + 1)f_{n+1} = 0$ and hence $f_{n+1} = 0$ for every $n$, so $f = f_0$ is constant. Consequently,
+over such a ring, \emph{a series is determined by its derivative and its constant term}, and every series $g$ has a unique antiderivative $\int g = \sum_n\frac{g_n}{n + 1}x^{n+1}$ with constant term
+$0$.
+\end{counterexample}
+
+\subsection{Exponential, logarithm and powers}\label{generating-functions:subsection-exp-log}
+
+From now on in this subsection, $R$ contains $\QQ$. The familiar series of analysis then make sense formally, and the familiar identities between them hold formally; but they must be proved again, by
+algebra alone.
+
+\begin{definition}\label{generating-functions:definition-exp-log}
+The \emph{exponential} and \emph{logarithm} series are
+\[
+\begin{aligned}
+\exp(x) &= e^x = \sum_{n \geq 0}\frac{x^n}{n!},\\
+\log(1 + x) &= \sum_{n \geq 1}\frac{(-1)^{n-1}}{n}x^n = x - \frac{x^2}{2} + \frac{x^3}{3} - \cdots.
+\end{aligned}
+\]
+For a series $f$ with $f(0) = 0$ we put $\exp(f) = \exp \circ f$ and $\log(1 + f) = \log(1 + x) \circ f$ (Definition~\ref{generating-functions:definition-composition}).
+\end{definition}
+
+The notation $\log(1 + f)$ is a single symbol: $\log$ is only defined for series with constant term $1$. Likewise $\exp(f)$ only for $f(0) = 0$
+(Counterexample~\ref{generating-functions:counterexample-composition}).
+
+\begin{proposition}\label{generating-functions:proposition-exp-log}
+Let $f, g \in R[[x]]$ with $f(0) = g(0) = 0$.
+\begin{enumerate}
+\item $D\exp(x) = \exp(x)$, and $\exp(x)$ is the only series $E$ with $DE = E$ and $E(0) = 1$. Also $D\log(1 + x) = \frac{1}{1 + x}$.
+\item $\exp(f + g) = \exp(f)\exp(g)$; in particular $\exp(f)$ is a unit with inverse $\exp(-f)$, and $\exp(nf) = \exp(f)^n$ for $n \in \ZZ$.
+\item $\exp(\log(1 + f)) = 1 + f$ and $\log(\exp(f)) = f$, where $\log(\exp(f))$ means $\log(1 + (\exp(f) - 1))$.
+\item $\log((1 + f)(1 + g)) = \log(1 + f) + \log(1 + g)$.
+\item $D\exp(f) = \exp(f)Df$ and $D\log(1 + f) = \frac{Df}{1 + f}$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) $D\sum_n\frac{x^n}{n!} = \sum_{n \geq 1}\frac{nx^{n-1}}{n!} = \sum_m\frac{x^m}{m!}$. If $DE = E$ and $E(0) = 1$, then $(n + 1)E_{n+1} = E_n$, so $E_n = 1/n!$ by induction. Finally
+$D\log(1 + x) = \sum_{n \geq 1}(-1)^{n-1}x^{n-1} = \frac{1}{1 + x}$ by Example~\ref{generating-functions:example-geometric}(2) with $a = -1$.
+(2) By Proposition~\ref{generating-functions:proposition-summable}(3) and (2), and the binomial theorem (Theorem~\ref{combinatorics:theorem-binomial}) in the commutative ring $R[[x]]$,
+\[
+\begin{aligned}
+\exp(f)\exp(g) &= \sum_{(i,j)}\frac{f^ig^j}{i!\,j!} = \sum_n\frac{1}{n!}\sum_{i+j=n}\binom{n}{i}f^ig^j\\
+&= \sum_n\frac{(f + g)^n}{n!} = \exp(f + g);
+\end{aligned}
+\]
+the family $(f^ig^j/(i!j!))$ is summable since its terms have order at least $i + j$. With $g = -f$ we get $\exp(f)\exp(-f) = \exp(0) = 1$, and $\exp(nf) = \exp(f)^n$ follows by induction for
+$n \geq 0$ and then for $n < 0$ by taking inverses.
+(5) Chain rule (Lemma~\ref{generating-functions:lemma-derivative}(3)) and (1): $D\exp(f) = \exp(f)Df$, and $D\log(1 + f) = \frac{1}{1 + x} \circ f \cdot Df = \frac{Df}{1 + f}$, using
+Lemma~\ref{generating-functions:lemma-composition}(1) for the inverse.
+(3) Let $L = \log(1 + x)$ and $h = \exp(L)$. By (5), $Dh = h \cdot \frac{1}{1 + x}$, so by the Leibniz rule
+\[
+D\Bigl(\frac{h}{1 + x}\Bigr) = \frac{Dh}{1 + x} - \frac{h}{(1 + x)^2} = 0.
+\]
+By Counterexample~\ref{generating-functions:counterexample-characteristic} the series $h/(1 + x)$ is constant, equal to its constant term $h(0) = \exp(0) = 1$; so $\exp(\log(1 + x)) = 1 + x$. Put
+$E_1 = \exp(x) - 1$. We have shown $E_1 \circ L = x$. Both $E_1$ and $L$ have constant term $0$ and coefficient of $x$ equal to $1$, so they lie in the group of
+Proposition~\ref{generating-functions:proposition-compositional-inverse}, where $E_1 \circ L = x$ implies $L \circ E_1 = x$, that is, $\log(\exp(x)) = x$. Composing both identities with $f$
+(Lemma~\ref{generating-functions:lemma-composition}(2)) gives (3).
+(4) By (2) and (3), $\exp(\log(1 + f) + \log(1 + g)) = (1 + f)(1 + g) = 1 + (f + g + fg)$. Apply $\log$, using $\log(\exp(u)) = u$ for $u = \log(1 + f) + \log(1 + g)$, which has constant term $0$.
+\end{proof}
+
+\begin{definition}\label{generating-functions:definition-powers}
+For $a \in R$ and a series $f$ with $f(0) = 0$, put $(1 + f)^a = \exp(a\log(1 + f))$. The \emph{binomial series} is $(1 + x)^a$.
+\end{definition}
+
+\begin{theorem}[Newton's binomial series]\label{generating-functions:theorem-binomial-series}
+Let $R$ contain $\QQ$, $a, b \in R$, and $f, g \in R[[x]]$ with $f(0) = g(0) = 0$.
+\begin{enumerate}
+\item $(1 + x)^a = \sum_{n \geq 0}\binom{a}{n}x^n$, with $\binom{a}{n} = \frac{a(a - 1) \cdots (a - n + 1)}{n!}$.
+\item $(1 + f)^a(1 + f)^b = (1 + f)^{a+b}$, $((1 + f)^a)^b = (1 + f)^{ab}$, and $((1 + f)(1 + g))^a = (1 + f)^a(1 + g)^a$; here $((1 + f)^a)^b$ makes sense since $(1 + f)^a$ has constant term $1$.
+\item For $a = n \in \NN$, $(1 + f)^a$ is the $n$-th power $(1 + f)^n$ in the ring $R[[x]]$; for $a = -1$ it is the inverse $1/(1 + f)$.
+\item For $m \geq 1$, $(1 + f)^{1/m}$ is the unique series $h$ with constant term $1$ and $h^m = 1 + f$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) Let $B = (1 + x)^a = \exp(aL)$ with $L = \log(1 + x)$. By Proposition~\ref{generating-functions:proposition-exp-log}(5) and (1), $DB = B \cdot \frac{a}{1 + x}$, that is, $(1 + x)DB = aB$.
+Comparing coefficients of $x^n$: $(n + 1)B_{n+1} + nB_n = aB_n$, so $B_{n+1} = \frac{a - n}{n + 1}B_n$, with $B_0 = \exp(0) = 1$. By induction $B_n = \frac{a(a - 1) \cdots (a - n + 1)}{n!} = \binom{a}{n}$.
+(2) The first two identities: $\exp(a\log(1 + f))\exp(b\log(1 + f)) = \exp((a + b)\log(1 + f))$ by Proposition~\ref{generating-functions:proposition-exp-log}(2); and
+$\log((1 + f)^a) = \log(\exp(a\log(1 + f))) = a\log(1 + f)$ by (3) of that proposition, so $((1 + f)^a)^b = \exp(ab\log(1 + f))$. The third: $\log((1 + f)(1 + g)) = \log(1 + f) + \log(1 + g)$
+by (4) of that proposition; multiply by $a$ and exponentiate.
+(3) By (2), $(1 + f)^{n} = \exp(\log(1 + f))^n$ (using $\exp(nu) = \exp(u)^n$), and $\exp(\log(1 + f)) = 1 + f$. For $a = -1$, $(1 + f)^{-1}(1 + f)^1 = (1 + f)^0 = 1$.
+(4) By (2) and (3), $h = (1 + f)^{1/m}$ satisfies $h^m = (1 + f)^{1} = 1 + f$. If also $k^m = 1 + f$ with $k(0) = 1$, then $u = k/h$ has $u^m = 1$ and $u(0) = 1$; write $u = 1 + v$ with
+$v(0) = 0$. If $v \neq 0$, of order $r \geq 1$, then $u^m = 1 + mv + (\text{terms of order} \geq 2r)$, so the coefficient of $x^r$ of $u^m - 1$ is $mv_r$, which is nonzero because $m$ is a unit of $R$ and $v_r \neq 0$; a contradiction. So $v = 0$ and $k = h$.
+\end{proof}
+
+\begin{example}\label{generating-functions:example-central-binomial}
+For $a = -\frac12$, $\binom{-1/2}{n} = \frac{(-\frac12)(-\frac32) \cdots (-\frac{2n-1}{2})}{n!} = \frac{(-1)^n\,1 \cdot 3 \cdots (2n - 1)}{2^nn!} = \frac{(-1)^n(2n)!}{4^n\,n!^2}$, using
+$1 \cdot 3 \cdots (2n - 1) = \frac{(2n)!}{2 \cdot 4 \cdots 2n} = \frac{(2n)!}{2^nn!}$. Substituting $-4x$ for $x$ (Lemma~\ref{generating-functions:lemma-composition}):
+\[
+\begin{aligned}
+\frac{1}{\sqrt{1 - 4x}} = (1 - 4x)^{-1/2} &= \sum_{n \geq 0}\binom{2n}{n}x^n\\
+&= 1 + 2x + 6x^2 + 20x^3 + 70x^4 + \cdots.
+\end{aligned}
+\]
+Squaring and using Theorem~\ref{generating-functions:theorem-binomial-series}(2), $\bigl(\sum_n\binom{2n}{n}x^n\bigr)^2 = (1 - 4x)^{-1} = \sum_n4^nx^n$, which is the identity
+\[
+\sum_{k=0}^{n}\binom{2k}{k}\binom{2n - 2k}{n - k} = 4^n.
+\]
+Combinatorial proofs of this identity exist, but they are surprisingly delicate; the generating function proves it in one line.
+\end{example}
+
+\begin{example}\label{generating-functions:example-sqrt}
+Similarly $\binom{1/2}{n} = \frac{1}{1 - 2n}\binom{-1/2}{n}$: the numerator of $\binom{1/2}{n}$ is $\frac12(\frac12 - 1) \cdots (\frac12 - n + 1)$, and that of $\binom{-1/2}{n}$ is
+$(\frac12 - 1) \cdots (\frac12 - n + 1)(\frac12 - n)$, so their ratio is $\frac{1/2}{1/2 - n} = \frac{1}{1 - 2n}$. Hence
+\[
+\begin{aligned}
+\sqrt{1 - 4x} = (1 - 4x)^{1/2} &= \sum_{n \geq 0}\frac{1}{1 - 2n}\binom{2n}{n}x^n\\
+&= 1 - 2x - 2x^2 - 4x^3 - 10x^4 - 28x^5 - \cdots,
+\end{aligned}
+\]
+and for $n \geq 1$ the coefficient $-\frac{1}{2n - 1}\binom{2n}{n} = -\frac{2}{n}\binom{2n - 2}{n - 1}$ is $-2$ times a Catalan number $\frac{1}{n}\binom{2n-2}{n-1}$; the check:
+$\binom{2n}{n} = \frac{2n(2n - 1)}{n^2}\binom{2n - 2}{n - 1}$.
+\end{example}
+
+\begin{remark}\label{generating-functions:remark-formal-analytic}
+When $R = \RR$ or $\CC$ and the series converge, the formal $\exp$, $\log$ and $(1 + x)^a$ are the Taylor series of the functions of the same name, and the formal identities become identities of
+functions near $0$. The formal theory needs none of this, and it works over rings such as $\QQ[y]$ or $\QQ[[y]]$, where $a$ may itself be a variable: $(1 + x)^y = \sum_n\binom{y}{n}x^n$ in
+$\QQ[y][[x]]$.
+\end{remark}
+
+\section{Rational generating functions and linear recurrences}\label{generating-functions:section-rational}
+
+The simplest sequences after the polynomial ones are those defined by a linear recurrence with constant coefficients, such as the Fibonacci numbers. Their generating functions are exactly the
+rational functions, and the factorisation of the denominator gives a closed formula.
+
+\subsection{Recurrences and rational series}\label{generating-functions:subsection-recurrences}
+
+\begin{definition}\label{generating-functions:definition-linear-recurrence}
+Let $c_1, \ldots, c_d \in R$, $d \geq 1$. A sequence $(a_n)_{n \geq 0}$ in $R$ satisfies the \emph{linear recurrence with constant coefficients}
+\[
+a_{n+d} = c_1a_{n+d-1} + c_2a_{n+d-2} + \cdots + c_da_n \qquad (n \geq 0)
+\]
+of order $d$. Its \emph{characteristic polynomial} is $\chi(t) = t^d - c_1t^{d-1} - \cdots - c_d \in R[t]$, and its \emph{reflected polynomial} is $Q(x) = 1 - c_1x - \cdots - c_dx^d \in R[x]$.
+\end{definition}
+
+A sequence satisfying such a recurrence is determined by its $d$ initial values $a_0, \ldots, a_{d-1}$, and any initial values can be chosen.
+
+\begin{theorem}\label{generating-functions:theorem-rational}
+Let $c_1, \ldots, c_d \in R$ and $Q = 1 - c_1x - \cdots - c_dx^d$. For a sequence $(a_n)$ in $R$ with generating function $A = \sum_na_nx^n$, the following are equivalent:
+\begin{enumerate}
+\item $(a_n)$ satisfies the recurrence $a_{n+d} = c_1a_{n+d-1} + \cdots + c_da_n$ for all $n \geq 0$;
+\item $QA$ is a polynomial of degree less than $d$ (or zero);
+\item $A = P/Q$ for a polynomial $P$ of degree less than $d$ (or $P = 0$).
+\end{enumerate}
+In that case $P = QA$ is determined by $a_0, \ldots, a_{d-1}$: its coefficient of $x^m$ is $a_m - c_1a_{m-1} - \cdots - c_ma_0$ for $m < d$. Conversely, for every $P$ of degree less than $d$, the
+coefficients of $P/Q$ satisfy the recurrence.
+\end{theorem}
+
+\begin{proof}
+$Q$ has constant term $1$, so it is a unit (Proposition~\ref{rings:proposition-power-series-units}) and (2) and (3) are equivalent. Put $c_0 = -1$, so that $Q = -\sum_{k=0}^{d}c_kx^k$. For
+$m \geq 0$, the coefficient of $x^m$ in $QA$ is $-\sum_{k=0}^{\min(m, d)}c_ka_{m-k}$. For $m = n + d \geq d$ this is $a_{n+d} - c_1a_{n+d-1} - \cdots - c_da_n$, which vanishes for all $n$ exactly when
+(1) holds; and for $m < d$ it is the stated coefficient of $P$.
+\end{proof}
+
+\begin{example}\label{generating-functions:example-fibonacci-gf}
+The Fibonacci numbers $F_0 = 0$, $F_1 = 1$, $F_{n+2} = F_{n+1} + F_n$ satisfy the recurrence with $d = 2$, $c_1 = c_2 = 1$, so $Q = 1 - x - x^2$, and $P = F_0 + (F_1 - F_0)x = x$:
+\[
+\sum_nF_nx^n = \frac{x}{1 - x - x^2}.
+\]
+The \emph{Lucas numbers} $L_0 = 2$, $L_1 = 1$, $L_{n+2} = L_{n+1} + L_n$, that is $2, 1, 3, 4, 7, 11, 18, 29, \ldots$, satisfy the same recurrence with $P = 2 + (1 - 2)x = 2 - x$. Both are sequences of
+integers; the theorem holds over $\ZZ$.
+\end{example}
+
+\begin{counterexample}\label{generating-functions:counterexample-variable-coefficients}
+The hypothesis that the coefficients are constant is essential. The sequence $a_n = n!$ satisfies the recurrence $a_{n+1} = (n + 1)a_n$, whose coefficient depends on $n$, but $\sum_nn!\,x^n$ is not
+rational, even over $\CC$. Indeed, by Theorem~\ref{generating-functions:theorem-closed-form} below, the coefficients of a rational series $P/Q \in \CC[[x]]$ satisfy $|a_n| \leq Cn^dM^n$ for some
+constants $C, M$ and $d$, while $n! \geq (n/2)^{n/2}$ (the $\lceil n/2\rceil$ largest factors are at least $n/2$), and $(n/2)^{n/2}/(n^dM^n) = (\sqrt{n/2}/M)^n/n^d$ is unbounded.
+\end{counterexample}
+
+\subsection{Partial fractions and the closed formula}\label{generating-functions:subsection-partial-fractions}
+
+\begin{lemma}[Partial fractions]\label{generating-functions:lemma-partial-fractions}
+Let $K$ be a field, and let $Q = \prod_{i=1}^{r}(1 - \alpha_ix)^{m_i}$ with $\alpha_1, \ldots, \alpha_r \in K$ distinct and nonzero and $m_i \geq 1$; put $d = \deg Q = m_1 + \cdots + m_r$. For every
+polynomial $P \in K[x]$ of degree less than $d$ there are unique $\beta_{ij} \in K$ ($1 \leq i \leq r$, $1 \leq j \leq m_i$) with
+\[
+\frac{P}{Q} = \sum_{i=1}^{r}\sum_{j=1}^{m_i}\frac{\beta_{ij}}{(1 - \alpha_ix)^j}.
+\]
+\end{lemma}
+
+\begin{proof}
+\emph{Step 1: the case $r = 1$.} Write $\alpha = \alpha_1$, $m = m_1$ and $y = 1 - \alpha x$. Since $\alpha \neq 0$, $x = \alpha^{-1}(1 - y)$, so every polynomial of degree less than $m$ in $x$ is a
+polynomial of degree less than $m$ in $y$: $P = \sum_{k=0}^{m-1}\gamma_ky^k$. Dividing by $y^m$ gives $P/Q = \sum_{k=0}^{m-1}\gamma_ky^{k-m}$, the required form with $\beta_{1j} = \gamma_{m-j}$.
+\emph{Step 2: splitting.} Let $Q_i = (1 - \alpha_ix)^{m_i}$. For $i \neq k$ the polynomials $Q_i$ and $Q_k$ have no common root (the only root of $Q_i$ is $\alpha_i^{-1}$), so $Q_1$ and
+$Q_2 \cdots Q_r$ generate the unit ideal of the principal ideal domain $K[x]$ (Theorem~\ref{rings:theorem-polynomial-division}): a generator of the ideal they generate divides both, and a common
+divisor of positive degree would have a root, in an extension of $K$, common to $Q_1$ and $Q_2 \cdots Q_r$. Write $1 = UQ_1 + VQ_2 \cdots Q_r$ with $U, V \in K[x]$. Then
+$\frac{P}{Q} = \frac{PV}{Q_1} + \frac{PU}{Q_2 \cdots Q_r}$. Divide: $PV = SQ_1 + P_1$ with $\deg P_1 < m_1$. Then $\frac{P}{Q} = \frac{P_1}{Q_1} + \frac{P_2}{Q_2 \cdots Q_r}$ with
+$P_2 = PU + SQ_2 \cdots Q_r$; multiplying by $Q$ shows $P_2Q_1 = P - P_1Q_2 \cdots Q_r$, which has degree less than $d$, so $\deg P_2 < d - m_1$. By induction on $r$ and Step 1, the form exists.
+\emph{Step 3: uniqueness.} Multiplying by $Q$, the right-hand side becomes $\sum_{i,j}\beta_{ij}Q/(1 - \alpha_ix)^j$, a polynomial of degree less than $d$. So the $K$-linear map
+$K^d \to \{P : \deg P < d\}$, $(\beta_{ij}) \mapsto \sum_{i,j}\beta_{ij}Q/(1 - \alpha_ix)^j$, is surjective by Step 2; both spaces have dimension $d$, so it is injective
+(Theorem~\ref{linear-algebra:theorem-rank-nullity}).
+\end{proof}
+
+\begin{theorem}\label{generating-functions:theorem-closed-form}
+Let $K$ be a field, $c_1, \ldots, c_d \in K$ with $c_d \neq 0$, and suppose that the characteristic polynomial factors as $\chi(t) = \prod_{i=1}^{r}(t - \alpha_i)^{m_i}$ with distinct
+$\alpha_i \in K$ (this holds for $K = \CC$ by the fundamental theorem of algebra, Theorem~\ref{fields:theorem-fta}). Then the sequences satisfying the recurrence are exactly the sequences
+\[
+a_n = \sum_{i=1}^{r}\sum_{j=1}^{m_i}\beta_{ij}\binom{n + j - 1}{j - 1}\alpha_i^n \qquad (\beta_{ij} \in K).
+\]
+If $K$ has characteristic $0$, they are exactly the sequences $a_n = \sum_ip_i(n)\alpha_i^n$ with polynomials $p_i \in K[t]$ of degree less than $m_i$.
+\end{theorem}
+
+\begin{proof}
+\emph{The reflected polynomial.} The roots $\alpha_i$ are nonzero, since $\chi(0) = -c_d \neq 0$. For a polynomial $f$ of degree at most $e$ put $f^{\ast} = x^ef(1/x)$, that is,
+$(\sum_kf_kt^k)^{\ast} = \sum_kf_kx^{e-k}$; then $(fg)^{\ast} = f^{\ast}g^{\ast}$ when the degrees are bounded by $e$ and $e^{\prime}$ and $fg$ is read with the bound $e + e^{\prime}$, as one checks on
+monomials. So $Q = \chi^{\ast} = \prod_i((t - \alpha_i)^{\ast})^{m_i} = \prod_i(1 - \alpha_ix)^{m_i}$.
+\emph{The formula.} By Theorem~\ref{generating-functions:theorem-rational}, the solutions are the coefficient sequences of the series $P/Q$ with $\deg P < d$, and by
+Lemma~\ref{generating-functions:lemma-partial-fractions} these are the series $\sum_{i,j}\beta_{ij}(1 - \alpha_ix)^{-j}$ with arbitrary $\beta_{ij}$. By
+Example~\ref{generating-functions:example-geometric}(4), $[x^n](1 - \alpha x)^{-j} = \binom{n + j - 1}{j - 1}\alpha^n$.
+\emph{Characteristic $0$.} Here $\binom{n + j - 1}{j - 1}$ is the value at $n$ of the polynomial $\binom{t + j - 1}{j - 1} = (t + 1) \cdots (t + j - 1)/(j - 1)!$ of degree $j - 1$, and the polynomials
+$\binom{t + j - 1}{j - 1}$, $1 \leq j \leq m$, form a basis of the polynomials of degree less than $m$, since their degrees are $0, 1, \ldots, m - 1$. So the combinations
+$\sum_j\beta_{ij}\binom{n + j - 1}{j - 1}$ are exactly the values $p_i(n)$ of the polynomials of degree less than $m_i$. (In characteristic $0$ a polynomial is determined by its values on $\NN$,
+by Corollary~\ref{rings:corollary-roots}, so the two descriptions agree.)
+\end{proof}
+
+\begin{example}[Binet's formula]\label{generating-functions:example-binet}
+For the Fibonacci numbers, $\chi(t) = t^2 - t - 1 = (t - \varphi)(t - \bar{\varphi})$ over $\RR$, with $\varphi = \frac{1 + \sqrt 5}{2}$ (the golden ratio) and $\bar{\varphi} = \frac{1 - \sqrt 5}{2}$,
+since $\varphi + \bar{\varphi} = 1$ and $\varphi\bar{\varphi} = -1$. So $F_n = \beta\varphi^n + \beta^{\prime}\bar{\varphi}^n$; the initial values $F_0 = 0$ and $F_1 = 1$ give $\beta^{\prime} = -\beta$ and
+$\beta(\varphi - \bar{\varphi}) = \beta\sqrt 5 = 1$:
+\[
+F_n = \frac{\varphi^n - \bar{\varphi}^n}{\sqrt 5}, \qquad L_n = \varphi^n + \bar{\varphi}^n,
+\]
+the second in the same way from $L_0 = 2$, $L_1 = 1$. Since $|\bar{\varphi}| < 0.62$, $|\bar{\varphi}^n/\sqrt 5| < \frac12$ for all $n \geq 0$, so $F_n$ is the integer nearest to $\varphi^n/\sqrt 5$, and
+$L_n$ is the integer nearest to $\varphi^n$ for $n \geq 2$. For instance $\varphi^{10}/\sqrt 5 = 55.0036\ldots$ and $F_{10} = 55$.
+\end{example}
+
+\begin{example}[A double root]\label{generating-functions:example-double-root}
+The recurrence $a_{n+2} = 4a_{n+1} - 4a_n$ has $\chi = (t - 2)^2$, so its solutions are $a_n = (\beta + \gamma n)2^n$. With $a_0 = 1$ and $a_1 = 4$: $\beta = 1$, $2(1 + \gamma) = 4$, so
+$a_n = (n + 1)2^n$, the coefficients of $\frac{1}{(1 - 2x)^2}$. The factor $n$ is the effect of the repeated root: the sequences $\beta2^n$ alone form a space of dimension $1$, while the solutions of a
+recurrence of order $2$ form a space of dimension $2$.
+\end{example}
+
+\begin{counterexample}\label{generating-functions:counterexample-splitting}
+The splitting hypothesis cannot be dropped over a field that is not algebraically closed. Over $\QQ$, the recurrence $a_{n+2} = -a_n$ has $\chi = t^2 + 1$, without rational roots, and the theorem says nothing about its solution
+$0, 1, 0, -1, 0, 1, \ldots$ over $\QQ$; one must pass to the splitting field $\QQ(i)$, where $a_n = \frac{i^n - (-i)^n}{2i}$. And the hypothesis $c_d \neq 0$ excludes the root $0$: the recurrence $a_{n+2} = a_{n+1}$ has
+the solutions $a_0$ arbitrary, $a_1 = a_2 = \cdots$, which are of the form $\beta \cdot 1^n$ only from $n = 1$ on; a root $0$ of multiplicity $m$ only affects the first $m$ terms.
+\end{counterexample}
+
+\subsection{Fibonacci identities}\label{generating-functions:subsection-fibonacci}
+
+\begin{proposition}\label{generating-functions:proposition-fibonacci}
+For $m, n \geq 0$ (and $n \geq 1$ where $F_{n-1}$ occurs):
+\begin{enumerate}
+\item $\begin{pmatrix}1 & 1\\ 1 & 0\end{pmatrix}^n = \begin{pmatrix}F_{n+1} & F_n\\ F_n & F_{n-1}\end{pmatrix}$ for $n \geq 1$;
+\item (Cassini) $F_{n+1}F_{n-1} - F_n^2 = (-1)^n$;
+\item (Addition) $F_{m+n} = F_{m+1}F_n + F_mF_{n-1}$, and $F_{2n} = F_nL_n$;
+\item $F_m$ divides $F_{km}$ for every $k \geq 1$, and $\gcd(F_m, F_n) = F_{\gcd(m, n)}$;
+\item $F_0 + F_1 + \cdots + F_n = F_{n+2} - 1$ and $F_1^2 + \cdots + F_n^2 = F_nF_{n+1}$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) By induction: for $n = 1$ it is the definition of the matrix ($F_0 = 0$, $F_1 = F_2 = 1$), and multiplying by the matrix on the right gives the rows $(F_{n+1} + F_n, F_{n+1})$ and
+$(F_n + F_{n-1}, F_n)$, that is, $(F_{n+2}, F_{n+1})$ and $(F_{n+1}, F_n)$.
+(2) Take determinants in (1): the determinant is multiplicative (Proposition~\ref{linear-algebra:proposition-determinant-properties}), and the matrix has determinant $-1$.
+(3) The entry in the top right corner of $M^{m+n} = M^mM^n$, where $M$ is the matrix of (1), is $F_{m+1}F_n + F_mF_{n-1}$ (for $m, n \geq 1$; for $m = 0$ the identity reads $F_n = F_n$).
+For $m = n$: $F_{2n} = F_n(F_{n+1} + F_{n-1})$, and $F_{n+1} + F_{n-1} = L_n$, since both sides satisfy the Fibonacci recurrence and agree for $n = 1, 2$ ($1 + 0 = 1$, $2 + 1 = 3$).
+(4) By (3), $F_{(k+1)m} = F_{km+1}F_m + F_{km}F_{m-1}$, so $F_m \mid F_{km}$ by induction on $k$. Consecutive Fibonacci numbers are coprime, by (2). Now
+$\gcd(F_{qn+r}, F_n) = \gcd(F_{qn+1}F_r + F_{qn}F_{r-1}, F_n) = \gcd(F_{qn+1}F_r, F_n) = \gcd(F_r, F_n)$ for $n \geq 1$ and $1 \leq r < n$: the second equality as $F_n \mid F_{qn}$, the third as
+$\gcd(F_{qn+1}, F_n)$ divides $\gcd(F_{qn+1}, F_{qn}) = 1$ (for $q = 0$, $F_1 = 1$). So $\gcd(F_m, F_n) = \gcd(F_n, F_r)$ whenever $m = qn + r$ with $0 \leq r < n$ (for $r = 0$ both sides are
+$F_n$, as $F_n \mid F_{qn}$ and $F_0 = 0$): the pair of indices follows the Euclidean algorithm, $\gcd(m, n) = \gcd(n, r)$, which ends at a pair $(d, 0)$ with $d = \gcd(m, n)$, and
+$\gcd(F_d, F_0) = F_d$.
+(5) Both are by induction: $F_{n+2} - 1 + F_{n+1} = F_{n+3} - 1$, and $F_nF_{n+1} + F_{n+1}^2 = F_{n+1}F_{n+2}$.
+\end{proof}
+
+\begin{remark}\label{generating-functions:remark-fibonacci-generating}
+The sum $\sum_{k \leq n}F_k = F_{n+2} - 1$ is also immediate from generating functions: by Example~\ref{generating-functions:example-partial-sums} the partial sums have generating function
+$\frac{x}{(1 - x)(1 - x - x^2)}$, and $\frac{x}{(1 - x)(1 - x - x^2)} = \frac{1}{x^2}\Bigl(\frac{x}{1 - x - x^2} - x\Bigr) - \frac{1}{1 - x}$, as one checks by clearing denominators; the
+first term, a series of order $2$ divided by $x^2$, is $\sum_nF_{n+2}x^n$ by the shift rule of Lemma~\ref{generating-functions:lemma-ring}. Identity (4) shows that
+$F_n$ can only be prime if $n$ is prime or $n = 4$ ($F_4 = 3$): if $n = ab$ with $3 \leq a < n$, then $1 < F_a < F_n$ and $F_a \mid F_n$, and the only composite $n$ without such a factor is $4$; the converse fails, $F_{19} = 4181 = 37 \cdot 113$, and it is unknown whether there are infinitely many Fibonacci primes.
+\end{remark}
+
+\subsection{Counting with automata: the transfer matrix}\label{generating-functions:subsection-transfer-matrix}
+
+Many sequences satisfying linear recurrences count words, or walks, built step by step with a finite memory. The \emph{transfer matrix method} proves that such counting sequences are always
+rational and gives the denominator.
+
+\begin{theorem}[Transfer matrix]\label{generating-functions:theorem-transfer-matrix}
+Let $A$ be a $k \times k$ matrix with entries in $R$; think of $A_{ij}$ as the number (or weight) of steps from state $i$ to state $j$. Then in the matrix ring $\mathrm{M}_k(R[[x]])$,
+\[
+\begin{aligned}
+&\sum_{n \geq 0}A^nx^n = (I - xA)^{-1},\\
+&\sum_{n \geq 0}(A^n)_{ij}x^n = \frac{(-1)^{i+j}\det\bigl((I - xA)_{\hat{\jmath}\hat{\imath}}\bigr)}{\det(I - xA)},
+\end{aligned}
+\]
+where $(I - xA)_{\hat{\jmath}\hat{\imath}}$ is the matrix with row $j$ and column $i$ removed. In particular each generating function $\sum_n(A^n)_{ij}x^n$ is rational with denominator
+$\det(I - xA) = 1 - \operatorname{tr}(A)x + \cdots + (-1)^k\det(A)x^k$, of degree at most $k$, and the sequence $((A^n)_{ij})_n$ satisfies a linear recurrence of order at most $k$.
+\end{theorem}
+
+\begin{proof}
+The family $(A^nx^n)$ of matrices is summable entrywise, and $(I - xA)\sum_nA^nx^n = \sum_nA^nx^n - \sum_nA^{n+1}x^{n+1} = I$, which shows the first formula ($I - xA$ commutes with $\sum A^nx^n$, so the
+inverse is two-sided). The determinant $\det(I - xA)$ is a polynomial in $x$ of degree at most $k$ with constant term $\det I = 1$, so it is a unit of $R[[x]]$, and the adjugate matrix satisfies
+$M\operatorname{adj}(M) = \det(M)I$ over the commutative ring $R[[x]]$ (Proposition~\ref{linear-algebra:proposition-determinant-properties}(4)). So
+$(I - xA)^{-1} = \det(I - xA)^{-1}\operatorname{adj}(I - xA)$, which is the second formula; its numerators are minors of size $k - 1$, polynomials of degree at most $k - 1$, and
+Theorem~\ref{generating-functions:theorem-rational} gives the recurrence. The coefficient of $x$ in $\det(I - xA)$ is $-\operatorname{tr}(A)$ and that of $x^k$ is $\det(-A)$, by the Leibniz
+expansion of the determinant.
+\end{proof}
+
+\begin{example}\label{generating-functions:example-no-consecutive-ones}
+Let $w_n$ be the number of words of length $n$ in the letters $0, 1$ with no two consecutive letters $1$. Classify by the last letter: the state is $0$ (last letter $0$, or the empty word) or $1$. From
+state $0$ one may append $0$ or $1$; from state $1$ only $0$. So $A = \begin{pmatrix}1 & 1\\ 1 & 0\end{pmatrix}$, $\det(I - xA) = 1 - x - x^2$, and $w_n$ is the sum of the entries of the first row of
+$A^n$, which is $F_{n+1} + F_n = F_{n+2}$ by Proposition~\ref{generating-functions:proposition-fibonacci}(1): $w_0, w_1, \ldots = 1, 2, 3, 5, 8, 13, \ldots$. Similarly, the words of length $n$ in
+the letters $a, b, c$ with no two consecutive letters $a$ have the transfer matrix $\begin{pmatrix}2 & 1\\ 2 & 0\end{pmatrix}$ (states: last letter not $a$, last letter $a$), and their number satisfies
+$u_{n+2} = 2u_{n+1} + 2u_n$: $1, 3, 8, 22, 60, 164, \ldots$, with generating function $\frac{1 + x}{1 - 2x - 2x^2}$.
+\end{example}
+
+\begin{example}\label{generating-functions:example-closed-walks}
+The number of closed walks of length $n$ in a finite graph is $\operatorname{tr}(A^n)$, where $A$ is the adjacency matrix. For the cycle with $3$ vertices, $A = J - I$ with $J$ the all-ones
+matrix; $J^2 = 3J$, so $J$ has the eigenvalues $3, 0, 0$ and $A$ has $2, -1, -1$. In a Jordan basis (Theorem~\ref{linear-algebra:theorem-jordan}) $A^n$ is triangular with diagonal entries
+$2^n, (-1)^n, (-1)^n$, so $\operatorname{tr}(A^n) = 2^n + 2(-1)^n$; and indeed $\det(I - xA) = (1 - 2x)(1 + x)^2$. Graph theory uses such counts to read properties of a graph
+off the spectrum of its adjacency matrix.
+\end{example}
+
+\subsection{Making change}\label{generating-functions:subsection-change}
+
+In how many ways can one pay $n$ cents with coins of $1$, $5$, $10$, $25$ and $50$ cents? This is P\'olya's problem; the answer is the coefficient of $x^n$ in
+\[
+\frac{1}{(1 - x)(1 - x^5)(1 - x^{10})(1 - x^{25})(1 - x^{50})},
+\]
+because $\frac{1}{1 - x^c} = \sum_mx^{cm}$ and a way of paying is a choice of the numbers $m_1, m_5, \ldots$ of coins of each kind with $m_1 + 5m_5 + 10m_{10} + 25m_{25} + 50m_{50} = n$. Multiplying the
+factors one at a time is an efficient algorithm: if $a_n$ are the coefficients of a series $A$, the coefficients of $A/(1 - x^c)$ are $b_n = a_n + b_{n-c}$. It gives $292$ ways to pay a dollar
+($n = 100$), and $242$ without the half-dollar.
+
+More generally, for positive integers $c_1, \ldots, c_k$ the number of solutions of $c_1m_1 + \cdots + c_km_k = n$ in natural numbers has the rational generating function $\prod_i(1 - x^{c_i})^{-1}$,
+whose denominator has the roots of unity of orders dividing the $c_i$ as reciprocal roots. By Theorem~\ref{generating-functions:theorem-closed-form} over $\CC$, the number is a \emph{quasi-polynomial}:
+a sum of terms $p(n)\zeta^n$ with $\zeta$ a root of unity, that is, a function that agrees with a polynomial on each residue class modulo the least common multiple of the $c_i$. The leading term
+comes from the root $1$, of multiplicity $k$, and is $\frac{n^{k-1}}{(k - 1)!\,c_1 \cdots c_k}$; it is the volume of a slice of a simplex, as the counting interpretation suggests.
+
+\begin{example}\label{generating-functions:example-three-parts}
+The number $a_n$ of partitions of $n$ into parts at most $3$ (equivalently, into at most $3$ parts, Exercise~\ref{combinatorics:exercise-partitions-three-parts}) is the integer nearest to
+$(n + 3)^2/12$. Here is a proof by generating functions. Let $A = \frac{1}{(1 - x)(1 - x^2)(1 - x^3)}$. Since $1 - x^6 = (1 - x^3)(1 + x^3)$,
+\[
+\begin{aligned}
+&(1 - x^6)A = \frac{1 + x^3}{(1 - x)(1 - x^2)},\\
+&\frac{1}{(1 - x)(1 - x^2)} = \sum_n\Bigl(\Bigl\lfloor\frac{n}{2}\Bigr\rfloor + 1\Bigr)x^n,
+\end{aligned}
+\]
+the latter because a solution of $m_1 + 2m_2 = n$ is determined by $m_2 \in \{0, \ldots, \lfloor n/2\rfloor\}$. So for $n \geq 6$, comparing coefficients of $x^n$, $a_n - a_{n-6} = \lfloor n/2\rfloor + 1 + \lfloor(n - 3)/2\rfloor + 1 = n$ (check $n = 2m$ and $n = 2m + 1$ separately). The function
+$f(n) = (n + 3)^2/12$ satisfies $f(n) - f(n - 6) = \frac{(n + 3)^2 - (n - 3)^2}{12} = n$ as well. Hence $g(n) = a_n - f(n)$ satisfies $g(n) = g(n - 6)$ for $n \geq 6$: it is periodic with period $6$.
+Its values for $n = 0, \ldots, 5$ (with $a_0, \ldots, a_5 = 1, 1, 2, 3, 4, 5$) are $\frac14, -\frac13, -\frac1{12}, 0, -\frac1{12}, -\frac13$, all of absolute value less than $\frac12$.
+\end{example}
+
+\section{Catalan numbers}\label{generating-functions:section-catalan}
+
+The Catalan numbers $C_n = \frac{1}{n + 1}\binom{2n}{n}$, $1, 1, 2, 5, 14, 42, 132, \ldots$, were defined in Proposition~\ref{combinatorics:proposition-lattice-paths} as the numbers of lattice paths
+that do not go above the diagonal. Stanley's book \cite{stanley-catalan} lists more than two hundred families of objects counted by them. They are the first example of a generating function defined
+by a \emph{nonlinear} equation, and of the method that decomposes a structure into smaller ones of the same kind.
+
+\subsection{Binary trees and the quadratic equation}\label{generating-functions:subsection-binary-trees}
+
+\begin{definition}\label{generating-functions:definition-binary-tree}
+The sets $\mathcal{B}_n$ of \emph{binary trees with $n$ nodes} are defined by recursion on $n$: $\mathcal{B}_0 = \{\varepsilon\}$ consists of the \emph{empty tree} $\varepsilon$, and for $n \geq 1$,
+\[
+\mathcal{B}_n = \bigsqcup_{i + j = n - 1}\mathcal{B}_i \times \mathcal{B}_j;
+\]
+a tree $(L, R) \in \mathcal{B}_i \times \mathcal{B}_j$ is drawn as a root node with the \emph{left subtree} $L$ and the \emph{right subtree} $R$ hanging below it. Let $b_n = |\mathcal{B}_n|$ and
+$B = \sum_nb_nx^n$.
+\end{definition}
+
+The definition is a formal version of the picture: a binary tree is either empty, or a root with an ordered pair of binary trees attached. The order matters: the two trees with $2$ nodes, a root with a
+left child and a root with a right child, are different.
+
+\begin{theorem}\label{generating-functions:theorem-catalan}
+$b_0 = 1$ and $b_n = \sum_{i=0}^{n-1}b_ib_{n-1-i}$ for $n \geq 1$ (Segner's recurrence). The generating function satisfies $B = 1 + xB^2$, and
+\[
+B = \frac{1 - \sqrt{1 - 4x}}{2x}, \qquad b_n = \frac{1}{n + 1}\binom{2n}{n} = C_n.
+\]
+\end{theorem}
+
+\begin{proof}
+\emph{The recurrence} is the rule of sum and the rule of product (Theorems~\ref{combinatorics:theorem-rule-of-sum} and~\ref{combinatorics:theorem-rule-of-product}) applied to the definition.
+\emph{The equation.} The coefficient of $x^n$ in $1 + xB^2$ is $1$ for $n = 0$ and $\sum_{i+j=n-1}b_ib_j = b_n$ for $n \geq 1$.
+\emph{Solving it.} Multiply $xB^2 - B + 1 = 0$ by $4x$ and complete the square: $(1 - 2xB)^2 = 1 - 4xB + 4x^2B^2 = 1 - 4x$. The series $1 - 2xB$ has constant term $1$ and its square is $1 - 4x$;
+by Theorem~\ref{generating-functions:theorem-binomial-series}(4), $1 - 2xB = \sqrt{1 - 4x}$, where $\sqrt{1 - 4x} = (1 - 4x)^{1/2}$. (The other root of the quadratic, with $+\sqrt{1 - 4x}$, is excluded:
+$1 + \sqrt{1 - 4x}$ has constant term $2$, so it is not $2xB$.) Hence $2xB = 1 - \sqrt{1 - 4x}$, a series without constant term, and by Example~\ref{generating-functions:example-sqrt},
+$[x^{n+1}](1 - \sqrt{1 - 4x}) = \frac{2}{n + 1}\binom{2n}{n}$, so $b_n = \frac{1}{n + 1}\binom{2n}{n}$, which is $C_n$ by Proposition~\ref{combinatorics:proposition-lattice-paths}.
+\end{proof}
+
+The solution can be read in two ways. Directly, the closed formula for $b_n$ comes out of the binomial series for $(1 - 4x)^{1/2}$. Indirectly, Theorem~\ref{generating-functions:theorem-catalan}
+shows that \emph{any} family of objects satisfying Segner's recurrence, with one object of size $0$, is counted by the Catalan numbers; it is enough to find a decomposition of the objects into an
+ordered pair of smaller ones. We do this for several families, and denote the generating function by $C = \sum_nC_nx^n$.
+
+\begin{corollary}\label{generating-functions:corollary-catalan-recurrence}
+$C_{n+1} = \sum_{i=0}^{n}C_iC_{n-i}$ for $n \geq 0$; $C_{n+1} = \frac{2(2n + 1)}{n + 2}C_n$; and $C = \frac{1}{1 - xC}$, that is, $C$ is also the generating function of finite sequences of objects
+counted by $xC$.
+\end{corollary}
+
+\begin{proof}
+The first is Segner's recurrence. The second: $\frac{C_{n+1}}{C_n} = \frac{(2n + 2)!}{(n + 1)!(n + 2)!} \cdot \frac{n!(n + 1)!}{(2n)!} = \frac{(2n + 1)(2n + 2)}{(n + 1)(n + 2)}$. The third: $C = 1 + xC^2$
+gives $C(1 - xC) = 1$, and $1 - xC$ is a unit.
+\end{proof}
+
+\subsection{Interpretations}\label{generating-functions:subsection-catalan-interpretations}
+
+\begin{proposition}\label{generating-functions:proposition-catalan-interpretations}
+Each of the following sets has $C_n$ elements.
+\begin{enumerate}
+\item \emph{Dyck words}: words with $n$ letters $U$ and $n$ letters $D$ such that every prefix has at least as many letters $U$ as letters $D$.
+\item \emph{Bracketings} of a product $x_0x_1 \cdots x_n$ of $n + 1$ factors in a fixed order, by $n$ pairs of brackets, that is, the ways to compute it by $n$ multiplications of two factors.
+\item \emph{Plane trees with $n$ edges}: here a plane tree is a root together with a finite (possibly empty) sequence of plane trees, its subtrees; the number of edges of a tree with subtrees
+$T_1, \ldots, T_k$ is $k + \sum_i\mathrm{edges}(T_i)$.
+\item \emph{Triangulations} of a convex polygon with $n + 2$ vertices, that is, maximal sets of pairwise non-crossing diagonals (Definition below).
+\item \emph{Non-crossing partitions} of $[n]$: set partitions of $[n]$ in which there are no $a < b < c < d$ with $a, c$ in one block and $b, d$ in another.
+\end{enumerate}
+\end{proposition}
+
+For (4) we use the following combinatorial model of a convex polygon, which avoids geometry. The vertices are $0, 1, \ldots, m - 1$, its \emph{sides} are the pairs $\{i, i + 1\}$ and $\{0, m - 1\}$,
+and its \emph{diagonals} are the other pairs $\{i, j\}$ with $i < j$. Two pairs $\{a, b\}$ and $\{c, d\}$ with $a < b$, $c < d$ \emph{cross} if $a < c < b < d$ or $c < a < d < b$; this is what
+chords of a circle through points in this cyclic order do. A \emph{triangulation} is a set of pairwise non-crossing diagonals, maximal for inclusion. For $m = 3$ the only triangulation is $\emptyset$.
+
+\begin{proof}
+In each case we show that the number $u_n$ of objects of size $n$ satisfies $u_0 = 1$ and Segner's recurrence, or (for (3) and (5)) that the generating function $U$ satisfies $U = 1/(1 - xU)$, which is
+equivalent to $U = 1 + xU^2$ (Corollary~\ref{generating-functions:corollary-catalan-recurrence} shows one direction, and the other is the same computation backwards). In both cases $U = C$, because the
+equation $U = 1 + xU^2$ determines the coefficients of $U$ recursively.
+
+(1) The empty word is the only Dyck word of length $0$. A nonempty Dyck word $w$ starts with $U$; let $2k + 2$ be the length of its shortest nonempty prefix with as many $U$s as $D$s (its \emph{first
+return}). Then $w = UvDv^{\prime}$, where $v$ and $v^{\prime}$ are Dyck words of lengths $2k$ and $2(n - 1 - k)$: every prefix of $v$ has at least as many $U$s as $D$s, because a prefix $Uv_0$ of
+$w$ with $v_0$ a prefix of $v$ has \emph{more} $U$s than $D$s (by minimality of the first return), and $v^{\prime}$ starts at a point where the counts are equal. Conversely $UvDv^{\prime}$ is a Dyck word
+whose first return is after $UvD$. This bijection with the pairs $(v, v^{\prime})$ gives Segner's recurrence. (This also reproves the count of
+Proposition~\ref{combinatorics:proposition-lattice-paths}, with $U = E$ and $D = N$.)
+
+(2) A product of one factor has one bracketing. For $n \geq 1$, the last multiplication computes $(x_0 \cdots x_i)(x_{i+1} \cdots x_n)$ for a unique $i \in \{0, \ldots, n - 1\}$, and the two factors are
+bracketed independently, with $i$ and $n - 1 - i$ multiplications.
+
+(3) The plane trees with $n$ edges whose root has $k$ subtrees $T_1, \ldots, T_k$ correspond to sequences of $k$ plane trees with $n - k$ edges in all. So the generating function $P$ (by edges) is
+$P = \sum_{k \geq 0}(xP)^k = \frac{1}{1 - xP}$, the family $((xP)^k)_k$ being summable since $\operatorname{ord}((xP)^k) \geq k$.
+
+(4) Let $m = n + 2$ and let $T$ be a triangulation; put $S = T \cup \{\text{sides}\}$. Let $k$ be the largest vertex $\leq n$ with $\{0, k\} \in S$ (it exists, since $\{0, 1\}$ is a side).
+\emph{Claim: $\{k, n + 1\} \in S$.} If $k = n$ it is a side. Otherwise $\{k, n + 1\}$ is a diagonal, and it crosses no element $\{a, b\}$ ($a < b$) of $S$: a crossing would need $a < k < b < n + 1$
+(the other pattern needs $b > n + 1$). If $a = 0$, then $\{0, b\} \in S$ with $k < b \leq n$, contradicting the choice of $k$. If $a > 0$, then $k \geq 2$ and $\{0, k\}$ is a diagonal of $T$ crossed by
+$\{a, b\}$, since $0 < a < k < b$; but $\{a, b\}$ is a side or a diagonal of $T$, and sides cross nothing ($a < c < b < d$ is impossible when $b = a + 1$, and $\{0, n + 1\}$ crosses nothing since no vertex
+lies outside $[0, n + 1]$). By maximality, $\{k, n + 1\} \in T$.
+\emph{Splitting.} So the triangle $\{0, k, n + 1\}$ has its three sides in $S$; and every other diagonal of $T$ has both ends in $\{0, \ldots, k\}$ or both in $\{k, \ldots, n + 1\}$, since otherwise it
+would cross $\{0, k\}$ or $\{k, n + 1\}$. Say that a polygon with $s + 2$ vertices has \emph{size} $s$, and let the ``polygon'' with $2$ vertices (size $0$) have one, empty, triangulation. The diagonals of $T$ other than $\{0, k\}$ and
+$\{k, n + 1\}$ form triangulations of the polygons with vertices $0, \ldots, k$ (size $k - 1$) and $k, \ldots, n + 1$ (size $n - k$), relabelled in order. Maximality in a small polygon follows from
+maximality of $T$: a diagonal of the small polygon that crosses nothing there crosses nothing in $T$, since the diagonals of the other small polygon, $\{0, k\}$ and $\{k, n + 1\}$ have both ends
+outside its open range of vertices. Conversely, a choice of $k \in \{1, \ldots, n\}$ and of triangulations of the two smaller polygons, together with the diagonals $\{0, k\}$ (if $k \geq 2$) and
+$\{k, n + 1\}$ (if $k \leq n - 1$), gives a triangulation: a further diagonal $\{i, j\}$ either lies in one small polygon, where it crosses something by maximality there, or has $i < k < j$, and then
+it crosses $\{0, k\}$ (if $i > 0$) or $\{k, n + 1\}$ (if $i = 0$, so $j \leq n$). The maximal $k$ for this triangulation is the chosen one, since no diagonal $\{0, j\}$ with $j > k$ was added. This gives $u_n = \sum_{k=1}^{n}u_{k-1}u_{n-k}$, Segner's recurrence.
+
+(5) Let $N$ be the generating function of the non-crossing partitions, with $N_0 = 1$. In a non-crossing partition of $[n]$, $n \geq 1$, let the block of $1$ be $\{1 = e_1 < e_2 < \cdots < e_r\}$, and
+put $e_{r+1} = n + 1$. The \emph{gaps} $G_i = \{e_i + 1, \ldots, e_{i+1} - 1\}$, $1 \leq i \leq r$, partition $[n] \setminus \{e_1, \ldots, e_r\}$, and every other block lies inside one gap: a block
+meeting two gaps $G_i$ and $G_j$, $i < j$, in elements $b \in G_i$ and $d \in G_j$ would cross the block of $1$, since $e_i < b < e_{i+1} \leq e_j < d$, which is the forbidden pattern with
+$a = e_i$ and $c = e_{i+1}$ (here $i + 1 \leq j \leq r$, so $e_{i+1}$ is an element of the block of $1$). So the partition is the block of $1$ together with non-crossing partitions of the $r$ gaps (relabelled in order), and conversely every such choice is non-crossing,
+since blocks in different gaps, or a block in a gap and the block of $1$, do not interleave. The gaps have sizes $s_1, \ldots, s_r \geq 0$ with $r + s_1 + \cdots + s_r = n$. Therefore
+$N = \sum_{r \geq 0}(xN)^r = \frac{1}{1 - xN}$.
+\end{proof}
+
+\begin{remark}\label{generating-functions:remark-catalan-bijections}
+The proof gives explicit recursive bijections between any two of these families, since they are all built by the same decomposition. For instance a binary tree $(L, R)$ corresponds to the Dyck
+word $U\,w(L)\,D\,w(R)$, and to the bracketing $(b(L))(b(R))$ with $b(\varepsilon) = x$. Non-recursive descriptions are also known: the plane tree with $n$ edges corresponds to the Dyck word
+obtained by walking around it from the root, writing $U$ for each edge traversed downwards and $D$ upwards.
+\end{remark}
+
+\begin{example}\label{generating-functions:example-catalan-small}
+For $n = 3$ there are $C_3 = 5$ objects of each kind: the Dyck words $UUUDDD$, $UUDUDD$, $UUDDUD$, $UDUUDD$, $UDUDUD$; the bracketings $((x_0x_1)x_2)x_3$, $(x_0(x_1x_2))x_3$, $(x_0x_1)(x_2x_3)$,
+$x_0((x_1x_2)x_3)$, $x_0(x_1(x_2x_3))$; the $5$ triangulations of a pentagon, each consisting of the two diagonals from one vertex; and all $5$ partitions of $[3]$, since a crossing needs $4$
+elements. For $n = 4$, of the $15$ partitions of $[4]$ (the Bell number $B_4$) exactly one, $\{\{1, 3\}, \{2, 4\}\}$, is crossing, and indeed $C_4 = 14$.
+\end{example}
+
+\begin{counterexample}\label{generating-functions:counterexample-catalan-order}
+Order matters in the definitions. If the two subtrees of a binary tree are not ordered (rooted trees in which each vertex has $0$ or $2$ unordered children), the numbers of such trees with
+$1, 3, 5, 7, 9$ vertices are $1, 1, 1, 2, 3$ (the Wedderburn--Etherington numbers), not Catalan numbers: the decomposition is into an \emph{unordered} pair, and the rule of product no longer applies
+directly. Likewise, the number of all set partitions of $[n]$ is the Bell number $B_n$ (Proposition~\ref{combinatorics:proposition-bell}), which exceeds $C_n$ from $n = 4$ on: the non-crossing condition
+is what makes the gaps independent.
+\end{counterexample}
+
+\subsection{Parity and growth of the Catalan numbers}\label{generating-functions:subsection-catalan-arithmetic}
+
+\begin{proposition}\label{generating-functions:proposition-catalan-parity}
+$C_n$ is odd if and only if $n = 2^a - 1$ for some $a \geq 0$.
+\end{proposition}
+
+\begin{proof}
+By Kummer's theorem (Theorem~\ref{combinatorics:theorem-kummer}) with $p = 2$, $v_2\binom{2n}{n} = 2s_2(n) - s_2(2n) = s_2(n)$, the number of digits $1$ in the binary expansion of $n$, since doubling
+only shifts the digits. Write $n + 1 = 2^ab$ with $b$ odd; then $v_2(n + 1) = a$, and $n = 2^ab - 1$ ends with exactly $a$ binary digits $1$ (followed, to the left, by the digits of $b - 1$, which is even).
+So $s_2(n) = a + s_2(b - 1) \geq a$, with equality if and only if $b = 1$. Since $v_2(C_n) = v_2\binom{2n}{n} - v_2(n + 1) = s_2(n) - a$, the number $C_n$ is odd exactly when $n = 2^a - 1$.
+\end{proof}
+
+So $C_0, C_1, C_3, C_7 = 1, 1, 5, 429$ are odd, and $C_2 = 2$, $C_4 = 14$, $C_5 = 42$, $C_6 = 132$ are even. The growth of $C_n$ is that of $\binom{2n}{n}$ divided by $n + 1$, roughly $4^n/n^{3/2}$;
+Section~\ref{generating-functions:section-estimates} proves the elementary bounds.
+
+\section{Partitions and infinite products}\label{generating-functions:section-partitions}
+
+Partitions of integers (Section~\ref{combinatorics:section-partitions}) are where generating functions first showed their power, in the work of Euler. Their generating functions are infinite
+products, and identities between infinite products prove theorems about partitions that are hard to see by counting.
+
+\subsection{Rules for infinite products}\label{generating-functions:subsection-product-rules}
+
+\begin{lemma}\label{generating-functions:lemma-product-rules}
+Let $(g_k)_{k \geq 1}$ and $(h_k)_{k \geq 1}$ be families satisfying the hypotheses of Definition~\ref{generating-functions:definition-infinite-product}, and write $\prod_k$ for $\prod_{k \geq 1}$.
+\begin{enumerate}
+\item (Factorwise products) $\prod_k(1 + g_k) \cdot \prod_k(1 + h_k) = \prod_k(1 + g_k)(1 + h_k)$, where the right-hand side is the infinite product of the family $(g_k + h_k + g_kh_k)_k$.
+\item (Inverses) Each $1 + g_k$ is a unit, the family $((1 + g_k)^{-1} - 1)_k$ satisfies the hypotheses, and $\prod_k(1 + g_k)^{-1} = \bigl(\prod_k(1 + g_k)\bigr)^{-1}$.
+\item (Reindexing and splitting) If $\pi$ is a bijection of $\{1, 2, \ldots\}$, then $\prod_k(1 + g_{\pi(k)}) = \prod_k(1 + g_k)$; and if $\{1, 2, \ldots\} = I \sqcup J$, then
+$\prod_k(1 + g_k) = \prod_{k \in I}(1 + g_k)\prod_{k \in J}(1 + g_k)$.
+\item (Logarithmic derivative) $D\prod_k(1 + g_k) = \prod_k(1 + g_k) \cdot \sum_k\frac{Dg_k}{1 + g_k}$, the sum being summable.
+\item (Coefficient homomorphisms) If $\phi \colon R \to S$ is a ring homomorphism and $\phi_\ast \colon R[[x]] \to S[[x]]$ applies $\phi$ to every coefficient, then $\phi_\ast$ is a ring homomorphism
+that preserves summable sums, limits and infinite products. So does the substitution $f \mapsto f(x^m)$, $m \geq 1$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+All the statements follow from three facts: infinite products are limits of their finite partial products (Proposition~\ref{generating-functions:proposition-infinite-product}(3)); finite products
+can be rearranged freely; and limits respect sums and products (the remark after Definition~\ref{generating-functions:definition-convergence}), as well as the operations $D$, $\phi_\ast$ and
+$f \mapsto f(x^m)$, because each coefficient of the result depends on finitely many coefficients of the argument, and $\operatorname{ord}(f(x^m)) = m\operatorname{ord}(f)$.
+(1) The family $(g_k + h_k + g_kh_k)$ satisfies the hypotheses, since $\operatorname{ord}(g_k + h_k + g_kh_k) \geq \min(\operatorname{ord} g_k, \operatorname{ord} h_k)$. The partial products of
+the right-hand side are the products of the partial products of the two factors on the left; pass to the limit.
+(2) $1 + g_k$ is a unit since its constant term is $1$, and $(1 + g_k)^{-1} - 1 = -g_k(1 + g_k)^{-1}$ has the same order as $g_k$. By (1), $\prod_k(1 + g_k) \cdot \prod_k(1 + g_k)^{-1} = \prod_k1 = 1$.
+(3) The partial products over $\{1, \ldots, N\}$ and over $\pi^{-1}(\{1, \ldots, N\})$ eventually agree with the infinite product in any given coefficient, by the proof of
+Proposition~\ref{generating-functions:proposition-infinite-product}(3), which works for any increasing sequence of finite sets exhausting the index set. The splitting is
+Proposition~\ref{generating-functions:proposition-infinite-product}(4).
+(4) For a finite product this is the Leibniz rule, $D\prod_{k \leq N}(1 + g_k) = \prod_{k \leq N}(1 + g_k)\sum_{k \leq N}Dg_k/(1 + g_k)$. The family $(Dg_k/(1 + g_k))_k$ is summable, since
+$\operatorname{ord}(Dg_k) \geq \operatorname{ord}(g_k) - 1$. Pass to the limit $N \to \infty$.
+(5) $\phi_\ast$ is additive, and multiplicative because $\phi(\sum_{i+j=n}a_ib_j) = \sum_{i+j=n}\phi(a_i)\phi(b_j)$; it does not increase orders, and acts coefficient by coefficient, so it preserves
+summable sums and limits, hence infinite products. The substitution $f \mapsto f(x^m)$ is the composition with $x^m$ (Lemma~\ref{generating-functions:lemma-composition}).
+\end{proof}
+
+\subsection{The partition generating function}\label{generating-functions:subsection-partition-gf}
+
+\begin{theorem}[Euler]\label{generating-functions:theorem-partition-gf}
+\[
+\sum_{n \geq 0}p(n)x^n = \prod_{k \geq 1}\frac{1}{1 - x^k}.
+\]
+More generally, for a set $S$ of positive integers, $\prod_{k \in S}\frac{1}{1 - x^k}$ is the generating function of the partitions with all parts in $S$, and $\prod_{k \in S}(1 + x^k)$ that of the
+partitions into distinct parts in $S$; and in $\ZZ[y][[x]]$,
+\[
+\prod_{k \geq 1}\frac{1}{1 - yx^k} = \sum_{n, m \geq 0}p_m(n)\,y^mx^n,
+\]
+where $p_m(n)$ is the number of partitions of $n$ into exactly $m$ parts.
+\end{theorem}
+
+\begin{proof}
+A partition is determined by its \emph{multiplicities}: the number $m_k$ of parts equal to $k$, for $k \geq 1$, which is a finitely supported family of natural numbers, and the partition has size
+$\sum_kkm_k$ and $\sum_km_k$ parts; conversely every finitely supported family $(m_k)$ comes from exactly one partition. Write $\frac{1}{1 - yx^k} = 1 + g_k$ with $g_k = \sum_{m \geq 1}y^mx^{km}$,
+of order $k$ in $x$. By Definition~\ref{generating-functions:definition-infinite-product} and Proposition~\ref{generating-functions:proposition-summable}(3), the product is
+\[
+\sum_{S \text{ finite}}\prod_{k \in S}\sum_{m_k \geq 1}y^{m_k}x^{km_k} = \sum_{(m_k)}y^{\sum_km_k}x^{\sum_kkm_k},
+\]
+the sum over all finitely supported families $(m_k)_{k \geq 1}$ (the set $S$ is their support). The coefficient of $y^mx^n$ counts the partitions of $n$ with $m$ parts. Setting $y = 1$
+(Lemma~\ref{generating-functions:lemma-product-rules}(5), with $\phi \colon \ZZ[y] \to \ZZ$, $y \mapsto 1$) gives the first formula. Restricting the factors to $k \in S$ restricts the parts to $S$,
+and for distinct parts each $m_k$ is $0$ or $1$, which gives the factors $1 + x^k$.
+\end{proof}
+
+\begin{example}\label{generating-functions:example-partition-gf-variants}
+\begin{enumerate}
+\item Partitions into parts at most $m$: $\prod_{k=1}^{m}(1 - x^k)^{-1}$. By conjugation (Proposition~\ref{combinatorics:proposition-conjugate}), this also counts the partitions into at most $m$
+parts.
+\item Partitions in which no part occurs more than $d - 1$ times: $\prod_k(1 + x^k + \cdots + x^{(d-1)k}) = \prod_k\frac{1 - x^{dk}}{1 - x^k}$.
+\item Partitions into odd parts: $\prod_{k \text{ odd}}(1 - x^k)^{-1}$. Partitions into distinct parts: $\prod_k(1 + x^k)$ (Example~\ref{generating-functions:example-product-distinct}).
+\end{enumerate}
+\end{example}
+
+\begin{corollary}[Euler, Glaisher]\label{generating-functions:corollary-glaisher}
+For $d \geq 2$, the number of partitions of $n$ with no part divisible by $d$ equals the number of partitions of $n$ in which no part occurs $d$ or more times. For $d = 2$: partitions into odd parts
+and partitions into distinct parts are equinumerous.
+\end{corollary}
+
+\begin{proof}
+By Example~\ref{generating-functions:example-partition-gf-variants}(2) and Lemma~\ref{generating-functions:lemma-product-rules}, the second number has the generating function
+\[
+\prod_{k \geq 1}\frac{1 - x^{dk}}{1 - x^k} = \frac{\prod_{k \geq 1}(1 - x^{dk})}{\prod_{d \mid k}(1 - x^k)\prod_{d \nmid k}(1 - x^k)} = \prod_{d \nmid k}\frac{1}{1 - x^k},
+\]
+using (1) and (2) of the lemma to write the product of quotients as a quotient of products, (3) to split $\prod_k(1 - x^k)$ according to whether $d \mid k$, and reindexing to identify
+$\prod_{k \geq 1}(1 - x^{dk})$ with $\prod_{d \mid k}(1 - x^k)$. The last product is the generating function of partitions without parts divisible by $d$, by Theorem~\ref{generating-functions:theorem-partition-gf}.
+\end{proof}
+
+For $d = 2$ this is Theorem~\ref{combinatorics:theorem-odd-distinct}, proved there by Glaisher's bijection; here it is a two-line computation, and the bijection can be recovered from it, the factor
+$\frac{1 - x^{2k}}{1 - x^k} = 1 + x^k$ corresponding to the binary expansion of multiplicities. This is the typical relation between the two methods: generating functions find and prove identities,
+bijections explain them.
+
+\subsection{Gaussian binomial coefficients}\label{generating-functions:subsection-gaussian}
+
+\begin{definition}\label{generating-functions:definition-gaussian}
+For $0 \leq k \leq n$, the \emph{Gaussian binomial coefficient} (or \emph{$q$-binomial coefficient}) is the polynomial
+\[
+\binom{n}{k}_q = \sum_{\lambda}q^{|\lambda|} \in \ZZ[q],
+\]
+the sum over the partitions $\lambda$ with at most $k$ parts, all at most $n - k$, that is, whose Ferrers diagram fits in a box with $k$ rows and $n - k$ columns; $|\lambda|$ is the sum of the parts.
+We put $\binom{n}{k}_q = 0$ for $k < 0$ or $k > n$. For $m \geq 0$ we write $(q)_m = (1 - q)(1 - q^2) \cdots (1 - q^m)$, with $(q)_0 = 1$.
+\end{definition}
+
+At $q = 1$ the definition counts the partitions in the box, which correspond to the lattice paths from one corner of the box to the other (the boundary of the diagram), so
+$\binom{n}{k}_1 = \binom{n}{k}$ by Proposition~\ref{combinatorics:proposition-lattice-paths}. The Gaussian coefficient refines the binomial coefficient by the area under the path.
+
+\begin{proposition}\label{generating-functions:proposition-gaussian}
+For $1 \leq k \leq n$:
+\begin{enumerate}
+\item ($q$-Pascal) $\binom{n}{k}_q = \binom{n - 1}{k - 1}_q + q^k\binom{n - 1}{k}_q = \binom{n - 1}{k}_q + q^{n-k}\binom{n - 1}{k - 1}_q$;
+\item $\binom{n}{k}_q = \binom{n}{n - k}_q$, the polynomial has degree $k(n - k)$, and its coefficients are symmetric: $q^{k(n-k)}\binom{n}{k}_{1/q} = \binom{n}{k}_q$;
+\item (product formula) in $\ZZ[[q]]$, and hence in $\ZZ[q]$ after clearing denominators,
+\[
+\binom{n}{k}_q = \frac{(q)_n}{(q)_k(q)_{n-k}} = \frac{(1 - q^n)(1 - q^{n-1}) \cdots (1 - q^{n-k+1})}{(1 - q)(1 - q^2) \cdots (1 - q^k)}.
+\]
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) Let $\lambda$ fit in the $k \times (n - k)$ box. If $\lambda$ has fewer than $k$ parts, it fits in the $(k - 1) \times (n - k)$ box, and these $\lambda$ give $\binom{n - 1}{k - 1}_q$. If it has
+exactly $k$ parts, subtracting $1$ from each part gives a partition in the $k \times (n - k - 1)$ box, of size $|\lambda| - k$, bijectively; these give $q^k\binom{n - 1}{k}_q$. (For $k = n$ the second
+case is empty, consistently with $\binom{n-1}{n}_q = 0$.) The second identity is proved in the same way, distinguishing whether the largest part is less than $n - k$ or equal to it (and then removing
+it).
+(2) Conjugation (Proposition~\ref{combinatorics:proposition-conjugate}) exchanges the $k \times (n - k)$ and $(n - k) \times k$ boxes preserving sizes. The largest size is that of the full box,
+$k(n - k)$, attained once. Taking the complement of a diagram in the box (rotated by a half turn) is a bijection between partitions of size $s$ and of size $k(n - k) - s$, which gives the symmetry.
+(3) Subtracting the two forms of (1): $(1 - q^{n-k})\binom{n - 1}{k - 1}_q = (1 - q^k)\binom{n - 1}{k}_q$, so with $m = n - 1$, $\binom{m}{k}_q = \frac{1 - q^{m-k+1}}{1 - q^k}\binom{m}{k - 1}_q$ for
+$1 \leq k \leq m$ (both sides vanish for $k = m + 1$, where the factor $1 - q^0 = 0$ appears). By induction on $k$ from $\binom{m}{0}_q = 1$ this gives the product formula, the inverses existing in
+$\ZZ[[q]]$ since the constant terms are $1$. Multiplying out, $\binom{n}{k}_q(q)_k(q)_{n-k} = (q)_n$ is an identity of polynomials.
+\end{proof}
+
+\begin{example}\label{generating-functions:example-gaussian}
+$\binom{4}{2}_q = \frac{(1 - q^4)(1 - q^3)}{(1 - q)(1 - q^2)} = (1 + q^2)(1 + q + q^2) = 1 + q + 2q^2 + q^3 + q^4$: the partitions in a $2 \times 2$ box are $\emptyset$, $1$, $2$, $1 + 1$, $2 + 1$,
+$2 + 2$, of sizes $0, 1, 2, 2, 3, 4$. At $q = 1$ the value is $6 = \binom{4}{2}$.
+\end{example}
+
+\begin{theorem}\label{generating-functions:theorem-subspaces}
+Let $q$ be a prime power and $\mathbb{F}_q$ the field with $q$ elements (Theorem~\ref{fields:theorem-finite-fields}). The number of $k$-dimensional subspaces of $\mathbb{F}_q^n$ is the value of
+the polynomial $\binom{n}{k}_q$ at $q$.
+\end{theorem}
+
+\begin{proof}
+Count the sequences $(v_1, \ldots, v_k)$ of linearly independent vectors in $\mathbb{F}_q^n$: $v_1$ can be any of the $q^n - 1$ nonzero vectors, and once $v_1, \ldots, v_{i}$ are chosen, $v_{i+1}$
+can be any vector outside their span, which has $q^i$ elements: $q^n - q^i$ choices. So there are $\prod_{i=0}^{k-1}(q^n - q^i)$ such sequences (Corollary~\ref{combinatorics:corollary-successive-choices}).
+Each $k$-dimensional subspace $W$ arises from exactly $\prod_{i=0}^{k-1}(q^k - q^i)$ of them, its ordered bases (the same count inside $W \cong \mathbb{F}_q^k$). The number of subspaces is the
+quotient
+\[
+\frac{\prod_{i=0}^{k-1}q^i(q^{n-i} - 1)}{\prod_{i=0}^{k-1}q^i(q^{k-i} - 1)} = \frac{(q^n - 1)(q^{n-1} - 1) \cdots (q^{n-k+1} - 1)}{(q^k - 1) \cdots (q - 1)},
+\]
+which is the value at $q$ of the polynomial $\binom{n}{k}_q$, by the polynomial identity of Proposition~\ref{generating-functions:proposition-gaussian}(3) (both numerator and denominator change sign
+$k$ times when written with factors $1 - q^j$).
+\end{proof}
+
+\begin{remark}\label{generating-functions:remark-schubert}
+There is also a bijective proof, which explains the partitions: every $k$-dimensional subspace is the row space of a unique $k \times n$ matrix in reduced row echelon form
+(Theorem~\ref{linear-algebra:theorem-gaussian-elimination}). If the pivots are in columns $j_1 < \cdots < j_k$, the free entries are those to the right of each pivot in its row and not in a pivot
+column; the number of free entries in row $i$ is $n - k - (j_i - i)$, and the numbers $\lambda_i = n - k - (j_i - i)$ form a partition in the $k \times (n - k)$ box. Each such matrix form gives
+$q^{|\lambda|}$ subspaces. In algebraic geometry these sets of subspaces are the Schubert cells of the Grassmannian.
+\end{remark}
+
+\begin{theorem}[$q$-binomial theorem]\label{generating-functions:theorem-q-binomial}
+In $\ZZ[q, z]$, for $n \geq 0$,
+\[
+\prod_{i=0}^{n-1}(1 + q^iz) = \sum_{k=0}^{n}q^{k(k-1)/2}\binom{n}{k}_qz^k.
+\]
+\end{theorem}
+
+\begin{proof}
+By induction on $n$; for $n = 0$ both sides are $1$. Multiplying the identity for $n - 1$ by $1 + q^{n-1}z$, the coefficient of $z^k$ on the left becomes
+$q^{k(k-1)/2}\binom{n - 1}{k}_q + q^{n-1}q^{(k-1)(k-2)/2}\binom{n - 1}{k - 1}_q$. Since $n - 1 + \frac{(k-1)(k-2)}{2} = \frac{k(k-1)}{2} + (n - k)$, this is
+$q^{k(k-1)/2}\bigl(\binom{n - 1}{k}_q + q^{n-k}\binom{n - 1}{k - 1}_q\bigr) = q^{k(k-1)/2}\binom{n}{k}_q$ by the second form of $q$-Pascal.
+\end{proof}
+
+At $q = 1$ this is the binomial theorem; combinatorially, the coefficient of $z^kq^m$ on the left counts the $k$-element subsets of $\{0, \ldots, n - 1\}$ with sum $m$, and subtracting
+$0, 1, \ldots, k - 1$ from the elements, in increasing order, turns such a subset into a partition in the $k \times (n - k)$ box, of size $m - k(k-1)/2$.
+
+\begin{corollary}[Euler's identity]\label{generating-functions:corollary-euler-identities}
+In $\ZZ[z][[q]]$,
+\[
+\prod_{i \geq 0}(1 + q^iz) = \sum_{k \geq 0}\frac{q^{k(k-1)/2}z^k}{(q)_k},
+\]
+where the left-hand side means $(1 + z)\prod_{i \geq 1}(1 + q^iz)$, the infinite product being that of Definition~\ref{generating-functions:definition-infinite-product} in $\ZZ[z][[q]]$.
+\end{corollary}
+
+\begin{proof}
+For fixed $k$, $\binom{n}{k}_q \to \frac{1}{(q)_k}$ as $n \to \infty$: the coefficient of $q^m$ in $\binom{n}{k}_q$ is the number of partitions of $m$ into at most $k$ parts, all at most $n - k$,
+which for $n - k \geq m$ is the number of partitions of $m$ into at most $k$ parts, the coefficient of $q^m$ in $\frac{1}{(q)_k} = \prod_{j=1}^{k}\frac{1}{1 - q^j}$
+(Example~\ref{generating-functions:example-partition-gf-variants}(1)). In the sum of Theorem~\ref{generating-functions:theorem-q-binomial}, the coefficient of $q^m$ only involves the $k$ with
+$k(k-1)/2 \leq m$, finitely many; so the right-hand side converges to $\sum_kq^{k(k-1)/2}z^k/(q)_k$, while the left-hand side, $(1 + z)$ times a partial product, converges to the infinite product.
+\end{proof}
+
+\begin{counterexample}\label{generating-functions:counterexample-two-variables}
+The companion identity $\prod_{i \geq 0}(1 - q^iz)^{-1} = \sum_{k \geq 0}z^k/(q)_k$ does not make sense in $\ZZ[z][[q]]$ as it stands: the factor $(1 - z)^{-1}$ is not a polynomial in $z$, and on the
+right the coefficient of $q^0$ receives the contributions $z^k$ from every $k$, so the family is not summable in the sense of Definition~\ref{generating-functions:definition-summable}. It holds in a
+ring of series in two variables with a summability condition on monomials $z^kq^m$, which we do not need. The choice of the ring is part of the statement of a formal identity.
+\end{counterexample}
+
+\subsection{The pentagonal number theorem}\label{generating-functions:subsection-pentagonal}
+
+Expanding $\prod_{k \geq 1}(1 - x^k)$, Euler found the astonishingly sparse series $1 - x - x^2 + x^5 + x^7 - x^{12} - x^{15} + x^{22} + x^{26} - \cdots$. The exponents are the
+\emph{pentagonal numbers} $\omega(j) = j(3j - 1)/2$ for $j \in \ZZ$: $0, 1, 2, 5, 7, 12, 15, 22, 26, \ldots$ for $j = 0, 1, -1, 2, -2, 3, -3, \ldots$.
+
+\begin{theorem}[Euler's pentagonal number theorem]\label{generating-functions:theorem-pentagonal}
+\[
+\prod_{k \geq 1}(1 - x^k) = \sum_{j \in \ZZ}(-1)^jx^{j(3j-1)/2}.
+\]
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: signed count.} By Definition~\ref{generating-functions:definition-infinite-product} with $g_k = -x^k$, the left-hand side is $\sum_S(-1)^{|S|}x^{\sum S}$ over finite sets $S$ of positive
+integers, so its coefficient of $x^n$ is $e(n) - o(n)$, where $e(n)$ and $o(n)$ are the numbers of partitions of $n$ into an even, resp.\ odd, number of distinct parts.
+
+\emph{Step 2: the pentagonal numbers are distinct.} For $k \geq 1$, $\omega(k) = \frac{k(3k-1)}{2} < \omega(-k) = \frac{k(3k+1)}{2} < \omega(k + 1) = \frac{(k+1)(3k+2)}{2}$, so $\omega$ is injective
+on $\ZZ$, and it suffices to show: $e(n) - o(n) = (-1)^j$ if $n = \omega(j)$, and $0$ if $n$ is not pentagonal.
+
+\emph{Step 3: Franklin's involution.} Let $\lambda = (\lambda_1 > \cdots > \lambda_k)$ be a partition into $k \geq 1$ distinct parts. Its \emph{base} is its smallest part $s = \lambda_k$, and its
+\emph{slope} is the largest $\sigma$ such that $\lambda_1, \lambda_2, \ldots, \lambda_\sigma$ are consecutive integers ($\lambda_i = \lambda_1 - i + 1$ for $i \leq \sigma$); so $1 \leq \sigma \leq k$. In
+the Ferrers diagram, the base is the bottom row and the slope is the longest diagonal of dots running down at $45$ degrees from the end of the top row. Call $\lambda$ \emph{exceptional} if $\sigma = k$
+and $s \in \{k, k + 1\}$, that is, if the slope and the base share a dot and the move below cannot be performed. Define $\phi(\lambda)$ for non-exceptional $\lambda$:
+\begin{itemize}
+\item \emph{Case A, $s \leq \sigma$}: remove the base and add $1$ to each of the $s$ largest parts. (Since $\lambda$ is not exceptional, $s < k$, so there are at least $s$ other parts.)
+\item \emph{Case B, $s > \sigma$}: subtract $1$ from each of the $\sigma$ largest parts and add a new smallest part $\sigma$.
+\end{itemize}
+
+\emph{Step 4: $\phi$ is well defined and exchanges the cases.} In case A the result is $\mu = (\lambda_1 + 1, \ldots, \lambda_s + 1, \lambda_{s+1}, \ldots, \lambda_{k-1})$, with $k - 1$ parts. Its
+parts are distinct, as $\lambda_s + 1 > \lambda_{s+1} + 1 > \lambda_{s+1}$. Its slope is exactly $s$: the first $s$ parts are consecutive (as $s \leq \sigma$), and if $s + 1 \leq k - 1$, then
+$\mu_{s+1} = \lambda_{s+1} \leq \lambda_s - 1 = \mu_s - 2$. Its base is $\lambda_{k-1}$ or $\lambda_{k-1} + 1$, in both cases greater than $\lambda_k = s$. So $\mu$ falls in case B. It is not
+exceptional: an exceptional partition in case B has as many parts as its slope and base equal to slope plus one; here that would mean $s = k - 1$ and base $k$, but then the base of $\mu$ is
+$\lambda_{k-1} + 1 \geq \lambda_k + 2 = k + 1$.
+
+In case B the result is $\mu = (\lambda_1 - 1, \ldots, \lambda_\sigma - 1, \lambda_{\sigma+1}, \ldots, \lambda_k, \sigma)$, with $k + 1$ parts. Its parts are distinct and positive: if $\sigma < k$,
+then $\lambda_{\sigma+1} \leq \lambda_\sigma - 2$ by the maximality of the slope, and $\sigma < s = \lambda_k$; if $\sigma = k$, non-exceptionality gives $s \geq k + 2$, so the parts $\lambda_i - 1$ are
+all at least $s - 1 > k = \sigma$. Its base is $\sigma$ and its slope is at least $\sigma$, so $\mu$ falls in case A. It is not exceptional, since its base $\sigma \leq k$ is smaller than its number of
+parts $k + 1$.
+
+\emph{Step 5: $\phi$ is an involution.} If $\lambda$ is in case A with base $s$, then $\mu = \phi(\lambda)$ has slope $s$, and case B for $\mu$ subtracts $1$ from its $s$ largest parts and adds the
+part $s$: this is $\lambda$. If $\lambda$ is in case B with slope $\sigma$, then $\mu$ has base $\sigma$, and case A for $\mu$ removes it and adds $1$ to the $\sigma$ largest parts: this is $\lambda$.
+So $\phi$ is an involution on the non-exceptional partitions into distinct parts, preserving the size $n$ and changing the number of parts by $\pm 1$. It pairs partitions with an even number of parts
+with partitions with an odd number, so the non-exceptional partitions contribute $0$ to $e(n) - o(n)$.
+
+\emph{Step 6: the exceptional partitions.} If $\sigma = k$ and $s = k$, then $\lambda = (2k - 1, 2k - 2, \ldots, k)$ and $n = \sum_{i=k}^{2k-1}i = \frac{k(3k - 1)}{2} = \omega(k)$. If $\sigma = k$
+and $s = k + 1$, then $\lambda = (2k, \ldots, k + 1)$ and $n = \frac{k(3k + 1)}{2} = \omega(-k)$. With the empty partition ($k = 0$, $n = 0 = \omega(0)$), every pentagonal number $\omega(j)$ has
+exactly one exceptional partition, with $|j|$ parts, and the other numbers have none. So $e(n) - o(n) = (-1)^j$ for $n = \omega(j)$ and $0$ otherwise.
+\end{proof}
+
+\begin{example}\label{generating-functions:example-franklin}
+For $n = 7$ the partitions into distinct parts are $7$, $6 + 1$, $5 + 2$, $4 + 3$, $4 + 2 + 1$. Franklin's involution pairs $6 + 1 \leftrightarrow 7$ (case A for $6 + 1$: base $1$, slope $1$) and
+$4 + 2 + 1 \leftrightarrow 5 + 2$ (case A for $4 + 2 + 1$: base $1$, slope $1$, giving $5 + 2$), and leaves $4 + 3$ exceptional: slope $2$, base $3 = k + 1$. So $e(7) - o(7) = 1$, and indeed
+$7 = \omega(-2)$ with sign $(-1)^{-2} = +1$.
+\end{example}
+
+\begin{corollary}[Euler's recurrence for $p(n)$]\label{generating-functions:corollary-partition-recurrence}
+For $n \geq 1$,
+\[
+\begin{aligned}
+p(n) &= \sum_{j \neq 0}(-1)^{j-1}p\bigl(n - \omega(j)\bigr)\\
+&= p(n - 1) + p(n - 2) - p(n - 5) - p(n - 7) + p(n - 12) + \cdots,
+\end{aligned}
+\]
+with $p(m) = 0$ for $m < 0$.
+\end{corollary}
+
+\begin{proof}
+By Theorem~\ref{generating-functions:theorem-partition-gf} and Lemma~\ref{generating-functions:lemma-product-rules}(2), $\sum_np(n)x^n \cdot \prod_k(1 - x^k) = 1$. Insert the pentagonal number
+theorem and compare the coefficients of $x^n$, $n \geq 1$: $\sum_j(-1)^jp(n - \omega(j)) = 0$, and the term $j = 0$ is $p(n)$.
+\end{proof}
+
+The recurrence computes $p(n)$ with about $\sqrt n$ additions per value, instead of the $n$ multiplications by $1/(1 - x^k)$. For example $p(10) = p(9) + p(8) - p(5) - p(3) = 30 + 22 - 7 - 3 = 42$.
+MacMahon used it to compute $p(n)$ for $n \leq 200$, finding $p(200) = 3\,972\,999\,029\,388$, which Hardy and Ramanujan used to test their asymptotic formula
+(Remark~\ref{combinatorics:remark-hardy-ramanujan}).
+
+\begin{corollary}[Euler's recurrence for $\sigma(n)$]\label{generating-functions:corollary-sigma-recurrence}
+Let $\sigma(n)$ be the sum of the positive divisors of $n$. For $n \geq 1$,
+\[
+\begin{aligned}
+\sigma(n) &= \sum_{j \neq 0}(-1)^{j-1}\sigma\bigl(n - \omega(j)\bigr)\\
+&= \sigma(n - 1) + \sigma(n - 2) - \sigma(n - 5) - \sigma(n - 7) + \cdots,
+\end{aligned}
+\]
+where the terms with $n - \omega(j) < 0$ are omitted, and a term $\sigma(0)$, which occurs exactly when $n$ is pentagonal, is to be read as $n$.
+\end{corollary}
+
+\begin{proof}
+Let $E = \prod_k(1 - x^k) = \sum_me_mx^m$, so $e_m = (-1)^j$ if $m = \omega(j)$ and $0$ otherwise. By Lemma~\ref{generating-functions:lemma-product-rules}(4),
+\[
+-x\frac{DE}{E} = \sum_{k \geq 1}\frac{kx^k}{1 - x^k} = \sum_{k \geq 1}\sum_{m \geq 1}kx^{km} = \sum_{n \geq 1}\sigma(n)x^n,
+\]
+grouping the pairs $(k, m)$ with $km = n$ (Proposition~\ref{generating-functions:proposition-summable}(2)). Write $S = \sum_{n \geq 1}\sigma(n)x^n$; then $-xDE = ES$, and comparing coefficients of
+$x^n$: $-ne_n = \sum_{m=0}^{n-1}e_m\sigma(n - m)$. The term $m = 0$ is $\sigma(n)$, so $\sigma(n) = -\sum_{m \geq 1}e_m\sigma(n - m) - ne_n$, which is the statement: the last term is $(-1)^{j-1}n$ when
+$n = \omega(j)$.
+\end{proof}
+
+For instance $\sigma(12) = \sigma(11) + \sigma(10) - \sigma(7) - \sigma(5) + 12 = 12 + 18 - 8 - 6 + 12 = 28$, which is $1 + 2 + 3 + 4 + 6 + 12$. Euler found this recurrence before he could prove the
+pentagonal number theorem, and called it ``a most extraordinary law of the numbers concerning the sums of their divisors''.
+
+\subsection{Jacobi's triple product identity}\label{generating-functions:subsection-triple-product}
+
+The pentagonal number theorem is a special case of an identity in two variables. We work in the ring $\Lambda[[q]]$ of formal power series in $q$ whose coefficients are Laurent polynomials in $z$,
+$\Lambda = \ZZ[z, z^{-1}]$.
+
+\begin{theorem}[Jacobi's triple product identity]\label{generating-functions:theorem-triple-product}
+In $\Lambda[[q]]$,
+\[
+\prod_{n \geq 1}(1 - q^{2n})(1 + q^{2n-1}z)(1 + q^{2n-1}z^{-1}) = \sum_{m \in \ZZ}q^{m^2}z^m.
+\]
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: a finite identity.} We show that for $N \geq 1$, in the ring $\ZZ[q, q^{-1}, z, z^{-1}]$ of Laurent polynomials,
+\begin{equation}\label{generating-functions:equation-finite-triple}
+\prod_{i=1}^{N}(1 + q^{2i-1}z)(1 + q^{2i-1}z^{-1}) = \sum_{m=-N}^{N}q^{m^2}z^m\binom{2N}{N + m}_{q^2}.
+\end{equation}
+Each factor $1 + q^{2i-1}z^{-1} = q^{2i-1}z^{-1}(1 + q^{-(2i-1)}z)$, and $\sum_{i=1}^{N}(2i - 1) = N^2$, so the left-hand side is $q^{N^2}z^{-N}\prod_{e}(1 + q^ez)$, the product over the odd
+$e$ with $|e| \leq 2N - 1$. These are $e = 2i - (2N - 1)$, $0 \leq i \leq 2N - 1$, so the product is $\prod_{i=0}^{2N-1}(1 + Q^iw)$ with $Q = q^2$ and $w = q^{-(2N-1)}z$. By
+Theorem~\ref{generating-functions:theorem-q-binomial} (an identity in $\ZZ[Q, w]$, which we may evaluate in the commutative ring of Laurent polynomials) it equals
+$\sum_{j=0}^{2N}Q^{j(j-1)/2}\binom{2N}{j}_Qw^j = \sum_jq^{j(j-1) - (2N-1)j}z^j\binom{2N}{j}_{q^2}$. Multiplying by $q^{N^2}z^{-N}$ and putting $m = j - N$, the exponent of $q$ becomes
+$j^2 - 2Nj + N^2 = m^2$, which is \eqref{generating-functions:equation-finite-triple}.
+
+\emph{Step 2: the limit.} Both sides of \eqref{generating-functions:equation-finite-triple} lie in $\Lambda[q] \subseteq \Lambda[[q]]$. As $N \to \infty$, the left-hand side converges to the
+infinite product $\prod_{n \geq 1}(1 + q^{2n-1}z)(1 + q^{2n-1}z^{-1})$ (Proposition~\ref{generating-functions:proposition-infinite-product}(3)). On the right, fix an exponent $M$ of $q$: only the
+$m$ with $m^2 \leq M$ contribute, and for each such $m$ the coefficient of $q^{M - m^2}$ in $\binom{2N}{N + m}_{q^2}$ counts the partitions of $(M - m^2)/2$ fitting in an $(N + m) \times (N - m)$
+box, which for $N - |m| \geq M$ is $p((M - m^2)/2)$ (and $0$ if $M - m^2$ is odd). So the right-hand side converges to $\sum_mq^{m^2}z^m\sum_kp(k)q^{2k} = \sum_mq^{m^2}z^m\prod_{n \geq 1}(1 - q^{2n})^{-1}$,
+by Theorem~\ref{generating-functions:theorem-partition-gf} with $x = q^2$ (Lemma~\ref{generating-functions:lemma-product-rules}(5)). Multiplying by $\prod_n(1 - q^{2n})$
+(Lemma~\ref{generating-functions:lemma-product-rules}(1), (2)) gives the theorem.
+\end{proof}
+
+\begin{corollary}\label{generating-functions:corollary-triple-product}
+In $\ZZ[[q]]$:
+\begin{enumerate}
+\item (Gauss) $\displaystyle\sum_{m \in \ZZ}(-1)^mq^{m^2} = \prod_{n \geq 1}\frac{1 - q^n}{1 + q^n} = 1 - 2q + 2q^4 - 2q^9 + \cdots$;
+\item $\displaystyle\sum_{m \in \ZZ}q^{m^2} = \prod_{n \geq 1}(1 - q^{2n})(1 + q^{2n-1})^2$;
+\item the pentagonal number theorem again: $\prod_{n \geq 1}(1 - x^n) = \sum_j(-1)^jx^{j(3j-1)/2}$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(1) Apply the coefficient homomorphism $\Lambda \to \ZZ$, $z \mapsto -1$ (Lemma~\ref{generating-functions:lemma-product-rules}(5)): $\sum_m(-1)^mq^{m^2} = \prod_n(1 - q^{2n})(1 - q^{2n-1})^2$. Now
+$\prod_n(1 - q^{2n})(1 - q^{2n-1}) = \prod_n(1 - q^n)$, splitting by parity (Lemma~\ref{generating-functions:lemma-product-rules}(3)), and
+$\prod_n(1 - q^{2n-1}) = \prod_n\frac{1}{1 + q^n}$ by Corollary~\ref{generating-functions:corollary-glaisher} with $d = 2$ (in the form $\prod_n(1 + q^n)\prod_{n \text{ odd}}(1 - q^n) = 1$, which
+follows from its proof with $x = q$, after inverting both sides). Multiplying gives (1).
+(2) Apply $z \mapsto 1$.
+(3) Replace $q$ by $q^3$ and then $z$ by $-q$, keeping track of the exponents. Since the substitution $z \mapsto -q$ does not preserve $\Lambda[[q]]$, we argue on the finite identity
+\eqref{generating-functions:equation-finite-triple} instead: with $q^3$ for $q$ and $-q$ for $z$, an identity of Laurent polynomials, the left-hand side becomes
+$\prod_{i=1}^{N}(1 - q^{6i-2})(1 - q^{6i-4})$ and the right-hand side $\sum_{m=-N}^{N}(-1)^mq^{3m^2+m}\binom{2N}{N + m}_{q^6}$, both polynomials in $q$. Letting $N \to \infty$ as in Step 2 of the proof,
+and multiplying by $\prod_n(1 - q^{6n})$, gives $\prod_n(1 - q^{6n})(1 - q^{6n-2})(1 - q^{6n-4}) = \sum_m(-1)^mq^{3m^2+m}$. The left-hand side is $\prod_n(1 - q^{2n})$, splitting the even exponents
+modulo $6$. Now replace $q^2$ by $x$: the exponent $3m^2 + m$ is even, and with $j = -m$, $(3m^2 + m)/2 = j(3j - 1)/2$. Formally: both sides lie in the image of the injective substitution
+$f \mapsto f(q^2)$, so the identity holds for the preimages.
+\end{proof}
+
+\begin{remark}\label{generating-functions:remark-partition-identities}
+The triple product identity is the source of a great many identities. A limiting form of it gives Jacobi's identity
+$\prod_{n \geq 1}(1 - x^n)^3 = \sum_{m \geq 0}(-1)^m(2m + 1)x^{m(m+1)/2}$; this and the \emph{Rogers--Ramanujan identities}
+\[
+\begin{aligned}
+\sum_{k \geq 0}\frac{x^{k^2}}{(x)_k} &= \prod_{n \geq 0}\frac{1}{(1 - x^{5n+1})(1 - x^{5n+4})},\\
+\sum_{k \geq 0}\frac{x^{k^2+k}}{(x)_k} &= \prod_{n \geq 0}\frac{1}{(1 - x^{5n+2})(1 - x^{5n+3})},
+\end{aligned}
+\]
+are proved in \cite{andrews-partitions}. The first Rogers--Ramanujan identity says that the partitions of $n$ whose parts differ pairwise by at least $2$ are equinumerous with the partitions of $n$
+into parts congruent to $\pm 1$ modulo $5$; bijective proofs exist, but they are complicated. Ramanujan also discovered the congruences $p(5n + 4) \equiv 0 \pmod 5$, $p(7n + 5) \equiv 0 \pmod 7$ and
+$p(11n + 6) \equiv 0 \pmod{11}$, whose proofs use the theory of modular forms (Chapter~\ref{modular-forms}).
+\end{remark}
+
+\section{Exponential generating functions}\label{generating-functions:section-exponential}
+
+When the objects being counted are built on a set of \emph{labelled} elements, such as permutations, set partitions or graphs on $[n]$, the natural generating function divides the $n$-th term by
+$n!$. The reason is that the product of two such series then counts pairs of structures placed on complementary subsets, with the binomial coefficient choosing the subsets. In this section $R$
+contains $\QQ$.
+
+\subsection{Labelled structures}\label{generating-functions:subsection-labelled}
+
+\begin{definition}\label{generating-functions:definition-egf}
+The \emph{exponential generating function} of a sequence $(a_n)_{n \geq 0}$ is $\sum_na_n\frac{x^n}{n!} \in R[[x]]$. For a series $f$ we write $n![x^n]f$ for the coefficient of $x^n/n!$ in $f$.
+\end{definition}
+
+\begin{definition}\label{generating-functions:definition-species}
+A \emph{class of labelled structures} $\mathcal{F}$ assigns to every finite set $S$ a finite set $\mathcal{F}[S]$, the structures \emph{on} $S$, and to every bijection $\tau \colon S \to T$ a bijection
+$\mathcal{F}[\tau] \colon \mathcal{F}[S] \to \mathcal{F}[T]$, the \emph{relabelling} along $\tau$, such that $\mathcal{F}[\id_S] = \id$ and $\mathcal{F}[\tau \circ \rho] = \mathcal{F}[\tau] \circ \mathcal{F}[\rho]$.
+Its \emph{counting sequence} is $f_n = |\mathcal{F}[[n]]|$, which is also $|\mathcal{F}[S]|$ for every $S$ with $n$ elements, and its exponential generating function is $F(x) = \sum_nf_nx^n/n!$.
+\end{definition}
+
+Examples: the permutations of $S$ (relabelled by conjugation, $\sigma \mapsto \tau\sigma\tau^{-1}$); the linear orders of $S$; the set partitions of $S$; the graphs with vertex set $S$, that is, the
+subsets of $\binom{S}{2}$; the class $\mathcal{E}$ with exactly one structure on every set (the set $S$ itself), with exponential generating function $\sum_nx^n/n! = e^x$; and the class $\mathcal{X}$ of
+singletons, with one structure on sets with one element and none otherwise, with generating function $x$. Permutations and linear orders both have $n!$ structures on an $n$-set, and generating
+function $\frac{1}{1 - x}$; they are different classes, since relabelling acts differently, but only the counting sequence matters here. The functoriality is what makes $|\mathcal{F}[S]|$ depend only on
+$|S|$, and it will let us transport structures from a block of a partition to a standard set.
+
+\begin{theorem}[Labelled product]\label{generating-functions:theorem-labelled-product}
+For classes $\mathcal{F}$ and $\mathcal{G}$, let $(\mathcal{F} \cdot \mathcal{G})[S] = \bigsqcup_{(A, B)}\mathcal{F}[A] \times \mathcal{G}[B]$, the disjoint union over the ordered pairs of disjoint
+sets with $A \cup B = S$. Its counting sequence is $h_n = \sum_{k=0}^{n}\binom{n}{k}f_kg_{n-k}$, and its exponential generating function is $F(x)G(x)$. More generally, the class of $k$-tuples of
+structures on the blocks of ordered decompositions $S = A_1 \sqcup \cdots \sqcup A_k$ has the generating function $F_1(x) \cdots F_k(x)$, and the number of such tuples on $[n]$ with $|A_i| = n_i$ is
+$\binom{n}{n_1, \ldots, n_k}f^{(1)}_{n_1} \cdots f^{(k)}_{n_k}$.
+\end{theorem}
+
+\begin{proof}
+For $S = [n]$, choose $A$ with $k$ elements ($\binom{n}{k}$ ways), a structure on $A$ ($f_k$ ways) and one on $B = [n] \setminus A$ ($g_{n-k}$ ways); the rules of sum and product give $h_n$. On the
+other side, $n![x^n](FG) = n!\sum_{k}\frac{f_k}{k!}\frac{g_{n-k}}{(n - k)!} = \sum_k\binom{n}{k}f_kg_{n-k}$. The case of $k$ factors follows by induction, or directly with the multinomial
+coefficient counting the ordered decompositions with prescribed sizes (Definition~\ref{combinatorics:definition-multinomial}).
+\end{proof}
+
+\begin{example}\label{generating-functions:example-labelled-product}
+\begin{enumerate}
+\item The pairs (subset $A$, the rest) are the structures of $\mathcal{E} \cdot \mathcal{E}$, with generating function $e^xe^x = e^{2x}$: there are $2^n$ of them.
+\item A permutation of $S$ together with a choice of its fixed points is the same as a set $A$ of fixed points and a derangement of $S \setminus A$. So $\frac{1}{1 - x} = e^xD(x)$, with $D$ the
+exponential generating function of the derangements, and $D(x) = \frac{e^{-x}}{1 - x}$: comparing coefficients, $D_n = n!\sum_{j \leq n}\frac{(-1)^j}{j!}$, which is
+Theorem~\ref{combinatorics:theorem-derangements} again.
+\end{enumerate}
+\end{example}
+
+\subsection{The exponential formula}\label{generating-functions:subsection-exponential-formula}
+
+\begin{theorem}[Exponential formula]\label{generating-functions:theorem-exponential-formula}
+Let $\mathcal{C}$ be a class of labelled structures with $\mathcal{C}[\emptyset] = \emptyset$ (``connected'' structures) and generating function $C(x)$. Let $\mathcal{A}[S]$ be the set of pairs
+$(\pi, (c_B)_{B \in \pi})$ of a set partition $\pi$ of $S$ and a structure $c_B \in \mathcal{C}[B]$ on each block (``assemblies'' of connected structures). Then the number of assemblies on $[n]$
+with exactly $k$ blocks has exponential generating function $C(x)^k/k!$, and in $R[y][[x]]$,
+\[
+\begin{aligned}
+&\sum_{n,k}\bigl|\{\text{assemblies on } [n] \text{ with } k \text{ blocks}\}\bigr|\,y^k\frac{x^n}{n!} = \exp(yC(x)),\\
+&\sum_n|\mathcal{A}[[n]]|\frac{x^n}{n!} = \exp(C(x)).
+\end{aligned}
+\]
+\end{theorem}
+
+\begin{proof}
+Count the pairs (assembly with $k$ blocks, numbering of its blocks). A numbering turns the set partition into an ordered decomposition $[n] = A_1 \sqcup \cdots \sqcup A_k$ into nonempty blocks, and
+the assembly into a $k$-tuple of structures $c_i \in \mathcal{C}[A_i]$; conversely such a tuple determines the assembly and the numbering. Since the blocks are nonempty and distinct, each assembly
+has exactly $k!$ numberings. So, with $a_{n,k}$ the number of assemblies,
+\[
+k!\,a_{n,k} = \bigl|\{(A_1, \ldots, A_k, c_1, \ldots, c_k)\}\bigr| = n![x^n]C(x)^k,
+\]
+by Theorem~\ref{generating-functions:theorem-labelled-product} (the condition $A_i \neq \emptyset$ is automatic, as $\mathcal{C}[\emptyset] = \emptyset$). Hence
+$\sum_na_{n,k}x^n/n! = C^k/k!$, and summing over $k$ (a summable family, as $\operatorname{ord}(C^k) \geq k$) gives $\sum_ky^kC^k/k! = \exp(yC)$, where $\exp(yC)$ is the composition of $\exp$ with
+$yC$, which has constant term $0$. Setting $y = 1$ (Lemma~\ref{generating-functions:lemma-product-rules}(5)) gives the second formula.
+\end{proof}
+
+The theorem says: \emph{to pass from connected structures to all structures, exponentiate}; and conversely, $C = \log(A)$ recovers the connected structures from all structures. The condition
+$\mathcal{C}[\emptyset] = \emptyset$ is necessary for $\exp(C)$ to be defined, and natural: the empty set has one assembly, the empty partition, which accounts for the constant term $1$.
+
+\begin{example}[Set partitions]\label{generating-functions:example-egf-partitions}
+Take $\mathcal{C}$ with one structure on every nonempty set: $C = e^x - 1$. Assemblies are set partitions, counted by the Stirling numbers $S(n, k)$ and the Bell numbers $B_n$
+(Section~\ref{combinatorics:section-stirling}):
+\[
+\begin{aligned}
+&\sum_{n,k}S(n, k)y^k\frac{x^n}{n!} = \exp\bigl(y(e^x - 1)\bigr),\\
+&\sum_nS(n, k)\frac{x^n}{n!} = \frac{(e^x - 1)^k}{k!}, \qquad \sum_nB_n\frac{x^n}{n!} = e^{e^x - 1}.
+\end{aligned}
+\]
+The derivative of the last series is $e^x\exp(e^x - 1)$ (Proposition~\ref{generating-functions:proposition-exp-log}(5)), and comparing coefficients of $x^n/n!$ by
+Theorem~\ref{generating-functions:theorem-labelled-product} gives $B_{n+1} = \sum_k\binom{n}{k}B_k$, the recurrence of Proposition~\ref{combinatorics:proposition-bell}. Expanding
+$(e^x - 1)^k = \sum_j\binom{k}{j}(-1)^{k-j}e^{jx}$ gives back the formula $S(n, k) = \frac{1}{k!}\sum_j(-1)^{k-j}\binom{k}{j}j^n$.
+\end{example}
+
+\begin{example}[Permutations and their cycles]\label{generating-functions:example-egf-cycles}
+A permutation is an assembly of cycles, counting each fixed point as a cycle of length $1$ (Proposition~\ref{groups:proposition-cycle-decomposition}): the blocks are the orbits, and on each
+orbit the permutation acts as a cyclic permutation. On a set with $k$ elements there are $(k - 1)!$ cyclic permutations, so
+$C(x) = \sum_{k \geq 1}\frac{(k-1)!}{k!}x^k = \sum_k\frac{x^k}{k} = -\log(1 - x)$ (Definition~\ref{generating-functions:definition-exp-log}, with $x$ replaced by $-x$). Then
+$\exp(C) = \exp(\log(1 - x))^{-1} = \frac{1}{1 - x}$, the $n!$ permutations, by Proposition~\ref{generating-functions:proposition-exp-log}(2) and (3); and with $y$ counting cycles,
+\[
+\exp(-y\log(1 - x)) = (1 - x)^{-y} = \sum_n\binom{-y}{n}(-x)^n = \sum_ny^{\overline{n}}\frac{x^n}{n!}
+\]
+by Theorem~\ref{generating-functions:theorem-binomial-series} in $\QQ[y][[x]]$ and upper negation (Proposition~\ref{combinatorics:proposition-binomial-polynomial}(3)). So the number of permutations of $[n]$ with $k$
+cycles is the coefficient of $y^k$ in $y(y + 1) \cdots (y + n - 1)$: this is Theorem~\ref{combinatorics:theorem-stirling-first}(2). Restricting the allowed cycle lengths to a set $L$ gives
+$\exp(\sum_{k \in L}x^k/k)$:
+\begin{enumerate}
+\item derangements ($L = \{2, 3, \ldots\}$): $\exp(-\log(1 - x) - x) = \frac{e^{-x}}{1 - x}$;
+\item involutions ($L = \{1, 2\}$): $\exp(x + x^2/2)$; differentiating, $I^{\prime} = (1 + x)I$, so $I_{n+1} = I_n + nI_{n-1}$ (Exercise~\ref{combinatorics:exercise-involutions});
+\item permutations with $\sigma^m = \id$ ($L$ the divisors of $m$): $\exp(\sum_{d \mid m}x^d/d)$.
+\end{enumerate}
+\end{example}
+
+\begin{example}[Connected graphs]\label{generating-functions:example-connected-graphs}
+A graph on $S$ is a set $E$ of $2$-element subsets of $S$ (its edges). The vertices of $S$ split into the classes of the equivalence relation generated by ``$\{u, v\} \in E$'', its \emph{components};
+the graph is \emph{connected} if $S \neq \emptyset$ and there is one class. Every edge lies inside a component, and the graph induced on a component is connected, since two vertices of a class are
+joined by a chain of edges whose vertices all lie in the class. So a graph is the same as a set partition of $S$ (into components) with a connected graph on each block: graphs are assemblies of
+connected graphs. There are $2^{\binom{n}{2}}$ graphs on $[n]$, so the exponential generating function $C$ of connected graphs is
+\[
+C(x) = \log\Bigl(\sum_{n \geq 0}2^{\binom{n}{2}}\frac{x^n}{n!}\Bigr),
+\]
+a formal identity although the series inside the logarithm converges nowhere except at $0$. Writing $G$ for that series, $DG = G \cdot DC$, which gives the recurrence
+$c_n = g_n - \frac{1}{n}\sum_{k=1}^{n-1}k\binom{n}{k}c_kg_{n-k}$ with $g_m = 2^{\binom{m}{2}}$, and the values $c_1, \ldots, c_6 = 1, 1, 4, 38, 728, 26704$: already for $n = 6$ about $81\%$ of the $32768$ graphs are connected.
+\end{example}
+
+\subsection{Bernoulli numbers and sums of powers}\label{generating-functions:subsection-bernoulli}
+
+\begin{definition}\label{generating-functions:definition-bernoulli}
+The \emph{Bernoulli numbers} $B_n \in \QQ$ are defined by $\frac{x}{e^x - 1} = \sum_{n \geq 0}B_n\frac{x^n}{n!}$, where $\frac{e^x - 1}{x} = \sum_n\frac{x^n}{(n + 1)!}$ has constant term $1$, so its
+inverse exists in $\QQ[[x]]$. (They are unrelated to the Bell numbers, which unfortunately share the letter.)
+\end{definition}
+
+\begin{proposition}\label{generating-functions:proposition-bernoulli}
+\begin{enumerate}
+\item $B_0 = 1$, and $\sum_{j=0}^{n}\binom{n + 1}{j}B_j = 0$ for $n \geq 1$; so $B_1 = -\frac12$, $B_2 = \frac16$, $B_3 = 0$, $B_4 = -\frac1{30}$, $B_5 = 0$, $B_6 = \frac1{42}$.
+\item $B_n = 0$ for every odd $n \geq 3$.
+\item (Faulhaber) For $m \geq 1$ and $n \geq 0$, $\displaystyle\sum_{k=0}^{m-1}k^n = \frac{1}{n + 1}\sum_{j=0}^{n}\binom{n + 1}{j}B_jm^{n+1-j}$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) Multiply $\sum_jB_jx^j/j!$ by $\frac{e^x - 1}{x} = \sum_i\frac{x^i}{(i+1)!}$; the product is $1$, so for $n \geq 1$, $\sum_{j=0}^{n}\frac{B_j}{j!\,(n - j + 1)!} = 0$; multiply by $(n + 1)!$.
+(2) Let $f = \frac{x}{e^x - 1} + \frac{x}{2}$. Substituting $-x$ for $x$ (Lemma~\ref{generating-functions:lemma-composition}), and using $e^{-x} = 1/e^x$,
+$\frac{-x}{e^{-x} - 1} = \frac{xe^x}{e^x - 1} = \frac{x}{e^x - 1} + x$, so $f(-x) = \frac{x}{e^x - 1} + x - \frac{x}{2} = f(x)$. An even series has no odd coefficients, and $f$ has the
+coefficients $B_n/n!$ for $n \geq 2$.
+(3) By Proposition~\ref{generating-functions:proposition-exp-log}(2), $(e^x - 1)\sum_{k=0}^{m-1}e^{kx} = e^{mx} - 1$, a telescoping sum. So
+\[
+\begin{aligned}
+\sum_{n}\Bigl(\sum_{k=0}^{m-1}k^n\Bigr)\frac{x^n}{n!} &= \sum_{k=0}^{m-1}e^{kx} = \frac{x}{e^x - 1} \cdot \frac{e^{mx} - 1}{x}\\
+&= \Bigl(\sum_jB_j\frac{x^j}{j!}\Bigr)\Bigl(\sum_{i \geq 0}\frac{m^{i+1}x^i}{(i + 1)!}\Bigr).
+\end{aligned}
+\]
+The coefficient of $x^n/n!$ on the right is $\sum_{j}\binom{n}{j}B_j\frac{m^{n-j+1}}{n - j + 1}$, and $\binom{n}{j}\frac{1}{n - j + 1} = \frac{1}{n + 1}\binom{n + 1}{j}$.
+\end{proof}
+
+For $n = 2$: $\sum_{k<m}k^2 = \frac13(m^3 - \frac32m^2 + \frac12m) = \frac{m(m - 1)(2m - 1)}{6}$. The Bernoulli numbers reappear in the values $\zeta(2k)$ of the Riemann zeta function, in the
+Euler--Maclaurin formula, and in Kummer's work on Fermat's last theorem.
+
+\section{Lagrange inversion}\label{generating-functions:section-lagrange}
+
+Many generating functions are defined implicitly, by an equation $T = x\phi(T)$ expressing that a structure is a root with a collection of substructures of the same kind attached: binary trees,
+plane trees, rooted labelled trees. Lagrange's formula gives the coefficients of $T$ directly. In this section $R$ contains $\QQ$.
+
+\subsection{Laurent series and residues}\label{generating-functions:subsection-laurent}
+
+\begin{definition}\label{generating-functions:definition-laurent}
+A \emph{formal Laurent series} over $R$ is a family $f = (f_n)_{n \in \ZZ}$ of elements of $R$ with $f_n = 0$ for all sufficiently negative $n$, written $\sum_nf_nx^n$. They form a ring $R((x))$ under
+termwise addition and the product $(fg)_n = \sum_{i+j=n}f_ig_j$, a finite sum. The \emph{residue} of $f$ is $\operatorname{res}(f) = f_{-1}$, and the derivative is $Df = \sum_nnf_nx^{n-1}$.
+\end{definition}
+
+The ring axioms, the Leibniz rule and the rules for summable families are proved as for $R[[x]]$; every Laurent series is $x^{-m}g$ with $m \geq 0$ and $g \in R[[x]]$, and $R[[x]]$ is a subring. If
+$K$ is a field, $K((x))$ is a field, the field of fractions of $K[[x]]$: a nonzero $f$ is $x^mu$ with $m \in \ZZ$ and $u$ a unit of $K[[x]]$ (Proposition~\ref{generating-functions:proposition-field-coefficients}),
+with inverse $x^{-m}u^{-1}$.
+
+\begin{lemma}\label{generating-functions:lemma-residues}
+Let $f \in R((x))$.
+\begin{enumerate}
+\item $\operatorname{res}(Df) = 0$.
+\item If $f = x^mu$ with $m \in \ZZ$ and $u \in R[[x]]$ with $u(0)$ a unit, then $f$ is a unit of $R((x))$ and $\operatorname{res}(Df/f) = m$.
+\item Let $g \in R[[x]]$ with $g(0) = 0$ and $g_1$ a unit. The composition $f \mapsto f(g) = \sum_nf_ng^n$ is defined on $R((x))$, where $g^{-1} \in R((x))$ by (2); it is a ring homomorphism, and
+\[
+\operatorname{res}\bigl(f(g) \cdot Dg\bigr) = \operatorname{res}(f).
+\]
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) The coefficient of $x^{-1}$ in $Df$ is $0 \cdot f_0 = 0$.
+(2) $u$ is a unit of $R[[x]]$ (Proposition~\ref{rings:proposition-power-series-units}), so $f^{-1} = x^{-m}u^{-1}$. By the Leibniz rule, $Df = mx^{m-1}u + x^mDu$, so $Df/f = \frac{m}{x} + \frac{Du}{u}$,
+and $Du/u \in R[[x]]$ has no residue.
+(3) Write $g = xv$ with $v(0) = g_1$ a unit; then $g^{-1} = x^{-1}v^{-1}$ and $g^n$ has order exactly $n$ for all $n \in \ZZ$, with lowest coefficient $g_1^n$. The family $(f_ng^n)$ is summable, since
+$f_n = 0$ for $n$ below some $n_0$ and $\operatorname{ord}(g^n) = n$; so $f(g)$ is defined, and it is a homomorphism by the computation of Lemma~\ref{generating-functions:lemma-composition}(1).
+For the residue formula, both sides are additive in $f$ and only the terms with $n_0 \leq n \leq -1$ matter: for $n \geq 0$, $f_ng^nDg \in R[[x]]$ and $f_nx^n$ have residue $0$. So it suffices
+to treat $f = x^n$ with $n < 0$. If $n \neq -1$, then $g^nDg = D(g^{n+1})/(n + 1)$ has residue $0$ by (1), like $x^n$. If $n = -1$, then $g^{-1}Dg = Dg/g$ has residue $1$ by (2), like $x^{-1}$.
+\end{proof}
+
+\subsection{The inversion formula}\label{generating-functions:subsection-lagrange-formula}
+
+\begin{theorem}[Lagrange inversion]\label{generating-functions:theorem-lagrange}
+Let $\phi \in R[[t]]$ with $\phi(0)$ a unit. There is a unique $T \in R[[x]]$ with $T(0) = 0$ and $T = x\phi(T)$. For every $H \in R[[t]]$ and $n \geq 1$,
+\[
+[x^n]H(T) = \frac{1}{n}[t^{n-1}]\,H^{\prime}(t)\phi(t)^n,
+\]
+and in particular
+\[
+[x^n]T^k = \frac{k}{n}[t^{n-k}]\,\phi(t)^n \quad (k \geq 1).
+\]
+\end{theorem}
+
+\begin{proof}
+\emph{Existence and uniqueness.} Since $\phi$ is a unit, $T = x\phi(T)$ is equivalent to $F(T) = x$ with $F(t) = t/\phi(t)$. Here $F(0) = 0$ and $F_1 = \phi(0)^{-1}$ is a unit, so by
+Proposition~\ref{generating-functions:proposition-compositional-inverse} there is exactly one $T$ with $T(0) = 0$ and $F \circ T = x$, namely the compositional inverse of $F$; it has $T_1 = \phi(0)$,
+a unit.
+\emph{The formula.} For $n \geq 1$, $n[x^n]H(T) = [x^{n-1}]D(H(T)) = \operatorname{res}\bigl(x^{-n}D(H(T))\bigr)$. By the chain rule (Lemma~\ref{generating-functions:lemma-derivative}(3)), $D(H(T)) = H^{\prime}(T)DT$. Since $x = F(T)$ and composition with $T$
+is a homomorphism on Laurent series (Lemma~\ref{generating-functions:lemma-residues}(3)), $x^{-n} = (F^{-n})(T)$, where $F(t)^{-n} = t^{-n}\phi(t)^n \in R((t))$. Hence
+\[
+\begin{aligned}
+n[x^n]H(T) &= \operatorname{res}\Bigl(\bigl(F^{-n}H^{\prime}\bigr)(T) \cdot DT\Bigr)\\
+&= \operatorname{res}\bigl(t^{-n}\phi(t)^nH^{\prime}(t)\bigr) = [t^{n-1}]\,\phi(t)^nH^{\prime}(t),
+\end{aligned}
+\]
+by Lemma~\ref{generating-functions:lemma-residues}(3) with $g = T$. For $H = t^k$, $H^{\prime} = kt^{k-1}$ and $[t^{n-1}]kt^{k-1}\phi^n = k[t^{n-k}]\phi^n$.
+\end{proof}
+
+\begin{example}[Catalan numbers again]\label{generating-functions:example-lagrange-catalan}
+The series $T = xB$, where $B = 1 + xB^2$ is the generating function of binary trees (Theorem~\ref{generating-functions:theorem-catalan}), satisfies $T = x + T^2$, that is, $T = \frac{x}{1 - T} = x\phi(T)$ with $\phi(t) = (1 - t)^{-1}$.
+By Lagrange and Example~\ref{generating-functions:example-geometric}(3), $C_{n-1} = [x^n]T = \frac{1}{n}[t^{n-1}](1 - t)^{-n} = \frac{1}{n}\binom{2n - 2}{n - 1}$. More generally
+$[x^{n+k}]T^k = \frac{k}{n + k}\binom{2n + k - 1}{n}$ counts the $k$-tuples of binary trees with $n$ nodes in all (Exercise~\ref{generating-functions:exercise-ballot-numbers}).
+\end{example}
+
+\begin{definition}\label{generating-functions:definition-mary-tree}
+For $m \geq 1$, the sets $\mathcal{T}^{(m)}_n$ of \emph{$m$-ary trees with $n$ nodes} are defined by $\mathcal{T}^{(m)}_0 = \{\varepsilon\}$ and
+$\mathcal{T}^{(m)}_n = \bigsqcup_{n_1 + \cdots + n_m = n - 1}\mathcal{T}^{(m)}_{n_1} \times \cdots \times \mathcal{T}^{(m)}_{n_m}$: a nonempty $m$-ary tree is a root with an ordered $m$-tuple of
+$m$-ary trees. For $m = 2$ these are the binary trees of Definition~\ref{generating-functions:definition-binary-tree}.
+\end{definition}
+
+\begin{corollary}[Fuss--Catalan numbers]\label{generating-functions:corollary-fuss-catalan}
+The number of $m$-ary trees with $n$ nodes is $\frac{1}{(m - 1)n + 1}\binom{mn}{n}$.
+\end{corollary}
+
+\begin{proof}
+The generating function $A$ satisfies $A = 1 + xA^m$, by the rule of product, so $T = A - 1$ satisfies $T = x(1 + T)^m$, and $T(0) = 0$. By Lagrange with $\phi = (1 + t)^m$, for $n \geq 1$,
+$[x^n]T = \frac{1}{n}[t^{n-1}](1 + t)^{mn} = \frac{1}{n}\binom{mn}{n - 1}$, and $\frac{1}{n}\binom{mn}{n - 1} = \frac{(mn)!}{n!\,(mn - n + 1)!} = \frac{1}{(m - 1)n + 1}\binom{mn}{n}$. For $n = 0$ both
+sides are $1$.
+\end{proof}
+
+For $m = 3$ the numbers are $1, 1, 3, 12, 55, 273, \ldots$, and for $m = 1$ they are all $1$ (a $1$-ary tree is a path).
+
+\subsection{The cycle lemma}\label{generating-functions:subsection-cycle-lemma}
+
+The factor $\frac{1}{(m - 1)n + 1}$ in the Fuss--Catalan numbers, like the factor $\frac{1}{n + 1}$ in the Catalan numbers, has a combinatorial explanation: among the cyclic shifts of a sequence,
+exactly one has a positivity property.
+
+\begin{lemma}[Cycle lemma]\label{generating-functions:lemma-cycle}
+Let $a_1, \ldots, a_N$ be integers with $a_1 + \cdots + a_N = 1$. Exactly one of the $N$ cyclic shifts $(a_{j+1}, \ldots, a_N, a_1, \ldots, a_j)$, $0 \leq j < N$, has all its partial sums positive;
+and these $N$ shifts are pairwise distinct sequences.
+\end{lemma}
+
+\begin{proof}
+Put $s_0 = 0$ and $s_i = a_1 + \cdots + a_i$, and extend by $s_{i+N} = s_i + 1$ for all $i \geq 0$, which matches the partial sums of the periodic sequence $a_{i+N} = a_i$. The partial sums of the
+shift starting after position $j$ are $s_{j+t} - s_j$, $1 \leq t \leq N$. Let $j$ be the \emph{last} index in $\{0, \ldots, N - 1\}$ at which $s_j = \min(s_0, \ldots, s_{N-1})$.
+\emph{Existence.} For $j < i \leq N - 1$, $s_i > s_j$ because $j$ is the last minimum; for $N \leq i < j + N$, $s_i = s_{i-N} + 1 \geq s_j + 1 > s_j$; and $s_{j+N} = s_j + 1$. So all partial sums of the
+shift after $j$ are positive.
+\emph{Uniqueness.} If the shift after $k$ has positive partial sums, then $s_i > s_k$ for $k < i \leq N - 1$, and $s_i + 1 = s_{i+N} > s_k$, that is $s_i \geq s_k$, for $0 \leq i < k$. So $s_k$ is the
+minimum and $k$ is its last occurrence: $k = j$.
+\emph{Distinctness.} If two shifts coincide, the sequence is invariant under a shift by some $d$ with $0 < d < N$, hence under the subgroup of $\ZZ/N\ZZ$ generated by $d$, of order $N/e$ with
+$e = \gcd(d, N) < N$; then the sequence consists of $N/e$ repetitions of its first $e$ terms, and its sum $1$ is divisible by $N/e > 1$, which is absurd.
+\end{proof}
+
+\begin{corollary}\label{generating-functions:corollary-cycle-lemma-count}
+Let $m \geq 1$ and $n \geq 0$. The number of sequences consisting of $n$ terms equal to $1 - m$ and $(m - 1)n + 1$ terms equal to $1$, all of whose partial sums are positive, is
+$\frac{1}{mn + 1}\binom{mn + 1}{n} = \frac{1}{(m - 1)n + 1}\binom{mn}{n}$.
+\end{corollary}
+
+\begin{proof}
+There are $N = mn + 1$ terms with sum $(m - 1)n + 1 - (m - 1)n = 1$, and $\binom{N}{n}$ such sequences. The cyclic group $\ZZ/N\ZZ$ acts on them by shifts; by the cycle lemma each orbit has $N$
+elements and contains exactly one sequence with positive partial sums. So the number of those is $\binom{N}{n}/N$, and $\frac{1}{mn + 1}\binom{mn + 1}{n} = \frac{(mn)!}{n!\,((m - 1)n + 1)!}$.
+\end{proof}
+
+For $m = 2$ the sequences are $+1$ followed by a Dyck word (with $U = +1$, $D = -1$): their number is $C_n$, a third proof of the formula for the Catalan numbers, and the shortest. The two counts of
+Corollaries~\ref{generating-functions:corollary-fuss-catalan} and~\ref{generating-functions:corollary-cycle-lemma-count} agree, and indeed reading an $m$-ary tree in preorder (root first, then
+the subtrees from left to right), writing $1 - m$ for each node and $+1$ for each empty subtree, and reversing the resulting word, gives a bijection; we do not need it.
+
+\subsection{Labelled trees and Cayley's formula}\label{generating-functions:subsection-cayley}
+
+\begin{definition}\label{generating-functions:definition-rooted-tree}
+A \emph{rooted forest} on a finite set $S$ is a pair $(\mathcal{R}, p)$ of a subset $\mathcal{R} \subseteq S$, the \emph{roots}, and a map $p \colon S \setminus \mathcal{R} \to S$, the \emph{parent
+map}, such that for every $v \in S$ some iterate $p^k(v)$, $k \geq 0$, lies in $\mathcal{R}$. A \emph{rooted tree} is a rooted forest with one root. The \emph{edges} of $(\mathcal{R}, p)$ are the
+sets $\{v, p(v)\}$, $v \in S \setminus \mathcal{R}$; a \emph{tree} on $S$ is a set of edges that arises from some rooted tree on $S$.
+\end{definition}
+
+The iterates $v, p(v), p^2(v), \ldots$ are the path from $v$ up to its root; the condition excludes cycles, since a cycle $v = p^k(v)$ would never reach a root. Relabelling along a bijection
+transports rooted trees, so these are classes of labelled structures.
+
+\begin{lemma}\label{generating-functions:lemma-trees-roots}
+Let $S$ be a finite set with $n \geq 1$ elements.
+\begin{enumerate}
+\item For a rooted forest $(\mathcal{R}, p)$, the map $v \mapsto \{v, p(v)\}$ is injective on $S \setminus \mathcal{R}$; so a rooted tree has $n - 1$ edges.
+\item A tree on $S$ together with a vertex $r \in S$ arises from exactly one rooted tree with root $r$.
+\end{enumerate}
+Consequently the number of rooted trees on $S$ is $n$ times the number of trees on $S$.
+\end{lemma}
+
+\begin{proof}
+(1) If $\{v, p(v)\} = \{w, p(w)\}$ with $v \neq w$, then $w = p(v)$ and $v = p(w)$, so $v = p^2(v)$ and the iterates of $v$ alternate between $v$ and $w$, two non-roots: they never reach a root.
+\emph{(2), uniqueness.} Let $p$ and $p^{\prime}$ be parent maps with root $r$ and the same edge set $E$. Let $d(v)$ be the least $k$ with $p^k(v) = r$. We show $p^{\prime}(v) = p(v)$ by induction on
+$d(v) \geq 1$. By (1) for $p^{\prime}$, the edge $\{v, p(v)\}$ is $\{u, p^{\prime}(u)\}$ for exactly one $u \neq r$, and $u \in \{v, p(v)\}$. If $u = v$ we are done. Otherwise $u = p(v) \neq r$ and
+$p^{\prime}(p(v)) = v$; but $d(p(v)) = d(v) - 1$, so by induction $p^{\prime}(p(v)) = p(p(v))$, and $p(p(v)) = v$ is impossible, as in (1).
+\emph{(2), existence.} Let $E$ come from a rooted tree $p$ with root $r_0$, and let $r \in S$. Let $r = v_0, v_1 = p(v_0), \ldots, v_d = r_0$ be the path from $r$ to $r_0$. Define $p^{\prime}$ on
+$S \setminus \{r\}$ by $p^{\prime}(v_{i+1}) = v_i$ for $0 \leq i < d$, and $p^{\prime}(u) = p(u)$ for $u$ not on the path. It has the same edges, the path being reversed. Every $u$ reaches $r$: its
+iterates under $p^{\prime}$ agree with those under $p$ until they first meet the path (which they do, at $r_0$ at the latest), at some $v_i$, and from there $p^{\prime}$ descends $v_i, v_{i-1}, \ldots, v_0 = r$.
+The consequence: by (2) the map (rooted tree) $\mapsto$ (its edge set, its root) is a bijection onto the pairs (tree, vertex).
+\end{proof}
+
+\begin{theorem}[Cayley's formula]\label{generating-functions:theorem-cayley}
+For $n \geq 1$ there are $n^{n-1}$ rooted trees and $n^{n-2}$ trees on $[n]$.
+\end{theorem}
+
+\begin{proof}[First proof, by Lagrange inversion]
+Removing the root $r$ of a rooted tree on $S$ leaves the rooted forest on $S \setminus \{r\}$ whose roots are the children of $r$ (the $v$ with $p(v) = r$); grouping the vertices by the root of their
+tree, this is the same as a set partition of $S \setminus \{r\}$ with a rooted tree on each block. Conversely a root $r$ and such an assembly give a rooted tree, by declaring $r$ the parent of the
+roots of the blocks. By Theorems~\ref{generating-functions:theorem-labelled-product} (with the class $\mathcal{X}$ for the root) and~\ref{generating-functions:theorem-exponential-formula}, the
+exponential generating function $T = \sum_nt_nx^n/n!$ of rooted trees satisfies
+\[
+T = x\exp(T).
+\]
+By Theorem~\ref{generating-functions:theorem-lagrange} with $\phi = e^t$, $\frac{t_n}{n!} = [x^n]T = \frac{1}{n}[t^{n-1}]e^{nt} = \frac{1}{n}\cdot\frac{n^{n-1}}{(n - 1)!}$, so $t_n = n^{n-1}$. By
+Lemma~\ref{generating-functions:lemma-trees-roots} there are $n^{n-1}/n = n^{n-2}$ trees.
+\end{proof}
+
+\begin{proof}[Second proof, by double counting (Pitman)]
+Count the sequences of $n - 1$ steps that build a rooted tree on $[n]$ from the rooted forest with $n$ roots and no edges, where a step chooses a root $\rho$ of the current forest and a vertex $v$
+not in the tree of $\rho$, and sets $p(\rho) = v$; the result is again a rooted forest, with one root fewer. If the current forest has $k$ roots, with trees of sizes $n_1, \ldots, n_k$, the number of
+possible steps is $\sum_i(n - n_i) = kn - n = n(k - 1)$. So there are $\prod_{k=2}^{n}n(k - 1) = n^{n-1}(n - 1)!$ building sequences. On the other hand, each rooted tree is the result of exactly
+$(n - 1)!$ of them, one for each order in which its $n - 1$ edges $\{v, p(v)\}$ are added: removing any set of parent assignments from a rooted tree leaves a rooted forest, so every order is a valid
+building sequence, and the sequence determines the order. Hence there are $n^{n-1}$ rooted trees.
+\end{proof}
+
+\begin{remark}\label{generating-functions:remark-cayley}
+The trees of Definition~\ref{generating-functions:definition-rooted-tree} are exactly the connected graphs without cycles on $S$, the trees of graph theory (Chapter~\ref{graph-theory}), where
+Pr\"ufer's bijection between trees on $[n]$ and sequences in $[n]^{n-2}$ gives a third proof. For $n = 4$ there are $16$ trees: $12$ paths ($4!/2$ orderings of the vertices up to reversal) and $4$
+stars (choose the centre). Lagrange inversion also counts rooted forests on $[n]$ with $k$ trees: $\binom{n - 1}{k - 1}n^{n-k}$ (Exercise~\ref{generating-functions:exercise-forests}).
+\end{remark}
+
+\section{Estimates}\label{generating-functions:section-estimates}
+
+An exact formula is not always the most useful answer: one often wants to know how fast a sequence grows. This section proves elementary bounds, by comparing products term by term, for the central
+binomial coefficients, the Catalan numbers and the Fibonacci numbers. They are the first instances of a general theory, sketched in the last remark, in which the growth of the coefficients is read
+off the singularities of the generating function viewed as a complex function.
+
+\begin{proposition}[Central binomial coefficients]\label{generating-functions:proposition-central-binomial-bounds}
+For $n \geq 1$,
+\[
+\frac{4^n}{2n + 1} \leq \frac{4^n}{2\sqrt{n}} \leq \binom{2n}{n} \leq \frac{4^n}{\sqrt{2n + 1}} \leq 4^n.
+\]
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1: a product formula.} Put $P_n = \binom{2n}{n}/4^n$. Since $\binom{2n}{n} = \frac{(2n)!}{n!^2}$ and $(2n)! = 2^nn! \cdot 1 \cdot 3 \cdots (2n - 1)$ (as in
+Example~\ref{generating-functions:example-central-binomial}),
+\[
+P_n = \frac{1 \cdot 3 \cdots (2n - 1)}{2 \cdot 4 \cdots 2n} = \prod_{k=1}^{n}\frac{2k - 1}{2k}.
+\]
+\emph{Step 2: the upper bound.} For $k \geq 1$, $\frac{2k - 1}{2k} < \frac{2k}{2k + 1}$, since $(2k - 1)(2k + 1) = 4k^2 - 1 < 4k^2$. Hence
+\[
+P_n^2 = \prod_{k=1}^{n}\frac{2k - 1}{2k} \cdot \frac{2k - 1}{2k} < \prod_{k=1}^{n}\frac{2k - 1}{2k} \cdot \frac{2k}{2k + 1} = \prod_{k=1}^{n}\frac{2k - 1}{2k + 1} = \frac{1}{2n + 1},
+\]
+a telescoping product. So $P_n \leq 1/\sqrt{2n + 1}$.
+\emph{Step 3: the lower bound.} For $k \geq 2$, $\frac{2k - 1}{2k} > \frac{2k - 2}{2k - 1}$, since $(2k - 1)^2 = 4k^2 - 4k + 1 > 4k^2 - 4k = 2k(2k - 2)$. Hence, keeping the factor $k = 1$ apart,
+\[
+P_n^2 \geq \frac14\prod_{k=2}^{n}\frac{2k - 1}{2k} \cdot \frac{2k - 2}{2k - 1} = \frac14\prod_{k=2}^{n}\frac{k - 1}{k} = \frac{1}{4n}.
+\]
+\emph{Step 4: the outer inequalities.} $2\sqrt{n} \leq 2n + 1$ because $4n \leq (2n + 1)^2$, and $\sqrt{2n + 1} \geq 1$.
+\end{proof}
+
+The outer, weaker bounds also have a one-line proof: $\binom{2n}{n}$ is the largest of the $2n + 1$ numbers $\binom{2n}{k}$ (Proposition~\ref{combinatorics:proposition-unimodal}), whose sum is
+$4^n$. The inner bounds are much better: the ratio of the upper to the lower bound is $\frac{2\sqrt{n}}{\sqrt{2n + 1}} = \sqrt{\frac{4n}{2n + 1}} < \sqrt{2}$, so they determine $\binom{2n}{n}$ up to a
+factor less than $\sqrt{2}$, for every $n$, while the outer bounds differ by the factor $2n + 1$.
+
+\begin{corollary}\label{generating-functions:corollary-catalan-bounds}
+For $n \geq 1$, $\displaystyle\frac{4^n}{2(n + 1)\sqrt{n}} \leq C_n \leq \frac{4^n}{(n + 1)\sqrt{2n + 1}}$. Moreover $\frac{C_{n+1}}{C_n} = \frac{2(2n + 1)}{n + 2}$, so the ratios increase strictly
+from $1$ towards $4$, and $2^{n-1} \leq C_n \leq 4^n$ for all $n \geq 1$.
+\end{corollary}
+
+\begin{proof}
+Divide the bounds of Proposition~\ref{generating-functions:proposition-central-binomial-bounds} by $n + 1$. From $C_n = \frac{(2n)!}{n!\,(n + 1)!}$,
+\[
+\frac{C_{n+1}}{C_n} = \frac{(2n + 2)(2n + 1)}{(n + 1)(n + 2)} = \frac{2(2n + 1)}{n + 2} = 4 - \frac{6}{n + 2},
+\]
+which increases strictly with $n$, equals $1$ for $n = 0$ and is at least $2$ for $n \geq 1$ (as $4n + 2 \geq 2n + 4$). So $C_1 = 1$ and $C_{n+1} \geq 2C_n$ give $C_n \geq 2^{n-1}$ by induction, and
+$C_n \leq \binom{2n}{n} \leq 4^n$.
+\end{proof}
+
+\begin{counterexample}\label{generating-functions:counterexample-small-cases}
+Bounds of this kind need their range checked separately. The tempting bound $C_n \geq 2^n$ is false for $n = 1, 2, 3, 4$ ($C_n = 1, 2, 5, 14$ against $2, 4, 8, 16$), and first holds at $n = 5$
+($42 \geq 32$), after which it persists, since the ratio $C_{n+1}/C_n$ is then at least $2$. Likewise the lower bound $\frac{4^n}{2(n + 1)\sqrt{n}}$ is useless for small $n$ and good for large $n$,
+while the bound $2^{n-1}$ is the opposite. An estimate is a statement for \emph{all} $n$ in a range, and the small cases are where it most often fails.
+\end{counterexample}
+
+\begin{proposition}[Fibonacci numbers]\label{generating-functions:proposition-fibonacci-bounds}
+Let $\varphi = \frac{1 + \sqrt{5}}{2}$. For $n \geq 1$, $\varphi^{n-2} \leq F_n \leq \varphi^{n-1}$, and for $n \geq 0$, $F_n$ is the integer nearest to $\varphi^n/\sqrt{5}$.
+\end{proposition}
+
+\begin{proof}
+\emph{The bounds}, by induction: they hold for $n = 1$ ($\varphi^{-1} \leq 1 \leq 1$) and $n = 2$ ($1 \leq 1 \leq \varphi$). If they hold for $n$ and $n + 1$, then, using $\varphi^2 = \varphi + 1$,
+$F_{n+2} = F_{n+1} + F_n \leq \varphi^n + \varphi^{n-1} = \varphi^{n-1}(\varphi + 1) = \varphi^{n+1}$, and likewise $F_{n+2} \geq \varphi^{n-1} + \varphi^{n-2} = \varphi^n$.
+\emph{Nearest integer.} By Binet's formula (Example~\ref{generating-functions:example-binet}), $F_n - \varphi^n/\sqrt{5} = -\psi^n/\sqrt{5}$ with $\psi = \frac{1 - \sqrt{5}}{2}$. Since $2 < \sqrt{5} < 3$,
+$|\psi| = \frac{\sqrt{5} - 1}{2} < 1$, so $|\psi^n/\sqrt{5}| \leq \frac{1}{\sqrt{5}} < \frac{1}{2}$ for all $n \geq 0$.
+\end{proof}
+
+\begin{remark}[Analytic combinatorics]\label{generating-functions:remark-analytic}
+The pattern behind these bounds is general. If the generating function $\sum_na_nx^n$ converges on a disc in $\CC$, the exponential growth rate $\limsup|a_n|^{1/n}$ is $1/\rho$, where $\rho$ is the radius
+of convergence, and $\rho$ is the distance from $0$ to the nearest singularity of the function: $\frac{1}{4}$ for $\frac{1 - \sqrt{1 - 4x}}{2x}$, $\varphi^{-1}$ for $\frac{x}{1 - x - x^2}$. The
+\emph{nature} of the singularity gives the subexponential factor: a square-root singularity $\sqrt{1 - x/\rho}$ produces $n^{-3/2}$, as for the Catalan numbers, and a simple pole produces a constant,
+as for the Fibonacci numbers. The precise asymptotic formulas, such as
+\[
+\begin{aligned}
+&\binom{2n}{n} \sim \frac{4^n}{\sqrt{\pi n}}, \qquad C_n \sim \frac{4^n}{\sqrt{\pi}\,n^{3/2}},\\
+&\frac{D_n}{n!} \to \frac1e, \qquad p(n) \sim \frac{1}{4n\sqrt{3}}e^{\pi\sqrt{2n/3}},
+\end{aligned}
+\]
+need real or complex analysis (Chapters~\ref{real-analysis} and~\ref{complex-analysis}); the last one is the Hardy--Ramanujan formula \cite{andrews-partitions}. The systematic theory is in
+\cite{flajolet-sedgewick}. The first formula is consistent with Proposition~\ref{generating-functions:proposition-central-binomial-bounds}: $\frac{1}{2\sqrt{n}} < \frac{1}{\sqrt{\pi n}} < \frac{1}{\sqrt{2n + 1}}$
+for $n \geq 1$, because $2n + 1 < \pi n < 4n$ when $n \geq 1$.
+\end{remark}
+
+\section{Exercises}\label{generating-functions:section-exercises}
+
+\begin{exercise}\label{generating-functions:exercise-squares}
+Show that $\sum_{n \geq 0}n^2x^n = \frac{x(1 + x)}{(1 - x)^3}$, and deduce $\sum_{k=0}^{n}k^2 = \frac{n(n + 1)(2n + 1)}{6}$ from Example~\ref{generating-functions:example-partial-sums}.
+\end{exercise}
+
+\begin{solution}
+Let $E = xD$, which multiplies the coefficient of $x^n$ by $n$. From $\sum_nx^n = (1 - x)^{-1}$, $E(1 - x)^{-1} = x(1 - x)^{-2}$, and $E\bigl(x(1 - x)^{-2}\bigr) = x(1 - x)^{-2} + 2x^2(1 - x)^{-3} =
+\frac{x(1 - x) + 2x^2}{(1 - x)^3} = \frac{x(1 + x)}{(1 - x)^3}$, by the Leibniz rule. Dividing by $1 - x$ gives the partial sums:
+$\sum_n\bigl(\sum_{k \leq n}k^2\bigr)x^n = \frac{x + x^2}{(1 - x)^4}$, whose coefficient of $x^n$ is, by Example~\ref{generating-functions:example-geometric}(3),
+$\binom{n + 2}{3} + \binom{n + 1}{3} = \frac{(n + 1)n}{6}\bigl((n + 2) + (n - 1)\bigr) = \frac{n(n + 1)(2n + 1)}{6}$.
+\end{solution}
+
+\begin{exercise}\label{generating-functions:exercise-compositions-one-two}
+Show that the number of ways of writing $n$ as an ordered sum of parts equal to $1$ or $2$ is $F_{n+1}$, and that the number of ordered sums of parts $\geq 2$ is $F_{n-1}$ for $n \geq 1$.
+\end{exercise}
+
+\begin{solution}
+A composition with $k$ parts in a set $A$ is a $k$-tuple, so by the rule of product the generating function is $\sum_k\bigl(\sum_{a \in A}x^a\bigr)^k = \frac{1}{1 - \sum_{a \in A}x^a}$. For $A = \{1, 2\}$
+this is $\frac{1}{1 - x - x^2} = \frac{1}{x}\sum_nF_nx^n$, so the count is $F_{n+1}$. For $A = \{2, 3, \ldots\}$, $\sum_{a \geq 2}x^a = \frac{x^2}{1 - x}$ and
+$\frac{1}{1 - x^2/(1 - x)} = \frac{1 - x}{1 - x - x^2} = 1 + \frac{x^2}{1 - x - x^2}$, whose coefficient of $x^n$ is $F_{n-1}$ for $n \geq 1$ (and $F_0 = 0$ for $n = 1$: there is no such composition of $1$).
+\end{solution}
+
+\begin{exercise}\label{generating-functions:exercise-central-convolution}
+Prove by generating functions that
+\[
+\sum_{k=0}^{n}\binom{2k}{k}\binom{2n - 2k}{n - k} = 4^n,
+\]
+and show that $\sum_{k=0}^{n}C_kC_{n-k} = C_{n+1}$ is the same kind of identity.
+\end{exercise}
+
+\begin{solution}
+The first identity is the square of $(1 - 4x)^{-1/2} = \sum_n\binom{2n}{n}x^n$, which is $(1 - 4x)^{-1}$ (Example~\ref{generating-functions:example-central-binomial}). For the second, $B = \sum_nC_nx^n$
+satisfies $B = 1 + xB^2$ (Theorem~\ref{generating-functions:theorem-catalan}), so $B^2 = (B - 1)/x = \sum_nC_{n+1}x^n$: again the coefficients of a square of a series in closed form.
+\end{solution}
+
+\begin{exercise}\label{generating-functions:exercise-no-part-one}
+Show that the number of partitions of $n \geq 1$ with no part equal to $1$ is $p(n) - p(n - 1)$, and that the number of partitions of $n$ in which no part occurs more than twice equals the number of
+partitions of $n$ with no part divisible by $3$.
+\end{exercise}
+
+\begin{solution}
+As in Theorem~\ref{generating-functions:theorem-partition-gf} and Example~\ref{generating-functions:example-partition-gf-variants}, the generating function of partitions with parts in a set
+$A \subseteq \{1, 2, \ldots\}$ is $\prod_{i \in A}(1 - x^i)^{-1}$.
+Removing the factor $i = 1$ multiplies $\sum_np(n)x^n$ by $1 - x$, which gives $p(n) - p(n - 1)$. For the second claim, a part $i$ occurring $0$, $1$ or $2$ times contributes the factor
+$1 + x^i + x^{2i} = \frac{1 - x^{3i}}{1 - x^i}$; by Lemma~\ref{generating-functions:lemma-product-rules}(1) and (2),
+\[
+\prod_{i \geq 1}\frac{1 - x^{3i}}{1 - x^i} = \Bigl(\prod_{i \geq 1}\frac{1}{1 - x^i}\Bigr)\Bigl(\prod_{i \geq 1}\frac{1}{1 - x^{3i}}\Bigr)^{-1} = \prod_{3 \nmid i}\frac{1}{1 - x^i},
+\]
+the last step by splitting the index set (Lemma~\ref{generating-functions:lemma-product-rules}(3)). This generalises Glaisher's theorem (Corollary~\ref{generating-functions:corollary-glaisher}) with $3$ in place of $2$.
+\end{solution}
+
+\begin{exercise}\label{generating-functions:exercise-q-binomial-values}
+Compute $\binom{4}{2}_q$, check that its value at $q = 1$ is $6$, and use Theorem~\ref{generating-functions:theorem-subspaces} to count the $2$-dimensional subspaces of $\mathbb{F}_2^4$.
+\end{exercise}
+
+\begin{solution}
+$\binom{4}{2}_q = \frac{(1 - q^4)(1 - q^3)}{(1 - q)(1 - q^2)} = (1 + q^2)(1 + q + q^2) = 1 + q + 2q^2 + q^3 + q^4$; at $q = 1$ this is $6$, and the coefficients count the partitions in a $2 \times 2$
+box by size: $\emptyset$; $(1)$; $(2), (1, 1)$; $(2, 1)$; $(2, 2)$. At $q = 2$ it is $1 + 2 + 8 + 8 + 16 = 35$ subspaces.
+\end{solution}
+
+\begin{exercise}\label{generating-functions:exercise-matchings}
+A \emph{perfect matching} of a set is a partition into blocks of size $2$. Show with the exponential formula that the number of perfect matchings of $[2m]$ is $(2m - 1)(2m - 3) \cdots 3 \cdot 1$, and
+that the number of involutions of $[n]$ is $\sum_k\frac{n!}{2^kk!\,(n - 2k)!}$.
+\end{exercise}
+
+\begin{solution}
+Take $\mathcal{C}$ with one structure on each $2$-element set and none on other sets: $C = x^2/2$. By Theorem~\ref{generating-functions:theorem-exponential-formula} the exponential generating function is
+$\exp(x^2/2) = \sum_m\frac{x^{2m}}{2^mm!}$, so the number is $\frac{(2m)!}{2^mm!} = 1 \cdot 3 \cdots (2m - 1)$ (Example~\ref{generating-functions:example-central-binomial}). For involutions,
+$\exp(x + x^2/2) = e^x\exp(x^2/2)$, and by Theorem~\ref{generating-functions:theorem-labelled-product} the number is $\sum_k\binom{n}{2k}\frac{(2k)!}{2^kk!} = \sum_k\frac{n!}{2^kk!\,(n - 2k)!}$:
+choose the $2k$ points that are moved, and a perfect matching of them.
+\end{solution}
+
+\begin{exercise}\label{generating-functions:exercise-ordered-partitions}
+An \emph{ordered set partition} of $S$ is a set partition together with a linear order of its blocks. Show that their exponential generating function is $\frac{1}{2 - e^x}$, and compute the numbers
+for $n \leq 4$. Show that the number of surjections $[n] \to [k]$ is $k!\,S(n, k)$.
+\end{exercise}
+
+\begin{solution}
+An ordered set partition with $k$ blocks is a $k$-tuple of nonempty sets forming an ordered decomposition, so by Theorem~\ref{generating-functions:theorem-labelled-product} its generating function is
+$(e^x - 1)^k$, and summing over $k$ (summable, as $\operatorname{ord}(e^x - 1)^k = k$) gives $\frac{1}{1 - (e^x - 1)} = \frac{1}{2 - e^x}$. Equivalently the number with $k$ blocks is $k!\,S(n, k)$
+(Example~\ref{generating-functions:example-egf-partitions}), the $k!$ orders of the blocks. The values $\sum_kk!\,S(n, k)$ for $n = 0, \ldots, 4$ are $1, 1, 3, 13, 75$. A surjection $f \colon [n] \to [k]$ is
+the same as the ordered set partition $(f^{-1}(1), \ldots, f^{-1}(k))$.
+\end{solution}
+
+\begin{exercise}\label{generating-functions:exercise-odd-cycles}
+Show that the exponential generating function of the permutations all of whose cycles have odd length is $\sqrt{\frac{1 + x}{1 - x}}$, and that their number for $n = 2m$ is
+$\bigl(1 \cdot 3 \cdots (2m - 1)\bigr)^2$.
+\end{exercise}
+
+\begin{solution}
+By Example~\ref{generating-functions:example-egf-cycles}, the generating function is $\exp\bigl(\sum_{k \text{ odd}}x^k/k\bigr)$, and $\sum_{k \text{ odd}}\frac{x^k}{k} = \frac12\bigl(\log(1 + x) - \log(1 - x)\bigr)$
+(Definition~\ref{generating-functions:definition-exp-log}). So the series is $(1 + x)^{1/2}(1 - x)^{-1/2}$ by Definition~\ref{generating-functions:definition-powers} and
+Proposition~\ref{generating-functions:proposition-exp-log}(2). By Theorem~\ref{generating-functions:theorem-binomial-series}(2) this is $(1 + x)\bigl((1 + x)(1 - x)\bigr)^{-1/2} = (1 + x)(1 - x^2)^{-1/2}$,
+and $(1 - x^2)^{-1/2} = \sum_m\binom{2m}{m}\frac{x^{2m}}{4^m}$ (Example~\ref{generating-functions:example-central-binomial} with $x^2/4$ in place of $x$). The coefficient of $x^{2m}$ is $\binom{2m}{m}/4^m$,
+and $(2m)!\binom{2m}{m}/4^m = \Bigl(\frac{(2m)!}{2^mm!}\Bigr)^2 = \bigl(1 \cdot 3 \cdots (2m - 1)\bigr)^2$.
+\end{solution}
+
+\begin{exercise}\label{generating-functions:exercise-derangement-recurrence}
+From $(1 - x)D(x) = e^{-x}$ (Example~\ref{generating-functions:example-labelled-product}), deduce $D_n = nD_{n-1} + (-1)^n$ for $n \geq 1$.
+\end{exercise}
+
+\begin{solution}
+The coefficient of $x^n/n!$ in $xD(x)$ is $n!\frac{D_{n-1}}{(n - 1)!} = nD_{n-1}$. So comparing coefficients of $x^n/n!$ gives $D_n - nD_{n-1} = (-1)^n$.
+\end{solution}
+
+\begin{exercise}\label{generating-functions:exercise-sum-cubes-bernoulli}
+Use Proposition~\ref{generating-functions:proposition-bernoulli}(3) to show $\sum_{k=0}^{m-1}k^3 = \bigl(\frac{m(m - 1)}{2}\bigr)^2$, and compute $B_8$.
+\end{exercise}
+
+\begin{solution}
+With $n = 3$: $\frac14\bigl(B_0m^4 + 4B_1m^3 + 6B_2m^2 + 4B_3m\bigr) = \frac14\bigl(m^4 - 2m^3 + m^2\bigr) = \frac{m^2(m - 1)^2}{4}$. For $B_8$, the recurrence of
+Proposition~\ref{generating-functions:proposition-bernoulli}(1) with $n = 8$, and $B_3 = B_5 = B_7 = 0$, reads
+$B_0 + 9B_1 + 36B_2 + 126B_4 + 84B_6 + 9B_8 = 0$, that is $1 - \frac92 + 6 - \frac{21}{5} + 2 + 9B_8 = 0$, so $9B_8 = \frac{3}{10}$ and $B_8 = -\frac{1}{30}$.
+\end{solution}
+
+\begin{exercise}\label{generating-functions:exercise-ballot-numbers}
+Show that the number of $k$-tuples of binary trees with $n$ nodes in total is $\frac{k}{2n + k}\binom{2n + k}{n}$, and check the cases $k = 1$ and $k = 2$.
+\end{exercise}
+
+\begin{solution}
+The generating function is $B^k$ (rule of product), and $B^k = x^{-k}T^k$ with $T = xB$, $T = x(1 - T)^{-1}$ (Example~\ref{generating-functions:example-lagrange-catalan}). By
+Theorem~\ref{generating-functions:theorem-lagrange} with $N = n + k$,
+$[x^n]B^k = [x^N]T^k = \frac{k}{N}[t^{n}](1 - t)^{-N} = \frac{k}{n + k}\binom{2n + k - 1}{n}$ (Example~\ref{generating-functions:example-geometric}(3)), and
+$\binom{2n + k}{n} = \frac{2n + k}{n + k}\binom{2n + k - 1}{n}$. For $k = 1$ this is $\frac{1}{2n + 1}\binom{2n + 1}{n} = \frac{1}{n + 1}\binom{2n}{n} = C_n$; for $k = 2$ it is
+$\frac{1}{n + 1}\binom{2n + 2}{n} = C_{n+1}$, as in Exercise~\ref{generating-functions:exercise-central-convolution}.
+\end{solution}
+
+\begin{exercise}\label{generating-functions:exercise-forests}
+Show that the number of rooted forests on $[n]$ with exactly $k$ trees is $\binom{n - 1}{k - 1}n^{n-k}$ for $1 \leq k \leq n$.
+\end{exercise}
+
+\begin{solution}
+Grouping the vertices by the root of their tree, a rooted forest with $k$ trees is an assembly of $k$ rooted trees, so by Theorem~\ref{generating-functions:theorem-exponential-formula} the exponential
+generating function is $T^k/k!$, with $T = x\exp(T)$ as in the proof of Theorem~\ref{generating-functions:theorem-cayley}. By Theorem~\ref{generating-functions:theorem-lagrange},
+$[x^n]T^k = \frac{k}{n}[t^{n-k}]e^{nt} = \frac{k}{n}\cdot\frac{n^{n-k}}{(n - k)!}$, so the number is $\frac{n!}{k!}\cdot\frac{k}{n}\cdot\frac{n^{n-k}}{(n - k)!} = \frac{(n - 1)!}{(k - 1)!\,(n - k)!}n^{n-k}$.
+For $k = 1$ this is Cayley's $n^{n-1}$; for $k = n$ it is $1$, the forest without edges.
+\end{solution}
+
+\begin{exercise}\label{generating-functions:exercise-motzkin}
+A \emph{unary-binary tree} is a root together with an ordered list of $0$, $1$ or $2$ unary-binary trees. Show that the number with $n$ nodes is $\frac{1}{n}[t^{n-1}](1 + t + t^2)^n$, and compute it for
+$n \leq 6$.
+\end{exercise}
+
+\begin{solution}
+The generating function $T$ (counting nodes) satisfies $T = x(1 + T + T^2)$ by the rules of sum and product, and $T(0) = 0$, so Theorem~\ref{generating-functions:theorem-lagrange} applies with
+$\phi = 1 + t + t^2$. The coefficient of $t^{n-1}$ in $(1 + t + t^2)^n$ is the sum of the multinomial coefficients $\binom{n}{a, b, c}$ with $b + 2c = n - 1$; for $n = 1, \ldots, 6$ the counts are
+$1, 1, 2, 4, 9, 21$, the \emph{Motzkin numbers}. For example, for $n = 5$: $\frac15\bigl(\binom{5}{1, 4, 0} + \binom{5}{2, 2, 1} + \binom{5}{3, 0, 2}\bigr) = \frac{5 + 30 + 10}{5} = 9$.
+\end{solution}
+
+\begin{exercise}\label{generating-functions:exercise-ternary}
+Compute the numbers of ternary trees with $n \leq 4$ nodes from the recurrence of Definition~\ref{generating-functions:definition-mary-tree}, and compare with
+Corollary~\ref{generating-functions:corollary-fuss-catalan}.
+\end{exercise}
+
+\begin{solution}
+With $t_n$ the number of ternary trees with $n$ nodes, $t_0 = 1$ and $t_n = \sum_{a+b+c=n-1}t_at_bt_c$. So $t_1 = t_0^3 = 1$; $t_2 = 3t_1t_0^2 = 3$ (the triples $(1, 0, 0)$ and its permutations);
+$t_3 = 3t_2 + 3t_1^2 = 12$ (the $3$ permutations of $(2, 0, 0)$ and the $3$ of $(1, 1, 0)$); and $t_4 = 3t_3 + 6t_2t_1 + t_1^3 = 36 + 18 + 1 = 55$ (the $3$ permutations of $(3, 0, 0)$, the $6$ of
+$(2, 1, 0)$, and $(1, 1, 1)$).
+The formula $\frac{1}{2n + 1}\binom{3n}{n}$ gives $1, 1, 3, 12, 55$ for $n = 0, \ldots, 4$.
+\end{solution}
+
+\begin{exercise}\label{generating-functions:exercise-fibonacci-growth}
+Show that $F_n \leq 2^{n-1}$ for $n \geq 1$ and that $F_{2n} \geq 2^{n-1}$ for $n \geq 1$, without using $\varphi$.
+\end{exercise}
+
+\begin{solution}
+By induction: $F_1 = F_2 = 1$, and $F_{n+2} = F_{n+1} + F_n \leq 2^n + 2^{n-1} \leq 2^{n+1}$. For the second, $F_2 = 1$, $F_4 = 3 \geq 2$, and $F_{2n+2} = F_{2n+1} + F_{2n} \geq 2F_{2n}$, since
+$F_{2n+1} \geq F_{2n}$.
+\end{solution}
+
+\begin{exercise}\label{generating-functions:exercise-not-rational}
+Show that the generating function $\sum_n\binom{2n}{n}x^n$ is not a rational function: there are no polynomials $P, Q \in \QQ[x]$ with $Q(0) = 1$ and $\sum_n\binom{2n}{n}x^n = P/Q$.
+\end{exercise}
+
+\begin{solution}
+If it were $P/Q$, its square $(1 - 4x)^{-1}$ would be $P^2/Q^2$, so $Q^2 = (1 - 4x)P^2$ in $\QQ[x]$. Compare the multiplicity of the irreducible factor $1 - 4x$ on both sides (unique factorisation
+in $\QQ[x]$, which is Euclidean and hence a UFD by Theorem~\ref{rings:theorem-euclidean-pid-ufd}): it is even on the left and odd on the right. This contradiction shows that the sequence $\binom{2n}{n}$ satisfies no linear recurrence with constant
+coefficients (Theorem~\ref{generating-functions:theorem-rational}).
+\end{solution}
