@@ -13,7 +13,8 @@ projection, the rational functions as the meromorphic functions on $\hat{\CC}$ (
 cross-ratio and their classification into parabolic, elliptic, hyperbolic and loxodromic ones (Theorem~\ref{complex-analysis:theorem-mobius-classification}). References: \cite{ahlfors-complex}, \cite{stein-shakarchi-complex},
 \cite{conway-complex} and \cite[Chapters 10--16]{rudin-rca}.
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{real-analysis} (Real Analysis) and Chapter~\ref{homotopy} (Homotopy and Covering Spaces).
+\noindent\textbf{Prerequisites.} Chapter~\ref{real-analysis} (Real Analysis), Chapter~\ref{homotopy} (Homotopy and Covering Spaces), Chapter~\ref{measure-theory} (Measure and Integration) and
+Chapter~\ref{geometric-measure-theory} (Geometric Measure Theory).
 
 We write $D(a, r) = \{z : |z - a| < r\}$, $\overline{D}(a, r)$ for its closure, and $\mathbb{D} = D(0, 1)$. All domains ($=$ nonempty connected
 open subsets of $\CC$) are denoted $U$, $V$.
@@ -1160,7 +1161,7 @@ $\frac{\partial}{\partial\bar z} = \frac{e^{i\theta}}{2}\bigl(\partial_r + \frac
 \end{exercise}
 
 \begin{solution}
-In polar coordinates $z = re^{i\theta}$ the area element is $dA = r\,dr\,d\theta$ (Corollary~\ref{measure-theory:corollary-polar} for $n = 2$, the measure $\mathcal{H}^1$ on the unit circle being $d\theta$), so
+In polar coordinates $z = re^{i\theta}$ the area element is $dA = r\,dr\,d\theta$ (Corollary~\ref{geometric-measure-theory:corollary-polar} for $n = 2$, the measure $\mathcal{H}^1$ on the unit circle being $d\theta$), so
 $\int_{|z| < R}|z|^{-1}\,dA = \int_0^{2\pi}\int_0^R dr\,d\theta = 2\pi R < \infty$: $1/z$ is locally integrable. By the chain rule, $\partial_r = \cos\theta\,\partial_x + \sin\theta\,\partial_y$ and
 $\partial_\theta = -r\sin\theta\,\partial_x + r\cos\theta\,\partial_y$, so $\partial_r + \frac ir\partial_\theta = e^{-i\theta}\partial_x + ie^{-i\theta}\partial_y = 2e^{-i\theta}\frac{\partial}{\partial\bar z}$, which is the hint.
 Hence $\frac1z\frac{\partial\varphi}{\partial\bar z} = \frac{1}{2r}\bigl(\partial_r\varphi + \frac ir\partial_\theta\varphi\bigr)$, and by dominated convergence (the integrand is integrable) and Fubini's theorem,

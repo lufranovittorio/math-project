@@ -62,9 +62,13 @@ method.
 \item Part~\ref{part-topology}, \emph{Topology}: general topology, homotopy
 theory, singular homology and cohomology, Poincar\'e duality.
 \item Part~\ref{part-sheaves}, \emph{Sheaves}: sheaves and sheaf cohomology.
-\item Part~\ref{part-analysis}, \emph{Analysis}: real, complex and functional
-analysis, several complex variables and distributions; harmonic analysis and
-operator algebras (planned).
+\item Part~\ref{part-measure-theory}, \emph{Real Analysis and Measure Theory}:
+real analysis, measure and integration, differentiation and absolute
+continuity, Radon measures, and geometric measure theory (Hausdorff measures,
+fractals, the area and coarea formulas, rectifiability).
+\item Part~\ref{part-analysis}, \emph{Complex and Functional Analysis}: complex
+and functional analysis, several complex variables and distributions; harmonic
+analysis and operator algebras (planned).
 \item Part~\ref{part-probability}, \emph{Probability and Statistics}
 (planned): probability theory, martingales, Markov chains, Brownian motion,
 stochastic calculus, statistics and information theory.
@@ -150,10 +154,14 @@ and~\ref{linear-algebra} (for spectral graph theory), then Part~\ref{part-discre
 \item \emph{Topology and geometry.} Chapters~\ref{general-topology}, \ref{homotopy}, \ref{singular-homology} and~\ref{singular-cohomology}, then manifolds
 (Chapters~\ref{topological-manifolds} and~\ref{smooth-manifolds}) and the rest of Part~\ref{part-differential-geometry}. Real analysis up to the inverse function theorem
 (Chapter~\ref{real-analysis}) is needed from smooth manifolds onwards.
-\item \emph{Analysis.} Chapters~\ref{real-analysis}, \ref{general-topology} (metric spaces, compactness and completeness), \ref{measure-theory}, \ref{complex-analysis},
-\ref{functional-analysis} and~\ref{distributions}, with Chapter~\ref{linear-algebra} for spectral theory in finite dimension.
-\item \emph{Probability and statistics.} The analysis path up to Chapter~\ref{measure-theory} (measures, the integral, $L^p$ spaces, modes of convergence, independence and the
-Borel--Cantelli lemmas, Fubini's theorem, the Radon--Nikodym theorem and weak convergence of measures), Hilbert spaces from Chapter~\ref{functional-analysis} (conditional
+\item \emph{Analysis.} Chapters~\ref{real-analysis}, \ref{general-topology} (metric spaces, compactness and completeness), \ref{measure-theory}, \ref{lebesgue-differentiation},
+\ref{radon-measures}, \ref{complex-analysis}, \ref{functional-analysis} and~\ref{distributions}, with Chapter~\ref{linear-algebra} for spectral theory in finite dimension.
+\item \emph{Geometric measure theory.} Chapters~\ref{measure-theory}, \ref{lebesgue-differentiation} and~\ref{radon-measures}, then Chapter~\ref{geometric-measure-theory}
+(Hausdorff measures and dimension, self-similar fractals, Rademacher's theorem, the area and coarea formulas, densities and rectifiable sets); its results on Lipschitz maps and
+rectifiable sets are used again on manifolds (Chapter~\ref{smooth-manifolds}).
+\item \emph{Probability and statistics.} The analysis path up to Chapter~\ref{radon-measures} (measures, the integral, $L^p$ spaces, modes of convergence, independence and the
+Borel--Cantelli lemmas, Fubini's theorem in Chapter~\ref{measure-theory}, the Radon--Nikodym theorem in Chapter~\ref{lebesgue-differentiation}, weak convergence of measures in
+Chapter~\ref{radon-measures}), Hilbert spaces from Chapter~\ref{functional-analysis} (conditional
 expectation is an orthogonal projection), and the Fourier transform of Chapter~\ref{distributions} (characteristic functions); then Part~\ref{part-probability}.
 \item \emph{Differential equations and dynamics.} The analysis path, together with the existence theorem of Picard and Lindel\"of in Chapter~\ref{real-analysis} and the Jordan
 normal form of Chapter~\ref{linear-algebra}; then Part~\ref{part-differential-equations}. Flows on manifolds use Chapter~\ref{smooth-manifolds}, read informally until
@@ -264,10 +272,10 @@ with it has to be redone. Vector- and complex-valued functions are integrated co
 (Sections~\ref{measure-theory:section-fubini} and~\ref{measure-theory:section-change-of-variables}), with Cavalieri's principle and solids of revolution as special cases
 (Subsection~\ref{measure-theory:subsection-volumes}).
 \item \emph{Length and line integrals of the first kind} $\int_\gamma f\,ds$ (Section~\ref{real-analysis:section-curves}): defined by the formula $\int_a^bf(\gamma(t))|\gamma^{\prime}(t)|\,dt$. They are integrals of the first
-construction: for an injective regular curve, $\int_\gamma f\,ds = \int_{\gamma([a,b])}f\,d\mathcal{H}^1$, the integral against one-dimensional Hausdorff measure on the image (Theorem~\ref{measure-theory:theorem-area-formula} and
-Example~\ref{measure-theory:example-area-formula}(1)), which depends only on the set.
+construction: for an injective regular curve, $\int_\gamma f\,ds = \int_{\gamma([a,b])}f\,d\mathcal{H}^1$, the integral against one-dimensional Hausdorff measure on the image (Theorem~\ref{geometric-measure-theory:theorem-area-formula} and
+Example~\ref{geometric-measure-theory:example-area-formula}(1)), which depends only on the set.
 \item \emph{Areas and surface integrals} $\int_\Sigma f\,dA$: the integral against $\mathcal{H}^2$, or $\mathcal{H}^k$ for $k$-dimensional submanifolds, computed from a parametrisation by the area formula
-(Section~\ref{measure-theory:section-area-formula}); equivalently, the Riemannian measure of the induced metric (Propositions~\ref{riemannian-geometry:proposition-riemannian-measure}
+(Section~\ref{geometric-measure-theory:section-area-formula}); equivalently, the Riemannian measure of the induced metric (Propositions~\ref{riemannian-geometry:proposition-riemannian-measure}
 and~\ref{riemannian-geometry:proposition-hausdorff-measure}). The theorems of Pappus--Guldin are examples.
 \item \emph{Line integrals of the second kind} $\int_\gamma F \cdot d\gamma$ (Definition~\ref{real-analysis:definition-second-kind}): the integral of the $1$-form $F_1\,dx_1 + \cdots + F_n\,dx_n$ over the oriented
 curve (Definition~\ref{differential-forms:definition-line-integral}), an integral of the second construction. For a regular curve it is $\int_\gamma\langle F, T\rangle\,ds$, a first-kind integral of the tangential component

@@ -19,7 +19,7 @@ and Hopf classifying the spaces of constant curvature, and the statements of Che
 developing maps and holonomy, of which the constant curvature metrics are the first examples. References:
 \cite{do-carmo-riemannian}, \cite{lee-riemannian}, \cite{kobayashi-nomizu}, \cite{joyce-special-holonomy}, \cite{warner-foundations}, \cite[Chapter 0]{griffiths-harris}.
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{connections} (Connections and Curvature).
+\noindent\textbf{Prerequisites.} Chapter~\ref{connections} (Connections and Curvature), Chapter~\ref{radon-measures} (Radon Measures) and Chapter~\ref{geometric-measure-theory} (Geometric Measure Theory).
 
 \noindent\textbf{Conventions.} $(M, g)$ is a Riemannian manifold of dimension $n$, and we write $\langle v, w\rangle = g(v, w)$ and $|v| = \langle v, v\rangle^{1/2}$. Curves are piecewise smooth unless stated otherwise. In local
 coordinates we use the summation convention: an index repeated once up and once down is summed over.
@@ -241,26 +241,26 @@ $k$-dimensional volume of a piece of a $k$-dimensional submanifold of $\RR^N$ is
 
 \begin{proposition}[Riemannian measure and Hausdorff measure]\label{riemannian-geometry:proposition-hausdorff-measure}
 Let $M \subseteq \RR^N$ be a $k$-dimensional submanifold with the induced metric. Then $\mu_g(A) = \mathcal{H}^k(A)$ for every Borel set $A \subseteq M$, where $\mathcal{H}^k$ is the
-$k$-dimensional Hausdorff measure of $\RR^N$ (Definition~\ref{measure-theory:definition-hausdorff}). In particular the volume of $M$ depends only on $M$ as a metric subspace of $\RR^N$, and a
+$k$-dimensional Hausdorff measure of $\RR^N$ (Definition~\ref{geometric-measure-theory:definition-hausdorff}). In particular the volume of $M$ depends only on $M$ as a metric subspace of $\RR^N$, and a
 nonempty $M$ has Hausdorff dimension $k$.
 \end{proposition}
 
 \begin{proof}
 A submanifold is locally closed (each point has a neighbourhood $W$ in $\RR^N$ with $M \cap W$ closed in $W$, by the slice charts), so $M$ and its Borel subsets are Borel in $\RR^N$. Let
 $x \colon \Omega \to M$ be a parametrisation; it is an injective smooth map with injective differential and a homeomorphism onto the open set $x(\Omega) \subseteq M$, and its function
-$\mathcal{J} = \sqrt{\det(Dx^TDx)}$ of Proposition~\ref{riemannian-geometry:proposition-parametrised-volume} is the Jacobian $Jx$ of Definition~\ref{measure-theory:definition-jacobian}. For a
+$\mathcal{J} = \sqrt{\det(Dx^TDx)}$ of Proposition~\ref{riemannian-geometry:proposition-parametrised-volume} is the Jacobian $Jx$ of Definition~\ref{geometric-measure-theory:definition-jacobian}. For a
 Borel set $A \subseteq x(\Omega)$, Proposition~\ref{riemannian-geometry:proposition-parametrised-volume} with $f = \mathbf{1}_A$ and the area formula
-(Theorem~\ref{measure-theory:theorem-area-formula}) give
+(Theorem~\ref{geometric-measure-theory:theorem-area-formula}) give
 \[
 \mu_g(A) = \int_{x^{-1}(A)}Jx\,d\lambda = \mathcal{H}^k(x(x^{-1}(A))) = \mathcal{H}^k(A).
 \]
 Cover $M$ by countably many such sets $V_i = x_i(\Omega_i)$ and let $B_i = V_i \setminus \bigcup_{j < i}V_j$; then $\mu_g(A) = \sum_i\mu_g(A \cap B_i) = \sum_i\mathcal{H}^k(A \cap B_i) =
 \mathcal{H}^k(A)$. Finally, if $M \neq \emptyset$, $\mathcal{H}^k(M) > 0$, and $M$ is a countable union of compact sets of finite $\mathcal{H}^k$-measure, so
-Proposition~\ref{measure-theory:proposition-hausdorff}(4) gives $\dim_{\mathcal{H}}M = k$.
+Proposition~\ref{geometric-measure-theory:proposition-hausdorff}(4) gives $\dim_{\mathcal{H}}M = k$.
 \end{proof}
 
 So the Riemannian volume of a submanifold of $\RR^N$, defined through charts and the metric, is the most naive notion of $k$-dimensional size: cover the set by small pieces and add up
-$\alpha(k)(\operatorname{diam})^k$. This is the point of view of geometric measure theory, where the area formula (Theorem~\ref{measure-theory:theorem-area-formula}) replaces the computation in
+$\alpha(k)(\operatorname{diam})^k$. This is the point of view of geometric measure theory, where the area formula (Theorem~\ref{geometric-measure-theory:theorem-area-formula}) replaces the computation in
 charts, and which extends the notion of $k$-dimensional volume to sets that are not manifolds, such as rectifiable sets and the singular varieties of algebraic geometry.
 
 For hypersurfaces of $\RR^{n+1}$ the volume form has a simple expression through the unit normal, and it turns integrals of $n$-forms into flux integrals. We write
@@ -392,7 +392,7 @@ coordinate planes; this is the inequality behind \emph{calibrations} (Section~\r
 \]
 an integral of the pairing of $\omega$ with a unit $k$-vector field against a measure. De Rham and Federer--Fleming call a continuous linear functional on compactly supported smooth $k$-forms a
 \emph{$k$-current} \cite{federer-fleming-1960}. If a current $T$ has locally finite mass, that is, $\sup\{T(\omega) : |\omega| \leq 1, \operatorname{supp}\omega \subseteq K\} < \infty$ for every compact $K$, then it
-extends to continuous forms, and the Riesz representation theorem for vector-valued functions (Theorem~\ref{measure-theory:theorem-riesz-vector}, with $H = \Lambda^k(\RR^N)^*$, identified with $\Lambda^k\RR^N$ by matching the orthonormal bases $dx^I$ and $e_I$)
+extends to continuous forms, and the Riesz representation theorem for vector-valued functions (Theorem~\ref{radon-measures:theorem-riesz-vector}, with $H = \Lambda^k(\RR^N)^*$, identified with $\Lambda^k\RR^N$ by matching the orthonormal bases $dx^I$ and $e_I$)
 writes it in exactly this form: $T(\omega) = \int\langle\omega, \xi\rangle\,d\mu$ with a Radon measure $\mu = \|T\|$, the \emph{mass measure}, and a Borel field $\xi$ of unit $k$-vectors. For $T = [\![M]\!]$ one recovers
 $\mu = \mathcal{H}^k$ on $M$ and the orienting $k$-vector; for general currents $\xi$ need not be a simple wedge product and $\mu$ need not live on a manifold, and this is the generality in which geometric measure
 theory solves Plateau's problem.

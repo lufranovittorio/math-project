@@ -1,0 +1,865 @@
+\chapter{Radon Measures}\label{radon-measures}
+\chapterstatus{complete}
+
+\section{Introduction}\label{radon-measures:section-introduction}
+
+On a locally compact Hausdorff space the measures compatible with the topology are the Radon measures: Borel measures finite on compact sets and approximable from outside by open sets and from inside
+by compact sets. They are exactly the positive linear functionals on continuous functions with compact support (the Riesz--Markov theorem), and their signed and vector-valued versions describe the duals
+of spaces of continuous functions. This chapter proves these representation theorems, studies weak convergence of measures and its compactness theorem, and differentiates one Radon measure with
+respect to another on $\RR^n$, and with respect to doubling measures on metric spaces; Lebesgue's theorem on the differentiability of monotone functions is a corollary. These results are used in
+functional analysis (Chapter~\ref{functional-analysis}), in probability, and in geometric measure theory (Chapter~\ref{geometric-measure-theory}).
+References: \cite{rudin-rca}, \cite{folland-real} and \cite{mattila-1995}.
+
+\noindent\textbf{Prerequisites.} Chapter~\ref{general-topology} (General Topology), Chapter~\ref{real-analysis} (Real Analysis), Chapter~\ref{measure-theory} (Measure and Integration) and
+Chapter~\ref{lebesgue-differentiation} (Differentiation and Absolute Continuity).
+
+\section{Radon measures and the Riesz representation theorem}\label{radon-measures:section-radon}
+
+A measure assigns numbers to sets; integration against it assigns numbers to functions, $f \mapsto \int f\,d\mu$, and this assignment is linear and positive. On $\RR^n$ the
+Riemann integral of continuous functions with compact support is such an assignment, and Lebesgue measure can be recovered from it: $\lambda([0, 1]^n)$ is the infimum of the integrals of the
+continuous functions that are at least $1$ on the cube. The Riesz representation theorem says that this always works: every positive linear functional on continuous functions with compact support
+is integration against exactly one measure of a reasonable kind. This point of view, \emph{measures as linear functionals}, is basic in geometric measure theory, in probability and in the theory
+of partial differential equations. It allows one to take limits of measures (Section~\ref{radon-measures:section-weak-convergence}), and it is the model for distributions, which are linear functionals on
+smooth functions (Chapter~\ref{distributions}).
+
+Throughout this section $X$ is a locally compact Hausdorff space with a countable basis; for instance $\RR^n$, an open or a closed subset of $\RR^n$, or a manifold. Such a space is metrisable: it is
+regular, because for a point $x$ outside a closed set $F$, Lemma~\ref{general-topology:lemma-lch-shrinking} applied to $\{x\} \subseteq X \setminus F$ gives an open $V \ni x$ with
+$\overline{V} \cap F = \emptyset$, and a regular space with a countable basis is metrisable (Theorem~\ref{general-topology:theorem-urysohn-metrisation}). It has an exhaustion by compact sets
+$K_1 \subseteq K_2 \subseteq \cdots$ with $K_m \subseteq \operatorname{int}K_{m+1}$ (Proposition~\ref{general-topology:proposition-exhaustion}); every compact $K \subseteq X$ lies in some $K_m$, since the
+increasing open sets $\operatorname{int}K_m$ cover $K$.
+
+We write $C_c(X)$ for the real vector space of continuous functions $f \colon X \to \RR$ with compact support, and, for an open $V \subseteq X$,
+\[
+f \prec V \quad \text{if} \quad f \in C_c(X), \quad 0 \leq f \leq 1 \quad \text{and} \quad \operatorname{supp}f \subseteq V.
+\]
+Continuous functions are Borel measurable. If $\mu$ is a Borel measure that is finite on compact sets, every $f \in C_c(X)$ is integrable, with $|\int f\,d\mu| \leq \|f\|_\infty\,\mu(\operatorname{supp}f)$.
+
+\begin{lemma}\label{radon-measures:lemma-closed-approximation}
+Let $\nu$ be a finite Borel measure on a metrisable space $X$. For every Borel set $E$ and every $\varepsilon > 0$ there are a closed set $F$ and an open set $U$ with $F \subseteq E \subseteq U$ and
+$\nu(U \setminus F) < \varepsilon$.
+\end{lemma}
+
+\begin{proof}
+Fix a metric $d$ inducing the topology, and let $\mathcal{G}$ be the family of Borel sets $E$ with the stated property. A closed set $E$ belongs to $\mathcal{G}$: take $F = E$ and
+$U_k = \{x : d(x, E) < 1/k\}$, which are open, decrease, and have intersection $E$ because $E$ is closed; as $\nu$ is finite, $\nu(U_k \setminus E) \to 0$
+(Proposition~\ref{measure-theory:proposition-measure-properties}). The family $\mathcal{G}$ is closed under complements, since $F \subseteq E \subseteq U$ gives
+$X \setminus U \subseteq X \setminus E \subseteq X \setminus F$ with the same difference $U \setminus F$. It is closed under countable unions: if $F_k \subseteq E_k \subseteq U_k$ with
+$\nu(U_k \setminus F_k) < \varepsilon 2^{-k-1}$, then $U = \bigcup_kU_k$ is open and $F^{\prime} = \bigcup_kF_k$ satisfies $\nu(U \setminus F^{\prime}) < \varepsilon/2$; the closed sets
+$F_1 \cup \cdots \cup F_N$ increase to $F^{\prime}$, so one of them, $F$, has $\nu(F^{\prime} \setminus F) < \varepsilon/2$, and then $F \subseteq \bigcup_kE_k \subseteq U$ and $\nu(U \setminus F) < \varepsilon$.
+So $\mathcal{G}$ is a $\sigma$-algebra containing the closed sets, hence all Borel sets.
+\end{proof}
+
+\begin{proposition}\label{radon-measures:proposition-radon-automatic}
+Let $X$ be a locally compact Hausdorff space with a countable basis and $\mu$ a Borel measure on $X$ that is finite on compact sets. Then $\mu$ is $\sigma$-finite and regular, hence a Radon measure
+(Definition~\ref{measure-theory:definition-regular}): for every Borel set $E$,
+\[
+\mu(E) = \inf\{\mu(U) : U \supseteq E \text{ open}\} = \sup\{\mu(K) : K \subseteq E \text{ compact}\}.
+\]
+\end{proposition}
+
+\begin{proof}
+$X$ is the union of the compact sets $K_m$ of an exhaustion, which have finite measure, so $\mu$ is $\sigma$-finite; and every point has a neighbourhood $\operatorname{int}K_{m+1} \subseteq K_{m+1}$ of finite
+measure. The measures $\nu_m(A) = \mu(A \cap \operatorname{int}K_m)$ are finite, and Lemma~\ref{radon-measures:lemma-closed-approximation} applies to them, $X$ being metrisable.
+
+\emph{Outer regularity.} Let $E$ be a Borel set with $\mu(E) < \infty$ (otherwise there is nothing to prove) and $\varepsilon > 0$. Choose open sets $U_m \supseteq E$ with
+$\nu_m(U_m \setminus E) < \varepsilon2^{-m}$, and let $U = \bigcup_m(U_m \cap \operatorname{int}K_m)$. It is open and contains $E = \bigcup_m(E \cap \operatorname{int}K_m)$, and
+$\mu(U \setminus E) \leq \sum_m\mu\bigl((U_m \cap \operatorname{int}K_m) \setminus E\bigr) = \sum_m\nu_m(U_m \setminus E) < \varepsilon$. So $\mu(U) < \mu(E) + \varepsilon$.
+
+\emph{Inner regularity.} Let $E$ be a Borel set and $t < \mu(E)$. By continuity from below, $\mu(E \cap \operatorname{int}K_m) > t$ for some $m$. Choose a closed $F \subseteq E$ with
+$\nu_m(E \setminus F) < \mu(E \cap \operatorname{int}K_m) - t$. Then $K = F \cap K_m$ is compact, contained in $E$, and
+$\mu(K) \geq \mu(F \cap \operatorname{int}K_m) = \nu_m(E) - \nu_m(E \setminus F) > t$.
+\end{proof}
+
+So on $\RR^n$ and on manifolds, \emph{Radon measure} simply means \emph{Borel measure finite on compact sets}. For general locally compact Hausdorff spaces this is false, and the theory below has to
+be set up with more care \cite[Chapter 2]{rudin-rca}; we shall not need that generality.
+
+\begin{lemma}\label{radon-measures:lemma-partition-compact}
+Let $X$ be a locally compact Hausdorff space, $K \subseteq X$ compact and $V_1, \ldots, V_n$ open sets covering $K$. There are $h_i \prec V_i$ with $\sum_ih_i \leq 1$ on $X$ and $\sum_ih_i = 1$ on $K$.
+\end{lemma}
+
+\begin{proof}
+Each $x \in K$ lies in some $V_i$, and Lemma~\ref{general-topology:lemma-lch-shrinking} gives an open $W_x \ni x$ with compact closure $\overline{W_x} \subseteq V_i$. Finitely many $W_x$ cover $K$; let $H_i$ be
+the union of the closures of those among them for which the chosen $i$ was $i$. Then $H_i \subseteq V_i$ is compact and $K \subseteq H_1 \cup \cdots \cup H_n$. Lemma~\ref{general-topology:lemma-lch-shrinking}
+gives $g_i \prec V_i$ with $g_i = 1$ on $H_i$. Put $h_1 = g_1$ and $h_k = (1 - g_1)\cdots(1 - g_{k-1})g_k$. Then $0 \leq h_k \leq g_k$, so $h_k \prec V_k$, and by induction on $m$,
+\[
+h_1 + \cdots + h_m = 1 - (1 - g_1)(1 - g_2)\cdots(1 - g_m),
+\]
+since $1 - \prod_{k \leq m}(1 - g_k) + h_{m+1} = 1 - \prod_{k \leq m+1}(1 - g_k)$. For $m = n$ the right side lies in $[0, 1]$, and it equals $1$ on each $H_i$, where the factor $1 - g_i$ vanishes.
+\end{proof}
+
+\begin{definition}\label{radon-measures:definition-positive-functional}
+A linear map $\Lambda \colon C_c(X) \to \RR$ is \emph{positive} if $\Lambda(f) \geq 0$ whenever $f \geq 0$.
+\end{definition}
+
+A positive functional is monotone: $f \leq g$ implies $\Lambda f \leq \Lambda g$. It is also automatically continuous in the following sense. If $K$ is compact and $\phi_K \in C_c(X)$ satisfies
+$0 \leq \phi_K \leq 1$ and $\phi_K = 1$ on $K$ (Lemma~\ref{general-topology:lemma-lch-shrinking}), then every $f$ with $\operatorname{supp}f \subseteq K$ satisfies
+$-\|f\|_\infty\phi_K \leq f \leq \|f\|_\infty\phi_K$, hence
+\[
+|\Lambda f| \leq \Lambda(\phi_K)\,\|f\|_\infty .
+\]
+So uniform convergence of functions supported in a fixed compact set implies convergence of the values of $\Lambda$.
+
+\begin{example}\label{radon-measures:example-positive-functionals}
+\begin{enumerate}
+\item \emph{Point masses.} $\Lambda f = f(x_0)$ is positive, and $\Lambda f = \int f\,d\delta_{x_0}$. More generally, for points $x_1, x_2, \ldots$ of $X$ with no accumulation point and numbers
+$c_k \geq 0$, the finite sum $\Lambda f = \sum_kc_kf(x_k)$ is integration against $\sum_kc_k\delta_{x_k}$.
+\item \emph{Densities.} For $g \in L^1_{\mathrm{loc}}(\RR^n)$ with $g \geq 0$, $\Lambda f = \int fg\,d\lambda$ is positive; it is integration against the measure $g\lambda$, $E \mapsto \int_Eg\,d\lambda$. For
+$g = 1$ this is the Riemann integral of $f$ (Proposition~\ref{measure-theory:proposition-riemann-lebesgue}, together with Fubini's theorem for the iterated integrals).
+\item \emph{Arc length on a circle.} On $X = \RR^2$, $\Lambda f = \int_0^{2\pi}f(\cos t, \sin t)\,dt$ is positive. The corresponding measure $\sigma$ (Theorem~\ref{radon-measures:theorem-riesz-markov}
+below) lives on the unit circle $S^1$: if $K$ is compact and disjoint from $S^1$, a function $f \prec \RR^2 \setminus S^1$ with $f = 1$ on $K$ gives $\sigma(K) \leq \int f\,d\sigma = \Lambda f = 0$, and
+by inner regularity $\sigma(\RR^2 \setminus S^1) = 0$. Since $\lambda^2(S^1) = 0$, the measures $\sigma$ and $\lambda^2$ are mutually singular. The measure of an arc is its length
+(Exercise~\ref{radon-measures:exercise-riesz-circle}), and $\sigma$ is the restriction to $S^1$ of the one-dimensional Hausdorff measure of Chapter~\ref{geometric-measure-theory}.
+\item \emph{Push-forward.} More generally, for a continuous map $\varphi \colon [a, b] \to X$, the functional $\Lambda f = \int_a^bf(\varphi(t))\,dt$ is integration against the push-forward
+$\varphi_*\lambda$, $E \mapsto \lambda(\{t \in [a, b] : \varphi(t) \in E\})$, which is a Borel measure, finite because $\lambda([a, b]) < \infty$.
+\end{enumerate}
+\end{example}
+
+\begin{theorem}[Riesz--Markov]\label{radon-measures:theorem-riesz-markov}
+Let $X$ be a locally compact Hausdorff space with a countable basis, and $\Lambda \colon C_c(X) \to \RR$ a positive linear functional. There is a unique Borel measure $\mu$ on $X$, finite on compact
+sets, with
+\[
+\Lambda f = \int_Xf\,d\mu \qquad \text{for all } f \in C_c(X).
+\]
+It is a Radon measure, and for open $V$ and compact $K$,
+\[
+\mu(V) = \sup\{\Lambda f : f \prec V\}, \qquad \mu(K) = \inf\{\Lambda f : f \in C_c(X),\ f \geq \mathbf{1}_K\}.
+\]
+\end{theorem}
+
+\begin{proof}
+The proof follows \cite[Theorem 2.14]{rudin-rca}. Motivated by the formulas to be proved, define $\mu(V) = \sup\{\Lambda f : f \prec V\}$ for open $V$, and for an arbitrary $E \subseteq X$
+\[
+\mu^*(E) = \inf\{\mu(V) : V \supseteq E \text{ open}\}.
+\]
+If $V \subseteq W$ are open, $f \prec V$ implies $f \prec W$, so $\mu(V) \leq \mu(W)$; hence $\mu^*(V) = \mu(V)$ for open $V$, and $\mu^*$ is monotone.
+
+\emph{Step 1: $\mu^*$ is an outer measure.} First let $V = \bigcup_iV_i$ be a countable union of open sets, and $f \prec V$. The compact set $\operatorname{supp}f$ is covered by finitely many
+$V_1, \ldots, V_n$, and Lemma~\ref{radon-measures:lemma-partition-compact} gives $h_i \prec V_i$ with $\sum_ih_i = 1$ on $\operatorname{supp}f$. Then $f = \sum_ih_if$ with $h_if \prec V_i$, so
+$\Lambda f = \sum_i\Lambda(h_if) \leq \sum_i\mu(V_i)$; taking the supremum over $f$, $\mu(V) \leq \sum_i\mu(V_i)$. Now let $E = \bigcup_iE_i$ be arbitrary, with $\sum_i\mu^*(E_i) < \infty$, and
+$\varepsilon > 0$. Choose open $V_i \supseteq E_i$ with $\mu(V_i) \leq \mu^*(E_i) + \varepsilon2^{-i}$; then
+$\mu^*(E) \leq \mu(\bigcup_iV_i) \leq \sum_i\mu^*(E_i) + \varepsilon$. Finally $\mu^*(\emptyset) = 0$, as $f \prec \emptyset$ forces $f = 0$.
+
+\emph{Step 2: compact sets.} Let $K$ be compact. If $f \in C_c(X)$ and $f \geq \mathbf{1}_K$, and $0 < \alpha < 1$, then $V_\alpha = \{f > \alpha\}$ is an open set containing $K$, and every $g \prec V_\alpha$
+satisfies $\alpha g \leq f$; so $\mu^*(K) \leq \mu(V_\alpha) \leq \Lambda f/\alpha$, and letting $\alpha \to 1$, $\mu^*(K) \leq \Lambda f$. Conversely, for an open $V \supseteq K$,
+Lemma~\ref{general-topology:lemma-lch-shrinking} gives $f \prec V$ with $f = 1$ on $K$, and $\Lambda f \leq \mu(V)$. So $\mu^*(K) = \inf\{\Lambda f : f \geq \mathbf{1}_K\}$, which is finite.
+
+\emph{Step 3: Borel sets are $\mu^*$-measurable.} By Carath\'eodory's theorem (Theorem~\ref{measure-theory:theorem-caratheodory}) the $\mu^*$-measurable sets form a $\sigma$-algebra on which $\mu^*$ is a
+measure, so it suffices to show that every open $U$ is $\mu^*$-measurable: $\mu^*(E \cap U) + \mu^*(E \setminus U) \leq \mu^*(E)$ for every $E$ with $\mu^*(E) < \infty$. Let $\varepsilon > 0$ and
+choose an open $V \supseteq E$ with $\mu(V) \leq \mu^*(E) + \varepsilon$. Choose $f \prec V \cap U$ with $\Lambda f > \mu(V \cap U) - \varepsilon$; its support $K$ is a compact subset of $U$, so
+$V \setminus K$ is open and we may choose $g \prec V \setminus K$ with $\Lambda g > \mu(V \setminus K) - \varepsilon$. The functions $f$ and $g$ have disjoint supports, so $f + g \prec V$, and
+\[\begin{aligned}
+\mu^*(E) + \varepsilon \geq \mu(V) \geq \Lambda f + \Lambda g &> \mu(V \cap U) + \mu(V \setminus K) - 2\varepsilon \\
+&\geq \mu^*(E \cap U) + \mu^*(E \setminus U) - 2\varepsilon,
+\end{aligned}\]
+because $E \cap U \subseteq V \cap U$ and $E \setminus U \subseteq V \setminus K$. Let $\varepsilon \to 0$.
+
+So the restriction of $\mu^*$ to the Borel sets is a Borel measure $\mu$, finite on compact sets by Step 2, and by construction it satisfies the two formulas of the statement.
+
+\emph{Step 4: $\Lambda f = \int f\,d\mu$.} Both sides are linear in $f$, so it suffices to show $\Lambda f \leq \int f\,d\mu$ for every $f \in C_c(X)$: applied to $-f$ it gives the reverse inequality.
+Let $K = \operatorname{supp}f$, choose $a < b$ with $f(X) \subseteq [a, b]$, let $\varepsilon > 0$, and choose $y_0 < a < y_1 < \cdots < y_n = b$ with $y_i - y_{i-1} < \varepsilon$. The Borel sets
+$E_i = \{y_{i-1} < f \leq y_i\} \cap K$ are disjoint with union $K$. By the definition of $\mu^*$ there are open sets $V_i \supseteq E_i$ with $\mu(V_i) < \mu(E_i) + \varepsilon/n$; replacing $V_i$ by
+$V_i \cap \{f < y_i + \varepsilon\}$ we may assume $f < y_i + \varepsilon$ on $V_i$. Lemma~\ref{radon-measures:lemma-partition-compact} gives $h_i \prec V_i$ with $\sum_ih_i = 1$ on $K$. Then
+$f = \sum_ih_if$, and $h_if \leq (y_i + \varepsilon)h_i$. By Step 2, $\sum_i\Lambda h_i = \Lambda(\sum_ih_i) \geq \mu(K)$, and $\Lambda h_i \leq \mu(V_i)$. As $|a| + y_i + \varepsilon > 0$,
+\[
+\begin{aligned}
+\Lambda f = \sum_i\Lambda(h_if) &\leq \sum_i(y_i + \varepsilon)\Lambda h_i = \sum_i(|a| + y_i + \varepsilon)\Lambda h_i - |a|\sum_i\Lambda h_i\\
+&\leq \sum_i(|a| + y_i + \varepsilon)\Bigl(\mu(E_i) + \frac{\varepsilon}{n}\Bigr) - |a|\mu(K)\\
+&\leq \sum_i(y_i - \varepsilon)\mu(E_i) + 2\varepsilon\mu(K) + \varepsilon(|a| + b + \varepsilon),
+\end{aligned}
+\]
+using $\sum_i\mu(E_i) = \mu(K)$ and $y_i \leq b$. On $E_i$ we have $f > y_{i-1} > y_i - \varepsilon$, so $\sum_i(y_i - \varepsilon)\mu(E_i) \leq \int f\,d\mu$. Letting $\varepsilon \to 0$ gives
+$\Lambda f \leq \int f\,d\mu$.
+
+\emph{Step 5: regularity and uniqueness.} $\mu$ is a Radon measure by Proposition~\ref{radon-measures:proposition-radon-automatic}. Let $\mu^{\prime}$ be another Borel measure, finite on compact sets,
+representing $\Lambda$, and $K$ compact. If $f \geq \mathbf{1}_K$, then $\mu^{\prime}(K) \leq \int f\,d\mu^{\prime} = \Lambda f$, so $\mu^{\prime}(K) \leq \mu(K)$ by Step 2. If $V \supseteq K$ is open and
+$f \prec V$ with $f = 1$ on $K$, then $\mu(K) \leq \Lambda f = \int f\,d\mu^{\prime} \leq \mu^{\prime}(V)$, and by outer regularity of $\mu^{\prime}$
+(Proposition~\ref{radon-measures:proposition-radon-automatic}) $\mu(K) \leq \mu^{\prime}(K)$. So $\mu$ and $\mu^{\prime}$ agree on compact sets, hence, by inner regularity, on all Borel sets.
+\end{proof}
+
+\begin{remark}\label{radon-measures:remark-riesz-markov}
+\begin{enumerate}
+\item For $X = \RR^n$ and $\Lambda$ the Riemann integral, the theorem produces Lebesgue measure on the Borel sets; the uniqueness statement is a convenient way to identify measures, as in
+Exercise~\ref{radon-measures:exercise-riesz-circle}. On a smooth manifold, an orientation and a volume form, or more generally a density, define a positive functional by integration, and hence a
+Radon measure (Chapter~\ref{differential-forms}).
+\item The theorem holds for every locally compact Hausdorff space, but then the measure is only outer regular and inner regular on open sets and on sets of finite measure
+\cite[Theorem 2.14 and Theorem 2.18]{rudin-rca}.
+\item If $X$ is compact, $1 \in C_c(X)$, and $|\Lambda f| \leq \Lambda(1)\|f\|_\infty = \mu(X)\|f\|_\infty$: a positive functional on $C(X)$ is bounded with norm $\mu(X)$. Every bounded linear functional on
+$C(X)$ is integration against a \emph{signed} Radon measure, a difference of two finite Radon measures \cite[Theorem 6.19]{rudin-rca} (for the spaces of this section, see Corollary~\ref{radon-measures:corollary-signed-riesz}
+below); this identifies the dual space of $C(X)$, a theme of
+Chapter~\ref{functional-analysis}.
+\end{enumerate}
+\end{remark}
+
+\subsection{Signed and vector-valued functionals}\label{radon-measures:subsection-riesz-vector}
+
+Many natural linear functionals are not positive. The functional $\varphi \mapsto \varphi(0) - \varphi(1)$ on $C_c(\RR)$ is the difference of two Dirac measures; $\varphi \mapsto \int\varphi h\,d\lambda$ with $h$
+changing sign is the difference of the measures $h^+\lambda$ and $h^-\lambda$. In geometric measure theory one also meets functionals on \emph{vector fields}: for the unit circle $S^1 \subseteq \RR^2$ with
+outward normal $n(x) = x$, the \emph{flux} $F \mapsto \int_0^{2\pi}\langle F(\cos t, \sin t), (\cos t, \sin t)\rangle\,dt$ through the circle is a linear functional on continuous vector fields $F \colon \RR^2 \to \RR^2$ with compact support. The
+Riesz representation theorem extends to all these cases: a functional that is merely bounded on functions of bounded size supported in a fixed compact set is integration against a measure, after pairing with
+a field of unit vectors.
+
+Let $H$ be a finite-dimensional real vector space with an inner product $\langle\,,\rangle$ and norm $|\ |$; for instance $H = \RR^m$ with the standard inner product. Let $C_c(X, H)$ be the vector space of
+continuous maps $f \colon X \to H$ with compact support. For $f \in C_c(X, H)$ the function $|f|$ belongs to $C_c(X)$. The map $r \colon H \to H$, $r(v) = v$ for $|v| \leq 1$ and $r(v) = v/|v|$ for $|v| > 1$, the
+nearest point projection onto the closed unit ball, is continuous, takes values in the ball, and moves no point farther from the ball: $|r(u) - w| \leq |u - w|$ whenever $|w| \leq 1$. To see this,
+we may assume $|u| > 1$; then
+$|u - w|^2 - |r(u) - w|^2 = |u|^2 - 1 - 2(|u| - 1)\langle u/|u|, w\rangle \geq |u|^2 - 1 - 2(|u| - 1) = (|u| - 1)^2 \geq 0$.
+
+\begin{lemma}\label{radon-measures:lemma-radon-approximation}
+Let $\mu$ be a Radon measure on $X$.
+\begin{enumerate}
+\item For $1 \leq p < \infty$, $C_c(X)$ is dense in $L^p(\mu)$.
+\item Let $w \colon X \to H$ be Borel with $|w| \leq 1$, $E$ a Borel set with $\mu(E) < \infty$, and $V \supseteq E$ open. For every $\varepsilon > 0$ there is $g \in C_c(X, H)$ with $|g| \leq 1$,
+$\operatorname{supp}g \subseteq V$ and $\int|g - \mathbf{1}_Ew|\,d\mu < \varepsilon$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) As in Proposition~\ref{measure-theory:proposition-density}, simple functions $\sum a_i\mathbf{1}_{E_i}$ with $\mu(E_i) < \infty$ are dense in $L^p(\mu)$, by
+Proposition~\ref{measure-theory:proposition-measurable-functions}(4) and dominated convergence. Given $E$ with $\mu(E) < \infty$ and $\varepsilon > 0$, regularity of $\mu$ gives a compact $K$ and an
+open $U$ with $K \subseteq E \subseteq U$ and $\mu(U \setminus K) < \varepsilon$, and Lemma~\ref{general-topology:lemma-lch-shrinking} gives $\phi \in C_c(X)$ with $0 \leq \phi \leq 1$, $\phi = 1$ on $K$ and
+$\operatorname{supp}\phi \subseteq U$. Then $\int|\mathbf{1}_E - \phi|^p\,d\mu \leq \mu(U \setminus K) < \varepsilon$.
+
+(2) Fix an orthonormal basis $e_1, \ldots, e_m$ of $H$ and write $w = \sum_jw_je_j$. By (1) choose $\phi_j \in C_c(X)$ with $\int|\phi_j - \mathbf{1}_Ew_j|\,d\mu < \varepsilon/(2m)$, and put
+$g_0 = \sum_j\phi_je_j$, so $\int|g_0 - \mathbf{1}_Ew|\,d\mu < \varepsilon/2$. Then $g_1 = r \circ g_0$ is continuous with compact support, $|g_1| \leq 1$, and $|g_1 - \mathbf{1}_Ew| \leq |g_0 - \mathbf{1}_Ew|$
+pointwise, as $|\mathbf{1}_Ew| \leq 1$. Choose a compact $K \subseteq E$ with $\mu(E \setminus K) < \varepsilon/4$ and $\psi \in C_c(X)$ with $0 \leq \psi \leq 1$, $\psi = 1$ on $K$ and
+$\operatorname{supp}\psi \subseteq V$, and let $g = \psi g_1$. On $K$, $g = g_1$; outside $E$, $|g - \mathbf{1}_Ew| = |g| \leq |g_1| = |g_1 - \mathbf{1}_Ew|$; on $E \setminus K$, $|g - w| \leq 2$. Hence
+$\int|g - \mathbf{1}_Ew|\,d\mu \leq \int|g_1 - \mathbf{1}_Ew|\,d\mu + 2\mu(E \setminus K) < \varepsilon$.
+\end{proof}
+
+\begin{theorem}[Riesz representation theorem for vector-valued functions]\label{radon-measures:theorem-riesz-vector}
+Let $L \colon C_c(X, H) \to \RR$ be linear and suppose that for every compact $K \subseteq X$
+\[
+M_K = \sup\bigl\{L(f) : f \in C_c(X, H),\ |f| \leq 1,\ \operatorname{supp}f \subseteq K\bigr\} < \infty .
+\]
+Then there are a Radon measure $\mu$ on $X$ and a Borel map $\nu \colon X \to H$ with $|\nu| = 1$ $\mu$-almost everywhere such that
+\[
+L(f) = \int_X\langle f, \nu\rangle\,d\mu \qquad\text{for all } f \in C_c(X, H).
+\]
+Moreover, for every open $V \subseteq X$,
+\begin{equation}\label{radon-measures:equation-total-variation}
+\mu(V) = \sup\bigl\{L(f) : f \in C_c(X, H),\ |f| \leq 1,\ \operatorname{supp}f \subseteq V\bigr\},
+\end{equation}
+and the pair $(\mu, \nu)$ is unique: $\mu$ is unique, and $\nu$ is unique up to $\mu$-null sets. The measure $\mu$ is the \emph{total variation measure} of $L$.
+\end{theorem}
+
+\begin{proof}
+The idea is to manufacture a positive functional out of $L$, namely the largest value of $L$ on fields dominated by a given function, and to apply the Riesz--Markov theorem to it.
+
+\emph{Step 1: a positive functional on nonnegative functions.} For $\varphi \in C_c(X)$ with $\varphi \geq 0$ let
+\[
+\lambda(\varphi) = \sup\bigl\{L(g) : g \in C_c(X, H),\ |g| \leq \varphi\bigr\}.
+\]
+Taking $g = 0$ shows $\lambda(\varphi) \geq 0$. If $|g| \leq \varphi$, then $\operatorname{supp}g \subseteq K = \operatorname{supp}\varphi$, and if $\varphi \neq 0$, $g/\|\varphi\|_\infty$ is admissible in the
+definition of $M_K$; so $L(g) \leq \|\varphi\|_\infty M_K$ and $\lambda(\varphi) < \infty$. Clearly $\lambda(c\varphi) = c\lambda(\varphi)$ for $c > 0$, as $g \mapsto cg$ matches the admissible fields. We
+show $\lambda(\varphi_1 + \varphi_2) = \lambda(\varphi_1) + \lambda(\varphi_2)$ for $\varphi_1, \varphi_2 \geq 0$. If $|g_i| \leq \varphi_i$, then $|g_1 + g_2| \leq \varphi_1 + \varphi_2$, so
+$L(g_1) + L(g_2) \leq \lambda(\varphi_1 + \varphi_2)$; taking suprema gives ``$\geq$''. Conversely let $|g| \leq \varphi_1 + \varphi_2$, and define $g_i = \varphi_ig/(\varphi_1 + \varphi_2)$ where
+$\varphi_1 + \varphi_2 > 0$ and $g_i = 0$ elsewhere. Then $|g_i| \leq \varphi_i$, and $g_i$ is continuous: this is clear where $\varphi_1 + \varphi_2 > 0$, and at a point $x_0$ where
+$\varphi_1 + \varphi_2 = 0$ we have $|g_i| \leq \varphi_i$ everywhere and $\varphi_i(x_0) = 0$, so $g_i(x) \to 0 = g_i(x_0)$ as $x \to x_0$. Since $g = 0$ where $\varphi_1 + \varphi_2 = 0$, $g = g_1 + g_2$, and
+$L(g) = L(g_1) + L(g_2) \leq \lambda(\varphi_1) + \lambda(\varphi_2)$.
+
+\emph{Step 2: extension and the measure $\mu$.} For $\varphi \in C_c(X)$ put $\lambda(\varphi) = \lambda(\varphi^+) - \lambda(\varphi^-)$, where $\varphi^\pm = \max(\pm\varphi, 0) \in C_c(X)$. If
+$\varphi = a - b$ with $a, b \geq 0$ in $C_c(X)$, then $\varphi^+ + b = \varphi^- + a$, and Step 1 gives $\lambda(\varphi) = \lambda(a) - \lambda(b)$. Writing
+$\varphi + \psi = (\varphi^+ + \psi^+) - (\varphi^- + \psi^-)$ shows that $\lambda$ is additive; it is homogeneous for $c \geq 0$ by Step 1, and $\lambda(-\varphi) = -\lambda(\varphi)$ since
+$(-\varphi)^\pm = \varphi^\mp$. So $\lambda$ is a positive linear functional on $C_c(X)$, and the Riesz--Markov theorem (Theorem~\ref{radon-measures:theorem-riesz-markov}) gives a Radon measure $\mu$ with
+$\lambda(\varphi) = \int\varphi\,d\mu$.
+
+\emph{Step 3: $|L(g)| \leq \int|g|\,d\mu$.} For $g \in C_c(X, H)$, $g$ is admissible for $\lambda(|g|)$, so $L(g) \leq \lambda(|g|) = \int|g|\,d\mu$; apply this also to $-g$.
+
+\emph{Step 4: construction of $\nu$.} Fix an orthonormal basis $e_1, \ldots, e_m$ of $H$ and let $L_j(\varphi) = L(\varphi e_j)$ for $\varphi \in C_c(X)$. By Step 3, $|L_j(\varphi)| \leq \int|\varphi|\,d\mu$,
+so $\Lambda_j(\varphi) = \int\varphi\,d\mu + L_j(\varphi)$ is a positive linear functional on $C_c(X)$. By the Riesz--Markov theorem there is a Radon measure $\sigma_j$ with $\Lambda_j(\varphi) = \int\varphi\,d\sigma_j$.
+For open $V$ and $\varphi \prec V$, $\Lambda_j(\varphi) \leq 2\int\varphi\,d\mu \leq 2\mu(V)$, so $\sigma_j(V) \leq 2\mu(V)$ by the formula for $\sigma_j(V)$ in Theorem~\ref{radon-measures:theorem-riesz-markov}; by
+outer regularity of $\mu$, $\sigma_j(E) \leq 2\mu(E)$ for all Borel $E$. Both measures are $\sigma$-finite (Proposition~\ref{radon-measures:proposition-radon-automatic}) and $\sigma_j \ll \mu$, so by the
+Radon--Nikodym theorem (Theorem~\ref{lebesgue-differentiation:theorem-radon-nikodym}) $\sigma_j(E) = \int_Eh_j\,d\mu$ for a Borel function $h_j \geq 0$. Since $\int_Eh_j\,d\mu \leq 2\mu(E)$ for all $E$, applied to
+$E = \{h_j > 2\} \cap K_m$ for the compact exhaustion $(K_m)$, $h_j \leq 2$ almost everywhere, and we may change $h_j$ on a null set so that $0 \leq h_j \leq 2$ everywhere. By the usual extension from
+indicator functions to simple functions and limits, $\int\varphi\,d\sigma_j = \int\varphi h_j\,d\mu$ for $\varphi \in C_c(X)$. Put $\nu_j = h_j - 1 \in [-1, 1]$ and $\nu = \sum_j\nu_je_j$, a Borel map with
+$|\nu| \leq \sqrt m$. Then $L_j(\varphi) = \int\varphi\,\nu_j\,d\mu$, and for $f \in C_c(X, H)$, writing $f = \sum_j\langle f, e_j\rangle e_j$ with $\langle f, e_j\rangle \in C_c(X)$,
+\[
+L(f) = \sum_jL_j\bigl(\langle f, e_j\rangle\bigr) = \int\sum_j\langle f, e_j\rangle\nu_j\,d\mu = \int\langle f, \nu\rangle\,d\mu .
+\]
+
+\emph{Step 5: $|\nu| \leq 1$ almost everywhere.} Let $E = \{|\nu| > 1\} \cap K_m$ and $w = \nu/|\nu|$ on $E$, $w = 0$ elsewhere. For $\varepsilon > 0$, Lemma~\ref{radon-measures:lemma-radon-approximation}(2) gives
+$g \in C_c(X, H)$ with $|g| \leq 1$ and $\int|g - \mathbf{1}_Ew|\,d\mu < \varepsilon$. Then, by Step 3,
+\[
+\int_E|\nu|\,d\mu = \int\langle\mathbf{1}_Ew, \nu\rangle\,d\mu \leq L(g) + \sqrt m\,\varepsilon \leq \int|g|\,d\mu + \sqrt m\,\varepsilon \leq \mu(E) + (1 + \sqrt m)\varepsilon .
+\]
+So $\int_E(|\nu| - 1)\,d\mu \leq 0$, while $|\nu| - 1 > 0$ on $E$; hence $\mu(E) = 0$, for every $m$.
+
+\emph{Step 6: $|\nu| \geq 1$ almost everywhere.} For $\varphi \geq 0$ in $C_c(X)$ and $|g| \leq \varphi$, $L(g) = \int\langle g, \nu\rangle\,d\mu \leq \int\varphi|\nu|\,d\mu$; taking the supremum,
+$\int\varphi\,d\mu = \lambda(\varphi) \leq \int\varphi|\nu|\,d\mu$, that is, $\int\varphi(1 - |\nu|)\,d\mu \leq 0$. Given a compact $K$, choose such $\varphi$ with $\varphi = 1$ on $K$ and $0 \leq \varphi \leq 1$
+(Lemma~\ref{general-topology:lemma-lch-shrinking}); as $1 - |\nu| \geq 0$ almost everywhere by Step 5, $\int_K(1 - |\nu|)\,d\mu \leq \int\varphi(1 - |\nu|)\,d\mu \leq 0$, so $|\nu| = 1$ almost
+everywhere on $K$, and on $X = \bigcup_mK_m$.
+
+\emph{Step 7: the formula \eqref{radon-measures:equation-total-variation} and uniqueness.} Let $(\mu^{\prime}, \nu^{\prime})$ be any pair with the properties of the theorem; we show that $\mu^{\prime}(V)$ equals
+the right side $s(V)$ of \eqref{radon-measures:equation-total-variation}. If $|f| \leq 1$, then $L(f) = \int\langle f, \nu^{\prime}\rangle\,d\mu^{\prime} \leq \int_V|f|\,d\mu^{\prime} \leq \mu^{\prime}(V)$ for
+$\operatorname{supp}f \subseteq V$, so $s(V) \leq \mu^{\prime}(V)$. Conversely, let $K \subseteq V$ be compact and $\varepsilon > 0$. Lemma~\ref{radon-measures:lemma-radon-approximation}(2), applied to $\mu^{\prime}$,
+$w = \nu^{\prime}$ and $E = K$, gives $g$ with $|g| \leq 1$, $\operatorname{supp}g \subseteq V$ and $\int|g - \mathbf{1}_K\nu^{\prime}|\,d\mu^{\prime} < \varepsilon$, so
+$L(g) \geq \int_K|\nu^{\prime}|^2\,d\mu^{\prime} - \varepsilon = \mu^{\prime}(K) - \varepsilon$. By inner regularity $s(V) \geq \mu^{\prime}(V)$. Hence $\mu^{\prime}(V) = s(V)$ for all open $V$; this proves
+\eqref{radon-measures:equation-total-variation} for $\mu$, and shows that $\mu^{\prime}$ and $\mu$ agree on open sets, hence on all Borel sets by outer regularity. Finally
+$\int\langle f, \nu - \nu^{\prime}\rangle\,d\mu = 0$ for all $f \in C_c(X, H)$. Let $E = \{\nu \neq \nu^{\prime}\} \cap K_m$ and $w = (\nu - \nu^{\prime})/|\nu - \nu^{\prime}|$ on $E$, $0$ elsewhere; approximating
+$\mathbf{1}_Ew$ by $g$ as in Lemma~\ref{radon-measures:lemma-radon-approximation}(2) and using $|\nu - \nu^{\prime}| \leq 2$ almost everywhere gives $\int_E|\nu - \nu^{\prime}|\,d\mu \leq 2\varepsilon$ for every
+$\varepsilon$, so $\nu = \nu^{\prime}$ almost everywhere on $E$, and on $X$.
+\end{proof}
+
+For a positive functional on $C_c(X) = C_c(X, \RR)$ the theorem gives back the Riesz--Markov measure with $\nu = 1$. For general functionals on $C_c(X)$ it gives the decomposition into a positive and a negative
+part.
+
+\begin{corollary}\label{radon-measures:corollary-signed-riesz}
+Let $L \colon C_c(X) \to \RR$ be linear with $\sup\{|L(\varphi)| : |\varphi| \leq 1, \operatorname{supp}\varphi \subseteq K\} < \infty$ for every compact $K$. Then there are Radon measures $\mu^+$ and
+$\mu^-$, concentrated on disjoint Borel sets $X^+$ and $X^-$, with
+\[
+L(\varphi) = \int\varphi\,d\mu^+ - \int\varphi\,d\mu^- \qquad (\varphi \in C_c(X)).
+\]
+If $X$ is compact, every bounded linear functional $L$ on $C(X)$ (with the norm $\|\ \|_\infty$) has this form with $\mu^\pm$ finite, and
+\[
+\|L\| = \|\mu^+ - \mu^-\| = \mu^+(X) + \mu^-(X),
+\]
+the \emph{total variation norm} of the signed measure $\mu^+ - \mu^-$, $E \mapsto \mu^+(E) - \mu^-(E)$: the norm of the functional is the norm of the measure.
+\end{corollary}
+
+\begin{proof}
+Apply Theorem~\ref{radon-measures:theorem-riesz-vector} with $H = \RR$. Then $\nu = \pm1$ almost everywhere; let $X^\pm = \{\nu = \pm1\}$ and $\mu^\pm(E) = \mu(E \cap X^\pm)$, Borel measures finite on compact
+sets, hence Radon by Proposition~\ref{radon-measures:proposition-radon-automatic}. Then $\int\varphi\nu\,d\mu = \int\varphi\,d\mu^+ - \int\varphi\,d\mu^-$. If $X$ is compact and $L$ is bounded, the hypothesis
+holds with the constant $\|L\|$, $\mu^\pm(X) \leq \mu(X) < \infty$, and \eqref{radon-measures:equation-total-variation} with $V = X$ gives $\mu(X) = \sup\{L(\varphi) : \|\varphi\|_\infty \leq 1\} = \|L\|$.
+\end{proof}
+
+For a signed measure $\mu = \mu^+ - \mu^-$ as in the corollary, with $\|\mu\| = \mu^+(X) + \mu^-(X)$, the total variation norm is intrinsic to the set function $\mu$:
+$\|\mu\| = \sup\sum_i|\mu(E_i)|$ over all finite partitions of $X$ into Borel sets $E_i$. Indeed $\sum_i|\mu(E_i)| \leq \sum_i(\mu^+(E_i) + \mu^-(E_i)) = \|\mu\|$, with equality for the partition
+$\{X^+, X \setminus X^+\}$. For example $\|\delta_0 - \delta_1\| = 2$, and $\|h\lambda\| = \int|h|\,d\lambda$ for the measure $E \mapsto \int_Eh\,d\lambda$ with $h \in L^1$.
+So the dual space of $C(X)$, for a compact metrisable $X$, is the space of signed Radon measures with the total variation norm; this proves the statement quoted in
+Remark~\ref{radon-measures:remark-riesz-markov}(3) for the spaces of this section. The decomposition $X = X^+ \cup X^-$ is the \emph{Hahn decomposition} and $\mu^\pm$ the \emph{Jordan decomposition} of the
+signed measure $\mu^+ - \mu^-$.
+
+For a noncompact $X$ the natural Banach space is $C_0(X)$, the space of continuous $f \colon X \to \RR$ \emph{vanishing at infinity}: for every $\varepsilon > 0$ the set $\{|f| \geq \varepsilon\}$ is compact.
+With the norm $\|f\|_\infty$ it is a closed subspace of the bounded continuous functions, hence complete (a uniform limit of functions vanishing at infinity vanishes at infinity), and it contains
+$C_c(X)$ as a dense subspace: for $f \in C_0(X)$ and $\varepsilon > 0$, Lemma~\ref{general-topology:lemma-lch-shrinking} gives $\psi \prec X$ with $\psi = 1$ on the compact set $\{|f| \geq \varepsilon\}$, and
+then $\psi f \in C_c(X)$ and $\|f - \psi f\|_\infty \leq \varepsilon$. For $X = \RR^n$, $e^{-|x|^2}$ and $1/(1 + |x|^2)$ lie in $C_0$, while the constant $1$ does not. As in Corollary~\ref{radon-measures:corollary-signed-riesz}, a
+\emph{finite signed Radon measure} is a difference $\mu = \mu^+ - \mu^-$ of finite Radon measures concentrated on disjoint Borel sets, with total variation norm $\|\mu\| = \mu^+(X) + \mu^-(X)$ and
+$\int f\,d\mu = \int f\,d\mu^+ - \int f\,d\mu^-$.
+
+\begin{corollary}[The dual of $C_0(X)$]\label{radon-measures:corollary-riesz-c0}
+For every bounded linear functional $L$ on $C_0(X)$ there is a unique finite signed Radon measure $\mu$ with
+\[
+L(f) = \int f\,d\mu \quad (f \in C_0(X)), \qquad \|L\| = \|\mu\|.
+\]
+Conversely every finite signed Radon measure defines in this way a bounded functional of norm $\|\mu\|$. So $C_0(X)^*$ is isometrically isomorphic to the space of finite signed Radon measures with the
+total variation norm. More generally, with $H$ as above, every bounded linear functional on $C_0(X, H)$ (with the norm $\sup_x|f(x)|$) is $f \mapsto \int\langle f, \nu\rangle\,d\mu$ with $\mu$ a finite Radon
+measure of mass $\mu(X) = \|L\|$ and $|\nu| = 1$ $\mu$-almost everywhere.
+\end{corollary}
+
+\begin{proof}
+We prove the vector-valued statement; the scalar one is the case $H = \RR$, with $\mu^\pm$ as in the proof of Corollary~\ref{radon-measures:corollary-signed-riesz}. The restriction of $L$ to $C_c(X, H)$
+satisfies the hypothesis of Theorem~\ref{radon-measures:theorem-riesz-vector} with $M_K \leq \|L\|$, which gives $\mu$ and $\nu$. By \eqref{radon-measures:equation-total-variation} with $V = X$,
+$\mu(X) = \sup\{L(f) : f \in C_c(X, H), |f| \leq 1\} \leq \|L\|$; in particular $\mu$ is finite. The functional $f \mapsto \int\langle f, \nu\rangle\,d\mu$ is defined on $C_0(X, H)$, with
+$|\int\langle f, \nu\rangle\,d\mu| \leq \|f\|_\infty\mu(X)$, and it agrees with $L$ on $C_c(X, H)$. The density argument above, applied componentwise (or with $\psi f$ for $f \in C_0(X, H)$), shows that
+$C_c(X, H)$ is dense in $C_0(X, H)$; two bounded functionals agreeing on a dense subspace are equal, so $L(f) = \int\langle f, \nu\rangle\,d\mu$ on $C_0(X, H)$. This also gives $\|L\| \leq \mu(X)$, so
+$\|L\| = \mu(X)$. Uniqueness follows from the uniqueness in Theorem~\ref{radon-measures:theorem-riesz-vector}, applied to the restriction to $C_c(X, H)$. For the converse, let $\mu = \mu^+ - \mu^-$ with $\mu^\pm$ concentrated on disjoint Borel sets
+$X^\pm$. The functional $L(f) = \int f\,d\mu$ satisfies $|L(f)| \leq \|f\|_\infty\|\mu\|$, and it is represented as in Theorem~\ref{radon-measures:theorem-riesz-vector} by the pair
+$(\mu^+ + \mu^-, \mathbf{1}_{X^+} - \mathbf{1}_{X^-})$ (a finite Borel measure, hence Radon by Proposition~\ref{radon-measures:proposition-radon-automatic}). By uniqueness and the first part,
+$\|L\| = (\mu^+ + \mu^-)(X) = \|\mu\|$.
+\end{proof}
+
+\begin{remark}\label{radon-measures:remark-dual-bounded-continuous}
+For a noncompact $X$ the corollary does not extend from $C_0(X)$ to the space $C_b(X)$ of all bounded continuous functions. For $X = \NN$ with the discrete topology, $C_0(\NN) = c_0$ is the space of
+sequences tending to $0$, its dual is the space of finite signed measures on $\NN$, that is, of summable sequences $\ell^1$, and $C_b(\NN) = \ell^\infty$. A bounded linear functional $L$ on $\ell^\infty$ that
+vanishes on $c_0$ and has $L(\mathbf{1}) = 1$ cannot be integration against a countably additive measure: such a measure would give mass $L(\mathbf{1}_{\{n\}}) = 0$ to each point, hence mass $0$ to $\NN$.
+Such functionals exist, by the Hahn--Banach theorem (Chapter~\ref{functional-analysis}); they correspond to finitely additive measures, or to measures on a large compactification of $X$. This is why the
+compactness of $X$ matters in Corollary~\ref{radon-measures:corollary-signed-riesz}, and why weak convergence of measures, in the next section, is defined by testing against $C_c(X)$; testing
+against $C_b(X)$ is a stronger condition, which also requires that no mass escapes to infinity.
+\end{remark}
+
+\begin{example}\label{radon-measures:example-riesz-vector}
+\begin{enumerate}
+\item For $L(\varphi) = \varphi(0) - \varphi(1)$ on $C_c(\RR)$, $\mu = \delta_0 + \delta_1$, $\nu(0) = 1$ and $\nu(1) = -1$. Indeed, for open $V$, the supremum in
+\eqref{radon-measures:equation-total-variation} is the number of the points $0, 1$ lying in $V$, attained by functions equal to $1$ near $0$ and $-1$ near $1$.
+\item For $h \in L^1_{\mathrm{loc}}(\RR^n)$ and $L(\varphi) = \int\varphi h\,d\lambda$, $\mu = |h|\lambda$ and $\nu = h/|h|$ where $h \neq 0$ (and $\nu = 1$ elsewhere, a $\mu$-null set). The total variation of
+$L$ on $V$ is $\int_V|h|\,d\lambda$, the $L^1$ norm.
+\item For the flux $L(F) = \int_0^{2\pi}\langle F(\cos t, \sin t), (\cos t, \sin t)\rangle\,dt = \int\langle F, n\rangle\,d\sigma$, with $\sigma$ the arc length measure of
+Example~\ref{radon-measures:example-positive-functionals}(3), $\mu = \sigma$ and $\nu = n$ on $S^1$: the theorem recovers the curve and its unit normal from the functional.
+For a $C^1$ field $F$, the divergence theorem in the plane gives $L(F) = \int_{|x| < 1}\operatorname{div}F\,d\lambda^2$.
+\end{enumerate}
+\end{example}
+
+\begin{remark}\label{radon-measures:remark-perimeter}
+\emph{Sets of finite perimeter.} Example~\ref{radon-measures:example-riesz-vector}(3) suggests a definition of boundary measure for arbitrary sets. For a Lebesgue measurable $E \subseteq \RR^n$ consider
+$L_E(F) = \int_E\operatorname{div}F\,d\lambda^n$ for $C^1$ vector fields $F$ with compact support. If $\sup\{L_E(F) : |F| \leq 1, \operatorname{supp}F \subseteq K\} < \infty$ for every compact $K$, then $L_E$ extends
+by uniform approximation to $C_c(\RR^n, \RR^n)$, and Theorem~\ref{radon-measures:theorem-riesz-vector} gives a Radon measure $\mu_E$, the \emph{perimeter measure}, and a unit vector field $\nu_E$ with
+$\int_E\operatorname{div}F = \int\langle F, \nu_E\rangle\,d\mu_E$: a divergence theorem for $E$, valid with no regularity of $\partial E$ assumed. For a bounded open set with smooth boundary, $\mu_E$ is the
+$(n-1)$-dimensional Hausdorff measure $\mathcal{H}^{n-1}$ (Chapter~\ref{geometric-measure-theory}) on $\partial E$ and $\nu_E$ is the outer normal. Such sets $E$ are the sets of \emph{finite perimeter} of Caccioppoli and De Giorgi, and the same construction with $\int u\operatorname{div}F$
+defines functions of \emph{bounded variation}; De Giorgi's structure theorem shows that $\mu_E$ is $\mathcal{H}^{n-1}$ restricted to a countably $(n-1)$-rectifiable ``reduced boundary''
+\cite[Chapter 5]{evans-gariepy}. This is the setting in which the isoperimetric problem and minimal surfaces are solved in geometric measure theory.
+\end{remark}
+
+\section{Weak convergence of measures}\label{radon-measures:section-weak-convergence}
+
+Sequences of measures appear whenever something discrete approximates something continuous, or something smooth approximates something singular. Riemann sums are integrals against finitely many
+point masses that approximate Lebesgue measure; in probability the distributions of normalised sums of random variables approximate the Gaussian distribution; smooth bumps of total mass $1$
+concentrating at a point approximate the Dirac measure; and in geometric measure theory one studies limits of the area measures of a sequence of surfaces, for instance of a minimising sequence for
+the area. Convergence $\mu_k(A) \to \mu(A)$ for all Borel sets $A$ is far too strong for these purposes (Example~\ref{radon-measures:example-weak-convergence}(1)). The useful notion tests the measures
+against continuous functions. As in Section~\ref{radon-measures:section-radon}, $X$ is a locally compact Hausdorff space with a countable basis.
+
+\begin{definition}\label{radon-measures:definition-weak-convergence}
+A sequence of Radon measures $\mu_k$ on $X$ \emph{converges weakly} to a Radon measure $\mu$, written $\mu_k \rightharpoonup \mu$, if
+\[
+\int_Xf\,d\mu_k \to \int_Xf\,d\mu \qquad \text{for every } f \in C_c(X).
+\]
+\end{definition}
+
+The limit is unique, by the uniqueness in Theorem~\ref{radon-measures:theorem-riesz-markov}. In probability theory this is called \emph{vague} convergence, and \emph{weak} convergence of probability
+measures means testing against all bounded continuous functions; the two agree when no mass is lost (Exercise~\ref{radon-measures:exercise-weak-mass}). In functional analysis it is the weak-$*$
+convergence of functionals on $C_c(X)$.
+
+\begin{example}\label{radon-measures:example-weak-convergence}
+\begin{enumerate}
+\item \emph{Moving point masses.} If $x_k \to x$ in $X$, then $\delta_{x_k} \rightharpoonup \delta_x$, since $f(x_k) \to f(x)$ for continuous $f$. On $\RR$, $\delta_{1/k} \rightharpoonup \delta_0$, but
+$\delta_{1/k}(\{0\}) = 0$ does not converge to $\delta_0(\{0\}) = 1$, and $\delta_{1/k}((0, 1)) = 1$ does not converge to $\delta_0((0, 1)) = 0$. So weak convergence does not imply convergence on
+compact sets, nor on open sets; Proposition~\ref{radon-measures:proposition-weak-convergence-sets} gives the inequalities that do hold.
+\item \emph{Riemann sums.} On $\RR$ let $\mu_k = \frac1k\sum_{j=1}^k\delta_{j/k}$. Then $\mu_k \rightharpoonup \mathbf{1}_{[0, 1]}\lambda$. Indeed $f \in C_c(\RR)$ is uniformly continuous, being
+continuous with compact support; with $\omega(\delta) = \sup\{|f(s) - f(t)| : |s - t| \leq \delta\}$, which tends to $0$ with $\delta$,
+\[
+\Bigl|\int f\,d\mu_k - \int_0^1f\,d\lambda\Bigr| = \Bigl|\sum_{j=1}^k\int_{(j-1)/k}^{j/k}\bigl(f(j/k) - f(t)\bigr)\,dt\Bigr| \leq \omega(1/k) \to 0.
+\]
+Each $\mu_k$ lives on a finite set, of Lebesgue measure $0$, while the limit is absolutely continuous with respect to $\lambda$.
+\item \emph{Approximate identities.} Let $\phi \geq 0$ be continuous on $\RR$ with support in $[-1, 1]$ and $\int\phi\,d\lambda = 1$, and $\phi_k(x) = k\phi(kx)$. Then $\int\phi_k\,d\lambda = 1$
+(Theorem~\ref{measure-theory:theorem-change-of-variables}), $\phi_k$ vanishes outside $[-1/k, 1/k]$, and for $f \in C_c(\RR)$
+\[
+\Bigl|\int f\phi_k\,d\lambda - f(0)\Bigr| = \Bigl|\int\bigl(f(x) - f(0)\bigr)\phi_k(x)\,dx\Bigr| \leq \omega(1/k),
+\]
+so $\phi_k\lambda \rightharpoonup \delta_0$: absolutely continuous measures converge to a singular one.
+\item \emph{Loss of mass.} On $\RR$, $\delta_k \rightharpoonup 0$, since every $f \in C_c(\RR)$ vanishes at $k$ for $k$ large; and $\frac1k\mathbf{1}_{[0, k]}\lambda \rightharpoonup 0$, since
+$|\int_0^kf\,d\lambda|/k \leq \|f\|_1/k$. All these measures have total mass $1$, the limit has mass $0$: mass can escape to infinity, by moving away or by spreading out.
+\item \emph{Oscillation.} Let $g \geq 0$ be continuous on $\RR$ and periodic of period $2\pi$, with mean value $\bar g = \frac1{2\pi}\int_0^{2\pi}g\,d\lambda$. Then $g(kx)\lambda \rightharpoonup \bar g\lambda$; for
+instance $(1 + \sin kx)\lambda \rightharpoonup \lambda$, although the densities $1 + \sin kx$ do not converge pointwise (at $x = \pi/2$ they run through $2, 1, 0, 1, 2, \ldots$). To see this, let
+$f \in C_c(\RR)$ with support in $[a, b]$ and $\varepsilon > 0$, and choose $a = a_0 < \cdots < a_N = b$ with $|f(s) - f(a_j)| \leq \varepsilon$ for $s \in [a_{j-1}, a_j]$. An interval
+$[k\alpha, k\beta]$ consists of $\lfloor k(\beta - \alpha)/2\pi\rfloor$ full periods and a remainder shorter than $2\pi$, so
+$\int_\alpha^\beta g(kx)\,dx = \frac1k\int_{k\alpha}^{k\beta}g(t)\,dt = (\beta - \alpha)\bar g + r$ with $|r| \leq 4\pi\|g\|_\infty/k$. Replacing $f$ by $f(a_j)$ on $[a_{j-1}, a_j]$ costs at most
+$\varepsilon(b - a)\|g\|_\infty$ in $\int fg(kx)\,dx$ and in $\bar g\int f\,dx$, so
+\[
+\Bigl|\int f(x)g(kx)\,dx - \bar g\int f(x)\,dx\Bigr| \leq 2\varepsilon(b - a)\|g\|_\infty + \frac{4\pi N\|f\|_\infty\|g\|_\infty}{k},
+\]
+whose $\limsup$ as $k \to \infty$ is at most $2\varepsilon(b - a)\|g\|_\infty$. Fast oscillations average out; this is the measure-theoretic content of the Riemann--Lebesgue lemma.
+\end{enumerate}
+\end{example}
+
+\begin{proposition}\label{radon-measures:proposition-weak-convergence-sets}
+Let $\mu_k \rightharpoonup \mu$ be Radon measures on $X$.
+\begin{enumerate}
+\item $\mu(U) \leq \liminf_k\mu_k(U)$ for every open $U$.
+\item $\mu(K) \geq \limsup_k\mu_k(K)$ for every compact $K$.
+\item $\mu_k(A) \to \mu(A)$ for every Borel set $A$ with compact closure and $\mu(\partial A) = 0$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) By inner regularity, $\mu(U)$ is the supremum of $\mu(K)$ over compact $K \subseteq U$; for such $K$, Lemma~\ref{general-topology:lemma-lch-shrinking} gives $f \prec U$ with $f = 1$ on $K$, and
+$\mu(K) \leq \int f\,d\mu \leq \mu(U)$. So $\mu(U) = \sup\{\int f\,d\mu : f \prec U\}$. For $f \prec U$, $\int f\,d\mu = \lim_k\int f\,d\mu_k \leq \liminf_k\mu_k(U)$.
+
+(2) Let $V \supseteq K$ be open. By Lemma~\ref{general-topology:lemma-lch-shrinking} there is $f \prec V$ with $f = 1$ on $K$, and $\limsup_k\mu_k(K) \leq \lim_k\int f\,d\mu_k = \int f\,d\mu \leq \mu(V)$.
+By outer regularity, the infimum of $\mu(V)$ over such $V$ is $\mu(K)$.
+
+(3) The interior $\operatorname{int}A$ and the closure $\overline{A}$ differ by $\partial A$, so $\mu(\operatorname{int}A) = \mu(A) = \mu(\overline{A})$. By (1) and (2),
+$\mu(A) = \mu(\operatorname{int}A) \leq \liminf_k\mu_k(\operatorname{int}A) \leq \liminf_k\mu_k(A) \leq \limsup_k\mu_k(A) \leq \limsup_k\mu_k(\overline{A}) \leq \mu(\overline{A}) = \mu(A)$.
+\end{proof}
+
+In Example~\ref{radon-measures:example-weak-convergence}(1) the inequalities are strict: $\delta_0((0, 1)) = 0 < 1$ and $\delta_0(\{0\}) = 1 > 0$; the sets $(0, 1)$ and $\{0\}$ have the point $0$, of
+$\delta_0$-measure $1$, in their boundary. In (2) of the same example, (3) says that the proportion of the points $j/k$ lying in an interval $[\alpha, \beta] \subseteq [0, 1]$ tends to $\beta - \alpha$.
+
+The main theorem about weak convergence is a compactness theorem: bounded mass on compact sets suffices for a convergent subsequence. Its proof needs a countable supply of test functions.
+
+\begin{lemma}\label{radon-measures:lemma-cc-separable}
+Let $K_1 \subseteq K_2 \subseteq \cdots$ be an exhaustion of $X$ by compact sets with $K_m \subseteq \operatorname{int}K_{m+1}$. There is a countable set $\mathcal{D} \subseteq C_c(X)$ such that for every
+$m$, every $f \in C_c(X)$ with $\operatorname{supp}f \subseteq K_m$ and every $\varepsilon > 0$ there is $g \in \mathcal{D}$ with $\operatorname{supp}g \subseteq K_{m+1}$ and $\|f - g\|_\infty < \varepsilon$.
+\end{lemma}
+
+\begin{proof}
+First, $C(L, \RR)$ has a countable dense subset for every compact metric space $(L, d)$. Indeed $L$ has a countable dense subset $\{x_1, x_2, \ldots\}$ (for each $j$, finitely many balls of radius $1/j$
+cover $L$; take their centres). The functions $u_i(y) = d(x_i, y)$ separate points: if $y \neq z$ and $d(x_i, y) < d(y, z)/2$, then $d(x_i, z) > d(y, z)/2 > d(x_i, y)$. By the Stone--Weierstrass theorem
+(Theorem~\ref{real-analysis:theorem-stone-weierstrass}) the polynomials in finitely many of the $u_i$ are dense in $C(L, \RR)$, and so are those with rational coefficients, which form a countable set, since
+the $u_i$ are bounded and real coefficients can be approximated by rational ones.
+
+Each $K_{m+1}$ is a compact metric space, $X$ being metrisable; let $\mathcal{D}_m \subseteq C(K_{m+1}, \RR)$ be countable and dense. By Lemma~\ref{general-topology:lemma-lch-shrinking} choose
+$\chi_m \in C_c(X)$ with values in $[0, 1]$, $\chi_m = 1$ on $K_m$ and $\operatorname{supp}\chi_m \subseteq \operatorname{int}K_{m+1}$. For $u \in \mathcal{D}_m$ the function $\chi_mu$, extended by $0$
+outside $K_{m+1}$, is continuous on $X$: it is continuous on the open set $\operatorname{int}K_{m+1}$ and vanishes on the open set $X \setminus \operatorname{supp}\chi_m$, and these two open sets cover $X$.
+Let $\mathcal{D}$ be the set of all these functions, for all $m$. Given $f$ with support in $K_m$, choose $u \in \mathcal{D}_m$ with $|f - u| < \varepsilon$ on $K_{m+1}$; then $f = \chi_mf$, so
+$|f - \chi_mu| = \chi_m|f - u| < \varepsilon$ on $K_{m+1}$, and both functions vanish outside $K_{m+1}$.
+\end{proof}
+
+\begin{theorem}[Weak compactness of Radon measures]\label{radon-measures:theorem-weak-compactness}
+Let $(\mu_k)$ be a sequence of Radon measures on $X$ with $\sup_k\mu_k(K) < \infty$ for every compact $K \subseteq X$. Then a subsequence converges weakly to a Radon measure.
+\end{theorem}
+
+\begin{proof}
+Let $(K_m)$ be an exhaustion as in Lemma~\ref{radon-measures:lemma-cc-separable}, $C_m = \sup_k\mu_k(K_m)$, and $\mathcal{D} = \{g_1, g_2, \ldots\}$ the countable set of the lemma. For each $i$ the
+sequence $\int g_i\,d\mu_k$ is bounded, by $\|g_i\|_\infty\sup_k\mu_k(\operatorname{supp}g_i)$, so it has a convergent subsequence (Theorem~\ref{real-analysis:theorem-bolzano-weierstrass-real}).
+Choose a subsequence along which $\int g_1\,d\mu_k$ converges, a further subsequence along which $\int g_2\,d\mu_k$ converges, and so on; the diagonal sequence, the $k$-th term of the $k$-th
+subsequence, is a subsequence of each of them from its $i$-th term on. Renaming it $(\mu_k)$, $\int g\,d\mu_k$ converges for every $g \in \mathcal{D}$.
+
+Let $f \in C_c(X)$, with support in some $K_m$, and $\varepsilon > 0$. Choose $g \in \mathcal{D}$ with support in $K_{m+1}$ and $\|f - g\|_\infty < \varepsilon$. Then
+\[
+\Bigl|\int f\,d\mu_k - \int f\,d\mu_l\Bigr| \leq 2\varepsilon C_{m+1} + \Bigl|\int g\,d\mu_k - \int g\,d\mu_l\Bigr|,
+\]
+so $\int f\,d\mu_k$ is a Cauchy sequence. Its limit $\Lambda f$ is linear and positive in $f$, so by Theorem~\ref{radon-measures:theorem-riesz-markov} it is $\int f\,d\mu$ for a Radon measure $\mu$, and
+$\mu_k \rightharpoonup \mu$.
+\end{proof}
+
+\begin{corollary}\label{radon-measures:corollary-probability-compact}
+Let $X$ be a compact metric space. Every sequence of Borel probability measures on $X$ has a subsequence converging weakly to a Borel probability measure.
+\end{corollary}
+
+\begin{proof}
+A compact metric space is locally compact and Hausdorff, and it has a countable basis: the balls of radius $1/j$ centred at the points of finite sets of such balls covering $X$. Every Borel measure on
+$X$ that is finite is a Radon measure (Proposition~\ref{radon-measures:proposition-radon-automatic}), and $\mu_k(X) = 1$ bounds the masses. Theorem~\ref{radon-measures:theorem-weak-compactness} gives a
+weakly convergent subsequence, and its limit $\mu$ satisfies $\mu(X) = \int 1\,d\mu = \lim\int 1\,d\mu_k = 1$, as $1 \in C_c(X)$ for compact $X$.
+\end{proof}
+
+\begin{remark}\label{radon-measures:remark-weak-compactness}
+\begin{enumerate}
+\item The hypothesis cannot be dropped: $k\delta_0$ has no weakly convergent subsequence on $\RR$. On non-compact spaces the limit of probability measures may have smaller mass, by
+Example~\ref{radon-measures:example-weak-convergence}(4); by Proposition~\ref{radon-measures:proposition-weak-convergence-sets}(1) applied to $U = X$, mass can only be lost, never gained.
+\item Theorem~\ref{radon-measures:theorem-weak-compactness} is a case of the Banach--Alaoglu theorem: bounded sets of linear functionals are compact for the weak-$*$ topology
+(Chapter~\ref{functional-analysis}).
+\item In the calculus of variations and in geometric measure theory this is the basic source of limits. A minimising sequence of surfaces for the area, all contained in a fixed ball, has area
+measures with bounded mass, and a subsequence of these converges weakly to a Radon measure; the hard part, the \emph{regularity theory}, is to show that the limit is again the area measure of a
+surface, perhaps with singularities. For curves, Exercise~\ref{radon-measures:exercise-staircase} shows that length can jump in the limit.
+\end{enumerate}
+\end{remark}
+
+\section{Differentiation of measures}\label{radon-measures:section-differentiation-measures}
+
+The Lebesgue differentiation theorem (Theorem~\ref{lebesgue-differentiation:theorem-lebesgue-differentiation}) says that for $h \in L^1_{\mathrm{loc}}(\RR^n)$ the averages $\frac1{\lambda(B(x, r))}\int_{B(x, r)}h$
+tend to $h(x)$ for almost every $x$. In terms of the measure $\nu = h\lambda$ it says that $\nu(B(x, r))/\lambda(B(x, r)) \to h(x)$: the density of $\nu$ can be computed by shrinking balls. We now do this
+for an arbitrary Radon measure $\nu$ on $\RR^n$. It has a Lebesgue decomposition $\nu = h\lambda + \nu_s$ with respect to $\lambda$ (Theorem~\ref{lebesgue-differentiation:theorem-lebesgue-decomposition}, which
+applies since $\nu$ is $\sigma$-finite by Proposition~\ref{radon-measures:proposition-radon-automatic}), and the shrinking balls recover $h$ and do not see the singular part, except on a null set. In this
+section $\lambda$ denotes Lebesgue measure on the Borel sets of $\RR^n$.
+
+\begin{definition}\label{radon-measures:definition-derivative-measure}
+Let $\nu$ be a Radon measure on $\RR^n$. The \emph{upper} and \emph{lower derivatives} of $\nu$ with respect to $\lambda$ at $x$ are
+\[
+\overline{D}\nu(x) = \limsup_{r \to 0}\frac{\nu(B(x, r))}{\lambda(B(x, r))}, \qquad \underline{D}\nu(x) = \liminf_{r \to 0}\frac{\nu(B(x, r))}{\lambda(B(x, r))},
+\]
+in $[0, \infty]$. If they agree, their common value is the \emph{derivative} $D\nu(x)$.
+\end{definition}
+
+\begin{example}\label{radon-measures:example-derivative-measure}
+For $\nu = \delta_0$ on $\RR^n$, $\nu(B(x, r)) = 0$ for $r \leq \|x\|$, so $D\nu(x) = 0$ for $x \neq 0$, while $D\nu(0) = \lim_r1/\lambda(B(0, r)) = \infty$. For the measure $\sigma$ on the circle
+(Example~\ref{radon-measures:example-positive-functionals}(3)), $D\sigma = 0$ outside $S^1$, because the balls around a point at positive distance from $S^1$ eventually miss $S^1$; at a point of $S^1$ the ball
+$B(x, r)$ meets $S^1$ in an arc of length about $2r$, so $\sigma(B(x, r))/\pi r^2$ behaves like $2/(\pi r)$ and $D\sigma = \infty$. In both cases the derivative is $0$ almost everywhere, in accordance
+with the singularity of these measures.
+\end{example}
+
+\begin{theorem}[Differentiation of measures]\label{radon-measures:theorem-differentiation-measures}
+Let $\nu$ be a Radon measure on $\RR^n$, and $\nu = h\lambda + \nu_s$ its Lebesgue decomposition, with $h \geq 0$ Borel and $\nu_s \perp \lambda$. Then $h \in L^1_{\mathrm{loc}}(\RR^n)$, and for
+$\lambda$-almost every $x$
+\[
+\lim_{r \to 0}\frac1{\lambda(B(x, r))}\Bigl(\int_{B(x, r)}|h(y) - h(x)|\,d\lambda(y) + \nu_s(B(x, r))\Bigr) = 0 .
+\]
+In particular $D\nu = h$ almost everywhere, and $\nu \perp \lambda$ if and only if $D\nu = 0$ almost everywhere.
+\end{theorem}
+
+\begin{proof}
+For compact $K$, $\int_Kh\,d\lambda \leq \nu(K) < \infty$, so $h \in L^1_{\mathrm{loc}}$, and by the Lebesgue differentiation theorem
+(Theorem~\ref{lebesgue-differentiation:theorem-lebesgue-differentiation}) the first term tends to $0$ almost everywhere. It remains to show that $\overline{D}\nu_s = 0$ almost everywhere. Let $S$ be a Borel set with
+$\lambda(S) = 0$ and $\nu_s(\RR^n \setminus S) = 0$. The measure $\nu_s$ is a Borel measure finite on compact sets ($\nu_s \leq \nu$), so it is a Radon measure
+(Proposition~\ref{radon-measures:proposition-radon-automatic}). Fix $t > 0$ and $R > 0$, and let
+\[
+A = \{x \in B(0, R) \setminus S : \overline{D}\nu_s(x) > t\}.
+\]
+We show $\lambda^*(A) = 0$. Let $\varepsilon > 0$. The Borel set $B(0, R) \setminus S$ has $\nu_s$-measure $0$, so by outer regularity it is contained in an open set $U$ with $\nu_s(U) < \varepsilon$. Let $G$ be
+the union of all open balls $B$ with $B \subseteq U$ and $\nu_s(B) > t\lambda(B)$. It is open and contains $A$: for $x \in A$ we have $x \in U$, so $B(x, r) \subseteq U$ for all small $r$, and
+$\nu_s(B(x, r)) > t\lambda(B(x, r))$ for some of these $r$. Let $K \subseteq G$ be compact. Finitely many of these balls cover $K$, and by the Vitali covering lemma
+(Lemma~\ref{lebesgue-differentiation:lemma-vitali-covering}) they contain pairwise disjoint balls $B_1, \ldots, B_k$ with
+\[
+\lambda(K) \leq 3^n\sum_j\lambda(B_j) < \frac{3^n}{t}\sum_j\nu_s(B_j) \leq \frac{3^n}{t}\nu_s(U) < \frac{3^n\varepsilon}{t}.
+\]
+By inner regularity of $\lambda$, $\lambda^*(A) \leq \lambda(G) \leq 3^n\varepsilon/t$, and as $\varepsilon$ is arbitrary, $A$ is a null set. Taking the union over $t = 1/j$ and $R = j$, $j \geq 1$, and
+adding the null set $S$, we find that $\overline{D}\nu_s = 0$ outside a null set.
+
+Finally, $\nu(B(x, r))/\lambda(B(x, r))$ differs from the average of $h$ over $B(x, r)$ by $\nu_s(B(x, r))/\lambda(B(x, r))$, and the average differs from $h(x)$ by at most the average of $|h - h(x)|$; so
+$D\nu = h$ almost everywhere. If $\nu \perp \lambda$, then $h = 0$ almost everywhere by uniqueness of the decomposition, so $D\nu = 0$ almost everywhere; conversely, if $D\nu = 0$ almost everywhere,
+then $h = 0$ almost everywhere and $\nu = \nu_s$.
+\end{proof}
+
+So the Radon--Nikodym derivative of the absolutely continuous part, an object obtained in Theorem~\ref{lebesgue-differentiation:theorem-radon-nikodym} by an abstract Hilbert space argument, can be computed as a
+limit of ratios. Balls are not essential: any sets that shrink to $x$ and occupy a fixed proportion of a ball around $x$ will do.
+
+\begin{corollary}\label{radon-measures:corollary-nicely-shrinking}
+Let $\nu = h\lambda + \nu_s$ be as in Theorem~\ref{radon-measures:theorem-differentiation-measures} and $c > 0$. For almost every $x$ the following holds: if $E_k$ are Borel sets with
+$E_k \subseteq B(x, r_k)$, $r_k \to 0$ and $\lambda(E_k) \geq c\lambda(B(x, r_k))$, then $\nu(E_k)/\lambda(E_k) \to h(x)$.
+\end{corollary}
+
+\begin{proof}
+Take $x$ as in the theorem. Then
+\[\begin{aligned}
+\Bigl|\frac{\nu(E_k)}{\lambda(E_k)} - h(x)\Bigr| &\leq \frac1{\lambda(E_k)}\Bigl(\int_{E_k}|h - h(x)|\,d\lambda + \nu_s(E_k)\Bigr) \\
+&\leq \frac1{c\lambda(B(x, r_k))}\Bigl(\int_{B(x, r_k)}|h - h(x)|\,d\lambda + \nu_s(B(x, r_k))\Bigr),
+\end{aligned}\]
+which tends to $0$.
+\end{proof}
+
+\begin{corollary}[Lebesgue's theorem on monotone functions]\label{radon-measures:corollary-monotone-differentiable}
+Let $F \colon [a, b] \to \RR$ be continuous and nondecreasing. Then $F$ is differentiable almost everywhere, $F^{\prime} \geq 0$ is integrable, and
+\[
+\int_a^bF^{\prime}\,d\lambda \leq F(b) - F(a),
+\]
+with equality if and only if $F$ is absolutely continuous.
+\end{corollary}
+
+\begin{proof}
+Let $\mu_F$ be the measure of Lemma~\ref{lebesgue-differentiation:lemma-stieltjes}, and $\nu(E) = \mu_F(E \cap [a, b])$ for Borel $E \subseteq \RR$; it is a finite Borel measure on $\RR$, hence a Radon measure. Let
+$\nu = h\lambda + \nu_s$ be its Lebesgue decomposition, and let $x \in (a, b)$ be a point where Corollary~\ref{radon-measures:corollary-nicely-shrinking} holds with $c = 1/4$. For
+$0 < r < \min(b - x, x - a)$, the intervals $(x, x + r]$ and $(x - r, x]$ have length $r = \frac14\lambda(B(x, 2r))$ and lie in $B(x, 2r)$, and
+$\nu((x, x + r]) = F(x + r) - F(x)$, $\nu((x - r, x]) = F(x) - F(x - r)$. So both one-sided difference quotients of $F$ at $x$ tend to $h(x)$, and $F^{\prime}(x) = h(x)$. Hence $F^{\prime} = h$ almost
+everywhere on $[a, b]$, and
+\[
+\int_a^bF^{\prime}\,d\lambda = \int_{[a, b]}h\,d\lambda \leq \nu([a, b]) = F(b) - F(a),
+\]
+with equality if and only if $\nu_s([a, b]) = 0$, that is, $\nu_s = 0$. In that case $F(x) - F(a) = \nu([a, x]) = \int_a^xh\,d\lambda$ for all $x$, so $F$ is absolutely continuous by
+Theorem~\ref{lebesgue-differentiation:theorem-absolutely-continuous}. Conversely, if $F$ is absolutely continuous, the same theorem gives $F(b) - F(a) = \int_a^bF^{\prime}$.
+\end{proof}
+
+For the Cantor function (Counterexample~\ref{lebesgue-differentiation:counterexample-cantor-function}) the inequality is strict: $\mu_F$ is singular, so $F^{\prime} = 0$ almost everywhere, as we saw directly,
+while $F(1) - F(0) = 1$. The corollary holds for all nondecreasing functions, continuous or not: a nondecreasing function has at most countably many jumps, and the jumps contribute a further singular
+part to its measure \cite[Chapter 7]{rudin-rca}. Since a function of bounded variation is a difference of two nondecreasing functions, it is differentiable almost everywhere as well.
+
+\begin{remark}\label{radon-measures:remark-besicovitch}
+The proof used Lebesgue measure through the Vitali covering lemma, that is, through the fact that $\lambda(3B) = 3^n\lambda(B)$. To differentiate a Radon measure $\nu$ with respect to an arbitrary Radon
+measure $\mu$ on $\RR^n$, which may give very different masses to $B$ and $3B$, one uses instead the \emph{Besicovitch covering theorem}: from every family of balls whose centres form a bounded set
+$A$ one can extract a subfamily covering $A$ that splits into a number of disjoint subfamilies depending only on $n$. With it one shows that $\nu(B(x, r))/\mu(B(x, r))$ converges $\mu$-almost
+everywhere to the density of the part of $\nu$ absolutely continuous with respect to $\mu$, and tends to $\infty$ almost everywhere for the singular part \cite[Chapter 1]{evans-gariepy}. This is the
+setting of geometric measure theory, where $\mu$ is often a Hausdorff measure restricted to a set.
+\end{remark}
+
+\subsection{Differentiation with respect to doubling measures}\label{radon-measures:subsection-doubling}
+
+Densities measure a measure $\mu$ against the function $r \mapsto \alpha(s)(2r)^s$. Measuring it against another measure $\nu$ instead, through the ratios $\mu(\overline{B}(x, r))/\nu(\overline{B}(x, r))$,
+leads to the general form of the Radon--Nikodym theorem in which the derivative $d\mu/d\nu$ is computed as a limit, as in Theorem~\ref{radon-measures:theorem-differentiation-measures} for
+$\nu = \lambda$. The proof there used $\lambda(3B) = 3^n\lambda(B)$, and the $5r$-covering lemma (Lemma~\ref{lebesgue-differentiation:lemma-five-r-covering}) shows that a weak form of this property is all one
+needs, in any metric space. Throughout, $X$ is a nonempty metric space, and for a Borel measure $\nu$ on $X$ and any $A \subseteq X$ we write $\nu^*(A) = \inf\{\nu(E) : E \supseteq A \text{ Borel}\}$.
+This outer measure is countably subadditive (take a union of Borel supersets), and a set with $\nu^*(A) = 0$ lies in a Borel set of measure $0$.
+
+\begin{definition}\label{radon-measures:definition-doubling}
+A Borel measure $\nu$ on $X$ is \emph{doubling} if $0 < \nu(\overline{B}(x, r)) < \infty$ for all $x \in X$ and $r > 0$, and there is a constant $C$ with
+\[
+\nu(\overline{B}(x, 2r)) \leq C\,\nu(\overline{B}(x, r)) \qquad \text{for all } x \in X,\ r > 0 .
+\]
+\end{definition}
+
+Iterating, $\nu(\overline{B}(x, 2^kr)) \leq C^k\nu(\overline{B}(x, r))$; in particular, for the enlarged ball $\widehat{B} = \overline{B}(x, 5r)$ of $B = \overline{B}(x, r)$,
+\begin{equation}\label{radon-measures:equation-doubling-five}
+\nu(\widehat{B}) \leq \nu(\overline{B}(x, 8r)) \leq C^3\nu(B) .
+\end{equation}
+A doubling measure is finite on bounded sets, since every bounded set lies in a closed ball, and hence $\sigma$-finite: $X = \bigcup_k\overline{B}(x_0, k)$ for any $x_0 \in X$.
+
+\begin{example}\label{radon-measures:example-doubling}
+\begin{enumerate}
+\item Lebesgue measure on $\RR^n$ is doubling with $C = 2^n$, since $\lambda(\overline{B}(x, r)) = \alpha(n)(2r)^n$.
+\item If $w$ is a Borel function on $\RR^n$ with $0 < m \leq w \leq M$, then $\nu = w\lambda$ is doubling with $C = 2^nM/m$:
+$\nu(\overline{B}(x, 2r)) \leq M\lambda(\overline{B}(x, 2r)) = 2^nM\lambda(\overline{B}(x, r)) \leq 2^n(M/m)\nu(\overline{B}(x, r))$.
+\item The Gaussian measure $\gamma = e^{-y^2/2}\lambda$ on $\RR$ is not doubling. For $x > 2$ the density $e^{-y^2/2}$ is decreasing on $[x - 2, x + 2]$, so
+\[
+\frac{\gamma([x - 2, x + 2])}{\gamma([x - 1, x + 1])} \geq \frac{\frac12e^{-(x - 3/2)^2/2}}{2e^{-(x - 1)^2/2}} = \frac14e^{(x - 5/4)/2},
+\]
+estimating the numerator by the integral over $[x - 2, x - \frac32]$; the right side is unbounded as $x \to \infty$. Far out, the measure of a ball is concentrated near its left end.
+\item A point mass $\delta_a$ on $\RR$ is not doubling, since balls missing $a$ have measure $0$; but $\delta_a$ is doubling on the one-point metric space $\{a\}$. Doubling is a property of the measure
+together with the metric space it lives on.
+\end{enumerate}
+\end{example}
+
+We need one approximation lemma, which replaces the role of $C_c(\RR^n)$ in the Lebesgue differentiation theorem.
+
+\begin{lemma}\label{radon-measures:lemma-lipschitz-dense}
+Let $\nu$ be a finite Borel measure on a metric space $X$ and $1 \leq p < \infty$. The bounded Lipschitz functions are dense in $L^p(\nu)$.
+\end{lemma}
+
+\begin{proof}
+By Proposition~\ref{measure-theory:proposition-measurable-functions}(4) and dominated convergence, simple functions $\sum_ia_i\mathbf{1}_{E_i}$ with $E_i$ Borel are dense, so it suffices to approximate
+$\mathbf{1}_E$ for a Borel set $E$. Let $\varepsilon > 0$. By Lemma~\ref{radon-measures:lemma-closed-approximation} there is a closed set $F \subseteq E$ with $\nu(E \setminus F) < \varepsilon$, so
+$\|\mathbf{1}_E - \mathbf{1}_F\|_p^p < \varepsilon$. If $F = \emptyset$, then $\|\mathbf{1}_E\|_p^p < \varepsilon$ and $0$ approximates. Otherwise let $g_k(x) = \max(0, 1 - k\,d(x, F))$. It is Lipschitz with constant $k$, takes values in $[0, 1]$,
+equals $1$ on $F$, and $g_k(x) \to 0$ for $x \notin F$ because $d(x, F) > 0$ for such $x$, $F$ being closed. So $g_k \to \mathbf{1}_F$ pointwise with $|g_k - \mathbf{1}_F| \leq 1$, and as $\nu$ is finite,
+dominated convergence gives $\|g_k - \mathbf{1}_F\|_p \to 0$.
+\end{proof}
+
+From now on $\nu$ is a doubling measure on $X$ with constant $C$.
+
+\begin{theorem}[Maximal inequality for doubling measures]\label{radon-measures:theorem-doubling-maximal}
+Let $f \in L^1(\nu)$ and $t > 0$, and let $A$ be the set of $x \in X$ such that
+\[
+\frac{1}{\nu(\overline{B}(x, r))}\int_{\overline{B}(x, r)}|f|\,d\nu > t \qquad \text{for some } 0 < r \leq 1 .
+\]
+Then $\nu^*(A) \leq C^3\|f\|_1/t$.
+\end{theorem}
+
+\begin{proof}
+Let $\mathcal{F}$ be the family of balls $B = \overline{B}(x, r)$ with $x \in A$, $0 < r \leq 1$ and $\int_B|f|\,d\nu > t\nu(B)$; every point of $A$ is the centre of a ball of $\mathcal{F}$. Let
+$\mathcal{G}$ be the disjoint subfamily of Lemma~\ref{lebesgue-differentiation:lemma-five-r-covering}. For finitely many balls of $\mathcal{G}$ the integrals $\int_B|f|\,d\nu$ add up to at most $\|f\|_1$, and each of them is
+$> t\nu(B) > 0$; so for each $m$ only finitely many exceed $1/m$, and $\mathcal{G} = \{B_1, B_2, \ldots\}$ is countable. Every ball of $\mathcal{F}$ lies in some $\widehat{B_i}$, so
+$A \subseteq \bigcup_i\widehat{B_i}$, and by \eqref{radon-measures:equation-doubling-five}
+\[
+\nu^*(A) \leq \sum_i\nu(\widehat{B_i}) \leq C^3\sum_i\nu(B_i) < \frac{C^3}{t}\sum_i\int_{B_i}|f|\,d\nu \leq \frac{C^3}{t}\|f\|_1 .
+\]
+(If $A$ is empty there is nothing to prove.)
+\end{proof}
+
+\begin{theorem}[Lebesgue differentiation theorem for doubling measures]\label{radon-measures:theorem-doubling-lebesgue}
+Let $f \colon X \to \RR$ be a Borel function with $\int_B|f|\,d\nu < \infty$ for every closed ball $B$. For $\nu$-almost every $x \in X$,
+\[
+\lim_{r \to 0}\frac{1}{\nu(\overline{B}(x, r))}\int_{\overline{B}(x, r)}|f(y) - f(x)|\,d\nu(y) = 0,
+\]
+and in particular the averages of $f$ over $\overline{B}(x, r)$ tend to $f(x)$.
+\end{theorem}
+
+\begin{proof}
+Write $\langle g \rangle_{x, r}$ for the average of a function $g$ over $\overline{B}(x, r)$ with respect to $\nu$, and $\Omega(x) = \limsup_{r \to 0}\langle|f - f(x)|\rangle_{x, r}$. Fix $x_0 \in X$, an integer $k \geq 1$,
+$t > 0$ and $\varepsilon > 0$, and let $D = \overline{B}(x_0, k + 1)$. The measure $E \mapsto \nu(E \cap D)$ is finite, so by Lemma~\ref{radon-measures:lemma-lipschitz-dense} there is a bounded continuous $g$ with
+$\int_D|f - g|\,d\nu < \varepsilon$. Let $h = (f - g)\mathbf{1}_D$, so $\|h\|_1 < \varepsilon$.
+
+Let $x \in B(x_0, k)$ and $0 < r \leq 1$. Then $\overline{B}(x, r) \subseteq D$, and for $y \in \overline{B}(x, r)$
+\[
+|f(y) - f(x)| \leq |h(y)| + |h(x)| + |g(y) - g(x)| .
+\]
+Averaging over $y$ gives $\langle|f - f(x)|\rangle_{x, r} \leq \langle|h|\rangle_{x, r} + |h(x)| + \sup_{\overline{B}(x, r)}|g - g(x)|$, and the last term tends to $0$ as $r \to 0$ because $g$ is continuous. So, if
+$\Omega(x) > 2t$, then either $\langle|h|\rangle_{x, r} > t$ for some $r \leq 1$, or $|h(x)| > t$. By Theorem~\ref{radon-measures:theorem-doubling-maximal} and Markov's inequality
+(Corollary~\ref{measure-theory:corollary-integral-properties}(4)),
+\[
+\nu^*\bigl(\{x \in B(x_0, k) : \Omega(x) > 2t\}\bigr) \leq \frac{C^3\varepsilon}{t} + \frac{\varepsilon}{t} .
+\]
+As $\varepsilon$ is arbitrary, this set has outer measure $0$. The set where $\Omega > 0$ is the union of these sets over $k \geq 1$ and $t = 1/j$, $j \geq 1$, so it has outer measure $0$ and lies in a
+$\nu$-null Borel set. Finally $|\langle f \rangle_{x, r} - f(x)| \leq \langle|f - f(x)|\rangle_{x, r}$.
+\end{proof}
+
+\begin{theorem}[Differentiation of measures with respect to a doubling measure]\label{radon-measures:theorem-doubling-differentiation}
+Let $\mu$ be a Borel measure on $X$ that is finite on bounded Borel sets, and let $\mu = h\nu + \mu_s$ be its Lebesgue decomposition with respect to $\nu$
+(Theorem~\ref{lebesgue-differentiation:theorem-lebesgue-decomposition}), with $h \geq 0$ Borel and $\mu_s \perp \nu$. Then for $\nu$-almost every $x$
+\[
+\lim_{r \to 0}\frac{\mu(\overline{B}(x, r))}{\nu(\overline{B}(x, r))} = h(x) .
+\]
+In particular, if $\mu \ll \nu$, the Radon--Nikodym derivative is $\frac{d\mu}{d\nu}(x) = \lim_{r \to 0}\mu(\overline{B}(x, r))/\nu(\overline{B}(x, r))$ for $\nu$-almost every $x$; and $\mu \perp \nu$ if and only
+if this limit is $0$ $\nu$-almost everywhere.
+\end{theorem}
+
+\begin{proof}
+Both measures are $\sigma$-finite, $X$ being the union of the balls $\overline{B}(x_0, k)$, so the decomposition exists. For every closed ball $B$, $\int_Bh\,d\nu \leq \mu(B) < \infty$, so by
+Theorem~\ref{radon-measures:theorem-doubling-lebesgue} the averages of $h$ over $\overline{B}(x, r)$ tend to $h(x)$ for almost every $x$. Since
+\[
+\frac{\mu(\overline{B}(x, r))}{\nu(\overline{B}(x, r))} = \frac{1}{\nu(\overline{B}(x, r))}\int_{\overline{B}(x, r)}h\,d\nu + \frac{\mu_s(\overline{B}(x, r))}{\nu(\overline{B}(x, r))},
+\]
+it remains to show that the last ratio tends to $0$ for almost every $x$.
+
+Let $S$ be a Borel set with $\nu(S) = 0$ and $\mu_s(X \setminus S) = 0$. Fix $x_0 \in X$, $k \geq 1$, $t > 0$ and $\varepsilon > 0$, and let $A$ be the set of $x \in B(x_0, k) \setminus S$ with
+$\limsup_{r \to 0}\mu_s(\overline{B}(x, r))/\nu(\overline{B}(x, r)) > t$. The measure $E \mapsto \mu_s(E \cap B(x_0, k + 1))$ is finite and vanishes on the Borel set $B(x_0, k) \setminus S$, so by
+Lemma~\ref{radon-measures:lemma-closed-approximation} there is an open $U^{\prime} \supseteq B(x_0, k) \setminus S$ with $\mu_s(U^{\prime} \cap B(x_0, k + 1)) < \varepsilon$. The set $U = U^{\prime} \cap B(x_0, k + 1)$ is
+open, contains $A$, and has $\mu_s(U) < \varepsilon$.
+
+Let $\mathcal{F}$ be the family of balls $B = \overline{B}(x, r)$ with $x \in A$, $r \leq 1$, $B \subseteq U$ and $\mu_s(B) > t\nu(B)$. Each $x \in A$ is the centre of such balls, because
+$\overline{B}(x, r) \subseteq U$ for small $r$. Let $\mathcal{G}$ be the disjoint subfamily of Lemma~\ref{lebesgue-differentiation:lemma-five-r-covering}. Its balls lie in the bounded set $U$, which has finite
+$\nu$-measure, and have positive $\nu$-measure, so $\mathcal{G} = \{B_1, B_2, \ldots\}$ is countable, as in the proof of Theorem~\ref{radon-measures:theorem-doubling-maximal}. As there,
+$A \subseteq \bigcup_i\widehat{B_i}$ and
+\[
+\nu^*(A) \leq C^3\sum_i\nu(B_i) < \frac{C^3}{t}\sum_i\mu_s(B_i) \leq \frac{C^3}{t}\mu_s(U) < \frac{C^3\varepsilon}{t} .
+\]
+So $\nu^*(A) = 0$. Taking the union over $k$ and $t = 1/j$, and adding the null set $S$, the ratio $\mu_s(\overline{B}(x, r))/\nu(\overline{B}(x, r))$ tends to $0$ outside a $\nu$-null set.
+
+If $\mu \ll \nu$, then $\mu_s = 0$ by uniqueness of the decomposition, and $h = d\mu/d\nu$ is the Radon--Nikodym derivative (Theorem~\ref{lebesgue-differentiation:theorem-radon-nikodym}). If $\mu \perp \nu$, then
+$h\nu = 0$ by uniqueness, so $h = 0$ almost everywhere; conversely, if the limit is $0$ almost everywhere, then $h = 0$ almost everywhere and $\mu = \mu_s$.
+\end{proof}
+
+So the Radon--Nikodym derivative, obtained abstractly in Theorem~\ref{lebesgue-differentiation:theorem-radon-nikodym}, is a limit of ratios of measures of balls whenever the reference measure is doubling. For
+$f \in L^1_{\mathrm{loc}}$ and $\mu = f\nu$ the theorem is the Lebesgue differentiation theorem again; for $\mu = \nu\llcorner E$, $E$ Borel, it is a density theorem:
+$\nu(E \cap \overline{B}(x, r))/\nu(\overline{B}(x, r))$ tends to $1$ at almost every point of $E$ and to $0$ at almost every point outside $E$.
+
+\begin{remark}\label{radon-measures:remark-doubling}
+Doubling is sufficient, not necessary. On $\RR^n$ every Radon measure can serve as $\nu$, by the Besicovitch covering theorem
+(Remark~\ref{radon-measures:remark-besicovitch}); so the non-doubling Gaussian measure of Example~\ref{radon-measures:example-doubling}(3)
+still differentiates. In general metric spaces some covering property is needed; spaces with a doubling measure, the \emph{spaces of homogeneous type}, are the standard setting for analysis on metric
+spaces \cite[Chapter 1]{heinonen-2001}.
+\end{remark}
+
+\begin{exercise}\label{radon-measures:exercise-doubling-totally-bounded}
+Let $\nu$ be a doubling measure on $X$ with constant $C$.
+\begin{enumerate}
+\item Let $0 < \varepsilon \leq R$ and let $m \geq 0$ be an integer with $2^m\varepsilon \geq 2R$. Show that a set of points of $\overline{B}(x, R)$ with pairwise distances $> 2\varepsilon$ has at most $C^{m+1}$
+elements.
+\item Deduce that closed balls in $X$ are totally bounded, that $X$ is separable, and that if $X$ is complete, closed balls are compact.
+\item Deduce that the Hilbert space $\ell^2$ of square-summable real sequences carries no doubling measure.
+\end{enumerate}
+\end{exercise}
+
+\begin{solution}
+(1) Let $y_1, \ldots, y_N \in \overline{B}(x, R)$ with $d(y_i, y_j) > 2\varepsilon$ for $i \neq j$. The balls $\overline{B}(y_i, \varepsilon)$ are pairwise disjoint and lie in $\overline{B}(x, R + \varepsilon) \subseteq \overline{B}(x, 2R)$.
+Moreover $\overline{B}(x, R) \subseteq \overline{B}(y_i, 2R)$, so
+$\nu(\overline{B}(x, R)) \leq \nu(\overline{B}(y_i, 2R)) \leq C^m\nu(\overline{B}(y_i, 2^{-m}2R)) \leq C^m\nu(\overline{B}(y_i, \varepsilon))$. Summing over $i$,
+\[
+NC^{-m}\nu(\overline{B}(x, R)) \leq \sum_i\nu(\overline{B}(y_i, \varepsilon)) \leq \nu(\overline{B}(x, 2R)) \leq C\nu(\overline{B}(x, R)),
+\]
+and dividing by $\nu(\overline{B}(x, R)) > 0$ gives $N \leq C^{m+1}$.
+
+(2) Given $\varepsilon \leq R$, choose a set $\{y_1, \ldots, y_N\} \subseteq \overline{B}(x, R)$ with pairwise distances $> 2\varepsilon$ and with $N$ as large as possible, which is possible by (1). Every
+$y \in \overline{B}(x, R)$ has $d(y, y_i) \leq 2\varepsilon$ for some $i$, since otherwise $y$ could be added. So finitely many open balls of radius $3\varepsilon$ cover $\overline{B}(x, R)$; for
+$\varepsilon > R$ the single ball $B(x, 3\varepsilon)$ does. Hence $\overline{B}(x, R)$ is totally bounded. A totally bounded metric space is separable (the centres of finite $1/j$-nets, $j \geq 1$, form a
+dense countable set), and $X = \bigcup_k\overline{B}(x_0, k)$ is a countable union of such spaces, so $X$ is separable. A closed subset of a complete space is complete, so if $X$ is complete, closed balls
+are compact by Theorem~\ref{general-topology:theorem-compact-metric}.
+
+(3) The unit vectors $e_1, e_2, \ldots$ lie in the closed unit ball of $\ell^2$ and have pairwise distances $\|e_i - e_j\| = \sqrt2$. So the closed unit ball is not totally bounded: no finitely many balls of
+radius $\frac12$ cover it, since each such ball contains at most one $e_i$. By (2), there is no doubling measure on $\ell^2$. Doubling measures live on spaces that are ``finite-dimensional'' in a metric sense.
+\end{solution}
+
+\section{Exercises}\label{radon-measures:section-exercises}
+
+\begin{exercise}\label{radon-measures:exercise-riesz-circle}
+Let $\sigma$ be the measure on $\RR^2$ of Example~\ref{radon-measures:example-positive-functionals}(3), and $\varphi(t) = (\cos t, \sin t)$. Show that $\sigma(E) = \lambda(\{t \in [0, 2\pi] : \varphi(t) \in E\})$
+for every Borel set $E$, and deduce that an arc $\{\varphi(t) : \alpha < t < \beta\}$ with $0 \leq \alpha < \beta \leq 2\pi$ has measure $\beta - \alpha$.
+\end{exercise}
+
+\begin{solution}
+The right side defines a finite Borel measure $\nu$, the push-forward of $\lambda$ restricted to $[0, 2\pi]$, since preimages under the continuous $\varphi$ of Borel sets are Borel. For $f = \mathbf{1}_E$,
+$\int f\,d\nu = \int_{[0, 2\pi]}f \circ \varphi\,d\lambda$ by definition; by linearity this holds for simple functions, by monotone convergence for measurable $f \geq 0$, and then for $f \in C_c(\RR^2)$. By
+Proposition~\ref{measure-theory:proposition-riemann-lebesgue}, $\int_{[0, 2\pi]}f \circ \varphi\,d\lambda = \Lambda f$. So $\nu$ represents $\Lambda$, and $\nu = \sigma$ by the uniqueness in
+Theorem~\ref{radon-measures:theorem-riesz-markov}. Since $\varphi$ is injective on $[0, 2\pi)$ and $\varphi(2\pi) = \varphi(0)$, the set of $t \in [0, 2\pi]$ with $\varphi(t)$ in the arc is $(\alpha, \beta)$, of
+measure $\beta - \alpha$.
+\end{solution}
+
+\begin{exercise}\label{radon-measures:exercise-weak-mass}
+Let $\mu_k \rightharpoonup \mu$ be Radon measures on $X$ (locally compact Hausdorff with a countable basis).
+\begin{enumerate}
+\item Show that $\mu(X) \leq \liminf_k\mu_k(X)$, and that $\mu_k(X) \to \mu(X)$ if $X$ is compact.
+\item Suppose that the $\mu_k$ and $\mu$ are probability measures. Show that $\int f\,d\mu_k \to \int f\,d\mu$ for every bounded continuous $f \colon X \to \RR$.
+\end{enumerate}
+\end{exercise}
+
+\begin{solution}
+(1) The first statement is Proposition~\ref{radon-measures:proposition-weak-convergence-sets}(1) with $U = X$; if $X$ is compact, $1 \in C_c(X)$. (2) Let $\varepsilon > 0$. By inner regularity choose a
+compact $K$ with $\mu(K) > 1 - \varepsilon$, and $\phi \in C_c(X)$ with $0 \leq \phi \leq 1$ and $\phi = 1$ on $K$. Then $\int\phi\,d\mu_k \to \int\phi\,d\mu > 1 - \varepsilon$, so
+$\int(1 - \phi)\,d\mu_k < 2\varepsilon$ for $k$ large, while $\int(1 - \phi)\,d\mu < \varepsilon$. As $f\phi \in C_c(X)$,
+\[\begin{aligned}
+\Bigl|\int f\,d\mu_k - \int f\,d\mu\Bigr| &\leq \Bigl|\int f\phi\,d\mu_k - \int f\phi\,d\mu\Bigr| \\
+&\quad + \|f\|_\infty\Bigl(\int(1 - \phi)\,d\mu_k + \int(1 - \phi)\,d\mu\Bigr),
+\end{aligned}\]
+whose $\limsup$ is at most $3\varepsilon\|f\|_\infty$. So when no mass is lost, testing against $C_c(X)$ and against bounded continuous functions give the same notion of convergence.
+\end{solution}
+
+\begin{exercise}\label{radon-measures:exercise-staircase}
+\emph{Length is not continuous.} For $k \geq 1$ let $\gamma_k(x) = (x, \frac1k\sin kx)$ for $x \in [0, 2\pi]$, and let $\mu_k$ be the length measure of $\gamma_k$, the Radon measure on $\RR^2$ with
+\[
+\int f\,d\mu_k = \int_0^{2\pi}f(\gamma_k(x))\,|\gamma_k^{\prime}(x)|\,dx = \int_0^{2\pi}f\bigl(x, \tfrac1k\sin kx\bigr)\sqrt{1 + \cos^2kx}\,dx .
+\]
+Show that $\gamma_k \to \gamma_0$, $\gamma_0(x) = (x, 0)$, uniformly, that $\mu_k \rightharpoonup c\mu_0$ with $c = \frac1{2\pi}\int_0^{2\pi}\sqrt{1 + \cos^2t}\,dt$, where $\mu_0$ is the length measure of the
+segment, and that $c > 1$. So the curves $\gamma_k$ have length $2\pi c$, which does not converge to the length $2\pi$ of the limit curve.
+\end{exercise}
+
+\begin{solution}
+$|\gamma_k(x) - \gamma_0(x)| \leq 1/k$. Let $f \in C_c(\RR^2)$, with modulus of uniform continuity $\omega$. Then $|f(\gamma_k(x)) - f(x, 0)| \leq \omega(1/k)$, so $\int f\,d\mu_k$ differs from
+$\int_0^{2\pi}f(x, 0)g(kx)\,dx$, where $g(t) = \sqrt{1 + \cos^2t}$, by at most $2\pi\sqrt2\,\omega(1/k)$. The argument of Example~\ref{radon-measures:example-weak-convergence}(5), applied on $[0, 2\pi]$ to the
+continuous function $x \mapsto f(x, 0)$ (only its continuity on $[0, 2\pi]$ was used), shows that $\int_0^{2\pi}f(x, 0)g(kx)\,dx \to \bar g\int_0^{2\pi}f(x, 0)\,dx = c\int f\,d\mu_0$. Since $g \geq 1$, with
+equality only where $\cos t = 0$, and $g$ is continuous, $c > 1$. The length of $\gamma_k$ is $\int_0^{2\pi}g(kx)\,dx = \frac1k\int_0^{2\pi k}g = 2\pi c$, as the interval consists of $k$ periods. In
+general length is only \emph{lower semicontinuous} under uniform convergence of curves: the limit can be shorter, never longer.
+\end{solution}
+
+\begin{exercise}\label{radon-measures:exercise-total-variation-point}
+Let $L(F) = F_1(0) + 2F_2(0)$ for $F = (F_1, F_2) \in C_c(\RR, \RR^2)$. Find the measure $\mu$ and the field $\nu$ of Theorem~\ref{radon-measures:theorem-riesz-vector}, and check
+\eqref{radon-measures:equation-total-variation} directly.
+\end{exercise}
+
+\begin{solution}
+$L(F) = \langle F(0), (1, 2)\rangle$, so $L(F) = \int\langle F, \nu\rangle\,d\mu$ with $\mu = \sqrt5\,\delta_0$ and $\nu(0) = (1, 2)/\sqrt5$, a unit vector. For an open $V \ni 0$ and $|F| \leq 1$ with
+support in $V$, the Cauchy--Schwarz inequality gives $L(F) \leq |(1, 2)| = \sqrt5$, with equality when $F(0) = (1, 2)/\sqrt5$, which is possible for $F = \psi\,(1, 2)/\sqrt5$ with $\psi \prec V$, $\psi(0) = 1$; for
+$0 \notin V$ the supremum is $0$. So the total variation is $\sqrt5\,\delta_0$, not $\delta_0 + 2\delta_0 = 3\delta_0$: the components cannot be estimated separately, as $|F| \leq 1$ couples them.
+\end{solution}

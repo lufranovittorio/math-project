@@ -37,8 +37,8 @@ Complex manifolds are defined in the same way with holomorphic transition maps (
 \cite{lee-smooth-manifolds}, \cite{warner-foundations}, \cite{hirsch-differential-topology}.
 
 \noindent\textbf{Prerequisites.} Chapter~\ref{real-analysis} (Real Analysis), Chapter~\ref{general-topology} (General Topology),
-Chapter~\ref{topological-manifolds} (Topological Manifolds and Group Actions) and
-Chapter~\ref{measure-theory} (Measure and Integration).
+Chapter~\ref{topological-manifolds} (Topological Manifolds and Group Actions),
+Chapter~\ref{measure-theory} (Measure and Integration) and Chapter~\ref{geometric-measure-theory} (Geometric Measure Theory).
 
 \begin{notation}\label{smooth-manifolds:notation-conventions}
 \emph{Smooth} means $C^\infty$ (Definition~\ref{real-analysis:definition-differentiable}); everything in this chapter works for $C^k$, $k \geq 1$, with the
@@ -1615,7 +1615,7 @@ exist at $x$, and it is locally bounded, or continuous, exactly when they are. S
 \begin{enumerate}
 \item If the submanifold is $C^2$, $u$ is $C^2$ and the second fundamental form exists everywhere and is continuous.
 \item If it is only $C^{1,1}$, then $u$ is $C^1$ and $\nabla u \colon U \to \RR^n$ is Lipschitz, with some constant $L$, but it need not be differentiable. Rademacher's theorem
-(Theorem~\ref{measure-theory:theorem-rademacher}), applied to the Lipschitz map $\nabla u$, says that $\nabla u$ is differentiable at almost every $x \in U$; at such a point the second derivatives
+(Theorem~\ref{geometric-measure-theory:theorem-rademacher}), applied to the Lipschitz map $\nabla u$, says that $\nabla u$ is differentiable at almost every $x \in U$; at such a point the second derivatives
 $\partial_i\partial_ju(x)$ exist, and so does the second fundamental form. The second derivatives are moreover bounded by $L$, hence so is $h$, whose denominator is at least $1$: if a map $g$ with Lipschitz constant $L$ is differentiable at $x$, then
 $|Dg(x)v| = \lim_{t \to 0}|g(x + tv) - g(x)|/|t| \leq L|v|$. So the second fundamental form exists at almost every point (for Lebesgue measure on $U$, which corresponds to the area measure on the graph) and is bounded,
 but it need not be continuous: for the stadium of Example~\ref{smooth-manifolds:example-regularity-curves}(3) the curvature is $0$ on the segments and $1/r$ on the circles, and it is undefined at the four junction points.
@@ -1639,9 +1639,9 @@ theorem \cite{freedman-1982} and admits no smooth structure by Donaldson's theor
 
 \begin{remark}\label{smooth-manifolds:remark-rectifiable}
 \emph{Rectifiable sets: manifolds up to measure zero.} At the bottom of the scale, geometric measure theory replaces submanifolds by the countably $k$-rectifiable sets of
-Definition~\ref{measure-theory:definition-rectifiable}: sets covered, up to an $\mathcal{H}^k$-null set, by countably many Lipschitz images of subsets of $\RR^k$. Every $k$-dimensional submanifold $S \subseteq \RR^N$ of
+Definition~\ref{geometric-measure-theory:definition-rectifiable}: sets covered, up to an $\mathcal{H}^k$-null set, by countably many Lipschitz images of subsets of $\RR^k$. Every $k$-dimensional submanifold $S \subseteq \RR^N$ of
 class $C^1$, in particular every smooth one, is countably $k$-rectifiable: $S$ is second countable, so it is covered by countably many slice charts, and the inverse of each is a $C^1$ map from an open subset of $\RR^k$
-onto an open part of $S$, whose image is countably $k$-rectifiable by Proposition~\ref{measure-theory:proposition-rectifiable}(3); then use part (1) of the same proposition. Conversely, a set is countably
+onto an open part of $S$, whose image is countably $k$-rectifiable by Proposition~\ref{geometric-measure-theory:proposition-rectifiable}(3); then use part (1) of the same proposition. Conversely, a set is countably
 $k$-rectifiable if and only if, up to an $\mathcal{H}^k$-null set, it is contained in a countable union of $C^1$ submanifolds of dimension $k$ \cite[3.2.29]{federer-gmt}. So a rectifiable set is a ``manifold
 almost everywhere'': at $\mathcal{H}^k$-almost every point it has an approximate tangent plane, and the area formula integrates over it. But it may be far from a manifold globally. The union
 $\bigcup_{q \in \QQ \cap [0, 1]}\{q\} \times [0, 1]$ of countably many vertical segments is countably $1$-rectifiable, and it is dense in the square $[0, 1]^2$. No point of it has a neighbourhood homeomorphic to an

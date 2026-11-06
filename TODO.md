@@ -105,7 +105,27 @@ together in one place.
    Also revisit the elementary `number-theory` chapter (Algebra part; it stays
    there because combinatorics and later algebra use it).
 2. **Differential geometry** (rebuild the part, thinnest chapters first).
-3. **Measure theory**.
+3. **Measure theory**. Step 1 done 2026-11-06: split into its own part *Real
+   Analysis and Measure Theory* (`measure-theory`, `lebesgue-differentiation`,
+   `radon-measures`, `geometric-measure-theory`). Step 2, next (user,
+   2026-11-06: "not just split, everything must be comprehensive, a nice
+   reading of basically everything", as many chapters and sections as the
+   Stacks project): grow the part into a complete treatise, slowly, e.g.
+   - `measure-theory`: semirings/π-λ (Dynkin), Carathéodory extension in full,
+     Lebesgue–Stieltjes measures and distribution functions, completion,
+     non-measurable sets (Vitali, Bernstein), inner/outer regularity;
+   - new `signed-measures`: Hahn and Jordan decompositions, total variation,
+     complex measures, L^p duality (p < ∞), uniform integrability, Vitali
+     convergence theorem, Dunford–Pettis;
+   - `lebesgue-differentiation`: functions of bounded variation, Banach–Zarecki,
+     Lebesgue points, unify the doubling maximal inequality with Hardy–Littlewood;
+   - `radon-measures`: Besicovitch covering theorem with proof, Prokhorov,
+     Haar measure (existence and uniqueness);
+   - `geometric-measure-theory`: Frostman's lemma, Brunn–Minkowski and the
+     isoperimetric inequality, Steiner symmetrisation, Marstrand projection,
+     Kakeya/Besicovitch sets, rectifiability in depth; perhaps split into
+     `hausdorff-measures`, `fractals`, `area-coarea`, `rectifiability`;
+   - move Borel–Cantelli/independence into `probability` when it is written.
 4. **Algebraic geometry**.
 5. Then free choice. Discrete mathematics is paused: the first part of
    `graph-theory` is drafted in `drafts/graph-theory-part1.tex` (introduction,
@@ -248,6 +268,11 @@ spectral-sequences 300 (then everything below about 800 lines).
   parts).
 
 ## Done
+
+- [x] 2026-11-06: **Measure theory split** into four chapters in a new part
+  *Real Analysis and Measure Theory* (labels renamed, tags kept); the
+  $5r$-covering lemma moved next to Vitali's lemma; prerequisites updated;
+  wide displays split.
 
 - [x] 2026-11-05: project created as a copy of The Hodge Project (chapters,
   tags, bibliography, `make.py`, website theme), renamed to The Math Project.
