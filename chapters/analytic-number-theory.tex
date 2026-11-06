@@ -1,16 +1,1639 @@
 \chapter{Analytic Number Theory}\label{analytic-number-theory}
-\chapterstatus{planned}
+\chapterstatus{complete}
 
-The distribution of prime numbers studied with the tools of analysis.
+\section{Introduction}\label{analytic-number-theory:section-introduction}
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{number-theory} (Elementary Number Theory), Chapter~\ref{prime-numbers} (Prime Numbers), Chapter~\ref{complex-analysis} (Complex Analysis) and Chapter~\ref{real-analysis} (Real Analysis).
+Chapter~\ref{prime-numbers} showed with elementary means that the number $\pi(x)$ of primes up to $x$ has the order of magnitude $x/\log x$, and that \emph{if} $\pi(x)\log x/x$ has a limit, the
+limit is $1$. To prove that the limit exists, the \emph{prime number theorem}, one needs a new idea, found by Riemann in 1859 \cite{riemann-1859}: encode the primes in the function
+\[
+\zeta(s) = \sum_{n \geq 1}\frac{1}{n^s} = \prod_p\frac{1}{1 - p^{-s}}
+\]
+of a \emph{complex} variable $s$, continue it beyond the half-plane where the series converges, and read off properties of the primes from the location of its zeros. Hadamard and de la
+Vall\'ee Poussin carried this out in 1896 \cite{hadamard-1896}, \cite{de-la-vallee-poussin-1896}; the key point is that $\zeta$ has no zeros on the line $\operatorname{Re}s = 1$. Dirichlet had
+used the same idea earlier, with real $s$ only, to prove that every progression $a, a + q, a + 2q, \ldots$ with $\gcd(a, q) = 1$ contains infinitely many primes; this needs the
+functions $L(s, \chi) = \sum\chi(n)n^{-s}$ attached to the characters $\chi$ of $(\ZZ/q\ZZ)^\times$, and the fact that $L(1, \chi) \neq 0$.
 
-\noindent\textbf{Planned contents.}
+This chapter develops these ideas with complete proofs. Its tools are the complex analysis of Chapter~\ref{complex-analysis}, Poisson summation from Chapter~\ref{distributions}, and the
+estimates of Chapter~\ref{prime-numbers}; the Gamma function, needed for the functional equation of $\zeta$, is developed here from scratch.
+
+The chapter is organised as follows.
 \begin{enumerate}
-\item Arithmetic functions and Dirichlet series; Euler products; abscissae of convergence.
-\item Averages of arithmetic functions: the hyperbola method, the divisor problem, the Gauss circle problem, squarefree numbers. (Chebyshev's and Mertens' estimates are in Chapter~\ref{prime-numbers}.)
-\item The Riemann zeta function: analytic continuation, functional equation, zeros; the prime number theorem (Newman's proof and the classical proof with a zero-free region).
-\item The explicit formula and the error term; the Riemann hypothesis and its equivalent forms; Selberg's elementary proof (overview).
-\item Dirichlet characters and $L$-functions; non-vanishing of $L(1, \chi)$; Dirichlet's theorem on primes in progressions; the class number formula for quadratic fields (statement).
-\item Exercises with solutions.
+\item Section~\ref{analytic-number-theory:section-dirichlet-series}: Dirichlet series, their half-planes of convergence, Euler products, the series attached to the classical arithmetic functions, and
+Landau's theorem on series with nonnegative coefficients.
+\item Section~\ref{analytic-number-theory:section-averages}: averages of arithmetic functions: Euler's summation formula and Euler's constant, Dirichlet's hyperbola method and the divisor
+problem, the averages of $\sigma$ and $\varphi$, the probability $6/\pi^2$ that two integers are coprime, squarefree numbers, the bound $\tau(n) \ll n^\varepsilon$, and the theorem of Hardy and Ramanujan
+that most integers $n$ have about $\log\log n$ prime factors.
+\item Section~\ref{analytic-number-theory:section-gamma}: the Gamma function: continuation, Euler's limit formula, the Weierstrass product, the partial fraction expansion of the cotangent and the
+product of the sine, the reflection and duplication formulas, the Beta function.
+\item Section~\ref{analytic-number-theory:section-zeta}: the Riemann zeta function: continuation, bounds near $\operatorname{Re}s = 1$, no zeros on $\operatorname{Re}s = 1$, the functional equation,
+trivial zeros, the values $\zeta(2k)$ and $\zeta(1 - 2k)$ in terms of Bernoulli numbers.
+\item Section~\ref{analytic-number-theory:section-pnt}: Newman's analytic theorem and the prime number theorem; $\sum\mu(n)/n = 0$; the maximal order of $\tau(n)$; the prime number theorem with an
+error term $\pi(x) = \operatorname{li}(x) + O(xe^{-c(\log x)^{1/10}})$, proved through a zero-free region.
+\item Section~\ref{analytic-number-theory:section-riemann-hypothesis}: the Riemann hypothesis, some of its equivalent forms, the explicit formula, and Selberg's elementary method (statements).
+\item Section~\ref{analytic-number-theory:section-dirichlet}: characters of finite abelian groups, Dirichlet characters and $L$-functions, $L(1, \chi) \neq 0$, Dirichlet's theorem on primes in
+progressions and the prime number theorem for progressions; Chebyshev's bias and the class number formula (statement).
+\item Section~\ref{analytic-number-theory:section-exercises}: exercises with solutions.
 \end{enumerate}
+References: \cite{apostol-analytic} and \cite{hardy-wright} for the elementary parts, \cite{davenport-multiplicative}, \cite{montgomery-vaughan}, \cite{tenenbaum-analytic} and
+\cite{iwaniec-kowalski} for the analytic theory, \cite{titchmarsh-zeta} for the zeta function, and \cite{zagier-newman} for Newman's proof.
+
+\noindent\textbf{Prerequisites.} Chapter~\ref{number-theory} (Elementary Number Theory), Chapter~\ref{prime-numbers} (Prime Numbers), Chapter~\ref{groups} (Groups),
+Chapter~\ref{real-analysis} (Real Analysis), Chapter~\ref{measure-theory} (Measure Theory), Chapter~\ref{complex-analysis} (Complex Analysis), Chapter~\ref{distributions} (Distributions and Sobolev
+Spaces) and Chapter~\ref{generating-functions} (Generating Functions).
+
+\begin{notation}\label{analytic-number-theory:notation-basic}
+As in Chapter~\ref{prime-numbers}, $p$ and $q$ (when $q$ is not a modulus) denote primes, sums and products over $p$ run over primes, and $\log$ is the natural logarithm. A complex variable is
+written $s = \sigma + it$ with $\sigma = \operatorname{Re}s$ and $t = \operatorname{Im}s$ (Riemann's notation, universal in this subject); $n^{-s} = e^{-s\log n}$. We write
+$f = O(g)$ or $f \ll g$ if $|f| \leq Cg$ for a constant $C$ in the stated range; a subscript, as in $\ll_\varepsilon$, says on what the constant may depend. $f = o(g)$ means $f/g \to 0$, and
+$f \sim g$ means $f/g \to 1$. For real $x$, $\lfloor x\rfloor$ is the integer part and $\{x\} = x - \lfloor x\rfloor \in [0, 1)$ the fractional part. The arithmetic functions $\varepsilon$, $\mathbf{1}$,
+$\mathrm{N}$, $\varphi$, $\tau$ (the number of divisors), $\sigma$ (the sum of divisors), $\mu$ and the Dirichlet convolution $*$ are those of Section~\ref{number-theory:section-arithmetic-functions};
+$\Lambda$ is the von Mangoldt function and $\theta$, $\psi$ the Chebyshev functions of Definition~\ref{prime-numbers:definition-chebyshev-functions}. Further, $\omega(n)$ is the number of distinct
+prime factors of $n$, $\Omega(n)$ the number of prime factors counted with multiplicity, and $\lambda(n) = (-1)^{\Omega(n)}$ is \emph{Liouville's function}; so $\omega(12) = 2$, $\Omega(12) = 3$,
+$\lambda(12) = -1$. Finally $\operatorname{li}(x) = \int_2^x\frac{dt}{\log t}$ for $x \geq 2$, as in Chapter~\ref{prime-numbers}.
+\end{notation}
+
+\section{Dirichlet series}\label{analytic-number-theory:section-dirichlet-series}
+
+Generating functions $\sum a_nx^n$ turn the addition of indices into multiplication of series: the coefficient of $x^n$ in a product is $\sum_{i + j = n}a_ib_j$. Multiplicative number theory needs the
+analogue for the \emph{multiplication} of indices, and $n^{-s}$ does this, since $m^{-s}n^{-s} = (mn)^{-s}$.
+
+\begin{definition}\label{analytic-number-theory:definition-dirichlet-series}
+Let $a \colon \{1, 2, \ldots\} \to \CC$ be an arithmetic function, $n \mapsto a_n$. Its \emph{Dirichlet series} is the series
+\[
+F(s) = \sum_{n \geq 1}\frac{a_n}{n^s}, \qquad s \in \CC,
+\]
+at those $s$ where it converges. The series of $\mathbf{1}$ is the \emph{Riemann zeta function} $\zeta(s) = \sum_{n \geq 1}n^{-s}$.
+\end{definition}
+
+\begin{example}\label{analytic-number-theory:example-dirichlet-series}
+\begin{enumerate}
+\item Since $|n^{-s}| = n^{-\sigma}$, the zeta series converges absolutely for $\sigma > 1$ (compare with $\int_1^\infty u^{-\sigma}du$) and diverges for real $s \leq 1$ (harmonic series). For
+$s = 1 + it$ with $t \neq 0$ it diverges too: by Euler's summation formula below (Lemma~\ref{analytic-number-theory:lemma-euler-summation}) its partial sums are
+$\frac{N^{-it}}{-it} + O(1)$, which do not converge.
+\item The \emph{alternating zeta function} $\eta(s) = \sum_{n \geq 1}(-1)^{n-1}n^{-s} = 1 - 2^{-s} + 3^{-s} - \cdots$ converges for real $s > 0$ by the alternating series test, although not
+absolutely for $s \leq 1$.
+\item With $\chi_{-4}(n) = 0$ for even $n$ and $\chi_{-4}(n) = (-1)^{(n-1)/2}$ for odd $n$, the series $L(s, \chi_{-4}) = 1 - 3^{-s} + 5^{-s} - 7^{-s} + \cdots$ is Leibniz's series at $s = 1$;
+its value $\frac\pi4$ was found by counting lattice points in Proposition~\ref{geometry-of-numbers:proposition-leibniz}.
+\item If only the indices $n = 2^k$ carry nonzero coefficients, $a_{2^k} = b_k$, then $F(s) = \sum_kb_k(2^{-s})^k$ is a power series in $w = 2^{-s}$. So power series are special Dirichlet series;
+the disc $|w| < r$ corresponds to the half-plane $\sigma > -\log r/\log 2$.
+\end{enumerate}
+\end{example}
+
+The basic tool to handle such series is summation by parts, the discrete analogue of integration by parts. We need it for complex coefficients and complex weights.
+
+\begin{lemma}[Partial summation]\label{analytic-number-theory:lemma-partial-summation}
+Let $(a_n)_{n \geq 1}$ be complex numbers and $A(u) = \sum_{n \leq u}a_n$ (so $A(u) = 0$ for $u < 1$). Let $0 < y < x$ and let $f \colon [y, x] \to \CC$ be continuously differentiable. Then
+\[
+\sum_{y < n \leq x}a_nf(n) = A(x)f(x) - A(y)f(y) - \int_y^xA(u)f^{\prime}(u)\,du.
+\]
+\end{lemma}
+
+\begin{proof}
+For each $n$ with $y < n \leq x$, $f(n) = f(x) - \int_n^xf^{\prime}(u)\,du$ by the fundamental theorem of calculus (Theorem~\ref{real-analysis:theorem-ftc}, applied to the real and imaginary
+parts). Multiplying by $a_n$ and summing,
+\[
+\begin{aligned}
+\sum_{y < n \leq x}a_nf(n) &= (A(x) - A(y))f(x) - \int_y^x\Bigl(\sum_{y < n \leq u}a_n\Bigr)f^{\prime}(u)\,du \\
+&= (A(x) - A(y))f(x) - \int_y^x(A(u) - A(y))f^{\prime}(u)\,du,
+\end{aligned}
+\]
+where the finite sum was exchanged with the integral. Since $\int_y^xA(y)f^{\prime}(u)\,du = A(y)(f(x) - f(y))$, this is the claim.
+\end{proof}
+
+\begin{theorem}\label{analytic-number-theory:theorem-half-plane}
+If the Dirichlet series $F(s) = \sum a_nn^{-s}$ converges at $s_0$, then it converges at every $s$ with $\operatorname{Re}s > \operatorname{Re}s_0$, uniformly on every compact subset of this
+half-plane. Consequently $F$ is holomorphic on $\operatorname{Re}s > \operatorname{Re}s_0$, and $F^{\prime}(s) = -\sum_na_n\log n\,n^{-s}$ there, the series converging in the same half-plane.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: a bound for blocks.} Let $b_n = a_nn^{-s_0}$ and $B(u) = \sum_{n \leq u}b_n$. Since $\sum b_n$ converges, $|B(u)| \leq \beta$ for all $u$, for some $\beta$. Let $w = s - s_0$ with
+$\operatorname{Re}w = u_0 > 0$. For integers $1 \leq M < N$, Lemma~\ref{analytic-number-theory:lemma-partial-summation} with $f(u) = u^{-w}$, $f^{\prime}(u) = -wu^{-w-1}$, gives
+\[
+\sum_{M < n \leq N}\frac{a_n}{n^s} = \sum_{M < n \leq N}\frac{b_n}{n^w} = B(N)N^{-w} - B(M)M^{-w} + w\int_M^NB(u)u^{-w-1}\,du,
+\]
+so that
+\[
+\Bigl|\sum_{M < n \leq N}\frac{a_n}{n^s}\Bigr| \leq \beta N^{-u_0} + \beta M^{-u_0} + |w|\beta\int_M^\infty u^{-u_0-1}\,du \leq \beta M^{-u_0}\Bigl(2 + \frac{|w|}{u_0}\Bigr).
+\]
+\emph{Step 2: uniform convergence.} A compact set $K$ in the half-plane $\operatorname{Re}s > \operatorname{Re}s_0$ has $\operatorname{Re}(s - s_0) \geq \eta$ and $|s - s_0| \leq R$ on $K$ for some
+$\eta, R > 0$. The bound of Step 1 is then at most $\beta M^{-\eta}(2 + R/\eta)$ for all $s \in K$, which tends to $0$ as $M \to \infty$. So the partial sums are uniformly Cauchy on $K$.
+\emph{Step 3: holomorphy.} The partial sums are entire functions of $s$, and they converge uniformly on compact subsets, so $F$ is holomorphic and the derivatives of the partial sums converge to
+$F^{\prime}$, by Weierstrass' theorem (Corollary~\ref{complex-analysis:corollary-liouville}(4)). The derivative of $a_nn^{-s} = a_ne^{-s\log n}$ is $-a_n\log n\,n^{-s}$.
+\end{proof}
+
+\begin{definition}\label{analytic-number-theory:definition-abscissae}
+The \emph{abscissa of convergence} of a Dirichlet series $F(s) = \sum a_nn^{-s}$ is $\sigma_c = \inf\{\operatorname{Re}s : F(s) \text{ converges}\} \in [-\infty, +\infty]$, and its \emph{abscissa
+of absolute convergence} is $\sigma_a = \inf\{\sigma \in \RR : \sum|a_n|n^{-\sigma} < \infty\}$.
+\end{definition}
+
+By Theorem~\ref{analytic-number-theory:theorem-half-plane}, the series converges on the open half-plane $\sigma > \sigma_c$ and diverges on $\sigma < \sigma_c$: the regions of convergence of
+Dirichlet series are half-planes, as those of power series are discs. On the line $\sigma = \sigma_c$ anything can happen.
+
+\begin{proposition}\label{analytic-number-theory:proposition-abscissae}
+Let $F(s) = \sum a_nn^{-s}$ and $A(u) = \sum_{n \leq u}a_n$.
+\begin{enumerate}
+\item $\sigma_c \leq \sigma_a \leq \sigma_c + 1$.
+\item If $A(u) = O(u^\alpha)$ for some $\alpha \geq 0$ and all $u \geq 1$, then $\sigma_c \leq \alpha$, and for $\sigma > \alpha$
+\[
+F(s) = s\int_1^\infty A(u)u^{-s-1}\,du,
+\]
+the integral converging absolutely.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) Absolute convergence implies convergence, so $\sigma_c \leq \sigma_a$. If the series converges at $s_0$, its terms tend to $0$, so $|a_n| \leq Cn^{\operatorname{Re}s_0}$, and
+$\sum|a_n|n^{-\sigma} \leq C\sum n^{\operatorname{Re}s_0 - \sigma}$ converges for $\sigma > \operatorname{Re}s_0 + 1$. Taking $\operatorname{Re}s_0$ close to $\sigma_c$ gives
+$\sigma_a \leq \sigma_c + 1$.
+(2) Let $\sigma > \alpha$. Lemma~\ref{analytic-number-theory:lemma-partial-summation} with $y = \frac12$, $f(u) = u^{-s}$ and $A(\frac12) = 0$ gives
+$\sum_{n \leq N}a_nn^{-s} = A(N)N^{-s} + s\int_{1/2}^NA(u)u^{-s-1}\,du$, and $A(u) = 0$ on $[\frac12, 1)$. Now $|A(N)N^{-s}| \leq CN^{\alpha - \sigma} \to 0$, and
+$|A(u)u^{-s-1}| \leq Cu^{\alpha - \sigma - 1}$ is integrable on $[1, \infty)$. So the partial sums converge to $s\int_1^\infty A(u)u^{-s-1}du$; in particular $\sigma_c \leq \alpha$.
+\end{proof}
+
+\begin{counterexample}\label{analytic-number-theory:counterexample-abscissae}
+The two abscissae can differ by the full amount $1$. For the alternating zeta function $\eta(s) = \sum(-1)^{n-1}n^{-s}$, the partial sums of the coefficients are $0$ or $1$, so $\sigma_c \leq 0$ by
+Proposition~\ref{analytic-number-theory:proposition-abscissae}(2); on the line $\sigma = 0$ the terms have absolute value $1$ and do not tend to $0$, so $\sigma_c = 0$. But $\sum n^{-\sigma}$ converges only
+for $\sigma > 1$, so $\sigma_a = 1$. The same holds for $L(s, \chi_{-4})$. So, unlike a power series, a Dirichlet series can converge without converging absolutely on a whole strip, here
+$0 < \sigma \leq 1$. For $\zeta$ itself, $\sigma_c = \sigma_a = 1$ by Example~\ref{analytic-number-theory:example-dirichlet-series}(1).
+\end{counterexample}
+
+\begin{proposition}[Uniqueness]\label{analytic-number-theory:proposition-uniqueness}
+Let $F(s) = \sum a_nn^{-s}$ and $G(s) = \sum b_nn^{-s}$ converge absolutely for $\sigma > \sigma_1$. If $F(\sigma_k) = G(\sigma_k)$ for a sequence of real numbers $\sigma_k \to +\infty$, then
+$a_n = b_n$ for all $n$.
+\end{proposition}
+
+\begin{proof}
+Let $c_n = a_n - b_n$ and suppose some $c_n \neq 0$; let $m$ be the least such index, and fix $\sigma_2 > \sigma_1$. For $\sigma \geq \sigma_2$,
+\[
+\begin{aligned}
+&m^\sigma\sum_nc_nn^{-\sigma} = c_m + \sum_{n > m}c_n\Bigl(\frac mn\Bigr)^\sigma, \\
+&\Bigl|\sum_{n > m}c_n\Bigl(\frac mn\Bigr)^\sigma\Bigr| \leq \Bigl(\frac{m}{m + 1}\Bigr)^{\sigma - \sigma_2}m^{\sigma_2}\sum_{n > m}|c_n|n^{-\sigma_2},
+\end{aligned}
+\]
+because $(m/n)^\sigma = (m/n)^{\sigma_2}(m/n)^{\sigma - \sigma_2}$ and $m/n \leq m/(m + 1)$. The right side tends to $0$ as $\sigma \to \infty$. At $\sigma = \sigma_k$ the left side is $0$, so letting
+$k \to \infty$ gives $c_m = 0$, a contradiction.
+\end{proof}
+
+So an arithmetic function is determined by its Dirichlet series, and identities between arithmetic functions may be proved by proving identities between their series. The dictionary rests on the
+following two facts.
+
+\begin{proposition}\label{analytic-number-theory:proposition-product}
+If $F(s) = \sum a_nn^{-s}$ and $G(s) = \sum b_nn^{-s}$ converge absolutely at $s$, so does $\sum(a * b)(n)n^{-s}$, and it equals $F(s)G(s)$.
+\end{proposition}
+
+\begin{proof}
+The double series $\sum_{d, e \geq 1}a_db_e(de)^{-s}$ converges absolutely, with sum of absolute values $\sum|a_d|d^{-\sigma}\sum|b_e|e^{-\sigma}$. An absolutely convergent double series may be summed in
+any order (Corollary~\ref{real-analysis:corollary-unconditional}); summing first over the pairs with $de = n$, and then over $n$, gives $\sum_n(\sum_{de = n}a_db_e)n^{-s}$, and summing over $d$ and $e$
+separately gives $F(s)G(s)$. The absolute convergence of the grouped series follows from $|(a * b)(n)| \leq (|a| * |b|)(n)$.
+\end{proof}
+
+\begin{theorem}[Euler products]\label{analytic-number-theory:theorem-euler-product}
+Let $f$ be a multiplicative arithmetic function with $\sum_n|f(n)|n^{-\sigma} < \infty$. Then, for every $s$ with real part $\sigma$,
+\[
+\sum_{n \geq 1}\frac{f(n)}{n^s} = \prod_p\Bigl(1 + \frac{f(p)}{p^s} + \frac{f(p^2)}{p^{2s}} + \cdots\Bigr) = \lim_{x \to \infty}\prod_{p \leq x}\Bigl(\sum_{k \geq 0}\frac{f(p^k)}{p^{ks}}\Bigr).
+\]
+If $f$ is completely multiplicative, the factor at $p$ is $(1 - f(p)p^{-s})^{-1}$; in particular $\zeta(s) = \prod_p(1 - p^{-s})^{-1}$ for $\sigma > 1$.
+\end{theorem}
+
+\begin{proof}
+Each factor is an absolutely convergent series. A finite product of absolutely convergent series may be multiplied out term by term and the terms summed in any order. By unique factorisation
+(Theorem~\ref{number-systems:theorem-fundamental-arithmetic}) and multiplicativity, the product over $p \leq x$ is therefore $\sum f(n)n^{-s}$ over the $n$ all of whose prime factors are at most $x$:
+each such $n = p_1^{k_1}\cdots p_r^{k_r}$ arises exactly once, with coefficient $f(p_1^{k_1})\cdots f(p_r^{k_r}) = f(n)$. These $n$ include all $n \leq x$, so the difference from the full series is at
+most $\sum_{n > x}|f(n)|n^{-\sigma}$, which tends to $0$. If $f$ is completely multiplicative, $\sum_kf(p)^kp^{-ks}$ is a geometric series with ratio of absolute value $< 1$ (since
+$|f(p)|p^{-\sigma} \leq \sum_n|f(n)|n^{-\sigma}$ and the terms $|f(p^k)|p^{-k\sigma} = (|f(p)|p^{-\sigma})^k$ must tend to $0$).
+\end{proof}
+
+The Euler product is the analytic form of unique factorisation, and it is the reason why $\zeta$ knows about the primes. Euler used it, for real $s \to 1^+$, to give a new proof that there are
+infinitely many primes (Theorem~\ref{prime-numbers:theorem-euler-primes}).
+
+\begin{example}\label{analytic-number-theory:example-dirichlet-series-table}
+Combining Propositions~\ref{analytic-number-theory:proposition-product} and~\ref{analytic-number-theory:proposition-uniqueness} with the identities of
+Section~\ref{number-theory:section-arithmetic-functions}, or computing the Euler factors, gives the following for $\sigma > 1$ (for $\sigma > 2$ where $\zeta(s - 1)$ appears).
+\begin{enumerate}
+\item $\sum\mu(n)n^{-s} = 1/\zeta(s)$, because $\mu * \mathbf{1} = \varepsilon$ (Proposition~\ref{number-theory:proposition-mobius}). In particular $\zeta(s) \neq 0$ for $\sigma > 1$.
+\item $\sum\tau(n)n^{-s} = \zeta(s)^2$ and $\sum\sigma(n)n^{-s} = \zeta(s)\zeta(s - 1)$, because $\tau = \mathbf{1} * \mathbf{1}$, $\sigma = \mathrm{N} * \mathbf{1}$ and $\sum n\cdot n^{-s} = \zeta(s - 1)$.
+\item $\sum\varphi(n)n^{-s} = \zeta(s - 1)/\zeta(s)$, because $\varphi = \mu * \mathrm{N}$ (Example~\ref{number-theory:example-mobius}).
+\item $\sum\log n\,n^{-s} = -\zeta^{\prime}(s)$ (Theorem~\ref{analytic-number-theory:theorem-half-plane}), and $\sum\Lambda(n)n^{-s} = -\zeta^{\prime}(s)/\zeta(s)$, because $\Lambda * \mathbf{1} = \log$
+(the identity $\sum_{d \mid n}\Lambda(d) = \log n$ after Definition~\ref{prime-numbers:definition-chebyshev-functions}).
+\item $\sum|\mu(n)|n^{-s} = \zeta(s)/\zeta(2s)$: the Euler factor is $1 + p^{-s} = (1 - p^{-2s})/(1 - p^{-s})$.
+\item $\sum\lambda(n)n^{-s} = \zeta(2s)/\zeta(s)$: $\lambda$ is completely multiplicative with $\lambda(p) = -1$, so the factor is $(1 + p^{-s})^{-1} = (1 - p^{-s})/(1 - p^{-2s})$.
+\item $\sum2^{\omega(n)}n^{-s} = \zeta(s)^2/\zeta(2s)$: the factor is $1 + 2\sum_{k \geq 1}p^{-ks} = \frac{1 + p^{-s}}{1 - p^{-s}} = \frac{1 - p^{-2s}}{(1 - p^{-s})^2}$.
+\item $\sum\tau(n)^2n^{-s} = \zeta(s)^4/\zeta(2s)$ (Ramanujan): the factor is $\sum_k(k + 1)^2x^k = \frac{1 + x}{(1 - x)^3} = \frac{1 - x^2}{(1 - x)^4}$ with $x = p^{-s}$.
+\end{enumerate}
+\end{example}
+
+For the theory of primes the decisive formula is (4): the logarithmic derivative of $\zeta$ is the Dirichlet series of $\Lambda$, whose partial sums are $\psi(x)$. The poles of $\zeta^{\prime}/\zeta$
+are the zeros and poles of $\zeta$, and this is how the zeros of $\zeta$ come to control the primes. We also need $\log\zeta$ itself.
+
+\begin{proposition}\label{analytic-number-theory:proposition-log-zeta}
+For $\sigma > 1$,
+\[
+\zeta(s) = \exp\Bigl(\sum_p\sum_{k \geq 1}\frac{p^{-ks}}{k}\Bigr), \qquad \text{so} \qquad \log|\zeta(s)| = \sum_p\sum_{k \geq 1}\frac{\cos(kt\log p)}{kp^{k\sigma}},
+\]
+the double series converging absolutely. More generally, if $f$ is completely multiplicative with $|f(n)| \leq 1$, then $\sum f(n)n^{-s} = \exp(\sum_p\sum_kf(p)^kp^{-ks}/k)$ for $\sigma > 1$.
+\end{proposition}
+
+\begin{proof}
+Let $\ell(w) = \sum_{k \geq 1}w^k/k$ for $|w| < 1$. Then $\ell^{\prime}(w) = \sum_{k \geq 0}w^k = (1 - w)^{-1}$, so $\frac{d}{dw}\bigl((1 - w)e^{\ell(w)}\bigr) = -e^{\ell(w)} + e^{\ell(w)} = 0$, and
+$(1 - w)e^{\ell(w)} = 1$. With $w = f(p)p^{-s}$, Theorem~\ref{analytic-number-theory:theorem-euler-product} gives $\prod_{p \leq x}(1 - f(p)p^{-s})^{-1} = \exp\bigl(\sum_{p \leq x}\ell(f(p)p^{-s})\bigr)$.
+The double series converges absolutely, since $\sum_p\sum_k|f(p)^kp^{-ks}|/k \leq \sum_{n \geq 2}n^{-\sigma}$ (each prime power $p^k$ is an integer $n \geq 2$). Letting $x \to \infty$, using the
+continuity of $\exp$, gives the formula; taking absolute values, $|e^z| = e^{\operatorname{Re}z}$ gives the formula for $\log|\zeta(s)|$, since $\operatorname{Re}p^{-iks} = p^{-k\sigma}\cos(kt\log p)$.
+\end{proof}
+
+The last result of this section is a theorem of Landau: a Dirichlet series with nonnegative coefficients is singular at the real point of its line of convergence, as a power series with nonnegative
+coefficients is singular at the positive point of its circle of convergence (Pringsheim's theorem). It is a powerful device for proving that a function has no zeros.
+
+\begin{theorem}[Landau]\label{analytic-number-theory:theorem-landau}
+Let $a_n \geq 0$ for all $n$, and let $F(s) = \sum a_nn^{-s}$ have finite abscissa of convergence $\sigma_c$. Then $F$ cannot be continued holomorphically to a neighbourhood of $\sigma_c$: there is no
+holomorphic function on a disc $D(\sigma_c, \varepsilon)$ that agrees with $F$ on $D(\sigma_c, \varepsilon) \cap \{\sigma > \sigma_c\}$.
+\end{theorem}
+
+\begin{proof}
+Suppose $F$ extends holomorphically to $D(\sigma_c, \varepsilon)$; then it is holomorphic on $U = \{\sigma > \sigma_c\} \cup D(\sigma_c, \varepsilon)$.
+\emph{Step 1: a big disc.} Let $\sigma_0 = \sigma_c + 1$. For small $\delta > 0$, the disc $|s - \sigma_0| < 1 + \delta$ lies in $U$: a point of this disc with $\sigma \leq \sigma_c$ has
+$\sigma_c - \sigma < \delta$ and $t^2 < (1 + \delta)^2 - 1 = 2\delta + \delta^2$, so it lies in $D(\sigma_c, \varepsilon)$ if $\delta$ is small. Hence the Taylor series of $F$ at $\sigma_0$ converges on this
+disc (Theorem~\ref{complex-analysis:theorem-analytic}).
+\emph{Step 2: the Taylor coefficients.} By Theorem~\ref{analytic-number-theory:theorem-half-plane}, $F^{(k)}(\sigma_0) = \sum_na_n(-\log n)^kn^{-\sigma_0}$. Let $h = 1 + \delta/2$. Then
+\[
+F(\sigma_0 - h) = \sum_{k \geq 0}\frac{h^k}{k!}\sum_na_n(\log n)^kn^{-\sigma_0}.
+\]
+\emph{Step 3: rearranging.} All the terms of this double series are nonnegative, so it may be summed in the other order (Tonelli for series):
+$F(\sigma_0 - h) = \sum_na_nn^{-\sigma_0}\sum_k\frac{(h\log n)^k}{k!} = \sum_na_nn^{-\sigma_0 + h}$. So the Dirichlet series converges at the real point $\sigma_0 - h = \sigma_c - \delta/2 < \sigma_c$,
+contradicting the definition of $\sigma_c$.
+\end{proof}
+
+\begin{counterexample}\label{analytic-number-theory:counterexample-landau}
+The hypothesis $a_n \geq 0$ is needed. Let $a_{2^k} = (-1)^k$ and $a_n = 0$ for other $n$. Then $F(s) = \sum_k(-2^{-s})^k = \frac{1}{1 + 2^{-s}}$ converges exactly when $|2^{-s}| < 1$, that is
+$\sigma > 0$, so $\sigma_c = 0$; but $\frac{1}{1 + 2^{-s}}$ is holomorphic near $s = 0$, with value $\frac12$. Its singularities on the line $\sigma = 0$ are at $2^{-s} = -1$, that is
+$s = \frac{(2k + 1)\pi i}{\log 2}$, none of them real. With $a_{2^k} = 1$ instead, $F(s) = \frac{1}{1 - 2^{-s}}$ has a pole at $s = 0$, as Landau's theorem requires.
+\end{counterexample}
+
+\section{Averages of arithmetic functions}\label{analytic-number-theory:section-averages}
+
+Arithmetic functions such as $\tau$, $\varphi$ or $\mu$ fluctuate wildly: $\tau(p) = 2$ for every prime, while $\tau(n)$ is large when $n$ has many small prime factors. Their \emph{averages}
+$\frac1x\sum_{n \leq x}f(n)$ are nevertheless regular, and computing them is the first task of analytic number theory. The methods of this section are elementary: partial summation, the hyperbola
+method, and Möbius inversion, together with the following comparison of sums and integrals.
+
+\begin{lemma}[Euler's summation formula]\label{analytic-number-theory:lemma-euler-summation}
+Let $0 < y < x$ and let $f \colon [y, x] \to \CC$ be continuously differentiable. Then
+\[
+\sum_{y < n \leq x}f(n) = \int_y^xf(u)\,du + \int_y^x\{u\}f^{\prime}(u)\,du - \{x\}f(x) + \{y\}f(y).
+\]
+\end{lemma}
+
+\begin{proof}
+Lemma~\ref{analytic-number-theory:lemma-partial-summation} with $a_n = 1$, $A(u) = \lfloor u\rfloor$, gives $\sum_{y < n \leq x}f(n) = \lfloor x\rfloor f(x) - \lfloor y\rfloor f(y) - \int_y^x\lfloor u\rfloor f^{\prime}(u)\,du$.
+Write $\lfloor u\rfloor = u - \{u\}$ and integrate by parts: $\int_y^xuf^{\prime}(u)\,du = xf(x) - yf(y) - \int_y^xf(u)\,du$. Substituting and using $x - \lfloor x\rfloor = \{x\}$ gives the formula.
+\end{proof}
+
+The formula says that the sum and the integral differ by a quantity controlled by $f^{\prime}$; when $f^{\prime}$ is integrable on $[y, \infty)$, the difference converges.
+
+\begin{proposition}\label{analytic-number-theory:proposition-harmonic}
+For $x \geq 1$,
+\[
+\sum_{n \leq x}\frac1n = \log x + \gamma + R(x), \qquad |R(x)| \leq \frac1x, \qquad \text{where} \quad \gamma = 1 - \int_1^\infty\frac{\{u\}}{u^2}\,du.
+\]
+So $\gamma = \lim_{n \to \infty}(1 + \frac12 + \cdots + \frac1n - \log n) = 0.5772156649\ldots$ is \emph{Euler's constant}.
+\end{proposition}
+
+\begin{proof}
+Lemma~\ref{analytic-number-theory:lemma-euler-summation} with $y = 1$ and $f(u) = 1/u$ gives $\sum_{1 < n \leq x}\frac1n = \log x - \int_1^x\frac{\{u\}}{u^2}du - \frac{\{x\}}{x}$. Adding the term $n = 1$
+and writing $\int_1^x = \int_1^\infty - \int_x^\infty$ (the integrand is at most $u^{-2}$),
+\[
+\sum_{n \leq x}\frac1n = \log x + \gamma + \int_x^\infty\frac{\{u\}}{u^2}\,du - \frac{\{x\}}{x},
+\]
+and both correction terms lie in $[0, \frac1x]$, so their difference has absolute value at most $\frac1x$.
+\end{proof}
+
+Whether $\gamma$ is irrational is unknown.
+
+\subsection{The divisor problem}\label{analytic-number-theory:subsection-divisor-problem}
+
+Since $\tau(n) = \#\{(a, b) : ab = n\}$, the sum $D(x) = \sum_{n \leq x}\tau(n)$ counts the lattice points $(a, b)$ with $a, b \geq 1$ under the hyperbola $ab = x$. Summing over $a$ gives
+$D(x) = \sum_{a \leq x}\lfloor x/a\rfloor = x\log x + O(x)$, with an error as large as the second term. Dirichlet's idea is to use the symmetry of the hyperbola.
+
+\begin{theorem}[Dirichlet]\label{analytic-number-theory:theorem-divisor-problem}
+For $x \geq 1$,
+\[
+D(x) = \sum_{n \leq x}\tau(n) = x\log x + (2\gamma - 1)x + O(\sqrt{x}).
+\]
+So the average order of $\tau(n)$ is $\log n$: a number up to $x$ has on average about $\log x$ divisors.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: the hyperbola method.} Every lattice point $(a, b)$ with $ab \leq x$ has $a \leq \sqrt{x}$ or $b \leq \sqrt{x}$ (or both). The points with $a \leq \sqrt{x}$ number
+$\sum_{a \leq \sqrt{x}}\lfloor x/a\rfloor$, by symmetry so do those with $b \leq \sqrt{x}$, and the points with both are the $\lfloor\sqrt{x}\rfloor^2$ points of a square. So
+\[
+D(x) = 2\sum_{a \leq \sqrt{x}}\Bigl\lfloor\frac xa\Bigr\rfloor - \lfloor\sqrt{x}\rfloor^2.
+\]
+\emph{Step 2: estimation.} By Proposition~\ref{analytic-number-theory:proposition-harmonic},
+$\sum_{a \leq \sqrt{x}}\lfloor x/a\rfloor = x\sum_{a \leq \sqrt{x}}\frac1a - \sum_{a \leq \sqrt{x}}\{x/a\} = x(\frac12\log x + \gamma + O(x^{-1/2})) + O(\sqrt{x})$. Also
+$\lfloor\sqrt{x}\rfloor^2 = (\sqrt{x} - \{\sqrt{x}\})^2 = x + O(\sqrt{x})$. Substituting gives $D(x) = x\log x + 2\gamma x - x + O(\sqrt{x})$.
+\end{proof}
+
+\begin{remark}\label{analytic-number-theory:remark-divisor-exponents}
+Write $D(x) = x\log x + (2\gamma - 1)x + \Delta(x)$. The \emph{Dirichlet divisor problem} asks for the true size of $\Delta(x)$. Voronoi proved $\Delta(x) = O(x^{1/3}\log x)$ \cite{voronoi-1903}, and the
+exponent has been lowered many times, to $\frac{131}{416} = 0.3149\ldots$ by Huxley \cite{huxley-2003}; Hardy proved that $\Delta(x) = O(x^{1/4})$ is false \cite{hardy-1916-divisor}, and it is conjectured that
+$\Delta(x) = O(x^{1/4 + \varepsilon})$ for every $\varepsilon > 0$. The \emph{Gauss circle problem} is the same question for the number $N(x)$ of lattice points in the disc of radius $\sqrt{x}$:
+$N(x) = \pi x + O(\sqrt{x})$ by Theorem~\ref{geometry-of-numbers:theorem-counting} (see Example~\ref{geometry-of-numbers:example-gauss-circle}), the error is $O(x^{131/416 + \varepsilon})$ by the same
+work of Huxley, it is not $O(x^{1/4})$ by Hardy \cite{hardy-1915-circle}, and $O(x^{1/4 + \varepsilon})$ is conjectured. Both problems are about lattice points near a curve, and the improvements come
+from estimates of exponential sums $\sum e^{2\pi if(n)}$ \cite{iwaniec-kowalski}.
+\end{remark}
+
+\subsection{Sums of divisors, totients and squarefree numbers}\label{analytic-number-theory:subsection-totients}
+
+The value $\zeta(2) = \frac{\pi^2}{6}$ (Example~\ref{functional-analysis:example-basel}) enters the next averages: $\frac{6}{\pi^2}$ is the density of the squarefree numbers and the probability that
+two integers are coprime.
+
+\begin{proposition}\label{analytic-number-theory:proposition-sigma-phi}
+For $x \geq 2$,
+\[
+\sum_{n \leq x}\sigma(n) = \frac{\pi^2}{12}x^2 + O(x\log x), \qquad \sum_{n \leq x}\varphi(n) = \frac{3}{\pi^2}x^2 + O(x\log x).
+\]
+So on average $\sigma(n)$ is about $\frac{\pi^2}{6}n$ and $\varphi(n)$ about $\frac{6}{\pi^2}n$.
+\end{proposition}
+
+\begin{proof}
+Let $T(y) = \sum_{m \leq y}m = \frac12\lfloor y\rfloor(\lfloor y\rfloor + 1)$; writing $\lfloor y\rfloor = y - \{y\}$ shows $T(y) = \frac{y^2}{2} + O(y)$ for $y \geq 1$.
+\emph{The sum of $\sigma$.} Since $\sigma = \mathrm{N} * \mathbf{1}$, $\sum_{n \leq x}\sigma(n) = \sum_{dm \leq x}m = \sum_{d \leq x}T(x/d) = \frac{x^2}{2}\sum_{d \leq x}\frac1{d^2} + O\bigl(x\sum_{d \leq x}\frac1d\bigr)$.
+Here $\sum_{d \leq x}d^{-2} = \zeta(2) - \sum_{d > x}d^{-2} = \frac{\pi^2}{6} + O(\frac1x)$ (compare with $\int_{x-1}^\infty u^{-2}du$), and $\sum_{d \leq x}\frac1d = O(\log x)$.
+\emph{The sum of $\varphi$.} Since $\varphi = \mu * \mathrm{N}$, $\sum_{n \leq x}\varphi(n) = \sum_{dm \leq x}\mu(d)m = \sum_{d \leq x}\mu(d)T(x/d) = \frac{x^2}{2}\sum_{d \leq x}\frac{\mu(d)}{d^2} + O(x\log x)$,
+and $\sum_{d \leq x}\mu(d)d^{-2} = \frac{1}{\zeta(2)} + O(\frac1x)$ by Example~\ref{analytic-number-theory:example-dirichlet-series-table}(1) at $s = 2$.
+\end{proof}
+
+\begin{corollary}\label{analytic-number-theory:corollary-coprime}
+The number $C(N)$ of pairs $(a, b)$ with $1 \leq a, b \leq N$ and $\gcd(a, b) = 1$ satisfies $C(N) = \frac{6}{\pi^2}N^2 + O(N\log N)$. So the ``probability'' that two integers are coprime is
+$\frac{6}{\pi^2} = 0.6079\ldots$
+\end{corollary}
+
+\begin{proof}
+For each $b \geq 2$ there are $\varphi(b)$ integers $a < b$ coprime to $b$, and the pair $(a, b)$ with $a > b$ corresponds to $(b, a)$; the only coprime pair with $a = b$ is $(1, 1)$. So
+$C(N) = 2\sum_{n \leq N}\varphi(n) - 1$, and Proposition~\ref{analytic-number-theory:proposition-sigma-phi} applies.
+\end{proof}
+
+\begin{proposition}\label{analytic-number-theory:proposition-squarefree}
+The number $Q(x)$ of squarefree integers $n \leq x$ is $Q(x) = \frac{6}{\pi^2}x + O(\sqrt{x})$.
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1: an identity.} $|\mu(n)| = \sum_{d^2 \mid n}\mu(d)$. Both sides are multiplicative in $n$ (the right side is $\sum_{de = n}\mu_2(d)$ with $\mu_2(d^2) = \mu(d)$, $\mu_2 = 0$ on
+non-squares, a convolution of multiplicative functions), so it suffices to check $n = p^k$: the $d$ with $d^2 \mid p^k$ are $1, p, \ldots, p^{\lfloor k/2\rfloor}$, and $\sum\mu(d)$ is $1$ if $k \leq 1$ and $0$
+if $k \geq 2$.
+\emph{Step 2: counting.} $Q(x) = \sum_{n \leq x}\sum_{d^2 \mid n}\mu(d) = \sum_{d \leq \sqrt{x}}\mu(d)\lfloor x/d^2\rfloor = x\sum_{d \leq \sqrt{x}}\frac{\mu(d)}{d^2} + O(\sqrt{x})$, and
+$\sum_{d \leq \sqrt{x}}\mu(d)d^{-2} = \frac{6}{\pi^2} + O(\sum_{d > \sqrt{x}}d^{-2}) = \frac{6}{\pi^2} + O(x^{-1/2})$.
+\end{proof}
+
+\begin{example}\label{analytic-number-theory:example-averages}
+For $x = 100$: $D(100) = 482$ against $100\log 100 + (2\gamma - 1)100 = 476.0$; $\sum_{n \leq 100}\varphi(n) = 3044$ against $\frac{3}{\pi^2}10^4 = 3039.6$; $\sum_{n \leq 100}\sigma(n) = 8299$
+against $\frac{\pi^2}{12}10^4 = 8224.7$; and $Q(100) = 61$ against $\frac{600}{\pi^2} = 60.8$. The errors are of the predicted sizes $\sqrt{x} = 10$ and $x\log x \approx 460$.
+\end{example}
+
+\subsection{The size of the divisor function}\label{analytic-number-theory:subsection-divisor-size}
+
+On average $\tau(n)$ is $\log n$, but individual values can be much larger.
+
+\begin{proposition}\label{analytic-number-theory:proposition-divisor-bound}
+For every $\varepsilon \in (0, 1]$ and $n \geq 1$, $\tau(n) \leq C(\varepsilon)n^\varepsilon$ with $C(\varepsilon) = \bigl(1 + \frac{1}{\varepsilon\log 2}\bigr)^{2^{1/\varepsilon}}$. In particular
+$\tau(n) = O_\varepsilon(n^\varepsilon)$, and $\log\tau(n) \leq \varepsilon\log n + 2^{1/\varepsilon}\log\bigl(1 + \frac{1}{\varepsilon\log 2}\bigr)$.
+\end{proposition}
+
+\begin{proof}
+By multiplicativity, $\tau(n)/n^\varepsilon = \prod_{p^k \| n}(k + 1)p^{-k\varepsilon}$, where $p^k \| n$ means that $p^k$ is the exact power of $p$ dividing $n$. If $p \geq 2^{1/\varepsilon}$ then
+$p^{k\varepsilon} \geq 2^k \geq k + 1$, so the factor is at most $1$. If $p < 2^{1/\varepsilon}$, then $p^{k\varepsilon} \geq 2^{k\varepsilon} = e^{k\varepsilon\log 2} \geq k\varepsilon\log 2$, so
+$(k + 1)p^{-k\varepsilon} \leq p^{-k\varepsilon} + k/(k\varepsilon\log 2) \leq 1 + \frac{1}{\varepsilon\log 2}$. There are fewer than $2^{1/\varepsilon}$ such primes.
+\end{proof}
+
+\begin{remark}\label{analytic-number-theory:remark-divisor-not-polylog}
+On the other hand $\tau(n)$ is not bounded by any power of $\log n$. Let $n_k = p_1p_2\cdots p_k$ be the product of the first $k$ primes, so $\tau(n_k) = 2^k$ and $\log n_k = \theta(p_k)$. By
+Chebyshev's estimates (Theorem~\ref{prime-numbers:theorem-chebyshev}) $\log n_k \leq p_k\log 4$ and $k = \pi(p_k) \geq \frac{p_k}{6\log p_k}$, so
+$\log\tau(n_k) \geq \frac{\log 2}{6}\cdot\frac{p_k}{\log p_k} \gg \frac{\log n_k}{\log\log n_k}$, which is larger than $A\log\log n_k$ for every $A$ once $k$ is large. Theorem~\ref{analytic-number-theory:theorem-wigert}
+below determines the exact constant: the largest values of $\log\tau(n)$ are $(\log 2 + o(1))\frac{\log n}{\log\log n}$.
+\end{remark}
+
+\subsection{The normal number of prime factors}\label{analytic-number-theory:subsection-normal-order}
+
+An arithmetic function $f$ has \emph{normal order} $g$ if for every $\varepsilon > 0$ the inequality $|f(n) - g(n)| \leq \varepsilon g(n)$ holds for all $n$ outside a set of density zero. The function
+$\tau$ has average order $\log n$ but no normal order of this size; the number of prime factors behaves much better.
+
+\begin{theorem}[Tur\'an]\label{analytic-number-theory:theorem-turan}
+For $x \geq 3$, with $L = \log\log x$,
+\[
+\sum_{n \leq x}\omega(n) = xL + O(x), \qquad \sum_{n \leq x}(\omega(n) - L)^2 = O(xL).
+\]
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: the mean.} $\sum_{n \leq x}\omega(n) = \sum_{n \leq x}\sum_{p \mid n}1 = \sum_{p \leq x}\lfloor x/p\rfloor$. Since $|\lfloor x/p\rfloor - x/p| < 1$ and $\pi(x) \leq x$, this is
+$x\sum_{p \leq x}\frac1p + O(x) = xL + O(x)$ by Mertens' second theorem (Theorem~\ref{prime-numbers:theorem-mertens-second}).
+\emph{Step 2: the second moment.} $\omega(n)^2 = \sum_{p \mid n}\sum_{p^{\prime} \mid n}1$; the pairs with $p = p^{\prime}$ give $\omega(n)$, and for $p \neq p^{\prime}$ the condition is $pp^{\prime} \mid n$. So
+\[
+\begin{aligned}
+\sum_{n \leq x}\omega(n)^2 &= \sum_{p \neq p^{\prime} \leq x}\Bigl\lfloor\frac{x}{pp^{\prime}}\Bigr\rfloor + \sum_{n \leq x}\omega(n) \\
+&\leq x\Bigl(\sum_{p \leq x}\frac1p\Bigr)^2 + xL + O(x) \\
+&= x(L + O(1))^2 + O(xL).
+\end{aligned}
+\]
+\emph{Step 3: the variance.} Expanding the square,
+$\sum_{n \leq x}(\omega(n) - L)^2 = \sum\omega(n)^2 - 2L\sum\omega(n) + \lfloor x\rfloor L^2 \leq xL^2 + O(xL) - 2L(xL - O(x)) + xL^2 = O(xL)$.
+\end{proof}
+
+\begin{corollary}[Hardy--Ramanujan]\label{analytic-number-theory:corollary-hardy-ramanujan}
+For every $\varepsilon > 0$, the number of $n \leq x$ with $|\omega(n) - \log\log x| > (\log\log x)^{1/2 + \varepsilon}$ is $O(x(\log\log x)^{-2\varepsilon}) = o(x)$. Consequently $\omega$ (and also
+$\Omega$) has normal order $\log\log n$.
+\end{corollary}
+
+\begin{proof}
+Each such $n$ contributes more than $(\log\log x)^{1 + 2\varepsilon}$ to the sum in Theorem~\ref{analytic-number-theory:theorem-turan}, so there are at most $O(xL)/L^{1 + 2\varepsilon}$ of them
+(this is Chebyshev's inequality from probability). For the normal order, the $n \leq x$ with $n > \sqrt{x}$ have $\log\log n = \log\log x + O(1)$, and the $n \leq \sqrt{x}$ are $o(x)$. For $\Omega$, note that
+$\sum_{n \leq x}(\Omega(n) - \omega(n)) = \sum_{p^k \leq x,\, k \geq 2}\lfloor x/p^k\rfloor \leq x\sum_p\frac{1}{p(p - 1)} = O(x)$, so $\Omega(n) - \omega(n) > \varepsilon\log\log x$ only for
+$O(x/\log\log x)$ integers $n \leq x$.
+\end{proof}
+
+\begin{remark}\label{analytic-number-theory:remark-erdos-kac}
+So a typical integer near $10^{100}$ has about $\log\log 10^{100} = 5.4$ distinct prime factors, with a standard deviation of about $\sqrt{5.4}$; integers are ``made of few primes''. Hardy and
+Ramanujan proved Corollary~\ref{analytic-number-theory:corollary-hardy-ramanujan} in 1917 \cite{hardy-ramanujan-1917}; Tur\'an's proof above (1934, \cite{turan-1934}) is the variance argument of
+probability theory. The events ``$p \mid n$'' for different primes behave like independent events of probability $\frac1p$, so $\omega(n) = \sum_p\mathbf{1}_{p \mid n}$ is like a sum of independent
+Bernoulli variables, and the \emph{Erd\H{o}s--Kac theorem} \cite{erdos-kac-1940} makes this precise as a central limit theorem (Chapter~\ref{probability}):
+\[
+\frac1x\#\Bigl\{n \leq x : \frac{\omega(n) - \log\log n}{\sqrt{\log\log n}} \leq a\Bigr\} \to \frac{1}{\sqrt{2\pi}}\int_{-\infty}^ae^{-u^2/2}\,du \qquad (x \to \infty).
+\]
+\end{remark}
+
+\section{The Gamma function}\label{analytic-number-theory:section-gamma}
+
+The functional equation of $\zeta$ involves Euler's Gamma function, the function that interpolates the factorials. We develop the properties we need: meromorphic continuation, absence of zeros,
+the reflection and duplication formulas. Along the way we prove the partial fraction expansion of the cotangent and the product formula for the sine, which also give the values $\zeta(2k)$.
+Integrals depending holomorphically on a parameter are handled by the following lemma.
+
+\begin{lemma}\label{analytic-number-theory:lemma-holomorphic-integrals}
+Let $I \subseteq \RR$ be an interval, $U \subseteq \CC$ open, and $F \colon I \times U \to \CC$ continuous and holomorphic in $s$ for each fixed $x \in I$. Suppose that for every compact $K \subseteq U$
+there is an integrable function $G_K$ on $I$ with $|F(x, s)| \leq G_K(x)$ for $x \in I$, $s \in K$. Then $\Phi(s) = \int_IF(x, s)\,dx$ is holomorphic on $U$, and
+$\Phi^{\prime}(s) = \int_I\partial_sF(x, s)\,dx$.
+\end{lemma}
+
+\begin{proof}
+\emph{Continuity.} If $s_k \to s$ in $U$, the points lie in a compact disc $K \subseteq U$ for large $k$, $F(x, s_k) \to F(x, s)$ for each $x$, and $|F(x, s_k)| \leq G_K(x)$; so
+$\Phi(s_k) \to \Phi(s)$ by dominated convergence (Theorem~\ref{measure-theory:theorem-dominated-convergence}).
+\emph{Holomorphy.} Let $T \subseteq U$ be a closed triangle. The function $(x, w) \mapsto F(x, w)$ on $I \times \partial T$ is continuous and bounded by $G_T(x)$, so by Fubini's theorem
+(Theorem~\ref{measure-theory:theorem-fubini}) $\int_{\partial T}\Phi(w)\,dw = \int_I\int_{\partial T}F(x, w)\,dw\,dx = 0$, the inner integral vanishing by Goursat's theorem
+(Theorem~\ref{complex-analysis:theorem-goursat}). By Morera's theorem (Corollary~\ref{complex-analysis:corollary-liouville}(3)), $\Phi$ is holomorphic.
+\emph{Derivative.} Let $\overline{D}(s, r) \subseteq U$. By the Cauchy integral formula for derivatives (Theorem~\ref{complex-analysis:theorem-cauchy-formula}), applied to $\Phi$ and to each
+$F(x, \cdot)$, and Fubini's theorem again on $I \times \partial D(s, r)$,
+$\Phi^{\prime}(s) = \frac{1}{2\pi i}\int_{\partial D}\frac{\Phi(w)}{(w - s)^2}dw = \int_I\frac{1}{2\pi i}\int_{\partial D}\frac{F(x, w)}{(w - s)^2}dw\,dx = \int_I\partial_sF(x, s)\,dx$.
+\end{proof}
+
+\begin{definition}\label{analytic-number-theory:definition-gamma}
+The \emph{Gamma function} is
+\[
+\Gamma(s) = \int_0^\infty t^{s-1}e^{-t}\,dt, \qquad \sigma > 0,
+\]
+where $t^{s-1} = e^{(s-1)\log t}$.
+\end{definition}
+
+\begin{proposition}\label{analytic-number-theory:proposition-gamma-basic}
+\begin{enumerate}
+\item The integral converges absolutely for $\sigma > 0$ and defines a holomorphic function there, with $\Gamma(\sigma) > 0$ for real $\sigma > 0$ and $\Gamma(\bar s) = \overline{\Gamma(s)}$.
+\item $\Gamma(s + 1) = s\Gamma(s)$ for $\sigma > 0$, $\Gamma(1) = 1$, and $\Gamma(n + 1) = n!$ for integers $n \geq 0$.
+\item $\Gamma$ extends to a meromorphic function on $\CC$, holomorphic except for simple poles at $s = 0, -1, -2, \ldots$, with $\operatorname{Res}_{s = -n}\Gamma = \frac{(-1)^n}{n!}$, and
+$\Gamma(s + 1) = s\Gamma(s)$ holds on all of $\CC$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) If $a \leq \sigma \leq b$ with $0 < a$, then $|t^{s-1}e^{-t}| = t^{\sigma - 1}e^{-t} \leq (t^{a-1} + t^{b-1})e^{-t}$, which is integrable on $(0, \infty)$ (near $0$ because $a > 0$, near $\infty$
+because of $e^{-t}$). So Lemma~\ref{analytic-number-theory:lemma-holomorphic-integrals} applies with $I = (0, \infty)$. For real $s$ the integrand is positive, and conjugating the integrand gives
+$\Gamma(\bar s) = \overline{\Gamma(s)}$.
+(2) Integrate by parts on $[\varepsilon, R]$: $\int_\varepsilon^Rt^se^{-t}dt = [-t^se^{-t}]_\varepsilon^R + s\int_\varepsilon^Rt^{s-1}e^{-t}dt$, and let $\varepsilon \to 0$, $R \to \infty$. Also
+$\Gamma(1) = \int_0^\infty e^{-t}dt = 1$, and induction gives $\Gamma(n + 1) = n!$.
+(3) For an integer $n \geq 1$ put $\Gamma_n(s) = \frac{\Gamma(s + n)}{s(s + 1)\cdots(s + n - 1)}$ on $\sigma > -n$, $s \notin \{0, -1, \ldots, -n + 1\}$. It is meromorphic there and, by (2),
+equals $\Gamma$ on $\sigma > 0$ and $\Gamma_{n+1}$ on $\sigma > -n$. So these functions glue to a meromorphic function on $\CC$. Near $s = -n$, $\Gamma_{n+1}$ is $\Gamma(s + n + 1)$, holomorphic and
+equal to $1$ at $s = -n$, divided by $s(s + 1)\cdots(s + n)$, which has a simple zero at $-n$; so the pole is simple with residue
+$\frac{1}{(-n)(-n + 1)\cdots(-1)} = \frac{(-1)^n}{n!}$. The functional equation persists by the identity theorem (Theorem~\ref{complex-analysis:theorem-identity}).
+\end{proof}
+
+The Gamma function is related to many integrals through the following formula, which uses a change of variables in a double integral.
+
+\begin{proposition}[Euler's Beta integral]\label{analytic-number-theory:proposition-beta}
+For $\operatorname{Re}a, \operatorname{Re}b > 0$, let $B(a, b) = \int_0^1u^{a-1}(1 - u)^{b-1}\,du$. Then
+\[
+\Gamma(a)\Gamma(b) = \Gamma(a + b)B(a, b), \qquad \text{so} \quad B(a, b) = \frac{\Gamma(a)\Gamma(b)}{\Gamma(a + b)}
+\]
+whenever $\Gamma(a + b) \neq 0$: for real $a, b > 0$ by Proposition~\ref{analytic-number-theory:proposition-gamma-basic}(1), and always by Theorem~\ref{analytic-number-theory:theorem-weierstrass-gamma} below.
+\end{proposition}
+
+\begin{proof}
+By Fubini's theorem (Theorem~\ref{measure-theory:theorem-fubini}), the integrand being absolutely integrable,
+$\Gamma(a)\Gamma(b) = \int_0^\infty\int_0^\infty x^{a-1}y^{b-1}e^{-x-y}\,dx\,dy$. The map $(r, u) \mapsto (x, y) = (ru, r(1 - u))$ is a diffeomorphism from $(0, \infty) \times (0, 1)$ onto
+$(0, \infty)^2$, with inverse $r = x + y$, $u = x/(x + y)$, and Jacobian determinant $\bigl|\det\begin{pmatrix}u & r \\ 1 - u & -r\end{pmatrix}\bigr| = r$. By the change of variables formula
+(Theorem~\ref{measure-theory:theorem-change-of-variables}),
+\[
+\Gamma(a)\Gamma(b) = \int_0^\infty\int_0^1r^{a+b-1}u^{a-1}(1 - u)^{b-1}e^{-r}\,du\,dr = \Gamma(a + b)B(a, b). \qedhere
+\]
+\end{proof}
+
+\begin{example}\label{analytic-number-theory:example-gamma-half}
+With $a = b = \frac12$ and the substitution $u = \sin^2\phi$, $du = 2\sin\phi\cos\phi\,d\phi$,
+\[
+\Gamma(\tfrac12)^2 = \Gamma(1)B(\tfrac12, \tfrac12) = \int_0^1\frac{du}{\sqrt{u(1 - u)}} = \int_0^{\pi/2}2\,d\phi = \pi, \qquad \text{so} \quad \Gamma(\tfrac12) = \sqrt{\pi}
+\]
+(as $\Gamma(\frac12) > 0$). Substituting $t = x^2$ in the definition gives $\Gamma(\frac12) = \int_0^\infty e^{-x^2}\cdot 2\,dx$, that is, the Gaussian integral $\int_{-\infty}^\infty e^{-x^2}dx = \sqrt{\pi}$. Then
+$\Gamma(\frac32) = \frac12\sqrt{\pi}$, $\Gamma(\frac52) = \frac34\sqrt{\pi}$, and the volume of the unit ball in $\RR^n$ is $\omega_n = \pi^{n/2}/\Gamma(\frac n2 + 1)$
+(Exercise~\ref{measure-theory:exercise-ball-volume}): $\omega_3 = \pi^{3/2}/\Gamma(\frac52) = \frac43\pi$.
+\end{example}
+
+\begin{theorem}[Euler's limit formula]\label{analytic-number-theory:theorem-euler-limit}
+For $\sigma > 0$,
+\[
+\Gamma(s) = \lim_{n \to \infty}\frac{n!\,n^s}{s(s + 1)\cdots(s + n)}.
+\]
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: a truncated integral.} Let $\Gamma_n(s) = \int_0^nt^{s-1}(1 - t/n)^n\,dt$. Substituting $t = nu$ gives $\Gamma_n(s) = n^sB(s, n + 1)$. For $m \geq 1$, integration by parts gives
+$\int_0^1u^{a-1}(1 - u)^m\,du = \frac ma\int_0^1u^a(1 - u)^{m-1}\,du$ when $\operatorname{Re}a > 0$ (the boundary terms vanish), that is $B(a, m + 1) = \frac maB(a + 1, m)$. Applying this $n$ times,
+\[
+\Gamma_n(s) = n^s\frac{n!}{s(s + 1)\cdots(s + n - 1)}\int_0^1u^{s+n-1}\,du = \frac{n!\,n^s}{s(s + 1)\cdots(s + n)}.
+\]
+\emph{Step 2: the limit.} Since $\log(1 - v) \leq -v$ for $0 \leq v < 1$, $0 \leq (1 - t/n)^n\mathbf{1}_{t < n} \leq e^{-t}$, and $(1 - t/n)^n \to e^{-t}$ for each $t$
+(Proposition~\ref{real-analysis:proposition-notable-limits}). By dominated convergence, with dominating function $t^{\sigma - 1}e^{-t}$, $\Gamma_n(s) \to \Gamma(s)$.
+\end{proof}
+
+To pass from the limit formula to a product we need infinite products of holomorphic functions.
+
+\begin{lemma}[Infinite products]\label{analytic-number-theory:lemma-infinite-products}
+Let $U \subseteq \CC$ be open and $u_k$ holomorphic functions on $U$ such that $\sum_k\sup_K|u_k| < \infty$ for every compact $K \subseteq U$. Then the partial products $P_N = \prod_{k \leq N}(1 + u_k)$
+converge uniformly on compact subsets of $U$ to a holomorphic function $P$. A point $s$ is a zero of $P$ exactly when $1 + u_k(s) = 0$ for some $k$, and its order is the sum of the orders of these
+zeros. Off the zeros, $P^{\prime}/P = \sum_ku_k^{\prime}/(1 + u_k)$, uniformly on compact subsets.
+\end{lemma}
+
+\begin{proof}
+\emph{Step 1: a logarithm.} For $|u| \leq \frac12$ let $\log(1 + u) = \sum_{j \geq 1}(-1)^{j+1}u^j/j$. As in the proof of Proposition~\ref{analytic-number-theory:proposition-log-zeta},
+$\exp(\log(1 + u)) = 1 + u$, and $|\log(1 + u)| \leq \sum_j|u|^j = \frac{|u|}{1 - |u|} \leq 2|u|$.
+\emph{Step 2: convergence.} Fix a compact $K$. There is $k_0$ with $|u_k| \leq \frac12$ on $K$ for $k > k_0$. The series $\sum_{k > k_0}\log(1 + u_k)$ converges uniformly on $K$ by Step 1 and the hypothesis
+(Weierstrass M-test), to a continuous function $S$, so $\prod_{k_0 < k \leq N}(1 + u_k) = \exp(\sum_{k_0 < k \leq N}\log(1 + u_k)) \to e^S$ uniformly on $K$, and $e^S$ has no zeros. Multiplying by the
+finitely many factors $k \leq k_0$ gives the uniform convergence of $P_N$ on $K$, and the zeros of $P$ in $K$ are those of these finitely many factors, with orders adding up. $P$ is holomorphic by
+Weierstrass' theorem (Corollary~\ref{complex-analysis:corollary-liouville}(4)).
+\emph{Step 3: logarithmic derivative.} $P_N^{\prime}/P_N = \sum_{k \leq N}u_k^{\prime}/(1 + u_k)$ by the product rule, and $P_N \to P$, $P_N^{\prime} \to P^{\prime}$ uniformly on compact subsets
+(Weierstrass' theorem); on a compact set where $P \neq 0$, $|P|$ is bounded below, so $P_N^{\prime}/P_N \to P^{\prime}/P$ uniformly there.
+\end{proof}
+
+\begin{theorem}[Weierstrass product]\label{analytic-number-theory:theorem-weierstrass-gamma}
+The function $1/\Gamma$ extends to an entire function, and for all $s \in \CC$
+\[
+\frac{1}{\Gamma(s)} = se^{\gamma s}\prod_{k \geq 1}\Bigl(1 + \frac sk\Bigr)e^{-s/k},
+\]
+the product converging uniformly on compact sets. Its zeros are the points $0, -1, -2, \ldots$, all simple. In particular $\Gamma$ has no zeros, and Euler's limit formula
+(Theorem~\ref{analytic-number-theory:theorem-euler-limit}) holds for all $s \notin \{0, -1, -2, \ldots\}$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: the product converges.} For $|w| \leq 1$, $(1 + w)e^{-w} = 1 + \sum_{j \geq 2}c_jw^j$ with $c_j = \frac{(-1)^j}{j!} + \frac{(-1)^{j-1}}{(j - 1)!} = (-1)^j\frac{1 - j}{j!}$, so
+$|(1 + w)e^{-w} - 1| \leq |w|^2\sum_{j \geq 2}\frac{j - 1}{j!} = |w|^2$ (the last sum is $\sum_{j \geq 1}\frac{1}{(j - 1)!} - \sum_{j \geq 1}\frac1{j!} = e - (e - 1) = 1$, the term $j = 1$ being $0$). With
+$w = s/k$, the factors $1 + u_k(s) = (1 + s/k)e^{-s/k}$ satisfy $|u_k(s)| \leq R^2/k^2$ for $|s| \leq R \leq k$. By Lemma~\ref{analytic-number-theory:lemma-infinite-products}, $E(s) = se^{\gamma s}\prod_k(1 + s/k)e^{-s/k}$
+is an entire function, with simple zeros exactly at $0, -1, -2, \ldots$
+\emph{Step 2: $E = 1/\Gamma$.} For $\sigma > 0$, with $H_n = \sum_{k \leq n}\frac1k$,
+\[
+\frac{s(s + 1)\cdots(s + n)}{n!\,n^s} = s\prod_{k=1}^n\Bigl(1 + \frac sk\Bigr)e^{-s\log n} = se^{s(H_n - \log n)}\prod_{k=1}^n\Bigl(1 + \frac sk\Bigr)e^{-s/k},
+\]
+which tends to $E(s)$, because $H_n - \log n \to \gamma$ (Proposition~\ref{analytic-number-theory:proposition-harmonic}). By Theorem~\ref{analytic-number-theory:theorem-euler-limit} the left side
+tends to $1/\Gamma(s)$; so $\Gamma(s)E(s) = 1$ for $\sigma > 0$. Both sides are meromorphic on the connected set $\CC$, so $\Gamma E = 1$ everywhere by the identity theorem. Hence $1/\Gamma = E$ is
+entire, and $\Gamma$ never vanishes. Finally, the computation of Step 2 shows that $\frac{s(s + 1)\cdots(s + n)}{n!\,n^s} \to E(s)$ for every $s \in \CC$; for $s \notin \{0, -1, \ldots\}$ the limit
+$E(s) = 1/\Gamma(s)$ is nonzero, and taking reciprocals gives Euler's limit formula at $s$.
+\end{proof}
+
+\subsection{The cotangent, the sine, and the reflection formula}\label{analytic-number-theory:subsection-cotangent}
+
+\begin{theorem}[Euler]\label{analytic-number-theory:theorem-cotangent}
+For $z \in \CC \setminus \ZZ$,
+\[
+\pi\cot\pi z = \frac1z + \sum_{n \geq 1}\frac{2z}{z^2 - n^2} = \lim_{N \to \infty}\sum_{n = -N}^N\frac{1}{z - n},
+\]
+the series converging absolutely and uniformly on compact subsets of $\CC \setminus \ZZ$.
+\end{theorem}
+
+\begin{proof}
+We follow Herglotz's argument \cite{aigner-ziegler}.
+\emph{Step 1: the series.} For $|z| \leq R$ and $n \geq 2R$, $|\frac{2z}{z^2 - n^2}| \leq \frac{2R}{n^2 - R^2} \leq \frac{8R}{3n^2}$, so the series converges absolutely and locally uniformly on
+$\CC \setminus \ZZ$; call its sum $S(z)$. Since $\frac{1}{z - n} + \frac{1}{z + n} = \frac{2z}{z^2 - n^2}$, $S(z) = \lim_NS_N(z)$ with $S_N(z) = \sum_{|n| \leq N}\frac{1}{z - n}$. Near an integer $m$,
+$S(z) - \frac{1}{z - m}$ is a locally uniform limit of functions holomorphic near $m$; so $S$ has a simple pole with residue $1$ at each integer.
+\emph{Step 2: the difference is entire.} $\pi\cot\pi z = \pi\cos\pi z/\sin\pi z$ also has simple poles with residue $\frac{\pi\cos\pi m}{\pi\cos\pi m} = 1$ at each integer $m$, and no other poles. So
+$h(z) = \pi\cot\pi z - S(z)$ has removable singularities at the integers (Proposition~\ref{complex-analysis:proposition-singularities}) and is entire. Both functions are odd, so $h$ is odd and
+$h(0) = 0$; both are real on $\RR \setminus \ZZ$, so $h$ is real on $\RR$.
+\emph{Step 3: periodicity.} $S_N(z + 1) - S_N(z) = \frac{1}{z + 1 + N} - \frac{1}{z - N} \to 0$, so $S$ has period $1$, as $\cot\pi z$ does; hence $h(z + 1) = h(z)$.
+\emph{Step 4: a duplication identity.} For $f = \pi\cot\pi z$: with $a = \pi z/2$, $\cot a + \cot(a + \frac\pi2) = \cot a - \tan a = \frac{\cos^2a - \sin^2a}{\sin a\cos a} = 2\cot 2a$, so
+$f(\frac z2) + f(\frac{z + 1}2) = 2f(z)$. For $S$: $S_N(\frac z2) + S_N(\frac{z + 1}2) = \sum_{|n| \leq N}\bigl(\frac{2}{z - 2n} + \frac{2}{z - (2n - 1)}\bigr) = 2S_{2N}(z) + \frac{2}{z + 2N + 1}$, since the
+numbers $2n$ and $2n - 1$ with $|n| \leq N$ are exactly the integers from $-2N - 1$ to $2N$. Letting $N \to \infty$, $S(\frac z2) + S(\frac{z + 1}2) = 2S(z)$. Hence $h(\frac z2) + h(\frac{z + 1}2) = 2h(z)$
+for $z \notin \ZZ$, and by continuity for all $z$.
+\emph{Step 5: Herglotz's trick.} The continuous periodic real function $h|_\RR$ attains its maximum $M$ at some $x_0 \in [0, 1]$. Then $h(\frac{x_0}2) + h(\frac{x_0 + 1}2) = 2M$ with both terms $\leq M$, so
+$h(\frac{x_0}2) = M$. Repeating, $h(x_0/2^k) = M$ for all $k$, and by continuity $M = h(0) = 0$. Applying this to $-h$, the minimum is $0$ too, so $h = 0$ on $\RR$, and $h = 0$ on $\CC$ by the identity
+theorem.
+\end{proof}
+
+\begin{corollary}[Euler's product for the sine]\label{analytic-number-theory:corollary-sine-product}
+For all $z \in \CC$,
+\[
+\sin\pi z = \pi z\prod_{n \geq 1}\Bigl(1 - \frac{z^2}{n^2}\Bigr).
+\]
+\end{corollary}
+
+\begin{proof}
+By Lemma~\ref{analytic-number-theory:lemma-infinite-products} with $u_n = -z^2/n^2$, the right side is an entire function $P$ with simple zeros exactly at the integers, and off the integers
+$\frac{P^{\prime}}{P} = \frac1z + \sum_n\frac{-2z/n^2}{1 - z^2/n^2} = \frac1z + \sum_n\frac{2z}{z^2 - n^2} = \pi\cot\pi z = \frac{(\sin\pi z)^{\prime}}{\sin\pi z}$ by Theorem~\ref{analytic-number-theory:theorem-cotangent}.
+So $(\sin\pi z/P)^{\prime} = \frac{\sin\pi z}{P}\bigl(\frac{(\sin\pi z)^{\prime}}{\sin\pi z} - \frac{P^{\prime}}{P}\bigr) = 0$ on the connected open set $\CC \setminus \ZZ$, and $\sin\pi z = cP(z)$. Letting $z \to 0$,
+$c = \lim\frac{\sin\pi z}{\pi z} = 1$.
+\end{proof}
+
+\begin{example}\label{analytic-number-theory:example-wallis}
+At $z = \frac12$: $1 = \frac\pi2\prod_n\bigl(1 - \frac{1}{4n^2}\bigr)$, that is, \emph{Wallis' product} $\frac\pi2 = \prod_{n \geq 1}\frac{(2n)^2}{(2n - 1)(2n + 1)} = \frac21\cdot\frac23\cdot\frac43\cdot\frac45\cdot\frac65\cdot\frac67\cdots$
+Comparing the coefficients of $z^3$ in $\sin\pi z = \pi z - \frac{\pi^3z^3}{6} + \cdots$ and in the product, $-\frac{\pi^3}{6} = -\pi\sum_n\frac1{n^2}$, which is Euler's original (heuristic) derivation of
+$\zeta(2) = \frac{\pi^2}{6}$; here it is a proof.
+\end{example}
+
+\begin{theorem}[Reflection formula]\label{analytic-number-theory:theorem-reflection}
+For $s \in \CC \setminus \ZZ$,
+\[
+\Gamma(s)\Gamma(1 - s) = \frac{\pi}{\sin\pi s}.
+\]
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{analytic-number-theory:theorem-weierstrass-gamma}, the factors $e^{\pm\gamma s}$ and $e^{\mp s/k}$ cancel in
+$\frac{1}{\Gamma(s)\Gamma(-s)} = se^{\gamma s}\prod_k\bigl(1 + \frac sk\bigr)e^{-s/k}\cdot(-s)e^{-\gamma s}\prod_k\bigl(1 - \frac sk\bigr)e^{s/k} = -s^2\prod_k\Bigl(1 - \frac{s^2}{k^2}\Bigr) = -\frac{s\sin\pi s}{\pi}$
+by Corollary~\ref{analytic-number-theory:corollary-sine-product}. Since $\Gamma(1 - s) = -s\Gamma(-s)$, $\Gamma(s)\Gamma(1 - s) = -s\Gamma(s)\Gamma(-s) = \frac{\pi}{\sin\pi s}$.
+\end{proof}
+
+\begin{example}\label{analytic-number-theory:example-reflection}
+At $s = \frac12$ the formula gives $\Gamma(\frac12)^2 = \pi$ again. On the line $s = \frac12 + it$, since $\Gamma(\frac12 - it) = \overline{\Gamma(\frac12 + it)}$ and
+$\sin(\frac\pi2 + i\pi t) = \cos(i\pi t) = \cosh\pi t$,
+\[
+\bigl|\Gamma(\tfrac12 + it)\bigr|^2 = \frac{\pi}{\cosh\pi t}:
+\]
+the Gamma function decays exponentially on vertical lines. This decay, of size $e^{-\pi|t|/2}$ on every vertical line by Stirling's formula (Remark~\ref{analytic-number-theory:remark-stirling-gamma}), is what
+makes the integrals of the next sections converge.
+\end{example}
+
+\begin{proposition}[Legendre's duplication formula]\label{analytic-number-theory:proposition-duplication}
+For $2s \notin \{0, -1, -2, \ldots\}$, $\Gamma(s)\Gamma(s + \frac12) = 2^{1 - 2s}\sqrt{\pi}\,\Gamma(2s)$.
+\end{proposition}
+
+\begin{proof}
+Let $s > 0$ be real. In $B(s, s) = \int_0^1(u(1 - u))^{s-1}du = 2\int_0^{1/2}(u(1 - u))^{s-1}du$ substitute $v = 4u(1 - u)$, which increases from $0$ to $1$ on $[0, \frac12]$, with
+$dv = 4(1 - 2u)\,du$ and $1 - 2u = \sqrt{1 - v}$:
+\[
+B(s, s) = 2\int_0^1\Bigl(\frac v4\Bigr)^{s-1}\frac{dv}{4\sqrt{1 - v}} = 2^{1 - 2s}B(s, \tfrac12).
+\]
+By Proposition~\ref{analytic-number-theory:proposition-beta}, $\frac{\Gamma(s)^2}{\Gamma(2s)} = 2^{1-2s}\frac{\Gamma(s)\Gamma(\frac12)}{\Gamma(s + \frac12)}$, which is the claim for real $s > 0$, as
+$\Gamma(\frac12) = \sqrt{\pi}$. Both sides are meromorphic on $\CC$, so the identity theorem extends it.
+\end{proof}
+
+\begin{remark}\label{analytic-number-theory:remark-stirling-gamma}
+Stirling's formula for $n!$ (Theorem~\ref{real-analysis:theorem-stirling}) extends to the complex Gamma function: for every $\delta > 0$,
+$\log\Gamma(s) = (s - \frac12)\log s - s + \frac12\log 2\pi + O_\delta(|s|^{-1})$ uniformly for $|\arg s| \leq \pi - \delta$, $|s| \geq 1$, with the principal branches of the logarithms
+\cite{iwaniec-kowalski}, \cite{titchmarsh-zeta}. In particular $|\Gamma(\sigma + it)| \sim \sqrt{2\pi}|t|^{\sigma - 1/2}e^{-\pi|t|/2}$ as $|t| \to \infty$ with $\sigma$ fixed, in agreement with
+Example~\ref{analytic-number-theory:example-reflection}. We shall not need it: the proofs below use only the results proved in this section.
+\end{remark}
+
+\section{The Riemann zeta function}\label{analytic-number-theory:section-zeta}
+
+\subsection{Continuation to the half-plane $\sigma > 0$}\label{analytic-number-theory:subsection-zeta-continuation}
+
+\begin{proposition}\label{analytic-number-theory:proposition-zeta-continuation}
+The zeta function extends to a meromorphic function on $\sigma > 0$ whose only pole is a simple pole at $s = 1$ with residue $1$. For $\sigma > 0$, $s \neq 1$ and every real $x \geq 1$,
+\begin{equation}\label{analytic-number-theory:equation-zeta-approximate}
+\zeta(s) = \sum_{n \leq x}\frac1{n^s} + \frac{x^{1-s}}{s - 1} + \frac{\{x\}}{x^s} - s\int_x^\infty\frac{\{u\}}{u^{s+1}}\,du.
+\end{equation}
+In particular $\zeta(s) = \frac{s}{s - 1} - s\int_1^\infty\{u\}u^{-s-1}\,du$, and $\zeta(s) = \frac{1}{s - 1} + \gamma + O(|s - 1|)$ near $s = 1$.
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1: the formula for $\sigma > 1$.} Lemma~\ref{analytic-number-theory:lemma-euler-summation} with $f(u) = u^{-s}$ on $[x, X]$ gives
+$\sum_{x < n \leq X}n^{-s} = \frac{x^{1-s} - X^{1-s}}{s - 1} - s\int_x^X\{u\}u^{-s-1}du - \{X\}X^{-s} + \{x\}x^{-s}$. For $\sigma > 1$ let $X \to \infty$: the terms in $X$ tend to $0$, and
+\eqref{analytic-number-theory:equation-zeta-approximate} follows.
+\emph{Step 2: continuation.} For $\sigma \geq a > 0$, $|\{u\}u^{-s-1}| \leq u^{-a-1}$, which is integrable on $[x, \infty)$; so by Lemma~\ref{analytic-number-theory:lemma-holomorphic-integrals} the
+integral is holomorphic on $\sigma > 0$, and the right side of \eqref{analytic-number-theory:equation-zeta-approximate} is meromorphic on $\sigma > 0$ with at most a pole at $s = 1$. For different values of
+$x$ these functions agree on $\sigma > 1$, hence everywhere on $\sigma > 0$ by the identity theorem; they define the continuation of $\zeta$.
+\emph{Step 3: the pole.} With $x = 1$, $\zeta(s) = 1 + \frac{1}{s - 1} - s\int_1^\infty\{u\}u^{-s-1}du$. The last term is holomorphic at $s = 1$ with value $\int_1^\infty\{u\}u^{-2}du = 1 - \gamma$ there
+(Proposition~\ref{analytic-number-theory:proposition-harmonic}). So $\zeta(s) - \frac{1}{s - 1}$ is holomorphic near $1$ with value $1 - (1 - \gamma) = \gamma$ at $s = 1$.
+\end{proof}
+
+\begin{corollary}\label{analytic-number-theory:corollary-zeta-negative-real}
+For real $0 < \sigma < 1$, $\zeta(\sigma) < 0$. In particular $\zeta$ has no zeros on the real segment $(0, 1)$, and $\zeta(\sigma) \leq \frac{\sigma}{\sigma - 1}$ for real $\sigma > 1$.
+\end{corollary}
+
+\begin{proof}
+In $\zeta(\sigma) = \frac{\sigma}{\sigma - 1} - \sigma\int_1^\infty\{u\}u^{-\sigma-1}du$ the integral is positive. For $0 < \sigma < 1$ the first term is negative; for $\sigma > 1$ the formula gives the bound.
+\end{proof}
+
+\begin{remark}\label{analytic-number-theory:remark-zeta-partial-sums}
+Formula \eqref{analytic-number-theory:equation-zeta-approximate} also describes the partial sums of the divergent series $\sum n^{-s}$ for $0 < \sigma \leq 1$:
+$\sum_{n \leq x}n^{-s} = \zeta(s) + \frac{x^{1-s}}{1 - s} + O(|s|x^{-\sigma}/\sigma)$. For instance $\sum_{n \leq x}n^{-1/2} = 2\sqrt{x} + \zeta(\frac12) + O(x^{-1/2})$, with
+$\zeta(\frac12) = -1.4603545\ldots$ So $\zeta(s)$ is the ``constant term'' of the partial sums, a first hint of how the continued function encodes information about the divergent series.
+\end{remark}
+
+\subsection{Bounds near the line $\sigma = 1$}\label{analytic-number-theory:subsection-zeta-bounds}
+
+\begin{proposition}\label{analytic-number-theory:proposition-zeta-bounds}
+There is a constant $C_1$ such that for $|t| \geq e^2$ and $\sigma \geq 1 - \frac{1}{\log|t|}$,
+\[
+|\zeta(\sigma + it)| \leq C_1\log|t|, \qquad |\zeta^{\prime}(\sigma + it)| \leq C_1\log^2|t|.
+\]
+\end{proposition}
+
+\begin{proof}
+For $\sigma \geq 2$, $|\zeta(s)| \leq \zeta(2)$ and $|\zeta^{\prime}(s)| \leq \sum\log n\,n^{-2}$, so we may assume $\sigma \leq 2$. Let $x = |t|$ in
+\eqref{analytic-number-theory:equation-zeta-approximate}; then $\sigma \geq 1 - \frac{1}{\log x} \geq \frac12$, and for $1 \leq n \leq x$, $n^{-\sigma} \leq n^{-1}n^{1/\log x} \leq \frac en$.
+\emph{The bound for $\zeta$.} The terms of \eqref{analytic-number-theory:equation-zeta-approximate} are bounded as follows: $\sum_{n \leq x}n^{-\sigma} \leq e(1 + \log x)$;
+$\bigl|\frac{x^{1-s}}{s - 1}\bigr| \leq \frac{x^{1-\sigma}}{|t|} \leq \frac{e}{x}$; $\{x\}x^{-\sigma} \leq \frac ex$; and
+$\bigl|s\int_x^\infty\{u\}u^{-s-1}du\bigr| \leq |s|\frac{x^{-\sigma}}{\sigma} \leq (2 + |t|)\cdot\frac{e}{x}\cdot 2 \leq 6e$. So $|\zeta(s)| \ll \log|t|$.
+\emph{The bound for $\zeta^{\prime}$.} Differentiate \eqref{analytic-number-theory:equation-zeta-approximate}, using Lemma~\ref{analytic-number-theory:lemma-holomorphic-integrals} for the integral:
+\[
+\begin{aligned}
+\zeta^{\prime}(s) = &-\sum_{n \leq x}\frac{\log n}{n^s} - \frac{x^{1-s}\log x}{s - 1} - \frac{x^{1-s}}{(s - 1)^2} - \frac{\{x\}\log x}{x^s} \\
+&- \int_x^\infty\frac{\{u\}}{u^{s+1}}\,du + s\int_x^\infty\frac{\{u\}\log u}{u^{s+1}}\,du.
+\end{aligned}
+\]
+The first sum is at most $e\log x(1 + \log x)$, the next four terms are $O(\log x)$ as before, and the last is at most $|s|\int_x^\infty u^{-\sigma-1}\log u\,du = |s|x^{-\sigma}\bigl(\frac{\log x}{\sigma} + \frac{1}{\sigma^2}\bigr) = O(\log x)$.
+\end{proof}
+
+\subsection{No zeros on the line $\sigma = 1$}\label{analytic-number-theory:subsection-zeta-line-one}
+
+\begin{theorem}[Hadamard, de la Vall\'ee Poussin]\label{analytic-number-theory:theorem-zeta-nonvanishing}
+$\zeta(1 + it) \neq 0$ for every real $t \neq 0$. More precisely, for $\sigma > 1$ and real $t$,
+\begin{equation}\label{analytic-number-theory:equation-three-four-one}
+|\zeta(\sigma)^3\zeta(\sigma + it)^4\zeta(\sigma + 2it)| \geq 1.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: the inequality.} By Proposition~\ref{analytic-number-theory:proposition-log-zeta}, the logarithm of the left side of \eqref{analytic-number-theory:equation-three-four-one} is
+\[
+\sum_p\sum_{k \geq 1}\frac{1}{kp^{k\sigma}}\bigl(3 + 4\cos(\vartheta_{p,k}) + \cos(2\vartheta_{p,k})\bigr), \qquad \vartheta_{p,k} = kt\log p,
+\]
+and $3 + 4\cos\vartheta + \cos 2\vartheta = 3 + 4\cos\vartheta + 2\cos^2\vartheta - 1 = 2(1 + \cos\vartheta)^2 \geq 0$. So the logarithm is $\geq 0$.
+\emph{Step 2: the line $\sigma = 1$.} Suppose $\zeta(1 + it) = 0$ with $t \neq 0$. As $\sigma \to 1^+$: $\zeta(\sigma) \leq \frac{\sigma}{\sigma - 1}$ (Corollary~\ref{analytic-number-theory:corollary-zeta-negative-real}),
+$|\zeta(\sigma + it)| \leq C(\sigma - 1)$ because $\zeta$ is holomorphic at $1 + it$ with a zero there, and $\zeta(\sigma + 2it)$ stays bounded because $\zeta$ is holomorphic at $1 + 2it \neq 1$. Hence
+the left side of \eqref{analytic-number-theory:equation-three-four-one} is $O((\sigma - 1)^{-3}(\sigma - 1)^4) = O(\sigma - 1) \to 0$, contradicting Step 1.
+\end{proof}
+
+The proof is due to Mertens (1898), simplifying de la Vallée Poussin's. The heuristic is that a zero at $1 + it$ would make $p^{-it}$ close to $-1$ for most primes, and then $p^{-2it}$ would be close to
+$1$, producing a pole at $1 + 2it$; the coefficients $3, 4, 1$ make this precise.
+
+\subsection{The functional equation}\label{analytic-number-theory:subsection-functional-equation}
+
+Riemann's second proof of the functional equation uses the theta function and Poisson summation; this is also the model for the functional equations of all the $L$-functions of later chapters.
+
+\begin{lemma}\label{analytic-number-theory:lemma-theta}
+The function $\vartheta(x) = \sum_{n \in \ZZ}e^{-\pi n^2x}$, $x > 0$, satisfies $\vartheta(1/x) = \sqrt{x}\,\vartheta(x)$. Consequently $w(x) = \sum_{n \geq 1}e^{-\pi n^2x} = \frac12(\vartheta(x) - 1)$
+satisfies $w(1/x) = \sqrt{x}\,w(x) + \frac12(\sqrt{x} - 1)$, and $0 < w(x) \leq 2e^{-\pi x}$ for $x \geq 1$.
+\end{lemma}
+
+\begin{proof}
+For fixed $x > 0$, $f(y) = e^{-\pi xy^2}$ is a Schwartz function with $\hat f(\xi) = x^{-1/2}e^{-\pi\xi^2/x}$ (Example~\ref{distributions:example-fourier-computations}(3) with $n = 1$). Poisson summation
+(Proposition~\ref{distributions:proposition-poisson}) gives $\vartheta(x) = \sum_nf(n) = \sum_k\hat f(k) = x^{-1/2}\vartheta(1/x)$. The relation for $w$ follows from $\vartheta = 2w + 1$. Finally, for
+$x \geq 1$, $w(x) \leq \sum_{n \geq 1}e^{-\pi nx} = \frac{e^{-\pi x}}{1 - e^{-\pi x}} \leq 2e^{-\pi x}$.
+\end{proof}
+
+\begin{theorem}[Riemann's functional equation]\label{analytic-number-theory:theorem-functional-equation}
+Let $\xi(s) = \pi^{-s/2}\Gamma(\frac s2)\zeta(s)$ for $\sigma > 1$. Then
+\begin{equation}\label{analytic-number-theory:equation-xi}
+\xi(s) = \frac{1}{s - 1} - \frac1s + \int_1^\infty w(x)\bigl(x^{s/2} + x^{(1-s)/2}\bigr)\frac{dx}{x},
+\end{equation}
+where the integral is an entire function of $s$. Consequently:
+\begin{enumerate}
+\item $\xi$ extends to a meromorphic function on $\CC$ whose only poles are simple poles at $s = 0$ and $s = 1$, and $\xi(s) = \xi(1 - s)$;
+\item $\zeta$ extends to a meromorphic function on $\CC$ whose only pole is the simple pole at $s = 1$, and
+\[
+\zeta(s) = \pi^{s - 1/2}\frac{\Gamma(\frac{1 - s}{2})}{\Gamma(\frac s2)}\zeta(1 - s).
+\]
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: a Mellin transform.} For $\sigma > 1$ and $n \geq 1$, substituting $t = \pi n^2x$ in $\Gamma(\frac s2) = \int_0^\infty t^{s/2-1}e^{-t}dt$ gives
+$\pi^{-s/2}\Gamma(\frac s2)n^{-s} = \int_0^\infty e^{-\pi n^2x}x^{s/2-1}dx$. Summing over $n$ and exchanging sum and integral, which is allowed by Tonelli's theorem because the sum of the integrals of the
+absolute values is $\pi^{-\sigma/2}\Gamma(\frac\sigma2)\zeta(\sigma) < \infty$ (Theorem~\ref{measure-theory:theorem-fubini}),
+\[
+\xi(s) = \int_0^\infty w(x)x^{s/2}\frac{dx}{x}.
+\]
+\emph{Step 2: folding at $x = 1$.} On $(0, 1)$ substitute $x \mapsto 1/x$ and use Lemma~\ref{analytic-number-theory:lemma-theta}:
+\[
+\begin{aligned}
+\int_0^1w(x)x^{s/2}\frac{dx}{x} &= \int_1^\infty w(1/x)x^{-s/2}\frac{dx}{x} \\
+&= \int_1^\infty w(x)x^{(1-s)/2}\frac{dx}{x} + \frac12\int_1^\infty\bigl(x^{-(s+1)/2} - x^{-s/2-1}\bigr)dx,
+\end{aligned}
+\]
+and the last integral is $\frac12\bigl(\frac{2}{s - 1} - \frac2s\bigr) = \frac{1}{s - 1} - \frac1s$ for $\sigma > 1$. Adding $\int_1^\infty w(x)x^{s/2}dx/x$ gives \eqref{analytic-number-theory:equation-xi}.
+\emph{Step 3: the integral is entire.} For $|s| \leq R$, $|w(x)(x^{s/2} + x^{(1-s)/2})x^{-1}| \leq 4e^{-\pi x}x^{R}$ for $x \geq 1$, an integrable function; so
+Lemma~\ref{analytic-number-theory:lemma-holomorphic-integrals} applies.
+\emph{Step 4: consequences.} (1) The right side of \eqref{analytic-number-theory:equation-xi} is meromorphic on $\CC$ with simple poles at $0$ and $1$ only, and it is unchanged by $s \mapsto 1 - s$.
+(2) Put $\zeta(s) = \pi^{s/2}\xi(s)/\Gamma(\frac s2)$. Since $1/\Gamma$ is entire (Theorem~\ref{analytic-number-theory:theorem-weierstrass-gamma}), this is meromorphic on $\CC$; it agrees with $\zeta$
+on $\sigma > 1$, hence with the continuation of Proposition~\ref{analytic-number-theory:proposition-zeta-continuation} on $\sigma > 0$. Its possible poles are those of $\xi$. At $s = 0$, the simple pole
+of $\xi$ is cancelled by the simple zero of $1/\Gamma(\frac s2)$; at $s = 1$ there is a simple pole, as $\Gamma(\frac12) \neq 0$. Finally
+$\zeta(s) = \pi^{s/2}\xi(1 - s)/\Gamma(\frac s2) = \pi^{s/2}\pi^{-(1-s)/2}\Gamma(\frac{1 - s}2)\zeta(1 - s)/\Gamma(\frac s2)$.
+\end{proof}
+
+\begin{corollary}\label{analytic-number-theory:corollary-zeros}
+\begin{enumerate}
+\item $\zeta(0) = -\frac12$.
+\item $\zeta(s) \neq 0$ for $\sigma \geq 1$.
+\item In the half-plane $\sigma \leq 0$ the zeros of $\zeta$ are exactly the \emph{trivial zeros} $s = -2, -4, -6, \ldots$, all simple.
+\item All other zeros, the \emph{nontrivial zeros}, lie in the \emph{critical strip} $0 < \sigma < 1$, off the real axis, and they are symmetric with respect to the real axis and to the
+\emph{critical line} $\sigma = \frac12$: if $\rho$ is a nontrivial zero, so are $\bar\rho$, $1 - \rho$ and $1 - \bar\rho$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(1) Near $s = 0$, $\xi(s) = -\frac1s + O(1)$ by \eqref{analytic-number-theory:equation-xi}, and $\frac{1}{\Gamma(s/2)} = \frac s2(1 + O(s))$ by Theorem~\ref{analytic-number-theory:theorem-weierstrass-gamma}. So
+$\zeta(0) = \lim_{s \to 0}\pi^{s/2}\xi(s)/\Gamma(\frac s2) = -\frac12$.
+(2) For $\sigma > 1$ by Example~\ref{analytic-number-theory:example-dirichlet-series-table}(1), and for $\sigma = 1$ by Theorem~\ref{analytic-number-theory:theorem-zeta-nonvanishing} (at $s = 1$ there is a pole).
+(3) For $\sigma \leq 0$, $s \neq 0$: $\xi(s) = \xi(1 - s) = \pi^{-(1-s)/2}\Gamma(\frac{1 - s}2)\zeta(1 - s)$ with $\operatorname{Re}(1 - s) \geq 1$, $1 - s \neq 1$, so $\xi(s) \neq 0$ by (2) and
+because $\Gamma$ has no zeros. Hence $\zeta(s) = \pi^{s/2}\xi(s)/\Gamma(\frac s2)$ vanishes exactly where $1/\Gamma(\frac s2)$ does, that is at $s = -2, -4, \ldots$, and these zeros are simple. At $s = 0$,
+$\zeta(0) = -\frac12 \neq 0$.
+(4) By (2) and (3) the other zeros have $0 < \sigma < 1$, and by Corollary~\ref{analytic-number-theory:corollary-zeta-negative-real} they are not real. The function $s \mapsto \overline{\zeta(\bar s)}$ is
+meromorphic and agrees with $\zeta$ on the real half-line $s > 1$, so it equals $\zeta$ (identity theorem); hence the zeros are symmetric under conjugation. For a nontrivial zero $\rho$,
+$\xi(\rho) = 0$ (as $\Gamma(\frac\rho2) \neq 0$ and is finite), so $\xi(1 - \rho) = 0$, and $\zeta(1 - \rho) = 0$ because $\Gamma(\frac{1 - \rho}2)$ is finite.
+\end{proof}
+
+\begin{remark}\label{analytic-number-theory:remark-zeros-numerics}
+The first nontrivial zeros in the upper half-plane are $\frac12 + i\,14.134725\ldots$, $\frac12 + i\,21.022039\ldots$, $\frac12 + i\,25.010857\ldots$ The number $N(T)$ of zeros $\rho = \beta + i\gamma$ with
+$0 < \gamma \leq T$ satisfies the \emph{Riemann--von Mangoldt formula} $N(T) = \frac{T}{2\pi}\log\frac{T}{2\pi} - \frac{T}{2\pi} + O(\log T)$; Hardy proved that infinitely many zeros lie on the critical
+line \cite{hardy-1914-zeros}, and Selberg that a positive proportion does \cite{titchmarsh-zeta}. All zeros with $0 < \gamma \leq 3 \cdot 10^{12}$ are known to lie on the critical line
+\cite{platt-trudgian}. The function $\xi$ is entire after removing its poles: $s(s - 1)\xi(s)$ is an entire function of order $1$, and Hadamard's factorisation theorem gives
+$s(s - 1)\xi(s) = e^{A + Bs}\prod_\rho(1 - s/\rho)e^{s/\rho}$ over the nontrivial zeros \cite{davenport-multiplicative}; this is the starting point of the explicit formula
+(Remark~\ref{analytic-number-theory:remark-explicit-formula}).
+\end{remark}
+
+\subsection{Values at the integers}\label{analytic-number-theory:subsection-zeta-values}
+
+\begin{theorem}[Euler]\label{analytic-number-theory:theorem-zeta-even}
+For every integer $k \geq 1$,
+\[
+\zeta(2k) = (-1)^{k+1}\frac{(2\pi)^{2k}B_{2k}}{2\,(2k)!},
+\]
+where $B_n$ are the Bernoulli numbers (Definition~\ref{generating-functions:definition-bernoulli}). In particular $\zeta(2k)$ is a rational multiple of $\pi^{2k}$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: the cotangent as a power series in $\zeta(2k)$.} For $|z| < 1$, by Theorem~\ref{analytic-number-theory:theorem-cotangent},
+\[
+\pi z\cot\pi z = 1 + \sum_{n \geq 1}\frac{2z^2}{z^2 - n^2} = 1 - 2\sum_{n \geq 1}\sum_{k \geq 1}\frac{z^{2k}}{n^{2k}} = 1 - 2\sum_{k \geq 1}\zeta(2k)z^{2k},
+\]
+expanding $\frac{z^2/n^2}{1 - z^2/n^2}$ as a geometric series; the double series converges absolutely, so the order of summation may be changed.
+\emph{Step 2: the cotangent through Bernoulli numbers.} The function $g(w) = \frac{w}{e^w - 1}$ (with $g(0) = 1$) is holomorphic on $|w| < 2\pi$, the zeros of $e^w - 1$ being $2\pi i\ZZ$. Its Taylor
+coefficients $c_n$ satisfy $\sum_{j=0}^nc_j/(n - j + 1)! = \delta_{n,0}$, by multiplying the Taylor series of $g$ and of $\frac{e^w - 1}{w} = \sum w^n/(n + 1)!$; these equations determine the inverse of
+$\sum w^n/(n + 1)!$ in $\QQ[[w]]$, so $c_n = B_n/n!$. Now for $0 < |z| < 1$, with $w = 2\pi iz$,
+\[
+\pi z\cot\pi z = \pi iz\frac{e^{2\pi iz} + 1}{e^{2\pi iz} - 1} = \pi iz + \frac{2\pi iz}{e^{2\pi iz} - 1} = \pi iz + \sum_{n \geq 0}B_n\frac{(2\pi iz)^n}{n!}.
+\]
+\emph{Step 3: comparison.} Since $B_0 = 1$ and $B_1 = -\frac12$ (Proposition~\ref{generating-functions:proposition-bernoulli}), the terms of degree $\leq 1$ give $1$. Comparing the coefficients of
+$z^{2k}$ with Step 1 (Taylor coefficients are unique), $-2\zeta(2k) = B_{2k}(2\pi i)^{2k}/(2k)! = (-1)^kB_{2k}(2\pi)^{2k}/(2k)!$.
+\end{proof}
+
+\begin{corollary}\label{analytic-number-theory:corollary-zeta-negative}
+For every integer $k \geq 1$, $\zeta(1 - 2k) = -\frac{B_{2k}}{2k}$, and $\zeta(-2k) = 0$. In particular all the values $\zeta(-n)$, $n \geq 0$, are rational.
+\end{corollary}
+
+\begin{proof}
+The zeros were found in Corollary~\ref{analytic-number-theory:corollary-zeros}. Put $s = 1 - 2k$ in Theorem~\ref{analytic-number-theory:theorem-functional-equation}(2):
+$\zeta(1 - 2k) = \pi^{1/2 - 2k}\Gamma(k)\zeta(2k)/\Gamma(\frac12 - k)$. From $\Gamma(\frac12) = (\frac12 - k)(\frac32 - k)\cdots(-\frac12)\Gamma(\frac12 - k)$ we get
+$\Gamma(\frac12 - k) = \sqrt{\pi}(-2)^k/(1 \cdot 3 \cdots (2k - 1))$. With Theorem~\ref{analytic-number-theory:theorem-zeta-even} and $(2k)! = 2^kk!\cdot 1 \cdot 3 \cdots (2k - 1)$,
+\[
+\begin{aligned}
+\zeta(1 - 2k) &= \frac{(k - 1)!\cdot 1 \cdot 3 \cdots (2k - 1)}{\pi^{2k}(-2)^k}\cdot(-1)^{k+1}\frac{(2\pi)^{2k}B_{2k}}{2\,(2k)!} \\
+&= -\frac{(k - 1)!\,2^{k-1}B_{2k}}{2^kk!} = -\frac{B_{2k}}{2k}.
+\end{aligned} \qedhere
+\]
+\end{proof}
+
+\begin{example}\label{analytic-number-theory:example-zeta-values}
+With $B_2 = \frac16$, $B_4 = -\frac1{30}$, $B_6 = \frac1{42}$ and $B_{12} = -\frac{691}{2730}$:
+\[
+\begin{aligned}
+&\zeta(2) = \frac{\pi^2}{6}, \quad \zeta(4) = \frac{\pi^4}{90}, \quad \zeta(6) = \frac{\pi^6}{945}, \\
+&\zeta(-1) = -\frac1{12}, \quad \zeta(-3) = \frac1{120}, \quad \zeta(-5) = -\frac1{252}, \quad \zeta(-11) = \frac{691}{32760}.
+\end{aligned}
+\]
+The value $\zeta(-1) = -\frac1{12}$ is behind the slogan ``$1 + 2 + 3 + \cdots = -\frac1{12}$''. The series diverges, and the equation is false as a statement about series. What is true is that
+$-\frac1{12}$ is the value at $s = -1$ of the continuation of $\sum n^{-s}$. It is also the constant term of the smoothed sums: $\sum_{n \geq 1}ne^{-nx} = \frac{e^{-x}}{(1 - e^{-x})^2} = \frac{1}{x^2} - \frac1{12} + O(x^2)$
+as $x \to 0^+$ (expand in a Laurent series), so $\sum_nne^{-n/N} = N^2 - \frac1{12} + O(N^{-2})$. The prime $691$ in $\zeta(-11)$ reappears in the theory of modular forms (Chapter~\ref{modular-forms}).
+\end{example}
+
+\begin{remark}\label{analytic-number-theory:remark-zeta-odd}
+Nothing comparable is known at the odd integers $\geq 3$. Ap\'ery proved that $\zeta(3) = 1.2020569\ldots$ is irrational \cite{apery-1979}, and Rivoal that infinitely many values $\zeta(2k + 1)$ are
+irrational \cite{rivoal-2000}; it is not known whether $\zeta(5)$ is irrational. Since $\pi$ is transcendental (Lindemann), Theorem~\ref{analytic-number-theory:theorem-zeta-even} shows that every
+$\zeta(2k)$ is transcendental.
+\end{remark}
+
+\section{The prime number theorem}\label{analytic-number-theory:section-pnt}
+
+\subsection{Newman's analytic theorem}\label{analytic-number-theory:subsection-newman}
+
+The deduction of the prime number theorem from the absence of zeros on $\sigma = 1$ is a \emph{Tauberian} step: one knows the behaviour of a transform at the boundary of its half-plane of
+convergence and wants the behaviour of the original function. Newman found in 1980 a short way to do this with Cauchy's integral formula \cite{newman-1980}; we give it in Zagier's form
+\cite{zagier-newman}.
+
+\begin{theorem}[Newman's analytic theorem]\label{analytic-number-theory:theorem-newman}
+Let $f \colon [0, \infty) \to \CC$ be bounded and locally integrable, and suppose that the function $g(z) = \int_0^\infty f(u)e^{-zu}\,du$, holomorphic on $\operatorname{Re}z > 0$, extends holomorphically
+to an open set containing the closed half-plane $\operatorname{Re}z \geq 0$. Then $\int_0^\infty f(u)\,du = \lim_{T \to \infty}\int_0^Tf(u)\,du$ exists and equals $g(0)$.
+\end{theorem}
+
+\begin{proof}
+Let $|f| \leq B$. The function $g$ is holomorphic on $\operatorname{Re}z > 0$ by Lemma~\ref{analytic-number-theory:lemma-holomorphic-integrals} (dominate by $Be^{-\eta u}$ on
+$\operatorname{Re}z \geq \eta$). For $T > 0$ let $g_T(z) = \int_0^Tf(u)e^{-zu}du$, an entire function by the same lemma; we must show $g_T(0) \to g(0)$.
+\emph{Step 1: a contour.} Fix $R > 0$. The extension of $g$ is holomorphic on an open set containing the compact set $\{|z| \leq R, \operatorname{Re}z \geq 0\}$, hence containing
+$\{|z| \leq R, \operatorname{Re}z \geq -\delta\}$ for some $\delta = \delta(R) > 0$. Let $C$ be the boundary of this region, traversed counterclockwise, and let $C_+$, $C_-$ be its parts in
+$\operatorname{Re}z > 0$ and $\operatorname{Re}z < 0$. By Cauchy's integral formula (Theorem~\ref{complex-analysis:theorem-cauchy-formula}), applied to the holomorphic function
+$(g(z) - g_T(z))e^{zT}(1 + z^2/R^2)$, whose value at $0$ is $g(0) - g_T(0)$,
+\[
+g(0) - g_T(0) = \frac{1}{2\pi i}\int_C\bigl(g(z) - g_T(z)\bigr)e^{zT}\Bigl(1 + \frac{z^2}{R^2}\Bigr)\frac{dz}{z}.
+\]
+\emph{Step 2: a pointwise bound.} For $|z| = R$, $\bigl|\bigl(1 + \frac{z^2}{R^2}\bigr)\frac1z\bigr| = \frac{|\bar z + z|}{R^2} = \frac{2|\operatorname{Re}z|}{R^2}$, using $R^2 = z\bar z$.
+\emph{Step 3: the right half.} For $\operatorname{Re}z > 0$, $|g(z) - g_T(z)| = |\int_T^\infty f(u)e^{-zu}du| \leq \frac{Be^{-T\operatorname{Re}z}}{\operatorname{Re}z}$. With Step 2 the integrand on $C_+$ is
+at most $\frac{Be^{-T\operatorname{Re}z}}{\operatorname{Re}z}e^{T\operatorname{Re}z}\frac{2\operatorname{Re}z}{R^2} = \frac{2B}{R^2}$, and $C_+$ has length $\pi R$; so the contribution of $C_+$ is at most
+$\frac{B}{R}$.
+\emph{Step 4: the left half, $g_T$.} Since $g_T$ is entire, the integral of $g_T(z)e^{zT}(1 + z^2/R^2)z^{-1}$ over $C_-$ equals its integral over the left semicircle
+$C_-^{\prime} = \{|z| = R, \operatorname{Re}z < 0\}$, by Cauchy's theorem (Theorem~\ref{complex-analysis:theorem-cauchy-homotopy}; the two paths have the same endpoints $\pm iR$ and are homotopic in
+$\CC \setminus \{0\}$, since $0$ is not between them). For $\operatorname{Re}z < 0$, $|g_T(z)| = |\int_0^Tf(u)e^{-zu}du| \leq \frac{Be^{-T\operatorname{Re}z}}{|\operatorname{Re}z|}$, and as in Step 3
+this contribution is at most $\frac{B}{R}$.
+\emph{Step 5: the left half, $g$.} On $C_-$ the function $g(z)(1 + z^2/R^2)z^{-1}$ is continuous, hence bounded, independently of $T$, and $e^{zT} \to 0$ as $T \to \infty$ for each $z$ with
+$\operatorname{Re}z < 0$, boundedly. By dominated convergence the integral of $g(z)e^{zT}(1 + z^2/R^2)z^{-1}$ over $C_-$ tends to $0$.
+\emph{Step 6: conclusion.} So $\limsup_{T \to \infty}|g(0) - g_T(0)| \leq \frac{2B}{R}$ for every $R > 0$, and $g_T(0) = \int_0^Tf \to g(0)$.
+\end{proof}
+
+The factor $1 + z^2/R^2$ is the trick: it makes the kernel small exactly where the estimates of $g - g_T$ are weak, near the imaginary axis.
+
+\subsection{The prime number theorem}\label{analytic-number-theory:subsection-pnt}
+
+\begin{theorem}[Prime number theorem]\label{analytic-number-theory:theorem-pnt}
+As $x \to \infty$,
+\[
+\theta(x) \sim x, \qquad \psi(x) \sim x, \qquad \pi(x) \sim \frac{x}{\log x}.
+\]
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: the function $\Phi$.} For $\sigma > 1$ let $\Phi(s) = \sum_p\log p\,p^{-s}$. By Example~\ref{analytic-number-theory:example-dirichlet-series-table}(4),
+\[
+-\frac{\zeta^{\prime}(s)}{\zeta(s)} = \sum_n\frac{\Lambda(n)}{n^s} = \Phi(s) + \sum_p\log p\sum_{k \geq 2}p^{-ks},
+\]
+and the last series converges absolutely and locally uniformly on $\sigma > \frac12$ (it is at most $\sum_n\log n\,n^{-2\sigma}/(1 - 2^{-\sigma})$), so it is holomorphic there. The function
+$-\zeta^{\prime}/\zeta$ is meromorphic on $\sigma > 0$; its poles in $\sigma \geq 1$ come from zeros of $\zeta$, of which there are none (Corollary~\ref{analytic-number-theory:corollary-zeros}(2)), and from
+the simple pole of $\zeta$ at $1$, where $-\zeta^{\prime}/\zeta$ has a simple pole with residue $1$. The zeros of $\zeta$ in $\sigma > 0$ form a closed discrete subset not meeting $\sigma \geq 1$. Hence
+$\Phi(s) - \frac{1}{s - 1}$ extends holomorphically to an open set containing $\sigma \geq 1$.
+\emph{Step 2: $\Phi$ as an integral.} By Proposition~\ref{analytic-number-theory:proposition-abscissae}(2) with $a_p = \log p$, whose partial sums are $\theta(x) < x\log 4$
+(Theorem~\ref{prime-numbers:theorem-chebyshev}), $\Phi(s) = s\int_1^\infty\theta(x)x^{-s-1}dx$ for $\sigma > 1$.
+\emph{Step 3: Newman's theorem.} Let $f(u) = \theta(e^u)e^{-u} - 1$, bounded by Chebyshev's estimate. Substituting $x = e^u$, for $\operatorname{Re}z > 0$
+\[
+\begin{aligned}
+g(z) &= \int_0^\infty f(u)e^{-zu}\,du = \int_1^\infty\Bigl(\frac{\theta(x)}{x} - 1\Bigr)x^{-z-1}\,dx \\
+&= \frac{\Phi(z + 1)}{z + 1} - \frac1z = \frac{1}{z + 1}\Bigl(\Phi(z + 1) - \frac1z - 1\Bigr),
+\end{aligned}
+\]
+which by Step 1 extends holomorphically to a neighbourhood of $\operatorname{Re}z \geq 0$. By Theorem~\ref{analytic-number-theory:theorem-newman}, the integral
+$\int_0^\infty f(u)\,du = \int_1^\infty\frac{\theta(x) - x}{x^2}\,dx$ converges.
+\emph{Step 4: $\theta(x) \sim x$.} Let $\lambda > 1$ and suppose $\theta(x) \geq \lambda x$ for arbitrarily large $x$. Since $\theta$ is nondecreasing, for such $x$
+\[
+\int_x^{\lambda x}\frac{\theta(t) - t}{t^2}\,dt \geq \int_x^{\lambda x}\frac{\lambda x - t}{t^2}\,dt = \int_1^\lambda\frac{\lambda - v}{v^2}\,dv > 0,
+\]
+a positive constant independent of $x$; this contradicts the Cauchy criterion for the convergent integral. Similarly, if $\theta(x) \leq \lambda x$ for some $\lambda < 1$ and arbitrarily large $x$,
+then $\int_{\lambda x}^x\frac{\theta(t) - t}{t^2}dt \leq \int_\lambda^1\frac{\lambda - v}{v^2}dv < 0$. So $\theta(x)/x \to 1$.
+\emph{Step 5: $\psi$ and $\pi$.} $0 \leq \psi(x) - \theta(x) \leq 2\sqrt{x}\log x$ (Theorem~\ref{prime-numbers:theorem-chebyshev}), so $\psi(x) \sim x$. In Step 1 of the proof of
+Theorem~\ref{prime-numbers:theorem-chebyshev-limit} it was shown that $\frac{\theta(x)}{x} = \frac{\pi(x)\log x}{x} + O\bigl(\frac{1}{\log x}\bigr)$; so $\pi(x)\log x/x \to 1$.
+\end{proof}
+
+\begin{corollary}\label{analytic-number-theory:corollary-pnt}
+\begin{enumerate}
+\item The $n$-th prime satisfies $p_n \sim n\log n$.
+\item For every $\varepsilon > 0$ there is $x_0$ such that every interval $(x, (1 + \varepsilon)x]$ with $x \geq x_0$ contains a prime; in fact it contains $\sim\varepsilon x/\log x$ primes.
+\item $\log\operatorname{lcm}(1, 2, \ldots, n) = \psi(n) \sim n$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(1) $\pi(p_n) = n$, so $n\log p_n/p_n \to 1$. Taking logarithms, $\log n + \log\log p_n - \log p_n \to 0$, so $\log n/\log p_n \to 1$ (as $\log\log p_n/\log p_n \to 0$), and
+$p_n \sim n\log p_n \sim n\log n$. (2) $\theta((1 + \varepsilon)x) - \theta(x) = \varepsilon x + o(x)$, which is positive for large $x$; and $\pi((1 + \varepsilon)x) - \pi(x) \sim \frac{(1 + \varepsilon)x}{\log x} - \frac{x}{\log x}$.
+(3) This is the remark after Definition~\ref{prime-numbers:definition-chebyshev-functions}.
+\end{proof}
+
+\begin{example}\label{analytic-number-theory:example-pnt-table}
+The approximations $\frac{x}{\log x}$ and $\operatorname{li}(x) = \int_2^x\frac{dt}{\log t}$ compared with $\pi(x)$:
+\begin{center}
+\begin{tabular}{rrrr}
+$x$ & $\pi(x)$ & $\operatorname{li}(x)$ & $x/\log x$ \\
+\hline
+$10^3$ & $168$ & $176.6$ & $144.8$ \\
+$10^6$ & $78498$ & $78626.5$ & $72382.4$ \\
+$10^9$ & $50847534$ & $50849233.9$ & $48254942.4$
+\end{tabular}
+\end{center}
+The relative error of $x/\log x$ is about $1/\log x$, while that of $\operatorname{li}(x)$ is tiny; the reason is that $\operatorname{li}(x) = \frac{x}{\log x} + \frac{x}{\log^2x} + O\bigl(\frac{x}{\log^3x}\bigr)$
+(integrate by parts twice), and the error term of Corollary~\ref{analytic-number-theory:corollary-pnt-li} below is smaller than every $x/\log^kx$. In particular the best constant $A$ in Legendre's
+$\pi(x) \approx \frac{x}{\log x - A}$ is $A = 1$, since $\frac{x}{\log x - A} = \frac{x}{\log x} + \frac{Ax}{\log^2x} + O\bigl(\frac{x}{\log^3x}\bigr)$.
+\end{example}
+
+\subsection{The M\"obius function and the divisor function}\label{analytic-number-theory:subsection-mobius-pnt}
+
+\begin{theorem}[Landau, von Mangoldt]\label{analytic-number-theory:theorem-mertens-function}
+The Mertens function $M(x) = \sum_{n \leq x}\mu(n)$ satisfies $M(x) = o(x)$, and
+\[
+\sum_{n \geq 1}\frac{\mu(n)}{n} = 0.
+\]
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: Newman's theorem.} By Proposition~\ref{analytic-number-theory:proposition-abscissae}(2) and Example~\ref{analytic-number-theory:example-dirichlet-series-table}(1),
+$\frac{1}{\zeta(s)} = s\int_1^\infty M(x)x^{-s-1}dx$ for $\sigma > 1$, since $|M(x)| \leq x$. Let $f(u) = M(e^u)e^{-u}$, so $|f| \leq 1$ and
+$g(z) = \int_0^\infty f(u)e^{-zu}du = \int_1^\infty M(x)x^{-z-2}dx = \frac{1}{(z + 1)\zeta(z + 1)}$ for $\operatorname{Re}z > 0$. Since $\zeta$ has no zeros on $\sigma \geq 1$ and a pole at $1$, the function
+$1/\zeta$ extends holomorphically to a neighbourhood of $\sigma \geq 1$, with value $0$ at $s = 1$. So Theorem~\ref{analytic-number-theory:theorem-newman} gives $\int_1^\infty M(x)x^{-2}dx = g(0) = 0$.
+\emph{Step 2: $M(x) = o(x)$.} Let $0 < \varepsilon < 1$, and suppose $M(x) \geq \varepsilon x$ for some $x \geq 4/\varepsilon$. Since $|M(y) - M(x)| \leq y - x + 1$, for $x \leq y \leq (1 + \frac\varepsilon2)x$
+we have $M(y) \geq \varepsilon x - \frac{\varepsilon x}{2} - 1 \geq \frac{\varepsilon x}{4}$, so
+\[
+\int_x^{(1 + \varepsilon/2)x}\frac{M(y)}{y^2}\,dy \geq \frac{\varepsilon x}{4}\cdot\frac{\varepsilon x}{2}\cdot\frac{1}{(1 + \varepsilon/2)^2x^2} \geq \frac{\varepsilon^2}{18}.
+\]
+By the Cauchy criterion this can happen only for $x$ in a bounded set; the same argument applies to $M(x) \leq -\varepsilon x$. So $|M(x)| < \varepsilon x$ for large $x$.
+\emph{Step 3: the series.} By Lemma~\ref{analytic-number-theory:lemma-partial-summation} with $f(u) = 1/u$, $\sum_{n \leq x}\frac{\mu(n)}{n} = \frac{M(x)}{x} + \int_1^x\frac{M(u)}{u^2}\,du$, which tends to
+$0 + 0$ by Steps 1 and 2.
+\end{proof}
+
+\begin{remark}\label{analytic-number-theory:remark-mertens-pnt}
+Conversely, $M(x) = o(x)$ implies the prime number theorem by elementary manipulations with Dirichlet convolution, and so does $\sum\mu(n)/n = 0$ \cite{apostol-analytic}: all three statements are
+``equivalent'' in the sense that each follows from each other by elementary arguments. That $\sum\mu(n)/n$ converges at all is subtle: compare the elementary bound $|\sum_{n \leq x}\mu(n)/n| \leq 1$ of
+Exercise~\ref{analytic-number-theory:exercise-mu-over-n}.
+\end{remark}
+
+\begin{theorem}[Wigert]\label{analytic-number-theory:theorem-wigert}
+\[
+\limsup_{n \to \infty}\frac{\log\tau(n)\,\log\log n}{\log n} = \log 2.
+\]
+\end{theorem}
+
+\begin{proof}
+\emph{Upper bound.} Let $\delta > 0$, $n$ large, and apply Proposition~\ref{analytic-number-theory:proposition-divisor-bound} with $\varepsilon = (1 + \delta)\frac{\log 2}{\log\log n}$. Then
+$2^{1/\varepsilon} = \exp\bigl(\frac{\log\log n}{1 + \delta}\bigr) = (\log n)^{1/(1 + \delta)}$ and $\log(1 + \frac{1}{\varepsilon\log 2}) = O(\log\log\log n)$, so
+\[
+\begin{aligned}
+\log\tau(n) &\leq (1 + \delta)\log 2\,\frac{\log n}{\log\log n} + O\bigl((\log n)^{1/(1 + \delta)}\log\log\log n\bigr) \\
+&= (1 + \delta + o(1))\log 2\,\frac{\log n}{\log\log n}.
+\end{aligned}
+\]
+\emph{Lower bound.} Let $n_k = p_1\cdots p_k$, so that $\log\tau(n_k) = k\log 2 = \pi(p_k)\log 2$ and $\log n_k = \theta(p_k)$. By the prime number theorem, $\log n_k \sim p_k$, so
+$\log\log n_k \sim \log p_k$, and $\frac{\log\tau(n_k)\log\log n_k}{\log n_k} \sim \frac{\pi(p_k)\log p_k}{p_k}\log 2 \to \log 2$.
+\end{proof}
+
+\subsection{An error term}\label{analytic-number-theory:subsection-error-term}
+
+Newman's method gives no rate of convergence. To get one we need zeros of $\zeta$ to be absent from a region to the left of $\sigma = 1$, quantitative bounds there, and an exact formula expressing
+a sum over primes as a contour integral. The following ``Perron formula'' is the simplest such formula.
+
+\begin{lemma}\label{analytic-number-theory:lemma-perron}
+For $\kappa > 0$ and $y > 0$,
+\[
+\frac{1}{2\pi i}\int_{\kappa - i\infty}^{\kappa + i\infty}\frac{y^s}{s(s + 1)}\,ds = \begin{cases}1 - \frac1y & y \geq 1, \\ 0 & y \leq 1,\end{cases}
+\]
+the integral converging absolutely.
+\end{lemma}
+
+\begin{proof}
+On $\sigma = \kappa$, $|y^s/(s(s + 1))| \leq y^\kappa/(\kappa^2 + t^2)$, so the integral converges absolutely. Let $T > 0$ and $R > 1$.
+\emph{Case $y \geq 1$.} Apply the residue theorem (Theorem~\ref{complex-analysis:theorem-residues}) to the boundary of the rectangle $[-R, \kappa] \times [-T, T]$, which encloses the poles $0$ and $-1$
+with residues $1$ and $\frac{y^{-1}}{-1}$. On the horizontal sides $|y^s| \leq y^\kappa$ and $|s(s + 1)| \geq T^2$, so their contribution is at most $(\kappa + R)y^\kappa/T^2 \to 0$ as $T \to \infty$. Hence
+$\frac{1}{2\pi i}\int_{(\kappa)} - \frac{1}{2\pi i}\int_{(-R)} = 1 - \frac1y$, the integrals being over the full vertical lines. On $\sigma = -R$, $|y^s| = y^{-R} \leq 1$ and
+$|s(s + 1)| \geq (R - 1)^2 + t^2$, so $|\int_{(-R)}| \leq \int\frac{dt}{(R - 1)^2 + t^2} = \frac{\pi}{R - 1} \to 0$ as $R \to \infty$.
+\emph{Case $y \leq 1$.} Use the rectangle $[\kappa, R] \times [-T, T]$, which contains no poles. Now $|y^s| \leq y^\kappa \leq 1$ for $\sigma \geq \kappa$, the horizontal sides again contribute $O(R/T^2)$, and
+the right side contributes at most $\int\frac{dt}{R^2 + t^2} = \frac\pi R$. So the integral is $0$.
+\end{proof}
+
+\begin{proposition}[A zero-free region]\label{analytic-number-theory:proposition-zero-free}
+There are constants $A \in (0, 1]$ and $C_2$ such that for $|t| \geq e^2$ and $\sigma \geq 1 - \frac{A}{\log^9|t|}$:
+\[
+\zeta(\sigma + it) \neq 0, \qquad \Bigl|\frac{1}{\zeta(\sigma + it)}\Bigr| \leq C_2\log^7|t|, \qquad \Bigl|\frac{\zeta^{\prime}(\sigma + it)}{\zeta(\sigma + it)}\Bigr| \leq C_2\log^9|t|.
+\]
+\end{proposition}
+
+\begin{proof}
+Let $L = \log|t| \geq 2$ and let $C_1$ be the constant of Proposition~\ref{analytic-number-theory:proposition-zeta-bounds}. For $\sigma \geq 2$, $|1/\zeta(s)| = |\sum\mu(n)n^{-s}| \leq \zeta(2)$ and
+$|\zeta^{\prime}/\zeta(s)| \leq \sum\Lambda(n)n^{-2}$, so assume $\sigma < 2$.
+\emph{Step 1: a lower bound for $\sigma > 1$.} For $1 < \sigma \leq 2$, \eqref{analytic-number-theory:equation-three-four-one} together with $\zeta(\sigma) \leq \frac{2}{\sigma - 1}$
+(Corollary~\ref{analytic-number-theory:corollary-zeta-negative-real}) and $|\zeta(\sigma + 2it)| \leq C_1\log|2t| \leq 2C_1L$ gives
+\[
+\begin{aligned}
+&|\zeta(\sigma + it)|^4 \geq \frac{1}{\zeta(\sigma)^3|\zeta(\sigma + 2it)|} \geq \frac{(\sigma - 1)^3}{16C_1L}, \\
+&|\zeta(\sigma + it)| \geq c_2(\sigma - 1)^{3/4}L^{-1/4}, \qquad c_2 = (16C_1)^{-1/4}.
+\end{aligned}
+\]
+\emph{Step 2: moving to the left.} Let $\delta = A/L^9$ with $A \leq 1$ to be chosen, and $\sigma_1 = 1 + \delta$. Since $\delta \leq 1/L$, the bound $|\zeta^{\prime}| \leq C_1L^2$ holds on
+$[1 - \delta, \sigma_1] + it$. For $1 - \delta \leq \sigma \leq \sigma_1$,
+\[
+\begin{aligned}
+|\zeta(\sigma + it)| &\geq |\zeta(\sigma_1 + it)| - \int_\sigma^{\sigma_1}|\zeta^{\prime}(u + it)|\,du \\
+&\geq c_2\delta^{3/4}L^{-1/4} - 2\delta C_1L^2 = L^{-7}\bigl(c_2A^{3/4} - 2C_1A\bigr).
+\end{aligned}
+\]
+Choose $A \leq 1$ so small that $2C_1A \leq \frac12c_2A^{3/4}$, that is $A^{1/4} \leq c_2/(4C_1)$. Then $|\zeta(\sigma + it)| \geq \frac{c_2}2A^{3/4}L^{-7}$ for $1 - \delta \leq \sigma \leq \sigma_1$; and for
+$\sigma_1 \leq \sigma < 2$, Step 1 gives $|\zeta(\sigma + it)| \geq c_2\delta^{3/4}L^{-1/4} \geq c_2A^{3/4}L^{-7}$.
+\emph{Step 3: conclusion.} So $\zeta \neq 0$ and $|1/\zeta| \leq \frac{2}{c_2A^{3/4}}L^7$ in the region, and $|\zeta^{\prime}/\zeta| \leq C_1L^2\cdot\frac{2}{c_2A^{3/4}}L^7$.
+\end{proof}
+
+\begin{theorem}[Prime number theorem with error term]\label{analytic-number-theory:theorem-pnt-error}
+There is a constant $c > 0$ such that
+\[
+\psi(x) = x + O\bigl(xe^{-c(\log x)^{1/10}}\bigr).
+\]
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: an integral formula.} Let $\psi_1(x) = \int_1^x\psi(u)\,du = \sum_{n \leq x}\Lambda(n)(x - n)$, and let $x \geq e^2$, $\kappa = 1 + \frac{1}{\log x}$. By Lemma~\ref{analytic-number-theory:lemma-perron}
+with $y = x/n$,
+\[
+\psi_1(x) = x\sum_n\Lambda(n)\frac{1}{2\pi i}\int_{(\kappa)}\frac{(x/n)^s}{s(s + 1)}\,ds = \frac{1}{2\pi i}\int_{(\kappa)}\Bigl(-\frac{\zeta^{\prime}(s)}{\zeta(s)}\Bigr)\frac{x^{s+1}}{s(s + 1)}\,ds.
+\]
+Here $\int_{(\kappa)}$ is the integral over the line $\sigma = \kappa$; sum and integral may be exchanged by Fubini's theorem, because $\sum_n\Lambda(n)n^{-\kappa}\int|x^{s}/(s(s + 1))|\,dt < \infty$.
+\emph{Step 2: shifting the contour.} There is $\delta_0 \in (0, \frac12]$ such that $\zeta$ has no zeros in the rectangle $1 - \delta_0 \leq \sigma \leq 2$, $|t| \leq e^2$: the zeros of $\zeta$ in
+$\sigma > 0$ are isolated, so finitely many lie in the compact rectangle $\frac12 \leq \sigma \leq 2$, $|t| \leq e^2$, and none has $\sigma \geq 1$. In this rectangle
+$\frac{\zeta^{\prime}}{\zeta}(s) + \frac{1}{s - 1}$ is holomorphic, hence bounded by some $C_0$. Now let $T \geq e^2$ and $\delta = \min(\delta_0, A/\log^9T)$. By
+Proposition~\ref{analytic-number-theory:proposition-zero-free} (note $A/\log^9T \leq A/\log^9|t|$ for $|t| \leq T$), $\zeta$ has no zeros in $1 - \delta \leq \sigma$, $|t| \leq T$. The residue theorem on the
+rectangle with vertices $\kappa \pm iT$, $1 - \delta \pm iT$, where the only pole of the integrand is at $s = 1$ with residue $\frac{x^2}{2}$, gives
+\[
+\psi_1(x) - \frac{x^2}{2} = \frac{1}{2\pi i}\Bigl(\int_{\kappa + iT}^{\kappa + i\infty} + \int_{\kappa - i\infty}^{\kappa - iT} + \int_{1 - \delta + iT}^{\kappa + iT} + \int_{1 - \delta - iT}^{1 - \delta + iT} + \int_{\kappa - iT}^{1 - \delta - iT}\Bigr),
+\]
+each of the integrand $-\frac{\zeta^{\prime}}{\zeta}(s)\frac{x^{s+1}}{s(s + 1)}$ along straight segments.
+\emph{Step 3: the pieces.} On $\sigma = \kappa$, $|\zeta^{\prime}/\zeta(s)| \leq \sum\Lambda(n)n^{-\kappa} = -\frac{\zeta^{\prime}}{\zeta}(\kappa) \leq \frac{1}{\kappa - 1} + C_0 \leq 2\log x$ for large $x$, and
+$|x^{s+1}| = ex^2$; so the two vertical tails contribute $O(x^2\log x\int_T^\infty t^{-2}dt) = O(x^2\log x/T)$. On the horizontal sides, $|\zeta^{\prime}/\zeta| \leq C_2\log^9T$,
+$|x^{s+1}| \leq ex^2$, $|s(s + 1)| \geq T^2$ and the length is at most $1$; they contribute $O(x^2\log^9T/T^2)$. On the left side $|x^{s+1}| = x^{2 - \delta}$; for $e^2 \leq |t| \leq T$ the integrand is at most
+$C_2\log^9T\,x^{2-\delta}/t^2$, and for $|t| \leq e^2$ it is at most $(\frac1\delta + C_0)x^{2-\delta}\cdot 2$, because $|s - 1| \geq \delta$ and $|s(s + 1)| \geq \frac12$ there; so the left side contributes
+$O(x^{2-\delta}(\log^9T + \delta^{-1})) = O(x^{2-\delta}\log^9T)$. Altogether
+\[
+\psi_1(x) - \frac{x^2}{2} \ll x^2\Bigl(\frac{\log x}{T} + \frac{\log^9T}{T^2} + x^{-\delta}\log^9T\Bigr).
+\]
+\emph{Step 4: choice of $T$.} Let $\lambda = (\log x)^{1/10}$ and $T = e^\lambda$. For large $x$, $\delta = A\lambda^{-9}$ and $x^{-\delta} = e^{-A\lambda}$. The three terms are
+$\lambda^{10}e^{-\lambda}$, $\lambda^9e^{-2\lambda}$ and $\lambda^9e^{-A\lambda}$, all $O(e^{-A\lambda/2})$ as $A \leq 1$. So $|\psi_1(x) - \frac{x^2}2| \leq C_3x^2\epsilon(x)$ with $\epsilon(x) = e^{-\frac A2(\log x)^{1/10}}$, for large $x$.
+\emph{Step 5: removing the smoothing.} Let $h = x\sqrt{\epsilon(x)} \leq \frac x2$. Since $\psi$ is nondecreasing,
+\[
+\frac{\psi_1(x) - \psi_1(x - h)}{h} \leq \psi(x) \leq \frac{\psi_1(x + h) - \psi_1(x)}{h}.
+\]
+The right side is $\frac{(x + h)^2 - x^2}{2h} + O\bigl(\frac{x^2\epsilon(x/2)}{h}\bigr) = x + \frac h2 + O\bigl(\frac{x^2\epsilon(x)}{h}\bigr) = x + O(x\sqrt{\epsilon(x)})$, using $\epsilon(x \pm h) \leq \epsilon(x/2) \leq 2\epsilon(x)$
+(as $(\log x - \log 2)^{1/10} \geq (\log x)^{1/10} - \log 2$ and $A \leq 1$). The left side is $x - \frac h2 + O(x\sqrt{\epsilon(x)})$ in the same way. So $\psi(x) = x + O(xe^{-\frac A4(\log x)^{1/10}})$.
+\end{proof}
+
+\begin{corollary}\label{analytic-number-theory:corollary-pnt-li}
+There is $c > 0$ with $\pi(x) = \operatorname{li}(x) + O\bigl(xe^{-c(\log x)^{1/10}}\bigr)$.
+\end{corollary}
+
+\begin{proof}
+Let $E(x) = e^{-c^{\prime}(\log x)^{1/10}}$, with $c^{\prime}$ the constant of Theorem~\ref{analytic-number-theory:theorem-pnt-error}. Since $\psi - \theta = O(\sqrt{x}\log x)$, $R(x) = \theta(x) - x$ satisfies
+$|R(x)| \leq C_4xE(x)$ for $x \geq 2$. Partial summation (Lemma~\ref{analytic-number-theory:lemma-partial-summation} with $y = \frac32$, $a_p = \log p$, $f = 1/\log$) gives
+$\pi(x) = \frac{\theta(x)}{\log x} + \int_2^x\frac{\theta(t)}{t\log^2t}\,dt$, and integration by parts gives $\operatorname{li}(x) = \frac{x}{\log x} - \frac{2}{\log 2} + \int_2^x\frac{dt}{\log^2t}$. Subtracting,
+\[
+\pi(x) - \operatorname{li}(x) = \frac{R(x)}{\log x} + \int_2^x\frac{R(t)}{t\log^2t}\,dt + \frac{2}{\log 2},
+\]
+and, splitting the integral at $\sqrt{x}$ and using that $E$ is decreasing, $|\int_2^x\frac{R(t)}{t\log^2t}dt| \leq C_4\bigl(\frac{\sqrt{x}}{\log^22} + xE(\sqrt{x})\bigr)$. Since $E(\sqrt{x}) = e^{-c^{\prime}2^{-1/10}(\log x)^{1/10}}$ and $E(x) \leq E(\sqrt{x})$, the claim
+holds with $c = c^{\prime}2^{-1/10}$.
+\end{proof}
+
+\begin{remark}\label{analytic-number-theory:remark-zero-free}
+The exponent $\frac{1}{10}$ comes from the crude zero-free region of Proposition~\ref{analytic-number-theory:proposition-zero-free}, which uses only the upper bounds of
+Proposition~\ref{analytic-number-theory:proposition-zeta-bounds}. Using in addition the Hadamard product of $\xi$ (Remark~\ref{analytic-number-theory:remark-zeros-numerics}) or a lemma of
+Borel--Carath\'eodory type, de la Vall\'ee Poussin obtained the zero-free region $\sigma > 1 - \frac{c}{\log|t|}$, and with it $\psi(x) = x + O(xe^{-c\sqrt{\log x}})$
+\cite{davenport-multiplicative}, \cite{montgomery-vaughan}. The best known region, of Vinogradov and Korobov, is $\sigma > 1 - c(\log|t|)^{-2/3}(\log\log|t|)^{-1/3}$, giving the error
+$O(x\exp(-c(\log x)^{3/5}(\log\log x)^{-1/5}))$ \cite{iwaniec-kowalski}. The general principle, visible in the proof above, is that a zero-free region $\sigma > 1 - \eta(t)$ gives an error term
+about $x\exp(-\min_t(\eta(t)\log x + \log t))$.
+\end{remark}
+
+\section{The Riemann hypothesis}\label{analytic-number-theory:section-riemann-hypothesis}
+
+\begin{conjecture}[Riemann hypothesis]\label{analytic-number-theory:conjecture-riemann}
+All nontrivial zeros of $\zeta$ lie on the critical line $\sigma = \frac12$.
+\end{conjecture}
+
+Riemann stated it in 1859 as ``very probable'' \cite{riemann-1859}. By Corollary~\ref{analytic-number-theory:corollary-zeros} the hypothesis is equivalent to $\zeta(s) \neq 0$ for $\sigma > \frac12$. The
+next proposition shows two of its arithmetic meanings; in each case one direction is easy and is proved here.
+
+\begin{proposition}\label{analytic-number-theory:proposition-rh-equivalent}
+Let $\frac12 \leq \beta < 1$.
+\begin{enumerate}
+\item If $M(x) = \sum_{n \leq x}\mu(n) = O(x^\beta)$, then $\zeta(s) \neq 0$ for $\sigma > \beta$.
+\item If $\psi(x) = x + O(x^\beta)$, then $\zeta(s) \neq 0$ for $\sigma > \beta$.
+\end{enumerate}
+In particular, if $M(x) = O_\varepsilon(x^{1/2 + \varepsilon})$ for every $\varepsilon > 0$, or $\psi(x) = x + O_\varepsilon(x^{1/2 + \varepsilon})$ for every $\varepsilon > 0$, then the Riemann hypothesis
+holds. Conversely, the Riemann hypothesis implies $M(x) = O_\varepsilon(x^{1/2 + \varepsilon})$ (Littlewood) and $\psi(x) = x + O(\sqrt{x}\log^2x)$ (von Koch) \cite{titchmarsh-zeta}, \cite{von-koch-1901}.
+\end{proposition}
+
+\begin{proof}
+(1) By Proposition~\ref{analytic-number-theory:proposition-abscissae}(2), $F(s) = \sum\mu(n)n^{-s}$ converges on $\sigma > \beta$ and is holomorphic there. On $\sigma > 1$, $\zeta F = 1$
+(Example~\ref{analytic-number-theory:example-dirichlet-series-table}(1)). The function $\zeta F$ is meromorphic on the connected set $\sigma > \beta$, so $\zeta F = 1$ there, and $\zeta$ cannot vanish.
+(2) The coefficients $a_n = \Lambda(n) - 1$ have partial sums $\psi(x) - \lfloor x\rfloor = O(x^\beta)$, so $G(s) = \sum(\Lambda(n) - 1)n^{-s} = -\frac{\zeta^{\prime}}{\zeta}(s) - \zeta(s)$ (for $\sigma > 1$)
+converges and is holomorphic on $\sigma > \beta$. Hence $\frac{\zeta^{\prime}}{\zeta} = -G - \zeta$ is holomorphic on $\sigma > \beta$ except at $s = 1$. A zero of $\zeta$ of order $m \geq 1$ at $\rho$ would be a
+pole of $\zeta^{\prime}/\zeta$ with residue $m$; so there is none with $\sigma > \beta$.
+\end{proof}
+
+\begin{remark}\label{analytic-number-theory:remark-explicit-formula}
+The precise link between primes and zeros is the \emph{explicit formula} of Riemann and von Mangoldt: for $x > 1$ not a prime power,
+\[
+\psi(x) = x - \sum_\rho\frac{x^\rho}{\rho} - \log 2\pi - \frac12\log\bigl(1 - x^{-2}\bigr),
+\]
+where $\rho$ runs over the nontrivial zeros, the sum being taken as $\lim_{T \to \infty}\sum_{|\operatorname{Im}\rho| \leq T}$ \cite{davenport-multiplicative}. The term $-\frac12\log(1 - x^{-2}) = \sum_k\frac{x^{-2k}}{2k}$
+comes from the trivial zeros, and $\log 2\pi = \frac{\zeta^{\prime}(0)}{\zeta(0)}$. Each zero $\rho = \beta + i\gamma$ contributes an oscillation of amplitude $x^\beta/|\rho|$ and frequency $\gamma/2\pi$ in
+$\log x$: the primes are a superposition of ``waves'' indexed by the zeros, and the Riemann hypothesis says that all these waves have the smallest possible amplitude $\sqrt{x}$. The proof is the
+argument of Theorem~\ref{analytic-number-theory:theorem-pnt-error} with the contour moved all the way to the left, which requires the Hadamard product of $\xi$ to control $\zeta^{\prime}/\zeta$.
+\end{remark}
+
+\begin{remark}\label{analytic-number-theory:remark-rh-facts}
+Some further facts, quoted without proof.
+\begin{enumerate}
+\item The \emph{Mertens conjecture} $|M(x)| < \sqrt{x}$ would imply the Riemann hypothesis by Proposition~\ref{analytic-number-theory:proposition-rh-equivalent}(1); it is true for all $x$ that have been checked but
+false in general \cite{odlyzko-te-riele}.
+\item In all rows of Example~\ref{analytic-number-theory:example-pnt-table}, $\pi(x) < \operatorname{li}(x)$, and the difference is far smaller than the error term allowed by
+Corollary~\ref{analytic-number-theory:corollary-pnt-li}; but Littlewood proved that $\pi(x) - \operatorname{li}(x)$ changes sign infinitely often \cite{littlewood-1914}, taking values of both signs larger than $c\sqrt{x}\log\log\log x/\log x$ in absolute value for a constant $c > 0$.
+\item (Robin) The Riemann hypothesis is equivalent to $\sigma(n) < e^\gamma n\log\log n$ for all $n > 5040$ \cite{robin-1984}; and (Lagarias) to $\sigma(n) \leq H_n + e^{H_n}\log H_n$ for all
+$n \geq 1$, where $H_n = 1 + \frac12 + \cdots + \frac1n$ \cite{lagarias-2002}.
+\item The \emph{Lindelöf hypothesis} $\zeta(\frac12 + it) = O_\varepsilon(|t|^\varepsilon)$, a consequence of the Riemann hypothesis, is also open; Exercise~\ref{analytic-number-theory:exercise-zeta-strip-bound}
+proves the ``trivial'' bound $O(|t|^{1/2}\log|t|)$.
+\end{enumerate}
+\end{remark}
+
+\begin{remark}\label{analytic-number-theory:remark-selberg}
+In 1949 Selberg and Erd\H{o}s found proofs of the prime number theorem without complex analysis \cite{selberg-1949}, \cite{erdos-1949}. Their starting point is \emph{Selberg's symmetry formula}
+\[
+\psi(x)\log x + \sum_{n \leq x}\Lambda(n)\psi\Bigl(\frac xn\Bigr) = 2x\log x + O(x),
+\]
+which follows from elementary manipulations with the function $\Lambda_2 = \mu * \log^2 = \Lambda\log + \Lambda * \Lambda$ and the estimates of Section~\ref{analytic-number-theory:section-averages}. The formula
+says that $\psi(x)/x$ cannot stay far from $1$ in one direction without being far from $1$ in the other on a large set, and a delicate Tauberian argument turns this into $\psi(x) \sim x$. Elementary
+proofs give weaker error terms than the analytic ones and do not see the zeros; their importance was methodological, showing that the prime number theorem does not ``need'' complex analysis.
+\end{remark}
+
+\section{Dirichlet's theorem on primes in arithmetic progressions}\label{analytic-number-theory:section-dirichlet}
+
+Dirichlet proved in 1837 that every arithmetic progression $a, a + q, a + 2q, \ldots$ with $\gcd(a, q) = 1$ contains infinitely many primes. Chapter~\ref{prime-numbers} proved special cases
+($a = \pm1$ with $q = 4, 6, 8$, and $a = 1$ for every $q$) with algebraic tricks that do not generalise. Dirichlet's idea is to isolate the progression with characters, the multiplicative analogue of
+Fourier analysis on $\ZZ/q\ZZ$.
+
+\subsection{Characters of finite abelian groups}\label{analytic-number-theory:subsection-characters}
+
+\begin{definition}\label{analytic-number-theory:definition-characters}
+Let $G$ be a finite abelian group, written multiplicatively with identity $1$. A \emph{character} of $G$ is a homomorphism $\chi \colon G \to \CC^\times$. The characters form a group $\widehat G$, the
+\emph{dual group}, under pointwise multiplication $(\chi\chi^{\prime})(g) = \chi(g)\chi^{\prime}(g)$, whose identity is the \emph{trivial character} $\chi_0(g) = 1$.
+\end{definition}
+
+\begin{notation}\label{analytic-number-theory:notation-characters}
+Since $g^{|G|} = 1$, the values $\chi(g)$ are $|G|$-th roots of unity, so $|\chi(g)| = 1$ and $\chi(g)^{-1} = \overline{\chi(g)}$; the inverse of $\chi$ in $\widehat G$ is the complex conjugate
+character $\bar\chi$. A character is \emph{real} if all its values are real, that is $\pm1$, equivalently $\chi^2 = \chi_0$.
+\end{notation}
+
+\begin{proposition}\label{analytic-number-theory:proposition-dual-group}
+Let $G$ be a finite abelian group.
+\begin{enumerate}
+\item $|\widehat G| = |G|$.
+\item For every $g \neq 1$ in $G$ there is $\chi \in \widehat G$ with $\chi(g) \neq 1$.
+\item (Orthogonality) $\sum_{g \in G}\chi(g) = |G|$ if $\chi = \chi_0$ and $0$ otherwise; $\sum_{\chi \in \widehat G}\chi(g) = |G|$ if $g = 1$ and $0$ otherwise.
+\item For $a, b \in G$, $\frac{1}{|G|}\sum_{\chi \in \widehat G}\overline{\chi(a)}\chi(b) = 1$ if $a = b$ and $0$ otherwise.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1), (2) By the structure theorem (Theorem~\ref{groups:theorem-structure-abelian}), $G$ is a direct product of cyclic groups $\langle g_1\rangle \times \cdots \times \langle g_r\rangle$ of orders
+$n_1, \ldots, n_r$. A character is determined by the values $\chi(g_i)$, which are $n_i$-th roots of unity, and every choice of such roots defines a character
+$\chi(g_1^{a_1}\cdots g_r^{a_r}) = \prod\chi(g_i)^{a_i}$ (well defined because $\chi(g_i)^{n_i} = 1$). So $|\widehat G| = n_1\cdots n_r = |G|$. If $g = \prod g_i^{a_i} \neq 1$, some $a_i \not\equiv 0 \pmod{n_i}$;
+the character with $\chi(g_i) = e^{2\pi i/n_i}$ and $\chi(g_j) = 1$ for $j \neq i$ has $\chi(g) = e^{2\pi ia_i/n_i} \neq 1$.
+(3) If $\chi \neq \chi_0$, pick $h$ with $\chi(h) \neq 1$; as $g \mapsto hg$ permutes $G$, $\chi(h)\sum_g\chi(g) = \sum_g\chi(hg) = \sum_g\chi(g)$, so the sum is $0$. If $g \neq 1$, pick $\psi$ by (2) with
+$\psi(g) \neq 1$; as $\chi \mapsto \psi\chi$ permutes $\widehat G$, $\psi(g)\sum_\chi\chi(g) = \sum_\chi\chi(g)$, so the sum is $0$. The other cases are clear, using (1).
+(4) $\overline{\chi(a)}\chi(b) = \chi(a^{-1}b)$; apply the second part of (3) to $g = a^{-1}b$.
+\end{proof}
+
+Formula (4) is the point: the indicator function of a single element $a$ is a linear combination of characters, and characters are multiplicative. This is how a condition such as $p \equiv a \pmod q$
+is expressed through multiplicative functions.
+
+\subsection{Dirichlet characters and $L$-functions}\label{analytic-number-theory:subsection-l-functions}
+
+\begin{definition}\label{analytic-number-theory:definition-dirichlet-character}
+Let $q \geq 1$. A \emph{Dirichlet character modulo $q$} is a function $\chi \colon \ZZ \to \CC$ of the form $\chi(n) = \chi^{\prime}(n \bmod q)$ if $\gcd(n, q) = 1$ and $\chi(n) = 0$ otherwise, where
+$\chi^{\prime}$ is a character of the group $(\ZZ/q\ZZ)^\times$. The \emph{principal character} $\chi_0$ comes from the trivial character: $\chi_0(n) = 1$ if $\gcd(n, q) = 1$ and $0$ otherwise. The
+\emph{Dirichlet $L$-function} of $\chi$ is $L(s, \chi) = \sum_{n \geq 1}\chi(n)n^{-s}$.
+\end{definition}
+
+A Dirichlet character is completely multiplicative and periodic modulo $q$, and there are $\varphi(q)$ of them by Proposition~\ref{analytic-number-theory:proposition-dual-group}(1).
+
+\begin{example}\label{analytic-number-theory:example-dirichlet-characters}
+\begin{enumerate}
+\item $q = 4$: $(\ZZ/4\ZZ)^\times = \{\pm1\}$, with the characters $\chi_0$ and $\chi_{-4}$ of Example~\ref{analytic-number-theory:example-dirichlet-series}(3).
+\item $q = p$ an odd prime: the Legendre symbol $\chi(n) = (\frac np)$ (Definition~\ref{number-theory:definition-legendre}) is a real character, multiplicative by Euler's criterion
+(Proposition~\ref{number-theory:proposition-euler-criterion}). Since $(\ZZ/p\ZZ)^\times$ is cyclic with a generator $g$ (Theorem~\ref{number-theory:theorem-primitive-root-prime}), the characters are
+$\chi_j(g^k) = e^{2\pi ijk/(p - 1)}$, $0 \leq j < p - 1$, and $\chi_{(p-1)/2}$ is the Legendre symbol. For $p = 3$ we write $\chi_{-3}(n) = (\frac n3)$.
+\item $q = 5$, with generator $2$ ($2, 4, 3, 1$ are its powers): the character with $\chi(2) = i$ has $\chi(1) = 1$, $\chi(2) = i$, $\chi(4) = -1$, $\chi(3) = -i$; it is not real.
+\item $q = 8$: $(\ZZ/8\ZZ)^\times = \{1, 3, 5, 7\}$ has four characters, all real: $\chi_0$; $\chi_{-4}$ with values $1, -1, 1, -1$; $\chi_8$ with values $1, -1, -1, 1$, that is
+$\chi_8(n) = (-1)^{(n^2 - 1)/8}$; and $\chi_{-8} = \chi_{-4}\chi_8$ with values $1, 1, -1, -1$.
+\end{enumerate}
+\end{example}
+
+\begin{proposition}\label{analytic-number-theory:proposition-dirichlet-orthogonality}
+Let $q \geq 1$ and let $\chi$ be a Dirichlet character modulo $q$.
+\begin{enumerate}
+\item $\sum_{n=1}^q\chi(n) = \varphi(q)$ if $\chi = \chi_0$ and $0$ otherwise; consequently $|\sum_{n \leq x}\chi(n)| \leq \varphi(q)$ for all $x$ if $\chi \neq \chi_0$.
+\item For $\gcd(a, q) = 1$ and all $n$: $\frac{1}{\varphi(q)}\sum_{\chi \bmod q}\overline{\chi(a)}\chi(n) = 1$ if $n \equiv a \pmod q$ and $0$ otherwise.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) The sum over a full period is the sum over $(\ZZ/q\ZZ)^\times$, so Proposition~\ref{analytic-number-theory:proposition-dual-group}(3) applies. For $\chi \neq \chi_0$, the partial sum up to $x$ is the
+sum over the last incomplete period, which has at most $\varphi(q)$ nonzero terms of absolute value $1$. (2) If $\gcd(n, q) > 1$ both sides are $0$; otherwise this is
+Proposition~\ref{analytic-number-theory:proposition-dual-group}(4).
+\end{proof}
+
+\begin{proposition}\label{analytic-number-theory:proposition-l-basic}
+Let $\chi$ be a Dirichlet character modulo $q$.
+\begin{enumerate}
+\item For $\sigma > 1$, $L(s, \chi) = \prod_p(1 - \chi(p)p^{-s})^{-1} = \exp(\ell(s, \chi))$, where $\ell(s, \chi) = \sum_p\sum_{k \geq 1}\frac{\chi(p)^k}{kp^{ks}}$ converges absolutely; in particular $L(s, \chi) \neq 0$,
+and $-\frac{L^{\prime}}{L}(s, \chi) = \sum_n\frac{\Lambda(n)\chi(n)}{n^s} = -\ell^{\prime}(s, \chi)$.
+\item If $\chi \neq \chi_0$, the series $L(s, \chi)$ converges for $\sigma > 0$, and $L(s, \chi)$ is holomorphic there.
+\item $L(s, \chi_0) = \zeta(s)\prod_{p \mid q}(1 - p^{-s})$. It is meromorphic on $\CC$, and on $\sigma > 0$ its only pole is a simple pole at $s = 1$ with residue $\frac{\varphi(q)}{q}$.
+\item $L(\bar s, \bar\chi) = \overline{L(s, \chi)}$ wherever the functions are defined.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) Theorem~\ref{analytic-number-theory:theorem-euler-product} and Proposition~\ref{analytic-number-theory:proposition-log-zeta}, since $\chi$ is completely multiplicative with $|\chi| \leq 1$. The
+formula for $L^{\prime}/L$ follows by differentiating $L = e^\ell$ termwise (allowed by locally uniform convergence), since $\frac{d}{ds}\frac{\chi(p)^kp^{-ks}}{k} = -\chi(p^k)\log p\,p^{-ks}$.
+(2) Proposition~\ref{analytic-number-theory:proposition-abscissae}(2) with $\alpha = 0$ and Proposition~\ref{analytic-number-theory:proposition-dirichlet-orthogonality}(1), and
+Theorem~\ref{analytic-number-theory:theorem-half-plane}.
+(3) The Euler factors of $L(s, \chi_0)$ are those of $\zeta$ for $p \nmid q$ and $1$ for $p \mid q$. The finite product $\prod_{p \mid q}(1 - p^{-s})$ is entire, nonzero for $\sigma > 0$, and equal to
+$\prod_{p \mid q}(1 - \frac1p) = \frac{\varphi(q)}{q}$ at $s = 1$ (Proposition~\ref{number-theory:proposition-euler-function}). Now use Theorem~\ref{analytic-number-theory:theorem-functional-equation}.
+(4) It holds for $\sigma > 1$ by conjugating the series, and extends by the identity theorem as in Corollary~\ref{analytic-number-theory:corollary-zeros}(4).
+\end{proof}
+
+\subsection{Non-vanishing at $s = 1$}\label{analytic-number-theory:subsection-l-one}
+
+\begin{theorem}[Dirichlet]\label{analytic-number-theory:theorem-l-one}
+$L(1, \chi) \neq 0$ for every Dirichlet character $\chi \neq \chi_0$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: the product of all $L$-functions.} Let $Z_q(s) = \prod_{\chi \bmod q}L(s, \chi)$. For real $\sigma > 1$, by Proposition~\ref{analytic-number-theory:proposition-l-basic}(1) and
+Proposition~\ref{analytic-number-theory:proposition-dirichlet-orthogonality}(2) with $a = 1$,
+\[
+\begin{aligned}
+Z_q(\sigma) &= \exp\Bigl(\sum_\chi\ell(\sigma, \chi)\Bigr) = \exp\Bigl(\sum_p\sum_{k \geq 1}\frac{1}{kp^{k\sigma}}\sum_\chi\chi(p^k)\Bigr) \\
+&= \exp\Bigl(\varphi(q)\sum_{p^k \equiv 1 \bmod q}\frac{1}{kp^{k\sigma}}\Bigr) \geq 1.
+\end{aligned}
+\]
+\emph{Step 2: complex characters.} Suppose $L(1, \chi) = 0$ for some $\chi$ with $\chi \neq \bar\chi$. Then $L(1, \bar\chi) = \overline{L(1, \chi)} = 0$ too, by
+Proposition~\ref{analytic-number-theory:proposition-l-basic}(4). As $\sigma \to 1^+$, $L(\sigma, \chi_0) = O((\sigma - 1)^{-1})$, $L(\sigma, \chi)$ and $L(\sigma, \bar\chi)$ are $O(\sigma - 1)$, and the other factors
+are bounded, all being holomorphic at $1$. So $Z_q(\sigma) = O(\sigma - 1) \to 0$, contradicting Step 1.
+\emph{Step 3: real characters.} Let $\chi \neq \chi_0$ be real and suppose $L(1, \chi) = 0$. Let $r = \mathbf{1} * \chi$, a multiplicative function
+(Proposition~\ref{number-theory:proposition-dirichlet-ring}(3)). At prime powers $r(p^k) = \sum_{j=0}^k\chi(p)^j$, which is $k + 1$ if $\chi(p) = 1$, $1$ if $\chi(p) = 0$, and $1$ or $0$ (for $k$ even
+or odd) if $\chi(p) = -1$. Hence $r(n) \geq 0$ for all $n$, and $r(m^2) \geq 1$ for all $m$, since every exponent of $m^2$ is even. By Proposition~\ref{analytic-number-theory:proposition-product},
+$F(s) = \sum r(n)n^{-s} = \zeta(s)L(s, \chi)$ for $\sigma > 1$. The right side is holomorphic on $\sigma > 0$: the simple pole of $\zeta$ at $1$ is cancelled by the zero of $L(s, \chi)$. Let $\sigma_c \leq 1$
+be the abscissa of convergence of $\sum r(n)n^{-s}$. If $\sigma_c > 0$, the function defined by the series on $\sigma > \sigma_c$ agrees with $\zeta L$ there (identity theorem), so it extends
+holomorphically to a neighbourhood of $\sigma_c$, contradicting Theorem~\ref{analytic-number-theory:theorem-landau}. So $\sigma_c \leq 0$, and the series converges at $s = \frac12$. But
+$\sum_nr(n)n^{-1/2} \geq \sum_mr(m^2)m^{-1} \geq \sum_m\frac1m = \infty$, a contradiction.
+\end{proof}
+
+\begin{remark}\label{analytic-number-theory:remark-l-one}
+The real case is the hard one, and it is deep: for $\chi(n) = (\frac np)$ with $p \equiv 3 \pmod 4$, Dirichlet's class number formula (Remark~\ref{analytic-number-theory:remark-class-number-formula})
+expresses $L(1, \chi)$ as $\pi h/\sqrt{p}$ with $h \geq 1$ a class number, which is another proof that it is not zero. The function $r = \mathbf{1} * \chi$ of Step 3 counts representations by binary
+quadratic forms; for $\chi = \chi_{-4}$, $4r(n) = r_2(n)$ is the number of representations of $n$ as a sum of two squares (Theorem~\ref{number-theory:theorem-jacobi-two-squares}).
+\end{remark}
+
+\subsection{Dirichlet's theorem}\label{analytic-number-theory:subsection-dirichlet-theorem}
+
+\begin{theorem}[Dirichlet]\label{analytic-number-theory:theorem-dirichlet}
+Let $q \geq 1$ and $\gcd(a, q) = 1$. As $\sigma \to 1^+$,
+\[
+\sum_{p \equiv a \bmod q}\frac{1}{p^\sigma} = \frac{1}{\varphi(q)}\log\frac{1}{\sigma - 1} + O(1).
+\]
+Consequently $\sum_{p \equiv a \bmod q}\frac1p = \infty$, and there are infinitely many primes $p \equiv a \pmod q$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: the prime part of $\ell$.} For $\sigma > 1$, $\ell(\sigma, \chi) = \sum_p\chi(p)p^{-\sigma} + R_\chi(\sigma)$ with $|R_\chi(\sigma)| \leq \sum_p\sum_{k \geq 2}p^{-k} = \sum_p\frac{1}{p(p - 1)} \leq 1$.
+\emph{Step 2: the principal character.} $L(\sigma, \chi_0) > 0$ and $\ell(\sigma, \chi_0)$ is real, so $\ell(\sigma, \chi_0) = \log L(\sigma, \chi_0) = \log\zeta(\sigma) + \sum_{p \mid q}\log(1 - p^{-\sigma})$. Since
+$(\sigma - 1)\zeta(\sigma) \to 1$ (Proposition~\ref{analytic-number-theory:proposition-zeta-continuation}), $\ell(\sigma, \chi_0) = \log\frac{1}{\sigma - 1} + O(1)$ for $1 < \sigma \leq 2$.
+\emph{Step 3: the other characters.} Let $\chi \neq \chi_0$. $L(s, \chi)$ is holomorphic near the segment $[1, 2]$ and nonzero on it (Theorem~\ref{analytic-number-theory:theorem-l-one} at $1$,
+Proposition~\ref{analytic-number-theory:proposition-l-basic}(1) elsewhere), so $L^{\prime}/L(\sigma, \chi)$ is continuous on $[1, 2]$, hence bounded. Since $\frac{d}{d\sigma}\ell(\sigma, \chi) = \frac{L^{\prime}}{L}(\sigma, \chi)$,
+$\ell(\sigma, \chi) = \ell(2, \chi) - \int_\sigma^2\frac{L^{\prime}}{L}(u, \chi)\,du$ is bounded on $(1, 2]$.
+\emph{Step 4: isolating the progression.} By Proposition~\ref{analytic-number-theory:proposition-dirichlet-orthogonality}(2),
+\[
+\begin{aligned}
+\sum_{p \equiv a \bmod q}\frac{1}{p^\sigma} &= \frac{1}{\varphi(q)}\sum_\chi\overline{\chi(a)}\sum_p\frac{\chi(p)}{p^\sigma} = \frac{1}{\varphi(q)}\sum_\chi\overline{\chi(a)}\bigl(\ell(\sigma, \chi) - R_\chi(\sigma)\bigr) \\
+&= \frac{1}{\varphi(q)}\log\frac{1}{\sigma - 1} + O(1).
+\end{aligned}
+\]
+If $\sum_{p \equiv a}\frac1p$ converged, the left side would stay bounded as $\sigma \to 1^+$, since $p^{-\sigma} < p^{-1}$; so it diverges.
+\end{proof}
+
+So the primes are equidistributed among the $\varphi(q)$ admissible classes in the sense of Dirichlet density. With Newman's theorem we get the natural density as well.
+
+\begin{proposition}\label{analytic-number-theory:proposition-l-line}
+$L(1 + it, \chi) \neq 0$ for every Dirichlet character $\chi$ and every real $t$, except for the pole of $L(s, \chi_0)$ at $s = 1$.
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1: an inequality.} For $\sigma > 1$, $|L(\sigma, \chi_0)^3L(\sigma + it, \chi)^4L(\sigma + 2it, \chi^2)| \geq 1$. Indeed, by Proposition~\ref{analytic-number-theory:proposition-l-basic}(1) its
+logarithm is $\sum_{p \nmid q}\sum_k\frac{1}{kp^{k\sigma}}\operatorname{Re}\bigl(3 + 4e^{i\phi} + e^{2i\phi}\bigr)$ with $e^{i\phi} = \chi(p)^kp^{-ikt}$, and
+$\operatorname{Re}(3 + 4e^{i\phi} + e^{2i\phi}) = 3 + 4\cos\phi + \cos 2\phi = 2(1 + \cos\phi)^2 \geq 0$ (for $p \mid q$ all terms vanish).
+\emph{Step 2.} Suppose $L(1 + it, \chi) = 0$, with $(\chi, t) \neq (\chi_0, 0)$. If $t = 0$, then $\chi \neq \chi_0$ and this contradicts Theorem~\ref{analytic-number-theory:theorem-l-one}. If $t \neq 0$,
+then $L(s, \chi^2)$ is holomorphic at $1 + 2it$ (its only possible pole is at $s = 1$), and as in Theorem~\ref{analytic-number-theory:theorem-zeta-nonvanishing} the product in Step 1 is
+$O((\sigma - 1)^{-3}(\sigma - 1)^4) \to 0$ as $\sigma \to 1^+$, a contradiction.
+\end{proof}
+
+\begin{theorem}[Prime number theorem for arithmetic progressions]\label{analytic-number-theory:theorem-pnt-progressions}
+Let $q \geq 1$, $\gcd(a, q) = 1$, $\theta(x; q, a) = \sum_{p \leq x,\ p \equiv a \bmod q}\log p$ and $\pi(x; q, a) = \#\{p \leq x : p \equiv a \bmod q\}$. Then
+\[
+\theta(x; q, a) \sim \frac{x}{\varphi(q)}, \qquad \pi(x; q, a) \sim \frac{1}{\varphi(q)}\cdot\frac{x}{\log x}.
+\]
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: the transform.} For $\sigma > 1$ let $\Phi_a(s) = \sum_{p \equiv a}\log p\,p^{-s} = \frac{1}{\varphi(q)}\sum_\chi\overline{\chi(a)}\Phi(s, \chi)$, where
+$\Phi(s, \chi) = \sum_p\chi(p)\log p\,p^{-s}$. As in Step 1 of Theorem~\ref{analytic-number-theory:theorem-pnt}, $\Phi(s, \chi) + \frac{L^{\prime}}{L}(s, \chi)$ is holomorphic on $\sigma > \frac12$. For
+$\chi \neq \chi_0$, $L^{\prime}/L(s, \chi)$ is holomorphic on a neighbourhood of $\sigma \geq 1$, by Proposition~\ref{analytic-number-theory:proposition-l-line} and the discreteness of zeros. For
+$\chi_0$, $-\frac{L^{\prime}}{L}(s, \chi_0) = -\frac{\zeta^{\prime}}{\zeta}(s) - \sum_{p \mid q}\frac{\log p}{p^s - 1}$, which is $\frac{1}{s - 1}$ plus a function holomorphic near $\sigma \geq 1$. Since
+$\overline{\chi_0(a)} = 1$, $\Phi_a(s) - \frac{1}{\varphi(q)(s - 1)}$ extends holomorphically to a neighbourhood of $\sigma \geq 1$.
+\emph{Step 2: Newman's theorem.} Let $f(u) = \theta(e^u; q, a)e^{-u} - \frac{1}{\varphi(q)}$, bounded because $\theta(x; q, a) \leq \theta(x) < x\log 4$. As in the proof of
+Theorem~\ref{analytic-number-theory:theorem-pnt}, $\int_0^\infty f(u)e^{-zu}du = \frac{\Phi_a(z + 1)}{z + 1} - \frac{1}{\varphi(q)z}$, which extends holomorphically to a neighbourhood of
+$\operatorname{Re}z \geq 0$. So $\int_1^\infty(\theta(x; q, a) - \frac{x}{\varphi(q)})x^{-2}dx$ converges by Theorem~\ref{analytic-number-theory:theorem-newman}.
+\emph{Step 3: conclusion.} Since $\theta(x; q, a)$ is nondecreasing, Step 4 of the proof of Theorem~\ref{analytic-number-theory:theorem-pnt} applies verbatim, with $\theta(t) - t$ replaced by $\theta(t; q, a) - t/\varphi(q)$, and gives
+$\theta(x; q, a) \sim x/\varphi(q)$. Partial summation as in Step 1 of Theorem~\ref{prime-numbers:theorem-chebyshev-limit} gives
+$\theta(x; q, a) = \pi(x; q, a)\log x - \int_2^x\frac{\pi(t; q, a)}{t}dt$, and the integral is $O(x/\log x)$ by Chebyshev's bound $\pi(t; q, a) \leq \pi(t) < 5t/\log t$; so
+$\pi(x; q, a)\log x \sim x/\varphi(q)$.
+\end{proof}
+
+\begin{example}\label{analytic-number-theory:example-chebyshev-bias}
+Although $\pi(x; 4, 1) \sim \pi(x; 4, 3)$, the class of $3$ modulo $4$ is usually ahead: $\pi(x; 4, 3) \geq \pi(x; 4, 1)$ for all $x < 26861$, and at $x = 10^6$ the counts are $39322$ against $39175$. This
+\emph{Chebyshev bias} comes from the squares: the squares of primes all lie in the class $1$, and in the explicit formula for $\theta(x; 4, 3) - \theta(x; 4, 1)$ they produce a positive term of size
+$\sqrt{x}$. Littlewood showed that the lead changes infinitely often, and Rubinstein and Sarnak, assuming the generalised Riemann hypothesis and a hypothesis on the zeros, showed that the class
+$3$ is ahead for a set of $x$ of logarithmic density $0.9959\ldots$ \cite{rubinstein-sarnak}.
+\end{example}
+
+\begin{remark}\label{analytic-number-theory:remark-class-number-formula}
+\emph{Dirichlet's class number formula.} Let $p \equiv 3 \pmod 4$ be a prime, $p > 3$, and $\chi(n) = (\frac np)$. Then
+\[
+L(1, \chi) = \frac{\pi h(-p)}{\sqrt{p}}, \qquad h(-p) = -\frac1p\sum_{a=1}^{p-1}a\Bigl(\frac ap\Bigr),
+\]
+where $h(-p)$ is the class number of binary quadratic forms of discriminant $-p$ (Section~\ref{number-theory:section-quadratic-forms}) \cite{davenport-multiplicative}. For instance
+$p = 7, 11, 19, 43, 163$ give $h = 1$, $p = 23$ and $31$ give $h = 3$ (for $p = 23$ the three reduced forms are listed in Section~\ref{number-theory:section-quadratic-forms}), and $p = 47$ gives $h = 5$. In general,
+for a negative discriminant $d$, $L(1, \chi_d) = \frac{2\pi h(d)}{w\sqrt{|d|}}$ with $w$ the number of automorphs ($w = 4$ for $d = -4$, $w = 6$ for $d = -3$, $w = 2$ otherwise): for $d = -4$ this is
+Leibniz's $L(1, \chi_{-4}) = \frac\pi4$, and for $d = -3$ it gives $\frac{\pi}{3\sqrt3}$ (Exercise~\ref{analytic-number-theory:exercise-l-minus-three}). The proof, and the version for real quadratic fields
+involving the fundamental unit, belong to Chapter~\ref{class-groups-and-units}. The formula shows in particular that $h(-p) \to \infty$; quantitative versions rest on lower bounds for $L(1, \chi)$, such as
+Siegel's ineffective bound $L(1, \chi) \gg_\varepsilon q^{-\varepsilon}$ \cite{davenport-multiplicative}.
+\end{remark}
+
+\begin{remark}\label{analytic-number-theory:remark-progressions-further}
+Uniformity in $q$ is the central problem. The Siegel--Walfisz theorem gives $\pi(x; q, a) = \operatorname{li}(x)/\varphi(q) + O(xe^{-c\sqrt{\log x}})$ uniformly for $q \leq (\log x)^A$; the Bombieri--Vinogradov
+theorem says that the generalised Riemann hypothesis holds ``on average'' over $q \leq x^{1/2}/(\log x)^B$; and Linnik proved that the least prime $p \equiv a \pmod q$ is $O(q^L)$ for an absolute constant
+$L$ \cite{iwaniec-kowalski}. Dirichlet's theorem is the first case of the Chebotarev density theorem, which describes the distribution of the Frobenius elements of primes in Galois extensions of number
+fields (Chapter~\ref{class-field-theory}).
+\end{remark}
+
+\section{Exercises}\label{analytic-number-theory:section-exercises}
+
+\begin{exercise}\label{analytic-number-theory:exercise-mu-over-n}
+Show that $\sum_{n \leq x}\mu(n)\lfloor x/n\rfloor = 1$ for $x \geq 1$, and deduce $\bigl|\sum_{n \leq x}\frac{\mu(n)}{n}\bigr| \leq 1$.
+\end{exercise}
+
+\begin{solution}
+$\sum_{n \leq x}\mu(n)\lfloor x/n\rfloor = \sum_{n \leq x}\mu(n)\#\{m \leq x : n \mid m\} = \sum_{m \leq x}\sum_{n \mid m}\mu(n) = 1$, since the inner sum is $1$ for $m = 1$ and $0$ otherwise
+(Proposition~\ref{number-theory:proposition-mobius}). Writing $\lfloor x/n\rfloor = x/n - \{x/n\}$, $x\sum_{n \leq x}\frac{\mu(n)}{n} = 1 + \sum_{n \leq x}\mu(n)\{x/n\}$. The last sum has absolute value at most
+$\{x\} + (\lfloor x\rfloor - 1) = x - 1$ (the term $n = 1$ is $\{x\}$, the others are less than $1$). So $|x\sum\mu(n)/n| \leq x$.
+\end{solution}
+
+\begin{exercise}\label{analytic-number-theory:exercise-liouville}
+Show that $\sum_{d \mid n}\lambda(d)$ is $1$ if $n$ is a square and $0$ otherwise, and that $\sum_n\lambda(n)n^{-s} = \zeta(2s)/\zeta(s)$ for $\sigma > 1$. Show that $\sum_{n \leq x}\lambda(n) = o(x)$.
+\end{exercise}
+
+\begin{solution}
+$\lambda * \mathbf{1}$ is multiplicative, and at $p^k$ it is $\sum_{j=0}^k(-1)^j$, which is $1$ for $k$ even and $0$ for $k$ odd; so it is the indicator of the squares. Its Dirichlet series is
+$\sum_mm^{-2s} = \zeta(2s)$, so $\zeta(s)\sum\lambda(n)n^{-s} = \zeta(2s)$ (Proposition~\ref{analytic-number-theory:proposition-product}). For the last part, $\lambda = \sum_{d^2 \mid n}\mu(n/d^2)$: indeed
+$\lambda = \mathbf{1}_{\square} * \mu$ by Möbius inversion, $\mathbf{1}_\square$ being the indicator of squares. So $\sum_{n \leq x}\lambda(n) = \sum_{d \leq \sqrt{x}}M(x/d^2)$. Given $\varepsilon > 0$, take $D$
+with $\sum_{d > D}d^{-2} < \varepsilon$; then $|\sum_{d > D}M(x/d^2)| \leq \varepsilon x$, and $\sum_{d \leq D}M(x/d^2) = o(x)$ by Theorem~\ref{analytic-number-theory:theorem-mertens-function}.
+\end{solution}
+
+\begin{exercise}\label{analytic-number-theory:exercise-divisor-log}
+Show that $\sum_{n \leq x}\frac{\tau(n)}{n} = \frac12\log^2x + 2\gamma\log x + O(1)$ for $x \geq 1$.
+\end{exercise}
+
+\begin{solution}
+By Lemma~\ref{analytic-number-theory:lemma-partial-summation} with $f(u) = 1/u$, $\sum_{n \leq x}\frac{\tau(n)}{n} = \frac{D(x)}{x} + \int_1^x\frac{D(u)}{u^2}du$. By
+Theorem~\ref{analytic-number-theory:theorem-divisor-problem}, $\frac{D(x)}{x} = \log x + O(1)$ and
+$\int_1^x\frac{D(u)}{u^2}du = \int_1^x\bigl(\frac{\log u}{u} + \frac{2\gamma - 1}{u} + O(u^{-3/2})\bigr)du = \frac12\log^2x + (2\gamma - 1)\log x + O(1)$. Adding gives the claim.
+\end{solution}
+
+\begin{exercise}\label{analytic-number-theory:exercise-squarefree-divisors}
+Show that $2^{\omega(n)} = \sum_{d \mid n}|\mu(d)|$, and that $\sum_{n \leq x}2^{\omega(n)} = \frac{6}{\pi^2}x\log x + O(x)$.
+\end{exercise}
+
+\begin{solution}
+Both sides are multiplicative and equal $2$ at every prime power. So $\sum_{n \leq x}2^{\omega(n)} = \sum_{d \leq x}|\mu(d)|\lfloor x/d\rfloor = x\sum_{d \leq x}\frac{|\mu(d)|}{d} + O(x)$. By partial summation and
+Proposition~\ref{analytic-number-theory:proposition-squarefree},
+\[
+\begin{aligned}
+\sum_{d \leq x}\frac{|\mu(d)|}{d} &= \frac{Q(x)}{x} + \int_1^x\frac{Q(u)}{u^2}\,du \\
+&= O(1) + \int_1^x\Bigl(\frac{6}{\pi^2u} + O(u^{-3/2})\Bigr)du = \frac{6}{\pi^2}\log x + O(1).
+\end{aligned}
+\]
+\end{solution}
+
+\begin{exercise}\label{analytic-number-theory:exercise-coprime-tuples}
+Let $k \geq 2$. Show that the number of $k$-tuples $(a_1, \ldots, a_k) \in \{1, \ldots, N\}^k$ with $\gcd(a_1, \ldots, a_k) = 1$ is $\frac{N^k}{\zeta(k)} + O(N^{k-1}\log N)$.
+\end{exercise}
+
+\begin{solution}
+By Möbius inversion the indicator of $\gcd = 1$ is $\sum_{d \mid \gcd}\mu(d)$, so the number is $\sum_{d \leq N}\mu(d)\lfloor N/d\rfloor^k$. Now $\lfloor N/d\rfloor^k = (N/d)^k + O((N/d)^{k-1})$ (mean value
+theorem, as $0 \leq N/d - \lfloor N/d\rfloor < 1$). So the number is $N^k\sum_{d \leq N}\mu(d)d^{-k} + O(N^{k-1}\sum_{d \leq N}d^{1-k})$, and $\sum_{d \leq N}\mu(d)d^{-k} = \zeta(k)^{-1} + O(N^{1-k})$,
+$\sum_{d \leq N}d^{1-k} = O(\log N)$.
+\end{solution}
+
+\begin{exercise}\label{analytic-number-theory:exercise-gamma-values}
+Show that $\Gamma(n + \frac12) = \frac{(2n)!}{4^nn!}\sqrt{\pi}$ for $n \geq 0$, and that $|\Gamma(it)|^2 = \frac{\pi}{t\sinh\pi t}$ for real $t \neq 0$.
+\end{exercise}
+
+\begin{solution}
+By induction from $\Gamma(\frac12) = \sqrt\pi$: $\Gamma(n + \frac32) = (n + \frac12)\Gamma(n + \frac12) = \frac{2n + 1}{2}\cdot\frac{(2n)!}{4^nn!}\sqrt\pi = \frac{(2n + 2)!}{4^{n+1}(n + 1)!}\sqrt\pi$, because
+$\frac{(2n + 2)!}{(2n)!} = (2n + 1)(2n + 2)$. (For $n \geq 1$ this is also the case $s = n$ of the duplication formula, Proposition~\ref{analytic-number-theory:proposition-duplication}:
+$\Gamma(n + \frac12) = 2^{1-2n}\sqrt\pi\,\frac{(2n - 1)!}{(n - 1)!} = \frac{(2n)!}{4^nn!}\sqrt\pi$.) For the second claim, $\Gamma(-it) = \overline{\Gamma(it)}$ and $\Gamma(1 - it) = -it\Gamma(-it)$, so by
+Theorem~\ref{analytic-number-theory:theorem-reflection} $|\Gamma(it)|^2 = \Gamma(it)\Gamma(-it) = \frac{\Gamma(it)\Gamma(1 - it)}{-it} = \frac{\pi}{-it\sin(\pi it)} = \frac{\pi}{t\sinh\pi t}$, using
+$\sin(i\pi t) = i\sinh\pi t$.
+\end{solution}
+
+\begin{exercise}\label{analytic-number-theory:exercise-zeta-values}
+Using the recursion of Proposition~\ref{generating-functions:proposition-bernoulli}, compute $B_8$ and deduce $\zeta(8)$ and $\zeta(-7)$.
+\end{exercise}
+
+\begin{solution}
+The recursion with $n = 8$ is $\sum_{j=0}^8\binom9jB_j = 0$: $1 - \frac92 + 36\cdot\frac16 + 126\cdot(-\frac1{30}) + 84\cdot\frac1{42} + 9B_8 = 0$, that is $1 - 4.5 + 6 - 4.2 + 2 + 9B_8 = 0$, so $B_8 = -\frac1{30}$.
+Then $\zeta(8) = (-1)^5\frac{(2\pi)^8B_8}{2 \cdot 8!} = \frac{256\pi^8}{30 \cdot 80640} = \frac{\pi^8}{9450}$, and $\zeta(-7) = -\frac{B_8}{8} = \frac1{240}$.
+\end{solution}
+
+\begin{exercise}\label{analytic-number-theory:exercise-eta}
+Show that $\eta(s) = (1 - 2^{1-s})\zeta(s)$ for $\sigma > 0$, that $\eta(1) = \log 2$, and recover from this that $\zeta$ has residue $1$ at $s = 1$. Show also that $\zeta$ has no zeros on the segment
+$(0, 1)$ in a second way.
+\end{exercise}
+
+\begin{solution}
+For $\sigma > 1$, $\zeta(s) - \eta(s) = 2\sum_n(2n)^{-s} = 2^{1-s}\zeta(s)$. Both sides of $\eta = (1 - 2^{1-s})\zeta$ are holomorphic on $\sigma > 0$, $s \neq 1$ (the left by
+Counterexample~\ref{analytic-number-theory:counterexample-abscissae} and Theorem~\ref{analytic-number-theory:theorem-half-plane}), so they agree there. The partial sums of $\eta(1)$ satisfy
+$\sum_{n \leq 2N}\frac{(-1)^{n-1}}{n} = H_{2N} - H_N \to \log 2$ by Proposition~\ref{analytic-number-theory:proposition-harmonic}, and $\eta$ is continuous at $1$, so $\eta(1) = \log 2$. Since
+$1 - 2^{1-s} = (s - 1)\log 2 + O((s - 1)^2)$, $(s - 1)\zeta(s) = \eta(s)(s - 1)/(1 - 2^{1-s}) \to \log 2/\log 2 = 1$. For real $0 < \sigma < 1$, $\eta(\sigma) > 0$ (alternating series with decreasing terms,
+first term $1$), while $1 - 2^{1-\sigma} < 0$; so $\zeta(\sigma) < 0$.
+\end{solution}
+
+\begin{exercise}\label{analytic-number-theory:exercise-l-minus-three}
+Show that $L(1, \chi_{-3}) = \sum_{n \geq 0}\bigl(\frac{1}{3n + 1} - \frac{1}{3n + 2}\bigr) = \frac{\pi}{3\sqrt3}$.
+\end{exercise}
+
+\begin{solution}
+The partial sums are $\sum_{n < N}\int_0^1(x^{3n} - x^{3n+1})\,dx = \int_0^1\frac{(1 - x)(1 - x^{3N})}{1 - x^3}\,dx = \int_0^1\frac{1 - x^{3N}}{1 + x + x^2}\,dx$. As $N \to \infty$ this tends to
+$\int_0^1\frac{dx}{1 + x + x^2}$ by dominated convergence. With $1 + x + x^2 = (x + \frac12)^2 + \frac34$, the integral is
+$\frac{2}{\sqrt3}\bigl[\arctan\frac{2x + 1}{\sqrt3}\bigr]_0^1 = \frac{2}{\sqrt3}\bigl(\frac\pi3 - \frac\pi6\bigr) = \frac{\pi}{3\sqrt3}$. This agrees with $\frac{2\pi h}{w\sqrt3}$ for $h = 1$, $w = 6$
+(Remark~\ref{analytic-number-theory:remark-class-number-formula}).
+\end{solution}
+
+\begin{exercise}\label{analytic-number-theory:exercise-zeta-strip-bound}
+Let $0 < \sigma_0 < 1$. Show that $|\zeta(\sigma + it)| \leq C(\sigma_0)|t|^{1-\sigma}\log|t|$ for $\sigma_0 \leq \sigma \leq 1$ and $|t| \geq 3$. In particular $\zeta(\frac12 + it) = O(|t|^{1/2}\log|t|)$.
+\end{exercise}
+
+\begin{solution}
+Take $x = |t|$ in \eqref{analytic-number-theory:equation-zeta-approximate}. For $n \leq x$, $n^{-\sigma} = n^{1-\sigma}/n \leq x^{1-\sigma}/n$, so $|\sum_{n \leq x}n^{-s}| \leq x^{1-\sigma}(1 + \log x)$. Further
+$|\frac{x^{1-s}}{s - 1}| \leq \frac{x^{1-\sigma}}{|t|} \leq x^{1-\sigma}$, $\{x\}x^{-\sigma} \leq 1$, and $|s\int_x^\infty\{u\}u^{-s-1}du| \leq \frac{|s|x^{-\sigma}}{\sigma} \leq \frac{(1 + |t|)|t|^{-\sigma}}{\sigma_0} \leq \frac{2|t|^{1-\sigma}}{\sigma_0}$.
+Each term is $O_{\sigma_0}(|t|^{1-\sigma}\log|t|)$. (Better bounds, such as $\zeta(\frac12 + it) = O(|t|^{1/4 + \varepsilon})$, follow from the functional equation and convexity; the Lindelöf hypothesis predicts
+$O(|t|^\varepsilon)$.)
+\end{solution}
+
+\begin{exercise}\label{analytic-number-theory:exercise-pnt-consequences}
+Deduce from the prime number theorem: (a) $\pi(2x) - \pi(x) \sim \pi(x)$; (b) the set $\{p/p^{\prime} : p, p^{\prime} \text{ prime}\}$ is dense in $(0, \infty)$; (c) for every $\varepsilon > 0$, $p_{n+1} < (1 + \varepsilon)p_n$
+for large $n$.
+\end{exercise}
+
+\begin{solution}
+(a) $\pi(2x) \sim \frac{2x}{\log 2x} \sim \frac{2x}{\log x} \sim 2\pi(x)$. (b) Let $0 < a < b$. By Corollary~\ref{analytic-number-theory:corollary-pnt}(2) with $1 + \varepsilon = b/a$, for every large prime
+$p^{\prime}$ the interval $(ap^{\prime}, bp^{\prime}]$ contains a prime $p$, and $p/p^{\prime} \in (a, b]$. (c) Corollary~\ref{analytic-number-theory:corollary-pnt}(2) with $x = p_n$.
+\end{solution}
+
+\begin{exercise}\label{analytic-number-theory:exercise-characters-mod-eight}
+Using the characters modulo $8$ of Example~\ref{analytic-number-theory:example-dirichlet-characters}(4), write $\sum_{p \equiv 3 \bmod 8}p^{-\sigma}$ in terms of the functions $\ell(\sigma, \chi)$, and check
+directly that the coefficient of $\ell(\sigma, \chi_0)$ is $\frac14$.
+\end{exercise}
+
+\begin{solution}
+The values at $3$ are $\chi_0(3) = 1$, $\chi_{-4}(3) = -1$, $\chi_8(3) = -1$, $\chi_{-8}(3) = 1$, all real. By Proposition~\ref{analytic-number-theory:proposition-dirichlet-orthogonality}(2),
+$\mathbf{1}_{n \equiv 3 \bmod 8} = \frac14(\chi_0 - \chi_{-4} - \chi_8 + \chi_{-8})(n)$; for instance at $n = 3$ this is $\frac14(1 + 1 + 1 + 1) = 1$ and at $n = 5$ it is $\frac14(1 - 1 + 1 - 1) = 0$. So
+$\sum_{p \equiv 3}p^{-\sigma} = \frac14\bigl(\ell(\sigma, \chi_0) - \ell(\sigma, \chi_{-4}) - \ell(\sigma, \chi_8) + \ell(\sigma, \chi_{-8})\bigr) + O(1)$, and only the first term is unbounded as $\sigma \to 1^+$.
+\end{solution}
+
+
+\begin{exercise}\label{analytic-number-theory:exercise-elementary-l-one}
+Let $\chi$ be a real nonprincipal character modulo $q$ and $r = \mathbf{1} * \chi$ as in the proof of Theorem~\ref{analytic-number-theory:theorem-l-one}. Show that
+$S(x) = \sum_{n \leq x}r(n)n^{-1/2} = 2L(1, \chi)\sqrt{x} + O(1)$ for $x \geq 1$, and deduce $L(1, \chi) \neq 0$ without Landau's theorem (this is the elementary proof in \cite{apostol-analytic}).
+\end{exercise}
+
+\begin{solution}
+\emph{Two auxiliary bounds.} By partial summation and $|\sum_{a \leq u}\chi(a)| \leq \varphi(q)$ (Proposition~\ref{analytic-number-theory:proposition-dirichlet-orthogonality}(1)): for $\alpha > 0$ and
+$1 \leq y < z$, $\sum_{y < a \leq z}\chi(a)a^{-\alpha} = O(y^{-\alpha})$; in particular $\sum_{a \leq y}\chi(a)a^{-1/2} = O(1)$ and $\sum_{a > y}\chi(a)a^{-1} = O(y^{-1})$. By
+Lemma~\ref{analytic-number-theory:lemma-euler-summation}, $\sum_{b \leq z}b^{-1/2} = 2\sqrt z + C + O(z^{-1/2})$ for a constant $C$.
+\emph{The hyperbola method.} Let $y = \sqrt x$. In $S(x) = \sum_{ab \leq x}\chi(a)(ab)^{-1/2}$ split the pairs according as $a \leq y$, or $a > y$ (and then $b < x/a < y$):
+\[
+S(x) = \sum_{a \leq y}\frac{\chi(a)}{\sqrt a}\sum_{b \leq x/a}\frac{1}{\sqrt b} + \sum_{b \leq y}\frac{1}{\sqrt b}\sum_{y < a \leq x/b}\frac{\chi(a)}{\sqrt a}.
+\]
+The inner sum of the second term is $O(y^{-1/2})$, so the second term is $O(y^{-1/2}\sum_{b \leq y}b^{-1/2}) = O(1)$. In the first term, the inner sum is $2\sqrt{x/a} + C + O(\sqrt{a/x})$, so the first term is
+$2\sqrt x\sum_{a \leq y}\frac{\chi(a)}{a} + C\sum_{a \leq y}\frac{\chi(a)}{\sqrt a} + O\bigl(\frac{y}{\sqrt x}\bigr) = 2\sqrt x\bigl(L(1, \chi) + O(y^{-1})\bigr) + O(1) = 2L(1, \chi)\sqrt x + O(1)$.
+\emph{Conclusion.} Since $r \geq 0$ and $r(m^2) \geq 1$, $S(x) \geq \sum_{m \leq \sqrt x}r(m^2)/m \geq \sum_{m \leq \sqrt x}\frac1m \geq \frac12\log x$, which is unbounded. If $L(1, \chi) = 0$, the formula would
+give $S(x) = O(1)$.
+\end{solution}

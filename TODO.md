@@ -61,8 +61,7 @@ counterexamples, exercises with solutions, citations for quoted results.
   backward induction, cooperative games and the Shapley value, auctions and
   mechanism design).
 - [ ] **More advanced topics**, extending the existing parts:
-  `analytic-number-theory` (Dirichlet series, prime number theorem, Dirichlet's
-  theorem), `algebraic-number-theory`, `modular-forms`, `harmonic-analysis`,
+  ~~`analytic-number-theory`~~ (done 2026-11-06), `algebraic-number-theory`, `modular-forms`, `harmonic-analysis`,
   `operator-algebras`, `k-theory`, `information-theory`,
   `computability-and-complexity`, more algebraic geometry in the style of the
   Stacks project.
@@ -87,7 +86,7 @@ counterexamples, exercises with solutions, citations for quoted results.
    in an organised part of their own, in the logical order):
    - Part *Number Theory* (after Probability, uses algebra and analysis only):
      ~~`prime-numbers`~~ (done), ~~`continued-fractions`~~ (done),
-     ~~`geometry-of-numbers`~~ (done), `analytic-number-theory`,
+     ~~`geometry-of-numbers`~~ (done), ~~`analytic-number-theory`~~ (done),
      `p-adic-numbers` (Hasse–Minkowski needs Dirichlet's theorem),
      `diophantine-equations` (uses all of the part: three squares via
      Hasse–Minkowski, Skolem, Thue).
@@ -170,6 +169,27 @@ spectral-sequences 300 (then everything below about 800 lines).
   with proof, bounds for $\gamma_n$; covering radius and the norm-Euclidean
   imaginary quadratic rings ($m = 1, 2, 3, 7, 11$); 14 exercises. Open: a
   full proof of the general upper bound of Minkowski's second theorem.
+- [x] 2026-11-06: `analytic-number-theory` (complete, about 1640 lines, 131
+  tags): Dirichlet series (half-planes, abscissae, uniqueness, Euler products,
+  table of classical series, Landau's theorem); averages (Euler summation and
+  $\gamma$, hyperbola method, $\sum\sigma$, $\sum\varphi$, coprime pairs,
+  squarefree numbers, $\tau(n) \ll n^\varepsilon$, Turán and Hardy–Ramanujan,
+  Erdős–Kac cited); the Gamma function from scratch (holomorphic parameter
+  integrals, Beta, Euler limit, infinite products, Weierstrass product,
+  cotangent by Herglotz, sine product, Wallis, reflection, duplication);
+  zeta (continuation, bounds near $\sigma = 1$, 3-4-1, theta and the
+  functional equation, trivial zeros, $\zeta(2k)$ and $\zeta(1-2k)$ via
+  Bernoulli); Newman–Zagier analytic theorem, PNT, $M(x) = o(x)$ and
+  $\sum\mu(n)/n = 0$, Wigert; PNT with error term $x e^{-c(\log x)^{1/10}}$ via
+  a zero-free region proved from the 3-4-1 inequality, $\pi = \mathrm{li} +
+  \ldots$; RH, easy directions of two equivalences, explicit formula, Robin,
+  Selberg (cited); characters of finite abelian groups, Dirichlet
+  characters, $L(1,\chi) \neq 0$ (Landau for real $\chi$), Dirichlet's theorem,
+  PNT in progressions, Chebyshev bias, class number formula (statement);
+  13 exercises. Open (optional): the classical zero-free region
+  $1 - c/\log t$ via the Hadamard product, the explicit formula with proof,
+  Gauss sums and the functional equation of $L(s,\chi)$, Pólya–Vinogradov,
+  and van der Corput's $O(x^{1/3})$ for the circle and divisor problems.
 - [x] 2026-11-05: removed the paragraphs "On the way to the Hodge conjecture"
   from all chapters (the route stays in the introduction); The Hodge Project
   is linked wherever it is mentioned.
