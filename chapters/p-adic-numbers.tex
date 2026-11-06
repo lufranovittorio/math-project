@@ -1,16 +1,1456 @@
 \chapter{p-adic Numbers}\label{p-adic-numbers}
-\chapterstatus{planned}
+\chapterstatus{complete}
 
-Absolute values on $\QQ$, the completions $\QQ_p$, and the local-global principle for quadratic forms.
+\section{Introduction}\label{p-adic-numbers:section-introduction}
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{number-theory} (Elementary Number Theory), Chapter~\ref{real-analysis} (Real Analysis), Chapter~\ref{general-topology} (General Topology), Chapter~\ref{geometry-of-numbers} (Geometry of Numbers) and Chapter~\ref{analytic-number-theory} (Analytic Number Theory).
+The real numbers complete $\QQ$ with respect to the usual absolute value. There are other ways of measuring the size of a rational number: Hensel's idea (1897, \cite{hensel-1897}) was to call
+an integer \emph{small} when it is divisible by a high power of a fixed prime $p$. With this notion $p^n \to 0$, the series $1 + p + p^2 + \cdots$ converges to $1/(1 - p)$, and completing $\QQ$ gives a new
+field $\QQ_p$, the field of \emph{$p$-adic numbers}. A congruence modulo $p^n$ is an approximate equation in $\QQ_p$, and solving a congruence modulo every power of $p$ amounts to solving an equation
+exactly in $\QQ_p$. Ostrowski's theorem says that the usual absolute value and the $p$-adic ones are, up to equivalence, all the absolute values on $\QQ$; so $\RR$ and the fields $\QQ_p$ are all the
+completions of $\QQ$, the \emph{places} of $\QQ$.
 
-\noindent\textbf{Planned contents.}
+The guiding principle of the chapter is the \emph{local-global principle}: to decide whether an equation has rational solutions, first look for solutions in $\RR$ and in every $\QQ_p$, where analysis
+(Newton's method, in the form of Hensel's lemma) makes the question easy. For quadratic forms the local conditions are also sufficient: this is the theorem of Hasse and Minkowski, the main result of the
+chapter, whose proof combines the Hilbert symbol, quadratic reciprocity, Legendre's theorem from Chapter~\ref{geometry-of-numbers} and Dirichlet's theorem from Chapter~\ref{analytic-number-theory}.
+
+The chapter is organised as follows.
 \begin{enumerate}
-\item Absolute values; Ostrowski's theorem; the product formula.
-\item Construction of $\QQ_p$ and $\ZZ_p$ (completion and inverse limit), $p$-adic expansions, the topology of $\ZZ_p$.
-\item Hensel's lemma and its applications: squares in $\QQ_p$, roots of unity, the structure of $\QQ_p^\times$.
-\item $p$-adic analysis: series, $\exp$ and $\log$, Mahler's theorem, Strassmann's theorem; the $p$-adic proof of the Skolem--Mahler--Lech theorem (statement).
-\item The Hilbert symbol and Hilbert reciprocity; quadratic forms over $\QQ_p$; the Hasse--Minkowski theorem (its proof uses Dirichlet's theorem on primes in progressions); Legendre's theorem on $ax^2 + by^2 + cz^2 = 0$ again.
-\item Exercises with solutions.
+\item Section~\ref{p-adic-numbers:section-absolute-values}: absolute values, the ultrametric inequality and its strange geometry, equivalent absolute values, Ostrowski's theorem, the product formula, and
+the completion of a field with an absolute value.
+\item Section~\ref{p-adic-numbers:section-q-p}: the field $\QQ_p$ and the ring $\ZZ_p$: valuation, $p$-adic expansions (rational numbers are the eventually periodic ones), $\ZZ_p$ as the inverse limit
+of the rings $\ZZ/p^n\ZZ$, compactness, total disconnectedness.
+\item Section~\ref{p-adic-numbers:section-hensel}: Hensel's lemma; squares in $\QQ_p$; roots of unity and Teichm\"uller representatives; the structure of the group $\QQ_p^\times$; the fields $\QQ_p$ are
+pairwise non-isomorphic.
+\item Section~\ref{p-adic-numbers:section-analysis}: $p$-adic analysis: series, power series, the $p$-adic exponential and logarithm, Mahler's theorem on continuous functions on $\ZZ_p$, Strassmann's
+theorem on zeros of power series, and the theorem of Skolem, Mahler and Lech on zeros of linear recurrences.
+\item Section~\ref{p-adic-numbers:section-hilbert-symbol}: the Hilbert symbol, its explicit formulas, and Hilbert's reciprocity law, which is a reformulation of quadratic reciprocity.
+\item Section~\ref{p-adic-numbers:section-hasse-minkowski}: quadratic forms over $\QQ_p$, the approximation theorem, the existence of rational numbers with prescribed Hilbert symbols, the
+Hasse--Minkowski theorem, sums of three squares, and the failure of the local-global principle for cubic equations.
+\item Section~\ref{p-adic-numbers:section-exercises}: exercises with solutions.
 \end{enumerate}
+References: \cite{serre-arithmetic} (Chapters I--IV) for the Hilbert symbol and quadratic forms, \cite{gouvea-padic} and \cite{koblitz-padic} for an elementary introduction,
+\cite{robert-padic} for $p$-adic analysis, and \cite{cassels-local-fields} for both.
+
+\noindent\textbf{Prerequisites.} Chapter~\ref{number-systems} (Number Systems), Chapter~\ref{number-theory} (Elementary Number Theory), Chapter~\ref{linear-algebra} (Linear Algebra),
+Chapter~\ref{commutative-algebra} (Commutative Algebra), Chapter~\ref{combinatorics} (Combinatorics), Chapter~\ref{general-topology} (General Topology), Chapter~\ref{real-analysis} (Real Analysis),
+Chapter~\ref{geometry-of-numbers} (Geometry of Numbers) and Chapter~\ref{analytic-number-theory} (Analytic Number Theory).
+
+\begin{notation}\label{p-adic-numbers:notation-basic}
+Throughout, $p$ is a prime. For a nonzero rational number $x$, $v_p(x) \in \ZZ$ is the exponent of $p$ in the factorisation of $x$ (so $v_p(x) = v_p(a) - v_p(b)$ for $x = a/b$), and
+$|x|_p = p^{-v_p(x)}$, $|0|_p = 0$, $v_p(0) = +\infty$. The usual absolute value is written $|x|_\infty$ when it must be distinguished. $\QQ_p$ is the field of $p$-adic numbers, $\ZZ_p$ the ring of
+$p$-adic integers, $\ZZ_p^\times$ its group of units, and $U_n = 1 + p^n\ZZ_p$ for $n \geq 1$. For a field $k$, $k^\times$ is its multiplicative group and $k^{\times2}$ the subgroup of nonzero squares;
+$\mu_n$ is the group of $n$-th roots of unity in the field at hand. Places: $v$ runs over the set $\{2, 3, 5, 7, \ldots\} \cup \{\infty\}$, and $\QQ_\infty = \RR$.
+\end{notation}
+
+\section{Absolute values}\label{p-adic-numbers:section-absolute-values}
+
+\subsection{Definition and first examples}\label{p-adic-numbers:subsection-absolute-values}
+
+The properties of the usual absolute value used in analysis are positivity, multiplicativity and the triangle inequality. Taking these as axioms gives a notion of size on any field.
+
+\begin{definition}\label{p-adic-numbers:definition-absolute-value}
+An \emph{absolute value} on a field $K$ is a function $|\cdot| \colon K \to \RR_{\geq 0}$ such that for all $x, y \in K$:
+\begin{enumerate}
+\item $|x| = 0$ if and only if $x = 0$;
+\item $|xy| = |x||y|$;
+\item $|x + y| \leq |x| + |y|$ (the \emph{triangle inequality}).
+\end{enumerate}
+It is \emph{non-archimedean} if it satisfies the stronger \emph{ultrametric inequality} $|x + y| \leq \max(|x|, |y|)$, and \emph{archimedean} otherwise. The \emph{trivial} absolute value is $|x| = 1$ for
+all $x \neq 0$. A field with an absolute value is a \emph{valued field}; it is a metric space with $d(x, y) = |x - y|$.
+\end{definition}
+
+From (2), $|1| = |1|^2$, so $|1| = 1$, and $|-1|^2 = 1$ gives $|-1| = 1$; hence $|-x| = |x|$ and $|x^{-1}| = |x|^{-1}$. Also $|n \cdot 1| \leq n$ for $n \in \NN$, by the triangle inequality.
+
+\begin{proposition}\label{p-adic-numbers:proposition-p-adic-absolute-value}
+For every prime $p$, $|\cdot|_p$ is a non-archimedean absolute value on $\QQ$. More precisely, for $x, y \in \QQ$, $v_p(xy) = v_p(x) + v_p(y)$ and $v_p(x + y) \geq \min(v_p(x), v_p(y))$, with equality if
+$v_p(x) \neq v_p(y)$.
+\end{proposition}
+
+\begin{proof}
+Additivity of $v_p$ on products follows from unique factorisation. For the sum we may assume $x, y, x + y \neq 0$. Write $x = p^ma/b$ and $y = p^nc/d$ with $a, b, c, d$ integers prime to $p$, and
+$m \leq n$. Then $x + y = p^m(ad + p^{n-m}bc)/(bd)$, and $p \nmid bd$, so $v_p(x + y) \geq m$. If $m < n$, then $ad + p^{n-m}bc \equiv ad \not\equiv 0 \pmod p$, and $v_p(x + y) = m$. Taking
+$|x|_p = p^{-v_p(x)}$ turns these statements into multiplicativity and the ultrametric inequality, which implies the triangle inequality.
+\end{proof}
+
+\begin{example}\label{p-adic-numbers:example-p-adic-sizes}
+\begin{enumerate}
+\item $|2^{10}|_2 = 2^{-10}$ is tiny, while $|1/1024|_2 = 1024$ is large; $|3|_2 = |5|_2 = |1001|_2 = 1$.
+\item $|12/35|_2 = 1/4$, $|12/35|_3 = 1/3$, $|12/35|_5 = 5$, $|12/35|_7 = 7$, and $|12/35|_p = 1$ for $p \geq 11$.
+\item In $\QQ$ with $|\cdot|_p$ the sequence $p^n$ tends to $0$, and the partial sums $1 + p + \cdots + p^{n-1} = (1 - p^n)/(1 - p)$ tend to $1/(1 - p)$, since
+$|(1 - p^n)/(1 - p) - 1/(1 - p)|_p = |p^n|_p = p^{-n}$.
+\item The sequence $1, 11, 111, 1111, \ldots$ converges $5$-adically (and $2$-adically) to $-1/9$: $(10^n - 1)/9 + 1/9 = 10^n/9$ has $5$-adic absolute value $5^{-n}$.
+\end{enumerate}
+\end{example}
+
+\begin{notation}\label{p-adic-numbers:notation-valuation}
+For a non-archimedean absolute value it is often convenient to work additively: $v(x) = -\log_p|x|$ for $|\cdot| = |\cdot|_p$, with $v(0) = +\infty$. The rules
+$v(xy) = v(x) + v(y)$ and $v(x + y) \geq \min(v(x), v(y))$ make $v$ a \emph{valuation} in the sense of Definition~\ref{commutative-algebra:definition-regular}. ``$x$ is small'' means
+``$|x|$ is small'', that is, ``$v(x)$ is large''.
+\end{notation}
+
+\subsection{Ultrametric geometry}\label{p-adic-numbers:subsection-ultrametric}
+
+The ultrametric inequality has striking consequences for the geometry of a valued field, all opposite to the intuition from $\RR$.
+
+\begin{proposition}\label{p-adic-numbers:proposition-ultrametric}
+Let $|\cdot|$ be a non-archimedean absolute value on $K$. For $a \in K$ and $r > 0$ let $B(a, r) = \{x : |x - a| < r\}$ and $\bar B(a, r) = \{x : |x - a| \leq r\}$.
+\begin{enumerate}
+\item If $|x| \neq |y|$, then $|x + y| = \max(|x|, |y|)$. (\emph{Every triangle is isosceles}: of the three sides $|x - y|$, $|y - z|$, $|x - z|$, the two largest are equal.)
+\item Every point of a ball is a centre: if $b \in B(a, r)$ then $B(b, r) = B(a, r)$, and similarly for $\bar B$.
+\item Two balls are either disjoint or one contains the other.
+\item Every ball $B(a, r)$ and $\bar B(a, r)$, $r > 0$, is both open and closed.
+\item A sequence $(x_n)$ is Cauchy if and only if $|x_{n+1} - x_n| \to 0$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) Say $|x| > |y|$. Then $|x + y| \leq |x|$, and $|x| = |(x + y) - y| \leq \max(|x + y|, |y|)$ forces $|x| \leq |x + y|$, since $|x| > |y|$. For the triangle apply this to $x - y$ and $y - z$.
+(2) If $|x - b| < r$, then $|x - a| \leq \max(|x - b|, |b - a|) < r$; so $B(b, r) \subseteq B(a, r)$, and by symmetry ($a \in B(b, r)$) equality holds.
+(3) If $c$ lies in both balls, both are balls centred at $c$ by (2), and the one with smaller radius is contained in the other.
+(4) Balls are open in any metric space ($\bar B(a, r)$ contains $B(x, r)$ for each of its points $x$, by (2)). The complement of $B(a, r)$ is open: if $|x - a| \geq r$, then $B(x, r)$ is disjoint
+from $B(a, r)$, otherwise by (3) and (2) they would coincide. The same argument with $\bar B$ works.
+(5) For $m > n$, $|x_m - x_n| \leq \max(|x_{m} - x_{m-1}|, \ldots, |x_{n+1} - x_n|)$.
+\end{proof}
+
+\begin{counterexample}\label{p-adic-numbers:counterexample-ultrametric-real}
+None of these statements holds in $\RR$: the triangle with vertices $0, 1, 3$ has sides $1, 2, 3$; the interval $(0, 2)$ contains $1.5$ but is not the interval of radius $1$ around $1.5$; and the partial
+sums of the harmonic series satisfy $|x_{n+1} - x_n| = 1/(n + 1) \to 0$ but diverge. Statement (5) also explains why $p$-adic analysis is in some ways simpler than real analysis: by
+Proposition~\ref{p-adic-numbers:proposition-series} below, a series converges as soon as its terms tend to zero.
+\end{counterexample}
+
+The next criterion shows that non-archimedean absolute values are those for which the integers are bounded; the name ``archimedean'' refers to the archimedean property of $\RR$: some multiple
+$n\cdot x$ of a nonzero $x$ is arbitrarily large.
+
+\begin{proposition}\label{p-adic-numbers:proposition-non-archimedean-criterion}
+An absolute value on a field $K$ is non-archimedean if and only if $|n \cdot 1| \leq 1$ for all $n \in \ZZ$, if and only if $\{|n \cdot 1| : n \in \ZZ\}$ is bounded.
+\end{proposition}
+
+\begin{proof}
+If $|\cdot|$ is non-archimedean then $|n \cdot 1| = |1 + \cdots + 1| \leq 1$ by induction. If $|n \cdot 1| \leq C$ for all $n$, then for $x, y \in K$ and $N \geq 1$, by the binomial theorem,
+\[
+|x + y|^N = \Bigl|\sum_{k=0}^N\binom Nk x^ky^{N-k}\Bigr| \leq \sum_{k=0}^NC|x|^k|y|^{N-k} \leq (N + 1)C\max(|x|, |y|)^N .
+\]
+Taking $N$-th roots, $|x + y| \leq ((N + 1)C)^{1/N}\max(|x|, |y|)$, and $((N + 1)C)^{1/N} \to 1$ as $N \to \infty$.
+\end{proof}
+
+In particular every absolute value on a field of characteristic $p > 0$ is non-archimedean, since $\ZZ\cdot1$ is then finite.
+
+\subsection{Equivalent absolute values and Ostrowski's theorem}\label{p-adic-numbers:subsection-ostrowski}
+
+If $|\cdot|$ is an absolute value, so is $|\cdot|^\alpha$ for $0 < \alpha \leq 1$ (since $(a + b)^\alpha \leq a^\alpha + b^\alpha$ for $a, b \geq 0$, $a + b > 0$: dividing by $(a + b)^\alpha$, this is $1 \leq s^\alpha + (1 - s)^\alpha$ for $s \in [0, 1]$, true because
+$s^\alpha \geq s$), and for every $\alpha > 0$ if $|\cdot|$ is
+non-archimedean. These give the same notion of convergence, and should not be counted as different.
+
+\begin{definition}\label{p-adic-numbers:definition-equivalent}
+Two absolute values on a field $K$ are \emph{equivalent} if they define the same topology on $K$.
+\end{definition}
+
+\begin{proposition}\label{p-adic-numbers:proposition-equivalent}
+Let $|\cdot|_1$ and $|\cdot|_2$ be absolute values on $K$, with $|\cdot|_1$ nontrivial. The following are equivalent:
+\begin{enumerate}
+\item $|\cdot|_1$ and $|\cdot|_2$ are equivalent;
+\item for all $x \in K$, $|x|_1 < 1$ implies $|x|_2 < 1$;
+\item $|\cdot|_2 = |\cdot|_1^\alpha$ for some real $\alpha > 0$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) $\Rightarrow$ (2): $|x|_1 < 1$ if and only if $x^n \to 0$ in the topology of $|\cdot|_1$, since $|x^n|_1 = |x|_1^n$. The topologies coincide, so $x^n \to 0$ also for $|\cdot|_2$, which means
+$|x|_2 < 1$.
+
+(2) $\Rightarrow$ (3): Choose $y$ with $|y|_1 > 1$ (possible since $|\cdot|_1$ is nontrivial: some $|z|_1 \neq 1$, and take $y = z$ or $z^{-1}$). By (2) applied to $y^{-1}$, $|y|_2 > 1$. Put
+$\alpha = \log|y|_2/\log|y|_1 > 0$. Let $x \neq 0$ and write $|x|_1 = |y|_1^\beta$. For rationals $m/n > \beta$ (with $n > 0$), $|x^n/y^m|_1 < 1$, hence $|x^n/y^m|_2 < 1$, that is
+$|x|_2 < |y|_2^{m/n}$; letting $m/n \downarrow \beta$ gives $|x|_2 \leq |y|_2^\beta$. Applying the same argument to rationals $m/n < \beta$ and to $y^m/x^n$ gives $|x|_2 \geq |y|_2^\beta$. So
+$|x|_2 = |y|_2^\beta = |y|_1^{\alpha\beta} = |x|_1^\alpha$.
+
+(3) $\Rightarrow$ (1): the open balls of $|\cdot|_2$ are the open balls of $|\cdot|_1$ with radii raised to the power $\alpha$.
+\end{proof}
+
+\begin{theorem}[Ostrowski]\label{p-adic-numbers:theorem-ostrowski}
+Every nontrivial absolute value on $\QQ$ is equivalent to exactly one of $|\cdot|_\infty$ and $|\cdot|_p$, $p$ prime. More precisely, it equals $|\cdot|_\infty^\alpha$ for some $0 < \alpha \leq 1$, or
+$|\cdot|_p^\alpha$ for some prime $p$ and some $\alpha > 0$.
+\end{theorem}
+
+\begin{proof}
+Let $|\cdot|$ be a nontrivial absolute value on $\QQ$. By multiplicativity it is determined by its values on the integers $n \geq 2$.
+
+\emph{Step 1: a comparison inequality.} Let $m, n \geq 2$ be integers. Write $m$ in base $n$: $m = a_0 + a_1n + \cdots + a_kn^k$ with $0 \leq a_i < n$ and $k \leq \log m/\log n$. Since $|a_i| \leq a_i < n$,
+\[
+|m| \leq \sum_{i=0}^k|a_i||n|^i \leq (k + 1)\,n\max(1, |n|)^k \leq \Bigl(1 + \frac{\log m}{\log n}\Bigr)n\max(1, |n|)^{\log m/\log n} .
+\]
+Apply this to $m^t$ in place of $m$, take $t$-th roots and let $t \to \infty$; since $(1 + t\log m/\log n)^{1/t}n^{1/t} \to 1$,
+\begin{equation}\label{p-adic-numbers:equation-ostrowski}
+|m| \leq \max(1, |n|)^{\log m/\log n} \qquad (m, n \geq 2).
+\end{equation}
+
+\emph{Step 2: the archimedean case.} Suppose $|m| > 1$ for some integer $m \geq 2$. Then \eqref{p-adic-numbers:equation-ostrowski} forces $|n| > 1$ for every $n \geq 2$, and then reads
+$|m|^{1/\log m} \leq |n|^{1/\log n}$. Exchanging $m$ and $n$ gives equality, so $|n|^{1/\log n} = e^\alpha$ is a constant, that is $|n| = n^\alpha$, for all $n \geq 2$; here $\alpha > 0$, and
+$\alpha \leq 1$ because $|2| \leq 2$. Hence $|x| = |x|_\infty^\alpha$ for all $x \in \QQ$.
+
+\emph{Step 3: the non-archimedean case.} Otherwise $|n| \leq 1$ for all integers $n$, and $|\cdot|$ is non-archimedean by Proposition~\ref{p-adic-numbers:proposition-non-archimedean-criterion}. As it is
+nontrivial, $|n| < 1$ for some $n \geq 2$, and hence, by factoring $n$, $|p| < 1$ for some prime $p$. The set $I = \{n \in \ZZ : |n| < 1\}$ is an ideal of $\ZZ$ (by the ultrametric inequality and
+$|mn| = |m||n| \leq |n|$), it is proper since $|1| = 1$, and it is prime by multiplicativity. It contains $p$, so $I = p\ZZ$. Thus $|q| = 1$ for primes $q \neq p$, and writing $|p| = p^{-\alpha}$ with
+$\alpha > 0$, we get $|x| = p^{-\alpha v_p(x)} = |x|_p^\alpha$ for all $x \in \QQ^\times$.
+
+\emph{Step 4: uniqueness.} The absolute values $|\cdot|_\infty$ and $|\cdot|_p$, $p$ prime, are pairwise inequivalent by Proposition~\ref{p-adic-numbers:proposition-equivalent}(2): $|p|_p < 1$ but
+$|p|_q = 1$ for $q \neq p$ and $|p|_\infty > 1$.
+\end{proof}
+
+\begin{remark}\label{p-adic-numbers:remark-ostrowski}
+Ostrowski proved the theorem in 1916 \cite{ostrowski-1916}, together with a second theorem: a field complete with respect to an archimedean absolute value is isomorphic to $\RR$ or $\CC$, with
+the absolute value $|\cdot|_\infty^\alpha$ \cite[Chapter 3]{cassels-local-fields}. For the field $k(t)$ of rational functions over a field $k$, the analogous classification gives, besides the
+trivial absolute value, one absolute value for each monic irreducible polynomial $\pi$ (measuring divisibility by $\pi$) and one ``at infinity'', $|f| = e^{\deg f}$, if one only allows absolute values
+trivial on $k$; this is the beginning of the analogy between number fields and function fields of curves (Chapter~\ref{curves}).
+\end{remark}
+
+\begin{theorem}[Product formula]\label{p-adic-numbers:theorem-product-formula}
+For every $x \in \QQ^\times$, $|x|_p = 1$ for all but finitely many primes $p$, and
+\[
+\prod_{v}|x|_v = |x|_\infty\prod_p|x|_p = 1 .
+\]
+\end{theorem}
+
+\begin{proof}
+Both sides are multiplicative in $x$, so it suffices to check $x = -1$ and $x = q$ a prime. For $x = -1$ all factors are $1$. For $x = q$: $|q|_\infty = q$, $|q|_q = q^{-1}$, and $|q|_p = 1$ for
+$p \neq q$.
+\end{proof}
+
+\begin{example}\label{p-adic-numbers:example-product-formula}
+For $x = 12/35$: $|x|_\infty = 12/35$, and by Example~\ref{p-adic-numbers:example-p-adic-sizes}(2) the product of the $p$-adic absolute values is $\frac14 \cdot \frac13 \cdot 5 \cdot 7 = \frac{35}{12}$.
+The product formula says that the places of $\QQ$ ``see'' every nonzero rational together: a nonzero rational cannot be small at all places at once. This is the arithmetic analogue of the fact
+that a nonzero rational function on the Riemann sphere has as many zeros as poles.
+\end{example}
+
+\subsection{Completion}\label{p-adic-numbers:subsection-completion}
+
+The real numbers were constructed in Definition~\ref{number-systems:definition-reals} as classes of Cauchy sequences of rationals. The construction only uses the absolute value, and works for any valued
+field.
+
+\begin{theorem}\label{p-adic-numbers:theorem-completion}
+Let $(K, |\cdot|)$ be a valued field. There is a valued field $(\hat K, |\cdot|)$, complete as a metric space, with an embedding $K \to \hat K$ preserving the absolute value and with dense image. If
+$(L, |\cdot|)$ is another complete valued field and $\iota \colon K \to L$ preserves absolute values, then $\iota$ extends uniquely to a field homomorphism $\hat K \to L$ preserving absolute values.
+In particular $\hat K$ is unique up to unique isomorphism, the \emph{completion} of $K$. If $|\cdot|$ is non-archimedean, so is its extension, and $\{|x| : x \in \hat K^\times\} = \{|x| : x \in K^\times\}$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: the field.} Let $\mathcal{C}$ be the ring of Cauchy sequences in $K$ and $\mathcal{N}$ the ideal of null sequences; the proof of
+Lemma~\ref{number-systems:lemma-cauchy-rationals}(1)(2) applies verbatim, with $|\cdot|$ in place of the absolute value of $\QQ$. If $(x_n) \in \mathcal{C} \setminus \mathcal{N}$, there are $\delta > 0$
+and $N$ with $|x_n| \geq \delta$ for $n \geq N$ (the proof of part (3) of the lemma, without the signs), and then $(x_n^{-1})_{n \geq N}$ is Cauchy, because
+$|x_n^{-1} - x_m^{-1}| \leq \delta^{-2}|x_m - x_n|$. So $\mathcal{N}$ is a maximal ideal and $\hat K = \mathcal{C}/\mathcal{N}$ is a field, containing $K$ as the classes of constant sequences.
+
+\emph{Step 2: the absolute value.} For $(x_n) \in \mathcal{C}$, $\bigl||x_n| - |x_m|\bigr| \leq |x_n - x_m|$, so $(|x_n|)$ is a Cauchy sequence of reals, and we put $|[x_n]| = \lim|x_n|$; this does not
+change when a null sequence is added, and it is an absolute value, by passing to the limit in the axioms. If $|\cdot|$ is non-archimedean and $(x_n) \notin \mathcal{N}$, then
+$|x_n - x_m| < \delta \leq |x_n|$ for large $m, n$, so $|x_m| = |x_n|$ by Proposition~\ref{p-adic-numbers:proposition-ultrametric}(1): the sequence $|x_n|$ is eventually constant, which gives the
+last statement, and the ultrametric inequality passes to the limit.
+
+\emph{Step 3: density and completeness.} The class $\xi = [x_n]$ is the limit of the constant sequences $x_m$, since $|\xi - x_m| = \lim_n|x_n - x_m|$ is small for large $m$; so $K$ is dense. If $(\xi_k)$
+is Cauchy in $\hat K$, choose $y_k \in K$ with $|\xi_k - y_k| < 1/k$; then $(y_k)$ is Cauchy in $K$, and $\xi_k \to [y_k]$.
+
+\emph{Step 4: the universal property.} If $\iota \colon K \to L$ preserves absolute values, it maps Cauchy sequences to Cauchy sequences and null sequences to null sequences, so
+$[x_n] \mapsto \lim\iota(x_n)$ is well defined; it is a homomorphism preserving absolute values, and it is the only continuous extension, because $K$ is dense. A homomorphism preserving absolute
+values is an isometry, hence continuous.
+\end{proof}
+
+\begin{definition}\label{p-adic-numbers:definition-q-p}
+The field $\QQ_p$ of \emph{$p$-adic numbers} is the completion of $(\QQ, |\cdot|_p)$. By Ostrowski's theorem, $\RR = \QQ_\infty$ and the fields $\QQ_p$ are, up to isomorphism, all the completions of $\QQ$
+with respect to nontrivial absolute values.
+\end{definition}
+
+\section{The field $\QQ_p$ and the ring $\ZZ_p$}\label{p-adic-numbers:section-q-p}
+
+\subsection{Valuation and $p$-adic integers}\label{p-adic-numbers:subsection-z-p}
+
+\begin{definition}\label{p-adic-numbers:definition-z-p}
+The ring of \emph{$p$-adic integers} is the closed unit ball $\ZZ_p = \{x \in \QQ_p : |x|_p \leq 1\}$. By Theorem~\ref{p-adic-numbers:theorem-completion}, every $x \in \QQ_p^\times$ has
+$|x|_p = p^{-v_p(x)}$ for a unique $v_p(x) \in \ZZ$, the \emph{valuation} of $x$; we put $v_p(0) = +\infty$.
+\end{definition}
+
+\begin{proposition}\label{p-adic-numbers:proposition-z-p}
+\begin{enumerate}
+\item $\ZZ_p$ is a subring of $\QQ_p$, open and closed; its group of units is $\ZZ_p^\times = \{x : |x|_p = 1\}$.
+\item Every $x \in \QQ_p^\times$ is uniquely $x = p^nu$ with $n = v_p(x) \in \ZZ$ and $u \in \ZZ_p^\times$. Hence $\QQ_p = \ZZ_p[1/p]$ is the fraction field of $\ZZ_p$.
+\item The nonzero ideals of $\ZZ_p$ are the $p^n\ZZ_p = \{x : v_p(x) \geq n\}$, $n \geq 0$. So $\ZZ_p$ is a principal ideal domain and a discrete valuation ring, with unique maximal ideal $p\ZZ_p$.
+\item $\ZZ$ is dense in $\ZZ_p$, and $\ZZ_p \cap \QQ = \ZZ_{(p)} = \{a/b : a, b \in \ZZ, \ p \nmid b\}$.
+\item For $n \geq 1$, the map $\ZZ \to \ZZ_p/p^n\ZZ_p$ is surjective with kernel $p^n\ZZ$, so $\ZZ_p/p^n\ZZ_p \cong \ZZ/p^n\ZZ$. In particular $\ZZ_p/p\ZZ_p \cong \mathbb{F}_p$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) The ultrametric inequality and multiplicativity show that $\ZZ_p$ is closed under sums and products; it is a closed ball, hence open and closed by
+Proposition~\ref{p-adic-numbers:proposition-ultrametric}(4). If $|x|_p = 1$ then $|x^{-1}|_p = 1$; conversely if $x, x^{-1} \in \ZZ_p$ then $|x|_p \leq 1$ and $|x|_p^{-1} \leq 1$.
+
+(2) $u = p^{-n}x$ has $|u|_p = 1$; uniqueness is clear from $v_p(p^nu) = n$.
+
+(3) If $I \neq 0$ is an ideal, let $n = \min\{v_p(x) : x \in I\}$, attained at some $x = p^nu$. Then $p^n = u^{-1}x \in I$, and every $y \in I$ is $y = p^n \cdot p^{-n}y$ with $p^{-n}y \in \ZZ_p$. The
+valuation $v_p$ satisfies the conditions of Definition~\ref{commutative-algebra:definition-regular}.
+
+(4) Let $x \in \ZZ_p$ and $n \geq 1$. By density of $\QQ$ choose $a/b \in \QQ$ with $|x - a/b|_p \leq p^{-n}$; then $|a/b|_p \leq 1$, so $p \nmid b$ after cancelling. Choose $b^{\prime} \in \ZZ$ with
+$bb^{\prime} \equiv 1 \pmod{p^n}$; then $a/b - ab^{\prime} = a(1 - bb^{\prime})/b$ has $|\cdot|_p \leq p^{-n}$, so the integer $ab^{\prime}$ is within $p^{-n}$ of $x$. The second statement is the
+definition of $|\cdot|_p$ on $\QQ$.
+
+(5) Surjectivity is (4): every class $x + p^n\ZZ_p = \bar B(x, p^{-n})$ contains an integer. The kernel is $\ZZ \cap p^n\ZZ_p = \{m : v_p(m) \geq n\} = p^n\ZZ$.
+\end{proof}
+
+\begin{remark}\label{p-adic-numbers:remark-congruences}
+Part (5) is the dictionary between $\ZZ_p$ and congruences: for $x, y \in \ZZ_p$, $x \equiv y \pmod{p^n}$ (that is, $x - y \in p^n\ZZ_p$) means $|x - y|_p \leq p^{-n}$. A polynomial equation
+$f(x) = 0$ with $f \in \ZZ[x_1, \ldots, x_m]$ has a solution in $\ZZ_p^m$ if and only if the congruence $f(x) \equiv 0 \pmod{p^n}$ has a solution for every $n$
+(Exercise~\ref{p-adic-numbers:exercise-solutions-mod-p-n}).
+\end{remark}
+
+\subsection{Series and $p$-adic expansions}\label{p-adic-numbers:subsection-expansions}
+
+\begin{proposition}\label{p-adic-numbers:proposition-series}
+Let $K$ be a complete non-archimedean valued field and $(a_n)$ a sequence in $K$. The series $\sum_na_n$ converges if and only if $a_n \to 0$. Then $|\sum_na_n| \leq \max_n|a_n|$, and the sum does not
+change if the terms are permuted.
+\end{proposition}
+
+\begin{proof}
+If the series converges, $a_n = s_n - s_{n-1} \to 0$. Conversely, if $a_n \to 0$, the partial sums satisfy $|s_{n+1} - s_n| = |a_{n+1}| \to 0$, so they form a Cauchy sequence by
+Proposition~\ref{p-adic-numbers:proposition-ultrametric}(5), which converges since $K$ is complete. The bound passes to the limit from $|s_n| \leq \max_{k \leq n}|a_k|$. If $\sigma$ is a permutation of
+$\NN$ and $\varepsilon > 0$, choose $N$ with $|a_n| < \varepsilon$ for $n > N$ and then $M$ with $\sigma(\{0, \ldots, M\}) \supseteq \{0, \ldots, N\}$; for $m \geq M$, the difference
+$\sum_{k \leq m}a_{\sigma(k)} - \sum_{n \leq N}a_n$ is a finite sum of terms $a_n$ with $n > N$, of absolute value $< \varepsilon$.
+\end{proof}
+
+More generally, we shall sum families indexed by countable sets, such as double series. A family $(a_i)_{i \in I}$, $I$ countable, \emph{tends to $0$} if for every $\varepsilon > 0$ only finitely many
+$|a_i|$ are $\geq \varepsilon$.
+
+\begin{lemma}\label{p-adic-numbers:lemma-summable}
+Let $K$ be complete non-archimedean and $(a_i)_{i \in I}$ a family tending to $0$, $I$ countable. Then $\sum_{i \in I}a_i$, defined by enumerating $I$, does not depend on the enumeration, and for every
+partition $I = \bigsqcup_{j \in J}I_j$ the families $(a_i)_{i \in I_j}$ and $(\sum_{i \in I_j}a_i)_{j \in J}$ tend to $0$ and $\sum_{j}\sum_{i \in I_j}a_i = \sum_{i \in I}a_i$.
+\end{lemma}
+
+\begin{proof}
+Independence of the enumeration is the last part of Proposition~\ref{p-adic-numbers:proposition-series}. Let $\varepsilon > 0$ and let $F \subseteq I$ be the finite set of $i$ with $|a_i| \geq \varepsilon$.
+For $j$ with $I_j \cap F = \emptyset$, $|\sum_{i \in I_j}a_i| < \varepsilon$; this holds for all but finitely many $j$, so the inner sums tend to $0$. Let $s = \sum_Ia_i$ and let $J_0 \subseteq J$ be a finite
+set of indices containing those $j$ with $I_j \cap F \neq \emptyset$. Then $s - \sum_{j \in J_0}\sum_{I_j}a_i$ is a sum of terms $a_i$ with $i \notin F$, of absolute value $< \varepsilon$. As $J_0$ can be any
+large enough finite set, the outer series converges to $s$.
+\end{proof}
+
+\begin{theorem}[$p$-adic expansions]\label{p-adic-numbers:theorem-expansions}
+Every $x \in \ZZ_p$ can be written uniquely as a convergent series
+\[
+x = \sum_{k \geq 0}a_kp^k, \qquad a_k \in \{0, 1, \ldots, p - 1\},
+\]
+and every such series converges in $\ZZ_p$. Every $x \in \QQ_p^\times$ is uniquely $x = \sum_{k \geq m}a_kp^k$ with $m = v_p(x)$, $a_k \in \{0, \ldots, p - 1\}$, $a_m \neq 0$. The truncations
+$x_n = \sum_{k < n}a_kp^k$ are the integers $0 \leq x_n < p^n$ with $x \equiv x_n \pmod{p^n}$.
+\end{theorem}
+
+\begin{proof}
+Every such series converges by Proposition~\ref{p-adic-numbers:proposition-series}, since $|a_kp^k|_p \leq p^{-k}$. Given $x \in \ZZ_p$, by Proposition~\ref{p-adic-numbers:proposition-z-p}(5) there is a unique
+integer $0 \leq x_n < p^n$ with $x \equiv x_n \pmod{p^n}$. Since $x_{n+1} \equiv x \equiv x_n \pmod{p^n}$ and $0 \leq x_{n+1} < p^{n+1}$, $x_{n+1} = x_n + a_np^n$ with $0 \leq a_n < p$. Then
+$x_n = \sum_{k < n}a_kp^k$ and $|x - x_n|_p \leq p^{-n} \to 0$, so $x = \sum_ka_kp^k$. Uniqueness: if $x = \sum_kb_kp^k$, the partial sums $\sum_{k < n}b_kp^k$ lie in $[0, p^n)$ and are $\equiv x \pmod{p^n}$,
+so they equal $x_n$, and $b_k = a_k$. For $x \in \QQ_p^\times$ apply this to $p^{-m}x \in \ZZ_p^\times$.
+\end{proof}
+
+\begin{example}\label{p-adic-numbers:example-expansions}
+\begin{enumerate}
+\item $-1 = \sum_{k \geq 0}(p - 1)p^k$, since the partial sums are $p^n - 1 \equiv -1 \pmod{p^n}$. Adding $1$ to $\ldots(p-1)(p-1)(p-1)$ produces an infinite carry, as in $0.999\ldots = 1$.
+\item $1/(1 - p) = 1 + p + p^2 + \cdots$. In $\ZZ_2$, $-1/3 = 1/(1 - 4) = 1 + 2^2 + 2^4 + \cdots$, and $1/3 = 1 + 2 + 2^3 + 2^5 + 2^7 + \cdots$: indeed
+$1 + 2 + 2^3(1 + 4 + 16 + \cdots) = 3 + 8/(1 - 4) = 1/3$.
+\item In $\ZZ_5$: $1/3 = 2 + 3 \cdot 5 + 1 \cdot 5^2 + 3 \cdot 5^3 + 1 \cdot 5^4 + \cdots$ (digits $2, 3, 1, 3, 1, 3, \ldots$), as $2 + 5(3 + 5)/(1 - 25) = 2 - 5/3 = 1/3$; and
+$-1/6 = 4 + 4 \cdot 5^2 + 4 \cdot 5^4 + \cdots = 4/(1 - 25)$. The digits are found by long division from the right: $1/3 \equiv 2 \pmod 5$ since $3 \cdot 2 = 6 \equiv 1$, then
+$(1/3 - 2)/5 = -1/3 \equiv 3 \pmod 5$, and so on.
+\item Writing the digits from right to left, as for integers, $-1 = \ldots 4444_5$ and $1/3 = \ldots 3131313132_5$. Addition and multiplication are done exactly as for integers written in base $p$,
+with carries propagating to the left forever.
+\end{enumerate}
+\end{example}
+
+The expansions of real numbers are eventually periodic exactly for rationals; the same holds $p$-adically.
+
+\begin{proposition}\label{p-adic-numbers:proposition-rational-periodic}
+An element $x \in \QQ_p$ is rational if and only if its $p$-adic expansion is eventually periodic.
+\end{proposition}
+
+\begin{proof}
+If the digits are eventually periodic, $x = A + p^mB(1 + p^\ell + p^{2\ell} + \cdots) = A + p^mB/(1 - p^\ell)$ for integers $A$, $B$ and some $m \in \ZZ$, $\ell \geq 1$, which is rational.
+
+Conversely, multiplying by a power of $p$ we may assume $x = a/b \in \ZZ_{(p)}$ with $b \geq 1$, $p \nmid b$. Let $x = \sum a_kp^k$ and put $y_n = (x - \sum_{k < n}a_kp^k)/p^n = \sum_{k \geq 0}a_{n+k}p^k$. Then
+$y_n = c_n/b$ with $c_n \in \ZZ$, $c_0 = a$, and $y_{n+1} = (y_n - a_n)/p$, that is $c_{n+1} = (c_n - a_nb)/p$. Hence $|c_{n+1}| \leq (|c_n| + (p - 1)b)/p$. If $|c_n| \leq b$ this gives
+$|c_{n+1}| \leq b$; if $|c_n| > b$ it gives $|c_{n+1}| < |c_n|$. So $|c_n| \leq \max(|a|, b)$ for all $n$, and $|c_n| \leq b$ for $n$ large. The $c_n$ take finitely many values, so $c_n = c_{n+\ell}$ for some
+$n$ and $\ell \geq 1$. Since $y_n$ determines its digits $a_n, a_{n+1}, \ldots$, the digit sequence is periodic from $n$ on, with period $\ell$.
+\end{proof}
+
+\begin{corollary}\label{p-adic-numbers:corollary-q-p-uncountable}
+$\QQ_p \neq \QQ$; in fact $\QQ_p$ and $\ZZ_p$ are uncountable.
+\end{corollary}
+
+\begin{proof}
+By Theorem~\ref{p-adic-numbers:theorem-expansions}, $\ZZ_p$ is in bijection with the set of all sequences in $\{0, \ldots, p - 1\}$, which is uncountable by Cantor's diagonal argument; and a non-periodic
+sequence such as $a_k = 1$ for $k$ a square and $0$ otherwise gives an irrational $p$-adic integer.
+\end{proof}
+
+\subsection{$\ZZ_p$ as an inverse limit}\label{p-adic-numbers:subsection-inverse-limit}
+
+The truncations $x \mapsto x \bmod p^n$ are compatible: reducing $x \bmod p^{n+1}$ modulo $p^n$ gives $x \bmod p^n$. This gives the second description of $\ZZ_p$, as the completion of $\ZZ$ in the sense
+of commutative algebra (Definition~\ref{commutative-algebra:definition-completion}).
+
+\begin{theorem}\label{p-adic-numbers:theorem-inverse-limit}
+The map
+\[
+\begin{aligned}
+&\ZZ_p \to \lim_n\ZZ/p^n\ZZ, \qquad x \mapsto (x \bmod p^n)_n, \\
+&\lim_n\ZZ/p^n\ZZ = \Bigl\{(\xi_n)_{n \geq 1} \in \prod_{n \geq 1}\ZZ/p^n\ZZ : \xi_{n+1} \equiv \xi_n \pmod{p^n}\Bigr\},
+\end{aligned}
+\]
+is an isomorphism of rings, and a homeomorphism when each $\ZZ/p^n\ZZ$ is discrete and the inverse limit carries the topology induced from the product. So $\ZZ_p$ is the $(p)$-adic completion of $\ZZ$.
+\end{theorem}
+
+\begin{proof}
+By Proposition~\ref{p-adic-numbers:proposition-z-p}(5) each $x \mapsto x \bmod p^n$ is a ring homomorphism $\ZZ_p \to \ZZ/p^n\ZZ$, and they are compatible, so the map is a ring homomorphism. It is injective,
+because $x \equiv 0 \pmod{p^n}$ for all $n$ means $|x|_p = 0$. It is surjective: given a compatible family $(\xi_n)$, let $x_n \in [0, p^n)$ represent $\xi_n$; compatibility says $x_{n+1} - x_n \in p^n\ZZ$,
+so $(x_n)$ is Cauchy, and its limit $x$ satisfies $x \equiv x_n \pmod{p^n}$ for all $n$. For the topologies: the sets $\{x : x \equiv a \pmod{p^n}\} = \bar B(a, p^{-n})$ form a basis of the topology of $\ZZ_p$,
+and they correspond exactly to the basic open sets $\{(\xi_k) : \xi_n = a \bmod p^n\}$ of the inverse limit.
+\end{proof}
+
+\subsection{Topology}\label{p-adic-numbers:subsection-topology}
+
+\begin{theorem}\label{p-adic-numbers:theorem-topology}
+\begin{enumerate}
+\item $\ZZ_p$ is compact, and so is every closed ball in $\QQ_p$.
+\item $\QQ_p$ is locally compact, and $\ZZ_p$ is open in $\QQ_p$.
+\item $\QQ_p$ is totally disconnected: its only connected subsets are points and $\emptyset$.
+\item $\NN$ and $\ZZ$ are dense in $\ZZ_p$, and $\QQ$ is dense in $\QQ_p$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) $\ZZ_p$ is complete, being closed in the complete space $\QQ_p$, and totally bounded: for every $n$, it is covered by the $p^n$ balls $\bar B(a, p^{-n})$, $0 \leq a < p^n$, by
+Proposition~\ref{p-adic-numbers:proposition-z-p}(5). By Theorem~\ref{general-topology:theorem-compact-metric} it is compact. A closed ball $\bar B(a, p^k)$ is the image of $\ZZ_p$ under the
+homeomorphism $x \mapsto a + p^{-k}x$, and every closed ball of positive radius $r$ equals $\bar B(a, p^k)$ for $p^k \leq r < p^{k+1}$, since $|\cdot|_p$ takes only the values $p^k$.
+(2) Every point $a$ has the compact neighbourhood $a + \ZZ_p$, open by Proposition~\ref{p-adic-numbers:proposition-z-p}(1).
+(3) Let $A \subseteq \QQ_p$ contain two points $a \neq b$, and let $r = |a - b|_p$. The ball $B(a, r)$ is open and closed, contains $a$ and not $b$; so $A \cap B(a, r)$ and $A \setminus B(a, r)$
+disconnect $A$.
+(4) $\ZZ$ is dense by Proposition~\ref{p-adic-numbers:proposition-z-p}(4); a negative integer $m$ is the limit of the positive integers $m + p^n$; $\QQ$ is dense by construction.
+\end{proof}
+
+\begin{remark}\label{p-adic-numbers:remark-cantor}
+By Theorem~\ref{p-adic-numbers:theorem-inverse-limit}, $\ZZ_p$ is homeomorphic to the product $\{0, \ldots, p - 1\}^{\NN}$ of discrete spaces (via the digits), hence compact also by Tychonoff's theorem
+(Theorem~\ref{general-topology:theorem-tychonoff}). For $p = 2$ this is the Cantor set; in fact every $\ZZ_p$ is homeomorphic to the Cantor set, since every compact, totally disconnected metric space
+without isolated points is, by a theorem of Brouwer \cite{engelking-general-topology}. As an additive group $\ZZ_p$ is a compact abelian group, and has a Haar measure $\mu$ with $\mu(a + p^n\ZZ_p) = p^{-n}$
+(Chapter~\ref{harmonic-analysis}).
+\end{remark}
+
+\begin{counterexample}\label{p-adic-numbers:counterexample-q-p-not-ordered}
+$\QQ_p$ is not an ordered field: $-1$ is a sum of squares in $\QQ_p$ (Exercise~\ref{p-adic-numbers:exercise-not-ordered}), while in an ordered field sums of squares are $\geq 0$. And while $\RR$ has only one quadratic extension, $\CC$, the field $\QQ_p$ has three
+($p$ odd) or seven ($p = 2$) of them, $\QQ_p(\sqrt{a})$ for $a$ running over the nontrivial classes of Corollary~\ref{p-adic-numbers:corollary-square-classes}.
+\end{counterexample}
+
+\section{Hensel's lemma and the multiplicative group}\label{p-adic-numbers:section-hensel}
+
+\subsection{Hensel's lemma}\label{p-adic-numbers:subsection-hensel}
+
+Newton's method finds a root of a polynomial $f$ by iterating $a \mapsto a - f(a)/f^{\prime}(a)$. Over $\RR$ it converges only from a good starting point, and proving that it does needs estimates on
+$f^{\prime\prime}$. Over $\ZZ_p$ the estimates are automatic, because polynomials with coefficients in $\ZZ_p$ have ``Taylor coefficients'' in $\ZZ_p$.
+
+\begin{lemma}\label{p-adic-numbers:lemma-taylor}
+Let $R$ be a commutative ring and $f \in R[x]$. There is $g \in R[x, h]$ with $f(x + h) = f(x) + f^{\prime}(x)h + g(x, h)h^2$.
+\end{lemma}
+
+\begin{proof}
+By linearity it suffices to take $f = x^n$, where $(x + h)^n = x^n + nx^{n-1}h + h^2\sum_{k \geq 2}\binom nkx^{n-k}h^{k-2}$, with integer binomial coefficients.
+\end{proof}
+
+\begin{theorem}[Hensel's lemma]\label{p-adic-numbers:theorem-hensel}
+Let $f \in \ZZ_p[x]$ and $a \in \ZZ_p$ with
+\[
+|f(a)|_p < |f^{\prime}(a)|_p^2 .
+\]
+Then there is a unique $\alpha \in \ZZ_p$ with $f(\alpha) = 0$ and $|\alpha - a|_p < |f^{\prime}(a)|_p$. Moreover $|\alpha - a|_p = |f(a)/f^{\prime}(a)|_p$ and $|f^{\prime}(\alpha)|_p = |f^{\prime}(a)|_p$, and $\alpha$
+is the limit of the Newton iterates $a_0 = a$, $a_{n+1} = a_n - f(a_n)/f^{\prime}(a_n)$.
+\end{theorem}
+
+\begin{proof}
+Write $|\cdot|$ for $|\cdot|_p$, let $c = |f^{\prime}(a)| > 0$ and $t = |f(a)|/c^2 < 1$. If $t = 0$ take $\alpha = a$; assume $t > 0$.
+
+\emph{Step 1: induction.} We show that the iterates are defined, lie in $\ZZ_p$, and satisfy
+\[
+|f^{\prime}(a_n)| = c, \qquad |f(a_n)| \leq c^2t^{2^n} .
+\]
+This holds for $n = 0$. If it holds for $n$, let $h_n = -f(a_n)/f^{\prime}(a_n)$; then $|h_n| \leq ct^{2^n} < c \leq 1$, so $a_{n+1} = a_n + h_n \in \ZZ_p$. By Lemma~\ref{p-adic-numbers:lemma-taylor},
+$f(a_{n+1}) = f(a_n) + f^{\prime}(a_n)h_n + g(a_n, h_n)h_n^2 = g(a_n, h_n)h_n^2$, so $|f(a_{n+1})| \leq |h_n|^2 \leq c^2t^{2^{n+1}}$. Applying the lemma to $f^{\prime}$ gives
+$f^{\prime}(a_{n+1}) = f^{\prime}(a_n) + h_n\cdot b$ with $b \in \ZZ_p$, and $|h_nb| < c = |f^{\prime}(a_n)|$, so $|f^{\prime}(a_{n+1})| = c$ by Proposition~\ref{p-adic-numbers:proposition-ultrametric}(1).
+
+\emph{Step 2: the limit.} Since $|a_{n+1} - a_n| = |h_n| \to 0$, the sequence is Cauchy and converges to some $\alpha \in \ZZ_p$ ($\ZZ_p$ is closed). By continuity of polynomials, $f(\alpha) = \lim f(a_n) = 0$
+and $|f^{\prime}(\alpha)| = c$. For $n \geq 1$, $|h_n| \leq ct^{2^n} < ct = |h_0|$, so $|\alpha - a| = |\sum_nh_n| = |h_0| = |f(a)/f^{\prime}(a)| < c$, by Proposition~\ref{p-adic-numbers:proposition-ultrametric}(1).
+
+\emph{Step 3: uniqueness.} Let $\beta \in \ZZ_p$ with $f(\beta) = 0$ and $|\beta - a| < c$, and put $h = \beta - \alpha$, so $|h| < c$. Then
+$0 = f(\beta) = f(\alpha) + f^{\prime}(\alpha)h + g(\alpha, h)h^2 = h\bigl(f^{\prime}(\alpha) + g(\alpha, h)h\bigr)$, and $|g(\alpha, h)h| \leq |h| < c = |f^{\prime}(\alpha)|$, so the second factor is nonzero and $h = 0$.
+\end{proof}
+
+The most common case is $|f^{\prime}(a)|_p = 1$: a simple root modulo $p$ lifts uniquely.
+
+\begin{corollary}\label{p-adic-numbers:corollary-hensel-simple}
+Let $f \in \ZZ_p[x]$ and $a \in \ZZ_p$ with $f(a) \equiv 0 \pmod p$ and $f^{\prime}(a) \not\equiv 0 \pmod p$. Then there is a unique $\alpha \in \ZZ_p$ with $f(\alpha) = 0$ and $\alpha \equiv a \pmod p$.
+Consequently, if the reduction $\bar f \in \mathbb{F}_p[x]$ has a simple root $\bar a$, then $f$ has a root in $\ZZ_p$ reducing to $\bar a$, and $f$ has exactly as many roots in $\ZZ_p$ as $\bar f$ has
+roots in $\mathbb{F}_p$, provided that all roots of $\bar f$ in $\mathbb{F}_p$ are simple.
+\end{corollary}
+
+\begin{proof}
+Here $|f(a)|_p \leq p^{-1} < 1 = |f^{\prime}(a)|_p^2$, and $|\alpha - a|_p < 1$ means $\alpha \equiv a \pmod p$. For the count, every root of $f$ in $\ZZ_p$ reduces to a root of $\bar f$, and each root of
+$\bar f$ has exactly one root of $f$ above it.
+\end{proof}
+
+This is the statement of Exercise~\ref{commutative-algebra:exercise-hensel}; Theorem~\ref{p-adic-numbers:theorem-hensel} is stronger, and the extra strength is needed for $p = 2$, as the next examples
+show.
+
+\begin{example}\label{p-adic-numbers:example-hensel}
+\begin{enumerate}
+\item $x^2 + 1$ over $\ZZ_5$: $2^2 + 1 = 5 \equiv 0$ and $f^{\prime}(2) = 4 \not\equiv 0 \pmod 5$, so $\ZZ_5$ contains a square root $i$ of $-1$ with $i \equiv 2 \pmod 5$, and another one $-i \equiv 3$. The Newton
+iteration gives successively $i \equiv 2, 7, 57, 182, \ldots$, and the digits of $i$ are $2, 1, 2, 1, 3, 4, 2, 3, \ldots$. So the Gaussian integers embed in $\ZZ_5$, and the factorisation
+$5 = (2 + i)(2 - i)$ (Theorem~\ref{number-theory:theorem-gaussian-primes}) shows up in $\ZZ_5$: since $i \equiv 2 \pmod 5$, $2 + i \equiv 4$ is a unit and $2 - i$ carries the whole factor,
+$|2 - i|_5 = 5^{-1}$, $|2 + i|_5 = 1$.
+\item $x^2 - 2$ over $\ZZ_7$: $3^2 = 9 \equiv 2$, so $\sqrt 2 \in \ZZ_7$, with digits $3, 1, 2, 6, 1, 2, 1, 2, \ldots$.
+\item $x^2 + 1$ over $\ZZ_3$ has no root, since $-1$ is not a square modulo $3$. More generally, a root of $f$ in $\ZZ_p$ gives a root of $\bar f$; so a solution modulo $p$ is necessary, and Hensel's lemma
+shows that it is sufficient when it is simple.
+\item $x^2 - 17$ over $\ZZ_2$: here $f^{\prime}(x) = 2x$ is never a unit, and the corollary does not apply. But $a = 1$ gives $|f(1)|_2 = |{-16}|_2 = 2^{-4} < 2^{-2} = |f^{\prime}(1)|_2^2$, so $17$ is a square in
+$\ZZ_2$, with a root $\alpha \equiv 1 \pmod 8$ ($|\alpha - 1|_2 = |16/2|_2 = 2^{-3}$); its binary digits are $1, 0, 0, 1, 0, 1, 1, 1, 0, 1, \ldots$.
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{p-adic-numbers:counterexample-hensel}
+The inequality $|f(a)| < |f^{\prime}(a)|^2$ cannot be weakened to $|f(a)| < |f^{\prime}(a)|$. For $f = x^2 - 5$ over $\ZZ_2$ and $a = 1$: $|f(1)|_2 = |{-4}|_2 = 2^{-2} < 2^{-1} = |f^{\prime}(1)|_2$, but
+$|f(1)|_2 = |f^{\prime}(1)|_2^2$, and $5$ is not a square in $\ZZ_2$, since odd squares are $\equiv 1 \pmod 8$. Nor can a multiple root modulo $p$ be lifted in general: $x^2 - p$ has the double root $0$
+modulo $p$ and no root in $\ZZ_p$, since $v_p(x^2)$ is even.
+\end{counterexample}
+
+\begin{remark}\label{p-adic-numbers:remark-hensel-several}
+The same proof, with the Jacobian matrix in place of $f^{\prime}$, gives a multivariable version: if $f = (f_1, \ldots, f_m) \in \ZZ_p[x_1, \ldots, x_m]^m$ and $a \in \ZZ_p^m$ satisfy
+$f(a) \equiv 0 \pmod p$ and $\det(\partial f_i/\partial x_j)(a) \not\equiv 0 \pmod p$, then $f$ has a unique zero $\alpha \equiv a \pmod p$. For a single equation in several variables one can simply fix all
+but one variable: a solution modulo $p$ of $f(x_1, \ldots, x_m) \equiv 0$ at which some $\partial f/\partial x_j$ is nonzero modulo $p$ lifts to a solution in $\ZZ_p^m$. Rings with the property of
+Corollary~\ref{p-adic-numbers:corollary-hensel-simple} are called \emph{henselian}; they play an important role in algebraic geometry (Chapter~\ref{etale-cohomology}).
+\end{remark}
+
+\subsection{Squares}\label{p-adic-numbers:subsection-squares}
+
+\begin{theorem}\label{p-adic-numbers:theorem-squares}
+\begin{enumerate}
+\item Let $p$ be odd. A unit $u \in \ZZ_p^\times$ is a square in $\QQ_p$ if and only if its reduction modulo $p$ is a square in $\mathbb{F}_p$, that is $(\frac up) = 1$. An element $x = p^nu$ of $\QQ_p^\times$
+is a square if and only if $n$ is even and $(\frac up) = 1$.
+\item A unit $u \in \ZZ_2^\times$ is a square in $\QQ_2$ if and only if $u \equiv 1 \pmod 8$. An element $x = 2^nu$ of $\QQ_2^\times$ is a square if and only if $n$ is even and $u \equiv 1 \pmod 8$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+If $x = p^nu = y^2$ then $n = v_p(x) = 2v_p(y)$ is even, and $u = (p^{-n/2}y)^2$ is the square of a unit. So it suffices to treat units.
+(1) If $u = y^2$, reducing modulo $p$ gives a square. Conversely, if $u \equiv b^2 \pmod p$ with $b \in \ZZ$, then $p \nmid b$, and $f = x^2 - u$ has $f(b) \equiv 0$, $f^{\prime}(b) = 2b \not\equiv 0 \pmod p$;
+Corollary~\ref{p-adic-numbers:corollary-hensel-simple} gives a root.
+(2) Odd squares are $\equiv 1 \pmod 8$, since $(2k + 1)^2 = 4k(k + 1) + 1$ and $k(k + 1)$ is even; this applies to $y \in \ZZ_2^\times$ by reducing modulo $8$. Conversely, if $u \equiv 1 \pmod 8$, then
+$f = x^2 - u$ satisfies $|f(1)|_2 = |1 - u|_2 \leq 2^{-3} < 2^{-2} = |f^{\prime}(1)|_2^2$, and Theorem~\ref{p-adic-numbers:theorem-hensel} gives a root.
+\end{proof}
+
+\begin{corollary}\label{p-adic-numbers:corollary-square-classes}
+\begin{enumerate}
+\item For $p$ odd, $\QQ_p^\times/\QQ_p^{\times2} \cong (\ZZ/2\ZZ)^2$, with representatives $1, \varepsilon, p, \varepsilon p$, where $\varepsilon \in \ZZ$ is any quadratic nonresidue modulo $p$.
+\item $\QQ_2^\times/\QQ_2^{\times2} \cong (\ZZ/2\ZZ)^3$, with representatives $\pm1, \pm5, \pm2, \pm10$.
+\item $\RR^\times/\RR^{\times2} \cong \ZZ/2\ZZ$, with representatives $\pm1$.
+\end{enumerate}
+In all cases $k^{\times2}$ is an open subgroup of $k^\times$: it contains $U_1$ for $p$ odd and $U_3 = 1 + 8\ZZ_2$ for $p = 2$.
+\end{corollary}
+
+\begin{proof}
+(1) The map $p^nu \mapsto (n \bmod 2, (\frac up))$ is a homomorphism $\QQ_p^\times \to \ZZ/2\ZZ \times \{\pm1\}$, surjective, with kernel $\QQ_p^{\times2}$ by the theorem. (2) Similarly
+$2^nu \mapsto (n \bmod 2, u \bmod 8) \in \ZZ/2\ZZ \times (\ZZ/8\ZZ)^\times$ is surjective with kernel $\QQ_2^{\times2}$, and $(\ZZ/8\ZZ)^\times = \{1, 3, 5, 7\} \cong (\ZZ/2\ZZ)^2$, represented by
+$1, -1 \equiv 7, 5, -5 \equiv 3$. (3) is Proposition~\ref{number-systems:proposition-roots}. The last statement is part of the theorem.
+\end{proof}
+
+\begin{example}\label{p-adic-numbers:example-squares}
+\begin{enumerate}
+\item $-1$ is a square in $\QQ_p$ for $p \equiv 1 \pmod 4$ and not for $p \equiv 3 \pmod 4$ or $p = 2$ (Corollary~\ref{number-theory:corollary-minus-one}; $-1 \equiv 7 \pmod 8$).
+\item $-7$ is a square in $\QQ_2$, since $-7 \equiv 1 \pmod 8$; so $\QQ(\sqrt{-7}) \subseteq \QQ_2$. This is why $2$ splits in $\QQ(\sqrt{-7})$, as $2 = \frac{1 + \sqrt{-7}}{2}\cdot\frac{1 - \sqrt{-7}}{2}$.
+\item $2$ is a square in $\QQ_7$ but not in $\QQ_3$ or $\QQ_5$ (Proposition~\ref{number-theory:proposition-two}); $6 = 2 \cdot 3$ is not a square in $\QQ_3$, as $v_3(6)$ is odd.
+\end{enumerate}
+\end{example}
+
+\subsection{Roots of unity and Teichm\"uller representatives}\label{p-adic-numbers:subsection-teichmuller}
+
+\begin{proposition}\label{p-adic-numbers:proposition-roots-of-unity}
+\begin{enumerate}
+\item For every $a \in \ZZ_p$ the limit $\omega(a) = \lim_{n \to \infty}a^{p^n}$ exists. It satisfies $\omega(a) \equiv a \pmod p$ and $\omega(a)^p = \omega(a)$, and $\omega(a)$ depends only on $a \bmod p$.
+\item $\omega$ induces an injective homomorphism $\mathbb{F}_p^\times \to \ZZ_p^\times$, whose image is $\mu_{p-1}$, the group of all $(p-1)$-th roots of unity in $\QQ_p$.
+\item The roots of unity in $\QQ_p$ are exactly $\mu_{p-1}$ for $p$ odd, and $\{\pm1\}$ for $p = 2$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) \emph{A lemma}: if $x, y \in \ZZ_p$ and $x \equiv y \pmod{p^k}$ with $k \geq 1$, then $x^p \equiv y^p \pmod{p^{k+1}}$. Indeed, $x = y + p^kz$ gives
+$x^p = y^p + py^{p-1}p^kz + \sum_{j \geq 2}\binom pjy^{p-j}p^{jk}z^j$, and every term after $y^p$ is divisible by $p^{k+1}$ (as $jk \geq k + 1$ for $j \geq 2$). Now $a^p \equiv a \pmod p$, by Fermat's little
+theorem applied to an integer congruent to $a$. By the lemma and induction, $a^{p^{n+1}} \equiv a^{p^n} \pmod{p^{n+1}}$; so $(a^{p^n})$ is Cauchy and has a limit $\omega(a)$, with
+$\omega(a)^p = \lim a^{p^{n+1}} = \omega(a)$ and $\omega(a) \equiv a \pmod p$. If $a \equiv b \pmod p$ then $a^{p^n} \equiv b^{p^n} \pmod{p^{n+1}}$ by the lemma, so $\omega(a) = \omega(b)$.
+
+(2) $\omega(ab) = \omega(a)\omega(b)$ because $(ab)^{p^n} = a^{p^n}b^{p^n}$. For $p \nmid a$, $\omega(a) \neq 0$ and $\omega(a)^{p-1} = 1$; injectivity follows from $\omega(a) \equiv a \pmod p$. So $\omega(\mathbb{F}_p^\times)$
+consists of $p - 1$ distinct roots of $x^{p-1} - 1$, which has at most $p - 1$ roots in the field $\QQ_p$; hence it is $\mu_{p-1}$.
+
+(3) A root of unity $\zeta \in \QQ_p$ has $|\zeta|_p = 1$. By (2), $\zeta = \omega(\zeta)u$ with $u = \zeta/\omega(\zeta) \equiv 1 \pmod p$ a root of unity. We show that a root of unity $u \in U_1$ is $1$ for $p$ odd, and is
+$\pm1$ for $p = 2$. It suffices to show that $U_1$ ($p$ odd) and $U_2 = 1 + 4\ZZ_2$ have no elements of prime order $\ell$ (an element of finite order $n > 1$ has a power of prime order); for $p = 2$, then $u^2 \in U_3 \subseteq U_2$ (odd squares are $\equiv 1 \pmod 8$)
+forces $u^2 = 1$. If $\ell \neq p$: $1$ is a simple root of $x^\ell - 1$ modulo $p$ (the derivative $\ell$ is a unit), so by Corollary~\ref{p-adic-numbers:corollary-hensel-simple} $1$ is the only root
+$\equiv 1 \pmod p$. If $\ell = p$: write $u = 1 + x$ with $k = v_p(x) \geq 1$, and $k \geq 2$ if $p = 2$. Then
+$u^p - 1 = px + \sum_{j=2}^{p-1}\binom pjx^j + x^p$; here $v_p(px) = k + 1$, the middle terms have valuation $\geq 1 + 2k > k + 1$, and $v_p(x^p) = pk > k + 1$ (as $(p - 1)k \geq 2$). So
+$v_p(u^p - 1) = k + 1$ and $u^p \neq 1$.
+\end{proof}
+
+\begin{definition}\label{p-adic-numbers:definition-teichmuller}
+$\omega(a)$ is the \emph{Teichm\"uller representative} of $a \bmod p$. Every $x \in \QQ_p^\times$ is uniquely $x = p^n\omega(x)\langle x\rangle$ with $n = v_p(x)$, $\omega(x) = \omega(p^{-n}x) \in \mu_{p-1}$ and
+$\langle x\rangle \in U_1$.
+\end{definition}
+
+\begin{example}\label{p-adic-numbers:example-teichmuller}
+In $\ZZ_5$, $\omega(2)$ is a primitive fourth root of unity, so $\omega(2) = \pm i$ in the notation of Example~\ref{p-adic-numbers:example-hensel}(1); as $\omega(2) \equiv 2 \pmod 5$, it is the root
+$i \equiv 2$. Thus $\lim 2^{5^n}$ is a square root of $-1$ in $\ZZ_5$: $2^5 = 32 \equiv 7 \pmod{25}$ and $7^2 = 49 \equiv -1 \pmod{25}$, as predicted. In $\ZZ_7$, $\omega(3)$ is a primitive sixth root of
+unity, so $\QQ_7$ contains the cube roots of unity and $\sqrt{-3} = 2\omega(3) - 1$.
+\end{example}
+
+\subsection{The structure of $\QQ_p^\times$}\label{p-adic-numbers:subsection-structure}
+
+For $x \in \ZZ_p$ the power $(1 + p)^x$ can be defined by continuity: it is the $p$-adic analogue of $e^x$, and identifies the additive group $\ZZ_p$ with the multiplicative group $U_1$.
+
+\begin{lemma}\label{p-adic-numbers:lemma-power-valuation}
+Let $q = p$ if $p$ is odd and $q = 4$ if $p = 2$, and let $u \in 1 + q\ZZ_p$ with $v_p(u - 1) = v_p(q)$. For every $m \in \ZZ$, $v_p(u^m - 1) = v_p(q) + v_p(m)$.
+\end{lemma}
+
+\begin{proof}
+Write $m = p^km^{\prime}$ with $p \nmid m^{\prime}$. If $y \equiv 1 \pmod{p^j}$ exactly (that is, $v_p(y - 1) = j$) with $j \geq v_p(q)$, then $y^{m^{\prime}} - 1 = (y - 1)(1 + y + \cdots + y^{m^{\prime}-1})$ and the second factor is
+$\equiv m^{\prime} \not\equiv 0 \pmod p$, so $v_p(y^{m^{\prime}} - 1) = j$; for $m^{\prime} < 0$ use $y^{m^{\prime}} - 1 = -y^{m^{\prime}}(y^{-m^{\prime}} - 1)$. And $v_p(y^p - 1) = j + 1$, by Lemma~\ref{number-theory:lemma-lifting} (or the computation in
+the proof of Proposition~\ref{p-adic-numbers:proposition-roots-of-unity}(3)). Applying the second fact $k$ times and the first once gives the claim.
+\end{proof}
+
+\begin{theorem}\label{p-adic-numbers:theorem-structure}
+\begin{enumerate}
+\item For $p$ odd, the map $\ZZ \to U_1$, $m \mapsto (1 + p)^m$, extends uniquely to a continuous map $\ZZ_p \to U_1$, $x \mapsto (1 + p)^x$, which is an isomorphism of topological groups. Hence
+\[
+\QQ_p^\times \cong \ZZ \times \mu_{p-1} \times U_1 \cong \ZZ \times \ZZ/(p - 1)\ZZ \times \ZZ_p .
+\]
+\item For $p = 2$, $x \mapsto 5^x$ is likewise an isomorphism $\ZZ_2 \to U_2 = 1 + 4\ZZ_2$, $U_1 = \{\pm1\} \times U_2$, and
+\[
+\QQ_2^\times \cong \ZZ \times \{\pm1\} \times U_2 \cong \ZZ \times \ZZ/2\ZZ \times \ZZ_2 .
+\]
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Let $q$ and $u = 1 + p$ (resp.\ $u = 5$) be as in Lemma~\ref{p-adic-numbers:lemma-power-valuation}, and $c = v_p(q)$. The lemma gives $|u^m - u^{m^{\prime}}|_p = |u^{m^{\prime}}|_p|u^{m - m^{\prime}} - 1|_p = p^{-c}|m - m^{\prime}|_p$
+for integers $m, m^{\prime}$. So $m \mapsto u^m$ is uniformly continuous for the $p$-adic metric on $\ZZ$, and extends uniquely to a continuous map $\phi \colon \ZZ_p \to 1 + q\ZZ_p$ (a Cauchy sequence of integers is
+mapped to a Cauchy sequence; $1 + q\ZZ_p$ is closed), with $|\phi(x) - \phi(y)|_p = p^{-c}|x - y|_p$ by continuity. Thus $\phi$ is injective; it is a homomorphism because $u^{m + m^{\prime}} = u^mu^{m^{\prime}}$
+for integers, by continuity. It is surjective: its image is compact, hence closed, and contains $u^{\ZZ}$, which is dense in $1 + q\ZZ_p$. Indeed, by the lemma the $p^n$ powers $u^m$, $0 \leq m < p^n$, are distinct
+modulo $p^{n+c}$ and lie in $1 + q\ZZ_p$, which has exactly $p^n$ classes modulo $p^{n+c}$ (the classes of $1 + qk$, $0 \leq k < p^n$); so every element of $1 + q\ZZ_p$ is congruent to some $u^m$
+modulo $p^{n+c}$, for every $n$. Finally $\phi^{-1}$ is continuous since $\phi$ preserves distances up to the factor $p^{-c}$.
+
+The decompositions of $\QQ_p^\times$ follow from Definition~\ref{p-adic-numbers:definition-teichmuller}: $x \mapsto (v_p(x), \omega(x), \langle x\rangle)$ is an isomorphism $\QQ_p^\times \to \ZZ \times \mu_{p-1} \times U_1$, and
+$\mu_{p-1} \cong \mathbb{F}_p^\times$ is cyclic (Theorem~\ref{number-theory:theorem-primitive-root-prime}). For $p = 2$, $\mu_1 = 1$, and every $u \in U_1 = \ZZ_2^\times$ is $\pm$ an element of $U_2$, uniquely.
+\end{proof}
+
+\begin{remark}\label{p-adic-numbers:remark-structure}
+Reducing the theorem modulo $p^n$ recovers Gauss's theorem on primitive roots (Theorem~\ref{number-theory:theorem-primitive-roots}) for prime powers: $(\ZZ/p^n\ZZ)^\times \cong \mu_{p-1} \times U_1/U_n$ is cyclic of
+order $(p - 1)p^{n-1}$ for $p$ odd, and $(\ZZ/2^n\ZZ)^\times \cong \{\pm1\} \times \ZZ/2^{n-2}\ZZ$ (Theorem~\ref{number-theory:theorem-units-two-power}). It also computes the groups of $n$-th powers: for $p \nmid n$,
+$\QQ_p^\times/\QQ_p^{\times n} \cong \ZZ/n\ZZ \times \mu_{p-1}/\mu_{p-1}^n$, because $\ZZ_p$ is $n$-divisible. For $n = 2$ and $p$ odd this is Corollary~\ref{p-adic-numbers:corollary-square-classes}(1) again.
+\end{remark}
+
+\begin{corollary}\label{p-adic-numbers:corollary-non-isomorphic}
+The fields $\RR$, $\QQ_2$, $\QQ_3$, $\QQ_5$, $\ldots$ are pairwise non-isomorphic, even as abstract fields.
+\end{corollary}
+
+\begin{proof}
+A field isomorphism preserves the group of roots of unity and the group $k^\times/k^{\times2}$. By Proposition~\ref{p-adic-numbers:proposition-roots-of-unity}(3), $\QQ_p$ contains $p - 1$ roots of unity for $p$
+odd, and $\QQ_2$ and $\RR$ contain $2$. By Corollary~\ref{p-adic-numbers:corollary-square-classes}, $|k^\times/k^{\times2}|$ is $2$ for $\RR$, $8$ for $\QQ_2$ and $4$ for $\QQ_3$. These invariants distinguish all
+the fields: $p - 1$ separates the $\QQ_p$ with $p$ odd from each other, and $\QQ_3$, $\QQ_2$, $\RR$ share the value $2$ but have different numbers of square classes.
+\end{proof}
+
+\section{$p$-adic analysis}\label{p-adic-numbers:section-analysis}
+
+\subsection{Power series}\label{p-adic-numbers:subsection-power-series}
+
+By Proposition~\ref{p-adic-numbers:proposition-series}, a power series $\sum a_nx^n$ with $a_n \in \QQ_p$ converges at $x \in \QQ_p$ if and only if $|a_nx^n|_p \to 0$. So the domain of convergence depends only on
+$|x|_p$, and is a disc. We write $|\cdot|$ for $|\cdot|_p$ and $v$ for $v_p$ in this section.
+
+\begin{proposition}\label{p-adic-numbers:proposition-power-series}
+Let $f = \sum_{n \geq 0}a_nx^n$ with $a_n \in \QQ_p$, and $r = 1/\limsup_n|a_n|^{1/n} \in [0, \infty]$. Then $f(x)$ converges for $|x| < r$ and diverges for $|x| > r$. If $\rho > 0$ and $|a_n|\rho^n \to 0$, the
+series converges uniformly on the closed disc $\bar B(0, \rho)$ and $f$ is continuous there.
+\end{proposition}
+
+\begin{proof}
+If $|x| < \rho^{\prime} < r$, then $|a_n| \leq \rho^{\prime-n}$ for large $n$, so $|a_nx^n| \leq (|x|/\rho^{\prime})^n \to 0$. If $|x| > r$, then $|a_n||x|^n \geq 1$ for infinitely many $n$. On $\bar B(0, \rho)$, the
+tail $\sum_{n > N}a_nx^n$ has absolute value $\leq \max_{n > N}|a_n|\rho^n$, which tends to $0$ uniformly in $x$; a uniform limit of the continuous polynomials is continuous.
+\end{proof}
+
+Unlike the real case, the behaviour on the boundary $|x| = r$ is uniform: either the series converges at every point of the circle or at none, since convergence depends only on $|x|$.
+
+To evaluate composite series we sum families indexed by tuples of integers, using Lemma~\ref{p-adic-numbers:lemma-summable}. Formal compositions are those of
+Definition~\ref{generating-functions:definition-composition}, applied with coefficients in $\QQ_p$, or in $\QQ_p[[y]]$ for series in two variables.
+
+\begin{lemma}\label{p-adic-numbers:lemma-substitution}
+Let $G = \sum_{\beta}g_\beta X^\beta$ be a formal power series in variables $X = (X_1, \ldots, X_r)$, with coefficients in $\QQ_p$ and no constant term, and let $x \in \QQ_p^r$ be such that the family
+$(g_\beta x^\beta)_\beta$ tends to $0$; put $s = \max_\beta|g_\beta x^\beta|$. Let $F = \sum_nf_nY^n$ with $|f_n|s^n \to 0$. Then the family of the coefficients $h_\gamma$ of the composite series
+$H = F(G) = \sum_\gamma h_\gamma X^\gamma$, multiplied by $x^\gamma$, tends to $0$, and
+\[
+\sum_\gamma h_\gamma x^\gamma = F(G(x)) .
+\]
+\end{lemma}
+
+\begin{proof}
+Consider the family of products $f_ng_{\beta_1}\cdots g_{\beta_n}x^{\beta_1 + \cdots + \beta_n}$, indexed by $n \geq 0$ and $n$-tuples of nonzero multi-indices. It tends to $0$: given $\varepsilon > 0$, the terms with
+$n \geq N$ are $< \varepsilon$ for suitable $N$, since they are bounded by $|f_n|s^n$; for each $n < N$, a term $\geq \varepsilon$ has every factor $|g_{\beta_i}x^{\beta_i}| \geq \varepsilon/(Cs^{n-1})$, where
+$C = \max_{n < N}|f_n|$ (we may assume $s > 0$ and $C > 0$), and only finitely many $\beta$ satisfy this. By Lemma~\ref{p-adic-numbers:lemma-summable} we may group the family in two ways. Grouping by $n$, the inner
+sum is $f_nG(x)^n$, again by the lemma (a product of $n$ convergent sums is the sum of the product family); the total is $F(G(x))$. Grouping by $\gamma = \beta_1 + \cdots + \beta_n$, the inner sum is
+$h_\gamma x^\gamma$, because $h_\gamma$ is by definition the finite sum (finite as $|\beta_i| \geq 1$ forces $n \leq |\gamma|$) of the products $f_ng_{\beta_1}\cdots g_{\beta_n}$ over the tuples with sum $\gamma$.
+\end{proof}
+
+Consequently, identities between formal power series over $\QQ$ remain true for $p$-adic numbers, whenever the families involved tend to $0$. This is how we transfer the identities of
+Proposition~\ref{generating-functions:proposition-exp-log}.
+
+\subsection{The exponential and the logarithm}\label{p-adic-numbers:subsection-exp-log}
+
+The size of $1/n!$ is given by Legendre's formula (Theorem~\ref{combinatorics:theorem-legendre}): $v(n!) = (n - s_p(n))/(p - 1)$, where $s_p(n)$ is the sum of the base-$p$ digits of $n$. In
+particular $v(n!) \leq (n - 1)/(p - 1)$ for $n \geq 1$, with equality when $n$ is a power of $p$. Also $(p - 1)v(n) \leq n - 1$, since $n \geq p^{v(n)} \geq 1 + (p - 1)v(n)$.
+
+\begin{definition}\label{p-adic-numbers:definition-exp-log}
+The \emph{$p$-adic exponential} and \emph{logarithm} are
+\[
+\exp(x) = \sum_{n \geq 0}\frac{x^n}{n!}, \qquad \log(1 + x) = \sum_{n \geq 1}\frac{(-1)^{n-1}x^n}{n},
+\]
+for $x \in \QQ_p$ where the series converge. Let $D = \{x \in \QQ_p : v(x) > 1/(p - 1)\}$; thus $D = p\ZZ_p$ for $p$ odd and $D = 4\ZZ_2$ for $p = 2$.
+\end{definition}
+
+\begin{proposition}\label{p-adic-numbers:proposition-exp-log-convergence}
+The series $\exp(x)$ converges if and only if $x \in D$, and $\log(1 + x)$ converges if and only if $|x| < 1$.
+\end{proposition}
+
+\begin{proof}
+$v(x^n/n!) = nv(x) - (n - s_p(n))/(p - 1) = n\bigl(v(x) - \frac{1}{p - 1}\bigr) + \frac{s_p(n)}{p - 1}$. If $v(x) > 1/(p - 1)$ this tends to $\infty$. If not, along $n = p^k$ (where $s_p(n) = 1$) it stays
+$\leq 1/(p - 1)$, so the terms do not tend to $0$. For the logarithm, $v(x^n/n) = nv(x) - v(n) \geq nv(x) - \log n/\log p$, which tends to $\infty$ if $v(x) > 0$; if $v(x) \leq 0$ then $|x^n/n| \geq 1$.
+\end{proof}
+
+So the $p$-adic exponential has a small domain, not even containing $1$: there is no $p$-adic number $e$. The logarithm, on the other hand, converges on the whole of $U_1 = 1 + p\ZZ_p$.
+
+\begin{theorem}\label{p-adic-numbers:theorem-exp-log}
+\begin{enumerate}
+\item For $x, y \in D$: $\exp(x + y) = \exp(x)\exp(y)$, and $v(\exp(x) - 1) = v(x)$.
+\item For $|x|, |y| < 1$: $\log((1 + x)(1 + y)) = \log(1 + x) + \log(1 + y)$. For $x \in D$, $v(\log(1 + x)) = v(x)$.
+\item $\exp \colon D \to 1 + D$ and $\log \colon 1 + D \to D$ are mutually inverse isomorphisms of topological groups, from the additive group $D$ to the multiplicative group $1 + D$, preserving
+distances.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: sizes of the terms.} For $x \in D$ and $m \geq 2$,
+\[
+\begin{aligned}
+v\Bigl(\frac{x^m}{m!}\Bigr) - v(x) &\geq (m - 1)v(x) - \frac{m - 1}{p - 1} > 0, \\
+v\Bigl(\frac{x^m}{m}\Bigr) - v(x) &= (m - 1)v(x) - v(m) > \frac{m - 1}{p - 1} - v(m) \geq 0 .
+\end{aligned}
+\]
+So in both series the first term $x$ strictly dominates, and $v(\exp(x) - 1) = v(\log(1 + x)) = v(x)$ by Proposition~\ref{p-adic-numbers:proposition-ultrametric}(1). In particular $\exp$ maps $D$ to $1 + D$ and
+$\log$ maps $1 + D$ to $D$, and both preserve distances once the homomorphism properties are known: $|\exp(x) - \exp(y)| = |\exp(y)||\exp(x - y) - 1| = |x - y|$.
+
+\emph{Step 2: the functional equations.} Apply Lemma~\ref{p-adic-numbers:lemma-substitution} with two variables. For (1), take $G = X + Y$ at $(x, y)$, so $s = \max(|x|, |y|)$, and $F = \exp(Y)$; then
+$|f_n|s^n = |s^n/n!| \to 0$ as $x, y \in D$. The formal identity $\exp(X + Y) = \exp(X)\exp(Y)$ holds in $\QQ[[X, Y]]$: apply Proposition~\ref{generating-functions:proposition-exp-log}(2) over $R = \QQ[X, Y]$ to $f = Xt$, $g = Yt$ in $R[[t]]$, and
+read off the coefficient of $X^aY^b$, which sits in degree $a + b$ in $t$. With the lemma it gives
+$\exp(x + y) = \sum_{j, k}\frac{x^jy^k}{j!\,k!}$, and grouping this family by $j$ (Lemma~\ref{p-adic-numbers:lemma-summable}) gives $\exp(x)\exp(y)$. For (2), take $G = X + Y + XY$, with
+$s = \max(|x|, |y|) < 1$, and $F = \log(1 + Y)$, where $|f_n|s^n = s^n/|n| \leq ns^n \to 0$; the formal identity of Proposition~\ref{generating-functions:proposition-exp-log}(4), transferred to $\QQ[[X, Y]]$ in the same way, gives the claim.
+
+\emph{Step 3: inverse maps.} For $x \in D$, take $G = \log(1 + X)$ and $F = \exp(Y)$: by Step 1 the family $(g_mx^m)$ tends to $0$ with maximum $s = |x|$, and $|x|^n/|n!| \to 0$. The formal identity
+$\exp(\log(1 + X)) = 1 + X$ (Proposition~\ref{generating-functions:proposition-exp-log}(3)) gives $\exp(\log(1 + x)) = 1 + x$. Likewise, with $G = \exp(X) - 1$ (maximum $s = |x| < 1$) and
+$F = \log(1 + Y)$, $\log(\exp(x)) = x$. So the two maps are inverse bijections between $D$ and $1 + D$, homomorphisms by Step 2, and isometries by Step 1.
+\end{proof}
+
+\begin{corollary}\label{p-adic-numbers:corollary-log-kernel}
+The logarithm is a homomorphism $\log \colon U_1 \to \QQ_p$, defined on all of $U_1 = 1 + p\ZZ_p$. For $p$ odd it is injective with image $p\ZZ_p$. For $p = 2$ its kernel is $\{\pm1\}$ and its image is
+$4\ZZ_2$.
+\end{corollary}
+
+\begin{proof}
+For $p$ odd, $U_1 = 1 + D$ and this is Theorem~\ref{p-adic-numbers:theorem-exp-log}(3). For $p = 2$, $U_1 = \{\pm1\} \times U_2$ (Theorem~\ref{p-adic-numbers:theorem-structure}), $U_2 = 1 + D$ maps isomorphically
+onto $D = 4\ZZ_2$, and $2\log(-1) = \log(1) = 0$ gives $\log(-1) = 0$.
+\end{proof}
+
+\begin{remark}\label{p-adic-numbers:remark-iwasawa-log}
+Theorem~\ref{p-adic-numbers:theorem-exp-log}(3) gives a second proof that $U_1 \cong p\ZZ_p \cong \ZZ_p$ for $p$ odd (Theorem~\ref{p-adic-numbers:theorem-structure}), and identifies the isomorphism:
+$(1 + p)^x = \exp(x\log(1 + p))$. Setting $\log p = 0$ and $\log\zeta = 0$ for roots of unity, the logarithm extends to a homomorphism $\QQ_p^\times \to \QQ_p$, \emph{Iwasawa's logarithm}, which is
+continuous but very far from injective \cite{robert-padic}. In the other direction, no power series converging on all of $\QQ_p$ can serve as an exponential, by
+Proposition~\ref{p-adic-numbers:proposition-exp-log-convergence}.
+\end{remark}
+
+\subsection{Mahler's theorem}\label{p-adic-numbers:subsection-mahler}
+
+Every continuous function $[0, 1] \to \RR$ is a uniform limit of polynomials (Weierstrass). On $\ZZ_p$ there is a much more precise statement, due to Mahler (1958, \cite{mahler-1958}): every continuous
+function is the sum of a uniformly convergent series in the binomial polynomials
+\[
+\binom xn = \frac{x(x - 1)\cdots(x - n + 1)}{n!} \in \QQ[x] .
+\]
+We use the difference operator $(\Delta f)(x) = f(x + 1) - f(x)$, so $(\Delta^nf)(x) = \sum_{k=0}^n(-1)^{n-k}\binom nkf(x + k)$, and for a function $f \colon \ZZ_p \to \QQ_p$ the sup norm
+$\|f\| = \sup_{x \in \ZZ_p}|f(x)|$.
+
+\begin{lemma}\label{p-adic-numbers:lemma-binomial-integral}
+For every $n \geq 0$ and $x \in \ZZ_p$, $\binom xn \in \ZZ_p$. The function $x \mapsto \binom xn$ is continuous on $\ZZ_p$ with $\|\binom xn\| = 1$, and $\Delta\binom xn = \binom{x}{n - 1}$ for $n \geq 1$.
+\end{lemma}
+
+\begin{proof}
+On $\NN$ the polynomial $\binom xn$ takes integer values, hence values in the closed set $\ZZ_p$; as it is continuous and $\NN$ is dense in $\ZZ_p$ (Theorem~\ref{p-adic-numbers:theorem-topology}(4)), it maps
+$\ZZ_p$ into $\ZZ_p$. Its value at $x = n$ is $1$. The last formula is Pascal's rule, a polynomial identity since it holds on $\NN$.
+\end{proof}
+
+\begin{theorem}[Mahler]\label{p-adic-numbers:theorem-mahler}
+Let $f \colon \ZZ_p \to \QQ_p$ be continuous, and $a_n = (\Delta^nf)(0)$. Then $a_n \to 0$, and
+\[
+f(x) = \sum_{n \geq 0}a_n\binom xn
+\]
+uniformly on $\ZZ_p$, with $\|f\| = \max_n|a_n|$. Conversely, for every sequence $a_n \to 0$ the series defines a continuous function $f$ with $(\Delta^nf)(0) = a_n$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: the converse.} If $a_n \to 0$, then $|a_n\binom xn| \leq |a_n|$ by Lemma~\ref{p-adic-numbers:lemma-binomial-integral}, so the series converges uniformly and defines a continuous function $f$, with
+$\|f\| \leq \max|a_n|$. By the lemma, $\Delta^kf = \sum_na_n\binom{x}{n - k}$, whose value at $0$ is $a_k$.
+
+\emph{Step 2: the key estimate.} In the polynomial ring $\ZZ[T]$, $(T - 1)^{p^k} \equiv T^{p^k} - 1 \pmod p$: the middle binomial coefficients $\binom{p^k}{j}$, $0 < j < p^k$, are divisible by $p$
+(Kummer's theorem, Theorem~\ref{combinatorics:theorem-kummer}: there is a carry when adding $j$ and $p^k - j$ in base $p$), and $(-1)^{p^k} \equiv -1 \pmod 2$. Write $\tau$ for the translation $(\tau g)(x) = g(x + 1)$, so $\Delta = \tau - 1$. Then
+$\Delta^{p^k} = \tau^{p^k} - 1 + pP(\tau)$ for a polynomial $P$ with integer coefficients. For a function $g$ on $\ZZ_p$ let $\omega_g(k) = \sup\{|g(x) - g(y)| : x \equiv y \pmod{p^k}\}$. Since
+$|(\tau^{p^k}g - g)(x)| = |g(x + p^k) - g(x)|$ and $\|P(\tau)g\| \leq \|g\|$ by the ultrametric inequality,
+\[
+\|\Delta^{p^k}g\| \leq \max\bigl(\omega_g(k), |p|\,\|g\|\bigr).
+\]
+Also $\omega_{\Delta^jg} \leq \omega_g$ and $\|\Delta g\| \leq \|g\|$, as $\Delta^jg$ is an integer combination of translates of $g$.
+
+\emph{Step 3: $a_n \to 0$.} A continuous function on the compact space $\ZZ_p$ is bounded and uniformly continuous, so $\|f\| < \infty$ and $\omega_f(k) \to 0$. Let $\varepsilon > 0$ and choose $k$ with
+$\omega_f(k) \leq \varepsilon$. Applying Step 2 to $g = \Delta^{(m-1)p^k}f$, by induction on $m$, $\|\Delta^{mp^k}f\| \leq \max(\varepsilon, |p|^m\|f\|)$. Choose $m$ with $|p|^m\|f\| \leq \varepsilon$. Then for
+$n \geq mp^k$, $|a_n| \leq \|\Delta^nf\| \leq \|\Delta^{mp^k}f\| \leq \varepsilon$.
+
+\emph{Step 4: the expansion.} Let $g = \sum_na_n\binom xn$, continuous by Step 1. For $m \in \NN$, Newton's forward difference formula $f(m) = ((1 + \Delta)^mf)(0) = \sum_{n \leq m}\binom mna_n$ gives
+$f(m) = g(m)$. By density of $\NN$, $f = g$. Finally $\|f\| \leq \max|a_n|$ by Step 1, and $|a_n| = |(\Delta^nf)(0)| \leq \|f\|$.
+\end{proof}
+
+\begin{example}\label{p-adic-numbers:example-mahler}
+\begin{enumerate}
+\item For $p$ odd, the function $f(x) = (1 + p)^x$ of Theorem~\ref{p-adic-numbers:theorem-structure} has
+$\Delta^nf(0) = \sum_k(-1)^{n-k}\binom nk(1 + p)^k = ((1 + p) - 1)^n = p^n$, so $(1 + p)^x = \sum_np^n\binom xn$, the binomial series,
+now valid for all $x \in \ZZ_p$. Similarly $5^x = \sum_n4^n\binom xn$ on $\ZZ_2$.
+\item On $\ZZ_2$, the indicator function of $2\ZZ_2$ is $\frac12(1 + (-1)^x)$, with $(-1)^x = (1 - 2)^x = \sum_n(-2)^n\binom xn$; its Mahler coefficients are $a_0 = 1$ and $a_n = (-1)^n2^{n-1}$ for $n \geq 1$.
+Locally constant functions, such as indicators of balls, are continuous on $\ZZ_p$: the topology has a basis of open and closed sets.
+\item $\binom x2 = x(x - 1)/2$ is a polynomial with a non-integral coefficient that maps $\ZZ_2$ to $\ZZ_2$. The integer-valued polynomials are exactly the $\ZZ$-combinations of the $\binom xn$, by
+Mahler's coefficients $a_n = \Delta^nf(0) \in \ZZ$ (for $f$ integer-valued) and Newton's formula.
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{p-adic-numbers:counterexample-mahler}
+The function $m \mapsto 2^m$ on $\NN$ has $\Delta^n f(0) = 1$ for all $n$, which does not tend to $0$: it does not extend to a continuous function on $\ZZ_2$. Directly: $2^k \to 0$ in $\ZZ_2$ but
+$2^{2^k} \to 0 \neq 1 = 2^0$. In contrast $m \mapsto 3^m$ extends to $\ZZ_2$ (its Mahler coefficients are $2^n$), and $m \mapsto 2^m$ extends to $\ZZ_p$ for odd $p$ only after restricting $m$ to a
+residue class modulo $p - 1$, since $2^{m}$ with $m \equiv m_0 \pmod{p - 1}$ equals $2^{m_0}\langle 2\rangle^{m - m_0}$, with $\omega(2)^{p-1} = 1$.
+\end{counterexample}
+
+\subsection{Strassmann's theorem}\label{p-adic-numbers:subsection-strassmann}
+
+A nonzero real power series converging on $[-1, 1]$ can have infinitely many zeros there ($\sin(10\pi x)$ has $21$ zeros in $[-1, 1]$, and $\sin(m\pi x)$ has $2m + 1$). Over $\ZZ_p$ the number of zeros is read off from the sizes of the coefficients.
+
+\begin{theorem}[Strassmann]\label{p-adic-numbers:theorem-strassmann}
+Let $f(x) = \sum_na_nx^n$ with $a_n \in \QQ_p$, $a_n \to 0$, not all zero, and let $N$ be the largest index with $|a_N| = \max_n|a_n|$. Then $f$ has at most $N$ zeros in $\ZZ_p$.
+\end{theorem}
+
+\begin{proof}
+By induction on $N$. If $N = 0$, then $|a_n| < |a_0|$ for $n \geq 1$, so $|f(x) - a_0| < |a_0|$ for $x \in \ZZ_p$, and $f(x) \neq 0$. Let $N \geq 1$ and let $\alpha \in \ZZ_p$ be a zero (if there is none, we are
+done). For $x \in \ZZ_p$,
+\[
+\begin{aligned}
+f(x) = f(x) - f(\alpha) &= \sum_{n \geq 1}a_n(x^n - \alpha^n) \\
+&= (x - \alpha)\sum_{n \geq 1}a_n\sum_{j=0}^{n-1}x^j\alpha^{n-1-j} = (x - \alpha)g(x),
+\end{aligned}
+\]
+where $g(x) = \sum_mb_mx^m$ with $b_m = \sum_{n > m}a_n\alpha^{n-1-m}$; the rearrangement is justified by Lemma~\ref{p-adic-numbers:lemma-summable}, since the family $a_nx^j\alpha^{n-1-j}$ ($0 \leq j < n$)
+is bounded by $|a_n|$ and so tends to $0$. Now $|b_m| \leq \max_{n > m}|a_n| \to 0$; for $m \geq N$, $|b_m| \leq \max_{n > m}|a_n| < |a_N|$; and $b_{N-1} = a_N + \sum_{n > N}a_n\alpha^{n-N}$ has
+$|b_{N-1}| = |a_N|$. So $|b_{N-1}| = \max_m|b_m|$ and $N - 1$ is the largest index where the maximum is attained. By induction $g$ has at most $N - 1$ zeros, and every zero of $f$ other than $\alpha$
+is a zero of $g$.
+\end{proof}
+
+\begin{corollary}\label{p-adic-numbers:corollary-strassmann}
+A power series with coefficients tending to $0$ that vanishes at infinitely many points of $\ZZ_p$ is identically zero. Two such series that agree on an infinite subset of $\ZZ_p$ have the same coefficients.
+\end{corollary}
+
+\begin{proof}
+If not all coefficients vanish, Strassmann's theorem bounds the number of zeros. Apply this to the difference for the second statement.
+\end{proof}
+
+\begin{counterexample}\label{p-adic-numbers:counterexample-strassmann}
+The corollary is false for continuous functions, or even for locally constant ones: the indicator function of $p\ZZ_p$ vanishes on the infinite set $1 + p\ZZ_p$. Power series are rigid, like
+holomorphic functions; this rigidity is the foundation of rigid analytic geometry. And the bound is sharp: $x(x - 1)\cdots(x - N + 1)$ has $N$ zeros, and its leading coefficient $1$ is a maximal one.
+\end{counterexample}
+
+\subsection{The Skolem--Mahler--Lech theorem}\label{p-adic-numbers:subsection-skolem}
+
+A \emph{linear recurrence} is a sequence $(u_n)_{n \geq 0}$ with $u_{n+d} = c_1u_{n+d-1} + \cdots + c_du_n$ for all $n$, with constant coefficients and $c_d \neq 0$. The Fibonacci numbers are an example. When
+does such a sequence vanish? Skolem proved in 1934 \cite{skolem-1934} that for rational recurrences the zero set has a simple structure; Mahler \cite{mahler-1935} and Lech \cite{lech-1953} extended this
+to algebraic and to arbitrary fields of characteristic $0$. Skolem's proof is $p$-adic: the subsequences along residue classes are values of $p$-adic analytic functions, and Strassmann's theorem bounds
+their zeros.
+
+\begin{theorem}[Skolem--Mahler--Lech]\label{p-adic-numbers:theorem-skolem}
+Let $(u_n)$ be a linear recurrence with $u_n, c_i \in \ZZ$ and $c_d \neq 0$. The set $\{n \geq 0 : u_n = 0\}$ is the union of a finite set and finitely many arithmetic progressions
+$\{r + Mk : k \geq 0\}$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: matrices.} Let $A$ be the companion matrix of the recurrence, so that
+\[
+(u_{n+1}, \ldots, u_{n+d})^T = A(u_n, \ldots, u_{n+d-1})^T .
+\]
+Then $u_n = e^TA^nw$ with $w = (u_0, \ldots, u_{d-1})^T$ and
+$e = (1, 0, \ldots, 0)^T$, and $\det A = \pm c_d \neq 0$. Choose a prime $p \geq 3$ not dividing $c_d$. The reduction of $A$ lies in the finite group $\GL_d(\mathbb{F}_p)$, so $A^M \equiv I \pmod p$ for some
+$M \geq 1$: $A^M = I + pB$ with $B$ an integer matrix.
+
+\emph{Step 2: interpolation.} Fix $0 \leq r < M$. For $k \in \NN$, by the binomial theorem for the commuting matrices $I$ and $pB$,
+\[
+u_{r + Mk} = e^TA^r(I + pB)^kw = \sum_{j \geq 0}\binom kjp^jc_j, \qquad c_j = e^TA^rB^jw \in \ZZ .
+\]
+Expanding $\binom kj = \frac{1}{j!}\sum_{i \leq j}s(j, i)k^i$ with integers $s(j, i)$ (the coefficients of the falling factorial), we get $u_{r+Mk} = F_r(k)$ for the formal power series
+\[
+F_r(x) = \sum_{i \geq 0}\alpha_ix^i, \qquad \alpha_i = \sum_{j \geq i}\frac{p^j}{j!}s(j, i)c_j ,
+\]
+provided the rearrangement is justified. It is, for every $x \in \ZZ_p$: $v(p^j/j!) \geq j - \frac{j - 1}{p - 1} = \frac{(p - 2)j + 1}{p - 1} \to \infty$ as $p \geq 3$, so the family
+$\frac{p^j}{j!}s(j, i)c_jx^i$ ($0 \leq i \leq j$) tends to $0$, and Lemma~\ref{p-adic-numbers:lemma-summable} applies. In particular $\alpha_i \to 0$.
+
+\emph{Step 3: zeros.} By Theorem~\ref{p-adic-numbers:theorem-strassmann}, either all $\alpha_i$ vanish, and then $u_{r + Mk} = 0$ for all $k$, or $F_r$ has finitely many zeros in $\ZZ_p$, and then $u_{r+Mk} = 0$ for
+only finitely many $k$. Taking the union over $r$ gives the theorem.
+\end{proof}
+
+\begin{example}\label{p-adic-numbers:example-skolem}
+\begin{enumerate}
+\item $u_{n+2} = u_n$, $u_0 = 0$, $u_1 = 1$ vanishes exactly on the even numbers, an infinite progression.
+\item The Fibonacci sequence vanishes only at $n = 0$, since it is increasing from $n = 1$ on.
+\item Berstel's sequence $u_{n+3} = 2u_{n+2} - 4u_{n+1} + 4u_n$, $u_0 = u_1 = 0$, $u_2 = 1$, has the zeros $n = 0, 1, 4, 6, 13, 52$, and a direct computation shows that there are no others below $3000$.
+It is a classical test case: the zeros are sparse and irregular, and no progression is involved.
+\end{enumerate}
+\end{example}
+
+\begin{remark}\label{p-adic-numbers:remark-skolem-problem}
+The proof is not effective: Strassmann's theorem bounds the number of zeros of each $F_r$, but not their size, and the progressions appear only through the vanishing of infinitely many $\alpha_i$. Whether
+there is an algorithm deciding if a given integer linear recurrence has a zero is the \emph{Skolem problem}, open in general; it is known to be decidable for orders $d \leq 4$ \cite{everest-recurrence}.
+\end{remark}
+
+\begin{remark}\label{p-adic-numbers:remark-kummer}
+$p$-adic analysis also explains congruences between the values $\zeta(1 - k) = -B_k/k$ of Corollary~\ref{analytic-number-theory:corollary-zeta-negative}: \emph{Kummer's congruences} say that, for
+$p - 1 \nmid k$ and $k \equiv k^{\prime} \pmod{(p - 1)p^{n-1}}$ (both even), $(1 - p^{k-1})\frac{B_k}{k} \equiv (1 - p^{k^{\prime}-1})\frac{B_{k^{\prime}}}{k^{\prime}} \pmod{p^n}$. Equivalently, these values, as functions of
+$k$ in a fixed class modulo $p - 1$, extend to a continuous function on $\ZZ_p$: the \emph{Kubota--Leopoldt $p$-adic zeta function} \cite[Chapter II]{koblitz-padic}.
+\end{remark}
+
+\section{The Hilbert symbol}\label{p-adic-numbers:section-hilbert-symbol}
+
+\subsection{Definition and first properties}\label{p-adic-numbers:subsection-hilbert-definition}
+
+Legendre's theorem (Theorem~\ref{geometry-of-numbers:theorem-legendre}) decides when a conic $ax^2 + by^2 = cz^2$ has a rational point. Its conditions are congruences, one for each prime dividing $abc$;
+in the language of this chapter, they say that the conic has a point over certain fields $\QQ_p$. The Hilbert symbol records, for each place, whether the conic $z^2 = ax^2 + by^2$ has a point.
+
+\begin{definition}\label{p-adic-numbers:definition-hilbert-symbol}
+Let $k = \QQ_v$ for a place $v$ (so $k = \QQ_p$ or $k = \RR$), and $a, b \in k^\times$. The \emph{Hilbert symbol} is
+\[
+(a, b)_v = \begin{cases}1 & \text{if } z^2 = ax^2 + by^2 \text{ has a solution } (x, y, z) \in k^3 \setminus \{0\},\\ -1 & \text{otherwise.}\end{cases}
+\]
+We write $(a, b)$ when $v$ is fixed. For $a, b \in \QQ^\times$, $(a, b)_v$ means the symbol of their images in $\QQ_v$.
+\end{definition}
+
+\begin{notation}\label{p-adic-numbers:notation-hilbert}
+The symbol takes values in the multiplicative group $\{\pm1\}$. Replacing $x$, $y$ by $x/c$, $y/d$ shows that $(a, b)$ depends only on the classes of $a$ and $b$ in $k^\times/k^{\times2}$. For $u \in \ZZ_2^\times$ put
+\[
+\varepsilon(u) = \frac{u - 1}{2} \bmod 2, \qquad \omega(u) = \frac{u^2 - 1}{8} \bmod 2,
+\]
+computed with an integer congruent to $u$ modulo $8$; so $\varepsilon(u) = 0$ if and only if $u \equiv 1 \pmod 4$, and $\omega(u) = 0$ if and only if $u \equiv \pm1 \pmod 8$. For an odd prime $p$, $\varepsilon(p)$ is
+$(p - 1)/2 \bmod 2$, and $(\frac up)$ for $u \in \ZZ_p^\times$ is the Legendre symbol of $u \bmod p$.
+\end{notation}
+
+\begin{lemma}\label{p-adic-numbers:lemma-epsilon-omega}
+$\varepsilon$ and $\omega$ are homomorphisms $\ZZ_2^\times \to \ZZ/2\ZZ$, with $\varepsilon(-1) = 1$, $\omega(-1) = 0$, $\varepsilon(5) = 0$, $\omega(5) = 1$.
+\end{lemma}
+
+\begin{proof}
+For odd integers $u$, $v$: $\frac{uv - 1}{2} - \frac{u - 1}{2} - \frac{v - 1}{2} = \frac{(u - 1)(v - 1)}{2}$ is even, and $\frac{u^2v^2 - 1}{8} - \frac{u^2 - 1}{8} - \frac{v^2 - 1}{8} = \frac{(u^2 - 1)(v^2 - 1)}{8}$ is even,
+since $8 \mid u^2 - 1$. The values are direct computations ($\omega(5) = 24/8 = 3$).
+\end{proof}
+
+The symbol is a norm condition. For $b \in k^\times$ let $N_b = \{z^2 - by^2 : y, z \in k\} \setminus \{0\}$; if $b$ is not a square, $N_b$ is the group of norms $N(z + y\sqrt b) = z^2 - by^2$ from the quadratic
+extension $k(\sqrt b)$.
+
+\begin{proposition}\label{p-adic-numbers:proposition-hilbert-norm}
+Let $a, b \in k^\times$.
+\begin{enumerate}
+\item $(a, b) = 1$ if and only if $a \in N_b$.
+\item $N_b$ is a subgroup of $k^\times$ containing $k^{\times2}$; it is $k^\times$ if $b$ is a square.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(2) The identity $(z_1^2 - by_1^2)(z_2^2 - by_2^2) = (z_1z_2 + by_1y_2)^2 - b(z_1y_2 + z_2y_1)^2$ shows that $N_b$ is closed under products, $1/a = a \cdot (1/a)^2$ shows it is closed under inverses, and
+$z^2 \in N_b$. If $b = c^2$, then $z^2 - by^2 = (z - cy)(z + cy)$, and $z - cy = 1$, $z + cy = a$ is solved by $z = (a + 1)/2$, $y = (a - 1)/(2c)$; so $N_b = k^\times$.
+(1) If $a = z^2 - by^2$, then $(1, y, z)$ solves $z^2 = ax^2 + by^2$. Conversely let $(x, y, z) \neq 0$ be a solution. If $x \neq 0$, then $a = (z/x)^2 - b(y/x)^2 \in N_b$. If $x = 0$, then $z^2 = by^2$ with
+$y \neq 0$, so $b$ is a square and $a \in N_b = k^\times$ by (2).
+\end{proof}
+
+\begin{proposition}\label{p-adic-numbers:proposition-hilbert-properties}
+For $a, a^{\prime}, b \in k^\times$:
+\begin{enumerate}
+\item $(a, b) = (b, a)$ and $(a, c^2) = 1$ for $c \in k^\times$;
+\item $(a, -a) = 1$, and $(a, 1 - a) = 1$ if $a \neq 1$;
+\item if $(a, b) = 1$, then $(aa^{\prime}, b) = (a^{\prime}, b)$;
+\item $(a, b) = (a, -ab) = (a, (1 - a)b)$ (the last for $a \neq 1$).
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) The equation is symmetric in $(a, x)$ and $(b, y)$, and $(0, 1, c)$ solves $z^2 = ax^2 + c^2y^2$. (2) $(1, 1, 0)$ solves $z^2 = ax^2 - ay^2$, and $(1, 1, 1)$ solves $z^2 = ax^2 + (1 - a)y^2$.
+(3) By Proposition~\ref{p-adic-numbers:proposition-hilbert-norm}, $a \in N_b$, and $N_b$ is a group, so $aa^{\prime} \in N_b$ if and only if $a^{\prime} \in N_b$. (4) By (2), $(-a, a) = 1$, so (3) and (1) give
+$(-ab, a) = (b, a)$; similarly with $1 - a$.
+\end{proof}
+
+\subsection{Explicit formulas}\label{p-adic-numbers:subsection-hilbert-formulas}
+
+\begin{theorem}\label{p-adic-numbers:theorem-hilbert-formulas}
+\begin{enumerate}
+\item For $k = \RR$: $(a, b)_\infty = -1$ if and only if $a < 0$ and $b < 0$.
+\item For $p$ odd, $a = p^\alpha u$ and $b = p^\beta v$ with $u, v \in \ZZ_p^\times$:
+\[
+(a, b)_p = (-1)^{\alpha\beta\varepsilon(p)}\Bigl(\frac up\Bigr)^\beta\Bigl(\frac vp\Bigr)^\alpha .
+\]
+\item For $p = 2$, $a = 2^\alpha u$ and $b = 2^\beta v$ with $u, v \in \ZZ_2^\times$:
+\[
+(a, b)_2 = (-1)^{\varepsilon(u)\varepsilon(v) + \alpha\omega(v) + \beta\omega(u)} .
+\]
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) If $a > 0$, then $(x, y, z) = (1, 0, \sqrt a)$ is a solution; similarly if $b > 0$. If $a, b < 0$, then $ax^2 + by^2 \leq 0$ with equality only for $x = y = 0$, and then
+$z = 0$.
+
+Since both sides of (2) and (3) depend only on the square classes of $a$ and $b$ (by Theorem~\ref{p-adic-numbers:theorem-squares}: changing $u$ by a square does not change $(\frac up)$, $\varepsilon(u)$ or
+$\omega(u)$, by Lemma~\ref{p-adic-numbers:lemma-epsilon-omega}), we may assume $\alpha, \beta \in \{0, 1\}$; by symmetry, $\alpha \geq \beta$.
+
+(2), \emph{case $\alpha = \beta = 0$}: we show $(u, v) = 1$. Modulo $p$, the sets $\{ux^2\}$ and $\{1 - vy^2\}$ each have $(p + 1)/2$ elements (there are $(p - 1)/2$ nonzero squares), so they meet:
+$ux_0^2 \equiv 1 - vy_0^2 \pmod p$ for some integers $x_0, y_0$, not both divisible by $p$. If $p \nmid x_0$, the polynomial $f(x) = ux^2 + vy_0^2 - 1$ has the simple root $x_0$ modulo $p$
+($f^{\prime}(x_0) = 2ux_0$ is a unit), and Corollary~\ref{p-adic-numbers:corollary-hensel-simple} gives $x \in \ZZ_p$ with $ux^2 + vy_0^2 = 1$, a solution with $z = 1$. If $p \mid x_0$, then $p \nmid y_0$, and
+we lift $y_0$ instead.
+
+\emph{Case $\alpha = 1$, $\beta = 0$}: we show $(pu, v) = (\frac vp)$. If $(\frac vp) = 1$, $v$ is a square and $(pu, v) = 1$. Let $(\frac vp) = -1$ and suppose $z^2 = pux^2 + vy^2$ has a nonzero solution;
+scaling by a power of $p$ we may take $x, y, z \in \ZZ_p$, not all divisible by $p$. Then $z^2 \equiv vy^2 \pmod p$. If $p \nmid y$, then $v \equiv (z/y)^2$ is a square modulo $p$, which is false. So $p \mid y$,
+hence $p \mid z$, hence $p^2 \mid pux^2$ and $p \mid x$: a contradiction. So $(pu, v) = -1$.
+
+\emph{Case $\alpha = \beta = 1$}: by Proposition~\ref{p-adic-numbers:proposition-hilbert-properties}(4) and (1), $(pu, pv) = (pu, -p^2uv) = (pu, -uv) = (\frac{-uv}{p}) = (\frac{-1}{p})(\frac up)(\frac vp)$, and
+$(\frac{-1}{p}) = (-1)^{\varepsilon(p)}$ by Euler's criterion (Proposition~\ref{number-theory:proposition-euler-criterion}). In each case the result agrees with formula (2).
+
+(3), \emph{case $\alpha = \beta = 0$}: we show $(u, v) = (-1)^{\varepsilon(u)\varepsilon(v)}$. Suppose $u \equiv 1 \pmod 4$. If $u \equiv 1 \pmod 8$, $u$ is a square and $(u, v) = 1$. If $u \equiv 5 \pmod 8$, then
+$u + 4v \equiv 5 + 4 \equiv 1 \pmod 8$ (as $v$ is odd), so $u + 4v = w^2$ with $w \in \ZZ_2$ by Theorem~\ref{p-adic-numbers:theorem-squares}, and $(x, y, z) = (1, 2, w)$ is a solution. The case
+$v \equiv 1 \pmod 4$ is symmetric. If $u \equiv v \equiv -1 \pmod 4$, a solution with $x, y, z \in \ZZ_2$ not all even would give $z^2 + x^2 + y^2 \equiv 0 \pmod 4$; squares are $\equiv 0$ or $1 \pmod 4$, so all three
+would be even. Hence $(u, v) = -1$.
+
+\emph{Case $\alpha = 1$, $\beta = 0$, $u = 1$}: we show $(2, v) = (-1)^{\omega(v)}$. If $v \equiv 1 \pmod 8$, $v$ is a square. If $v \equiv -1 \pmod 8$, then $2 + v \equiv 1 \pmod 8$ is a square $w^2$, and
+$(1, 1, w)$ is a solution. Conversely let $z^2 = 2x^2 + vy^2$ with $x, y, z \in \ZZ_2$ not all even. Then $y$ and $z$ are odd: if both were even, $2x^2 \equiv 0 \pmod 4$ would make $x$ even; and they have the
+same parity since $z^2 \equiv vy^2 \pmod 2$. So $y^2 \equiv z^2 \equiv 1 \pmod 8$, and $2x^2 \equiv 1 - v \pmod 8$; as $2x^2 \equiv 0$ or $2 \pmod 8$, $v \equiv 1$ or $-1 \pmod 8$, that is $\omega(v) = 0$.
+
+\emph{Case $\alpha = 1$, $\beta = 0$}: we show $(2u, v) = (2, v)(u, v)$, which gives the formula by the two previous cases. If $(2, v) = 1$, this is Proposition~\ref{p-adic-numbers:proposition-hilbert-properties}(3)
+with $a = 2$; if $(u, v) = 1$, likewise with $a = u$. If $(2, v) = (u, v) = -1$, then $\omega(v) = 1$ and $\varepsilon(u) = \varepsilon(v) = 1$, so $v \equiv 3 \pmod 8$ and $u \equiv 3 \pmod 4$. Then
+$2u + v \equiv 6 + 3 \equiv 1 \pmod 8$ is a square $w^2$, and $(1, 1, w)$ shows $(2u, v) = 1 = (2, v)(u, v)$.
+
+\emph{Case $\alpha = \beta = 1$}: $(2u, 2v) = (2u, -4uv) = (2u, -uv)$, which by the previous case equals $(-1)^{\varepsilon(u)\varepsilon(-uv) + \omega(-uv)}$. By Lemma~\ref{p-adic-numbers:lemma-epsilon-omega},
+$\varepsilon(-uv) = 1 + \varepsilon(u) + \varepsilon(v)$ and $\omega(-uv) = \omega(u) + \omega(v)$, so the exponent is $\varepsilon(u) + \varepsilon(u)^2 + \varepsilon(u)\varepsilon(v) + \omega(u) + \omega(v) \equiv
+\varepsilon(u)\varepsilon(v) + \omega(u) + \omega(v)$, as $\varepsilon(u)^2 = \varepsilon(u)$ in $\ZZ/2\ZZ$.
+\end{proof}
+
+\begin{corollary}\label{p-adic-numbers:corollary-hilbert-bilinear}
+For every place $v$, the Hilbert symbol is a symmetric bilinear form on the $\mathbb{F}_2$-vector space $\QQ_v^\times/\QQ_v^{\times2}$ (written multiplicatively, with values in $\{\pm1\} \cong \mathbb{F}_2$), and it is
+nondegenerate: if $(a, b)_v = 1$ for all $b$, then $a$ is a square. Consequently, for $b$ not a square, $N_b$ has index $2$ in $\QQ_v^\times$.
+\end{corollary}
+
+\begin{proof}
+In each formula the exponent of $-1$ is, for fixed $b$, additive in $a$: for $p$ odd, $a \mapsto \alpha$ and $u \mapsto (\frac up)$ are homomorphisms; for $p = 2$, use Lemma~\ref{p-adic-numbers:lemma-epsilon-omega}.
+Nondegeneracy is checked on bases. For $p$ odd take $\varepsilon_0, p$ with $\varepsilon_0$ a nonresidue unit: $(\varepsilon_0, \varepsilon_0) = 1$, $(\varepsilon_0, p) = -1$, $(p, p) = (\frac{-1}{p})$; the Gram matrix over $\mathbb{F}_2$ is
+$\left(\begin{smallmatrix}0 & 1\\ 1 & *\end{smallmatrix}\right)$, invertible. For $p = 2$ take $-1, 5, 2$: $(-1, -1) = -1$, $(5, 5) = (-1, 5) = (2, 2) = (2, -1) = 1$, $(2, 5) = -1$, so the Gram matrix is
+$\left(\begin{smallmatrix}1 & 0 & 0\\ 0 & 0 & 1\\ 0 & 1 & 0\end{smallmatrix}\right)$, invertible. For $\RR$, $(-1, -1) = -1$. Finally, if $b$ is not a square, $a \mapsto (a, b)$ is a nontrivial homomorphism to $\{\pm1\}$
+whose kernel is $N_b$ (Proposition~\ref{p-adic-numbers:proposition-hilbert-norm}).
+\end{proof}
+
+\begin{example}\label{p-adic-numbers:example-hilbert}
+\begin{enumerate}
+\item $(-1, -1)_v = -1$ exactly for $v = 2$ and $v = \infty$: the equation $x^2 + y^2 + z^2 = 0$ has nonzero solutions in $\QQ_p$ for $p$ odd, but not in $\QQ_2$ or $\RR$. Equivalently, the quaternion algebra
+$\mathbb{H}$ splits at the odd primes and is a division algebra over $\RR$ and $\QQ_2$.
+\item $(2, 3)_v$: at $\infty$ both are positive, so $1$; at $3$, $(2, 3)_3 = (\frac23) = -1$; at $2$, $(2, 3)_2 = (-1)^{\omega(3)} = -1$; at all other primes both are units, so $1$. Thus $z^2 = 2x^2 + 3y^2$ has no
+nonzero rational solution, and the obstruction can be seen both at $2$ and at $3$.
+\item In $\QQ_3$, with the basis $-1, 3$ of $\QQ_3^\times/\QQ_3^{\times2}$: $(-1, -1)_3 = 1$, $(-1, 3)_3 = (\frac{-1}{3}) = -1$, $(3, 3)_3 = (-1, 3)_3 = -1$.
+\end{enumerate}
+\end{example}
+
+\subsection{Hilbert's reciprocity law}\label{p-adic-numbers:subsection-hilbert-reciprocity}
+
+\begin{theorem}[Hilbert reciprocity]\label{p-adic-numbers:theorem-hilbert-reciprocity}
+For $a, b \in \QQ^\times$, $(a, b)_v = 1$ for all but finitely many places $v$, and
+\[
+\prod_v(a, b)_v = 1 .
+\]
+\end{theorem}
+
+\begin{proof}
+If $p$ is odd and $a$, $b$ are $p$-adic units, $(a, b)_p = 1$ by Theorem~\ref{p-adic-numbers:theorem-hilbert-formulas}(2); this excludes all but finitely many places. By
+Corollary~\ref{p-adic-numbers:corollary-hilbert-bilinear} both sides are multiplicative in $a$ and in $b$, and $\QQ^\times$ is generated by $-1$, $2$ and the odd primes. So it suffices to check the product for
+$a, b$ in this set; by symmetry, and since $(a, a) = (a, -a^2) = (a, -1)$ (Proposition~\ref{p-adic-numbers:proposition-hilbert-properties}(4)), it suffices to treat the following pairs. Let $q \neq q^{\prime}$ be odd primes. Only the places where a
+factor can differ from $1$ are listed.
+\begin{enumerate}
+\item $a = b = -1$: $(-1, -1)_\infty = -1$ and $(-1, -1)_2 = (-1)^{\varepsilon(-1)^2} = -1$; product $1$.
+\item $a = -1$, $b = 2$: $(-1, 2)_2 = (-1)^{\omega(-1)} = 1$; all factors are $1$.
+\item $a = -1$, $b = q$: $(-1, q)_2 = (-1)^{\varepsilon(-1)\varepsilon(q)} = (-1)^{\varepsilon(q)}$ and $(-1, q)_q = (\frac{-1}{q}) = (-1)^{\varepsilon(q)}$; product $1$.
+\item $a = 2$, $b = q$: $(2, q)_2 = (-1)^{\omega(q)}$ and $(2, q)_q = (\frac 2q)$; the product is $1$ by the second supplementary law (Proposition~\ref{number-theory:proposition-two}).
+\item $a = q$, $b = q^{\prime}$: $(q, q^{\prime})_2 = (-1)^{\varepsilon(q)\varepsilon(q^{\prime})}$, $(q, q^{\prime})_q = (\frac{q^{\prime}}{q})$ and $(q, q^{\prime})_{q^{\prime}} = (\frac{q}{q^{\prime}})$; the product is $1$ by the law of quadratic
+reciprocity (Theorem~\ref{number-theory:theorem-quadratic-reciprocity}).
+\end{enumerate}
+\end{proof}
+
+\begin{remark}\label{p-adic-numbers:remark-hilbert-reciprocity}
+Conversely, cases (3)--(5) of the proof show that Hilbert's law implies quadratic reciprocity and both supplementary laws: the reciprocity law \emph{is} the product formula for the Hilbert symbol, in
+the same way as Theorem~\ref{p-adic-numbers:theorem-product-formula} is the product formula for absolute values. In this form it generalises to every number field, where it is one of the main
+statements of class field theory (Chapter~\ref{class-field-theory}); Corollary~\ref{p-adic-numbers:corollary-hilbert-bilinear}, which says that the norms from a quadratic extension of $\QQ_p$ form a subgroup
+of index $2$, is the first case of local class field theory.
+\end{remark}
+
+\section{Quadratic forms and the Hasse--Minkowski theorem}\label{p-adic-numbers:section-hasse-minkowski}
+
+\subsection{Quadratic forms over a field}\label{p-adic-numbers:subsection-quadratic-forms}
+
+In this subsection $k$ is a field of characteristic $\neq 2$.
+
+\begin{definition}\label{p-adic-numbers:definition-quadratic-form}
+A \emph{quadratic form} in $n$ variables over $k$ is $f(x) = x^TAx = \sum_{i,j}a_{ij}x_ix_j$ with $A = (a_{ij})$ a symmetric $n \times n$ matrix over $k$; it is \emph{nondegenerate} if $\det A \neq 0$, and then
+$n$ is its \emph{rank} and the class $d(f)$ of $\det A$ in $k^\times/k^{\times2}$ its \emph{discriminant}. Two forms $f$, $g$ are \emph{equivalent}, $f \sim g$, if $g(x) = f(Px)$ for some $P \in \GL_n(k)$. The
+form $f$ \emph{represents} $c \in k$ if $f(x) = c$ for some $x \in k^n \setminus \{0\}$; it is \emph{isotropic} if it represents $0$, and \emph{anisotropic} otherwise.
+\end{definition}
+
+\begin{notation}\label{p-adic-numbers:notation-quadratic-forms}
+$\langle a_1, \ldots, a_n\rangle$ denotes the diagonal form $a_1x_1^2 + \cdots + a_nx_n^2$. For forms $f$ in $x$ and $g$ in $y$ (disjoint variables), $f \oplus g$ is the form $f(x) + g(y)$, and $-g$ is the form
+$-g(y)$; so $f \oplus (-g)$ is $f(x) - g(y)$, and $cf$ is the form $c f(x)$. Equivalent forms represent the same elements, and $d$ is well defined since $\det(P^TAP) = \det(P)^2\det A$.
+\end{notation}
+
+By Theorem~\ref{linear-algebra:theorem-orthogonal-basis}, applied to the symmetric bilinear form $B(x, y) = x^TAy$ (so that $f(x) = B(x, x)$), every quadratic form is equivalent to a diagonal one,
+$\langle a_1, \ldots, a_n\rangle$, and it is nondegenerate if and only if all $a_i \neq 0$. Multiplying a variable by $c \neq 0$ replaces $a_i$ by $c^2a_i$; and multiplying $f$ by $c \neq 0$ does not change whether it
+is isotropic.
+
+\begin{lemma}\label{p-adic-numbers:lemma-isotropic}
+Let $f$, $g$, $h$ be nondegenerate forms over $k$ and $c \in k^\times$.
+\begin{enumerate}
+\item If $f$ is isotropic, it represents every element of $k$.
+\item $f$ represents $c$ if and only if $f \oplus \langle -c\rangle$ is isotropic.
+\item $\langle a, b\rangle$ is isotropic if and only if $-ab \in k^{\times2}$.
+\item $g \oplus (-h)$ is isotropic if and only if some $c \in k^\times$ is represented by both $g$ and $h$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) Let $f(v) = 0$ with $v \neq 0$. By nondegeneracy there is $w$ with $B(v, w) \neq 0$. Then $f(tv + w) = t^2f(v) + 2tB(v, w) + f(w) = 2tB(v, w) + f(w)$ takes every value as $t$ runs through $k$, and
+$tv + w \neq 0$ when this value is nonzero; the value $0$ is represented by $v$.
+(2) If $f(x) = c$ then $f(x) - c \cdot 1^2 = 0$. Conversely if $f(x) = cz^2$ with $(x, z) \neq 0$: if $z \neq 0$, $f(x/z) = c$; if $z = 0$, then $f$ is isotropic and (1) applies.
+(3) If $ax^2 + by^2 = 0$ with $(x, y) \neq 0$, then $x, y \neq 0$ and $-ab = (ax/y)^2$. Conversely if $-ab = s^2$, then $a \cdot s^2 + b \cdot a^2 = a(s^2 + ab) = 0$ with $(s, a) \neq 0$.
+(4) If $g(y) = h(z) = c \neq 0$, then $(y, z) \neq 0$ is a zero. Conversely let $g(y) = h(z)$ with $(y, z) \neq 0$. If the common value is nonzero we are done. If it is $0$, say $y \neq 0$, then $g$ is isotropic, so by
+(1) it represents every nonzero value of $h$ (and $h$, being diagonalisable with nonzero coefficients, has some); similarly if $z \neq 0$.
+\end{proof}
+
+\subsection{Quadratic forms over $\QQ_p$}\label{p-adic-numbers:subsection-local-forms}
+
+\begin{proposition}\label{p-adic-numbers:proposition-local-forms}
+Let $k = \QQ_v$ and $a, b, c \in k^\times$.
+\begin{enumerate}
+\item $\langle a, b\rangle$ represents $c$ if and only if $(c, -ab)_v = (a, b)_v$.
+\item $\langle a, b, c\rangle$ is isotropic if and only if $(-ac, -bc)_v = 1$.
+\item For $p$ odd, a form $\langle u_1, u_2, u_3\rangle$ over $\QQ_p$ with $u_i \in \ZZ_p^\times$ is isotropic, and hence represents every element; and every nondegenerate form of rank $\geq 5$ over $\QQ_p$ is
+isotropic.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(2) $ax^2 + by^2 + cz^2 = 0$ is equivalent to $z^2 = (-a/c)x^2 + (-b/c)y^2$, and $(-a/c, -b/c) = (-ac, -bc)$ since the classes modulo squares agree.
+(1) By Lemma~\ref{p-adic-numbers:lemma-isotropic}(2) and (2), $\langle a, b\rangle$ represents $c$ if and only if $(ac, bc) = 1$. By bilinearity (Corollary~\ref{p-adic-numbers:corollary-hilbert-bilinear}) and
+$(c, c) = (c, -1)$, $(ac, bc) = (a, b)(a, c)(c, b)(c, c) = (a, b)(c, ab)(c, -1) = (a, b)(c, -ab)$.
+(3) By (2) and Theorem~\ref{p-adic-numbers:theorem-hilbert-formulas}(2), $(-u_1u_3, -u_2u_3)_p = 1$; then Lemma~\ref{p-adic-numbers:lemma-isotropic}(1) applies. For rank $\geq 5$ diagonalise, and write each
+coefficient as $p^eu$ times a square, with $e \in \{0, 1\}$ and $u$ a unit. Three of the first five coefficients have the same $e$. If $e = 1$, multiply the form by $p$ and absorb $p^2$ into the
+variables: the three coefficients become units. In both cases the form contains a subform $\langle u_1, u_2, u_3\rangle$ with units, which is isotropic.
+\end{proof}
+
+\begin{example}\label{p-adic-numbers:example-anisotropic}
+Rank $5$ is the best possible. Over $\QQ_2$ and $\RR$ the form $\langle 1, 1, 1, 1\rangle$ is anisotropic: if $x_1^2 + \cdots + x_4^2 = 0$ in $\QQ_2$ with $x_i \in \ZZ_2$ not all even, then the number of odd $x_i$ is
+$\equiv 0 \pmod 4$ (squares are $0$ or $1$ modulo $4$), and four odd squares add up to $4 \pmod 8$, a contradiction. For $p$ odd and $\varepsilon$ a nonresidue unit, $f = \langle 1, -\varepsilon, p, -\varepsilon p\rangle$ is
+anisotropic over $\QQ_p$. Write $f = g \oplus (-h)$ with $g = \langle 1, -\varepsilon\rangle$ and $h = \langle -p, \varepsilon p\rangle = -pg$. By Proposition~\ref{p-adic-numbers:proposition-local-forms}(1), $g$ represents
+$c$ if and only if $(c, \varepsilon)_p = 1$, that is $v_p(c)$ is even (Theorem~\ref{p-adic-numbers:theorem-hilbert-formulas}(2)); and $h = -pg$ represents exactly the $-pc$ with $v_p(c)$ even, which have odd
+valuation. No element is represented by both, so $f$ is anisotropic by Lemma~\ref{p-adic-numbers:lemma-isotropic}(4). (Both forms are norm forms of quaternion division algebras.)
+\end{example}
+
+\begin{remark}\label{p-adic-numbers:remark-local-classification}
+Every nondegenerate form of rank $\geq 5$ over $\QQ_2$ is isotropic too, and forms over $\QQ_p$ are classified up to equivalence by the rank, the discriminant and one more invariant, the \emph{Hasse invariant}
+$\prod_{i<j}(a_i, a_j)_p$ of a diagonalisation; a form of rank $4$ is anisotropic exactly when its discriminant is a square and its Hasse invariant is $-(-1, -1)_p$ \cite[Chapter IV, Theorems 6 and 7]{serre-arithmetic}.
+\end{remark}
+
+\subsection{Approximation and prescribed Hilbert symbols}\label{p-adic-numbers:subsection-approximation}
+
+\begin{lemma}[Approximation]\label{p-adic-numbers:lemma-approximation}
+Let $S$ be a finite set of places, $x_v \in \QQ_v$ for $v \in S$, and $\varepsilon > 0$. There is $x \in \QQ$ with $|x - x_v|_v < \varepsilon$ for all $v \in S$. In other words, $\QQ$ is dense in $\prod_{v \in S}\QQ_v$.
+\end{lemma}
+
+\begin{proof}
+Enlarging $S$, we may assume $\infty \in S$; let $S = \{\infty, p_1, \ldots, p_n\}$.
+
+\emph{Step 1: reduction to $x_{p_i} \in \ZZ_{p_i}$.} Choose an integer $N \geq 1$, a product of the $p_i$, with $Nx_{p_i} \in \ZZ_{p_i}$ for all $i$. If $x^{\prime} \in \QQ$ satisfies
+$|x^{\prime} - Nx_v|_v < \varepsilon|N|_v$ for $v \in S$, then $x = x^{\prime}/N$ satisfies $|x - x_v|_v < \varepsilon$. So we may replace $x_v$ by $Nx_v$.
+
+\emph{Step 2: the finite places.} Choose $k$ with $p_i^{-k} < \varepsilon$ for all $i$. By Proposition~\ref{p-adic-numbers:proposition-z-p}(5) and the Chinese remainder theorem
+(Theorem~\ref{number-theory:theorem-crt}) there is $x_0 \in \ZZ$ with $x_0 \equiv x_{p_i} \pmod{p_i^k}$ for all $i$.
+
+\emph{Step 3: the real place.} Let $P = (p_1\cdots p_n)^k$ and choose a prime $q \notin S$. The numbers $b/q^m$, $b \in \ZZ$, $m \geq 0$, are dense in $\RR$, so there is $u = b/q^m$ with
+$|u - (x_\infty - x_0)/P|_\infty < \varepsilon/P$. Put $x = x_0 + uP$. Then $|x - x_\infty|_\infty < \varepsilon$, and for each $i$, $|u|_{p_i} \leq 1$ (as $q \neq p_i$), so
+$|x - x_{p_i}|_{p_i} \leq \max(|x_0 - x_{p_i}|_{p_i}, |P|_{p_i}) \leq p_i^{-k} < \varepsilon$.
+\end{proof}
+
+\begin{theorem}\label{p-adic-numbers:theorem-prescribed-symbols}
+Let $a_1, \ldots, a_m \in \QQ^\times$ and let $\varepsilon_{i,v} \in \{\pm1\}$ for $1 \leq i \leq m$ and all places $v$. There is $x \in \QQ^\times$ with $(a_i, x)_v = \varepsilon_{i,v}$ for all $i$ and $v$ if and only if:
+\begin{enumerate}
+\item $\varepsilon_{i,v} = 1$ for all but finitely many pairs $(i, v)$;
+\item $\prod_v\varepsilon_{i,v} = 1$ for every $i$;
+\item for every place $v$ there is $x_v \in \QQ_v^\times$ with $(a_i, x_v)_v = \varepsilon_{i,v}$ for all $i$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Necessity: (1) and (2) are Theorem~\ref{p-adic-numbers:theorem-hilbert-reciprocity}, and (3) holds with $x_v = x$. For sufficiency, multiplying the $a_i$ by squares we may assume they are squarefree integers.
+Let $S = \{\infty, 2\} \cup \{p : p \mid a_1\cdots a_m\}$ and $T = \{v : \varepsilon_{i,v} = -1 \text{ for some } i\}$, finite by (1).
+
+\emph{Case $S \cap T = \emptyset$.} Let $a = \prod_{\ell \in T}\ell$ (a product of odd primes not dividing any $a_i$) and $m_0 = 8\prod_{\ell \in S, \ell \neq 2, \infty}\ell$, so $\gcd(a, m_0) = 1$. By Dirichlet's theorem
+(Theorem~\ref{analytic-number-theory:theorem-dirichlet}) there is a prime $q \equiv a \pmod{m_0}$ with $q \notin S \cup T$. Put $x = aq$; we check $(a_i, x)_v = \varepsilon_{i,v}$.
+\begin{enumerate}
+\item[(a)] $v \in S$, where $\varepsilon_{i,v} = 1$: $x > 0$ gives $(a_i, x)_\infty = 1$. For $\ell \in S$ odd, $x \equiv a^2 \pmod \ell$ with $\ell \nmid a$, so $x/a^2 \equiv 1 \pmod\ell$ is a square in $\QQ_\ell$, and so is
+$x$; for $\ell = 2$, $x \equiv a^2 \pmod 8$, and $x$ is a square in $\QQ_2$ (Theorem~\ref{p-adic-numbers:theorem-squares}). In both cases $(a_i, x)_\ell = 1$.
+\item[(b)] $v = \ell \notin S$, $\ell \neq q$: $a_i$ is an $\ell$-adic unit, so $(a_i, x)_\ell = (\frac{a_i}{\ell})^{v_\ell(x)}$ by Theorem~\ref{p-adic-numbers:theorem-hilbert-formulas}(2). If $\ell \notin T$, then $v_\ell(x) = 0$
+and both sides are $1$. If $\ell \in T$, then $v_\ell(x) = 1$; and by (3) there is $x_\ell$ with $(\frac{a_i}{\ell})^{v_\ell(x_\ell)} = \varepsilon_{i,\ell}$ for all $i$, where $v_\ell(x_\ell)$ is odd since some $\varepsilon_{j,\ell} = -1$. So
+$(a_i, x)_\ell = (\frac{a_i}{\ell}) = \varepsilon_{i,\ell}$.
+\item[(c)] $v = q$: by (a), (b), Theorem~\ref{p-adic-numbers:theorem-hilbert-reciprocity} and (2), $(a_i, x)_q = \prod_{v \neq q}(a_i, x)_v = \prod_{v \neq q}\varepsilon_{i,v} = \varepsilon_{i,q}$.
+\end{enumerate}
+
+\emph{General case.} By Corollary~\ref{p-adic-numbers:corollary-square-classes}, $\QQ_v^{\times2}$ is an open subgroup of $\QQ_v^\times$, so by Lemma~\ref{p-adic-numbers:lemma-approximation} there is
+$x^{\prime} \in \QQ^\times$ with $x^{\prime}/x_v \in \QQ_v^{\times2}$ for all $v \in S$ (take $x^{\prime}$ close enough to each $x_v$). Put $\eta_{i,v} = \varepsilon_{i,v}(a_i, x^{\prime})_v$. The family $(\eta_{i,v})$ satisfies (1), (2) (by
+reciprocity for $x^{\prime}$) and (3) (with $x_vx^{\prime}$), and $\eta_{i,v} = \varepsilon_{i,v}(a_i, x_v)_v = 1$ for $v \in S$. By the first case there is $y \in \QQ^\times$ with $(a_i, y)_v = \eta_{i,v}$, and
+$x = x^{\prime}y$ satisfies $(a_i, x)_v = (a_i, x^{\prime})_v\eta_{i,v} = \varepsilon_{i,v}$.
+\end{proof}
+
+\subsection{The Hasse--Minkowski theorem}\label{p-adic-numbers:subsection-hasse-minkowski}
+
+\begin{theorem}[Hasse--Minkowski]\label{p-adic-numbers:theorem-hasse-minkowski}
+A nondegenerate quadratic form over $\QQ$ is isotropic over $\QQ$ if and only if it is isotropic over $\QQ_v$ for every place $v$.
+\end{theorem}
+
+\begin{proof}
+One direction is clear. Conversely let $f$ be isotropic over every $\QQ_v$, of rank $n$; diagonalise it over $\QQ$, $f \sim \langle a_1, \ldots, a_n\rangle$, and scale the variables to make the $a_i$ squarefree
+integers.
+
+\emph{$n = 1$:} $\langle a\rangle$ is never isotropic, so there is nothing to prove.
+
+\emph{$n = 2$:} by Lemma~\ref{p-adic-numbers:lemma-isotropic}(3), $-a_1a_2$ is a square in $\RR$ and in every $\QQ_p$; so it is positive and $v_p(-a_1a_2)$ is even for every $p$, and it is a square in $\QQ$.
+
+\emph{$n = 3$: reduction to Legendre's theorem.} If a prime $p$ divides all three $a_i$, divide $f$ by $p$. If $p$ divides exactly two, say $a_1$ and $a_2$, replace $f$ by
+$pf \sim \langle a_1/p, a_2/p, pa_3\rangle$ (substitute $x_1 \mapsto x_1/p$, $x_2 \mapsto x_2/p$). In both cases the coefficients stay squarefree, isotropy over $\QQ$ and over each $\QQ_v$ is unchanged, and
+$|a_1a_2a_3|$ decreases; after finitely many steps the $a_i$ are pairwise coprime. Isotropy over $\RR$ means the $a_i$ do not all have the same sign; multiplying by $-1$ we get $f = \langle a, b, -c\rangle$
+with $a, b, c$ positive, squarefree and pairwise coprime. We check the conditions of Theorem~\ref{geometry-of-numbers:theorem-legendre} for $ax^2 + by^2 = cz^2$. Let $\ell$ be an odd prime dividing $a$, and take a
+solution in $\QQ_\ell$ with $x, y, z \in \ZZ_\ell$ not all divisible by $\ell$. If $\ell \mid y$, then $\ell \mid cz^2$, so $\ell \mid z$, so $\ell^2 \mid ax^2$ and $\ell \mid x$ (as $\ell^2 \nmid a$), which is impossible.
+So $y$ is a unit, then so is $z$ (from $by^2 \equiv cz^2 \pmod\ell$), and $bc \equiv (by/z)^2 \pmod\ell$. Every number is a square modulo $2$, so $bc$ is a square modulo every prime factor of the squarefree number $a$,
+hence modulo $a$ by the Chinese remainder theorem. In the same way $ca$ is a square modulo $b$, and $-ab$ is a square modulo $c$ (from $ax^2 \equiv -by^2 \pmod\ell$ for $\ell \mid c$, $-ab \equiv (ax/y)^2$).
+Legendre's theorem gives a rational solution.
+
+\emph{$n = 4$.} Write $f = g \oplus (-h)$ with $g = \langle a_1, a_2\rangle$, $h = \langle -a_3, -a_4\rangle$, and let $S = \{\infty, 2\} \cup \{p : p \mid a_1a_2a_3a_4\}$. For $v \in S$, by
+Lemma~\ref{p-adic-numbers:lemma-isotropic}(4) there is $x_v \in \QQ_v^\times$ represented by both $g$ and $h$ over $\QQ_v$; for $v \notin S$ put $x_v = 1$. By Proposition~\ref{p-adic-numbers:proposition-local-forms}(1),
+for every $v$,
+\begin{equation}\label{p-adic-numbers:equation-four-variables}
+(x_v, -a_1a_2)_v = (a_1, a_2)_v, \qquad (x_v, -a_3a_4)_v = (-a_3, -a_4)_v ;
+\end{equation}
+for $v \notin S$ both sides are $1$, since all the entries are $v$-adic units and $v$ is odd. Apply Theorem~\ref{p-adic-numbers:theorem-prescribed-symbols} to $-a_1a_2$, $-a_3a_4$ and
+$\varepsilon_{1,v} = (a_1, a_2)_v$, $\varepsilon_{2,v} = (-a_3, -a_4)_v$: condition (1) holds as just seen, (2) is Hilbert reciprocity, and (3) is \eqref{p-adic-numbers:equation-four-variables}. So there is $x \in \QQ^\times$
+with $(x, -a_1a_2)_v = (a_1, a_2)_v$ and $(x, -a_3a_4)_v = (-a_3, -a_4)_v$ for all $v$. By Proposition~\ref{p-adic-numbers:proposition-local-forms}(1) and Lemma~\ref{p-adic-numbers:lemma-isotropic}(2), the
+ternary forms $g \oplus \langle -x\rangle$ and $h \oplus \langle -x\rangle$ are isotropic over every $\QQ_v$, hence over $\QQ$ by the case $n = 3$. So $g$ and $h$ both represent $x$ over $\QQ$, and $f$ is isotropic
+by Lemma~\ref{p-adic-numbers:lemma-isotropic}(4).
+
+\emph{$n \geq 5$, by induction on $n$.} Write $f = g \oplus (-h)$ with $g = \langle a_1, a_2\rangle$ and $h = \langle -a_3, \ldots, -a_n\rangle$, of rank $n - 2 \geq 3$, and let $S$ be as before. For $v \in S$ choose
+$x_v \in \QQ_v^\times$ represented by $g$ and $h$ over $\QQ_v$, and $y_v \in \QQ_v^2$ with $g(y_v) = x_v$. By Lemma~\ref{p-adic-numbers:lemma-approximation}, applied to each coordinate, there is $y \in \QQ^2$ so close to every
+$y_v$ that $x = g(y)$ satisfies $x/x_v \in \QQ_v^{\times2}$ for all $v \in S$ (by continuity of $g$ and openness of $\QQ_v^{\times2}$; in particular $x \neq 0$). Consider $f_1 = \langle x\rangle \oplus (-h)$, of rank $n - 1$. For
+$v \in S$, $h$ represents $x_v$, hence $x$, over $\QQ_v$. For $v \notin S$, $v$ is odd and $h$ contains $\langle -a_3, -a_4, -a_5\rangle$ with unit coefficients, so $h$ represents every element of $\QQ_v$ by
+Proposition~\ref{p-adic-numbers:proposition-local-forms}(3). So $f_1$ is isotropic over every $\QQ_v$ (Lemma~\ref{p-adic-numbers:lemma-isotropic}(2)), hence over $\QQ$ by induction, and $h$ represents $x$ over $\QQ$.
+Since $g(y) = x$ with $y \neq 0$, $f$ is isotropic over $\QQ$.
+\end{proof}
+
+\begin{corollary}\label{p-adic-numbers:corollary-hasse-minkowski-represent}
+A nondegenerate form $f$ over $\QQ$ represents $c \in \QQ^\times$ over $\QQ$ if and only if it represents $c$ over every $\QQ_v$.
+\end{corollary}
+
+\begin{proof}
+Apply the theorem to $f \oplus \langle -c\rangle$ and use Lemma~\ref{p-adic-numbers:lemma-isotropic}(2) over $\QQ$ and over each $\QQ_v$.
+\end{proof}
+
+\begin{corollary}\label{p-adic-numbers:corollary-one-place-redundant}
+Let $f$ be a nondegenerate ternary form over $\QQ$ and $v_0$ a place. If $f$ is isotropic over $\QQ_v$ for all $v \neq v_0$, it is isotropic over $\QQ$.
+\end{corollary}
+
+\begin{proof}
+Diagonalise, $f \sim \langle a, b, c\rangle$. By Proposition~\ref{p-adic-numbers:proposition-local-forms}(2), $f$ is isotropic over $\QQ_v$ if and only if $(-ac, -bc)_v = 1$. By Hilbert reciprocity the product of these
+symbols over all $v$ is $1$, so if all factors but the one at $v_0$ equal $1$, so does that one; then apply the theorem.
+\end{proof}
+
+This explains why the proof of the case $n = 3$ never used the place $2$. The corollary fails for forms of rank $4$: $\langle 1, 1, 1, 1\rangle$ is isotropic over every $\QQ_p$ with $p$ odd but not over $\QQ_2$ or $\RR$.
+
+\begin{example}\label{p-adic-numbers:example-hasse-minkowski}
+\begin{enumerate}
+\item $x^2 + y^2 = 3$ has no rational solution: by Proposition~\ref{p-adic-numbers:proposition-local-forms}(1) this would need $(3, -1)_3 = (1, 1)_3 = 1$, but $(3, -1)_3 = (\frac{-1}{3}) = -1$. In general, a positive
+rational $c$ is a sum of two rational squares if and only if $(c, -1)_p = 1$ for all $p$, that is, if and only if every prime $p \equiv 3 \pmod 4$ occurs in $c$ to an even power, in accordance with
+Theorem~\ref{number-theory:theorem-two-squares}.
+\item $3x^2 + 5y^2 = 7z^2$: here $a = 3$, $b = 5$, $c = 7$, and Legendre's conditions are $35 \equiv 2$ square modulo $3$ (no). So the form is anisotropic over $\QQ_3$, and has no rational zero. Indeed, by
+Proposition~\ref{p-adic-numbers:proposition-local-forms}(2) the form $\langle 3, 5, -7\rangle$ is isotropic over $\QQ_3$ if and only if $(21, 35)_3 = 1$, and
+$(21, 35)_3 = (\frac{35}{3}) = (\frac{2}{3}) = -1$ by Theorem~\ref{p-adic-numbers:theorem-hilbert-formulas}(2).
+\item Every positive rational number $c$ is a sum of four rational squares. By Corollary~\ref{p-adic-numbers:corollary-hasse-minkowski-represent} it suffices to check the places: over $\RR$, $c > 0$; over $\QQ_p$, $p$ odd,
+already $\langle 1, 1, 1\rangle$ represents everything (Proposition~\ref{p-adic-numbers:proposition-local-forms}(3)); over $\QQ_2$, $\langle 1, 1, 1\rangle$ represents every class except that of $7$, by the proof of
+Theorem~\ref{p-adic-numbers:theorem-three-squares-rational} below, and $7 = 4 + 1 + 1 + 1$. This is weaker than Lagrange's theorem (Theorem~\ref{number-theory:theorem-four-squares}), which gives integer squares.
+\end{enumerate}
+\end{example}
+
+\begin{theorem}[Sums of three rational squares]\label{p-adic-numbers:theorem-three-squares-rational}
+A positive rational number $c$ is a sum of three squares of rational numbers if and only if $-c$ is not a square in $\QQ_2$. For a positive integer $n$, this means that $n$ is not of the form
+$4^a(8b + 7)$ with $a, b \geq 0$.
+\end{theorem}
+
+\begin{proof}
+By Corollary~\ref{p-adic-numbers:corollary-hasse-minkowski-represent} we must decide when $\langle 1, 1, 1\rangle$ represents $c$ over each $\QQ_v$. Over $\RR$ it does, as $c > 0$; over $\QQ_p$, $p$ odd, it represents
+everything by Proposition~\ref{p-adic-numbers:proposition-local-forms}(3). Over $\QQ_2$, it represents the classes of
+\[
+\begin{aligned}
+&1 = 1, \quad 2 = 1 + 1, \quad 3 = 1 + 1 + 1, \quad 5 = 4 + 1, \\
+&6 = 4 + 1 + 1, \quad 10 = 9 + 1, \quad 14 = 9 + 4 + 1,
+\end{aligned}
+\]
+which are seven of the eight classes of $\QQ_2^\times/\QQ_2^{\times2}$ (Corollary~\ref{p-adic-numbers:corollary-square-classes}: the classes of $2^\alpha u$ are determined by $\alpha \bmod 2$ and $u \bmod 8$). The
+remaining class is that of $7$, which is the class of $-1$ since $-7 \equiv 1 \pmod 8$. And $\langle 1, 1, 1\rangle$ does not represent $-1$, since $\langle 1, 1, 1, 1\rangle$ is anisotropic over $\QQ_2$
+(Example~\ref{p-adic-numbers:example-anisotropic}). So $c$ is represented over $\QQ_2$ if and only if $c \notin -\QQ_2^{\times2}$. For $n = 4^am$ with $4 \nmid m$: $-n$ is a square in $\QQ_2$ if and only if $-m$ is, if and
+only if $m$ is odd and $-m \equiv 1 \pmod 8$, that is, $m \equiv 7 \pmod 8$.
+\end{proof}
+
+\begin{remark}\label{p-adic-numbers:remark-three-squares}
+Passing from rational to integer squares needs one more idea, the lemma of Davenport and Cassels; it gives Legendre's and Gauss's theorem that a positive integer is a sum of three integer squares if and only if it is not of
+the form $4^a(8b + 7)$, proved in Chapter~\ref{diophantine-equations}. The necessity was Exercise~\ref{geometry-of-numbers:exercise-three-squares-necessary}.
+\end{remark}
+
+\begin{remark}\label{p-adic-numbers:remark-hasse-principle}
+The local-global principle is special to quadratic forms. Selmer showed in 1951 \cite{selmer-1951} that the cubic equation $3x^3 + 4y^3 + 5z^3 = 0$ has nonzero solutions in $\RR$ and in every $\QQ_p$, but none
+in $\QQ$. For quadratic forms, Hasse--Minkowski also gives a classification over $\QQ$: two nondegenerate forms are equivalent over $\QQ$ if and only if they are equivalent over every $\QQ_v$, that is, if they have the
+same rank, discriminant, signature and Hasse invariants; and \emph{Meyer's theorem} says that an indefinite form over $\QQ$ of rank $\geq 5$ is isotropic, since by Remark~\ref{p-adic-numbers:remark-local-classification}
+such a form is isotropic at every finite place \cite[Chapter IV]{serre-arithmetic}. Hasse proved the theorem in 1923 \cite{hasse-1923}; the case of three variables goes back to Legendre, and Minkowski had found the local invariants for integral forms.
+\end{remark}
+
+\section{Exercises}\label{p-adic-numbers:section-exercises}
+
+\begin{exercise}\label{p-adic-numbers:exercise-power-absolute-value}
+Show that $|\cdot|_\infty^\alpha$ is not an absolute value on $\QQ$ for $\alpha > 1$, while $|\cdot|_p^\alpha$ is one for every $\alpha > 0$.
+\end{exercise}
+
+\begin{solution}
+$|1 + 1|_\infty^\alpha = 2^\alpha > 2 = |1|_\infty^\alpha + |1|_\infty^\alpha$ for $\alpha > 1$. For $|\cdot|_p^\alpha$ positivity and multiplicativity are clear, and
+$|x + y|_p^\alpha \leq \max(|x|_p, |y|_p)^\alpha = \max(|x|_p^\alpha, |y|_p^\alpha)$, which implies the triangle inequality.
+\end{solution}
+
+\begin{exercise}\label{p-adic-numbers:exercise-expansions}
+Find the $2$-adic expansion of $-1/7$ and the $3$-adic expansion of $1/2$.
+\end{exercise}
+
+\begin{solution}
+$-1/7 = 1/(1 - 8) = 1 + 2^3 + 2^6 + \cdots$, with digits $1, 0, 0, 1, 0, 0, \ldots$. In $\ZZ_3$, $-1/2 = 1/(1 - 3) = 1 + 3 + 3^2 + \cdots$, and
+$2 + 3(1 + 3 + 3^2 + \cdots) = 2 + 3 \cdot(-\tfrac12) = \tfrac12$; so the digits of $1/2$ are $2, 1, 1, 1, \ldots$.
+\end{solution}
+
+\begin{exercise}\label{p-adic-numbers:exercise-solutions-mod-p-n}
+Let $f \in \ZZ[x_1, \ldots, x_m]$. Show that $f$ has a zero in $\ZZ_p^m$ if and only if the congruence $f(x) \equiv 0 \pmod{p^n}$ has a solution in $\ZZ^m$ for every $n \geq 1$.
+\end{exercise}
+
+\begin{solution}
+If $f(\xi) = 0$ with $\xi \in \ZZ_p^m$, choose $x \in \ZZ^m$ with $x \equiv \xi \pmod{p^n}$ coordinatewise (Proposition~\ref{p-adic-numbers:proposition-z-p}(5)); then $f(x) \equiv f(\xi) = 0 \pmod{p^n}$, as $f$ has integer
+coefficients. Conversely, let $K_n = \{\xi \in \ZZ_p^m : |f(\xi)|_p \leq p^{-n}\}$. It is closed, as the preimage of a closed ball under the continuous map $f$, nonempty by hypothesis, and $K_{n+1} \subseteq K_n$.
+The space $\ZZ_p^m$ is compact (Theorem~\ref{p-adic-numbers:theorem-topology}(1) and Theorem~\ref{general-topology:theorem-tychonoff}), so $\bigcap_nK_n \neq \emptyset$, and any point of the intersection is a zero of $f$.
+\end{solution}
+
+\begin{exercise}\label{p-adic-numbers:exercise-harmonic}
+Let $H_n = 1 + \frac12 + \cdots + \frac1n$. Show that $v_2(H_n) = -k$ where $2^k \leq n < 2^{k+1}$; in particular $H_n$ is not an integer for $n \geq 2$. Show also that $v_p(H_{p-1}) \geq 1$ for every prime $p \geq 3$.
+\end{exercise}
+
+\begin{solution}
+Among $1, \ldots, n$ the number $2^k$ is the only one with $v_2 = k$, and all others have $v_2 < k$ (a multiple of $2^k$ other than $2^k$ is $\geq 2^{k+1} > n$). So $|1/2^k|_2 = 2^k$ is strictly larger than the absolute
+values of all other terms, and $|H_n|_2 = 2^k$ by Proposition~\ref{p-adic-numbers:proposition-ultrametric}(1) (applied repeatedly: the sum of the other terms has absolute value $< 2^k$). For $n \geq 2$, $k \geq 1$, so
+$H_n \notin \ZZ$. For the second claim, $H_{p-1}$ is a sum of $p$-adic units; modulo $p$, the inverses $1/k$, $1 \leq k \leq p - 1$, are the nonzero residues in some order, so
+$H_{p-1} \equiv 1 + 2 + \cdots + (p - 1) = p(p - 1)/2 \equiv 0 \pmod p$.
+\end{solution}
+
+\begin{exercise}\label{p-adic-numbers:exercise-factorials}
+Show that $\sum_{n \geq 0}n!$ converges in $\ZZ_p$ for every $p$, and that $\sum_{n \geq 0}n \cdot n! = -1$ in every $\ZZ_p$.
+\end{exercise}
+
+\begin{solution}
+$v_p(n!) \geq \lfloor n/p\rfloor \to \infty$ (Theorem~\ref{combinatorics:theorem-legendre}), so the terms tend to $0$ and Proposition~\ref{p-adic-numbers:proposition-series} applies. Since
+$n \cdot n! = (n + 1)! - n!$, the partial sums telescope: $\sum_{n < N}n \cdot n! = N! - 1 \to -1$. (Whether $\sum n!$ is rational, for some $p$, is not known.)
+\end{solution}
+
+\begin{exercise}\label{p-adic-numbers:exercise-cubes}
+Let $p \equiv 2 \pmod 3$. Show that every element of $\ZZ_p^\times$ is a cube. Show that $2$ is not a cube in $\QQ_7$.
+\end{exercise}
+
+\begin{solution}
+Since $\gcd(3, p - 1) = 1$, cubing is a bijection of the cyclic group $\mathbb{F}_p^\times$ (Theorem~\ref{number-theory:theorem-primitive-root-prime}). Given $u \in \ZZ_p^\times$, choose $b$ with $b^3 \equiv u \pmod p$;
+$f = x^3 - u$ has $f^{\prime}(b) = 3b^2 \not\equiv 0 \pmod p$ ($p \neq 3$), and Corollary~\ref{p-adic-numbers:corollary-hensel-simple} gives a cube root. If $x^3 = 2$ in $\QQ_7$, then $3v_7(x) = 0$, so $x$ is a unit and $2$
+is a cube modulo $7$. But the cubes modulo $7$ are $1^3 = 1$, $2^3 \equiv 1$, $3^3 \equiv 6$, $4^3 \equiv 1$, $5^3 \equiv 6$, $6^3 \equiv 6$.
+\end{solution}
+
+\begin{exercise}\label{p-adic-numbers:exercise-not-ordered}
+Show that $-1$ is a sum of squares in $\QQ_p$ for every prime $p$; so $\QQ_p$ admits no ordering.
+\end{exercise}
+
+\begin{solution}
+For $p$ odd, $\langle 1, 1, 1\rangle$ is isotropic over $\QQ_p$ (Proposition~\ref{p-adic-numbers:proposition-local-forms}(3)): $x^2 + y^2 + z^2 = 0$ with, say, $z \neq 0$, and $-1 = (x/z)^2 + (y/z)^2$. For $p = 2$,
+$-7 = s^2$ for some $s \in \ZZ_2$ (Theorem~\ref{p-adic-numbers:theorem-squares}), so $-1 = s^2/7 = 7s^2/49 = (2s/7)^2 + (s/7)^2 + (s/7)^2 + (s/7)^2$. In an ordered field squares are $\geq 0$, so a sum of squares
+cannot be $-1 < 0$.
+\end{solution}
+
+\begin{exercise}\label{p-adic-numbers:exercise-automorphisms}
+Show that $\ZZ_p = \{x \in \QQ_p : 1 + px^2 \in \QQ_p^{\times2}\}$ for $p$ odd and $\ZZ_2 = \{x \in \QQ_2 : 1 + 8x^2 \in \QQ_2^{\times2}\}$. Deduce that every field automorphism of $\QQ_p$ is the identity.
+\end{exercise}
+
+\begin{solution}
+For $p$ odd: if $v_p(x) \geq 0$, then $1 + px^2 \equiv 1 \pmod p$ is a square by Theorem~\ref{p-adic-numbers:theorem-squares}. If $v_p(x) = -k < 0$, then $v_p(px^2) = 1 - 2k < 0$ is odd, so
+$v_p(1 + px^2) = 1 - 2k$ is odd and $1 + px^2$ is not a square. For $p = 2$: if $v_2(x) \geq 0$, $1 + 8x^2 \equiv 1 \pmod 8$ is a square. If $v_2(x) = -1$, $x = u/2$ with $u$ a unit, and $1 + 8x^2 = 1 + 2u^2 \equiv 3 \pmod 8$
+is a unit that is not a square. If $v_2(x) \leq -2$, $v_2(8x^2) = 3 + 2v_2(x) < 0$ is odd, and $1 + 8x^2$ has odd valuation.
+
+Let $\sigma$ be a field automorphism. It fixes $\QQ$ (the prime field), so it fixes $p$ and $8$, and maps squares to squares; by the description just proved, $\sigma(\ZZ_p) \subseteq \ZZ_p$, and likewise for $\sigma^{-1}$, so
+$\sigma(\ZZ_p) = \ZZ_p$ and $\sigma(\ZZ_p^\times) = \ZZ_p^\times$. Writing $x = p^nu$, $\sigma(x) = p^n\sigma(u)$, so $|\sigma(x)|_p = |x|_p$: $\sigma$ is an isometry, hence continuous, and it is the identity on the dense subset
+$\QQ$, so $\sigma = \id$. (The same argument, with squares $=$ nonnegative numbers, shows that $\RR$ has no nontrivial automorphisms; by contrast $\CC$ has many.)
+\end{solution}
+
+\begin{exercise}\label{p-adic-numbers:exercise-log-zeros}
+Let $p$ be odd. Use Strassmann's theorem to show that $\log(1 + py) = 0$ with $y \in \ZZ_p$ only for $y = 0$.
+\end{exercise}
+
+\begin{solution}
+$\log(1 + py) = \sum_{n \geq 1}a_ny^n$ with $a_n = (-1)^{n-1}p^n/n$, so $|a_n|_p = p^{-n + v_p(n)}$. For $n \geq 2$, $v_p(n) \leq \log n/\log 3 < n - 1$, so $|a_n|_p < p^{-1} = |a_1|_p$, and $a_n \to 0$. In the
+notation of Theorem~\ref{p-adic-numbers:theorem-strassmann}, $N = 1$, so there is at most one zero, and $y = 0$ is one. (This agrees with the injectivity of $\log$ on $U_1$,
+Corollary~\ref{p-adic-numbers:corollary-log-kernel}.)
+\end{solution}
+
+\begin{exercise}\label{p-adic-numbers:exercise-mahler-squares}
+Find the Mahler expansions of $x^2$ and $x^3$ on $\ZZ_p$, and check that $\|f\| = \max_n|a_n|$ for them.
+\end{exercise}
+
+\begin{solution}
+$\Delta x^2 = 2x + 1$, $\Delta^2x^2 = 2$, so $a_0 = 0$, $a_1 = 1$, $a_2 = 2$: $x^2 = x + 2\binom x2$. Similarly $\Delta x^3 = 3x^2 + 3x + 1$, $\Delta^2x^3 = 6x + 6$, $\Delta^3x^3 = 6$, so
+$x^3 = x + 6\binom x2 + 6\binom x3$. In both cases $\max|a_n| = |a_1| = 1 = |1^k| = \|x^k\|$.
+\end{solution}
+
+\begin{exercise}\label{p-adic-numbers:exercise-conic}
+For which places $v$ does $x^2 + y^2 = 3z^2$ have a nonzero solution in $\QQ_v$? Verify Hilbert's reciprocity law in this example, and conclude that there is no nonzero rational solution.
+\end{exercise}
+
+\begin{solution}
+By Proposition~\ref{p-adic-numbers:proposition-local-forms}(2), $\langle 1, 1, -3\rangle$ is isotropic over $\QQ_v$ if and only if $(3, 3)_v = 1$, and $(3, 3)_v = (3, -1)_v$. Over $\RR$ it is $1$. For $p \neq 2, 3$ both entries
+are units and the symbol is $1$. At $3$: $(3, -1)_3 = (\frac{-1}{3}) = -1$. At $2$: $(3, -1)_2 = (-1)^{\varepsilon(3)\varepsilon(-1)} = -1$. So the conic has points exactly over $\RR$ and $\QQ_p$, $p \neq 2, 3$; the
+product of all symbols is $(-1)(-1) = 1$, as Theorem~\ref{p-adic-numbers:theorem-hilbert-reciprocity} predicts, and there is no rational point since there is no $3$-adic one.
+\end{solution}
+
+\begin{exercise}\label{p-adic-numbers:exercise-roots-of-unity-mod}
+Show that the number of solutions of $x^2 \equiv 1 \pmod{2^n}$ is $4$ for $n \geq 3$, and that for $p$ odd and $n \geq 1$, $x^{p-1} \equiv 1 \pmod{p^n}$ has exactly $p - 1$ solutions modulo $p^n$.
+\end{exercise}
+
+\begin{solution}
+By Theorem~\ref{number-theory:theorem-units-two-power}, $(\ZZ/2^n\ZZ)^\times \cong \ZZ/2\ZZ \times \ZZ/2^{n-2}\ZZ$, which has exactly $4$ elements of order dividing $2$ for $n \geq 3$; solutions are units. For $p$ odd, a
+solution is a unit, and $(\ZZ/p^n\ZZ)^\times$ is cyclic of order $(p - 1)p^{n-1}$ (Theorem~\ref{number-theory:theorem-primitive-roots}), so it has exactly $p - 1$ elements of order dividing $p - 1$; they are the reductions
+of the Teichm\"uller representatives (Proposition~\ref{p-adic-numbers:proposition-roots-of-unity}).
+\end{solution}

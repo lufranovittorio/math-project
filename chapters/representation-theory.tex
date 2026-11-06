@@ -4,7 +4,7 @@
 \section{Introduction}\label{representation-theory:section-introduction}
 
 A representation of a group or a Lie algebra is an action by linear maps. This chapter develops the
-basic theory: Schur's lemma, Maschke's theorem, unitary representations and character theory for finite groups, nilpotent and solvable Lie algebras with the
+basic theory: Schur's lemma, Maschke's theorem, unitary representations and character theory for finite groups (with the dual group and the Fourier transform of a finite abelian group), nilpotent and solvable Lie algebras with the
 theorems of Engel and Lie, and the complete
 classification of the finite-dimensional representations of the Lie algebra $\mathfrak{sl}_2(\CC)$. It then develops the structure theory of semisimple Lie
 algebras: Cartan's criteria and the Killing form, Weyl's theorem on complete reducibility, the root space decomposition, root systems and their classification by
@@ -450,6 +450,100 @@ as a rotation by $2\pi/5$ about an axis through two opposite vertices, with trac
 from $\chi_3$ by the field automorphism $\sqrt5 \mapsto -\sqrt5$, or equivalently by composing with conjugation by an odd permutation, which exchanges the two classes of
 $5$-cycles.
 \end{example}
+
+\subsection{Finite abelian groups and the finite Fourier transform}\label{representation-theory:subsection-abelian-characters}
+
+For an abelian group the theory above becomes particularly concrete. By Proposition~\ref{representation-theory:proposition-abelian} every irreducible representation is a homomorphism
+$G \to \CC^\times$, its own character, and the characters can be multiplied. This is the setting of Fourier analysis on $\ZZ/n\ZZ$, and of Dirichlet's method for primes in progressions
+(Chapter~\ref{analytic-number-theory}), where $G = (\ZZ/q\ZZ)^\times$.
+
+\begin{definition}\label{representation-theory:definition-dual-group}
+Let $G$ be a finite abelian group, written multiplicatively with identity $1$. A \emph{character} of $G$ is a homomorphism $\chi \colon G \to \CC^\times$; by
+Proposition~\ref{representation-theory:proposition-abelian} these are exactly the irreducible characters of $G$. They form a group $\widehat G$, the \emph{dual group}, under pointwise multiplication
+$(\chi\chi^{\prime})(g) = \chi(g)\chi^{\prime}(g)$, whose identity is the \emph{trivial character} $\chi_0(g) = 1$.
+\end{definition}
+
+\begin{notation}\label{representation-theory:notation-dual-group}
+Since $g^{|G|} = 1$, the values $\chi(g)$ are $|G|$-th roots of unity, so $|\chi(g)| = 1$ and $\chi(g)^{-1} = \overline{\chi(g)}$; the inverse of $\chi$ in $\widehat G$ is the complex conjugate
+character $\bar\chi$. A character is \emph{real} if all its values are real, that is $\pm1$, equivalently $\chi^2 = \chi_0$.
+\end{notation}
+
+\begin{proposition}\label{representation-theory:proposition-dual-group}
+Let $G$ be a finite abelian group.
+\begin{enumerate}
+\item $\widehat G \cong G$; in particular $|\widehat G| = |G|$.
+\item For every $g \neq 1$ in $G$ there is $\chi \in \widehat G$ with $\chi(g) \neq 1$.
+\item (Orthogonality) $\sum_{g \in G}\chi(g) = |G|$ if $\chi = \chi_0$ and $0$ otherwise; $\sum_{\chi \in \widehat G}\chi(g) = |G|$ if $g = 1$ and $0$ otherwise.
+\item For $a, b \in G$, $\frac{1}{|G|}\sum_{\chi \in \widehat G}\overline{\chi(a)}\chi(b) = 1$ if $a = b$ and $0$ otherwise.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) By the structure theorem (Theorem~\ref{groups:theorem-structure-abelian}), $G = \langle g_1\rangle \times \cdots \times \langle g_r\rangle$ with $g_i$ of order $n_i$. A character is determined by the
+values $\chi(g_i)$, which are $n_i$-th roots of unity, and every choice of such roots defines a character $\chi(g_1^{a_1}\cdots g_r^{a_r}) = \prod\chi(g_i)^{a_i}$ (well defined because
+$\chi(g_i)^{n_i} = 1$). So $\chi \mapsto (\chi(g_1), \ldots, \chi(g_r))$ is an isomorphism of $\widehat G$ onto $\mu_{n_1} \times \cdots \times \mu_{n_r}$, where $\mu_n \subseteq \CC^\times$ is the cyclic group
+of $n$-th roots of unity, and $\mu_{n_i} \cong \langle g_i\rangle$.
+
+(2) If $g = \prod g_i^{a_i} \neq 1$, some $a_i \not\equiv 0 \pmod{n_i}$; the character with $\chi(g_i) = e^{2\pi i/n_i}$ and $\chi(g_j) = 1$ for $j \neq i$ has $\chi(g) = e^{2\pi ia_i/n_i} \neq 1$.
+
+(3), (4) The conjugacy classes of $G$ are its elements and $C_G(g) = G$. The first relation in (3) is $|G|\langle\chi, \chi_0\rangle$, computed by Theorem~\ref{representation-theory:theorem-orthogonality}.
+Column orthogonality (Proposition~\ref{representation-theory:proposition-column-orthogonality}) with $g = b$, $h = a$ gives $\sum_\chi\chi(b)\overline{\chi(a)} = |G|$ if $a = b$ and $0$ otherwise, which is
+(4), and (4) with $a = 1$, $b = g$ is the second relation in (3).
+\end{proof}
+
+The isomorphism in (1) depends on the choice of generators $g_i$. The double dual is canonical:
+
+\begin{proposition}\label{representation-theory:proposition-double-dual}
+For a finite abelian group $G$, the map $\mathrm{ev} \colon G \to \widehat{\widehat G}$, $\mathrm{ev}(g)(\chi) = \chi(g)$, is an isomorphism of groups. A subgroup $H \subseteq G$ is the intersection of
+the kernels of the characters trivial on $H$, and these characters form a group isomorphic to $\widehat{G/H}$.
+\end{proposition}
+
+\begin{proof}
+$\mathrm{ev}(g)$ is a character of $\widehat G$ because the multiplication of $\widehat G$ is pointwise, and $\mathrm{ev}$ is a homomorphism because each $\chi$ is. It is injective by
+Proposition~\ref{representation-theory:proposition-dual-group}(2), and $|\widehat{\widehat G}| = |\widehat G| = |G|$ by part (1), so it is bijective. The characters of $G$ trivial on $H$ are the
+compositions of the characters of $G/H$ with $G \to G/H$; if $g \notin H$, part (2) applied to $gH \neq 1$ in $G/H$ gives one of them with $\chi(g) \neq 1$.
+\end{proof}
+
+\begin{definition}\label{representation-theory:definition-finite-fourier}
+Let $G$ be a finite abelian group. The \emph{Fourier transform} of $f \colon G \to \CC$ is the function $\hat f \colon \widehat G \to \CC$,
+\[
+\hat f(\chi) = \frac{1}{|G|}\sum_{g \in G}f(g)\overline{\chi(g)} = \langle f, \chi\rangle .
+\]
+\end{definition}
+
+\begin{theorem}[Fourier inversion and Plancherel]\label{representation-theory:theorem-finite-fourier}
+For $f, h \colon G \to \CC$ on a finite abelian group,
+\[
+f = \sum_{\chi \in \widehat G}\hat f(\chi)\chi, \qquad \frac{1}{|G|}\sum_{g \in G}f(g)\overline{h(g)} = \sum_{\chi \in \widehat G}\hat f(\chi)\overline{\hat h(\chi)} .
+\]
+Moreover $\widehat{f * h} = \hat f\,\hat h$ for the convolution $(f * h)(g) = \frac{1}{|G|}\sum_{x \in G}f(x)h(x^{-1}g)$.
+\end{theorem}
+
+\begin{proof}
+Every function on $G$ is a class function, so by Theorem~\ref{representation-theory:theorem-number-irreducibles} the characters form an orthonormal basis of the space of all functions
+$G \to \CC$. Expanding $f$ in an orthonormal basis gives the first formula, and the second is the computation of $\langle f, h\rangle$ in that basis. For the last one,
+$|G|^2\widehat{f * h}(\chi) = \sum_{x, g}f(x)h(x^{-1}g)\overline{\chi(g)}$; substituting $g = xy$ and using $\overline{\chi(xy)} = \overline{\chi(x)}\,\overline{\chi(y)}$ gives
+$\sum_xf(x)\overline{\chi(x)}\sum_yh(y)\overline{\chi(y)} = |G|^2\hat f(\chi)\hat h(\chi)$.
+\end{proof}
+
+\begin{example}\label{representation-theory:example-finite-fourier}
+\begin{enumerate}
+\item For $G = \ZZ/n\ZZ$ the characters are $\chi_j(k) = e^{2\pi ijk/n}$ (Proposition~\ref{representation-theory:proposition-abelian}), and $\hat f(\chi_j) = \frac1n\sum_kf(k)e^{-2\pi ijk/n}$ is the
+\emph{discrete Fourier transform}; inversion reads $f(k) = \sum_j\hat f(\chi_j)e^{2\pi ijk/n}$. The fast Fourier transform computes all $n$ values $\hat f(\chi_j)$ with $O(n\log n)$ operations
+instead of $O(n^2)$, when $n$ is a power of $2$, by splitting the sum into even and odd $k$.
+\item For $G = (\ZZ/2\ZZ)^m$ the characters are $\chi_a(x) = (-1)^{a \cdot x}$, $a \in (\ZZ/2\ZZ)^m$, and $\hat f$ is the \emph{Walsh--Hadamard transform}, used in coding theory and in the analysis of Boolean
+functions.
+\item For $G = (\ZZ/q\ZZ)^\times$, Proposition~\ref{representation-theory:proposition-dual-group}(4) writes the indicator function of a residue class $a$ as
+$\frac{1}{\varphi(q)}\sum_\chi\overline{\chi(a)}\chi$, a combination of multiplicative functions. This is the starting point of Dirichlet's theorem in Chapter~\ref{analytic-number-theory}.
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{representation-theory:counterexample-dual-nonabelian}
+For non-abelian $G$ the homomorphisms $G \to \CC^\times$ do not separate points: they all factor through $G^{\mathrm{ab}}$ (Corollary~\ref{representation-theory:corollary-one-dimensional}), so they
+are trivial on $[G, G] \neq 1$. For $S_3$ there are only two of them, against six elements. Fourier analysis on a non-abelian group needs the higher-dimensional irreducible representations; for compact
+groups this is the Peter--Weyl theorem of Chapter~\ref{harmonic-analysis}, where Pontryagin duality also extends Proposition~\ref{representation-theory:proposition-double-dual} to locally compact abelian
+groups such as $\RR$ and $\RR/\ZZ$.
+\end{counterexample}
 
 \section{Lie algebras}\label{representation-theory:section-lie-algebras}
 

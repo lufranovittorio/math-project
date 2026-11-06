@@ -82,12 +82,18 @@ counterexamples, exercises with solutions, citations for quoted results.
 
 ## Order of work (user, 2026-11-05)
 
+Update (user, 2026-11-06): after `p-adic-numbers`, first rebuild measure
+theory / geometric measure theory and the differential geometry part, then
+resume the number theory list below where it was left (`diophantine-equations`).
+Everything in order, without repetition, slowly, with notions that belong
+together in one place.
+
 1. **Number theory**, in three parts since 2026-11-05 (user: put new chapters
    in an organised part of their own, in the logical order):
    - Part *Number Theory* (after Probability, uses algebra and analysis only):
      ~~`prime-numbers`~~ (done), ~~`continued-fractions`~~ (done),
      ~~`geometry-of-numbers`~~ (done), ~~`analytic-number-theory`~~ (done),
-     `p-adic-numbers` (Hasse–Minkowski needs Dirichlet's theorem),
+     ~~`p-adic-numbers`~~ (done 2026-11-06),
      `diophantine-equations` (uses all of the part: three squares via
      Hasse–Minkowski, Skolem, Thue).
    - Part *Algebraic Number Theory*: `algebraic-number-theory` (number fields,
@@ -190,6 +196,34 @@ spectral-sequences 300 (then everything below about 800 lines).
   $1 - c/\log t$ via the Hadamard product, the explicit formula with proof,
   Gauss sums and the functional equation of $L(s,\chi)$, Pólya–Vinogradov,
   and van der Corput's $O(x^{1/3})$ for the circle and divisor problems.
+- [x] 2026-11-06: `p-adic-numbers` (complete, about 1450 lines, 134 tags):
+  absolute values, ultrametric geometry, equivalence, Ostrowski with proof,
+  product formula, completion of a valued field; $\QQ_p$, $\ZZ_p$ (DVR,
+  density of $\ZZ$), series, summable families, $p$-adic expansions
+  (rationals = eventually periodic), inverse limit, compactness, total
+  disconnectedness; Hensel's lemma ($|f(a)| < |f'(a)|^2$) with
+  counterexamples, squares and square classes, Teichmüller representatives,
+  roots of unity, $\QQ_p^\times \cong \ZZ \times \mu_{p-1} \times \ZZ_p$ (and
+  $p = 2$), the $\QQ_p$ pairwise non-isomorphic; power series, substitution
+  lemma, $\exp$/$\log$ (domains, isometric inverse isomorphisms), Mahler's
+  theorem, Strassmann, Skolem–Mahler–Lech with proof (Berstel's example),
+  Kummer congruences (remark); Hilbert symbol (norms, explicit formulas with
+  full proofs, bilinearity, nondegeneracy), Hilbert reciprocity $\iff$ QR;
+  quadratic forms over a field and over $\QQ_p$ (rank $\geq 5$ isotropic for
+  $p$ odd, anisotropic rank-4 examples), approximation lemma, rationals with
+  prescribed Hilbert symbols (Dirichlet), Hasse–Minkowski (n = 3 via
+  Legendre), one place redundant for ternary forms, sums of three rational
+  squares; 13 exercises. Open (optional): rank $\geq 5$ isotropic over
+  $\QQ_2$ and the local classification with proofs (now cited), Meyer's
+  theorem with proof.
+- [x] 2026-11-06: **no repetition** (user): the characters of finite abelian
+  groups were developed both in `representation-theory` and in
+  `analytic-number-theory`; moved into
+  `representation-theory:subsection-abelian-characters` (labels renamed,
+  tags kept), enlarged with the double dual, the finite Fourier transform,
+  Plancherel and convolution. Rule for the rewrite: before developing a
+  notion, grep the earlier chapters; merge duplicates into the earliest
+  natural chapter and cite it.
 - [x] 2026-11-05: removed the paragraphs "On the way to the Hodge conjecture"
   from all chapters (the route stays in the introduction); The Hodge Project
   is linked wherever it is mentioned.
