@@ -48,75 +48,107 @@ that have not been written yet are present as outlines, with the status
 
 \section{How the project is organised}\label{introduction:section-organisation}
 
-The chapters are grouped into parts. Parts marked \emph{(planned)} consist,
-for now, of chapter outlines.
+The book has three levels. A \emph{part} is a large area of mathematics
+(algebra, topology, number theory, \ldots); a \emph{chapter} is a region of
+that area, a subject one could teach as a course (groups, homotopy theory,
+analytic number theory, \ldots); a \emph{section} is a single topic inside it.
+Chapters marked \emph{planned} consist, for now, of an outline of their
+sections. The fifteen parts, grouped by the way they depend on each other, are
+the following.
+
+\medskip\noindent\textbf{Foundations and algebra.}
 \begin{itemize}
 \item Part~\ref{part-foundations}, \emph{Foundations}: logic, set theory, the
-number systems, model theory and category theory; computability and
-complexity (planned).
-\item Part~\ref{part-algebra}, \emph{Algebra}: from groups to derived
-categories, including a chapter of elementary number theory.
+number systems, model theory, category theory, computability and complexity.
+\item Part~\ref{part-algebra}, \emph{Algebra}: groups, rings, fields and Galois
+theory, elementary number theory, linear and multilinear algebra,
+representations of groups and Lie algebras, commutative algebra, homological
+algebra and derived categories.
 \item Part~\ref{part-discrete-mathematics}, \emph{Discrete Mathematics}:
 combinatorics, generating functions, graph theory and the probabilistic
 method.
-\item Part~\ref{part-topology}, \emph{Topology}: general topology, homotopy
-theory, singular homology and cohomology, Poincar\'e duality.
-\item Part~\ref{part-sheaves}, \emph{Sheaves}: sheaves and sheaf cohomology.
+\end{itemize}
+
+\noindent\textbf{Topology.}
+\begin{itemize}
+\item Part~\ref{part-topology}, \emph{Topology}: general topology, homotopy and
+covering spaces, topological manifolds, singular homology and cohomology,
+Poincar\'e duality, cohomology operations, low-dimensional topology (surfaces,
+knots, three-manifolds), sheaves and sheaf cohomology.
+\end{itemize}
+
+\noindent\textbf{Analysis and probability.}
+\begin{itemize}
 \item Part~\ref{part-measure-theory}, \emph{Real Analysis and Measure Theory}:
 real analysis, measure and integration, differentiation and absolute
 continuity, signed and complex measures with the duality of $L^p$ spaces, Radon
 measures, and geometric measure theory (Hausdorff measures,
 fractals, the area and coarea formulas, rectifiability).
 \item Part~\ref{part-analysis}, \emph{Complex and Functional Analysis}: complex
-and functional analysis, several complex variables and distributions; harmonic
-analysis and operator algebras (planned).
-\item Part~\ref{part-probability}, \emph{Probability and Statistics}
-(planned): probability theory, martingales, Markov chains, Brownian motion,
-stochastic calculus, statistics and information theory.
+analysis, special functions, functional analysis, several complex variables,
+distributions, harmonic analysis and operator algebras.
+\item Part~\ref{part-probability}, \emph{Probability and Statistics}:
+probability theory, martingales and stochastic processes, statistics and
+information theory.
+\end{itemize}
+
+\noindent\textbf{Number theory.}
+\begin{itemize}
 \item Part~\ref{part-number-theory}, \emph{Number Theory}, continuing the
-elementary number theory of Chapter~\ref{number-theory}: prime numbers
-(Chebyshev, Bertrand, Mertens, primality tests), continued fractions and
-Diophantine approximation, the geometry of numbers, analytic number theory
-(the prime number theorem, Dirichlet's theorem), $p$-adic numbers and the
-local-global principle, and Diophantine equations.
-\item Part~\ref{part-algebraic-number-theory}, \emph{Algebraic Number Theory}
-(planned): number fields and Dedekind domains, class groups and units,
-cyclotomic fields, local fields and class field theory.
+elementary number theory of Chapter~\ref{number-theory}: prime numbers,
+continued fractions and Diophantine approximation, the geometry of numbers,
+analytic number theory (the prime number theorem, Dirichlet's theorem),
+additive number theory and sieves, $p$-adic numbers and the local-global
+principle, Diophantine equations, and then algebraic number theory: number
+fields, local fields and class field theory.
+\end{itemize}
+
+\noindent\textbf{Equations and computation.}
+\begin{itemize}
 \item Part~\ref{part-differential-equations}, \emph{Differential Equations and
-Dynamics} (planned): ordinary differential equations, dynamical systems,
-ergodic theory, Sobolev spaces, elliptic and evolution equations, the calculus
-of variations.
-\item Part~\ref{part-numerical-analysis}, \emph{Numerical Analysis}
-(planned): approximation and quadrature, numerical linear algebra, and the
-numerical solution of ordinary and partial differential equations.
-\item Part~\ref{part-optimisation}, \emph{Optimisation and Game Theory}
-(planned): convex analysis, linear programming, nonlinear optimisation and
-game theory.
+Dynamical Systems}: ordinary differential equations and dynamical systems,
+ergodic theory, partial differential equations, the calculus of variations.
+\item Part~\ref{part-numerical-analysis}, \emph{Numerical Analysis and
+Optimisation}: numerical analysis, convex analysis and optimisation, game
+theory.
+\end{itemize}
+
+\noindent\textbf{Geometry.}
+\begin{itemize}
 \item Part~\ref{part-differential-geometry}, \emph{Differential Geometry}: from
-smooth manifolds to the Hodge theorem for harmonic forms; topological
-$K$-theory (planned).
+smooth manifolds and Lie groups through bundles, forms, connections and
+characteristic classes to topological $K$-theory, Riemannian geometry,
+currents and varifolds, symplectic geometry, elliptic operators, the Hodge
+theorem for harmonic forms, spin geometry and the index theorem.
 \item Part~\ref{part-complex-geometry}, \emph{Complex Geometry}: complex and
 K\"ahler manifolds, the Hodge decomposition, the Lefschetz theorems, the
 Kodaira vanishing and embedding theorems, deformations of complex structures and
 moduli, and Calabi--Yau manifolds.
-\item Part~\ref{part-algebraic-geometry}, \emph{Algebraic Geometry}: varieties,
-schemes, coherent cohomology, GAGA, curves, algebraic groups, abelian
-varieties, algebraic cycles, the cycle class map and \'etale cohomology.
-\item Part~\ref{part-arithmetic-geometry}, \emph{Arithmetic Geometry}
-(planned): modular forms and the arithmetic of elliptic curves.
+\item Part~\ref{part-algebraic-geometry}, \emph{Algebraic and Arithmetic
+Geometry}: varieties, schemes, coherent cohomology, GAGA, curves, algebraic
+groups and abelian varieties, algebraic cycles, algebraic surfaces, \'etale
+cohomology, modular forms and the arithmetic of elliptic curves.
 \item Part~\ref{part-hodge-theory}, \emph{Hodge Theory}: Hodge structures and
 Mumford--Tate groups, the Hodge conjecture, the evidence for it, its failed
 variants, mixed Hodge structures, absolute Hodge classes, and the Tate and
 standard conjectures around it.
 \end{itemize}
+
+\noindent\textbf{Physics.}
+\begin{itemize}
+\item Part~\ref{part-mathematical-physics}, \emph{Mathematical Physics}:
+classical mechanics, quantum mechanics, special and general relativity, as
+applications of the analysis and geometry developed before.
+\end{itemize}
 The order of the chapters is the logical order of the project, not a
 recommended reading order: a part comes after the parts it uses, so discrete
 mathematics, which needs only algebra, comes before topology; probability,
 which is built on measure theory, comes right after analysis; number theory,
-which uses algebra and analysis but no geometry, comes next, divided into an
-elementary and analytic part and an algebraic part; and the arithmetic of
+which uses algebra and analysis but no geometry, comes next, from its
+elementary and analytic chapters to algebraic number theory; the arithmetic of
 curves (modular forms, elliptic curves) comes after algebraic geometry, whose
-language it needs.
+language it needs; and mathematical physics, which uses all of analysis and
+geometry, comes last.
 Section~\ref{introduction:section-path} describes how to read the book along
 several reading paths.
 
@@ -147,16 +179,22 @@ squares, quadratic forms and the Heegner numbers); then Part~\ref{part-number-th
 Chapters~\ref{continued-fractions} and~\ref{geometry-of-numbers} add measure theory (Chapter~\ref{measure-theory}) for their metric results and volumes;
 Chapter~\ref{analytic-number-theory} needs complex analysis (Chapter~\ref{complex-analysis}), Poisson summation (Chapter~\ref{distributions}) and Fubini's theorem, and develops the
 Gamma function itself; Chapter~\ref{p-adic-numbers} uses the previous two, and
-Chapter~\ref{diophantine-equations} uses the whole part. Galois theory (Chapter~\ref{fields}) and commutative algebra (Chapter~\ref{commutative-algebra}) then lead to
-Part~\ref{part-algebraic-number-theory}, whose chapters form a sequence, and algebraic curves (Chapter~\ref{curves}) to the modular forms and elliptic curves of
-Part~\ref{part-arithmetic-geometry}.
+Chapter~\ref{additive-number-theory} adds harmonic analysis (Chapter~\ref{harmonic-analysis}) for the circle method, and
+Chapter~\ref{diophantine-equations} uses the elementary and analytic chapters. Galois theory (Chapter~\ref{fields}) and commutative algebra (Chapter~\ref{commutative-algebra}) then lead to
+the algebraic chapters of the part (Chapters~\ref{algebraic-number-theory} and~\ref{local-fields}), and algebraic curves (Chapter~\ref{curves}) to the modular forms and elliptic curves of
+Part~\ref{part-algebraic-geometry}.
 \item \emph{Discrete mathematics.} Chapters~\ref{groups} (actions, for counting orbits), \ref{rings} (polynomial rings, which formal power series generalise)
 and~\ref{linear-algebra} (for spectral graph theory), then Part~\ref{part-discrete-mathematics}. The probabilistic method uses only finite probability spaces, defined there.
 \item \emph{Topology and geometry.} Chapters~\ref{general-topology}, \ref{homotopy} and~\ref{singular-homology}, then manifolds
 (Chapters~\ref{topological-manifolds} and~\ref{smooth-manifolds}) and the rest of Part~\ref{part-differential-geometry}. Real analysis up to the inverse function theorem
 (Chapter~\ref{real-analysis}) is needed from smooth manifolds onwards.
+\item \emph{Low-dimensional topology.} Chapters~\ref{groups}, \ref{general-topology}, \ref{homotopy} (the fundamental group, van Kampen's theorem and covering spaces),
+\ref{singular-homology} and~\ref{poincare-duality}, then Chapter~\ref{low-dimensional-topology} (surfaces and mapping class groups, knots and their polynomials, braids,
+three-manifolds); the survey of four-manifolds there mentions intersection forms and gauge theory informally.
 \item \emph{Analysis.} Chapters~\ref{real-analysis}, \ref{general-topology} (metric spaces, compactness and completeness), \ref{measure-theory}, \ref{lebesgue-differentiation},
 \ref{signed-measures}, \ref{radon-measures}, \ref{complex-analysis}, \ref{functional-analysis} and~\ref{distributions}, with Chapter~\ref{linear-algebra} for spectral theory in finite dimension.
+Chapter~\ref{special-functions} (Gamma, Bessel and hypergeometric functions, orthogonal polynomials, elliptic and theta functions, asymptotic methods) needs only real and complex
+analysis and can be read right after Chapter~\ref{complex-analysis}.
 \item \emph{Geometric measure theory.} Chapters~\ref{measure-theory}, \ref{lebesgue-differentiation} and~\ref{radon-measures}, then Chapter~\ref{geometric-measure-theory}
 (Brunn--Minkowski and isoperimetric inequalities, Hausdorff measures and dimension, self-similar fractals, Rademacher's theorem, the area and coarea formulas, densities and rectifiable
 sets, Frostman's lemma and projections); its results on Lipschitz maps and rectifiable sets are used again on manifolds (Chapter~\ref{smooth-manifolds}). The path continues, after
@@ -173,7 +211,13 @@ Part~\ref{part-differential-geometry}.
 Part~\ref{part-differential-equations}.
 \item \emph{Optimisation and game theory.} Chapter~\ref{real-analysis} (whose last sections already contain Lagrange multipliers, Farkas' lemma and the Karush--Kuhn--Tucker
 conditions), compactness from Chapter~\ref{general-topology}, convexity and separation from Chapter~\ref{functional-analysis}, and the Brouwer fixed point theorem from
-Chapter~\ref{singular-homology} (for Nash equilibria); then Part~\ref{part-optimisation}.
+Chapter~\ref{singular-homology} (for Nash equilibria); then Part~\ref{part-numerical-analysis}.
+\item \emph{Mathematical physics.} For classical mechanics: Chapters~\ref{real-analysis}, \ref{linear-algebra}, \ref{ordinary-differential-equations}
+and~\ref{calculus-of-variations}, then manifolds, Lie groups and Riemannian and symplectic geometry from Part~\ref{part-differential-geometry}
+(Chapters~\ref{smooth-manifolds}, \ref{lie-groups}, \ref{riemannian-geometry} and~\ref{symplectic-geometry}). For quantum mechanics: the analysis path with
+Chapters~\ref{harmonic-analysis} and~\ref{operator-algebras} (spectral theory of unbounded operators), Chapter~\ref{representation-theory} (the representations of
+$\mathrm{SU}(2)$) and Chapter~\ref{probability}. For relativity: Chapters~\ref{connections} and~\ref{riemannian-geometry}, with hyperbolic equations from
+Chapter~\ref{sobolev-spaces}. Then Part~\ref{part-mathematical-physics}.
 \item \emph{The Hodge conjecture.} The path of the original
 \href{https://lufranovittorio.github.io/Appunti_Matematica/}{Hodge Project}, described in detail in Subsection~\ref{introduction:subsection-direct-route}.
 \end{itemize}

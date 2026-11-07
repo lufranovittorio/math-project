@@ -97,7 +97,7 @@
 002N,singular-homology:section-singular-cohomology
 002O,poincare-duality
 002P,cohomology-operations
-002Q,part-sheaves
+002Q,alias:part-topology
 002R,sheaves
 002S,sheaves:section-sheaf-cohomology
 002T,part-analysis
@@ -152,7 +152,7 @@
 0046,absolute-hodge
 0047,absolute-hodge:section-tate-conjecture
 0048,absolute-hodge:section-standard-conjectures
-0049,part-miscellany
+0049,alias:part-mathematical-physics
 004A,logic:section-introduction
 004B,logic:remark-metatheory
 004C,logic:section-propositional
@@ -4552,7 +4552,7 @@
 03IE,numerical-analysis:section-numerical-linear-algebra
 03IF,numerical-analysis:section-numerical-ode
 03IG,numerical-analysis:section-numerical-pde
-03IH,part-optimisation
+03IH,alias:part-numerical-analysis
 03II,convex-analysis
 03IJ,convex-analysis:section-linear-programming
 03IK,convex-analysis:section-nonlinear-optimisation
@@ -5256,9 +5256,9 @@
 041Y,geometry-of-numbers:exercise-z-sqrt-minus-three
 041Z,geometry-of-numbers:exercise-hermite-three
 0420,geometry-of-numbers:exercise-covering-a2
-0421,part-algebraic-number-theory
+0421,alias:part-number-theory
 0422,algebraic-number-theory:section-class-groups-and-units
-0423,part-arithmetic-geometry
+0423,alias:part-algebraic-geometry
 0424,analytic-number-theory:section-introduction
 0425,analytic-number-theory:notation-basic
 0426,analytic-number-theory:section-dirichlet-series
@@ -5883,3 +5883,12 @@
 04JD,sobolev-spaces:section-sobolev-spaces
 04JE,numerical-analysis:section-foundations
 04JF,convex-analysis:section-convex-analysis
+04JG,low-dimensional-topology
+04JH,special-functions
+04JI,additive-number-theory
+04JJ,spin-geometry
+04JK,algebraic-surfaces
+04JL,part-mathematical-physics
+04JM,classical-mechanics
+04JN,quantum-mechanics
+04JO,general-relativity

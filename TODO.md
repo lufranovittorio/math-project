@@ -8,6 +8,217 @@ is about ten times that. Work through the phases in order, but new parts can
 be started as soon as phase 0 is done. Tick items off (`[x]`) and move them to
 Done with a short summary.
 
+## Roadmap: the whole book, part by part (2026-11-07)
+
+The structure has three levels (user, 2026-11-07: "one must see the macro-argument, the region"):
+**part** = a large area, **chapter** = a region of it (a course), **section** = a topic. A new
+chapter only for a genuinely new region; everything else becomes sections of an existing chapter.
+Below, for every chapter: status and lines at 2026-11-07, then the sections to add or rebuild.
+Topics in *italics* belong in that chapter even though one might look for them elsewhere (no
+notion is developed twice). This list supersedes the chapter lists of Phase 1 below.
+
+### I. Foundations
+- `logic` (complete, 1300): natural deduction and sequent calculus with cut elimination (Gentzen);
+  Gödel's incompleteness theorems with full proofs (arithmetisation, diagonal lemma, Löb, Tarski's
+  undefinability); Peano and Presburger arithmetic; intuitionistic logic and Kripke models;
+  modal logic (survey).
+- `sets` (complete, 1153): ordinal arithmetic and Cantor normal form, cofinality, König's theorem,
+  the axiom of choice and its equivalents (Tychonoff, Hamel bases, every vector space has a basis),
+  ZFC in full, the cumulative hierarchy, constructible universe and independence of CH (survey),
+  large cardinals (survey), descriptive set theory (Borel and analytic sets, Suslin's theorem).
+- `number-systems` (complete, 972): surreal numbers (Conway), hyperreals and non-standard analysis
+  (via ultrapowers), quaternions and octonions, Frobenius and Hurwitz theorems.
+- `model-theory` (complete, 533): types and saturation, quantifier elimination for real closed
+  and algebraically closed fields, o-minimality, Morley's categoricity theorem (statement),
+  Ax–Grothendieck, ultraproducts and Łoś.
+- `categories` (complete, 1315): monads, Kan extensions, ends, abelian and triangulated
+  categories (survey here, details in homological algebra), topoi (survey).
+- `computability-and-complexity` (planned): Turing machines, Church–Turing, halting problem,
+  recursive and r.e. sets, Rice, degrees; P, NP, Cook–Levin, NP-complete problems, space
+  complexity, Savitch, hierarchy theorems; randomised classes; Kolmogorov complexity.
+
+### II. Algebra
+- `groups` (complete, 1050): free groups and presentations, Nielsen–Schreier, word problem;
+  nilpotent and solvable groups, Jordan–Hölder, finite simple groups (survey of the
+  classification), Sylow in depth, groups of small order (table up to 32), semidirect products
+  and extensions, transfer and Burnside's normal complement, *Coxeter groups and reflection
+  groups*, wallpaper and crystallographic groups.
+- `rings` (complete, 952): Euclidean, PID, UFD with counterexamples, Gaussian and Eisenstein
+  integers, Gröbner bases and Buchberger, noncommutative rings, Wedderburn–Artin, Jacobson radical.
+- `fields` (complete, 747): constructible numbers (section, see below), finite fields in depth,
+  solvability by radicals, the inverse Galois problem (survey), infinite Galois theory and Krull
+  topology, transcendence bases, *Hilbert irreducibility*, real closed fields and Artin–Schreier.
+- `number-theory` (complete, 1269): keep elementary; perfect numbers, Carmichael numbers,
+  arithmetic functions and Möbius inversion (check against analytic-number-theory), Gauss sums.
+- `linear-algebra` (complete, 1439): canonical forms over PIDs, Perron–Frobenius, positive
+  definite matrices, matrix inequalities, the polar and singular value decompositions, tensor
+  products (if not in multilinear algebra).
+- `multilinear-algebra` (complete, 848): symmetric and exterior powers, Pfaffians, Clifford algebras
+  (algebraic part; spin-geometry uses them).
+- `representation-theory` (complete, 2127): induced representations, Frobenius reciprocity, Mackey,
+  characters of S_n and Young tableaux, Schur–Weyl duality; *Lie algebras* in full here
+  (nilpotent and solvable, Engel, Lie, Cartan's criteria, Killing form, root systems and Dynkin
+  diagrams, classification of simple Lie algebras, Weyl group, highest weights, Weyl character
+  formula, Verma modules, PBW); no separate Lie algebra chapter.
+- `commutative-algebra` (complete, 703, thin): rebuild to Stacks depth: localisation, Noetherian
+  and Artinian rings, primary decomposition, integral extensions, going up/down, Noether
+  normalisation, Nullstellensatz, dimension theory, Krull's principal ideal theorem, regular local
+  rings, DVRs and Dedekind domains, completion, Hilbert polynomials, flatness, Cohen–Macaulay rings.
+- `homological-algebra` (complete, 1290): Ext and Tor in detail, group cohomology, Lie algebra
+  cohomology, spectral sequences, derived categories; Koszul complexes.
+
+### III. Discrete Mathematics
+- `combinatorics` (complete, 1949) and `generating-functions` (complete, 1849): designs and finite
+  geometries, Latin squares, matroids, posets (Dilworth, Möbius functions of posets), symmetric
+  functions, *combinatorics on words*.
+- `graph-theory` (planned): trees, Euler and Hamilton, matchings and Hall, Menger, flows and
+  max-flow min-cut, colourings (Brooks, Vizing), planarity and Euler's formula, the four colour
+  theorem (survey), Kuratowski, Ramsey and Turán, extremal graph theory, spectral graph theory,
+  expanders, random graphs; draft in `drafts/graph-theory-part1.tex`.
+- `probabilistic-method` (planned): first and second moment, Lovász local lemma, martingale
+  concentration, random graphs (thresholds), entropy methods.
+
+### IV. Topology
+- `general-topology` (complete, 2125): uniform spaces, nets and filters, paracompactness and
+  partitions of unity, metrisation theorems, Stone–Čech, Baire and its applications, dimension theory.
+- `homotopy` (complete, 781): CW complexes, cellular approximation, higher homotopy groups, the
+  long exact sequence of a fibration, Whitehead, Hurewicz, Freudenthal, Eilenberg–MacLane spaces,
+  the Hopf fibration, homotopy groups of spheres (survey).
+- `topological-manifolds` (complete, 590) and `poincare-duality` (complete, 420): Lefschetz fixed
+  point theorem, linking forms, Alexander duality, the Jordan–Brouwer separation theorem.
+- `singular-homology` (complete, 1011): cellular homology, Mayer–Vietoris examples, Künneth,
+  universal coefficients, cup products and the cohomology rings of projective spaces.
+- `cohomology-operations` (complete, 235, thin): Steenrod squares and reduced powers, Adem
+  relations, Hopf invariant, the Steenrod algebra; consider merging into `singular-homology`.
+- `low-dimensional-topology` (planned, new): surfaces, mapping class groups, knots and their
+  invariants, braids, 3-manifolds, survey of 4-manifolds.
+- `sheaves` (complete, 686): rebuild; presheaves, sheafification, étalé spaces, Čech and derived
+  functor cohomology, comparison theorems, soft and fine sheaves, de Rham and Dolbeault
+  resolutions, Leray spectral sequence, base change.
+
+### V. Real Analysis and Measure Theory
+- `real-analysis` (complete, 2391): Fourier series in detail (Fejér, Dirichlet, Gibbs), convex
+  functions, inequalities (AM-GM, Jensen, rearrangement), Weierstrass approximation, implicit and
+  inverse function theorems, Riemann–Stieltjes integral.
+- `measure-theory` (complete, 2102): slower Littlewood principles; change of variables (polar and
+  spherical coordinates, Jacobian via elementary matrices, Sard).
+- `lebesgue-differentiation`, `signed-measures`, `radon-measures`: Lebesgue points, unify maximal
+  inequalities; Riesz–Markov in all forms; Haar measure examples.
+- `geometric-measure-theory` (complete, 1764): Steiner symmetrisation, Kakeya sets,
+  rectifiability in depth, BV functions and sets of finite perimeter, De Giorgi's structure theorem.
+
+### VI. Complex and Functional Analysis
+- `complex-analysis` (complete, 1173, thin): rebuild: Riemann mapping theorem, Schwarz–Christoffel,
+  harmonic functions and the Dirichlet problem, Runge, Mittag-Leffler, Weierstrass factorisation,
+  Hadamard, Picard's theorems, normal families (Montel), analytic continuation and monodromy,
+  Riemann surfaces of algebraic functions (informal; curves chapter does the theory).
+- `special-functions` (planned, new): Gamma (moved from analytic-number-theory), asymptotics,
+  orthogonal polynomials, Fuchsian equations, hypergeometric, Bessel, elliptic and theta functions.
+- `functional-analysis` (complete, 1234): Banach algebras and Gelfand theory, spectral theorem for
+  unbounded operators, compact and Fredholm operators, weak topologies, Banach–Alaoglu,
+  Krein–Milman, Dunford–Pettis, interpolation (Riesz–Thorin, Marcinkiewicz), locally convex spaces.
+- `several-complex-variables` (complete, 314, thin): Hartogs, domains of holomorphy, pseudoconvexity,
+  the dbar problem (Hörmander), Cartan's theorems A and B (survey), Weierstrass preparation.
+- `distributions` (complete, 496): Schwartz space, tempered distributions, Fourier transform,
+  Paley–Wiener, Sobolev embedding (or in sobolev-spaces), fundamental solutions, Malgrange–Ehrenpreis.
+- `harmonic-analysis` (planned): Fourier analysis on locally compact abelian groups, Pontryagin
+  duality, Calderón–Zygmund theory, Hilbert transform, Littlewood–Paley, H^1 and BMO, wavelets,
+  Peter–Weyl and harmonic analysis on compact groups.
+- `operator-algebras` (planned): C*-algebras, Gelfand–Naimark, GNS, von Neumann algebras, the
+  bicommutant theorem, factors, K-theory of C*-algebras (survey).
+
+### VII. Probability and Statistics
+- `probability` (planned): as in its outline; move Borel–Cantelli and independence here from
+  measure-theory (or cite).
+- `martingales` (planned, with the stochastic-process outlines): Markov chains (recurrence,
+  stationary distributions, mixing times), Poisson processes, Brownian motion (construction,
+  path properties, strong Markov, reflection), stochastic calculus (Itô integral, Itô's formula,
+  Girsanov, SDEs), random walks and potential theory, percolation (survey).
+- `statistics` (planned): estimation, sufficiency, Cramér–Rao, maximum likelihood, tests and
+  Neyman–Pearson, confidence intervals, linear models, Bayesian inference, nonparametric methods,
+  bootstrap.
+- `information-theory` (planned): entropy, source and channel coding theorems, Kraft, Huffman,
+  error-correcting codes (Hamming, Reed–Solomon, BCH, bounds), rate distortion.
+
+### VIII. Number Theory
+- `prime-numbers`, `continued-fractions`, `geometry-of-numbers`, `analytic-number-theory`,
+  `p-adic-numbers` (complete): open items listed in their Done entries; *transcendence* goes into
+  `continued-fractions` (new sections: Lindemann–Weierstrass, Gelfond–Schneider, Baker's theorem
+  (statement), Schanuel's conjecture, Roth and Schmidt's subspace theorem, irrationality of ζ(3)
+  (Apéry/Beukers)); the chapter can be renamed "Diophantine Approximation and Transcendence".
+- `additive-number-theory` (planned, new): sums of squares, Waring, circle method, sieves,
+  Vinogradov, additive combinatorics, partitions.
+- `diophantine-equations` (planned): as in its outline; Thue's theorem, Skolem's method, Catalan
+  (Mihăilescu, statement), the abc conjecture.
+- `algebraic-number-theory` (planned): number fields, class groups and units, cyclotomic fields,
+  Kummer theory, quadratic fields and binary quadratic forms (link with number-theory), Dedekind
+  zeta functions and the class number formula.
+- `local-fields` (planned): local fields, ramification groups, local and global class field
+  theory, Hilbert class fields, Kronecker–Weber, Chebotarev, adeles and ideles, Tate's thesis.
+- Arithmetic of curves stays in Part *Algebraic and Arithmetic Geometry* (modular forms, elliptic curves).
+
+### IX. Differential Equations and Dynamical Systems
+- `ordinary-differential-equations` (planned): as in its outline; plus Floquet theory, Sturm
+  comparison, boundary value problems and Green's functions, Hamiltonian systems (pointer to
+  symplectic), bifurcation theory, chaos (Smale horseshoe, Lorenz), circle maps and rotation number.
+- `ergodic-theory` (planned): plus the ergodicity of the Gauss map (see continued-fractions),
+  Furstenberg's multiple recurrence and Szemerédi, topological dynamics, entropy (Kolmogorov–Sinai).
+- `sobolev-spaces` (planned, PDE): plus first-order equations and characteristics, conservation
+  laws and shocks, the Navier–Stokes and Euler equations (survey), dispersive equations,
+  Schauder estimates, De Giorgi–Nash–Moser.
+- `calculus-of-variations` (planned): direct method, Γ-convergence, minimal surfaces, harmonic
+  maps, optimal transport (Monge–Kantorovich, Brenier).
+
+### X. Numerical Analysis and Optimisation
+- `numerical-analysis` (planned): plus FFT, wavelets numerics, Monte Carlo methods, spectral methods.
+- `convex-analysis` (planned): plus semidefinite programming, interior point methods,
+  combinatorial optimisation (matchings, network flows, integer programming), stochastic gradient.
+- `game-theory` (planned): plus evolutionary game theory, social choice (Arrow's theorem), voting.
+
+### XI. Differential Geometry
+- `smooth-manifolds`, `lie-groups`, `vector-bundles`, `differential-forms`, `de-rham`,
+  `connections`, `characteristic-classes` (complete): slower rewrite (see Phase 2); Lie groups:
+  maximal tori, Weyl group, classification of compact Lie groups, homogeneous spaces.
+- `riemannian-geometry` (complete, 4405): extract lemmas (Hopf–Rinow first); comparison
+  geometry, Bishop–Gromov, Cheeger–Gromoll splitting, sphere theorem (survey), Ricci flow (survey).
+- `k-theory` (planned): vector bundles to K-groups, Bott periodicity, Adams operations, Hopf invariant one.
+- `currents` (draft, 1207): finish.
+- `symplectic-geometry` (complete, 735): Darboux, Moser, Lagrangian submanifolds, moment maps,
+  toric manifolds and Delzant, Gromov non-squeezing (survey), Arnold conjecture (survey).
+- `elliptic-operators`, `hodge-theorem` (complete): fine.
+- `spin-geometry` (planned, new): Clifford algebras, spin structures, Dirac operator, index theorem.
+- Also: *Riemann surfaces* are covered by `complex-manifolds` and `curves`; *Morse theory* goes as
+  sections in `riemannian-geometry` or `smooth-manifolds` (Morse lemma, handle decompositions,
+  Morse inequalities, h-cobordism (survey)).
+
+### XII. Complex Geometry
+- `complex-manifolds`, `kahler`, `kodaira` (complete): Chern connection, Kähler identities.
+- `deformations` (draft): finish.
+- `calabi-yau` (complete, 249, thin): Calabi conjecture (Yau's proof sketch), mirror symmetry
+  (survey); consider merging into `kahler`.
+
+### XIII. Algebraic and Arithmetic Geometry
+- `varieties`, `schemes` (complete): rebuild to Stacks depth: morphisms (finite, proper, flat,
+  smooth, étale), valuative criteria, differentials, Serre duality, Grothendieck–Riemann–Roch.
+- `divisors` (326), `gaga` (266), `curves` (297), `etale-cohomology` (188): thin; rebuild
+  (curves: Riemann–Roch with proof, Hurwitz, canonical embedding, hyperelliptic curves, Weierstrass
+  points, Jacobians; étale: sites, étale fundamental group, comparison theorems, Weil conjectures).
+- `algebraic-groups`, `intersection-theory` (complete): Chow rings, Grassmannians and Schubert
+  calculus, enumerative geometry (27 lines, 2875 lines on the quintic, survey).
+- `algebraic-surfaces` (planned, new).
+- `modular-forms` (planned): modular group, Eisenstein series, q-expansions, Hecke operators,
+  L-functions, theta functions and quadratic forms, modular curves.
+- `elliptic-curves-arithmetic` (planned): Mordell–Weil, heights, torsion (Nagell–Lutz, Mazur
+  statement), reduction, Hasse, BSD (statement), modularity (statement).
+
+### XIV. Hodge Theory
+- All complete but thin (363–1016): computed examples, counterexamples, exercises (Phase 2).
+
+### XV. Mathematical Physics (new part)
+- `classical-mechanics`, `quantum-mechanics`, `general-relativity` (planned, new).
+- Later candidates (only if they become real regions): statistical mechanics (Ising model, phase
+  transitions), quantum field theory (survey), gauge theory (Yang–Mills, instantons).
+
 ## Phase 0: infrastructure (first)
 
 All done (see Done). Possible later improvements:
@@ -18,6 +229,8 @@ All done (see Done). Possible later improvements:
   (now they are printed with the right number but are not links).
 
 ## Phase 1: new parts (one at a time, each chapter complete before the next)
+
+(Historical list; the slugs have since been merged, see the Roadmap above.)
 
 Each new chapter: Prerequisites line, introduction, slow sections, examples,
 counterexamples, exercises with solutions, citations for quoted results.
@@ -101,9 +314,14 @@ counterexamples, exercises with solutions, citations for quoted results.
     hodge-structures; Lefschetz (1,1) into hodge-conjecture; intermediate Jacobians into
     vhs; failures into known-cases; the Tate and standard conjectures into absolute-hodge.
     Still possible: cohomology-operations, calabi-yau, gaga, the small topology chapters;
-  - knot theory: not a chapter of its own unless needed. It could be part of a
-    low-dimensional topology chapter (surfaces, knots, 3-manifolds), with all topics of the
-    area, not only knots.
+  - ~~knot theory~~: part of the new planned chapter `low-dimensional-topology` (surfaces,
+    knots, 3-manifolds, 4-manifolds survey).
+  - ~~merge small parts~~ (done 2026-11-07: 19 → 15 parts; Sheaves into Topology, Algebraic
+    Number Theory into Number Theory, Arithmetic Geometry into Algebraic and Arithmetic Geometry,
+    Optimisation into Numerical Analysis and Optimisation; Miscellany replaced by Mathematical
+    Physics; old part labels are `alias:` tags). New planned chapters: low-dimensional-topology,
+    special-functions, additive-number-theory, algebraic-surfaces, spin-geometry,
+    classical-mechanics, quantum-mechanics, general-relativity.
 - **State every reusable step as its own result.** Sweep the existing chapters for facts
   proved inside proofs and extract them as lemmas/propositions with labels. First example,
   `riemannian-geometry:theorem-hopf-rinow`:
