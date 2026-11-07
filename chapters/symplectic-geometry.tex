@@ -21,6 +21,12 @@ tangent spaces are given by the Hessian of $f$ (Section~\ref{symplectic-geometry
 \item Darboux's theorem and Moser's theorem on area forms, by Moser's method (Section~\ref{symplectic-geometry:section-darboux}).
 \item Lagrangian submanifolds and Weinstein's neighbourhood theorem; contact forms and Legendrian submanifolds, unit cosphere bundles and unit conormals, and the normal cycles
 of geometric measure theory (Section~\ref{symplectic-geometry:section-lagrangian}).
+\item Compatible almost complex structures: their space is contractible, they exist on every symplectic manifold, and they give it Chern classes
+(Section~\ref{symplectic-geometry:section-almost-complex}).
+\item Hamiltonian group actions and moment maps, Noether's theorem, and the Kirillov--Kostant--Souriau form on coadjoint orbits (Section~\ref{symplectic-geometry:section-moment-maps}).
+\item Symplectic reduction (Marsden--Weinstein--Meyer), with complex projective space as a quotient of $\CC^n$ (Section~\ref{symplectic-geometry:section-reduction}).
+\item Integrable systems and the invariant tori of the Liouville--Arnold theorem (Section~\ref{symplectic-geometry:section-integrable}).
+\item A survey of global results: convexity, toric manifolds, non-squeezing, the Arnold conjecture, $C^0$-rigidity (Section~\ref{symplectic-geometry:section-survey}).
 \end{enumerate}
 References: \cite{cannas-da-silva}, \cite{mcduff-salamon}, \cite[Chapter 22]{lee-smooth-manifolds}.
 
@@ -397,18 +403,46 @@ is $\partial_\theta$, the rotation about the vertical axis: the height is the co
 \section{Darboux's theorem and Moser's method}\label{symplectic-geometry:section-darboux}
 
 Let $X_t$, $t \in [0, 1]$, be a time-dependent vector field, smooth in $(t, x)$, and $\varphi_t$ its flow, $\frac{d}{dt}\varphi_t(x) = X_t(\varphi_t(x))$ with $\varphi_0 = \id$, defined where the solutions exist
-(Theorem~\ref{real-analysis:theorem-picard-lindelof}). For a smooth family of forms $\omega_t$,
+(Theorem~\ref{real-analysis:theorem-picard-lindelof}). The basic formula is the time-dependent version of $\frac{d}{dt}\Phi_t^*\omega = \Phi_t^*L_X\omega$ (Proposition~\ref{differential-forms:proposition-cartan}).
+
+\begin{lemma}[Moser's formula]\label{symplectic-geometry:lemma-moser-formula}
+\begin{enumerate}
+\item Let $F_h$, $h \in (-\varepsilon, \varepsilon)$, be maps from an open set $U \subseteq M$ to $M$, smooth in $(h, x)$, with $F_0$ the inclusion and $\frac{\partial}{\partial h}F_h(x)|_{h=0} = X(x)$. Then
+$\frac{d}{dh}F_h^*\omega|_{h=0} = L_X\omega$ on $U$ for every differential form $\omega$.
+\item For a smooth family of forms $\omega_t$ and the flow $\varphi_t$ of $X_t$,
 \begin{equation}\label{symplectic-geometry:equation-moser}
-\frac{d}{dt}\varphi_t^*\omega_t = \varphi_t^*\Bigl(L_{X_t}\omega_t + \frac{d\omega_t}{dt}\Bigr);
+\frac{d}{dt}\varphi_t^*\omega_t = \varphi_t^*\Bigl(L_{X_t}\omega_t + \frac{d\omega_t}{dt}\Bigr).
 \end{equation}
-this is the time-dependent version of the formula $\frac{d}{dt}\Phi_t^*\omega = \Phi_t^*L_X\omega$ of Proposition~\ref{differential-forms:proposition-cartan}, with the same proof \cite[Chapter 22]{lee-smooth-manifolds}.
-\emph{Moser's method} constructs a diffeomorphism $\varphi_1$ with $\varphi_1^*\omega_1 = \omega_0$ by choosing $X_t$ so that the right side vanishes.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) \emph{Step 1: the derivative depends only on $X$.} In coordinates write $\omega = \sum_I\omega_I\,dx^{i_1} \wedge \cdots \wedge dx^{i_k}$. Then
+$F_h^*\omega = \sum_I\omega_I(F_h)\,dF_h^{i_1} \wedge \cdots \wedge dF_h^{i_k}$, and differentiating at $h = 0$, using $F_0 = \id$ and exchanging $\partial_h$ with the derivatives in $x$ (the family is smooth in
+$(h, x)$),
+\[
+\frac{d}{dh}F_h^*\omega\Big|_{h=0} = \sum_I\Bigl(\sum_jX^j\partial_j\omega_I\,dx^I + \omega_I\sum_{r=1}^kdx^{i_1} \wedge \cdots \wedge dX^{i_r} \wedge \cdots \wedge dx^{i_k}\Bigr).
+\]
+The right-hand side involves only $X$, not the family.
+
+\emph{Step 2: comparison with the flow.} The flow $\Phi_h$ of $X$ (Theorem~\ref{smooth-manifolds:theorem-flow}), restricted to a neighbourhood of a point and to small $h$, is such a family with the same $X$. So the
+derivative equals $\frac{d}{dh}\Phi_h^*\omega|_{h=0} = L_X\omega$ (Proposition~\ref{differential-forms:proposition-cartan}).
+
+(2) Fix $t$ and write $\varphi_{t+h} = \psi_h \circ \varphi_t$, where $\psi_h = \varphi_{t+h} \circ \varphi_t^{-1}$ moves points from time $t$ to time $t + h$ along the flow; $\psi_0 = \id$ and
+$\frac{\partial}{\partial h}\psi_h|_{h=0} = X_t$. Then
+\[
+\frac{\varphi_{t+h}^*\omega_{t+h} - \varphi_t^*\omega_t}{h} = \varphi_t^*\Bigl(\psi_h^*\frac{\omega_{t+h} - \omega_t}{h}\Bigr) + \varphi_t^*\Bigl(\frac{\psi_h^*\omega_t - \omega_t}{h}\Bigr).
+\]
+As $h \to 0$ the first term tends to $\varphi_t^*\frac{d\omega_t}{dt}$, by smoothness in $(h, t, x)$, and the second to $\varphi_t^*L_{X_t}\omega_t$ by (1).
+\end{proof}
+
+\emph{Moser's method} constructs a diffeomorphism $\varphi_1$ with $\varphi_1^*\omega_1 = \omega_0$ by choosing $X_t$ so that the right side of \eqref{symplectic-geometry:equation-moser} vanishes.
 
 \begin{theorem}[Darboux]\label{symplectic-geometry:theorem-darboux}
 Every point of a symplectic manifold $(M, \omega)$ of dimension $2n$ has a chart with coordinates $(x^1, \ldots, x^n, y^1, \ldots, y^n)$ in which $\omega = \sum_idx^i \wedge dy^i$.
 \end{theorem}
 
-\begin{proof}[Sketch of proof]
+\begin{proof}
 Choose a chart centred at the given point; after a linear change of coordinates (Theorem~\ref{linear-algebra:theorem-symplectic-basis}) the form $\omega_1 = \omega$ agrees at $0$ with the constant form
 $\omega_0 = \sum dx^i \wedge dy^i$. Let $\omega_t = \omega_0 + t(\omega_1 - \omega_0)$. At $0$ all $\omega_t$ equal $\omega_0$, so by compactness of $[0, 1]$ and continuity of the determinant they are
 nondegenerate on a ball $B$ around $0$ for all $t \in [0, 1]$. The closed form $\omega_1 - \omega_0$ is $d\beta$ on $B$ (Theorem~\ref{de-rham:theorem-homotopy-invariance}), and subtracting a constant
@@ -417,7 +451,7 @@ dependence on initial conditions, is defined for $t \in [0, 1]$ on a smaller bal
 \[
 \frac{d}{dt}\varphi_t^*\omega_t = \varphi_t^*\bigl(d\iota_{X_t}\omega_t + \iota_{X_t}d\omega_t + \omega_1 - \omega_0\bigr) = \varphi_t^*(-d\beta + 0 + d\beta) = 0 .
 \]
-So $\varphi_1^*\omega_1 = \omega_0$, and composing the chart with $\varphi_1$ gives the required coordinates. The omitted verification is formula \eqref{symplectic-geometry:equation-moser}.
+So $\varphi_1^*\omega_1 = \omega_0$, and composing the chart with $\varphi_1$ gives the required coordinates.
 \end{proof}
 
 So symplectic manifolds have no local invariants: there is no symplectic analogue of curvature. Compare with Riemannian geometry, where a metric is locally Euclidean only if it is flat
@@ -428,11 +462,10 @@ Let $\Sigma$ be a compact connected oriented surface and $\omega_0$, $\omega_1$ 
 $\varphi$ of $\Sigma$ with $\varphi^*\omega_1 = \omega_0$. In particular two compact connected orientable surfaces with area forms are symplectomorphic if and only if they are diffeomorphic and have the same area.
 \end{theorem}
 
-\begin{proof}[Sketch of proof]
+\begin{proof}
 The forms $\omega_t = (1 - t)\omega_0 + t\omega_1$ are positive, as convex combinations of positive top forms, hence area forms. Since $\int_\Sigma(\omega_1 - \omega_0) = 0$, the form $\omega_1 - \omega_0$ is
 exact (Corollary~\ref{de-rham:corollary-consequences}), say $d\beta$. Define $X_t$ by $\iota_{X_t}\omega_t = -\beta$; as $\Sigma$ is compact its flow is defined for all $t \in [0, 1]$, and the computation in the
-proof of Theorem~\ref{symplectic-geometry:theorem-darboux} gives $\varphi_1^*\omega_1 = \omega_0$. The same argument, with ``area form'' replaced by ``volume form'', applies in every dimension; it again uses
-formula \eqref{symplectic-geometry:equation-moser}.
+proof of Theorem~\ref{symplectic-geometry:theorem-darboux} gives $\varphi_1^*\omega_1 = \omega_0$. The same argument, with ``area form'' replaced by ``volume form'', applies in every dimension.
 \end{proof}
 
 \section{Lagrangian submanifolds}\label{symplectic-geometry:section-lagrangian}
@@ -629,6 +662,281 @@ Remark~\ref{symplectic-geometry:remark-normal-cycles} are usually said to live i
 $\langle\nu(x), \cdot\rangle$ carry the same information.
 \end{remark}
 
+\section{Compatible almost complex structures}\label{symplectic-geometry:section-almost-complex}
+
+By Proposition~\ref{symplectic-geometry:proposition-linear}(5) a symplectic vector space admits compatible complex structures. We now show that they form a contractible space and that they can be chosen smoothly on a
+symplectic manifold. This is the link between symplectic and complex geometry: it gives every symplectic manifold Chern classes and makes the K\"ahler manifolds of Chapter~\ref{kahler} the integrable case.
+
+\begin{definition}\label{symplectic-geometry:definition-compatible}
+Let $(V, \omega)$ be a symplectic vector space. A \emph{complex structure} on $V$ is a linear map $J$ with $J^2 = -1$; it is \emph{compatible} with $\omega$ if $\omega(Ju, Jv) = \omega(u, v)$ for all $u$, $v$ and
+$g_J(u, v) = \omega(u, Jv)$ is positive definite. We write $\mathcal{J}(V, \omega)$ for the set of compatible complex structures, a subset of $\operatorname{End}(V)$. An \emph{almost complex structure} on a manifold
+$M$ is a smooth section $J$ of $\operatorname{End}(TM)$ with $J^2 = -1$; on a symplectic manifold it is \emph{compatible} if $J_p \in \mathcal{J}(T_pM, \omega_p)$ for every $p$.
+\end{definition}
+
+The three structures $\omega$, $J$, $g_J$ determine each other in pairs: $g_J(u, v) = \omega(u, Jv)$, $\omega(u, v) = g_J(Ju, v)$, and $J$ is the endomorphism with $\omega(u, v) = g_J(Ju, v)$. In $\RR^{2n} = \CC^n$ with
+$\omega_0 = \sum dx^i \wedge dy^i$, the multiplication by $i$, $J_0(\partial_{x^j}) = \partial_{y^j}$, $J_0(\partial_{y^j}) = -\partial_{x^j}$, is compatible, with $g_{J_0}$ the Euclidean inner product.
+
+\begin{lemma}[Polar decomposition]\label{symplectic-geometry:lemma-polar}
+Let $g$ be an inner product on a symplectic vector space $(V, \omega)$ and $A$ the endomorphism with $\omega(u, v) = g(Au, v)$. Let $P = \sqrt{-A^2}$, the positive definite square root of the positive definite
+$g$-symmetric endomorphism $-A^2 = A^TA$. Then $J_g = AP^{-1}$ is a compatible complex structure, $g_{J_g}(u, v) = g(Pu, v)$, and $J_g = J$ if $g = g_J$ for some $J \in \mathcal{J}(V, \omega)$. The map
+$g \mapsto J_g$ is smooth on the open cone of inner products.
+\end{lemma}
+
+\begin{proof}
+\emph{Step 1: algebra.} $A$ is $g$-antisymmetric, $g(Au, v) = \omega(u, v) = -\omega(v, u) = -g(u, Av)$, and invertible as $\omega$ is nondegenerate; so $-A^2 = A^TA$ is $g$-symmetric and positive definite, and has a unique
+positive definite square root $P$ (diagonalise $-A^2$ in a $g$-orthonormal eigenbasis, Theorem~\ref{linear-algebra:theorem-spectral}). $P$ commutes with $A$, being a polynomial in $A^2$ (interpolate
+$\sqrt{\lambda}$ on the finitely many eigenvalues). Hence $J = AP^{-1}$ satisfies $J^2 = A^2P^{-2} = -1$, and $J^T = P^{-1}A^T = -P^{-1}A = -J$.
+
+\emph{Step 2: compatibility.} $\omega(Ju, Jv) = g(AJu, Jv) = g(J^TAJu, v) = g(-JAJu, v) = g(Au, v) = \omega(u, v)$, since $J$ commutes with $A$ and $J^2 = -1$. And
+$\omega(u, Jv) = g(Au, Jv) = g(-JAu, v) = g(-A^2P^{-1}u, v) = g(Pu, v)$, which is symmetric and positive definite.
+
+\emph{Step 3: the case $g = g_J$.} Then $\omega(u, v) = g_J(Ju, v)$, so $A = J$, $-A^2 = 1$, $P = 1$ and $J_g = J$.
+
+\emph{Step 4: smoothness.} The map $S \mapsto S^2$ on positive definite symmetric matrices has invertible differential $H \mapsto SH + HS$: in an eigenbasis of $S$ with eigenvalues $s_i > 0$ it multiplies the entry $H_{ij}$ by
+$s_i + s_j > 0$. By the inverse function theorem its inverse, the square root, is smooth; and $A$ depends smoothly on $g$ (in a basis, $A = G^{-1}\Omega^T$ for the Gram matrix $G$ of $g$ and the matrix $\Omega$ of $\omega$).
+\end{proof}
+
+\begin{proposition}\label{symplectic-geometry:proposition-compatible-contractible}
+\begin{enumerate}
+\item $\mathcal{J}(V, \omega)$ is contractible.
+\item Every symplectic manifold $(M, \omega)$ has a compatible almost complex structure, and any two are homotopic through compatible almost complex structures.
+\item The Chern classes of the complex vector bundle $(TM, J)$ (Chapter~\ref{characteristic-classes}) do not depend on the compatible $J$; they are the \emph{Chern classes} $c_k(M, \omega)$ of the symplectic manifold.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) The set $\mathcal{G}$ of inner products on $V$ is convex, hence contractible. The maps $r \colon \mathcal{G} \to \mathcal{J}(V, \omega)$, $g \mapsto J_g$, and $i \colon \mathcal{J}(V, \omega) \to \mathcal{G}$, $J \mapsto g_J$, are
+continuous, and $r \circ i = \id$ by Lemma~\ref{symplectic-geometry:lemma-polar}. If $h_t$ contracts $\mathcal{G}$ to a point, then $r \circ h_t \circ i$ contracts $\mathcal{J}(V, \omega)$.
+
+(2) Choose a Riemannian metric $g$ on $M$ (Proposition~\ref{riemannian-geometry:proposition-metric-exists}). Applying Lemma~\ref{symplectic-geometry:lemma-polar} in each tangent space gives
+$J_g$, which is smooth by the smoothness statement of the lemma. If $J_0$, $J_1$ are compatible, the metrics $g_t = (1 - t)g_{J_0} + tg_{J_1}$ give compatible almost complex structures $J_{g_t}$, smooth in $(t, p)$,
+with $J_{g_0} = J_0$ and $J_{g_1} = J_1$ by Step 3 of the lemma.
+
+(3) The family $J_{g_t}$ of (2) defines a complex structure on the pullback of $TM$ to $M \times [0, 1]$. Its Chern classes restrict, under the inclusions $\iota_0, \iota_1 \colon M \to M \times [0, 1]$ at $t = 0, 1$, to the Chern
+classes of $(TM, J_0)$ and $(TM, J_1)$, by naturality; and $\iota_0^* = \iota_1^*$ on cohomology, the two inclusions being homotopic.
+\end{proof}
+
+\begin{example}\label{symplectic-geometry:example-compatible}
+\begin{enumerate}
+\item For $(V, \omega) = (\RR^2, dx \wedge dy)$, a complex structure $J$ has $\det J = 1$ (its eigenvalues are $\pm i$), so $\omega(Ju, Jv) = \omega(u, v)$ automatically, and $\omega(u, Ju) \neq 0$ for $u \neq 0$
+since $u$, $Ju$ are independent; so $J$ is compatible if and only if $\omega(e_1, Je_1) > 0$. Writing $Je_1 = (a, b)$, this means $b > 0$, and $J$ is determined by $Je_1$ (as $J(Je_1) = -e_1$). Hence
+$J \mapsto a + ib$ identifies $\mathcal{J}(\RR^2, dx \wedge dy)$ with the upper half plane $\{\tau \in \CC : \operatorname{Im}\tau > 0\}$, a contractible set. More generally $\mathcal{J}(\RR^{2n}, \omega_0)$ is
+homogeneous under $\mathrm{Sp}(2n, \RR)$ with stabiliser $\mathrm{U}(n)$: it is the \emph{Siegel upper half space}.
+\item By (1), on an oriented surface with an area form $\omega$ an almost complex structure $J$ is compatible exactly when $\omega(u, Ju) > 0$ for $u \neq 0$; on a Riemann surface the complex structure is compatible
+with every area form defining the orientation. So $c_1(\Sigma, \omega)$ is the first Chern class of the tangent bundle, whose integral is the Euler characteristic $2 - 2g$ (Chapter~\ref{characteristic-classes}).
+\item $S^6$ has an almost complex structure (from the octonions) but no symplectic form, since $H^2(S^6) = 0$ (Proposition~\ref{symplectic-geometry:proposition-cohomology}): compatible almost complex structures exist
+only on symplectic manifolds, but almost complex structures exist more generally.
+\end{enumerate}
+\end{example}
+
+\section{Hamiltonian group actions and moment maps}\label{symplectic-geometry:section-moment-maps}
+
+Symmetries of a mechanical system produce conserved quantities: rotations give angular momentum, translations give linear momentum. The \emph{moment map} packages all conserved quantities of a group of
+symmetries into one map to the dual of the Lie algebra.
+
+\begin{definition}\label{symplectic-geometry:definition-moment-map}
+Let a Lie group $G$ with Lie algebra $\mathfrak{g}$ act smoothly on a symplectic manifold $(M, \omega)$ by symplectomorphisms. For $\xi \in \mathfrak{g}$ the \emph{infinitesimal generator} is the vector field
+$X^\xi(p) = \frac{d}{dt}\exp(t\xi) \cdot p\,|_{t=0}$. A \emph{moment map} is a smooth map $\mu \colon M \to \mathfrak{g}^*$ such that
+\begin{enumerate}
+\item for every $\xi \in \mathfrak{g}$ the function $\mu^\xi = \langle\mu, \xi\rangle$ is a Hamiltonian for $X^\xi$: $d\mu^\xi = \iota_{X^\xi}\omega$, that is, $X^\xi = X_{\mu^\xi}$;
+\item $\mu$ is equivariant: $\mu(g \cdot p) = \Ad^*_g\mu(p)$, where $\Ad^*_g\nu = \nu \circ \Ad_{g^{-1}}$ is the \emph{coadjoint action} (Definition~\ref{lie-groups:definition-adjoint}).
+\end{enumerate}
+The action is \emph{Hamiltonian} if a moment map exists.
+\end{definition}
+
+\begin{notation}\label{symplectic-geometry:notation-moment-map}
+We write $\langle\nu, \xi\rangle$ for the pairing of $\nu \in \mathfrak{g}^*$ with $\xi \in \mathfrak{g}$, $g \cdot p$ for the action, and $\mathfrak{g} \cdot p = \{X^\xi(p) : \xi \in \mathfrak{g}\}$ for the tangent space to
+the orbit. For an abelian group, $\Ad^*$ is trivial and equivariance means that $\mu$ is invariant.
+\end{notation}
+
+\begin{example}\label{symplectic-geometry:example-moment-maps}
+\begin{enumerate}
+\item \emph{Rotations of the sphere.} For $S^1$ acting on $(S^2, d\theta \wedge dz)$ by rotation about the vertical axis, $X^1 = \partial_\theta$ and $\iota_{\partial_\theta}(d\theta \wedge dz) = dz$, so $\mu = z$ is a moment map
+(Example~\ref{symplectic-geometry:example-archimedes}); its image is the interval $[-1, 1]$.
+\item \emph{The torus on $\CC^n$.} Let $T^n = (S^1)^n$ act on $(\CC^n, \omega_0)$ by $(e^{i\theta_1}, \ldots, e^{i\theta_n}) \cdot z = (e^{i\theta_1}z_1, \ldots, e^{i\theta_n}z_n)$. The generator of the $k$-th circle is
+$-y_k\partial_{x_k} + x_k\partial_{y_k}$, and $\iota_{-y\partial_x + x\partial_y}(dx \wedge dy) = -y\,dy - x\,dx = -d\frac{|z|^2}{2}$. So $\mu(z) = -\frac12(|z_1|^2, \ldots, |z_n|^2) + c$ is a moment map for every
+constant $c \in \RR^n$; its image is a translate of the negative orthant.
+\item \emph{Cotangent lifts.} An action of $G$ on a manifold $Q$ lifts to $T^*Q$ by $g \cdot (q, p) = (gq, p \circ d(g^{-1}))$, which preserves the tautological form $\lambda$. With $\omega = -d\lambda$ and $X = X^\xi$,
+$\iota_X\omega = -\iota_Xd\lambda = d(\lambda(X)) - L_X\lambda = d(\lambda(X))$, so $\mu^\xi(q, p) = \lambda(X^\xi) = \langle p, \xi_Q(q)\rangle$, where $\xi_Q$ is the generator on $Q$. For translations of $\RR^3$ this is the
+\emph{linear momentum} $p$, and for rotations, identifying $\mathfrak{so}(3)$ with $\RR^3$ (the vector $a$ generating the rotations $q \mapsto q + t\,a \times q + \cdots$), $\mu^a(q, p) = \langle p, a \times q\rangle = \langle a, q \times p\rangle$: the
+moment map is the \emph{angular momentum} $q \times p$.
+\end{enumerate}
+\end{example}
+
+\begin{proposition}[Noether's theorem]\label{symplectic-geometry:proposition-noether}
+Let $G$ act on $(M, \omega)$ with moment map $\mu$, and let $H$ be a $G$-invariant function. Then $\mu$ is constant along the integral curves of $X_H$, and $H$ is constant along the orbits of the action.
+\end{proposition}
+
+\begin{proof}
+For $\xi \in \mathfrak{g}$, $X_H\mu^\xi = \{\mu^\xi, H\} = -X_{\mu^\xi}H = -X^\xi H$ (Definition~\ref{symplectic-geometry:definition-hamiltonian} and Proposition~\ref{symplectic-geometry:proposition-hamiltonian}(2)), and
+$X^\xi H = 0$ because $H$ is invariant under the one-parameter group $\exp(t\xi)$. So every $\mu^\xi$ is constant along the flow of $X_H$. The second statement is the invariance of $H$.
+\end{proof}
+
+For the Kepler problem, $H = \frac12|p|^2 - 1/|q|$ on $T^*(\RR^3 \setminus 0)$ is invariant under rotations, so the angular momentum $q \times p$ is conserved; the orbit therefore lies in the plane orthogonal to it, and
+the constancy of its length is Kepler's second law (equal areas in equal times).
+
+The most important source of Hamiltonian actions is the coadjoint action itself. Its orbits carry a canonical symplectic form.
+
+\begin{proposition}[Kirillov--Kostant--Souriau]\label{symplectic-geometry:proposition-kks}
+Let $G$ be a Lie group, $\nu \in \mathfrak{g}^*$, and $\mathcal{O} = \{\Ad^*_g\nu : g \in G\}$ its coadjoint orbit, a manifold diffeomorphic to $G/G_\nu$ (Theorem~\ref{lie-groups:theorem-homogeneous}, $G_\nu$ being the closed
+stabiliser). The generator of the coadjoint action is $X^\xi(\nu) = -\nu \circ \ad_\xi$, and
+\[
+\omega_\nu(X^\xi(\nu), X^\eta(\nu)) = \langle\nu, [\xi, \eta]\rangle
+\]
+defines a $G$-invariant symplectic form on $\mathcal{O}$, for which the inclusion $\mathcal{O} \to \mathfrak{g}^*$ is a moment map.
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1: the generator.} $\langle\Ad^*_{\exp t\xi}\nu, \eta\rangle = \langle\nu, \Ad_{\exp(-t\xi)}\eta\rangle$, whose derivative at $t = 0$ is $-\langle\nu, [\xi, \eta]\rangle$ by Proposition~\ref{lie-groups:proposition-adjoint}.
+So $\langle X^\xi(\nu), \eta\rangle = -\langle\nu, [\xi, \eta]\rangle$, and the vectors $X^\xi(\nu)$ span $T_\nu\mathcal{O}$.
+
+\emph{Step 2: well defined and nondegenerate.} $X^\xi(\nu) = 0$ if and only if $\langle\nu, [\xi, \eta]\rangle = 0$ for all $\eta$, if and only if $\omega_\nu(X^\xi(\nu), \cdot) = 0$. So the value of
+$\langle\nu, [\xi, \eta]\rangle$ depends only on the vectors $X^\xi(\nu)$, $X^\eta(\nu)$, and the resulting alternating form has trivial kernel.
+
+\emph{Step 3: invariance and smoothness.} Differentiating $\Ad^*_g\Ad^*_{\exp t\xi}\nu = \Ad^*_{\exp(t\Ad_g\xi)}\Ad^*_g\nu$ gives $d(\Ad^*_g)X^\xi(\nu) = X^{\Ad_g\xi}(\Ad^*_g\nu)$, so
+\[\begin{aligned}
+(\Ad^{*}_g)^*\omega\,(X^\xi(\nu), X^\eta(\nu)) &= \langle\Ad^*_g\nu, [\Ad_g\xi, \Ad_g\eta]\rangle\\
+&= \langle\nu, \Ad_{g^{-1}}\Ad_g[\xi, \eta]\rangle = \omega_\nu(X^\xi(\nu), X^\eta(\nu)),
+\end{aligned}\]
+using that $\Ad_g$ is a Lie algebra automorphism. Pulled back along the submersion $G \to \mathcal{O}$, $g \mapsto \Ad^*_g\nu$, $\omega$ becomes, by this invariance, the left-invariant $2$-form on $G$ whose value at $e$ is
+$(\xi, \eta) \mapsto \langle\nu, [\xi, \eta]\rangle$; this form is smooth, hence so is $\omega$.
+
+\emph{Step 4: moment map.} Let $f^\xi(\nu) = \langle\nu, \xi\rangle$. Then $df^\xi(X^\eta(\nu)) = \langle X^\eta(\nu), \xi\rangle = -\langle\nu, [\eta, \xi]\rangle = \omega_\nu(X^\xi(\nu), X^\eta(\nu))$, so $\iota_{X^\xi}\omega = df^\xi$; and
+the inclusion is equivariant by definition.
+
+\emph{Step 5: closedness.} By Cartan's formula and Step 4, $L_{X^\xi}\omega = d\iota_{X^\xi}\omega + \iota_{X^\xi}d\omega = \iota_{X^\xi}d\omega$, and $L_{X^\xi}\omega = 0$ by the invariance of Step 3. As the $X^\xi$ span every
+tangent space, $d\omega = 0$.
+\end{proof}
+
+\begin{example}\label{symplectic-geometry:example-coadjoint-so3}
+For $G = \mathrm{SO}(3)$ identify $\mathfrak{so}(3)$ with $(\RR^3, \times)$ as in Example~\ref{symplectic-geometry:example-moment-maps}(3), and $\mathfrak{so}(3)^*$ with $\RR^3$ by the inner product. Then $\Ad$ and $\Ad^*$ are
+the standard action of rotations, the coadjoint orbits are the spheres $|\nu| = r$ and the origin, and the generator is $X^a(\nu) = a \times \nu$. For $\nu$ on the sphere of radius $r > 0$,
+$\omega_\nu(a \times \nu, b \times \nu) = \langle\nu, a \times b\rangle$. For $a$, $b$ orthogonal to $\nu$, the vectors $a \times \nu$, $b \times \nu$ span the tangent plane and
+$\langle\nu, (a \times \nu) \times (b \times \nu)\rangle = r^2\langle\nu, a \times b\rangle$, so $\omega = \frac1r\,dA$ for the area form $dA$ of the sphere of radius $r$; its total area is $4\pi r$. The moment map of the
+rotations about the axis $e_3$ is the height $\nu_3$, as in Example~\ref{symplectic-geometry:example-moment-maps}(1).
+\end{example}
+
+\section{Symplectic reduction}\label{symplectic-geometry:section-reduction}
+
+A conserved quantity allows one to reduce the number of degrees of freedom: fix its value and divide by the symmetry. For a Hamiltonian action this gives a new symplectic manifold of dimension $2\dim G$ less.
+
+\begin{lemma}\label{symplectic-geometry:lemma-moment-map-linear}
+Let $\mu$ be a moment map for an action of $G$ on $(M, \omega)$ and $p \in M$, with stabiliser $G_p$ and Lie algebra $\mathfrak{g}_p$.
+\begin{enumerate}
+\item $\ker d_p\mu = (\mathfrak{g} \cdot p)^\omega$, and the annihilator of the image of $d_p\mu$ is $\mathfrak{g}_p$. So $p$ is a regular point of $\mu$ if and only if $\mathfrak{g}_p = 0$, that is, the action is locally free at $p$.
+\item If $\mu(p) = 0$, the orbit $\mathfrak{g} \cdot p$ is an isotropic subspace contained in $\ker d_p\mu$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) For $v \in T_pM$ and $\xi \in \mathfrak{g}$, $\langle d_p\mu(v), \xi\rangle = d\mu^\xi(v) = \omega(X^\xi(p), v)$. So $d_p\mu(v) = 0$ iff $v \in (\mathfrak{g} \cdot p)^\omega$; and $\xi$ annihilates the image iff
+$\omega(X^\xi(p), v) = 0$ for all $v$, iff $X^\xi(p) = 0$, iff $\xi \in \mathfrak{g}_p$ (the generator vanishes at $p$ exactly when $\exp(t\xi)$ fixes $p$).
+
+(2) $\mu^{-1}(0)$ is $G$-invariant by equivariance, since $\Ad^*_g0 = 0$; so $X^\xi(p)$, tangent to the orbit, satisfies $d_p\mu(X^\xi(p)) = 0$, and then $\omega(X^\xi(p), X^\eta(p)) = d\mu^\xi(X^\eta(p)) = 0$.
+\end{proof}
+
+\begin{theorem}[Marsden--Weinstein--Meyer]\label{symplectic-geometry:theorem-reduction}
+Let a compact Lie group $G$ act on $(M, \omega)$ with moment map $\mu$, and suppose that $G$ acts freely on $Z = \mu^{-1}(0)$. Then $Z$ is a closed submanifold of codimension $\dim G$, the quotient
+$M_0 = Z/G$ is a manifold of dimension $\dim M - 2\dim G$ with $\pi \colon Z \to M_0$ a submersion, and there is a unique symplectic form $\omega_0$ on $M_0$ with $\pi^*\omega_0 = \iota^*\omega$, where
+$\iota \colon Z \to M$ is the inclusion. $(M_0, \omega_0)$ is the \emph{symplectic reduction} or \emph{symplectic quotient} $M /\!\!/ G$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: $Z$ and $M_0$ are manifolds.} By Lemma~\ref{symplectic-geometry:lemma-moment-map-linear}(1), freeness makes $0$ a regular value, so $Z$ is a closed submanifold of codimension $\dim\mathfrak{g}^* = \dim G$
+(Theorem~\ref{smooth-manifolds:theorem-regular-value}), and $G$-invariant. A free action of a compact Lie group is proper, so $M_0 = Z/G$ is a manifold of dimension $\dim Z - \dim G$ and $\pi$ is a submersion, by the
+quotient manifold theorem \cite[Theorem 21.10]{lee-smooth-manifolds}.
+
+\emph{Step 2: linear algebra.} At $p \in Z$, $T_pZ = \ker d_p\mu = (\mathfrak{g} \cdot p)^\omega$ by Lemma~\ref{symplectic-geometry:lemma-moment-map-linear}, and $\ker d_p\pi = \mathfrak{g} \cdot p$. The kernel of $\omega$
+restricted to $T_pZ$ is $T_pZ \cap (T_pZ)^\omega = (\mathfrak{g} \cdot p)^\omega \cap \mathfrak{g} \cdot p = \mathfrak{g} \cdot p$, using $(W^\omega)^\omega = W$ (Proposition~\ref{symplectic-geometry:proposition-linear}(2))
+and Lemma~\ref{symplectic-geometry:lemma-moment-map-linear}(2). Hence $\omega_p|_{T_pZ}$ descends to a nondegenerate form on $T_pZ/\mathfrak{g} \cdot p \cong T_{\pi(p)}M_0$.
+
+\emph{Step 3: the form on $M_0$.} The form obtained at $\pi(p)$ does not depend on the point $p$ of the fibre: $\iota^*\omega$ is $G$-invariant and $\pi \circ g = \pi$, so for $p^{\prime} = gp$ the identifications differ
+by $dg$, which preserves $\omega$. This defines $\omega_0$ with $\pi^*\omega_0 = \iota^*\omega$, unique since $d\pi$ is surjective. It is smooth: on the image of a local section $s$ of $\pi$ (which exists since $\pi$ is a
+submersion), $\omega_0 = s^*\iota^*\omega$.
+
+\emph{Step 4: closed.} $\pi^*d\omega_0 = d\iota^*\omega = \iota^*d\omega = 0$, and $\pi^*$ is injective on forms, as $d\pi$ is surjective. Dimensions: $\dim M_0 = (\dim M - \dim G) - \dim G$.
+\end{proof}
+
+\begin{example}\label{symplectic-geometry:example-reduction}
+\begin{enumerate}
+\item \emph{Complex projective space.} Let $S^1$ act on $(\CC^n, \omega_0)$ by $e^{i\theta}z$, with moment map $\mu(z) = -\frac12|z|^2 + \frac12$ (Example~\ref{symplectic-geometry:example-moment-maps}(2) for the diagonal
+circle). Then $Z = S^{2n-1}$, the action on it is free, and $M_0 = S^{2n-1}/S^1 = \CC\PP^{n-1}$. So $\CC\PP^{n-1}$ carries a symplectic form, characterised by the fact that its pullback to the unit sphere is the
+restriction of $\omega_0$; it is (a multiple of) the Fubini--Study form of Chapter~\ref{kahler}. For $n = 2$, $\CC\PP^1 = S^2$ with total area $\pi$ (the area of the unit disc, by Exercise~\ref{symplectic-geometry:exercise-reduction-area}).
+\item \emph{Reduction of the harmonic oscillator.} On $\CC^n$ the Hamiltonian $H = \frac12|z|^2$ generates the diagonal circle action (up to sign), so the reduced spaces of the isotropic harmonic oscillator at energy $E$ are
+$S^{2n-1}(\sqrt{2E})/S^1 \cong \CC\PP^{n-1}$: the space of its orbits of energy $E$.
+\item \emph{Freeness is needed.} For the diagonal circle action on $\CC^2$ with moment map $\mu = -\frac12|z|^2$, the level $Z = \mu^{-1}(0) = \{0\}$ is a fixed point, where the action is not free; $0$ is a critical
+value, $Z$ does not have codimension $1$, and the quotient is a point instead of a surface. Shifting the moment map by a constant changes the level: $\mu + \frac12$ gives back (1).
+\end{enumerate}
+\end{example}
+
+\section{Integrable systems}\label{symplectic-geometry:section-integrable}
+
+A Hamiltonian system on a $2n$-dimensional symplectic manifold is \emph{integrable} if it has $n$ independent conserved quantities in involution. Then its motion is quasi-periodic, on invariant tori.
+
+\begin{definition}\label{symplectic-geometry:definition-integrable}
+Functions $F_1, \ldots, F_n$ on a symplectic manifold $(M, \omega)$ of dimension $2n$ are \emph{in involution} if $\{F_i, F_j\} = 0$ for all $i$, $j$, and \emph{independent} on a subset if $dF_1, \ldots, dF_n$ are linearly
+independent at each of its points. A Hamiltonian $H$ is \emph{integrable} if there are such functions with $H = F_1$.
+\end{definition}
+
+\begin{theorem}[Liouville--Arnold]\label{symplectic-geometry:theorem-liouville-arnold}
+Let $F = (F_1, \ldots, F_n) \colon M \to \RR^n$ be functions in involution on $(M^{2n}, \omega)$, let $c$ be a regular value of $F$, and $L$ a compact connected component of $F^{-1}(c)$. Then:
+\begin{enumerate}
+\item $L$ is a Lagrangian submanifold, invariant under the flows of all $X_{F_i}$;
+\item $L$ is diffeomorphic to the torus $T^n = \RR^n/\ZZ^n$, by a diffeomorphism in which the flow of each $X_{F_i}$ is a linear flow $\theta \mapsto \theta + t\,a_i$, $a_i \in \RR^n$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: the vector fields.} $X_{F_i}F_j = \{F_j, F_i\} = 0$, so the $X_{F_i}$ are tangent to the level sets, in particular to $L$, which is an $n$-dimensional submanifold
+(Theorem~\ref{smooth-manifolds:theorem-regular-value}). They are linearly independent along $L$, since $\iota_{X}\omega$ is injective in $X$ and the $dF_i$ are independent; they commute, as
+$[X_{F_i}, X_{F_j}] = -X_{\{F_i, F_j\}} = 0$ (Proposition~\ref{symplectic-geometry:proposition-hamiltonian}(2)); and $\omega(X_{F_i}, X_{F_j}) = \{F_i, F_j\} = 0$. So the $X_{F_i}$ span $T_pL$ at each $p \in L$, $L$ is
+isotropic of dimension $n$, hence Lagrangian (Proposition~\ref{symplectic-geometry:proposition-linear}(3)).
+
+\emph{Step 2: an action of $\RR^n$.} The flows $\varphi^i_t$ of the $X_{F_i}$ restricted to the compact manifold $L$ are complete, and commute because the fields commute. So
+$t \cdot p = \varphi^1_{t_1} \circ \cdots \circ \varphi^n_{t_n}(p)$ is a smooth action of the group $\RR^n$ on $L$. For fixed $p$ the orbit map $a_p \colon \RR^n \to L$, $t \mapsto t \cdot p$, has differential at $t$ sending
+$e_i$ to $X_{F_i}(t \cdot p)$, which is bijective; so $a_p$ is a local diffeomorphism, and its image, the orbit of $p$, is open. The orbits partition the connected $L$ into open sets, so there is only one: the action is
+transitive.
+
+\emph{Step 3: the lattice.} The stabiliser $\Gamma = \{t : t \cdot p = p\}$ is a subgroup of $\RR^n$ (independent of $p$, as $\RR^n$ is abelian), and discrete because $a_p$ is injective near $0$. So $\Gamma = \ZZ v_1 + \cdots + \ZZ v_k$
+with $v_1, \ldots, v_k$ linearly independent (Corollary~\ref{geometry-of-numbers:corollary-discrete}). The map $a_p$ induces a bijective local diffeomorphism $\RR^n/\Gamma \to L$, hence a diffeomorphism. As $L$ is compact and
+$\RR^n/\Gamma \cong T^k \times \RR^{n-k}$, $k = n$.
+
+\emph{Step 4: linear coordinates.} Let $A$ be the linear isomorphism of $\RR^n$ with $Ae_i = v_i$; then $\theta \mapsto (A\theta) \cdot p$ is a diffeomorphism $\RR^n/\ZZ^n \to L$, and the flow of $X_{F_i}$, which is
+translation by $te_i$ in the $\RR^n$-action, becomes $\theta \mapsto \theta + tA^{-1}e_i$.
+\end{proof}
+
+The full Liouville--Arnold theorem adds that near $L$ there are \emph{action--angle coordinates} $(I, \theta) \in U \times T^n$, with $U \subseteq \RR^n$ open, in which $\omega = \sum dI_j \wedge d\theta_j$ and the $F_i$ depend only
+on $I$; Hamilton's equations become $\dot I = 0$, $\dot\theta = \partial H/\partial I$ \cite[Sections 49--50]{arnold-mechanics}.
+
+\begin{example}\label{symplectic-geometry:example-integrable}
+\begin{enumerate}
+\item Every Hamiltonian system with one degree of freedom is integrable away from the critical points of $H$: for the pendulum of Example~\ref{symplectic-geometry:example-hamiltonian}(2) the compact regular level sets are
+the closed curves $H = c$ with $-1 < c < 1$ or $c > 1$, circles on which the motion is periodic.
+\item The $n$ uncoupled oscillators $H = \sum_j\frac{\omega_j}{2}(q_j^2 + p_j^2)$ on $\RR^{2n}$ are integrable with $F_j = \frac12(q_j^2 + p_j^2)$, the moment map of the torus action of
+Example~\ref{symplectic-geometry:example-moment-maps}(2) up to sign; the invariant tori are products of circles, and the flow is linear with frequencies $\omega_j$. It is periodic only if the $\omega_j$ are commensurable;
+otherwise its orbits are dense in subtori (Weyl's theorem on $n\alpha$, Chapter~\ref{continued-fractions}).
+\item The Kepler problem on $T^*(\RR^3 \setminus 0)$ is integrable with $F = (H, |q \times p|^2, (q \times p)_3)$, the energy, the squared total angular momentum and one component of it, which Poisson-commute.
+\end{enumerate}
+\end{example}
+
+\section{Global symplectic topology: a survey}\label{symplectic-geometry:section-survey}
+
+The local triviality of symplectic structures (Darboux) contrasts with a deep global rigidity. We state some landmark results without proof.
+
+\begin{enumerate}
+\item \emph{Convexity} (Atiyah, Guillemin--Sternberg). For a Hamiltonian action of a torus $T^k$ on a compact connected symplectic manifold, the image of the moment map is a convex polytope, the convex hull of the images of
+the fixed points \cite{cannas-da-silva}. For the torus action on $\CC\PP^{n}$ induced from Example~\ref{symplectic-geometry:example-moment-maps}(2) it is a simplex; for $S^2$ with the rotation it is the interval of
+Example~\ref{symplectic-geometry:example-moment-maps}(1).
+\item \emph{Toric manifolds} (Delzant). Compact symplectic $2n$-manifolds with an effective Hamiltonian action of $T^n$ are classified by their moment polytopes, which are exactly the \emph{Delzant polytopes}: simple,
+rational, and smooth at each vertex \cite{cannas-da-silva}. Every Delzant polytope arises by symplectic reduction of some $\CC^N$ by a subtorus of $T^N$.
+\item \emph{Gromov's non-squeezing theorem.} If the ball $B^{2n}(r)$ embeds symplectically into the cylinder $B^2(R) \times \RR^{2n-2}$, then $r \leq R$ \cite{mcduff-salamon}. Volume-preserving maps can squeeze any
+ball into any cylinder; symplectic maps cannot. This leads to \emph{symplectic capacities}, invariants of open sets that measure two-dimensional size.
+\item \emph{The Arnold conjecture.} A Hamiltonian diffeomorphism of a compact symplectic manifold whose fixed points are nondegenerate has at least $\sum_kb_k(M)$ fixed points, more than the Lefschetz fixed point theorem
+predicts. It was proved by Floer for a large class of manifolds, and in general with rational coefficients by Fukaya--Ono and Liu--Tian; its proof created Floer homology \cite{mcduff-salamon}.
+\item \emph{$C^0$-rigidity} (Eliashberg--Gromov). A $C^0$-limit of symplectomorphisms that is a diffeomorphism is a symplectomorphism \cite{mcduff-salamon}: the symplectic group is closed in the
+diffeomorphism group for the uniform topology, unlike what its definition by first derivatives suggests.
+\end{enumerate}
+
 \section{Exercises}\label{symplectic-geometry:section-exercises}
 
 \begin{exercise}\label{symplectic-geometry:exercise-nondegenerate-r4}
@@ -732,4 +1040,26 @@ outward normal rotated by $+\pi/2$). So $\int_{E_j \times \{\phi_j\}}\beta = |E_
 outwards on $E_j$, or a vertex $p_{j+1}$, and then it lies in the circular sector of radius $\varepsilon$ and angle $\theta_j$ between the normals $\xi_j$ and $\xi_{j+1}$. These pieces overlap only along segments, so
 the area of the $\varepsilon$-neighbourhood is $\operatorname{area}(P) + \sum_j\varepsilon|E_j| + \sum_j\frac12\theta_j\varepsilon^2 = \operatorname{area}(P) + \varepsilon L + \pi\varepsilon^2$. The
 coefficient of $\varepsilon$ is $\int_{N(P)}\beta$, and that of $\varepsilon^2$ is $\frac12\int_{N(P)}d\phi$, which comes only from the arcs over the vertices.
+\end{solution}
+
+\begin{exercise}\label{symplectic-geometry:exercise-reduction-area}
+Let $\omega_{\mathrm{red}}$ be the reduced symplectic form on $\CC\PP^1 = S^3/S^1$ of Example~\ref{symplectic-geometry:example-reduction}(1) (for $n = 2$). Using the map
+$s \colon \{w \in \CC : |w| < 1\} \to S^3$, $s(w) = (w, \sqrt{1 - |w|^2})$, show that $\int_{\CC\PP^1}\omega_{\mathrm{red}} = \pi$.
+\end{exercise}
+
+\begin{solution}
+The composite $\pi \circ s$ is injective (the second coordinate of $s(w)$ is real and positive, which fixes the representative in each circle orbit) and its image is $\CC\PP^1$ minus the single point $[1 : 0]$, the image of
+the circle $|w| = 1$, $z_2 = 0$; so $\pi \circ s$ is an orientation-preserving parametrisation of a set of full measure. By Theorem~\ref{symplectic-geometry:theorem-reduction}, $(\pi \circ s)^*\omega_{\mathrm{red}} = s^*\iota^*\omega_0$.
+With $w = x + iy$, $s^*(dx_1 \wedge dy_1) = dx \wedge dy$ and $s^*(dx_2 \wedge dy_2) = 0$, as $y_2 = 0$ along $s$. So the integral is the area of the unit disc, $\pi$.
+\end{solution}
+
+\begin{exercise}\label{symplectic-geometry:exercise-no-moment-map}
+Show that a symplectic action of a connected Lie group on a simply connected symplectic manifold has, for each $\xi$, a Hamiltonian function for $X^\xi$, and that the circle action on the torus $T^2 = \RR^2/\ZZ^2$ with
+$\omega = dx \wedge dy$ given by $\theta \cdot (x, y) = (x + \theta, y)$ has no moment map.
+\end{exercise}
+
+\begin{solution}
+The flow of $X^\xi$ preserves $\omega$, so $0 = L_{X^\xi}\omega = d\iota_{X^\xi}\omega$ by Cartan's formula: $\iota_{X^\xi}\omega$ is closed, hence exact on a simply connected manifold
+(Theorem~\ref{de-rham:theorem-homotopy-invariance} and the vanishing of $H^1_{\mathrm{dR}}$ of simply connected manifolds, Chapter~\ref{de-rham}). On the torus, $X = \partial_x$ and $\iota_{\partial_x}(dx \wedge dy) = dy$,
+which is closed but not exact: its integral over the circle $x = 0$ is $1$. So no function $\mu$ with $d\mu = dy$ exists.
 \end{solution}
