@@ -185,12 +185,9 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
 - `currents` (draft, 1207): finish.
 - `symplectic-geometry` (complete): still to do: toric manifolds and Delzant's theorem,
   Lagrangian neighbourhood theorem with proof, generating functions.
-- `elliptic-operators`: the elliptic estimate is only sketched; a full proof needs a rebuild of
-  `distributions` first (Peetre's inequality, multiplication by smooth functions on H^s,
-  difference quotients, Rellich with proof on the torus), then the regularity theorem.
-- **Duplication to fix**: Wirtinger's inequality appears three times
-  (`distributions:proposition-wirtinger`, `elliptic-operators:example-wirtinger`,
-  `hodge-theorem:example-wirtinger`): keep the first, cite it from the others.
+- `elliptic-operators`: still cited, not proved: invariance of H^s under diffeomorphisms for
+  non-integer s (Proposition sobolev-sections, Warner). Possible: parametrix and
+  pseudodifferential operators (survey).
 - `de-rham`: still to do: Thom isomorphism and Euler class with forms (Bott–Tu), Leray–Hirsch.
 - `spin-geometry` (planned, new): Clifford algebras, spin structures, Dirac operator, index theorem.
 - Also: *Riemann surfaces* are covered by `complex-manifolds` and `curves`; *Morse theory* goes as
@@ -533,6 +530,15 @@ spectral-sequences 300 (then everything below about 800 lines).
   parts).
 
 ## Done
+
+- [x] 2026-11-07: **Elliptic regularity fully proved**: `distributions` gets Peetre's inequality,
+  multiplication on H^s (with the sharp sup|φ| bound), interpolation, difference quotients,
+  local elliptic estimate (freezing coefficients) and local regularity, Weyl's lemma, the
+  counterexample x d/dx; `elliptic-operators` proves the global estimate and regularity from
+  them (localisation lemma). Wirtinger stated once (distributions). **Currents no longer
+  duplicated**: the de Rham section on currents moved into `currents` as "Currents on
+  manifolds" (labels renamed to `currents:`), and the Euclidean definition is now a dimension
+  convention. **One Exercises section per chapter** (18 chapters normalised).
 
 - [x] 2026-11-07: **Differential geometry, first round.** `riemannian-geometry`: Hopf–Rinow
   split into lemma-geodesic-sphere, proposition-minimising-from-point,

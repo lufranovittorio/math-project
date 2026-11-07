@@ -600,7 +600,10 @@ $\psi_i = \zeta\theta_i/\Theta$ is smooth with compact support in $B(x_i, \delta
 subset of $B(x_i, \delta_i)$. By the Leibniz rule (which holds for distributions, by Definition~\ref{distributions:definition-derivative}),
 $P(\psi_iu) = \psi_iPu + \sum_{|\alpha| \leq m}\sum_{0 < \beta \leq \alpha}\binom{\alpha}{\beta}\chi a_\alpha(\partial^\beta\psi_i)\partial^{\alpha - \beta}u$, and the double sum has $H^s$ norm at most $C\|u\|_{s+m-1}$. With Step 1,
 \[
-\|u\|_{s+m} \leq \sum_i\|\psi_iu\|_{s+m} \leq C\sum_i\bigl(\|P(\psi_iu)\|_s + \|\psi_iu\|_{s+m-1}\bigr) \leq C\bigl(\|Pu\|_s + \|u\|_{s+m-1}\bigr).
+\begin{aligned}
+\|u\|_{s+m} &\leq \sum_i\|\psi_iu\|_{s+m} \leq C\sum_i\bigl(\|P(\psi_iu)\|_s + \|\psi_iu\|_{s+m-1}\bigr) \\
+&\leq C\bigl(\|Pu\|_s + \|u\|_{s+m-1}\bigr).
+\end{aligned}
 \]
 
 \emph{Step 3: absorbing the error.} If $m = 1$ this is the claim. If $m \geq 2$, Lemma~\ref{distributions:lemma-interpolation} with $\varepsilon = 1/(2C)$ gives $C\|u\|_{s+m-1} \leq \frac12\|u\|_{s+m} + C^{\prime}\|u\|_s$, and
