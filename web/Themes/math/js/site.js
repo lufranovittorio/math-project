@@ -63,7 +63,15 @@
     var makeGroup = function (label, key, fallback, options, onChange) {
       var group = document.createElement("span");
       group.className = "bib-option-group";
-      group.appendChild(document.createTextNode(label + " "));
+      var caption = document.createElement("span");
+      caption.className = "bib-option-label";
+      caption.textContent = label;
+      group.appendChild(caption);
+      var segment = document.createElement("span");
+      segment.className = "bib-segment";
+      segment.setAttribute("role", "group");
+      segment.setAttribute("aria-label", label);
+      group.appendChild(segment);
       options.forEach(function (option) {
         var button = document.createElement("button");
         button.type = "button";
@@ -77,13 +85,13 @@
           });
           onChange(option[0]);
         });
-        group.appendChild(button);
+        segment.appendChild(button);
       });
       controls.appendChild(group);
     };
-    makeGroup("Labels:", "bib-labels", "alpha", [["alpha", "Author–year"], ["numbers", "Numbers"]],
+    makeGroup("Labels", "bib-labels", "alpha", [["alpha", "Author–year"], ["numbers", "Numbers"]],
               function () { applyBibLabels(document); });
-    makeGroup("Order:", "bib-order", "author", [["author", "Author"], ["year", "Year"]], sortEntries);
+    makeGroup("Order", "bib-order", "author", [["author", "Author"], ["year", "Year"]], sortEntries);
     bibList.parentNode.insertBefore(controls, bibList);
     if (readSetting("bib-order", "author") === "year") sortEntries("year");
   }

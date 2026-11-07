@@ -411,16 +411,28 @@ a.part-pdf:hover { border-color: var(--accent); text-decoration: none; }
 .main-text dl.bibliography dt::after { content: "]"; }
 .main-text dl.bibliography dd { margin: 0; }
 .bib-options {
-  display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem;
-  margin: 0 0 1.25rem;
-  font-family: var(--sans); font-size: 0.8125rem; color: var(--ink-2);
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 2rem;
+  margin: 0 0 1.75rem; padding: 0.55rem 0.9rem;
+  border: 1px solid var(--rule); border-radius: 10px; background: var(--surface-2);
+  font-family: var(--sans); font-size: 0.8125rem;
 }
-.bib-option-group button {
-  margin-left: 0.25rem; padding: 0.15rem 0.6rem;
-  border: 1px solid var(--rule); border-radius: 4px;
-  background: transparent; color: var(--ink-2); font: inherit; cursor: pointer;
+.bib-option-group { display: inline-flex; align-items: center; gap: 0.6rem; }
+.bib-option-label {
+  color: var(--muted); font-size: 0.6875rem; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
 }
-.bib-option-group button[aria-pressed="true"] { background: var(--surface-2); color: var(--ink); border-color: var(--ink-2); }
+.bib-segment {
+  display: inline-flex; padding: 2px;
+  border: 1px solid var(--rule); border-radius: 999px; background: var(--surface);
+}
+.bib-segment button {
+  padding: 0.2rem 0.8rem; border: 0; border-radius: 999px;
+  background: transparent; color: var(--ink-2); font: inherit; line-height: 1.4; cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+.bib-segment button:hover { color: var(--ink); }
+.bib-segment button[aria-pressed="true"] { background: var(--accent); color: var(--surface); }
+.bib-segment button:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
 .main-text dl.bibliography dd p { margin: 0; }
 .main-text dl.bibliography :target, .main-text dl.bibliography dt:target + dd { background: var(--surface-2); }
 .main-text .cite { white-space: nowrap; }
