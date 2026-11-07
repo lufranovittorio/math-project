@@ -128,9 +128,10 @@ together in one place.
      with Hardy–Littlewood;
    - ~~`radon-measures`: Besicovitch covering theorem with proof, Prokhorov;
      Haar measure~~ (done 2026-11-07);
-   - `geometric-measure-theory`: Frostman's lemma, ~~Brunn–Minkowski and the
+   - `geometric-measure-theory`: ~~Frostman's lemma, energies, Marstrand~~ (done
+     2026-11-07), ~~Brunn–Minkowski and the
      isoperimetric inequality~~ (done 2026-11-07, for the Minkowski content;
-     the perimeter version needs BV functions), Steiner symmetrisation, Marstrand projection,
+     the perimeter version needs BV functions), Steiner symmetrisation,
      Kakeya/Besicovitch sets, rectifiability in depth; perhaps split into
      `hausdorff-measures`, `fractals`, `area-coarea`, `rectifiability`;
    - move Borel–Cantelli/independence into `probability` when it is written.
@@ -276,6 +277,13 @@ spectral-sequences 300 (then everything below about 800 lines).
   parts).
 
 ## Done
+
+- [x] 2026-11-07: **Frostman, energies, Marstrand** (new last section of *Geometric
+  Measure Theory*): mass distribution principle as a lemma, Hausdorff content,
+  Frostman's lemma for compact sets (dyadic proof), measure characterisation of
+  dimension, Riesz potentials and energies, energy characterisation of dimension,
+  capacity, Marstrand's projection theorem (Kaufman's energy proof), examples
+  (C×C, four-corner set), 2 exercises (energy of an interval, dimension of products).
 
 - [x] 2026-11-07: **Monotone functions and bounded variation** (new section of
   *Differentiation and Absolute Continuity*): Vitali covering theorem for fine covers,
