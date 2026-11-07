@@ -13,7 +13,15 @@ Chapter~\ref{elliptic-operators} provides.
 
 The consequences drawn here are the Hodge decomposition of the space of forms (with the Helmholtz decomposition of vector fields on a torus as a concrete instance), Poincar\'e duality via the
 Hodge star, the conformal invariance of harmonic $1$-forms on surfaces, the Poincar\'e inequality, and Bochner's vanishing theorem, with a complete proof of the Bochner--Weitzenb\"ock formula on
-$1$-forms; the complex analogue is in Chapter~\ref{kahler}. References: \cite[Chapter 6]{warner-foundations}, \cite[Chapter 4]{wells-differential-analysis},
+$1$-forms; the complex analogue is in Chapter~\ref{kahler}. The later sections develop the theory further:
+\begin{itemize}
+\item Section~\ref{hodge-theorem:section-elliptic-complexes}: elliptic complexes, the Hodge theorem for them (finite-dimensional cohomology, harmonic representatives), twisted de Rham complexes, and the Euler
+characteristic of a complex as an index;
+\item Section~\ref{hodge-theorem:section-spectrum}: the positive eigenvalues of the Laplacian form exact complexes, the finite form of the McKean--Singer identity, the heat flow to the harmonic representative,
+and Lichnerowicz's lower bound for the first eigenvalue under a Ricci curvature bound;
+\item Section~\ref{hodge-theorem:section-middle-degree}: conformal invariance of the Hodge star in the middle degree, self-dual and anti-self-dual forms, and the signature as $b^+ - b^-$;
+\item Section~\ref{hodge-theorem:section-products}: harmonic forms on Riemannian products.
+\end{itemize} References: \cite[Chapter 6]{warner-foundations}, \cite[Chapter 4]{wells-differential-analysis},
 \cite[Chapter 0]{griffiths-harris}, \cite[Chapter 5]{voisin-hodge-1}.
 
 \noindent\textbf{Prerequisites.} Chapter~\ref{elliptic-operators} (Elliptic Operators on Compact Manifolds) and
@@ -324,6 +332,326 @@ heat equation, which constructs the harmonic projection as $\lim_{t \to \infty}e
 Exercise~\ref{elliptic-operators:exercise-heat-equation}.
 \end{remark}
 
+\section{Elliptic complexes}\label{hodge-theorem:section-elliptic-complexes}
+
+The de Rham complex is not the only complex of differential operators to which the argument of Section~\ref{hodge-theorem:section-decomposition} applies. What the proof used is that the Laplacian
+$d\delta + \delta d$ is elliptic, although $d$ itself is not; and the ellipticity of the Laplacian is a pointwise statement about the symbols. We isolate this property; it is the setting of the Dolbeault
+complex of a complex manifold (Chapter~\ref{complex-manifolds}), of de Rham complexes with twisted coefficients, and of the index theorem.
+
+\begin{definition}\label{hodge-theorem:definition-elliptic-complex}
+Let $M$ be a compact manifold and $E^0, \ldots, E^N$ vector bundles over $M$ with Hermitian (or, for real bundles, Euclidean) metrics. A \emph{complex of differential operators} is a sequence
+\[
+0 \to \Gamma(M, E^0) \xrightarrow{D_0} \Gamma(M, E^1) \xrightarrow{D_1} \cdots \xrightarrow{D_{N-1}} \Gamma(M, E^N) \to 0
+\]
+of differential operators $D_k$ of the same order $m \geq 1$ with $D_{k+1} \circ D_k = 0$. It is an \emph{elliptic complex} if for every $x \in M$ and every $\xi \in T^*_xM \setminus \{0\}$ the sequence of principal symbols
+\[
+0 \to E^0_x \xrightarrow{\sigma_m(D_0)(x, \xi)} E^1_x \xrightarrow{\sigma_m(D_1)(x, \xi)} \cdots \to E^N_x \to 0
+\]
+is exact. Its \emph{cohomology} is $H^k(E^\bullet, D) = \ker D_k/\operatorname{im}D_{k-1}$.
+\end{definition}
+
+\begin{notation}\label{hodge-theorem:notation-elliptic-complex}
+We write $D$ for each of the operators $D_k$ and $D^*$ for their formal adjoints (Definition~\ref{elliptic-operators:definition-formal-adjoint}), so that $D^* \colon \Gamma(E^{k+1}) \to \Gamma(E^k)$; the
+\emph{Laplacians} of the complex are $\Delta_k = D_{k-1}D_{k-1}^* + D_k^*D_k \colon \Gamma(E^k) \to \Gamma(E^k)$, often simply written $\Delta = DD^* + D^*D$, and
+$\mathcal{H}^k(E^\bullet) = \ker\Delta_k$ is the space of \emph{harmonic sections}. Sections of $E^k$ are \emph{closed} if $Du = 0$ and \emph{coclosed} if $D^*u = 0$.
+\end{notation}
+
+The symbols of a complex form a complex: by the multiplicativity of principal symbols (Proposition~\ref{elliptic-operators:proposition-symbol}), $\sigma_m(D_{k+1})\sigma_m(D_k) = \sigma_{2m}(D_{k+1}D_k) = 0$.
+Ellipticity requires this complex of finite-dimensional vector spaces to be exact. For $N = 1$ it says that the single operator $D_0 \colon \Gamma(E^0) \to \Gamma(E^1)$ is elliptic in the sense of
+Definition~\ref{elliptic-operators:definition-differential-operator}, so elliptic complexes generalise elliptic operators.
+
+\begin{lemma}\label{hodge-theorem:lemma-laplacian-elliptic-complex}
+The Laplacians of an elliptic complex are elliptic and formally self-adjoint operators of order $2m$, and $\int_M\langle\Delta u, u\rangle = \|Du\|^2 + \|D^*u\|^2$ for smooth $u$.
+\end{lemma}
+
+\begin{proof}
+\emph{Step 1: the symbol.} By the multiplicativity of symbols and $\sigma_m(D^*) = \sigma_m(D)^*$ (Definition~\ref{elliptic-operators:definition-formal-adjoint}), writing $a_k = \sigma_m(D_k)(x, \xi)$,
+\[
+\sigma_{2m}(\Delta_k)(x, \xi) = a_{k-1}a_{k-1}^* + a_k^*a_k .
+\]
+\emph{Step 2: the finite-dimensional lemma.} The maps $a_k$ form a complex of finite-dimensional inner product spaces, and the right-hand side is its Laplacian in degree $k$. The proof of
+Lemma~\ref{hodge-theorem:lemma-finite-dimensional} works verbatim for complex inner product spaces, and shows that the kernel of this Laplacian is isomorphic to the cohomology of the complex
+$(a_\bullet)$ in degree $k$. For $\xi \neq 0$ this cohomology vanishes by ellipticity, so $\sigma_{2m}(\Delta_k)(x, \xi)$ is injective, hence invertible. So $\Delta_k$ is elliptic.
+
+\emph{Step 3: adjointness.} $\Delta_k^* = (D_{k-1}D_{k-1}^*)^* + (D_k^*D_k)^* = \Delta_k$, and $\int\langle\Delta u, u\rangle = \int\langle D^*u, D^*u\rangle + \int\langle Du, Du\rangle$ by the definition of the formal adjoint.
+\end{proof}
+
+\begin{theorem}[Hodge theorem for elliptic complexes]\label{hodge-theorem:theorem-elliptic-complex}
+Let $(\Gamma(E^\bullet), D)$ be an elliptic complex over a compact manifold. For each $k$:
+\begin{enumerate}
+\item $\mathcal{H}^k(E^\bullet)$ is finite-dimensional, consists of smooth sections, and equals $\ker D \cap \ker D^*$;
+\item there is an orthogonal decomposition $\Gamma(E^k) = \mathcal{H}^k(E^\bullet) \oplus D\Gamma(E^{k-1}) \oplus D^*\Gamma(E^{k+1})$, with $\ker D_k = \mathcal{H}^k(E^\bullet) \oplus D\Gamma(E^{k-1})$;
+\item the map $\mathcal{H}^k(E^\bullet) \to H^k(E^\bullet, D)$, $u \mapsto [u]$, is an isomorphism; in particular the cohomology of an elliptic complex is finite-dimensional.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: harmonic sections.} By Lemma~\ref{hodge-theorem:lemma-laplacian-elliptic-complex} and Theorem~\ref{elliptic-operators:theorem-fredholm}(1), $\ker\Delta_k$ is finite-dimensional and consists of smooth
+sections; and $\Delta u = 0$ gives $\|Du\|^2 + \|D^*u\|^2 = 0$, so $\ker\Delta = \ker D \cap \ker D^*$, the converse being clear.
+
+\emph{Step 2: decomposition.} By Corollary~\ref{elliptic-operators:corollary-p-star-p} applied to $\Delta_k = \Delta_k^*$, $\Gamma(E^k) = \Delta\Gamma(E^k) \oplus \ker\Delta$, and
+$\Delta\Gamma(E^k) \subseteq D\Gamma(E^{k-1}) + D^*\Gamma(E^{k+1})$. The three spaces are pairwise orthogonal: for $h$ harmonic, $\int\langle h, Dv\rangle = \int\langle D^*h, v\rangle = 0$ and
+$\int\langle h, D^*w\rangle = \int\langle Dh, w\rangle = 0$; and $\int\langle Dv, D^*w\rangle = \int\langle DDv, w\rangle = 0$. So the sum is direct and orthogonal. If $Du = 0$ and $u = h + Dv + D^*w$, then
+$0 = \int\langle Du, w\rangle = \int\langle DD^*w, w\rangle = \|D^*w\|^2$, so $u \in \mathcal{H}^k \oplus D\Gamma(E^{k-1})$; the reverse inclusion is clear since $DD = 0$.
+
+\emph{Step 3: cohomology.} Harmonic sections are closed. By Step 2 every closed section is $h + Dv$ with $h$ harmonic, which gives surjectivity, and if $h = Dv$ is harmonic then
+$\|h\|^2 = \int\langle h, Dv\rangle = \int\langle D^*h, v\rangle = 0$, which gives injectivity.
+\end{proof}
+
+\begin{example}\label{hodge-theorem:example-elliptic-complexes}
+\begin{enumerate}
+\item \emph{The de Rham complex.} Here $E^k = \Lambda^kT^*M$, $D = d$ and $\sigma_1(d)(x, \xi) = i\xi \wedge -$ (Example~\ref{elliptic-operators:example-symbol-computations}(5)). The sequence
+$0 \to \Lambda^0 \xrightarrow{\xi\wedge} \Lambda^1 \xrightarrow{\xi\wedge} \cdots$ is exact for $\xi \neq 0$: choose a basis $e^1 = \xi, e^2, \ldots, e^n$ of $T^*_xM$ and write $\alpha = e^1 \wedge \beta + \gamma$ with $\beta$,
+$\gamma$ not involving $e^1$; then $\xi \wedge \alpha = e^1 \wedge \gamma$, which vanishes only if $\gamma = 0$, that is, if $\alpha = \xi \wedge \beta$. So
+Theorem~\ref{hodge-theorem:theorem-elliptic-complex} contains Theorems~\ref{hodge-theorem:theorem-decomposition} and~\ref{hodge-theorem:theorem-hodge}.
+\item \emph{Twisted de Rham complexes.} Let $E \to M$ be a vector bundle with a flat connection $\nabla$ (Chapter~\ref{connections}) and any Hermitian metric. The exterior covariant derivative
+$d_\nabla \colon \Omega^k(M, E) \to \Omega^{k+1}(M, E)$ satisfies $d_\nabla \circ d_\nabla = 0$ because the curvature vanishes, and its symbol is $i\xi \wedge - \otimes \id_E$, since in a local frame
+$d_\nabla = d + A\wedge$ differs from $d$ by an operator of order $0$. The symbol sequence is the one of (1) tensored with $E_x$, hence exact. So the cohomology of a compact manifold with coefficients in a
+flat bundle (a local system) is finite-dimensional and is represented by harmonic forms; the metric on $E$ need not be parallel, but then $d_\nabla^*$ is not simply $\pm{*}d_\nabla{*}$.
+\item \emph{The Dolbeault complex} $(\Omega^{p,\bullet}(X), \bar\partial)$ of a compact complex manifold is elliptic; this is the case used in Chapter~\ref{complex-manifolds}.
+\item \emph{A single operator}: for $N = 1$, Theorem~\ref{hodge-theorem:theorem-elliptic-complex} says that $\ker D$ and $\Gamma(E^1)/D\Gamma(E^0) \cong \ker D^*$ are finite-dimensional, which is
+part of Theorem~\ref{elliptic-operators:theorem-fredholm} (with Corollary~\ref{elliptic-operators:corollary-p-star-p}).
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{hodge-theorem:counterexample-not-elliptic-complex}
+Exactness of the symbol sequence cannot be dropped. On the torus $T^2 = \RR^2/\ZZ^2$ consider the complex $0 \to C^\infty(T^2) \xrightarrow{\partial_x} C^\infty(T^2) \to 0$. Its symbol $i\xi_1$ vanishes at
+$\xi = dy$, so it is not elliptic, and indeed its cohomology $H^0 = \ker\partial_x$ contains every smooth function of $y$ alone, an infinite-dimensional space. Likewise $H^1 = C^\infty(T^2)/\partial_xC^\infty(T^2)$
+is infinite-dimensional: $f \mapsto \int_0^1f(x, y)\,dx$ vanishes on $\partial_xC^\infty$ and maps onto $C^\infty(\RR/\ZZ)$.
+\end{counterexample}
+
+\begin{corollary}\label{hodge-theorem:corollary-euler-characteristic-complex}
+For an elliptic complex, the operator $D + D^* \colon \bigoplus_{k \text{ even}}\Gamma(E^k) \to \bigoplus_{k \text{ odd}}\Gamma(E^k)$ is elliptic, and its index equals the \emph{Euler characteristic of the complex}
+$\chi(E^\bullet, D) = \sum_k(-1)^k\dim H^k(E^\bullet, D)$.
+\end{corollary}
+
+\begin{proof}
+On $\bigoplus_k\Gamma(E^k)$ the operator $P = D + D^*$ is formally self-adjoint and $P^2 = DD^* + D^*D = \Delta$, since $DD = 0$ and $D^*D^* = 0$. So $\sigma_m(P)^2 = \sigma_{2m}(\Delta)$ is invertible for $\xi \neq 0$, hence
+so is $\sigma_m(P)$, and its restriction from even to odd degrees is an isomorphism (it is injective on each, and $\sigma_m(P)$ exchanges the two). The kernel of $P$ on even sections is
+$\bigoplus_{k \text{ even}}\mathcal{H}^k$: $Pu = 0$ gives $\Delta u = P^2u = 0$, and conversely harmonic sections satisfy $Du = D^*u = 0$. The cokernel is the kernel of the adjoint, $P$ on odd sections, which is
+$\bigoplus_{k \text{ odd}}\mathcal{H}^k$ for the same reason. Conclude with Theorem~\ref{hodge-theorem:theorem-elliptic-complex}(3).
+\end{proof}
+
+For the de Rham complex this is Corollary~\ref{hodge-theorem:corollary-euler-characteristic}. The index of an elliptic complex is computed from characteristic classes by the Atiyah--Singer index theorem
+(Chapter~\ref{spin-geometry}); the Euler characteristic and the signature of a manifold, and the holomorphic Euler characteristic of a complex manifold, are the three classical instances.
+
+\section{The spectrum of the Hodge Laplacian}\label{hodge-theorem:section-spectrum}
+
+The Hodge theorem concerns the eigenvalue $0$ of the Laplacian. The positive eigenvalues carry no topology individually, but they come in a pattern that the topology constrains, and their size is constrained by the
+curvature.
+
+\begin{notation}\label{hodge-theorem:notation-eigenspaces}
+For $\lambda \in \RR$ let $E^k_\lambda = \{\alpha \in \Omega^k(M) : \Delta\alpha = \lambda\alpha\}$. By Theorem~\ref{elliptic-operators:theorem-spectral}, $E^k_\lambda$ is finite-dimensional, nonzero only for countably many
+$\lambda \geq 0$, and $E^k_0 = \mathcal{H}^k$. We write $\lambda_1^{(k)}$ for the smallest positive eigenvalue of $\Delta$ on $k$-forms.
+\end{notation}
+
+\begin{proposition}\label{hodge-theorem:proposition-eigenspace-complex}
+Let $\lambda > 0$. Then $d(E^k_\lambda) \subseteq E^{k+1}_\lambda$ and $\delta(E^k_\lambda) \subseteq E^{k-1}_\lambda$, the complex
+\[
+0 \to E^0_\lambda \xrightarrow{d} E^1_\lambda \xrightarrow{d} \cdots \xrightarrow{d} E^n_\lambda \to 0
+\]
+is exact, $E^k_\lambda = dE^{k-1}_\lambda \oplus \delta E^{k+1}_\lambda$ orthogonally, and $d$ restricts to an isomorphism $\delta E^{k+1}_\lambda \to dE^k_\lambda$. Consequently $\sum_k(-1)^k\dim E^k_\lambda = 0$.
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1: invariance.} $d$ and $\delta$ commute with $\Delta$ (Proposition~\ref{riemannian-geometry:proposition-adjoint}), so they map $\lambda$-eigenforms to $\lambda$-eigenforms.
+
+\emph{Step 2: decomposition.} For $\alpha \in E^k_\lambda$, $\alpha = \lambda^{-1}\Delta\alpha = d(\lambda^{-1}\delta\alpha) + \delta(\lambda^{-1}d\alpha)$, with $\lambda^{-1}\delta\alpha \in E^{k-1}_\lambda$ and $\lambda^{-1}d\alpha \in E^{k+1}_\lambda$ by
+Step 1. The two summands are orthogonal, as in Theorem~\ref{hodge-theorem:theorem-decomposition}.
+
+\emph{Step 3: exactness.} If $\alpha \in E^k_\lambda$ and $d\alpha = 0$, Step 2 gives $\alpha = d(\lambda^{-1}\delta\alpha)$, so $\alpha$ is exact within the complex. For the isomorphism, $d$ maps $\delta E^{k+1}_\lambda$ onto
+$d(dE^{k-1}_\lambda \oplus \delta E^{k+1}_\lambda) = dE^k_\lambda$, and it is injective there: if $d\delta\beta = 0$ then $\|\delta\beta\|^2 = (\beta, d\delta\beta) = 0$.
+
+\emph{Step 4: alternating sum.} An exact sequence of finite-dimensional vector spaces has vanishing alternating sum of dimensions (by rank--nullity, $\dim E^k_\lambda = \dim\ker d_k + \dim\operatorname{im}d_k$
+and $\ker d_k = \operatorname{im}d_{k-1}$, so the sum telescopes).
+\end{proof}
+
+\begin{corollary}[McKean--Singer identity, finite form]\label{hodge-theorem:corollary-mckean-singer}
+For every $\Lambda \geq 0$ and every $t \in \RR$,
+\[
+\sum_{k=0}^n(-1)^k\sum_{\lambda \leq \Lambda}e^{-t\lambda}\dim E^k_\lambda = \chi(M).
+\]
+\end{corollary}
+
+\begin{proof}
+The terms with $\lambda > 0$ cancel by Proposition~\ref{hodge-theorem:proposition-eigenspace-complex}, and the terms with $\lambda = 0$ give $\sum_k(-1)^k\dim\mathcal{H}^k = \chi(M)$ by
+Corollary~\ref{hodge-theorem:corollary-euler-characteristic}.
+\end{proof}
+
+\begin{remark}\label{hodge-theorem:remark-heat-kernel}
+Letting $\Lambda \to \infty$, the left-hand side becomes $\sum_k(-1)^k\operatorname{tr}e^{-t\Delta_k}$; the series converge because the eigenvalues grow like $k^{2/n}$ (Weyl's law; on tori this is
+Proposition~\ref{elliptic-operators:proposition-weyl-torus}). So the supertrace of the heat operator is independent of $t$. As $t \to \infty$ it tends to $\sum_k(-1)^k\dim\mathcal{H}^k$, which is the Hodge
+theorem; as $t \to 0$ the heat kernel has an asymptotic expansion whose coefficients are integrals of local curvature expressions, and comparing the two limits proves the Gauss--Bonnet--Chern theorem and,
+for twisted Dirac operators, the index theorem \cite{lawson-michelsohn}.
+\end{remark}
+
+\begin{example}\label{hodge-theorem:example-circle-eigenspaces}
+On $M = \RR/2\pi\ZZ$, $E^0_{j^2}$ is spanned by $\cos j\theta$ and $\sin j\theta$ and $E^1_{j^2}$ by $\cos j\theta\,d\theta$ and $\sin j\theta\,d\theta$ for $j \geq 1$ (Example~\ref{hodge-theorem:example-wirtinger}). The map
+$d \colon E^0_{j^2} \to E^1_{j^2}$ sends $\cos j\theta \mapsto -j\sin j\theta\,d\theta$ and $\sin j\theta \mapsto j\cos j\theta\,d\theta$, an isomorphism, as Proposition~\ref{hodge-theorem:proposition-eigenspace-complex} predicts;
+and $\chi(S^1) = 1 - 1 = 0$.
+\end{example}
+
+The eigenvalue expansion also gives the heat equation proof of the Hodge theorem, announced in Remark~\ref{hodge-theorem:remark-elliptic-complexes}: the heat flow deforms a closed form inside its cohomology
+class to the harmonic representative.
+
+\begin{proposition}[Heat flow]\label{hodge-theorem:proposition-heat-flow}
+Let $\alpha \in \Omega^k(M)$, let $(u_j)$ be an orthonormal basis of eigenforms of $\Delta$ on $k$-forms with eigenvalues $\lambda_j$ (Theorem~\ref{elliptic-operators:theorem-spectral}), and
+$\alpha(t) = \sum_je^{-t\lambda_j}(\alpha, u_j)u_j$ for $t \geq 0$. Then:
+\begin{enumerate}
+\item $\alpha(t)$ is smooth in $(t, x)$, $\partial_t\alpha + \Delta\alpha = 0$ and $\alpha(0) = \alpha$;
+\item $\|\alpha(t) - H\alpha\| \leq e^{-t\lambda_1^{(k)}}\|\alpha - H\alpha\|$, and $\alpha(t) \to H\alpha$ in every $C^r$ norm as $t \to \infty$;
+\item $d(\alpha(t)) = (d\alpha)(t)$; if $\alpha$ is closed, every $\alpha(t)$ is closed and cohomologous to $\alpha$, and the energy $\|\alpha(t)\|^2$ decreases to $\|H\alpha\|^2$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) The coefficients $c_j = (\alpha, u_j)$ decay faster than any power of $\lambda_j$ (proof of Theorem~\ref{elliptic-operators:theorem-spectral}), and $|e^{-t\lambda_j}| \leq 1$, so the series and its term-by-term
+derivatives in $t$ converge in every Sobolev norm, uniformly in $t \geq 0$; hence $\alpha(t)$ is smooth and the equation holds term by term.
+
+(2) $H\alpha = \sum_{\lambda_j = 0}c_ju_j$, so $\|\alpha(t) - H\alpha\|^2 = \sum_{\lambda_j > 0}e^{-2t\lambda_j}c_j^2 \leq e^{-2t\lambda_1^{(k)}}\|\alpha - H\alpha\|^2$. The same estimate holds for
+$\Delta^N(\alpha(t) - H\alpha) = (\Delta^N\alpha)(t) - H\Delta^N\alpha$, since $(\Delta^N\alpha, u_j) = \lambda_j^Nc_j$. The operator $\Delta^N$ is elliptic of order $2N$ (its symbol is $|\xi|^{2N}$), so
+Theorem~\ref{elliptic-operators:theorem-elliptic-estimate} bounds the $H^{2N}$ norm of $\alpha(t) - H\alpha$ by a constant times $e^{-t\lambda_1^{(k)}}(\|\Delta^N\alpha\| + \|\alpha\|)$. By the Sobolev embedding, used as in the proof of Theorem~\ref{elliptic-operators:theorem-spectral}, the $H^{2N}$ norm bounds the $C^r$ norm for
+$N$ large.
+
+(3) Let $v$ be an eigenform of $\Delta$ on $(k+1)$-forms, with eigenvalue $\mu$. Then $\delta v \in E^k_\mu$, so $(u_j, \delta v) = 0$ unless $\lambda_j = \mu$ (eigenspaces of a symmetric operator for different
+eigenvalues are orthogonal), and
+\[\begin{aligned}
+(d(\alpha(t)), v) &= (\alpha(t), \delta v) = \sum_je^{-t\lambda_j}c_j(u_j, \delta v)\\
+&= e^{-t\mu}(\alpha, \delta v) = e^{-t\mu}(d\alpha, v) = ((d\alpha)(t), v).
+\end{aligned}\]
+As the eigenforms $v$ are complete in $L^2$, $d(\alpha(t)) = (d\alpha)(t)$. If $d\alpha = 0$ then $d\alpha(t) = 0$, and
+$\alpha(t) - \alpha = -\int_0^t\Delta\alpha(s)\,ds = d\bigl(-\int_0^t\delta\alpha(s)\,ds\bigr)$ is exact. Finally $\|\alpha(t)\|^2 = \sum_je^{-2t\lambda_j}c_j^2$ is non-increasing with limit $\sum_{\lambda_j = 0}c_j^2 = \|H\alpha\|^2$.
+\end{proof}
+
+The size of the first eigenvalue on functions is controlled by the Ricci curvature. The next theorem, due to Lichnerowicz, is the second application of the Bochner--Weitzenb\"ock formula.
+
+\begin{theorem}[Lichnerowicz]\label{hodge-theorem:theorem-lichnerowicz}
+Let $(M, g)$ be a compact oriented Riemannian manifold of dimension $n \geq 2$ with $\mathrm{Ric} \geq (n - 1)\kappa\,g$ for a constant $\kappa > 0$. Then the smallest positive eigenvalue of the Laplacian on functions
+satisfies $\lambda_1^{(0)} \geq n\kappa$.
+\end{theorem}
+
+\begin{proof}
+Let $\Delta f = \lambda f$ with $\lambda > 0$ and $f \neq 0$, and $\alpha = df$.
+
+\emph{Step 1: the two sides of the Bochner formula.} Since $d$ commutes with $\Delta$, $\Delta\alpha = d\Delta f = \lambda\alpha$, and $\|\alpha\|^2 = (\delta df, f) = \lambda\|f\|^2$. So
+Proposition~\ref{hodge-theorem:proposition-weitzenbock} gives
+\[\begin{aligned}
+\lambda^2\|f\|^2 = \lambda\|\alpha\|^2 = (\Delta\alpha, \alpha) &= \|\nabla\alpha\|^2 + \int_M\mathrm{Ric}(\alpha^\sharp, \alpha^\sharp)\,\mathrm{vol}\\
+&\geq \|\nabla\alpha\|^2 + (n - 1)\kappa\lambda\|f\|^2 .
+\end{aligned}\]
+\emph{Step 2: the Hessian term.} In a local orthonormal frame let $h_{ij} = (\nabla_{e_i}\alpha)(e_j)$, so that $|\nabla\alpha|^2 = \sum_{i,j}h_{ij}^2$ and, by Lemma~\ref{hodge-theorem:lemma-codifferential-connection}(3),
+$\Delta f = \delta\alpha = -\sum_ih_{ii}$. By the Cauchy--Schwarz inequality, $(\sum_ih_{ii})^2 \leq n\sum_ih_{ii}^2 \leq n\sum_{i,j}h_{ij}^2$. Hence $|\nabla\alpha|^2 \geq \frac1n(\Delta f)^2$ pointwise, and
+$\|\nabla\alpha\|^2 \geq \frac1n\|\Delta f\|^2 = \frac{\lambda^2}{n}\|f\|^2$.
+
+\emph{Step 3: conclusion.} Combining, $\lambda^2 \geq \frac{\lambda^2}{n} + (n - 1)\kappa\lambda$; dividing by $\lambda > 0$, $\lambda\frac{n - 1}{n} \geq (n - 1)\kappa$, that is, $\lambda \geq n\kappa$.
+\end{proof}
+
+\begin{example}\label{hodge-theorem:example-lichnerowicz-sphere}
+The bound is attained on the round unit sphere $S^n$, where $\mathrm{Ric} = (n - 1)g$ (so $\kappa = 1$): the restriction of a linear function $z$ to $S^n$ satisfies $\Delta z = nz$
+(Exercise~\ref{hodge-theorem:exercise-linear-functions-sphere}), so $\lambda_1^{(0)} \leq n$, and Theorem~\ref{hodge-theorem:theorem-lichnerowicz} gives $\lambda_1^{(0)} = n$. For $n = 2$ this is the value $2$ of
+Exercise~\ref{elliptic-operators:exercise-first-eigenvalue-sphere}, now obtained without knowing the whole spectrum.
+\end{example}
+
+\begin{counterexample}\label{hodge-theorem:counterexample-lichnerowicz}
+A positive lower bound on the Ricci curvature is needed. The flat torus $\RR^n/L\ZZ^n$ has $\mathrm{Ric} = 0$ and first eigenvalue $4\pi^2/L^2$, attained by $\cos(2\pi x_1/L)$, which tends to $0$ as $L \to \infty$; so no
+bound depending only on $n$ holds when $\kappa = 0$. And a lower bound on $\mathrm{Ric}$ cannot be replaced by a lower bound on the scalar curvature: the product $S^2(1) \times S^1(L)$ of a unit sphere and a circle of
+length $L$ has scalar curvature $2 > 0$ but first eigenvalue at most $4\pi^2/L^2$, again by a function of the circle coordinate.
+\end{counterexample}
+
+\section{Harmonic forms in the middle degree}\label{hodge-theorem:section-middle-degree}
+
+Proposition~\ref{hodge-theorem:proposition-conformal-invariance} has an analogue in every even dimension: the Hodge star on forms of half the dimension depends only on the conformal class. In dimensions divisible by four
+this leads to a description of the signature by harmonic forms.
+
+\begin{proposition}\label{hodge-theorem:proposition-conformal-star}
+Let $g^{\prime} = e^{2u}g$ be conformal metrics on an oriented $n$-manifold, with Hodge stars $*$ and $*^{\prime}$. Then $*^{\prime} = e^{(n - 2k)u}\,*$ on $k$-forms. In particular, for $n = 2m$, $*^{\prime} = *$ on $m$-forms, and
+on a compact manifold of dimension $2m$ the space $\mathcal{H}^m$ depends only on the conformal class of the metric.
+\end{proposition}
+
+\begin{proof}
+Let $(\omega^1, \ldots, \omega^n)$ be an oriented orthonormal coframe for $g$; then $(e^u\omega^1, \ldots, e^u\omega^n)$ is one for $g^{\prime}$. For a multi-index $I$ of length $k$ with complement $I^c$, the
+Hodge star of $g$ maps $\omega^I \mapsto \epsilon_I\omega^{I^c}$ with a sign $\epsilon_I$ depending only on the permutation $(I, I^c)$ (Theorem~\ref{multilinear-algebra:theorem-hodge-star}), and that of $g^{\prime}$ maps
+$e^{ku}\omega^I \mapsto \epsilon_Ie^{(n-k)u}\omega^{I^c}$. By linearity over functions, $*^{\prime}\omega^I = e^{(n-2k)u}*\omega^I$. On a compact manifold an $m$-form is harmonic if and only if $d\alpha = 0$ and
+$d{*}\alpha = 0$ (Proposition~\ref{riemannian-geometry:proposition-adjoint}(3) and $\delta = \pm{*}d{*}$), conditions which, for $n = 2m$, involve the metric only through $*$ on $m$-forms.
+\end{proof}
+
+\begin{definition}\label{hodge-theorem:definition-self-dual}
+Let $M$ be an oriented Riemannian manifold of dimension $n = 4l$. On $2l$-forms, $** = (-1)^{2l \cdot 2l} = 1$ (Theorem~\ref{multilinear-algebra:theorem-hodge-star}), so $\Lambda^{2l}T^*M = \Lambda^+ \oplus \Lambda^-$ with
+$\Lambda^{\pm} = \{\alpha : *\alpha = \pm\alpha\}$. Forms with $*\alpha = \alpha$ are \emph{self-dual}, those with $*\alpha = -\alpha$ \emph{anti-self-dual}. When $M$ is compact, $\mathcal{H}^\pm$ denotes the space of
+harmonic self-dual, respectively anti-self-dual, $2l$-forms, and $b^\pm = \dim\mathcal{H}^\pm$.
+\end{definition}
+
+Since $*$ is an isometry with $*^2 = 1$ on $\Lambda^{2l}$, it is self-adjoint there, and $\Lambda^+ \perp \Lambda^-$ pointwise; every $2l$-form splits as $\alpha = \frac12(\alpha + *\alpha) + \frac12(\alpha - *\alpha)$.
+As $*$ commutes with $\Delta$, it preserves $\mathcal{H}^{2l}$, and $\mathcal{H}^{2l} = \mathcal{H}^+ \oplus \mathcal{H}^-$.
+
+\begin{theorem}\label{hodge-theorem:theorem-signature-harmonic}
+Let $M$ be a compact oriented Riemannian manifold of dimension $4l$. Then the signature of $M$ (Definition~\ref{poincare-duality:definition-intersection-form}) is $\sigma(M) = b^+ - b^-$, and $b^+ + b^- = b_{2l}(M)$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: the form on harmonic representatives.} Under the de Rham isomorphism the cup product corresponds to the wedge product (Theorem~\ref{de-rham:theorem-de-rham}), so
+$\sigma(M)$ is the signature of $Q(\alpha, \beta) = \int_M\alpha \wedge \beta$ on $H^{2l}_{\mathrm{dR}}(M)$, which by Theorem~\ref{hodge-theorem:theorem-hodge} we may compute on $\mathcal{H}^{2l} = \mathcal{H}^+ \oplus \mathcal{H}^-$.
+
+\emph{Step 2: definiteness.} For $\alpha \in \mathcal{H}^\pm$, $Q(\alpha, \alpha) = \int\alpha \wedge \alpha = \pm\int\alpha \wedge *\alpha = \pm\|\alpha\|^2$. So $Q$ is positive definite on $\mathcal{H}^+$ and negative definite on $\mathcal{H}^-$.
+
+\emph{Step 3: orthogonality.} For $\alpha \in \mathcal{H}^+$ and $\beta \in \mathcal{H}^-$, $Q(\alpha, \beta) = \int\alpha \wedge \beta = \int\beta \wedge *\alpha = (\beta, \alpha) = 0$, using that forms of even degree commute and that
+$\mathcal{H}^+ \perp \mathcal{H}^-$. So in a basis adapted to $\mathcal{H}^+ \oplus \mathcal{H}^-$ the matrix of $Q$ is block diagonal, positive definite of size $b^+$ and negative definite of size $b^-$, and
+$\sigma(M) = b^+ - b^-$ by Sylvester's law of inertia. The last statement is Theorem~\ref{hodge-theorem:theorem-hodge}.
+\end{proof}
+
+\begin{example}\label{hodge-theorem:example-self-dual}
+\begin{enumerate}
+\item On $\RR^4$ with the standard metric and orientation, $*(dx_1 \wedge dx_2) = dx_3 \wedge dx_4$, $*(dx_1 \wedge dx_3) = -dx_2 \wedge dx_4$, $*(dx_1 \wedge dx_4) = dx_2 \wedge dx_3$, so $\Lambda^+$ has the basis
+$dx_1 \wedge dx_2 + dx_3 \wedge dx_4$, $dx_1 \wedge dx_3 - dx_2 \wedge dx_4$, $dx_1 \wedge dx_4 + dx_2 \wedge dx_3$, and $\Lambda^-$ the basis with the opposite signs: both have rank $3$.
+\item On the flat torus $T^4 = \RR^4/\ZZ^4$ the harmonic $2$-forms are those with constant coefficients (Example~\ref{riemannian-geometry:example-harmonic-forms}), so by (1) $b^+ = b^- = 3$ and $\sigma(T^4) = 0$.
+\item On $S^2 \times S^2$ with the product of two unit round metrics, let $\omega_1$, $\omega_2$ be the pullbacks of the two area forms. They are closed and parallel, and $*\omega_1 = \omega_2$, since
+$\omega_1 \wedge \omega_2$ is the volume form and $\omega_1$, $\omega_2$ are built from complementary halves of an oriented orthonormal coframe. Hence $\omega_1$ and $\omega_2$ are harmonic, they span
+$\mathcal{H}^2$ (as $b_2 = 2$ by Theorem~\ref{de-rham:theorem-kunneth}), $\mathcal{H}^+ = \RR(\omega_1 + \omega_2)$ and $\mathcal{H}^- = \RR(\omega_1 - \omega_2)$, and $\sigma = 0$, as in
+Example~\ref{poincare-duality:example-intersection-forms}.
+\end{enumerate}
+\end{example}
+
+\begin{remark}\label{hodge-theorem:remark-signature-operator}
+On all forms of a $4l$-manifold there is an involution $\tau$, equal to $*$ up to a sign depending on the degree, which anticommutes with $d + \delta$. The operator $d + \delta$ from the $(+1)$-eigenspace to the
+$(-1)$-eigenspace of $\tau$ is the \emph{signature operator}; its index is $\sigma(M)$, by the argument of Theorem~\ref{hodge-theorem:theorem-signature-harmonic} (the contributions of the degrees other than $2l$ cancel in
+pairs). The Atiyah--Singer theorem computes this index as the $L$-genus, which is Hirzebruch's signature theorem (Remark~\ref{characteristic-classes:remark-signature}). In dimension $4$ the self-dual and anti-self-dual
+$2$-forms are the starting point of Donaldson theory: a connection whose curvature is anti-self-dual (an \emph{instanton}) minimises the Yang--Mills functional.
+\end{remark}
+
+\section{Products}\label{hodge-theorem:section-products}
+
+\begin{proposition}\label{hodge-theorem:proposition-products}
+Let $M$ and $N$ be compact oriented Riemannian manifolds and $M \times N$ the product with the product metric and orientation, with projections $p$ and $q$. If $\alpha \in \mathcal{H}^a(M)$ and $\beta \in \mathcal{H}^b(N)$,
+then $p^*\alpha \wedge q^*\beta$ is harmonic, and the map
+\[
+\bigoplus_{a+b=k}\mathcal{H}^a(M) \otimes \mathcal{H}^b(N) \to \mathcal{H}^k(M \times N), \qquad \alpha \otimes \beta \mapsto p^*\alpha \wedge q^*\beta,
+\]
+is an isomorphism. In particular $\mathcal{H}^k(M \times N)$ depends only on $\mathcal{H}^\bullet(M)$ and $\mathcal{H}^\bullet(N)$.
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1: the star of a product form.} If $(\omega^1, \ldots, \omega^m)$ and $(\theta^1, \ldots, \theta^{n})$ are oriented orthonormal coframes on $M$ and $N$, their pullbacks form an oriented orthonormal coframe on
+$M \times N$. For multi-indices $I$, $J$ of lengths $a$, $b$, with $\omega^I \wedge \omega^{I^c} = \epsilon_I\omega^{1\cdots m}$ and similarly for $J$, one checks on these monomials that
+\[
+*(p^*\omega^I \wedge q^*\theta^J) = (-1)^{b(m - a)}\,p^*(*\omega^I) \wedge q^*(*\theta^J),
+\]
+since $(\omega^I \wedge \theta^J) \wedge (\omega^{I^c} \wedge \theta^{J^c}) = (-1)^{b(m-a)}(\omega^I \wedge \omega^{I^c}) \wedge (\theta^J \wedge \theta^{J^c})$. By linearity over functions of $p$ and of $q$ the formula holds for all
+$\alpha \in \Omega^a(M)$, $\beta \in \Omega^b(N)$.
+
+\emph{Step 2: harmonicity.} If $\alpha$ and $\beta$ are harmonic, then $\alpha$, $*\alpha$, $\beta$ and $*\beta$ are closed, so $p^*\alpha \wedge q^*\beta$ and, by Step 1, its Hodge star are closed. By
+Proposition~\ref{riemannian-geometry:proposition-adjoint}(3) the product is harmonic.
+
+\emph{Step 3: bijectivity.} The map is the composition of the isomorphisms of Theorem~\ref{hodge-theorem:theorem-hodge} for $M$ and $N$, the K\"unneth isomorphism of Theorem~\ref{de-rham:theorem-kunneth} (compact
+manifolds have finite good covers \cite[Chapter I, Section 5]{bott-tu}), and the inverse of the isomorphism of Theorem~\ref{hodge-theorem:theorem-hodge} for $M \times N$, since the harmonic form
+$p^*\alpha \wedge q^*\beta$ represents the class $[p^*\alpha \wedge q^*\beta]$.
+\end{proof}
+
+\begin{example}\label{hodge-theorem:example-products}
+On $S^1 \times S^{n-1}$ with the product of round metrics, $\mathcal{H}^\bullet(S^1)$ is spanned by $1$ and $d\theta$, and $\mathcal{H}^\bullet(S^{n-1})$ by $1$ and the volume form $\mathrm{vol}_{S^{n-1}}$ (Exercise~\ref{hodge-theorem:exercise-harmonic-top}
+and Example~\ref{de-rham:example-spheres}). So the harmonic forms on the product are spanned by $1$, $d\theta$, $\mathrm{vol}_{S^{n-1}}$ and $d\theta \wedge \mathrm{vol}_{S^{n-1}}$; for $n \geq 3$ this agrees with the
+discussion of the sharpness of Theorem~\ref{hodge-theorem:theorem-bochner}, where $d\theta$ appeared as the parallel harmonic $1$-form.
+\end{example}
+
 \section{Exercises}\label{hodge-theorem:section-exercises}
 
 \begin{exercise}\label{hodge-theorem:exercise-harmonic-top}
@@ -397,4 +725,60 @@ $\overline\nabla_XY = \nabla_XY + \mathrm{II}(X, Y)$, and on the unit sphere the
 Hence $(\nabla_Xdz)(Y) = \langle\overline\nabla_XY - \nabla_XY, e_3\rangle = -\langle X, Y\rangle\langle x, e_3\rangle = -\langle X, Y\rangle z$. Hence $\nabla_{e_i}\alpha = -z\,e^i$ in an orthonormal frame, and
 $\nabla^*\nabla\alpha = -\sum_i\nabla_{e_i}(-z\,e^i)$, which at a point with $\nabla e_i = 0$ is $\sum_ie_i(z)\,e^i = dz = \alpha$. Since $\mathrm{Ric} = g$ on the unit sphere, the formula reads
 $\Delta\alpha = \alpha + \alpha = 2\alpha$, as it should.
+\end{solution}
+
+\begin{exercise}\label{hodge-theorem:exercise-linear-functions-sphere}
+Let $z$ be the restriction to the round unit sphere $S^n \subseteq \RR^{n+1}$ of a linear function. Show that $\Delta z = nz$, and deduce that $n$ is an eigenvalue of the Laplacian on functions with multiplicity at least
+$n + 1$.
+\end{exercise}
+
+\begin{solution}
+The computation in the solution of Exercise~\ref{hodge-theorem:exercise-weitzenbock-sphere} works in every dimension: with $z(x) = \langle x, e\rangle$, the Gauss formula gives $(\nabla_Xdz)(Y) = -\langle X, Y\rangle z$ for
+tangent fields $X$, $Y$. By Lemma~\ref{hodge-theorem:lemma-codifferential-connection}(3), $\Delta z = \delta dz = -\sum_{i=1}^n(\nabla_{e_i}dz)(e_i) = nz$. The restrictions of the $n + 1$ coordinate functions are linearly
+independent (their values at the points $\pm e_j$ distinguish them), so the eigenspace has dimension at least $n + 1$. (In fact it is exactly $n + 1$, by the theory of spherical harmonics.)
+\end{solution}
+
+\begin{exercise}\label{hodge-theorem:exercise-twisted-circle}
+On the circle $S^1 = \RR/2\pi\ZZ$ let $L_a$ be the trivial complex line bundle with the flat connection $\nabla = d + ia\,d\theta$, $a \in \RR$, and the standard Hermitian metric. Compute the cohomology of the twisted
+de Rham complex $0 \to C^\infty(S^1, \CC) \xrightarrow{d_\nabla} \Omega^1(S^1, \CC) \to 0$ of Example~\ref{hodge-theorem:example-elliptic-complexes}(2), and check that its Euler characteristic is $0 = \chi(S^1)$.
+\end{exercise}
+
+\begin{solution}
+In Fourier series, $d_\nabla(\sum_kc_ke^{ik\theta}) = \sum_ki(k + a)c_ke^{ik\theta}\,d\theta$. If $a \notin \ZZ$, every factor $i(k + a)$ is nonzero, so $d_\nabla$ is injective, and it is surjective onto $\Omega^1$: for smooth
+$g\,d\theta = \sum_kb_ke^{ik\theta}\,d\theta$ the coefficients $b_k/(i(k + a))$ decay rapidly, since $|k + a| \geq \operatorname{dist}(a, \ZZ) > 0$ grows like $|k|$. So $H^0 = H^1 = 0$. If $a = -k_0 \in \ZZ$, then
+$\ker d_\nabla = \CC e^{ik_0\theta}$ and the image consists of the forms with $b_{k_0} = 0$, so $H^0 \cong H^1 \cong \CC$. In both cases $\dim H^0 - \dim H^1 = 0$. (For $a \in \ZZ$ the connection is gauge equivalent to $d$
+via multiplication by $e^{-ia\theta}$, which explains why the cohomology is that of the trivial local system; for $a \notin \ZZ$ the holonomy $e^{-2\pi ia}$ is nontrivial.)
+\end{solution}
+
+\begin{exercise}\label{hodge-theorem:exercise-odd-dimension-signature}
+Let $M$ be a compact oriented Riemannian manifold of dimension $4l + 2$. Show that $*$ satisfies $** = -1$ on $\mathcal{H}^{2l+1}$, and deduce that $b_{2l+1}(M)$ is even.
+\end{exercise}
+
+\begin{solution}
+On $k$-forms in dimension $n$, $** = (-1)^{k(n-k)}$ (Theorem~\ref{multilinear-algebra:theorem-hodge-star}); for $n = 4l + 2$ and $k = 2l + 1$ the exponent $(2l + 1)^2$ is odd. So $*$ is a complex structure on the
+real vector space $\mathcal{H}^{2l+1}$ (it preserves harmonic forms because it commutes with $\Delta$), which therefore has even dimension; conclude with Theorem~\ref{hodge-theorem:theorem-hodge}. (This also follows
+from the nondegenerate skew-symmetric intersection form of Definition~\ref{poincare-duality:definition-intersection-form}.)
+\end{solution}
+
+\begin{exercise}\label{hodge-theorem:exercise-eigenvalue-one-forms}
+Let $M$ be compact, connected and oriented. Show that the nonzero eigenvalues of $\Delta$ on functions are eigenvalues of $\Delta$ on $1$-forms, with eigenforms $df$, and that on a compact oriented surface the
+positive eigenvalues on $1$-forms are exactly the positive eigenvalues on functions, each with twice the multiplicity.
+\end{exercise}
+
+\begin{solution}
+If $\Delta f = \lambda f$ with $\lambda > 0$, then $\Delta df = \lambda df$ and $df \neq 0$ (otherwise $\lambda f = \delta df = 0$). On a surface, by Proposition~\ref{hodge-theorem:proposition-eigenspace-complex},
+$E^1_\lambda = dE^0_\lambda \oplus \delta E^2_\lambda$ for $\lambda > 0$, with $d \colon E^0_\lambda \to E^1_\lambda$ injective and $\delta \colon E^2_\lambda \to E^1_\lambda$ injective (by the dual argument). The Hodge star maps
+$E^0_\lambda$ isomorphically onto $E^2_\lambda$, as it commutes with $\Delta$. Hence $\dim E^1_\lambda = 2\dim E^0_\lambda$, and $E^1_\lambda = 0$ if $\lambda$ is not an eigenvalue on functions.
+\end{solution}
+
+\begin{exercise}\label{hodge-theorem:exercise-self-dual-cp2}
+Let $M$ be a compact oriented Riemannian $4$-manifold. Show that for every $2$-form $\alpha$, $\alpha \wedge \alpha = (|\alpha^+|^2 - |\alpha^-|^2)\,\mathrm{vol}$, where $\alpha = \alpha^+ + \alpha^-$ is the decomposition into
+self-dual and anti-self-dual parts. Deduce that if $b^- = 0$ (for instance for $\CC\PP^2$ with the Fubini--Study metric, Chapter~\ref{kahler}), every closed $2$-form $\alpha$ satisfies $\int_M\alpha \wedge \alpha \geq 0$.
+\end{exercise}
+
+\begin{solution}
+$\alpha^+ \wedge \alpha^- = \alpha^- \wedge *\alpha^+ = \langle\alpha^-, \alpha^+\rangle\mathrm{vol} = 0$, $\alpha^+ \wedge \alpha^+ = \alpha^+ \wedge *\alpha^+ = |\alpha^+|^2\mathrm{vol}$ and
+$\alpha^- \wedge \alpha^- = -\alpha^- \wedge *\alpha^- = -|\alpha^-|^2\mathrm{vol}$; expand $(\alpha^+ + \alpha^-)^{\wedge 2}$. For a closed $\alpha$ write $\alpha = h + d\beta$ with $h$ harmonic
+(Theorem~\ref{hodge-theorem:theorem-decomposition}); by Stokes, $\int\alpha \wedge \alpha = \int h \wedge h$, and if $b^- = 0$ then $h = h^+$ is self-dual (the anti-self-dual part of a harmonic form is harmonic, as $*$
+commutes with $\Delta$), so $\int h \wedge h = \|h\|^2 \geq 0$.
 \end{solution}

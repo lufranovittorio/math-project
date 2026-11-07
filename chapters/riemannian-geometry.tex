@@ -784,27 +784,81 @@ $t_1 < t_0 < t_2$ close to $t_0$ (or $t_1 = t_0$ at the endpoints), $c([t_1, t_2
 Theorem~\ref{riemannian-geometry:theorem-local-minimisation}(1) it is a monotone reparametrisation of a radial geodesic from $x$, and having constant speed, it is that geodesic, affinely reparametrised. So $c$ is a geodesic near every $t_0$.
 \end{proof}
 
+The proof of the Hopf--Rinow theorem below consists of three steps of independent interest, which we state separately. The first describes how a curve leaves a normal ball
+\cite[2.104]{gallot-hulin-lafontaine}.
+
+\begin{lemma}[Geodesic spheres]\label{riemannian-geometry:lemma-geodesic-sphere}
+Let $p \in M$, let $\exp_p$ be a diffeomorphism from $B(0, \varepsilon) \subseteq T_pM$ onto an open set, let $0 < \delta < \varepsilon$, and let
+$S_\delta = \exp_p(\{w \in T_pM : |w| = \delta\})$ be the \emph{geodesic sphere} of radius $\delta$. If $q \in M$ and $d(p, q) \geq \delta$, then
+\begin{enumerate}
+\item every piecewise smooth curve from $p$ to $q$ meets $S_\delta$;
+\item $d(p, q) = \delta + \min_{x \in S_\delta} d(x, q)$, and the minimum is attained.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{Step 1: the sphere is the boundary of the ball.} By Theorem~\ref{riemannian-geometry:theorem-local-minimisation}(2), $B = \exp_p(B(0, \delta))$ is the open metric ball of radius $\delta$
+about $p$, and every $x \in S_\delta$ has $d(p, x) = \delta$. The set $K = \exp_p(\bar B(0, \delta))$ is compact, hence closed, and contains $B$; so $\bar B \subseteq K$ and $\bar B \setminus B \subseteq K \setminus B = S_\delta$.
+
+\emph{Step 2: (1).} Let $c \colon [a, b] \to M$ go from $p$ to $q$. As $d(p, q) \geq \delta$, $q \notin B$, so $t_1 = \inf\{t : c(t) \notin B\}$ is defined, and $t_1 > a$ since $B$ is an open neighbourhood of $c(a) = p$. As $B$ is open,
+$c(t_1) \notin B$, while $c(t) \in B$ for $t < t_1$; so $c(t_1) \in \bar B \setminus B \subseteq S_\delta$ by Step 1.
+
+\emph{Step 3: (2).} The function $x \mapsto d(x, q)$ is continuous (it is $1$-Lipschitz) and $S_\delta$ is compact, so the minimum $m$ is attained. For $x \in S_\delta$, $d(p, q) \leq d(p, x) + d(x, q) = \delta + d(x, q)$, so
+$d(p, q) \leq \delta + m$. Conversely, for a curve $c$ from $p$ to $q$ and $t_1$ as in Step 2, $L(c) = L(c|_{[a, t_1]}) + L(c|_{[t_1, b]}) \geq d(p, c(t_1)) + d(c(t_1), q) \geq \delta + m$; taking the infimum over $c$, $d(p, q) \geq \delta + m$.
+\end{proof}
+
+\begin{proposition}[Minimising geodesics from a point]\label{riemannian-geometry:proposition-minimising-from-point}
+Let $(M, g)$ be connected and $p \in M$, and suppose that $\exp_p$ is defined on all of $T_pM$. Then every $q \in M$ is joined to $p$ by a minimising geodesic: there is $u \in T_pM$ with $|u| = 1$ such that
+$\gamma(t) = \exp_p(tu)$ satisfies $\gamma(r) = q$ and $L(\gamma|_{[0, r]}) = r$, where $r = d(p, q)$. In particular $\{x : d(p, x) \leq R\} = \exp_p(\bar B(0, R))$ for every $R \geq 0$.
+\end{proposition}
+
+\begin{proof}
+For $q = p$ there is nothing to prove; let $q \neq p$ and $r = d(p, q) > 0$.
+
+\emph{Step 1: the direction.} Take a normal ball $\exp_p(B(0, \varepsilon))$ and $0 < \delta < \min(\varepsilon, r)$. By Lemma~\ref{riemannian-geometry:lemma-geodesic-sphere} there is $x_0 = \exp_p(\delta u) \in S_\delta$, $|u| = 1$, with
+$r = \delta + d(x_0, q)$. Let $\gamma(t) = \exp_p(tu)$, defined for all $t$ by hypothesis.
+
+\emph{Step 2: the set of good times.} Let $T = \{t \in [0, r] : d(\gamma(t), q) = r - t\}$. It is closed, since both sides are continuous in $t$, and $\delta \in T$ because $\gamma(\delta) = x_0$. Let $t_0 = \max T \geq \delta$. For
+$t \in T$, $d(p, \gamma(t)) \geq d(p, q) - d(\gamma(t), q) = t$, while $L(\gamma|_{[0, t]}) = t$; so $\gamma|_{[0, t]}$ is minimising.
+
+\emph{Step 3: $t_0 = r$.} Suppose $t_0 < r$. Let $y = \gamma(t_0)$ and take a normal ball about $y$ of radius $\varepsilon^{\prime}$ and $0 < \eta < \min(\varepsilon^{\prime}, r - t_0)$. Lemma~\ref{riemannian-geometry:lemma-geodesic-sphere} at $y$ gives
+$x_1$ with $d(y, x_1) = \eta$ and $d(y, q) = \eta + d(x_1, q)$, so $d(x_1, q) = r - t_0 - \eta$ and $d(p, x_1) \geq r - d(x_1, q) = t_0 + \eta$. The curve going along $\gamma$ from $p$ to $y$ and then along the radial unit-speed
+geodesic from $y$ to $x_1$ has length $t_0 + \eta \leq d(p, x_1)$, so it is minimising, and by Lemma~\ref{riemannian-geometry:lemma-minimising-geodesic} it is a geodesic. A geodesic is determined by its position and velocity at
+$t_0$, so this curve is $\gamma|_{[0, t_0 + \eta]}$, and $x_1 = \gamma(t_0 + \eta)$. Then $t_0 + \eta \in T$, contradicting the maximality of $t_0$.
+
+\emph{Step 4: conclusion.} So $r \in T$: $d(\gamma(r), q) = 0$, that is $\gamma(r) = q$, and $\gamma|_{[0, r]}$ is minimising by Step 2. For the last statement, $\exp_p(\bar B(0, R))$ lies in the closed metric ball of radius $R$
+since $d(p, \exp_p(v)) \leq L(t \mapsto \exp_p(tv)) = |v|$, and conversely every $q$ with $d(p, q) \leq R$ is $\exp_p(ru)$ with $r \leq R$.
+\end{proof}
+
+\begin{lemma}[Extension of geodesics]\label{riemannian-geometry:lemma-extension-geodesics}
+Let $(M, g)$ be a Riemannian manifold whose distance is complete. Then every geodesic $\gamma \colon [0, b) \to M$ with $b < \infty$ extends to a geodesic on $[0, b + \eta)$ for some $\eta > 0$. Consequently every geodesic
+is defined on all of $\RR$.
+\end{lemma}
+
+\begin{proof}
+A constant geodesic extends trivially; otherwise, after reparametrising, $\gamma$ has unit speed. For $s, t < b$, $d(\gamma(s), \gamma(t)) \leq |s - t|$, so for $t_k \uparrow b$ the sequence $(\gamma(t_k))$ is Cauchy and converges to
+some $q$. Take $W$ and $\delta$ for $q$ as in Lemma~\ref{riemannian-geometry:lemma-uniformly-normal}: unit-speed geodesics starting in $W$ are defined on $(-\delta, \delta)$. Choose $k$ with $t_k > b - \delta$ and
+$\gamma(t_k) \in W$. The geodesic with initial velocity $\dot\gamma(t_k)$ is defined on $(-\delta, \delta)$; by uniqueness it agrees with $t \mapsto \gamma(t_k + t)$ where both are defined, so together they define a geodesic on
+$[0, t_k + \delta)$, and $t_k + \delta > b$. For the last statement, the maximal interval of definition of a geodesic is open (Theorem~\ref{smooth-manifolds:theorem-flow}), and by what was just shown, and the same argument applied to $t \mapsto \gamma(-t)$, it has no finite endpoint.
+\end{proof}
+
 \begin{theorem}[Hopf--Rinow]\label{riemannian-geometry:theorem-hopf-rinow}
 For a connected Riemannian manifold $(M, g)$ the following are equivalent: $(M, d)$ is a complete metric space; the geodesics are defined for all time; closed bounded subsets are compact. In that case any
 two points are joined by a minimising geodesic. In particular compact Riemannian manifolds are geodesically complete.
 \end{theorem}
 
 \begin{proof}
-We show more: the three conditions are also equivalent to (d) \emph{$\exp_p$ is defined on all of $T_pM$ for some $p$}; and (d) implies that every $q$ is joined to $p$ by a minimising geodesic.
+We show that the three conditions are also equivalent to (d) \emph{$\exp_p$ is defined on all of $T_pM$ for some $p$}.
 
-\emph{Step 1: (d) gives minimising geodesics from $p$.} Let $q \neq p$, $r = d(p, q)$, and choose $0 < \delta < r$ with $\exp_p$ a diffeomorphism on $B(0, \delta')$ for some $\delta' > \delta$. The \emph{geodesic sphere}
-$S = \exp_p(\{|w| = \delta\})$ is compact; let $x_0 = \exp_p(\delta u) \in S$, $|u| = 1$, minimise $d(\cdot, q)$ on $S$. Every curve from $p$ to $q$ meets $S$ (by the argument in the proof of
-Theorem~\ref{riemannian-geometry:theorem-local-minimisation}), and points of $S$ have distance $\delta$ from $p$, so $r = \delta + d(x_0, q)$. Let $\gamma(t) = \exp_p(tu)$, defined for all $t$ by (d), and let
-$T = \{t \in [\delta, r] : d(\gamma(t), q) = r - t\}$, a closed set containing $\delta$. Let $t_0 = \max T$ and suppose $t_0 < r$. Apply the same construction at $\gamma(t_0)$: for small $\eta > 0$ there is $x_1$ on the geodesic sphere of
-radius $\eta$ about $\gamma(t_0)$ with $d(\gamma(t_0), q) = \eta + d(x_1, q)$, so $d(x_1, q) = r - t_0 - \eta$ and $d(p, x_1) \geq d(p, q) - d(x_1, q) = t_0 + \eta$. The curve going along $\gamma$ from $p$ to $\gamma(t_0)$ and then along the
-radial geodesic to $x_1$ has length $t_0 + \eta$, so it is minimising, and by Lemma~\ref{riemannian-geometry:lemma-minimising-geodesic} (after parametrising by arc length) it is a geodesic, hence equal to $\gamma$ on $[0, t_0 + \eta]$.
-So $x_1 = \gamma(t_0 + \eta)$ and $t_0 + \eta \in T$, a contradiction. Hence $t_0 = r$, $\gamma(r) = q$ and $L(\gamma|_{[0, r]}) = r$.
+\emph{Heine--Borel implies completeness.} A Cauchy sequence is bounded, so it lies in a closed bounded, hence compact, set; it has a convergent subsequence and therefore converges.
 
-\emph{Step 2: the equivalences.} If closed bounded sets are compact, a Cauchy sequence, being bounded, has a convergent subsequence, hence converges; so $M$ is complete. If $M$ is complete, let $\gamma \colon [0, b) \to M$ be a maximal unit-speed
-geodesic with $b < \infty$. For $t_k \uparrow b$, $d(\gamma(t_k), \gamma(t_l)) \leq |t_k - t_l|$, so $(\gamma(t_k))$ is Cauchy and converges to some $q$. Take $W$, $\delta$ for $q$ as in Lemma~\ref{riemannian-geometry:lemma-uniformly-normal}; then
-geodesics with initial point in $W$ and speed $1$ are defined on $(-\delta, \delta)$. Choose $t_k > b - \delta$ with $\gamma(t_k) \in W$; the geodesic with initial velocity $\dot\gamma(t_k)$ is defined up to time $t_k + \delta > b$ and extends $\gamma$ by
-uniqueness, a contradiction. So geodesics are defined for all time, which implies (d). Finally, assume (d) and let $K$ be closed and bounded, say $K \subseteq \{x : d(p, x) \leq R\}$. By Step 1, this ball is contained in
-$\exp_p(\bar B(0, R))$, which is compact; so $K$ is compact. The last statements follow from Step 1 applied at every point, and from the compactness of closed bounded subsets of a compact space.
+\emph{Completeness implies geodesic completeness}: this is Lemma~\ref{riemannian-geometry:lemma-extension-geodesics}. Geodesic completeness trivially implies (d).
+
+\emph{(d) implies Heine--Borel.} Let $K$ be closed and bounded, say $K \subseteq \{x : d(p, x) \leq R\}$. By Proposition~\ref{riemannian-geometry:proposition-minimising-from-point}, this ball is $\exp_p(\bar B(0, R))$, which is compact
+as the continuous image of a compact set; so $K$ is compact.
+
+Finally, when the conditions hold, $\exp_x$ is defined on all of $T_xM$ for every $x$, and Proposition~\ref{riemannian-geometry:proposition-minimising-from-point} at $x$ gives minimising geodesics from $x$. A compact metric space is
+complete, so compact Riemannian manifolds are geodesically complete.
 \end{proof}
 
 \begin{remark}\label{riemannian-geometry:remark-heine-borel}
