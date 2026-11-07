@@ -1329,10 +1329,10 @@ $t_1\mathcal{H}^s(A) \leq \mu(A) \leq 2^st_2\mathcal{H}^s(A)$. The factor $2^s$ 
 the $5r$-covering lemma, which works with balls from the start. For $\mu = \mathcal{H}^s\llcorner A$ the two inequalities are the two halves of the upper density theorem
 (Theorem~\ref{geometric-measure-theory:theorem-density-bounds}).
 \item \emph{Differentiation of one measure by another.} For two Radon measures $\mu$, $\nu$ on $\RR^n$, the limit $\lim_{r \to 0}\nu(\overline{B}(x, r))/\mu(\overline{B}(x, r))$ exists for $\mu$-almost every $x$
-and is the Radon--Nikodym derivative of the absolutely continuous part of $\nu$ with respect to $\mu$ \cite[Chapter 1]{evans-gariepy}. For $\mu = \lambda$ this is
+and is the Radon--Nikodym derivative of the absolutely continuous part of $\nu$ with respect to $\mu$ (Theorem~\ref{radon-measures:theorem-besicovitch-differentiation}). For $\mu = \lambda$ this is
 Theorem~\ref{radon-measures:theorem-differentiation-measures}. For a general $\mu$ the Vitali covering lemma is useless, since $\mu(B(x, 3r))$ need not be comparable to $\mu(B(x, r))$, and it is
-replaced by the \emph{Besicovitch covering theorem}, which uses the geometry of $\RR^n$: if every point of a bounded set $A$ is the centre of some ball of a family of closed balls with bounded radii,
-one can extract a subfamily that still covers $A$ and in which no point lies in more than $N(n)$ balls, a number depending only on $n$. In a general metric space the Vitali argument survives
+replaced by the Besicovitch covering theorem (Theorem~\ref{radon-measures:theorem-besicovitch}), which uses the geometry of $\RR^n$ and produces covers that split into $N(n)$ disjoint
+families. In a general metric space the Vitali argument survives
 when $\mu$ is doubling, $\mu(\overline{B}(x, 2r)) \leq C\mu(\overline{B}(x, r))$; see Subsection~\ref{radon-measures:subsection-doubling}.
 \item \emph{Rectifiable measures.} The rectifiability criteria have their natural form for measures. A Radon measure $\mu$ on $\RR^n$ is \emph{$k$-rectifiable} if $\mu = \theta\mathcal{H}^k\llcorner E$
 with $E$ countably $k$-rectifiable and $\theta$ a positive Borel function. \emph{Preiss's theorem} says that $\mu$ is $k$-rectifiable if and only if $0 < \Theta^k(\mu, x) < \infty$ for $\mu$-almost every

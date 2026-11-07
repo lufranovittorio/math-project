@@ -8,7 +8,9 @@ hypotheses, and their generalisations to $\RR^n$ and to measures. The tools are 
 the averages of an integrable function over small balls around $x$ converge to its value at almost every $x$, and its corollaries are the density theorem and the first half of the fundamental theorem.
 The Cantor function shows what can go wrong in the second half. The Radon--Nikodym theorem, proved with von Neumann's Hilbert space argument, says when a measure has a density with respect to another,
 and the Lebesgue decomposition splits every measure into an absolutely continuous and a singular part. Finally the absolutely continuous functions are exactly the indefinite integrals, which gives the
-fundamental theorem of calculus in its final form. The extension of the Radon--Nikodym theorem to signed and complex measures is in Chapter~\ref{signed-measures}; differentiation of general
+fundamental theorem of calculus in its final form. The last section studies functions of bounded variation: Lebesgue's theorem that monotone
+functions are differentiable almost everywhere, proved with Vitali's covering theorem for fine covers; Fubini's theorem on series of monotone functions; the decomposition of a monotone
+function into absolutely continuous, singular continuous and jump parts; and the theorem of Banach and Zarecki, which characterises absolute continuity by Luzin's property (N). The extension of the Radon--Nikodym theorem to signed and complex measures is in Chapter~\ref{signed-measures}; differentiation of general
 Radon measures, and with respect to doubling measures, is in Chapter~\ref{radon-measures}.
 References: \cite{folland-real}, \cite{rudin-rca} and \cite{stein-shakarchi-real}.
 
@@ -88,6 +90,44 @@ the balls chosen are disjoint (those chosen at step $k$ lie in $U_k$, which miss
 The theorem is used in Chapter~\ref{geometric-measure-theory} to identify Hausdorff measure with Lebesgue measure. The proof used only two facts: the $5r$-covering lemma, valid in every metric
 space, and $\lambda(\overline{B}(x, 5r)) = 5^n\lambda(\overline{B}(x, r))$. So it works verbatim for balls of any norm on $\RR^n$ (for instance cubes, the balls of the maximum norm), and with
 $5^n$ replaced by a power of the doubling constant, for doubling measures on separable metric spaces (Chapter~\ref{radon-measures}).
+
+The theorem fills an open set. Lebesgue's original form of the covering theorem fills an arbitrary set, using only balls from a prescribed family that contains arbitrarily small balls around each of
+its points; this is what is needed to differentiate monotone functions in Section~\ref{lebesgue-differentiation:section-bounded-variation}. For an arbitrary $E \subseteq \RR^n$, the outer measure
+$\lambda^*(E)$ is the infimum of $\lambda(U)$ over open $U \supseteq E$: enlarge the boxes of a cover of $E$ slightly to open boxes.
+
+\begin{definition}\label{lebesgue-differentiation:definition-fine-cover}
+Let $E \subseteq \RR^n$. A family $\mathcal{F}$ of closed balls of positive radius is a \emph{fine cover} (or \emph{Vitali cover}) of $E$ if for every $x \in E$ and every $\delta > 0$ there is a ball $B \in \mathcal{F}$
+with $x \in B$ and $\operatorname{diam}B < \delta$.
+\end{definition}
+
+The balls need not be centred at the points of $E$. In $\RR$ the closed balls are the closed intervals $[c, d]$, $c < d$; for instance the intervals $[x, x + h]$ and $[x - h, x]$ for $x \in E$ and
+$0 < h < 1$ form a fine cover of $E$.
+
+\begin{corollary}[Vitali covering theorem for fine covers]\label{lebesgue-differentiation:corollary-vitali-fine}
+Let $E \subseteq \RR^n$ with $\lambda^*(E) < \infty$, and let $\mathcal{F}$ be a fine cover of $E$. There are countably many pairwise disjoint balls $B_1, B_2, \ldots \in \mathcal{F}$ with
+$\lambda^*(E \setminus \bigcup_iB_i) = 0$. Consequently, for every $\varepsilon > 0$ there are finitely many pairwise disjoint balls $B_1, \ldots, B_m \in \mathcal{F}$ with
+$\lambda^*(E \setminus \bigcup_{i=1}^mB_i) < \varepsilon$, and given an open $U \supseteq E$ the balls can be chosen inside $U$.
+\end{corollary}
+
+\begin{proof}
+Fix an open $U \supseteq E$ with $\lambda(U) < \infty$, and let $\theta = \frac145^{-n}$. We may assume $\lambda^*(E) > 0$.
+
+\emph{Step 1: a fixed proportion.} Let $E^{\prime} \subseteq E$ with $\lambda^*(E^{\prime}) > 0$, and $U^{\prime} \supseteq E^{\prime}$ open. We find finitely many disjoint balls of $\mathcal{F}$ in $U^{\prime}$ with
+$\lambda^*(E^{\prime} \setminus \bigcup B_i) \leq (1 - \theta)\lambda^*(E^{\prime})$. Shrinking $U^{\prime}$, we may assume $\lambda(U^{\prime}) \leq (1 + \theta)\lambda^*(E^{\prime})$. Let $\mathcal{F}^{\prime}$ be the
+family of balls of $\mathcal{F}$ of diameter at most $1$, contained in $U^{\prime}$ and meeting $E^{\prime}$; since $U^{\prime}$ is open and $\mathcal{F}$ is fine, every point of $E^{\prime}$ lies in a ball of
+$\mathcal{F}^{\prime}$. By Lemma~\ref{lebesgue-differentiation:lemma-five-r-covering} and Remark~\ref{lebesgue-differentiation:remark-five-r-countable} there is a countable disjoint subfamily $\mathcal{G}$ with
+$E^{\prime} \subseteq \bigcup_{\mathcal{G}}\widehat{B^{\prime}}$, so $\lambda^*(E^{\prime}) \leq 5^n\sum_{\mathcal{G}}\lambda(B^{\prime})$, and finitely many balls $B_1, \ldots, B_m$ of $\mathcal{G}$ have total measure at
+least $\frac125^{-n}\lambda^*(E^{\prime}) = 2\theta\lambda^*(E^{\prime})$. Then
+\[
+\lambda^*\Bigl(E^{\prime} \setminus \bigcup_iB_i\Bigr) \leq \lambda\Bigl(U^{\prime} \setminus \bigcup_iB_i\Bigr) = \lambda(U^{\prime}) - \sum_i\lambda(B_i) \leq (1 + \theta - 2\theta)\lambda^*(E^{\prime}).
+\]
+
+\emph{Step 2: iteration.} Apply Step 1 to $E$ and $U$, then to $E \setminus (B_1 \cup \cdots \cup B_m)$ and the open set $U \setminus (B_1 \cup \cdots \cup B_m)$, and so on, stopping if the remainder becomes null.
+The balls are pairwise disjoint and lie in $U$, and after $k$ rounds the remainder has outer measure at most $(1 - \theta)^k\lambda^*(E) \to 0$.
+
+\emph{Step 3: finitely many balls.} The disjoint balls lie in $U$, so $\sum_i\lambda(B_i) \leq \lambda(U) < \infty$; choose $m$ with $\sum_{i > m}\lambda(B_i) < \varepsilon$. Then
+$\lambda^*(E \setminus \bigcup_{i \leq m}B_i) \leq \lambda^*(E \setminus \bigcup_iB_i) + \sum_{i > m}\lambda(B_i) < \varepsilon$.
+\end{proof}
 
 \begin{definition}\label{lebesgue-differentiation:definition-maximal-function}
 For $f \in L^1_{\mathrm{loc}}(\RR^n)$, $x \in \RR^n$ and $r > 0$, the \emph{average} of $f$ over $B(x, r)$ is
@@ -334,6 +374,328 @@ $\mu_F(C) = F(1) - F(0) = 1$ for the Cantor function because $F$ is constant on 
 of bounded variation, hence not absolutely continuous.
 \end{example}
 
+\section{Monotone functions and bounded variation}\label{lebesgue-differentiation:section-bounded-variation}
+
+Absolutely continuous functions are differences of nondecreasing ones
+(Lemma~\ref{lebesgue-differentiation:lemma-absolutely-continuous}). Here we study the larger class of all differences of nondecreasing functions, the functions of bounded variation, without any
+continuity assumption. We prove Lebesgue's theorem that they are differentiable almost everywhere, decompose them into an absolutely continuous, a singular continuous and a jump part, and characterise
+the absolutely continuous ones among them by the theorem of Banach and Zarecki: a continuous function of bounded variation is absolutely continuous exactly when it maps null sets to null sets. All
+functions in this section are real-valued; a complex function is treated through its real and imaginary parts.
+
+\subsection{Functions of bounded variation}\label{lebesgue-differentiation:subsection-bv}
+
+\begin{definition}\label{lebesgue-differentiation:definition-bounded-variation}
+Let $F \colon [c, d] \to \RR$. The \emph{total variation} of $F$ on $[c, d]$ is
+\[
+V(F; [c, d]) = \sup\Bigl\{\sum_{i=1}^m|F(t_i) - F(t_{i-1})| : c = t_0 < t_1 < \cdots < t_m = d\Bigr\} \in [0, \infty],
+\]
+the supremum over all partitions of $[c, d]$. The function $F$ is \emph{of bounded variation}, $F \in BV([c, d])$, if $V(F; [c, d]) < \infty$.
+\end{definition}
+
+\begin{notation}\label{lebesgue-differentiation:notation-bounded-variation}
+For $F \colon [a, b] \to \RR$ we keep the notation $V_F(x) = V(F; [a, x])$ of Definition~\ref{lebesgue-differentiation:definition-absolutely-continuous}, with $V_F(a) = 0$. One-sided limits are
+written $F(x+) = \lim_{t \downarrow x}F(t)$ and $F(x-) = \lim_{t \uparrow x}F(t)$, with the conventions $F(a-) = F(a)$ and $F(b+) = F(b)$. The \emph{jump} of $F$ at $x$ is $F(x+) - F(x-)$.
+\end{notation}
+
+Adding a point to a partition does not decrease the sum, by the triangle inequality; so the supremum may be taken over partitions containing any given finite set of points, and it is the
+limit of the sums along any sequence of partitions each refining the previous one and with mesh tending to $0$, provided $F$ is continuous.
+
+\begin{example}\label{lebesgue-differentiation:example-bounded-variation}
+\begin{enumerate}
+\item A monotone $F$ has $V(F; [c, d]) = |F(d) - F(c)|$: all the sums telescope.
+\item A Lipschitz $F$, $|F(x) - F(y)| \leq L|x - y|$, has $V(F; [c, d]) \leq L(d - c)$. In particular $C^1$ functions on $[c, d]$ are of bounded variation, by the mean value theorem.
+\item The indicator $\mathbf{1}_{[1/2, 1]}$ on $[0, 1]$ has variation $1$: a sum has exactly one non-zero term. Functions of bounded variation need not be continuous.
+\item $F(x) = x\sin(1/x)$, $F(0) = 0$, is continuous on $[0, 1]$ but not of bounded variation. At $t_k = 1/((k + \frac12)\pi)$ it takes the values $\pm t_k$ with alternating signs, so
+$|F(t_k) - F(t_{k+1})| = t_k + t_{k+1} \geq t_k$, and $\sum_k t_k = \infty$.
+\item $F(x) = x^2\sin(1/x^2)$, $F(0) = 0$, is differentiable at every point of $[0, 1]$, but the same argument with $t_k = ((k + \frac12)\pi)^{-1/2}$ gives the terms $t_k^2 + t_{k+1}^2 \geq t_k^2$,
+whose sum diverges. In contrast, $x^2\sin(1/x)$ has $|F^{\prime}| \leq 3$ on $[0, 1]$, so it is Lipschitz and of bounded variation.
+\end{enumerate}
+\end{example}
+
+\begin{proposition}\label{lebesgue-differentiation:proposition-variation}
+Let $F, G \colon [a, b] \to \RR$.
+\begin{enumerate}
+\item For $a \leq c \leq d \leq e \leq b$, $V(F; [c, e]) = V(F; [c, d]) + V(F; [d, e])$, and $|F(e) - F(c)| \leq V(F; [c, e])$.
+\item Functions of bounded variation are bounded: $|F(x)| \leq |F(a)| + V(F; [a, b])$.
+\item $V(F + G; [a, b]) \leq V(F; [a, b]) + V(G; [a, b])$ and $V(tF; [a, b]) = |t|V(F; [a, b])$; so $BV([a, b])$ is a vector space. It is closed under
+products:
+\[
+V(FG; [a, b]) \leq \|F\|_\infty V(G; [a, b]) + \|G\|_\infty V(F; [a, b]).
+\]
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) A partition of $[c, e]$ refined by $d$ splits into partitions of $[c, d]$ and $[d, e]$, and conversely two such partitions together form a partition of $[c, e]$ containing $d$; since adding $d$ does not
+decrease the sum, the suprema agree. The inequality is the trivial partition. (2) follows from (1): $|F(x) - F(a)| \leq V(F; [a, x]) \leq V(F; [a, b])$. (3) The first two statements hold for each partition sum.
+For the product, $|F(t_i)G(t_i) - F(t_{i-1})G(t_{i-1})| \leq |F(t_i)||G(t_i) - G(t_{i-1})| + |G(t_{i-1})||F(t_i) - F(t_{i-1})|$.
+\end{proof}
+
+\begin{theorem}[Jordan decomposition]\label{lebesgue-differentiation:theorem-jordan}
+A function $F \colon [a, b] \to \RR$ is of bounded variation if and only if it is a difference of two nondecreasing functions. More precisely, if $F \in BV([a, b])$, the \emph{positive} and
+\emph{negative variations}
+\[
+P_F = \tfrac12(V_F + F - F(a)), \qquad N_F = \tfrac12(V_F - F + F(a))
+\]
+are nondecreasing, vanish at $a$, and satisfy $F = F(a) + P_F - N_F$ and $V_F = P_F + N_F$. They are minimal: if $F = G - H$ with $G$, $H$ nondecreasing, then
+$P_F(y) - P_F(x) \leq G(y) - G(x)$ and $N_F(y) - N_F(x) \leq H(y) - H(x)$ for $x < y$.
+\end{theorem}
+
+\begin{proof}
+A difference of nondecreasing functions is of bounded variation by Example~\ref{lebesgue-differentiation:example-bounded-variation}(1) and Proposition~\ref{lebesgue-differentiation:proposition-variation}(3).
+Conversely, let $F \in BV([a, b])$ and $x < y$. By Proposition~\ref{lebesgue-differentiation:proposition-variation}(1), $V_F(y) - V_F(x) = V(F; [x, y]) \geq |F(y) - F(x)|$, so both
+$V_F(y) - V_F(x) \pm (F(y) - F(x))$ are $\geq 0$: $P_F$ and $N_F$ are nondecreasing. The identities are immediate. For minimality, write $\Delta_iF = F(t_i) - F(t_{i-1})$ for a partition of $[x, y]$. Then
+$|\Delta_iF| \pm \Delta_iF = 2(\Delta_iF)^{\pm} \leq 2\Delta_iG$ for $+$ and $\leq 2\Delta_iH$ for $-$, because $\Delta_iF = \Delta_iG - \Delta_iH$ with both increments $\geq 0$. Summing,
+$\sum_i|\Delta_iF| + (F(y) - F(x)) \leq 2(G(y) - G(x))$, and taking the supremum over partitions, $2(P_F(y) - P_F(x)) \leq 2(G(y) - G(x))$; similarly for $N_F$.
+\end{proof}
+
+The Jordan decomposition of a function is the analogue of the Jordan decomposition of a signed measure into positive and negative parts (Chapter~\ref{signed-measures}), and the two correspond under
+$F \mapsto \mu_F$; the minimality statement is the analogue of the minimality of $\mu^+$ and $\mu^-$.
+
+\subsection{Lebesgue's theorem on monotone functions}\label{lebesgue-differentiation:subsection-monotone}
+
+\begin{lemma}\label{lebesgue-differentiation:lemma-monotone-jumps}
+Let $F \colon [a, b] \to \RR$ be nondecreasing. Then $F(x-)$ and $F(x+)$ exist for every $x$, with $F(x-) \leq F(x) \leq F(x+)$; $F$ is continuous at $x$ if and only if its jump at $x$ is $0$; and for
+finitely many points $a \leq s_1 < \cdots < s_m \leq b$ the jumps satisfy $\sum_j(F(s_j+) - F(s_j-)) \leq F(b) - F(a)$. Consequently $F$ has at most countably many points of discontinuity, and the sum of all
+its jumps is at most $F(b) - F(a)$.
+\end{lemma}
+
+\begin{proof}
+$F(x-) = \sup_{t < x}F(t)$ and $F(x+) = \inf_{t > x}F(t)$ by monotonicity, and both are squeezed around $F(x)$. Choose points $a \leq u_0 \leq s_1 \leq u_1 \leq s_2 \leq \cdots \leq s_m \leq u_m \leq b$ with
+$u_{j-1} < s_j < u_j$ whenever $s_j$ is an interior point (and $u_{j-1} = s_j$ or $u_j = s_j$ at an endpoint). Then $F(s_j+) - F(s_j-) \leq F(u_j) - F(u_{j-1})$, and the right sides telescope to at most
+$F(b) - F(a)$. So at most $k(F(b) - F(a))$ points have a jump larger than $1/k$, and the set of discontinuities is a countable union of finite sets.
+\end{proof}
+
+\begin{definition}\label{lebesgue-differentiation:definition-dini}
+For $F \colon [a, b] \to \RR$ and $x \in (a, b)$ the four \emph{Dini derivatives} are
+\[\begin{aligned}
+D^+F(x) &= \limsup_{h \downarrow 0}\frac{F(x + h) - F(x)}{h}, & D_+F(x) &= \liminf_{h \downarrow 0}\frac{F(x + h) - F(x)}{h}, \\
+D^-F(x) &= \limsup_{h \downarrow 0}\frac{F(x) - F(x - h)}{h}, & D_-F(x) &= \liminf_{h \downarrow 0}\frac{F(x) - F(x - h)}{h},
+\end{aligned}\]
+with values in $[-\infty, \infty]$. Always $D_+F \leq D^+F$ and $D_-F \leq D^-F$, and $F$ is differentiable at $x$ if and only if the four are equal and finite.
+\end{definition}
+
+For $F(x) = |x|$ at $0$: $D^+F = D_+F = 1$ and $D^-F = D_-F = -1$. For $F(x) = x\sin(1/x)$ at $0$: $D^+F = D^-F = 1$ and $D_+F = D_-F = -1$.
+
+\begin{theorem}[Lebesgue]\label{lebesgue-differentiation:theorem-lebesgue-monotone}
+Let $F \colon [a, b] \to \RR$ be nondecreasing. Then $F$ is differentiable almost everywhere, $F^{\prime}$ is integrable, and
+\[
+\int_a^bF^{\prime}\,d\lambda \leq F(b) - F(a).
+\]
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: $D^+F \leq D_-F$ almost everywhere.} For rationals $0 \leq u < v$ let $E = \{x \in (a, b) : D_-F(x) < u < v < D^+F(x)\}$ and $s = \lambda^*(E)$. Let $\varepsilon > 0$ and $U \supseteq E$ open with
+$\lambda(U) < s + \varepsilon$. For $x \in E$ there are arbitrarily small $h > 0$ with $[x - h, x] \subseteq U$ and $F(x) - F(x - h) < uh$; these intervals form a fine cover of $E$, so by
+Corollary~\ref{lebesgue-differentiation:corollary-vitali-fine} there are disjoint ones $I_1 = [x_1 - h_1, x_1], \ldots, I_m = [x_m - h_m, x_m]$ with $\lambda^*(E \setminus \bigcup_iI_i) < \varepsilon$. Then
+\[
+\sum_i(F(x_i) - F(x_i - h_i)) < u\sum_ih_i \leq u\lambda(U) < u(s + \varepsilon).
+\]
+Let $A = E \cap \bigcup_i\operatorname{int}I_i$; it differs from $E \cap \bigcup_iI_i$ by finitely many points, so $\lambda^*(A) > s - \varepsilon$. For $y \in A$ there are arbitrarily small $k > 0$ such that $[y, y + k]$ lies
+in the interior of the interval $I_i$ containing $y$, and $F(y + k) - F(y) > vk$. By the corollary again there are disjoint such intervals $J_1 = [y_1, y_1 + k_1], \ldots, J_p = [y_p, y_p + k_p]$ with
+$\lambda^*(A \setminus \bigcup_jJ_j) < \varepsilon$, so $\sum_jk_j > s - 2\varepsilon$. Each $J_j$ lies in some $I_i$, and since $F$ is nondecreasing, the increments of $F$ over the disjoint $J_j$ inside $I_i$ add
+up to at most the increment over $I_i$. Hence
+\[
+v(s - 2\varepsilon) < \sum_j(F(y_j + k_j) - F(y_j)) \leq \sum_i(F(x_i) - F(x_i - h_i)) < u(s + \varepsilon).
+\]
+Letting $\varepsilon \to 0$, $vs \leq us$, so $s = 0$. The set where $D^+F > D_-F$ is the union of the sets $E$ over all rational pairs (note $D_-F \geq 0$), so it is null.
+
+\emph{Step 2: the derivative exists in $[0, \infty]$ almost everywhere.} The function $G(x) = -F(-x)$ on $[-b, -a]$ is nondecreasing, and $D^+G(-x) = D^-F(x)$, $D_-G(-x) = D_+F(x)$. Step 1 for $G$ gives
+$D^-F \leq D_+F$ almost everywhere. So almost everywhere
+\[
+D^+F \leq D_-F \leq D^-F \leq D_+F \leq D^+F,
+\]
+all four Dini derivatives agree, and the limit $F^{\prime}(x) = \lim_{h \to 0}(F(x + h) - F(x))/h$ exists in $[0, \infty]$.
+
+\emph{Step 3: integrability.} Extend $F$ by $F(x) = F(b)$ for $x > b$, and let $g_k(x) = k(F(x + 1/k) - F(x))$. The $g_k$ are nonnegative and Borel (monotone functions are Borel, their superlevel sets being
+intervals), and $g_k \to F^{\prime}$ almost everywhere on $[a, b]$. By Fatou's lemma and translation invariance,
+\[\begin{aligned}
+\int_a^bF^{\prime} &\leq \liminf_k\int_a^bg_k = \liminf_k\Bigl(k\int_b^{b + 1/k}F - k\int_a^{a + 1/k}F\Bigr) \\
+&= \liminf_k\Bigl(F(b) - k\int_a^{a + 1/k}F\Bigr) \leq F(b) - F(a),
+\end{aligned}\]
+since $F \geq F(a)$ on $[a, a + 1/k]$. In particular $F^{\prime} < \infty$ almost everywhere, so $F$ is differentiable almost everywhere.
+\end{proof}
+
+\begin{corollary}\label{lebesgue-differentiation:corollary-bv-differentiable}
+Every $F \in BV([a, b])$ is differentiable almost everywhere, $F^{\prime} \in L^1([a, b])$, and $\int_a^b|F^{\prime}|\,d\lambda \leq V(F; [a, b])$.
+\end{corollary}
+
+\begin{proof}
+By Theorem~\ref{lebesgue-differentiation:theorem-jordan}, $F = F(a) + P_F - N_F$; both are differentiable almost everywhere by Theorem~\ref{lebesgue-differentiation:theorem-lebesgue-monotone}, and where both are,
+$|F^{\prime}| \leq P_F^{\prime} + N_F^{\prime}$. Integrating, $\int|F^{\prime}| \leq P_F(b) + N_F(b) = V_F(b)$.
+\end{proof}
+
+A series of nondecreasing functions may be differentiated term by term, a fact that also follows from Lebesgue's theorem.
+
+\begin{theorem}[Fubini's theorem on series of monotone functions]\label{lebesgue-differentiation:theorem-fubini-series}
+Let $F_n \colon [a, b] \to \RR$ be nondecreasing functions such that $F(x) = \sum_nF_n(x)$ converges for every $x \in [a, b]$. Then $F^{\prime} = \sum_nF_n^{\prime}$ almost everywhere.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: normalisation and a first inequality.} Replacing $F_n$ by $F_n - F_n(a)$, which changes neither the convergence nor the derivatives, we may assume $F_n(a) = 0$, so $F_n \geq 0$. The partial
+sums $S_N = \sum_{n \leq N}F_n$ and the remainders $R_N = F - S_N = \sum_{n > N}F_n$ are nondecreasing, and $0 \leq R_N \leq R_N(b) \to 0$. Outside a null set $Z$, the countably many functions $F$, $F_n$,
+$R_N$ are all differentiable by Theorem~\ref{lebesgue-differentiation:theorem-lebesgue-monotone}, and there $F_{N+1}^{\prime} \geq 0$ and $R_N^{\prime} \geq 0$ give
+$S_N^{\prime} \leq S_{N+1}^{\prime} \leq F^{\prime}$. So $\sum_nF_n^{\prime}$ converges outside $Z$, with sum at most $F^{\prime}$.
+
+\emph{Step 2: a subsequence of remainders.} Choose $N_1 < N_2 < \cdots$ with $R_{N_k}(b) < 2^{-k}$. The series $G = \sum_kR_{N_k}$ of nondecreasing nonnegative functions converges everywhere, as
+$R_{N_k}(x) \leq 2^{-k}$. By Step 1 applied to it, $\sum_kR_{N_k}^{\prime} \leq G^{\prime} < \infty$ almost everywhere, so $R_{N_k}^{\prime} \to 0$, that is, $S_{N_k}^{\prime} \to F^{\prime}$, almost
+everywhere. Since $S_N^{\prime}$ increases with $N$, the whole sequence converges to $F^{\prime}$ almost everywhere.
+\end{proof}
+
+The inequality in Theorem~\ref{lebesgue-differentiation:theorem-lebesgue-monotone} is strict for the Cantor function (Counterexample~\ref{lebesgue-differentiation:counterexample-cantor-function}), and for
+every function with a jump. The next theorem shows that these are the only two obstructions.
+
+\begin{definition}\label{lebesgue-differentiation:definition-jump-function}
+Let $F \colon [a, b] \to \RR$ be nondecreasing. Its \emph{jump function} is
+\[
+J_F(x) = \sum_{a \leq t < x}(F(t+) - F(t)) + \sum_{a < t \leq x}(F(t) - F(t-)),
+\]
+the sums running over the countably many discontinuities (Lemma~\ref{lebesgue-differentiation:lemma-monotone-jumps}). A nondecreasing $F$ is \emph{singular} if $F^{\prime} = 0$ almost everywhere.
+\end{definition}
+
+\begin{theorem}[Lebesgue decomposition of a monotone function]\label{lebesgue-differentiation:theorem-monotone-decomposition}
+Let $F \colon [a, b] \to \RR$ be nondecreasing, and put $F_{ac}(x) = F(a) + \int_a^xF^{\prime}\,d\lambda$. Then
+\[
+F = F_{ac} + F_{sc} + J_F,
+\]
+where $F_{ac}$ is absolutely continuous and nondecreasing, $J_F$ is nondecreasing with $J_F^{\prime} = 0$ almost everywhere, and $F_{sc}$ is continuous, nondecreasing and singular. The decomposition is unique:
+if $F = A + S + J_F$ with $A$ absolutely continuous, $A(a) = F(a)$, and $S$ continuous and singular, then $A = F_{ac}$ and $S = F_{sc}$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: $F - F_{ac}$ is nondecreasing and singular.} For $x < y$, Theorem~\ref{lebesgue-differentiation:theorem-lebesgue-monotone} on $[x, y]$ gives $\int_x^yF^{\prime} \leq F(y) - F(x)$, which says that
+$F - F_{ac}$ is nondecreasing. By Corollary~\ref{lebesgue-differentiation:corollary-ftc-lebesgue}, $F_{ac}^{\prime} = F^{\prime}$ almost everywhere, so $(F - F_{ac})^{\prime} = 0$ almost everywhere. $F_{ac}$ is absolutely
+continuous by Lemma~\ref{lebesgue-differentiation:lemma-absolutely-continuous}(1), and nondecreasing as $F^{\prime} \geq 0$.
+
+\emph{Step 2: $J_F$ and $F - J_F$ are nondecreasing.} For $x < y$,
+\[
+J_F(y) - J_F(x) = \sum_{x \leq t < y}(F(t+) - F(t)) + \sum_{x < t \leq y}(F(t) - F(t-)) \geq 0 .
+\]
+Any finitely many terms of this sum are bounded by $F(y) - F(x)$: choosing intermediate points as in the proof of Lemma~\ref{lebesgue-differentiation:lemma-monotone-jumps}, they are bounded by increments of $F$
+over disjoint subintervals of $[x, y]$. So $J_F(y) - J_F(x) \leq F(y) - F(x)$.
+
+\emph{Step 3: $F - J_F$ is continuous.} Let $x < y$. Since $F(y-) \geq F(x+)$, the term $F(y) - F(y-)$ is at most $F(y) - F(x+)$, which tends to $0$ as $y \downarrow x$; and the sum of the jumps at points
+$t \in (x, y)$ tends to $0$ as $y \downarrow x$, being the tail of a convergent series of nonnegative terms. So $J_F(x+) - J_F(x) = F(x+) - F(x)$, and similarly $J_F(x) - J_F(x-) = F(x) - F(x-)$. Hence
+$F - J_F$ has no jumps, and it is continuous by Lemma~\ref{lebesgue-differentiation:lemma-monotone-jumps}.
+
+\emph{Step 4: conclusion.} Put $F_{sc} = F - F_{ac} - J_F$, continuous as $F - J_F$ and $F_{ac}$ are. The function $F - F_{ac}$ is nondecreasing and has the same jumps as $F$, $F_{ac}$ being continuous;
+applying Step 2 to it, $F_{sc} = (F - F_{ac}) - J_{F - F_{ac}}$ is nondecreasing. Now $F_{sc}$ and $J_F$ are nondecreasing, so their derivatives, which exist almost everywhere, are $\geq 0$; they add up to
+$(F - F_{ac})^{\prime} = 0$ almost everywhere by Step 1. So both vanish almost everywhere.
+
+\emph{Step 5: uniqueness.} If $F = A + S + J_F$ as stated, then $A^{\prime} = F^{\prime} - S^{\prime} - J_F^{\prime} = F^{\prime}$ almost everywhere, and by
+Theorem~\ref{lebesgue-differentiation:theorem-absolutely-continuous}, $A(x) = F(a) + \int_a^xA^{\prime} = F_{ac}(x)$. Then $S = F - F_{ac} - J_F = F_{sc}$.
+\end{proof}
+
+\begin{example}\label{lebesgue-differentiation:example-monotone-decomposition}
+Let $c$ be the Cantor function on $[0, 1]$ and $F(x) = x + c(x) + \mathbf{1}_{[1/2, 1]}(x)$. Then $F^{\prime} = 1$ almost everywhere, $F_{ac}(x) = x$, $J_F = \mathbf{1}_{[1/2, 1]}$ (the only jump, of size $1$,
+is at $\frac12$, where $F(\frac12-) = F(\frac12) - 1$), and $F_{sc} = c$. Under $F \mapsto \mu_F$ (Theorem~\ref{measure-theory:theorem-lebesgue-stieltjes}, after making $F$ right-continuous) the three parts
+correspond to the absolutely continuous part $\lambda$, the singular continuous part $\mu_c$ and the discrete part $\delta_{1/2}$ of the measure, as in
+Example~\ref{lebesgue-differentiation:example-lebesgue-decomposition}.
+\end{example}
+
+\subsection{The theorem of Banach and Zarecki}\label{lebesgue-differentiation:subsection-banach-zarecki}
+
+What distinguishes the Cantor function from an absolutely continuous function? It is continuous and of bounded variation, but it maps the Cantor set, a null set, onto $[0, 1]$. This turns out to be the
+only possible defect.
+
+\begin{definition}\label{lebesgue-differentiation:definition-luzin-n}
+A function $F \colon [a, b] \to \RR$ has \emph{Luzin's property (N)} if $\lambda(F(Z)) = 0$ for every null set $Z \subseteq [a, b]$ (the image $F(Z)$ is then measurable, being a null set).
+\end{definition}
+
+\begin{lemma}\label{lebesgue-differentiation:lemma-image-measure-bound}
+Let $F \colon [a, b] \to \RR$ and $E \subseteq [a, b]$.
+\begin{enumerate}
+\item If $F$ is differentiable at every point of $E$ with $|F^{\prime}| \leq M$ on $E$, then $\lambda^*(F(E)) \leq M\lambda^*(E)$.
+\item If $F$ is continuous, $E$ is measurable and $F$ is differentiable at every point of $E$, then $F^{\prime}$ is measurable on $E$ and $\lambda^*(F(E)) \leq \int_E|F^{\prime}|\,d\lambda$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) Let $\varepsilon > 0$, and for $k \geq 1$ let $E_k$ be the set of $x \in E$ with $|F(y) - F(x)| \leq (M + \varepsilon)|y - x|$ for all $y \in [a, b]$ with $|y - x| < 1/k$. The $E_k$ increase, with union $E$ by
+the definition of the derivative. Cover $E_k$ by countably many intervals $I_j$ of length $< 1/k$ with $\sum_j\lambda(I_j) \leq \lambda^*(E_k) + \varepsilon$. Two points $x, y$ of $E_k \cap I_j$ satisfy
+$|F(x) - F(y)| \leq (M + \varepsilon)\lambda(I_j)$, so $F(E_k \cap I_j)$ lies in an interval of length $(M + \varepsilon)\lambda(I_j)$, and
+$\lambda^*(F(E_k)) \leq (M + \varepsilon)(\lambda^*(E) + \varepsilon)$. It remains to pass to the limit in $k$. Choose Borel sets $H_k \supseteq F(E_k)$ with $\lambda(H_k) = \lambda^*(F(E_k))$ (intersections of
+open sets), and replace $H_k$ by $\bigcap_{j \geq k}H_j$, which still contains $F(E_k)$ since the $F(E_j)$ increase; now the $H_k$ increase, and their union contains $F(E)$, so
+$\lambda^*(F(E)) \leq \lim_k\lambda(H_k) \leq (M + \varepsilon)(\lambda^*(E) + \varepsilon)$. Let $\varepsilon \to 0$.
+
+(2) Extend $F$ by $F(x) = F(b)$ for $x > b$. The functions $g_k(x) = k(F(x + 1/k) - F(x))$ are continuous, and at every point of $E \setminus \{b\}$ they converge to $F^{\prime}$; so $F^{\prime}$ is
+measurable on $E$. For $\eta > 0$ and $m \geq 1$ let $E_m = \{x \in E : (m - 1)\eta \leq |F^{\prime}(x)| < m\eta\}$, a measurable set. By (1), $\lambda^*(F(E_m)) \leq m\eta\lambda(E_m)$, and so
+\[
+\lambda^*(F(E)) \leq \sum_m m\eta\lambda(E_m) \leq \sum_m\int_{E_m}(|F^{\prime}| + \eta)\,d\lambda = \int_E|F^{\prime}|\,d\lambda + \eta\lambda(E);
+\]
+let $\eta \to 0$.
+\end{proof}
+\begin{theorem}[Banach--Zarecki]\label{lebesgue-differentiation:theorem-banach-zarecki}
+A function $F \colon [a, b] \to \RR$ is absolutely continuous if and only if it is continuous, of bounded variation, and has Luzin's property (N).
+\end{theorem}
+
+\begin{proof}
+\emph{Absolutely continuous functions have the three properties.} Continuity is the definition applied to a single interval, and bounded variation is
+Lemma~\ref{lebesgue-differentiation:lemma-absolutely-continuous}(2). Let $Z$ be a null set, $\varepsilon > 0$, and $\delta$ as in the definition of absolute continuity. Choose an open $U$ with
+$Z \cap (a, b) \subseteq U \subseteq (a, b)$ and $\lambda(U) < \delta$, and write $U$ as the disjoint union of its components $(a_k, b_k)$. On $[a_k, b_k]$ the continuous $F$ attains its minimum and maximum at points
+$s_k$, $t_k$, so $F([a_k, b_k])$ is an interval of length $|F(t_k) - F(s_k)|$. The open intervals between $s_k$ and $t_k$ lie in the disjoint $(a_k, b_k)$, and their total length is $< \delta$; so for every $m$,
+$\sum_{k \leq m}|F(t_k) - F(s_k)| < \varepsilon$. Hence
+\[
+\lambda^*(F(Z)) \leq \lambda(F(\{a, b\})) + \sum_k\lambda(F([a_k, b_k])) \leq \varepsilon,
+\]
+and $F(Z)$ is null.
+
+\emph{The three properties imply absolute continuity.} By Corollary~\ref{lebesgue-differentiation:corollary-bv-differentiable}, $F$ is differentiable outside a null set $Z$, and $F^{\prime} \in L^1([a, b])$. Let
+$x < y$ in $[a, b]$. By the intermediate value theorem $F([x, y])$ contains the interval between $F(x)$ and $F(y)$, so by Lemma~\ref{lebesgue-differentiation:lemma-image-measure-bound}(2), applied to the measurable
+set $[x, y] \setminus Z$, and property (N),
+\[
+|F(y) - F(x)| \leq \lambda^*(F([x, y] \setminus Z)) + \lambda(F(Z)) \leq \int_x^y|F^{\prime}|\,d\lambda .
+\]
+Given $\varepsilon > 0$, Lemma~\ref{lebesgue-differentiation:lemma-absolutely-continuous}(1) gives $\delta > 0$ with $\int_E|F^{\prime}| < \varepsilon$ whenever $\lambda(E) < \delta$; then for disjoint intervals $(a_k, b_k)$
+of total length $< \delta$, $\sum_k|F(b_k) - F(a_k)| \leq \int_{\bigcup_k(a_k, b_k)}|F^{\prime}| < \varepsilon$.
+\end{proof}
+
+\begin{counterexample}\label{lebesgue-differentiation:counterexample-banach-zarecki}
+None of the three conditions of Theorem~\ref{lebesgue-differentiation:theorem-banach-zarecki} follows from the other two.
+\begin{enumerate}
+\item The Cantor function is continuous and of bounded variation (it is monotone), but it maps the Cantor set, a null set, onto $[0, 1]$.
+\item $F(x) = x\sin(1/x)$, $F(0) = 0$, is continuous and not of bounded variation (Example~\ref{lebesgue-differentiation:example-bounded-variation}(4)), but it has property (N). On $[1/k, 1]$ it is $C^1$, so
+$|F^{\prime}| \leq M_k$ there and Lemma~\ref{lebesgue-differentiation:lemma-image-measure-bound}(1) gives $\lambda(F(Z \cap [1/k, 1])) = 0$ for a null set $Z$; and
+$F(Z) \subseteq \{0\} \cup \bigcup_kF(Z \cap [1/k, 1])$.
+\item $\mathbf{1}_{[1/2, 1]}$ is of bounded variation and has property (N), as all its images are finite, but it is not continuous.
+\end{enumerate}
+\end{counterexample}
+
+\begin{remark}\label{lebesgue-differentiation:remark-luzin-measurable}
+A continuous $F \colon [a, b] \to \RR$ with property (N) maps measurable sets to measurable sets. Indeed, by inner regularity a measurable $E \subseteq [a, b]$ is the union of countably many compact sets $K_i$ and
+a null set $Z$; the images $F(K_i)$ are compact and $F(Z)$ is null. Conversely, if a continuous $F$ maps measurable sets to measurable sets, it has property (N): if $\lambda(F(Z)) > 0$ for a null set $Z$, then
+either $B = F(Z)$ is not measurable, or it is measurable of positive measure and contains a non-measurable set $B$ by Theorem~\ref{measure-theory:theorem-bernstein}; in both cases
+$F^{-1}(B) \cap Z$ is a null set, hence measurable, with image $B$. The Cantor
+function therefore maps some null set onto a non-measurable set.
+\end{remark}
+
+The theorem gives two useful consequences: a formula for the variation, and a fundamental theorem of calculus for functions that are differentiable everywhere.
+
+\begin{corollary}\label{lebesgue-differentiation:corollary-variation-integral}
+If $F \colon [a, b] \to \RR$ is absolutely continuous, then $V_F(x) = \int_a^x|F^{\prime}|\,d\lambda$ for all $x \in [a, b]$. In particular $V(F; [a, b]) = \int_a^b|F^{\prime}|$ for $F \in C^1([a, b])$.
+\end{corollary}
+
+\begin{proof}
+For a partition of $[a, x]$, $\sum_i|F(t_i) - F(t_{i-1})| = \sum_i|\int_{t_{i-1}}^{t_i}F^{\prime}| \leq \int_a^x|F^{\prime}|$ by Theorem~\ref{lebesgue-differentiation:theorem-absolutely-continuous}; so
+$V_F(x) \leq \int_a^x|F^{\prime}|$. The reverse inequality is Corollary~\ref{lebesgue-differentiation:corollary-bv-differentiable} on $[a, x]$. A $C^1$ function is Lipschitz, hence absolutely continuous.
+\end{proof}
+
+\begin{corollary}\label{lebesgue-differentiation:corollary-everywhere-differentiable}
+Let $F \colon [a, b] \to \RR$ be continuous, differentiable at all but countably many points of $[a, b]$, and suppose $F^{\prime} \in L^1([a, b])$. Then $F$ is absolutely continuous, and
+$F(x) = F(a) + \int_a^xF^{\prime}\,d\lambda$ for all $x$.
+\end{corollary}
+
+\begin{proof}
+Let $D$ be the countable set where $F$ is not differentiable. \emph{Property (N).} For a null set $Z$ and $M \geq 1$, let $Z_M = \{x \in Z \setminus D : |F^{\prime}(x)| \leq M\}$. By
+Lemma~\ref{lebesgue-differentiation:lemma-image-measure-bound}(1), $\lambda^*(F(Z_M)) \leq M\lambda^*(Z_M) = 0$; and $F(Z \cap D)$ is countable. So $F(Z) = F(Z \cap D) \cup \bigcup_MF(Z_M)$ is null.
+\emph{Bounded variation.} For $x < y$, as in the proof of the theorem, $|F(y) - F(x)| \leq \lambda^*(F([x, y] \setminus D)) + \lambda(F(D)) \leq \int_x^y|F^{\prime}|$ by
+Lemma~\ref{lebesgue-differentiation:lemma-image-measure-bound}(2), so $V(F; [a, b]) \leq \int_a^b|F^{\prime}| < \infty$. By Theorem~\ref{lebesgue-differentiation:theorem-banach-zarecki}, $F$ is absolutely continuous, and
+Theorem~\ref{lebesgue-differentiation:theorem-absolutely-continuous} gives the formula.
+\end{proof}
+
+The hypotheses are sharp. Differentiability almost everywhere is not enough: the Cantor function is differentiable outside the Cantor set, with $F^{\prime} = 0$. Integrability of $F^{\prime}$ is needed:
+$x^2\sin(1/x^2)$ is differentiable everywhere, but it is not of bounded variation (Example~\ref{lebesgue-differentiation:example-bounded-variation}(5)), and its derivative is not integrable.
+
 \section{Exercises}\label{lebesgue-differentiation:section-exercises}
 
 \begin{exercise}\label{lebesgue-differentiation:exercise-no-half-density}
@@ -355,4 +717,58 @@ Choose $R$ with $a = \int_{B(0, R)}|f| > 0$. For $\|x\| \geq R$, the ball $B(x, 
 $Mf(x) \geq a/\lambda(B(x, 2\|x\|)) = a/(2^n\|x\|^n\lambda(B(0, 1)))$. The function $\|x\|^{-n}$ is not integrable on $\{\|x\| \geq R\}$: the shells
 $2^kR \leq \|x\| < 2^{k+1}R$ have measure $(2^n - 1)2^{kn}R^n\lambda(B(0, 1))$, and on each of them $\|x\|^{-n} \geq 2^{-(k+1)n}R^{-n}$, so each contributes at least the
 positive constant $(1 - 2^{-n})\lambda(B(0, 1))$ to the integral.
+\end{solution}
+
+\begin{exercise}\label{lebesgue-differentiation:exercise-variation-continuous}
+Let $F \in BV([a, b])$ and $x \in [a, b]$. Show that $F$ is continuous at $x$ if and only if $V_F$ is continuous at $x$. Deduce that a continuous function of bounded variation is the difference of two continuous
+nondecreasing functions.
+\end{exercise}
+
+\begin{solution}
+If $V_F$ is continuous at $x$, so is $F$, because $|F(y) - F(x)| \leq |V_F(y) - V_F(x)|$ by Proposition~\ref{lebesgue-differentiation:proposition-variation}(1). Conversely, let $F$ be continuous at $x < b$ and
+$\varepsilon > 0$. Choose a partition $x = t_0 < t_1 < \cdots < t_m = b$ with $\sum_i|F(t_i) - F(t_{i-1})| > V(F; [x, b]) - \varepsilon$; adding a point close to $x$ does not decrease the sum, so by continuity at $x$
+we may assume $|F(t_1) - F(x)| < \varepsilon$. Then $V(F; [x, b]) < 2\varepsilon + \sum_{i \geq 2}|F(t_i) - F(t_{i-1})| \leq 2\varepsilon + V(F; [t_1, b])$, so $V_F(t_1) - V_F(x) = V(F; [x, t_1]) < 2\varepsilon$, and the same
+holds for $t_1$ replaced by any $y \in (x, t_1]$, as $V_F$ is nondecreasing. So $V_F$ is right-continuous at $x$; left continuity is proved in the same way with partitions of $[a, x]$. For the last statement,
+$P_F$ and $N_F$ of Theorem~\ref{lebesgue-differentiation:theorem-jordan} are continuous when $F$ and $V_F$ are.
+\end{solution}
+
+\begin{exercise}\label{lebesgue-differentiation:exercise-integration-by-parts}
+Let $F, G \colon [a, b] \to \RR$ be absolutely continuous. Show that $FG$ is absolutely continuous and
+\[
+\int_a^bFG^{\prime}\,d\lambda = F(b)G(b) - F(a)G(a) - \int_a^bF^{\prime}G\,d\lambda .
+\]
+\end{exercise}
+
+\begin{solution}
+$F$ and $G$ are continuous, hence bounded. For disjoint intervals $(a_k, b_k)$,
+\[\begin{aligned}
+\sum_k|F(b_k)G(b_k) - F(a_k)G(a_k)| &\leq \|F\|_\infty\sum_k|G(b_k) - G(a_k)| \\
+&\quad + \|G\|_\infty\sum_k|F(b_k) - F(a_k)|,
+\end{aligned}\]
+which is small when the total length is small; so $FG$ is absolutely continuous. At every point
+where both $F$ and $G$ are differentiable, which is almost every point, $(FG)^{\prime} = F^{\prime}G + FG^{\prime}$, and $F^{\prime}G$, $FG^{\prime}$ are integrable (products of integrable and bounded
+measurable functions). Theorem~\ref{lebesgue-differentiation:theorem-absolutely-continuous} applied to $FG$ gives $F(b)G(b) - F(a)G(a) = \int_a^b(F^{\prime}G + FG^{\prime})$.
+\end{solution}
+
+\begin{exercise}\label{lebesgue-differentiation:exercise-composition-ac}
+Let $F(x) = \sqrt{x}$ and $G(x) = x^2\sin^2(1/x)$, $G(0) = 0$, on $[0, 1]$. Show that $F$ and $G$ are absolutely continuous and $G([0, 1]) \subseteq [0, 1]$, but $F \circ G$ is not of bounded variation. So a
+composition of absolutely continuous functions need not be absolutely continuous.
+\end{exercise}
+
+\begin{solution}
+$G$ is differentiable on $[0, 1]$ with $G^{\prime}(x) = 2x\sin^2(1/x) - 2\sin(1/x)\cos(1/x)$ for $x > 0$ and $G^{\prime}(0) = 0$, so $|G^{\prime}| \leq 4$, $G$ is Lipschitz and hence absolutely continuous, and
+$0 \leq G \leq 1$. $F(x) = \int_0^x\frac{dt}{2\sqrt t}$ with an integrable integrand, so $F$ is absolutely continuous by Theorem~\ref{lebesgue-differentiation:theorem-absolutely-continuous}. Now
+$F(G(x)) = x|\sin(1/x)|$. With $s_k = 1/((k + \frac12)\pi)$ and $u_k = 1/(k\pi)$ we have $u_{k+1} < s_k < u_k$, $F(G(s_k)) = s_k$ and $F(G(u_k)) = 0$, so the partition by the points $u_K < s_{K-1} < u_{K-1} < \cdots < s_1 < u_1$
+gives a sum at least $\sum_{k=1}^{K-1}s_k$, which tends to $\infty$ with $K$.
+\end{solution}
+
+\begin{exercise}\label{lebesgue-differentiation:exercise-strictly-singular}
+Let $c$ be the Cantor function, extended by $c(t) = 0$ for $t < 0$ and $c(t) = 1$ for $t > 1$, and let $q_1, q_2, \ldots$ be an enumeration of the rationals in $(0, 1)$. Show that
+$F(x) = \sum_n2^{-n}c(x - q_n)$ is continuous and strictly increasing on $[0, 1]$, but $F^{\prime} = 0$ almost everywhere.
+\end{exercise}
+
+\begin{solution}
+Each term is continuous and nondecreasing, and the series converges uniformly, so $F$ is continuous and nondecreasing. If $0 \leq x < y \leq 1$, choose $q_n \in (x, y)$; then $c(x - q_n) = 0$ while
+$c(y - q_n) > 0$, because $c(t) \geq c(3^{-k}) = 2^{-k} > 0$ for $t \geq 3^{-k}$. So $F(y) - F(x) \geq 2^{-n}(c(y - q_n) - c(x - q_n)) > 0$. Each $c(x - q_n)$ has derivative $0$ almost everywhere, since $c^{\prime} = 0$
+outside the Cantor set and $c$ is constant outside $[0, 1]$. By Theorem~\ref{lebesgue-differentiation:theorem-fubini-series}, $F^{\prime} = \sum_n2^{-n}\cdot0 = 0$ almost everywhere.
 \end{solution}

@@ -895,8 +895,9 @@ Theorem~\ref{lebesgue-differentiation:theorem-absolutely-continuous}. Conversely
 \end{proof}
 
 For the Cantor function (Counterexample~\ref{lebesgue-differentiation:counterexample-cantor-function}) the inequality is strict: $\mu_F$ is singular, so $F^{\prime} = 0$ almost everywhere, as we saw directly,
-while $F(1) - F(0) = 1$. The corollary holds for all nondecreasing functions, continuous or not: a nondecreasing function has at most countably many jumps, and the jumps contribute a further singular
-part to its measure \cite[Chapter 7]{rudin-rca}. Since a function of bounded variation is a difference of two nondecreasing functions, it is differentiable almost everywhere as well.
+while $F(1) - F(0) = 1$. The first assertions hold for all nondecreasing functions, continuous or not, and were proved by a covering argument in
+Theorem~\ref{lebesgue-differentiation:theorem-lebesgue-monotone}; the equality case is part of the decomposition of Theorem~\ref{lebesgue-differentiation:theorem-monotone-decomposition}, in which the
+jumps of $F$ give the discrete part of $\mu_F$. The proof above shows how both follow from the differentiation of measures.
 
 \begin{remark}\label{radon-measures:remark-besicovitch}
 The proof used Lebesgue measure through the Vitali covering lemma, that is, through the fact that $\lambda(3B) = 3^n\lambda(B)$. To differentiate a Radon measure $\nu$ with respect to an arbitrary Radon

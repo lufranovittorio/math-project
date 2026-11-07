@@ -123,8 +123,9 @@ together in one place.
      linear maps proved via elementary matrices, Sard's lemma);
    - ~~new `signed-measures`~~ (done 2026-11-07; Dunford–Pettis left for
      `functional-analysis`, where weak topologies are);
-   - `lebesgue-differentiation`: functions of bounded variation, Banach–Zarecki,
-     Lebesgue points, unify the doubling maximal inequality with Hardy–Littlewood;
+   - `lebesgue-differentiation`: ~~functions of bounded variation, Banach–Zarecki~~
+     (done 2026-11-07); Lebesgue points, unify the doubling maximal inequality
+     with Hardy–Littlewood;
    - ~~`radon-measures`: Besicovitch covering theorem with proof, Prokhorov;
      Haar measure~~ (done 2026-11-07);
    - `geometric-measure-theory`: Frostman's lemma, ~~Brunn–Minkowski and the
@@ -275,6 +276,15 @@ spectral-sequences 300 (then everything below about 800 lines).
   parts).
 
 ## Done
+
+- [x] 2026-11-07: **Monotone functions and bounded variation** (new section of
+  *Differentiation and Absolute Continuity*): Vitali covering theorem for fine covers,
+  total variation, Jordan decomposition with minimality, jumps of monotone functions,
+  Dini derivatives, Lebesgue's theorem (covering proof), Fubini's theorem on series,
+  decomposition into absolutely continuous + singular continuous + jump parts,
+  Luzin's property (N), Banach–Zarecki, variation = ∫|F'|, FTC for functions
+  differentiable off a countable set; 4 exercises (integration by parts, composition
+  of AC functions, strictly increasing singular function).
 
 - [x] 2026-11-07: **Besicovitch and Prokhorov** (*Radon Measures*): Besicovitch covering
   theorem with full proof (explicit constant), Vitali-type coverings for every Radon
