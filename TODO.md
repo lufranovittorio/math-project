@@ -114,9 +114,8 @@ together in one place.
    - `measure-theory`: semirings/π-λ (Dynkin), Carathéodory extension in full,
      Lebesgue–Stieltjes measures and distribution functions, completion,
      non-measurable sets (Vitali, Bernstein), inner/outer regularity;
-   - new `signed-measures`: Hahn and Jordan decompositions, total variation,
-     complex measures, L^p duality (p < ∞), uniform integrability, Vitali
-     convergence theorem, Dunford–Pettis;
+   - ~~new `signed-measures`~~ (done 2026-11-07; Dunford–Pettis left for
+     `functional-analysis`, where weak topologies are);
    - `lebesgue-differentiation`: functions of bounded variation, Banach–Zarecki,
      Lebesgue points, unify the doubling maximal inequality with Hardy–Littlewood;
    - `radon-measures`: Besicovitch covering theorem with proof, Prokhorov,
@@ -268,6 +267,16 @@ spectral-sequences 300 (then everything below about 800 lines).
   parts).
 
 ## Done
+
+- [x] 2026-11-07: **Signed and Complex Measures** chapter (`signed-measures`,
+  between differentiation and Radon measures): signed measures, Hahn and
+  Jordan decompositions, total variation, complex measures and polar
+  decomposition, the Banach space M(X), Lebesgue–Radon–Nikodym for signed and
+  complex measures, chain rule, ε–δ absolute continuity, converse Hölder,
+  duality (L^p)* = L^q with full proof, Minkowski's integral inequality,
+  Hardy's inequality, uniform integrability, de la Vallée Poussin, Vitali
+  convergence theorem, Scheffé; 11 exercises. Radon Measures and Functional
+  Analysis now cite it instead of restating Hahn/Jordan and L^p duality.
 
 - [x] 2026-11-06: **Measure theory split** into four chapters in a new part
   *Real Analysis and Measure Theory* (labels renamed, tags kept); the

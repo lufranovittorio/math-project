@@ -1,0 +1,964 @@
+\chapter{Signed and Complex Measures}\label{signed-measures}
+\chapterstatus{complete}
+
+\section{Introduction}\label{signed-measures:section-introduction}
+
+A measure assigns to sets a size in $[0, \infty]$. Many set functions that occur naturally are countably additive but take negative or complex values: the integral
+$E \mapsto \int_Ef\,d\mu$ of a real or complex integrable function, the total electric charge in a region, the difference of two probability distributions, or the functional
+$E \mapsto \Lambda(\mathbf{1}_E)$ attached to a linear functional $\Lambda$ on a space of functions. This chapter develops the theory of such \emph{signed} and \emph{complex measures} and uses it
+to answer a basic question about the spaces $L^p$: which linear functionals on $L^p$ are bounded?
+
+The first result is that nothing really new happens. A signed measure splits the space into a part where it is positive and a part where it is negative (the Hahn decomposition,
+Theorem~\ref{signed-measures:theorem-hahn}), so it is the difference of two positive measures living on disjoint sets (the Jordan decomposition, Theorem~\ref{signed-measures:theorem-jordan}). A
+complex measure has a \emph{total variation} $|\nu|$, the smallest positive measure dominating it, which is always finite (Theorem~\ref{signed-measures:theorem-total-variation}), and
+$\nu$ has a density of absolute value $1$ with respect to $|\nu|$ (the polar decomposition, Theorem~\ref{signed-measures:theorem-polar}). The Radon--Nikodym theorem and the Lebesgue decomposition
+extend to signed and complex measures (Theorem~\ref{signed-measures:theorem-lebesgue-radon-nikodym}), and absolute continuity of finite measures has an $\varepsilon$--$\delta$ form
+(Theorem~\ref{signed-measures:theorem-epsilon-delta}).
+
+The second half applies this. The complex measures on a measurable space form a Banach space (Proposition~\ref{signed-measures:proposition-banach}). For $1 \leq p < \infty$ every bounded linear
+functional on $L^p(\mu)$ is integration against a unique function of $L^q(\mu)$, $1/p + 1/q = 1$ (Theorem~\ref{signed-measures:theorem-lp-duality}; for $p = 1$ one needs $\mu$ to be $\sigma$-finite), while
+the dual of $L^\infty$ is larger than $L^1$. As applications we prove Minkowski's integral inequality and Hardy's inequality. Finally we characterise exactly when convergence in measure implies
+convergence in $L^1$: this happens if and only if the sequence is \emph{uniformly integrable} (Vitali's convergence theorem, Theorem~\ref{signed-measures:theorem-vitali-convergence}), a condition
+that can be tested with the criterion of de la Vall\'ee Poussin; Scheff\'e's lemma is a useful special case.
+References: \cite[Chapters 3 and 6]{folland-real} and \cite[Chapter 6]{rudin-rca}.
+
+\noindent\textbf{Prerequisites.} Chapter~\ref{real-analysis} (Real Analysis), Chapter~\ref{measure-theory} (Measure and Integration) and Chapter~\ref{lebesgue-differentiation} (Differentiation and
+Absolute Continuity).
+
+\begin{notation}\label{signed-measures:notation-basic}
+Throughout, $(X, \mathcal{A})$ is a measurable space. The word \emph{measure} without qualification means a measure in the sense of
+Definition~\ref{measure-theory:definition-measure}, with values in $[0, \infty]$; we also call it a \emph{positive measure} for emphasis. Positive measures are denoted $\mu$, $\rho$, $\sigma$, signed and
+complex measures $\nu$; Lebesgue measure on $\RR^n$ is $\lambda$. For a positive measure $\mu$ and a measurable $f$ for which the integrals make sense, $f\mu$ is the set function
+$E \mapsto \int_Ef\,d\mu$ (the measure \emph{with density} $f$). For a real number or function $a$, $a^+ = \max(a, 0)$ and $a^- = \max(-a, 0)$, so that $a = a^+ - a^-$ and $|a| = a^+ + a^-$; for
+a complex number $z \neq 0$, $\operatorname{sgn}z = z/|z|$, and $\operatorname{sgn}0 = 0$, so that $z = |z|\operatorname{sgn}z$ and $\overline{\operatorname{sgn}z}\,z = |z|$.
+\end{notation}
+
+\section{Signed measures}\label{signed-measures:section-signed}
+
+If $\mu_1$ and $\mu_2$ are positive measures and one of them is finite, the difference $E \mapsto \mu_1(E) - \mu_2(E)$ is defined on all of $\mathcal{A}$ and countably additive. If both take the value
+$\infty$ on the same set, the expression $\infty - \infty$ has no meaning, and this is why at most one infinite value is allowed in the following definition.
+
+\begin{definition}\label{signed-measures:definition-signed-measure}
+A \emph{signed measure} on $(X, \mathcal{A})$ is a map $\nu \colon \mathcal{A} \to [-\infty, \infty]$ such that
+\begin{enumerate}
+\item $\nu(\emptyset) = 0$;
+\item $\nu$ takes at most one of the values $\infty$ and $-\infty$;
+\item $\nu$ is \emph{countably additive}: for every sequence $(E_k)$ of pairwise disjoint measurable sets, $\nu(\bigsqcup_kE_k) = \sum_k\nu(E_k)$, where the series converges absolutely if the left
+side is finite, and diverges to the left side ($\infty$ or $-\infty$) otherwise.
+\end{enumerate}
+The signed measure $\nu$ is \emph{finite} if it takes only real values.
+\end{definition}
+
+The absolute convergence in (3) is not an extra condition. If $\nu(\bigsqcup_kE_k)$ is finite, then every rearrangement of the series $\sum_k\nu(E_k)$ has the same sum, since rearranging the
+sets does not change their union; by Corollary~\ref{real-analysis:corollary-unconditional} the series converges absolutely. We include it in the definition because it is used constantly.
+Taking all $E_k$ but finitely many empty shows that $\nu$ is finitely additive.
+
+\begin{example}\label{signed-measures:example-signed-measures}
+\begin{enumerate}
+\item \emph{Differences.} If $\mu_1$, $\mu_2$ are positive measures and at least one of them is finite, $\nu = \mu_1 - \mu_2$ is a signed measure: if $\mu_2$ is finite, $\nu$ never takes the value
+$-\infty$, and for disjoint $E_k$ the series $\sum_k\mu_2(E_k)$ converges, so $\sum_k(\mu_1(E_k) - \mu_2(E_k)) = \mu_1(\bigsqcup_kE_k) - \mu_2(\bigsqcup_kE_k)$. We shall see that every signed
+measure is of this form (Theorem~\ref{signed-measures:theorem-jordan}).
+\item \emph{Densities.} Let $\mu$ be a positive measure and $f \colon X \to [-\infty, \infty]$ measurable with $\int f^+\,d\mu < \infty$ or $\int f^-\,d\mu < \infty$ (one says that $f$ is
+\emph{extended $\mu$-integrable}). Then $f\mu = f^+\mu - f^-\mu$ is a signed measure, by (1): $f^\pm\mu$ are positive measures by Corollary~\ref{measure-theory:corollary-integral-properties}(1)
+applied to $\sum_kf^\pm\mathbf{1}_{E_k}$, and one of them is finite. For example $\nu(E) = \int_Ex\,e^{-x^2}\,dx$ is a finite signed measure on the Borel sets of $\RR$, positive on subsets of
+$[0, \infty)$ and negative on subsets of $(-\infty, 0]$.
+\item \emph{Point charges.} For real numbers $a_n$ with $\sum_n|a_n| < \infty$ and points $x_n \in X$, $\nu = \sum_na_n\delta_{x_n}$, that is $\nu(E) = \sum_{x_n \in E}a_n$, is a finite signed measure on
+$\mathcal{P}(X)$; the countable additivity is the associativity of absolutely convergent double series. The \emph{dipole} $\delta_0 - \delta_1$ on $\RR$ takes the values $1$, $-1$ and $0$; it vanishes on
+$\{0, 1\}$ and on $\RR$.
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{signed-measures:counterexample-alternating}
+On $\NN = \{1, 2, \ldots\}$ with the power set, the formula $\nu(E) = \sum_{n \in E}(-1)^n/n$ does not define a signed measure, although the series converges for $E = \NN$. Indeed the even
+numbers would get $\sum_k1/(2k) = \infty$ and the odd numbers $-\sum_k1/(2k - 1) = -\infty$, so both infinite values would occur, and then $\nu(\NN) = \infty + (-\infty)$ would be meaningless. The
+requirement of absolute convergence in Definition~\ref{signed-measures:definition-signed-measure} excludes exactly such conditionally convergent ``charges''.
+\end{counterexample}
+
+\begin{proposition}\label{signed-measures:proposition-signed-properties}
+Let $\nu$ be a signed measure.
+\begin{enumerate}
+\item If $F \subseteq E$ are measurable and $\nu(E)$ is finite, then $\nu(F)$ is finite.
+\item If $E_1 \subseteq E_2 \subseteq \cdots$, then $\nu(\bigcup_kE_k) = \lim_k\nu(E_k)$.
+\item If $E_1 \supseteq E_2 \supseteq \cdots$ and $\nu(E_1)$ is finite, then $\nu(\bigcap_kE_k) = \lim_k\nu(E_k)$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) By additivity $\nu(E) = \nu(F) + \nu(E \setminus F)$. The right side is never of the form $\infty + (-\infty)$, since only one infinite value occurs. If $\nu(F)$ were infinite, so would be the
+right side.
+
+(2) With $E_0 = \emptyset$, the sets $E_k \setminus E_{k-1}$ are disjoint with union $\bigcup_kE_k$, and the partial sums of $\sum_k\nu(E_k \setminus E_{k-1})$ are $\nu(E_k)$ by finite additivity.
+By countable additivity they converge to $\nu(\bigcup_kE_k)$ (in $[-\infty, \infty]$).
+
+(3) By (1) all $\nu(E_k)$ are finite. Apply (2) to the increasing sets $E_1 \setminus E_k$, whose union is $E_1 \setminus \bigcap_kE_k$: then
+$\nu(E_1) - \nu(E_k) = \nu(E_1 \setminus E_k) \to \nu(E_1) - \nu(\bigcap_kE_k)$.
+\end{proof}
+
+Unlike a positive measure, a signed measure is not monotone: for the dipole $\nu = \delta_0 - \delta_1$, $\nu(\{1\}) = -1 < 0 = \nu(\emptyset)$ although $\emptyset \subseteq \{1\}$, and
+$\nu(\{0\}) = 1 > 0 = \nu(\{0, 1\})$. The value $\nu(E) = 0$ does not mean that $\nu$ ignores $E$; this distinction is the subject of the next definition.
+
+\begin{definition}\label{signed-measures:definition-positive-set}
+Let $\nu$ be a signed measure. A measurable set $E$ is \emph{positive} for $\nu$ if $\nu(F) \geq 0$ for every measurable $F \subseteq E$, \emph{negative} if $\nu(F) \leq 0$ for every measurable
+$F \subseteq E$, and \emph{null} if $\nu(F) = 0$ for every measurable $F \subseteq E$.
+\end{definition}
+
+\begin{example}\label{signed-measures:example-positive-sets}
+\begin{enumerate}
+\item For the dipole $\delta_0 - \delta_1$, the set $\{0, 1\}$ has measure $0$ but is not null: it is neither positive nor negative. A set $E$ is positive if and only if $1 \notin E$, negative if and only if
+$0 \notin E$, and null if and only if it contains neither point.
+\item For $\nu = f\mu$ as in Example~\ref{signed-measures:example-signed-measures}(2), the set $\{f \geq 0\}$ is positive, $\{f \leq 0\}$ is negative and $\{f = 0\}$ is null. More precisely, a set $E$ is
+positive if and only if $f \geq 0$ $\mu$-almost everywhere on $E$: if $\mu(E \cap \{f < 0\}) > 0$, then $F = E \cap \{f < 0\}$ has $\nu(F) = -\int_Ff^-\,d\mu < 0$ by
+Corollary~\ref{measure-theory:corollary-integral-properties}(4).
+\item For a positive measure the null sets in the sense of the definition are the sets of measure $0$.
+\end{enumerate}
+\end{example}
+
+\begin{lemma}\label{signed-measures:lemma-positive-sets}
+Let $\nu$ be a signed measure.
+\begin{enumerate}
+\item A measurable subset of a positive set is positive, and a countable union of positive sets is positive.
+\item If $E$ is measurable and $0 < \nu(E) < \infty$, then $E$ contains a positive set $P$ with $\nu(P) \geq \nu(E) > 0$.
+\end{enumerate}
+The same holds with ``negative'' in place of ``positive'' and the inequalities reversed.
+\end{lemma}
+
+\begin{proof}
+(1) The first statement is clear. Let $P_1, P_2, \ldots$ be positive and $F \subseteq \bigcup_kP_k$ measurable. The sets $F_k = F \cap P_k \setminus \bigcup_{j < k}P_j$ are disjoint, contained in $P_k$, and
+have union $F$, so $\nu(F) = \sum_k\nu(F_k) \geq 0$.
+
+(2) \emph{Step 1: removing negative pieces greedily.} If $E$ is positive, take $P = E$. Otherwise let $n_1$ be the least positive integer for which there is a measurable $E_1 \subseteq E$ with
+$\nu(E_1) < -1/n_1$. Inductively, if $E \setminus (E_1 \cup \cdots \cup E_{k-1})$ is not positive, let $n_k$ be the least positive integer for which there is a measurable
+$E_k \subseteq E \setminus (E_1 \cup \cdots \cup E_{k-1})$ with $\nu(E_k) < -1/n_k$, and choose such an $E_k$. If at some stage $E \setminus (E_1 \cup \cdots \cup E_{k-1})$ is positive, stop and call it
+$P$; otherwise let $P = E \setminus \bigsqcup_kE_k$.
+
+\emph{Step 2: the size of $P$.} All subsets of $E$ have finite measure, by Proposition~\ref{signed-measures:proposition-signed-properties}(1). By additivity
+$\nu(E) = \nu(P) + \sum_k\nu(E_k)$, where the series converges absolutely; since its terms are negative, $\nu(P) \geq \nu(E)$. Moreover $\sum_k1/n_k < \sum_k|\nu(E_k)| < \infty$, so $n_k \to \infty$
+if the process does not stop.
+
+\emph{Step 3: $P$ is positive.} In the finite case this holds by construction. Otherwise, let $F \subseteq P$ be measurable and suppose $\nu(F) < 0$. Choose $k$ with $n_k \geq 2$ and
+$1/(n_k - 1) < -\nu(F)$. Then $F \subseteq E \setminus (E_1 \cup \cdots \cup E_{k-1})$ and $\nu(F) < -1/(n_k - 1)$, which contradicts the minimality of $n_k$. The statement for negative sets follows by
+applying this to $-\nu$.
+\end{proof}
+
+\begin{theorem}[Hahn decomposition]\label{signed-measures:theorem-hahn}
+Let $\nu$ be a signed measure on $(X, \mathcal{A})$. There is a measurable set $P$ such that $P$ is positive and $N = X \setminus P$ is negative for $\nu$. If $P^{\prime}$ is another such set, then the
+symmetric difference $P \mathbin{\triangle} P^{\prime}$ is null for $\nu$.
+\end{theorem}
+
+The pair $(P, N)$ is a \emph{Hahn decomposition} of $X$ for $\nu$.
+
+\begin{proof}
+\emph{Step 1: a positive set of maximal measure.} Replacing $\nu$ by $-\nu$ if necessary, we may assume that $\nu$ does not take the value $\infty$. Let $m = \sup\{\nu(E) : E \text{ positive}\}$, a
+supremum over a nonempty family since $\emptyset$ is positive, and choose positive sets $P_j$ with $\nu(P_j) \to m$. The union $P = \bigcup_jP_j$ is positive by
+Lemma~\ref{signed-measures:lemma-positive-sets}(1), and $\nu(P) = \nu(P_j) + \nu(P \setminus P_j) \geq \nu(P_j)$ because $P \setminus P_j \subseteq P$. Hence $\nu(P) = m$, and $m < \infty$.
+
+\emph{Step 2: the complement is negative.} Let $N = X \setminus P$, and suppose some measurable $E \subseteq N$ has $\nu(E) > 0$. As $\nu(E) < \infty$, Lemma~\ref{signed-measures:lemma-positive-sets}(2)
+gives a positive $Q \subseteq E$ with $\nu(Q) > 0$. Then $P \sqcup Q$ is positive with $\nu(P \sqcup Q) = m + \nu(Q) > m$, contradicting the definition of $m$.
+
+\emph{Step 3: uniqueness.} If $(P^{\prime}, N^{\prime})$ is another Hahn decomposition, then $P \setminus P^{\prime} = P \cap N^{\prime}$ is a subset of the positive set $P$ and of the negative set
+$N^{\prime}$, so all its measurable subsets have measure $\geq 0$ and $\leq 0$: it is null. So is $P^{\prime} \setminus P$, and hence their union $P \mathbin{\triangle} P^{\prime}$.
+\end{proof}
+
+\begin{counterexample}\label{signed-measures:counterexample-hahn-not-unique}
+The Hahn decomposition itself is not unique, only unique up to null sets. For $\nu = \delta_0$ on the Borel sets of $\RR$, both $(\RR, \emptyset)$ and $(\{0\}, \RR \setminus \{0\})$ are Hahn
+decompositions, and so is $(P, \RR \setminus P)$ for every Borel $P \ni 0$. For $\nu = f\lambda$ on $\RR$ with $f(x) = \sin x$, one may take $P = \{\sin \geq 0\}$ or $P = \{\sin > 0\}$; the
+difference is the null set $\pi\ZZ$.
+\end{counterexample}
+
+To state the Jordan decomposition we extend the notion of mutual singularity, introduced for positive measures before
+Theorem~\ref{lebesgue-differentiation:theorem-lebesgue-decomposition}, to signed measures.
+
+\begin{definition}\label{signed-measures:definition-singular}
+Two signed measures $\nu_1$, $\nu_2$ on $(X, \mathcal{A})$ are \emph{mutually singular}, $\nu_1 \perp \nu_2$, if there is a measurable set $S$ such that $S$ is null for $\nu_1$ and $X \setminus S$
+is null for $\nu_2$. One says that $\nu_1$ \emph{lives on} (or is \emph{concentrated on}) $X \setminus S$ and $\nu_2$ on $S$.
+\end{definition}
+
+For positive measures this is the earlier notion, by Example~\ref{signed-measures:example-positive-sets}(3).
+
+\begin{theorem}[Jordan decomposition]\label{signed-measures:theorem-jordan}
+Let $\nu$ be a signed measure. There are unique positive measures $\nu^+$ and $\nu^-$ with $\nu = \nu^+ - \nu^-$ and $\nu^+ \perp \nu^-$. If $(P, N)$ is a Hahn decomposition for $\nu$, then
+\[
+\nu^+(E) = \nu(E \cap P), \qquad \nu^-(E) = -\nu(E \cap N) \qquad (E \in \mathcal{A}).
+\]
+At least one of $\nu^+$, $\nu^-$ is finite.
+\end{theorem}
+
+\begin{proof}
+\emph{Existence.} Define $\nu^\pm$ by the formulas. They are countably additive because $\nu$ is, and nonnegative because $P$ is positive and $N$ is negative; so they are positive measures. Since
+$E = (E \cap P) \sqcup (E \cap N)$, $\nu(E) = \nu^+(E) - \nu^-(E)$. The set $N$ is null for $\nu^+$ and $P$ is null for $\nu^-$, so $\nu^+ \perp \nu^-$. If $\nu$ does not take the value
+$\infty$, then $\nu^+(X) = \nu(P) < \infty$; otherwise $\nu^-(X) = -\nu(N) < \infty$.
+
+\emph{Uniqueness.} Let $\nu = \mu^+ - \mu^-$ with positive measures $\mu^\pm$ and a measurable $S$ that is null for $\mu^+$ while $X \setminus S$ is null for $\mu^-$. Put $P^{\prime} = X \setminus S$
+and $N^{\prime} = S$. For $F \subseteq P^{\prime}$, $\nu(F) = \mu^+(F) \geq 0$, and for $F \subseteq N^{\prime}$, $\nu(F) = -\mu^-(F) \leq 0$: so $(P^{\prime}, N^{\prime})$ is a Hahn decomposition, and
+$P \mathbin{\triangle} P^{\prime}$ is null for $\nu$ by Theorem~\ref{signed-measures:theorem-hahn}. For measurable $E$, the sets $E \cap P$ and $E \cap P^{\prime}$ differ by subsets of this null set, so
+\[
+\mu^+(E) = \mu^+(E \cap P^{\prime}) = \nu(E \cap P^{\prime}) = \nu(E \cap P \cap P^{\prime}) = \nu(E \cap P) = \nu^+(E),
+\]
+and in the same way $\mu^- = \nu^-$.
+\end{proof}
+
+\begin{definition}\label{signed-measures:definition-variation-signed}
+The measures $\nu^+$ and $\nu^-$ of Theorem~\ref{signed-measures:theorem-jordan} are the \emph{positive} and \emph{negative variations} of $\nu$, and the positive measure
+$|\nu| = \nu^+ + \nu^-$ is its \emph{total variation}. The signed measure $\nu$ is \emph{$\sigma$-finite} if $|\nu|$ is. For $f \in L^1(|\nu|)$ we put
+$\int f\,d\nu = \int f\,d\nu^+ - \int f\,d\nu^-$.
+\end{definition}
+
+The integral is well defined, since $\int|f|\,d\nu^\pm \leq \int|f|\,d|\nu| < \infty$ (Corollary~\ref{measure-theory:corollary-integral-properties}(1) applied to $|\nu| = \nu^+ + \nu^-$ and simple functions,
+then monotone convergence); it is linear in $f$, and $|\int f\,d\nu| \leq \int|f|\,d\nu^+ + \int|f|\,d\nu^- = \int|f|\,d|\nu|$.
+
+\begin{proposition}\label{signed-measures:proposition-variation-signed}
+Let $\nu$ be a signed measure and $E$ measurable.
+\begin{enumerate}
+\item $\nu^+(E) = \sup\{\nu(F) : F \subseteq E \text{ measurable}\}$ and $\nu^-(E) = -\inf\{\nu(F) : F \subseteq E \text{ measurable}\}$.
+\item $|\nu(E)| \leq |\nu|(E)$, and $|\nu|(E) = \sup\sum_k|\nu(E_k)|$, the supremum over all finite or countable partitions of $E$ into measurable sets $E_k$.
+\item \emph{(Minimality.)} If $\nu = \mu_1 - \mu_2$ with positive measures $\mu_1$, $\mu_2$, one of them finite, then $\nu^+ \leq \mu_1$ and $\nu^- \leq \mu_2$.
+\item $E$ is null for $\nu$ if and only if $|\nu|(E) = 0$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Let $(P, N)$ be a Hahn decomposition. (1) For $F \subseteq E$, $\nu(F) = \nu^+(F) - \nu^-(F) \leq \nu^+(F) \leq \nu^+(E)$, with equality for $F = E \cap P$. The second formula follows by applying
+the first to $-\nu$, whose variations are $(-\nu)^\pm = \nu^\mp$ by uniqueness.
+
+(2) $|\nu(E)| = |\nu^+(E) - \nu^-(E)| \leq \nu^+(E) + \nu^-(E)$. For a partition, $\sum_k|\nu(E_k)| \leq \sum_k|\nu|(E_k) = |\nu|(E)$, and the partition $\{E \cap P, E \cap N\}$ gives
+$|\nu(E \cap P)| + |\nu(E \cap N)| = \nu^+(E) + \nu^-(E)$.
+
+(3) $\nu^+(E) = \nu(E \cap P) = \mu_1(E \cap P) - \mu_2(E \cap P) \leq \mu_1(E \cap P) \leq \mu_1(E)$, where if $\mu_1(E \cap P) = \infty$ there is nothing to prove. Similarly for $\nu^-$.
+
+(4) If $|\nu|(E) = 0$, then $|\nu(F)| \leq |\nu|(F) = 0$ for all $F \subseteq E$. Conversely, if $E$ is null, then $\nu^+(E) = \nu(E \cap P) = 0$ and $\nu^-(E) = -\nu(E \cap N) = 0$.
+\end{proof}
+
+So $\nu^+$ and $\nu^-$ are the most economical way of writing $\nu$ as a difference of positive measures: in any other way $\nu = \mu_1 - \mu_2$, one has $\mu_1 = \nu^+ + \rho$ and $\mu_2 = \nu^- + \rho$
+for the positive measure $\rho = \mu_1 - \nu^+$ (where $\mu_1$ is finite), which cancels.
+
+To compute integrals against measures with densities we need the following lemma.
+
+\begin{lemma}\label{signed-measures:lemma-density-integral}
+Let $\mu$ be a positive measure and $h \colon X \to [0, \infty]$ measurable. Then $h\mu$ is a positive measure, and $\int g\,d(h\mu) = \int gh\,d\mu$ for every measurable $g \colon X \to [0, \infty]$.
+For complex $g$, $g \in L^1(h\mu)$ if and only if $gh \in L^1(\mu)$, and then the same formula holds.
+\end{lemma}
+
+\begin{proof}
+$h\mu$ is a measure by Corollary~\ref{measure-theory:corollary-integral-properties}(1). For $g = \mathbf{1}_E$ the formula is the definition of $h\mu$; by linearity it holds for nonnegative simple
+functions. For general $g \geq 0$ choose simple $0 \leq s_k \uparrow g$ (Proposition~\ref{measure-theory:proposition-measurable-functions}(4)); then $s_kh \uparrow gh$, and the monotone convergence theorem
+(Theorem~\ref{measure-theory:theorem-monotone-convergence}) applied on both sides gives the formula. Applied to $|g|$ it gives the integrability statement, and the formula for complex $g$ follows by
+splitting $g$ into $(\operatorname{Re}g)^\pm$ and $(\operatorname{Im}g)^\pm$.
+\end{proof}
+
+\begin{example}\label{signed-measures:example-jordan-density}
+\begin{enumerate}
+\item For $\nu = f\mu$ with $f$ extended $\mu$-integrable, $(\{f \geq 0\}, \{f < 0\})$ is a Hahn decomposition (Example~\ref{signed-measures:example-positive-sets}(2)), so
+\[
+\nu^+ = f^+\mu, \qquad \nu^- = f^-\mu, \qquad |\nu| = |f|\mu, \qquad \int g\,d\nu = \int gf\,d\mu \quad (g \in L^1(|\nu|)),
+\]
+the last by Lemma~\ref{signed-measures:lemma-density-integral}. For the measure $\nu(E) = \int_Ex\,e^{-x^2}\,dx$ of Example~\ref{signed-measures:example-signed-measures}(2),
+$\nu^+(\RR) = \int_0^\infty xe^{-x^2}\,dx = \frac12$, $\nu^-(\RR) = \frac12$ and $|\nu|(\RR) = 1$, although $\nu(\RR) = 0$.
+\item For $\nu = \delta_0 - \delta_1$, $\nu^+ = \delta_0$, $\nu^- = \delta_1$ and $|\nu| = \delta_0 + \delta_1$, of total mass $2$. For $h > 0$ the measures $\nu_h = (\delta_h - \delta_0)/h$ satisfy
+$\int g\,d\nu_h = (g(h) - g(0))/h \to g^{\prime}(0)$ for every differentiable $g$, while $|\nu_h|(\RR) = 2/h \to \infty$: the ``limit'' $g \mapsto g^{\prime}(0)$ is not a measure, but a
+distribution in the sense of Chapter~\ref{distributions}.
+\end{enumerate}
+\end{example}
+
+\section{Complex measures}\label{signed-measures:section-complex}
+
+In Fourier analysis one integrates $e^{-i\xi x}$ against measures, and the bounded linear functionals on spaces of complex functions are complex-valued. So we also need complex measures. They are
+simpler in one respect: they take no infinite values.
+
+\begin{definition}\label{signed-measures:definition-complex-measure}
+A \emph{complex measure} on $(X, \mathcal{A})$ is a map $\nu \colon \mathcal{A} \to \CC$ with $\nu(\emptyset) = 0$ such that $\nu(\bigsqcup_kE_k) = \sum_k\nu(E_k)$ for every sequence of
+pairwise disjoint measurable sets, the series being convergent. We write $M(X) = M(X, \mathcal{A})$ for the set of complex measures, a complex vector space under setwise operations.
+\end{definition}
+
+As for signed measures, the series converges absolutely: its real and imaginary parts converge under every rearrangement, so Corollary~\ref{real-analysis:corollary-unconditional} applies to both.
+The real and imaginary parts $\nu_r = \operatorname{Re}\nu$ and $\nu_i = \operatorname{Im}\nu$ are finite signed measures, and conversely $\nu_r + i\nu_i$ is a complex measure for any finite signed
+measures $\nu_r$, $\nu_i$. A finite signed measure is a complex measure with real values; but a signed measure taking an infinite value is not a complex measure. For $f \in L^1(\mu)$, $f\mu$ is a
+complex measure, by Example~\ref{signed-measures:example-signed-measures}(2) applied to $\operatorname{Re}f$ and $\operatorname{Im}f$.
+
+For a signed measure, $|\nu|$ was defined through the Jordan decomposition, and Proposition~\ref{signed-measures:proposition-variation-signed}(2) expressed it through partitions. For complex
+measures there is no order, and the partition formula becomes the definition.
+
+\begin{definition}\label{signed-measures:definition-total-variation}
+The \emph{total variation} of a complex measure $\nu$ is the set function
+\[
+|\nu|(E) = \sup\Bigl\{\sum_k|\nu(E_k)| : E = \bigsqcup_kE_k\Bigr\} \qquad (E \in \mathcal{A}),
+\]
+the supremum over all finite or countable partitions of $E$ into measurable sets $E_k$.
+The \emph{total variation norm} of $\nu$ is $\|\nu\| = |\nu|(X)$.
+\end{definition}
+
+For a finite signed measure this is the total variation of Definition~\ref{signed-measures:definition-variation-signed}, by Proposition~\ref{signed-measures:proposition-variation-signed}(2). Before
+proving that $|\nu|$ is a finite measure, we need an elementary inequality: among finitely many complex numbers one can always choose some whose sum is not much smaller than the sum of all the
+absolute values.
+
+\begin{lemma}\label{signed-measures:lemma-quarter}
+Let $z_1, \ldots, z_m \in \CC$. There is a subset $S \subseteq \{1, \ldots, m\}$ with $\bigl|\sum_{k \in S}z_k\bigr| \geq \frac14\sum_{k=1}^m|z_k|$.
+\end{lemma}
+
+\begin{proof}
+Since $|z| \leq |\operatorname{Re}z| + |\operatorname{Im}z|$, the total $\sum_k|z_k|$ is at most the sum of the four numbers
+\[
+\sum_{\operatorname{Re}z_k > 0}\operatorname{Re}z_k, \qquad \sum_{\operatorname{Re}z_k < 0}(-\operatorname{Re}z_k), \qquad \sum_{\operatorname{Im}z_k > 0}\operatorname{Im}z_k, \qquad
+\sum_{\operatorname{Im}z_k < 0}(-\operatorname{Im}z_k),
+\]
+so one of them is at least $\frac14\sum_k|z_k|$. If it is the first, take $S = \{k : \operatorname{Re}z_k > 0\}$; then
+$|\sum_{k \in S}z_k| \geq \operatorname{Re}\sum_{k \in S}z_k = \sum_{\operatorname{Re}z_k > 0}\operatorname{Re}z_k$. The other three cases are the same.
+\end{proof}
+
+The best constant is $1/\pi$ instead of $1/4$ (Exercise~\ref{signed-measures:exercise-one-over-pi}); any positive constant suffices for the next theorem.
+
+\begin{theorem}\label{signed-measures:theorem-total-variation}
+Let $\nu$ be a complex measure. Then $|\nu|$ is a finite positive measure with $|\nu(E)| \leq |\nu|(E)$ for all $E$. It is the smallest such measure: if $\mu$ is a positive measure with
+$|\nu(E)| \leq \mu(E)$ for all $E$, then $|\nu| \leq \mu$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: $|\nu|$ is countably additive.} Let $E = \bigsqcup_iE_i$. If $t_i < |\nu|(E_i)$, there are partitions $\{A_{ij}\}_j$ of $E_i$ with $\sum_j|\nu(A_{ij})| > t_i$. The sets $A_{ij}$ form a countable
+partition of $E$, so $|\nu|(E) \geq \sum_it_i$; hence $|\nu|(E) \geq \sum_i|\nu|(E_i)$. Conversely, let $\{A_j\}$ be any countable partition of $E$. For each $j$, $\{A_j \cap E_i\}_i$ is a partition of
+$A_j$, and for each $i$, $\{A_j \cap E_i\}_j$ is a partition of $E_i$; hence
+\[
+\sum_j|\nu(A_j)| = \sum_j\Bigl|\sum_i\nu(A_j \cap E_i)\Bigr| \leq \sum_i\sum_j|\nu(A_j \cap E_i)| \leq \sum_i|\nu|(E_i),
+\]
+the interchange of summations being allowed for nonnegative terms. Taking the supremum, $|\nu|(E) \leq \sum_i|\nu|(E_i)$. Clearly $|\nu|(\emptyset) = 0$, and the one-set partition gives
+$|\nu(E)| \leq |\nu|(E)$.
+
+\emph{Step 2: a set of infinite variation splits.} Suppose $|\nu|(E) = \infty$. We claim that $E = A \sqcup B$ with $|\nu(A)| > 1$, $|\nu(B)| > 1$ and $|\nu|(A) = \infty$. Let
+$c = 4(1 + |\nu(E)|)$. Some partition $\{E_k\}$ of $E$ has $\sum_k|\nu(E_k)| > c$, and then already a finite sum $\sum_{k \leq m}|\nu(E_k)| > c$. By Lemma~\ref{signed-measures:lemma-quarter} there is
+$S \subseteq \{1, \ldots, m\}$ such that $A_0 = \bigcup_{k \in S}E_k$ satisfies $|\nu(A_0)| > c/4 = 1 + |\nu(E)|$. For $B_0 = E \setminus A_0$,
+$|\nu(B_0)| = |\nu(E) - \nu(A_0)| \geq |\nu(A_0)| - |\nu(E)| > 1$. By Step 1, $|\nu|(A_0) + |\nu|(B_0) = \infty$; let $A$ be one of $A_0$, $B_0$ with infinite variation and $B$ the other.
+
+\emph{Step 3: $|\nu|(X) < \infty$.} If not, Step 2 applied to $X$ gives $X = A_1 \sqcup B_1$ with $|\nu(B_1)| > 1$ and $|\nu|(A_1) = \infty$; applied to $A_1$ it gives $A_1 = A_2 \sqcup B_2$ with
+$|\nu(B_2)| > 1$ and $|\nu|(A_2) = \infty$; and so on. The sets $B_1, B_2, \ldots$ are pairwise disjoint, so $\sum_k\nu(B_k) = \nu(\bigsqcup_kB_k)$ converges, which is impossible since its terms
+do not tend to $0$.
+
+\emph{Step 4: minimality.} If $|\nu(F)| \leq \mu(F)$ for all $F$, then for every partition of $E$, $\sum_k|\nu(E_k)| \leq \sum_k\mu(E_k) = \mu(E)$.
+\end{proof}
+
+\begin{corollary}\label{signed-measures:corollary-bounded}
+A complex measure is bounded: $|\nu(E)| \leq \|\nu\| < \infty$ for all $E$. A signed measure is finite if and only if it is bounded, if and only if $|\nu|(X) < \infty$.
+\end{corollary}
+
+\begin{proof}
+The first statement is Theorem~\ref{signed-measures:theorem-total-variation}. For a signed measure, if all values are finite then $\nu^\pm(X) = \pm\nu(P^\pm)$ are finite, where $P^+ = P$ and $P^- = N$ for
+a Hahn decomposition; so $|\nu|(X) < \infty$ and $|\nu(E)| \leq |\nu|(X)$.
+\end{proof}
+
+\begin{counterexample}\label{signed-measures:counterexample-finitely-additive}
+Countable additivity is essential for boundedness. The finite and the cofinite subsets of $\NN$ form an algebra $\mathcal{C}$ (closed under complements and finite unions). Define
+$\nu(E) = |E|$ for finite $E$ and $\nu(E) = -|\NN \setminus E|$ for cofinite $E$. Then $\nu$ is finitely additive on $\mathcal{C}$: two disjoint sets cannot both be cofinite; if both are finite this is
+clear; and if $A$ is finite, $B$ cofinite and $A \cap B = \emptyset$, then $A \subseteq \NN \setminus B$ and $|\NN \setminus (A \cup B)| = |\NN \setminus B| - |A|$, so $\nu(A \cup B) = \nu(A) + \nu(B)$.
+But $\nu$ is unbounded, and it is not countably additive: $\nu(\NN) = 0$ while $\sum_n\nu(\{n\}) = \infty$.
+\end{counterexample}
+
+For a complex measure $\nu = \nu_r + i\nu_i$, the signed measures $\nu_r$, $\nu_i$ satisfy $|\nu_r(E)| \leq |\nu(E)| \leq |\nu|(E)$, so $|\nu_r| \leq |\nu|$ and $|\nu_i| \leq |\nu|$ by the minimality of
+$|\nu_r|$ (Proposition~\ref{signed-measures:proposition-variation-signed}(2), whose partition formula shows that $|\nu_r|$ is the smallest positive measure dominating $|\nu_r(E)|$).
+
+\begin{definition}\label{signed-measures:definition-complex-integral}
+For a complex measure $\nu = \nu_r + i\nu_i$ let $L^1(\nu) = L^1(|\nu|)$, and for $f \in L^1(\nu)$ put $\int f\,d\nu = \int f\,d\nu_r + i\int f\,d\nu_i$, the integrals on the right as in
+Definition~\ref{signed-measures:definition-variation-signed}.
+\end{definition}
+
+This is well defined since $L^1(|\nu|) \subseteq L^1(|\nu_r|) \cap L^1(|\nu_i|)$, and it is linear in $f$ and in $\nu$. For a simple function $s = \sum_ja_j\mathbf{1}_{A_j}$ with disjoint $A_j$,
+$\int s\,d\nu = \sum_ja_j\nu(A_j)$. The inequality $|\int f\,d\nu| \leq \int|f|\,d|\nu|$ is true but not obvious from the definition; it follows from the next theorem, which says that a complex
+measure is a positive measure twisted by a phase.
+
+\begin{lemma}\label{signed-measures:lemma-averages}
+Let $\mu$ be a finite positive measure, $g \in L^1(\mu)$ and $S \subseteq \CC$ closed. If the average $\frac{1}{\mu(E)}\int_Eg\,d\mu$ lies in $S$ for every measurable $E$ with $\mu(E) > 0$, then
+$g(x) \in S$ for $\mu$-almost every $x$.
+\end{lemma}
+
+\begin{proof}
+Let $D = \overline{B}(a, r)$ be a closed disc disjoint from $S$, and $E = g^{-1}(D)$. If $\mu(E) > 0$, then
+\[
+\Bigl|\frac{1}{\mu(E)}\int_Eg\,d\mu - a\Bigr| = \frac{1}{\mu(E)}\Bigl|\int_E(g - a)\,d\mu\Bigr| \leq \frac{1}{\mu(E)}\int_E|g - a|\,d\mu \leq r,
+\]
+so the average lies in $D$, hence not in $S$; a contradiction. So $\mu(g^{-1}(D)) = 0$. The open set $\CC \setminus S$ is the union of the countably many closed discs with rational centre and rational
+radius that it contains, so $\mu(g^{-1}(\CC \setminus S)) = 0$.
+\end{proof}
+
+\begin{theorem}[Polar decomposition]\label{signed-measures:theorem-polar}
+Let $\nu$ be a complex measure. There is a measurable $h \colon X \to \CC$ with $|h(x)| = 1$ for all $x$ such that $\nu = h|\nu|$, that is,
+\[
+\nu(E) = \int_Eh\,d|\nu| \qquad (E \in \mathcal{A}).
+\]
+It is unique up to $|\nu|$-null sets. Consequently $\int f\,d\nu = \int fh\,d|\nu|$ and $|\int f\,d\nu| \leq \int|f|\,d|\nu|$ for $f \in L^1(\nu)$. For a finite signed measure, $h = \mathbf{1}_P - \mathbf{1}_N$ for a Hahn
+decomposition $(P, N)$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: a density.} The positive measures $\nu_r^\pm$ and $\nu_i^\pm$ are bounded by $|\nu|$, since $\nu_r^+ \leq |\nu_r| \leq |\nu|$, and the same for the others. So $|\nu|(E) = 0$ implies that all four vanish on $E$, and the Radon--Nikodym theorem
+(Theorem~\ref{lebesgue-differentiation:theorem-radon-nikodym}, with the finite measure $|\nu|$) gives integrable densities $h_1, \ldots, h_4 \geq 0$ with $\nu_r^+ = h_1|\nu|$, and so on. Then
+$h = h_1 - h_2 + i(h_3 - h_4) \in L^1(|\nu|)$ satisfies $\nu = h|\nu|$.
+
+\emph{Step 2: $|h| \leq 1$ almost everywhere.} For $|\nu|(E) > 0$, the average of $h$ over $E$ is $\nu(E)/|\nu|(E)$, of absolute value $\leq 1$. By Lemma~\ref{signed-measures:lemma-averages} with
+$S$ the closed unit disc, $|h| \leq 1$ almost everywhere.
+
+\emph{Step 3: $|h| \geq 1$ almost everywhere.} Let $0 < r < 1$ and $A = \{|h| < r\}$. For every partition $\{E_k\}$ of $A$,
+$\sum_k|\nu(E_k)| = \sum_k|\int_{E_k}h\,d|\nu|| \leq r\sum_k|\nu|(E_k) = r|\nu|(A)$, so $|\nu|(A) \leq r|\nu|(A)$, and $|\nu|(A) = 0$ because it is finite. Letting $r \uparrow 1$ along a sequence,
+$|h| \geq 1$ almost everywhere.
+
+\emph{Step 4: conclusion.} Redefine $h = 1$ on the null set where $|h| \neq 1$. Uniqueness: if $h|\nu| = h^{\prime}|\nu|$, then $\int_E(h - h^{\prime})\,d|\nu| = 0$ for all $E$, and taking $E$ to be the sets
+where $\operatorname{Re}(h - h^{\prime})$ or $\operatorname{Im}(h - h^{\prime})$ is positive or negative shows $h = h^{\prime}$ almost everywhere (Corollary~\ref{measure-theory:corollary-integral-properties}(4)).
+The formula $\int f\,d\nu = \int fh\,d|\nu|$ holds for indicator functions by the theorem, hence for simple functions; for $f \in L^1(|\nu|)$ choose simple $s_k \to f$ pointwise with $|s_k| \leq |f|$
+(approximate $(\operatorname{Re}f)^\pm$ and $(\operatorname{Im}f)^\pm$ from below), and pass to the limit on both sides by dominated convergence (Theorem~\ref{measure-theory:theorem-dominated-convergence}),
+on the left for each of the four measures $\nu_r^\pm$, $\nu_i^\pm$, which are bounded by $|\nu|$. Then $|\int f\,d\nu| \leq \int|fh|\,d|\nu| = \int|f|\,d|\nu|$. For a finite signed measure,
+$\nu = (\mathbf{1}_P - \mathbf{1}_N)(\nu^+ + \nu^-)$ by Theorem~\ref{signed-measures:theorem-jordan}.
+\end{proof}
+
+\begin{proposition}\label{signed-measures:proposition-variation-density}
+Let $\mu$ be a positive measure and $g \in L^1(\mu)$. Then $|g\mu| = |g|\mu$; in particular $\|g\mu\| = \|g\|_1$, and $\int f\,d(g\mu) = \int fg\,d\mu$ for $f \in L^1(|g|\mu)$.
+\end{proposition}
+
+\begin{proof}
+Let $\nu = g\mu$. The positive measure $|g|\mu$ satisfies $|\nu(E)| = |\int_Eg\,d\mu| \leq \int_E|g|\,d\mu$, so $|\nu| \leq |g|\mu$ by Theorem~\ref{signed-measures:theorem-total-variation}. Conversely, let
+$u = \overline{\operatorname{sgn}g}$, so that $ug = |g|$ and $|u| \leq 1$, and choose simple functions $s_k \to u$ pointwise with $|s_k| \leq 1$. For a simple $s = \sum_ja_j\mathbf{1}_{A_j}$ with disjoint
+$A_j$ and $|a_j| \leq 1$, and measurable $E$,
+\[
+\Bigl|\int_Esg\,d\mu\Bigr| = \Bigl|\sum_ja_j\nu(E \cap A_j)\Bigr| \leq \sum_j|\nu(E \cap A_j)| \leq |\nu|(E).
+\]
+Applying this to $s_k$ and letting $k \to \infty$ by dominated convergence (dominated by $|g|$) gives $\int_E|g|\,d\mu = \int_Eug\,d\mu \leq |\nu|(E)$. The last formula: by
+Lemma~\ref{signed-measures:lemma-density-integral}, $\int f\,d(g\mu)$ is computed from the signed measures $(\operatorname{Re}g)\mu$ and $(\operatorname{Im}g)\mu$ by
+Example~\ref{signed-measures:example-jordan-density}(1).
+\end{proof}
+
+\begin{example}\label{signed-measures:example-complex-measures}
+\begin{enumerate}
+\item For $\nu = \sum_na_n\delta_{x_n}$ with distinct points $x_n$ and $\sum_n|a_n| < \infty$, $a_n \in \CC$, $|\nu| = \sum_n|a_n|\delta_{x_n}$ (Exercise~\ref{signed-measures:exercise-atoms}): the variation adds
+absolute values.
+\item \emph{Fourier--Stieltjes transform.} For a complex Borel measure $\nu$ on $\RR$ define $\hat\nu(\xi) = \int e^{-i\xi x}\,d\nu(x)$. Then $|\hat\nu(\xi)| \leq \|\nu\|$, and $\hat\nu$ is continuous by
+dominated convergence with respect to $|\nu|$, since $e^{-i\xi x}h(x)$ depends continuously on $\xi$ and is bounded by $1$ (with $h$ the polar density). For $\nu = f\lambda$, $f \in L^1(\RR)$, this is the
+Fourier transform of $f$; for $\nu = \delta_a$ it is $e^{-ia\xi}$, which does not tend to $0$ as $|\xi| \to \infty$. So point masses are visible in the behaviour of $\hat\nu$ at infinity.
+\item The measure $\nu(E) = \int_{E \cap [0, 2\pi]}e^{ix}\,dx$ on $\RR$ has $\nu(\RR) = 0$ and $\|\nu\| = 2\pi$ by
+Proposition~\ref{signed-measures:proposition-variation-density}: the total variation cannot be seen from the value on the whole space.
+\end{enumerate}
+\end{example}
+
+\begin{proposition}\label{signed-measures:proposition-banach}
+With the total variation norm, $M(X, \mathcal{A})$ is a Banach space. The finite signed measures form a closed real subspace.
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1: a norm.} For complex measures $\nu_1$, $\nu_2$ and $c \in \CC$, the positive measure $|\nu_1| + |\nu_2|$ dominates $|(\nu_1 + \nu_2)(E)|$, so $|\nu_1 + \nu_2| \leq |\nu_1| + |\nu_2|$ by
+minimality, and clearly $|c\nu| = |c||\nu|$. If $\|\nu\| = 0$, then $\nu = 0$. So $\|\ \|$ is a norm.
+
+\emph{Step 2: the limit.} Let $(\nu_n)$ be Cauchy and $\varepsilon_n = \sup_{m \geq n}\|\nu_m - \nu_n\|$, so $\varepsilon_n \to 0$. Since $|\nu_m(E) - \nu_n(E)| \leq \|\nu_m - \nu_n\|$, the limit
+$\nu(E) = \lim_n\nu_n(E)$ exists for every $E$, uniformly in $E$. For a finite family of disjoint sets $E_1, \ldots, E_K$ and $m \geq n$,
+$\sum_{k \leq K}|\nu_m(E_k) - \nu_n(E_k)| \leq \|\nu_m - \nu_n\| \leq \varepsilon_n$, and letting $m \to \infty$,
+\begin{equation}\label{signed-measures:equation-uniform}
+\sum_{k \leq K}|\nu(E_k) - \nu_n(E_k)| \leq \varepsilon_n .
+\end{equation}
+
+\emph{Step 3: $\nu$ is a complex measure.} Clearly $\nu(\emptyset) = 0$. Let $E = \bigsqcup_kE_k$. By \eqref{signed-measures:equation-uniform} (applied to the single set $E$ and to $E_1, \ldots, E_K$),
+\[\begin{aligned}
+\Bigl|\nu(E) - \sum_{k \leq K}\nu(E_k)\Bigr| &\leq |\nu(E) - \nu_n(E)| + \Bigl|\nu_n(E) - \sum_{k \leq K}\nu_n(E_k)\Bigr| \\
+&\quad + \sum_{k \leq K}|\nu_n(E_k) - \nu(E_k)| \\
+&\leq 2\varepsilon_n + \Bigl|\nu_n\Bigl(\bigsqcup_{k > K}E_k\Bigr)\Bigr| .
+\end{aligned}\]
+For fixed $n$ the last term tends to $0$ as $K \to \infty$, by countable additivity of $\nu_n$. Hence $\limsup_K|\nu(E) - \sum_{k \leq K}\nu(E_k)| \leq 2\varepsilon_n$ for every $n$, and the series
+converges to $\nu(E)$.
+
+\emph{Step 4: convergence in norm.} By \eqref{signed-measures:equation-uniform}, every finite partial sum $\sum_{k \leq K}|(\nu - \nu_n)(E_k)|$ for a partition of $X$ is at most $\varepsilon_n$, so
+$\|\nu - \nu_n\| \leq \varepsilon_n \to 0$. If all $\nu_n$ are real, so is $\nu$.
+\end{proof}
+
+By Proposition~\ref{signed-measures:proposition-variation-density}, $f \mapsto f\mu$ is a linear isometry of $L^1(\mu)$ onto a closed subspace of $M(X)$, which consists of measures absolutely
+continuous with respect to $\mu$, as the next section shows. For example $L^1(\NN) = \ell^1 = M(\NN, \mathcal{P}(\NN))$.
+
+\section{The Radon--Nikodym theorem for signed and complex measures}\label{signed-measures:section-radon-nikodym}
+
+\begin{definition}\label{signed-measures:definition-absolutely-continuous}
+Let $\mu$ be a positive measure and $\nu$ a signed or complex measure on $(X, \mathcal{A})$. Then $\nu$ is \emph{absolutely continuous} with respect to $\mu$, $\nu \ll \mu$, if $\nu(E) = 0$ for every
+measurable $E$ with $\mu(E) = 0$.
+\end{definition}
+
+\begin{proposition}\label{signed-measures:proposition-absolutely-continuous}
+For $\mu$ positive and $\nu$ signed or complex, the following are equivalent: (a) $\nu \ll \mu$; (b) $|\nu| \ll \mu$; and, for signed $\nu$, (c) $\nu^+ \ll \mu$ and $\nu^- \ll \mu$. If
+$\nu \ll \mu$ and $\nu \perp \mu$, then $\nu = 0$.
+\end{proposition}
+
+\begin{proof}
+(a) $\Rightarrow$ (b): if $\mu(E) = 0$, every measurable $F \subseteq E$ has $\mu(F) = 0$, hence $\nu(F) = 0$; so every sum $\sum_k|\nu(E_k)|$ for a partition of $E$ vanishes, and $|\nu|(E) = 0$ (for
+signed $\nu$ use Proposition~\ref{signed-measures:proposition-variation-signed}(2)). (b) $\Rightarrow$ (c) since $\nu^\pm \leq |\nu|$, and (c) $\Rightarrow$ (a) since $\nu = \nu^+ - \nu^-$; for complex
+$\nu$, (b) $\Rightarrow$ (a) by $|\nu(E)| \leq |\nu|(E)$. Finally, if $\nu \perp \mu$, choose $S$ null for $\nu$ with $\mu(X \setminus S) = 0$. Then $|\nu|(X \setminus S) = 0$ by (b) and
+$|\nu|(S) = 0$ by Proposition~\ref{signed-measures:proposition-variation-signed}(4) (for complex $\nu$, because every partition of the null set $S$ gives the sum $0$); so $\nu = 0$.
+\end{proof}
+
+\begin{theorem}[Lebesgue--Radon--Nikodym]\label{signed-measures:theorem-lebesgue-radon-nikodym}
+Let $\mu$ be a $\sigma$-finite positive measure and $\nu$ a $\sigma$-finite signed measure on $(X, \mathcal{A})$. There are unique signed measures $\nu_a$ and $\nu_s$ with
+\[
+\nu = \nu_a + \nu_s, \qquad \nu_a \ll \mu, \qquad \nu_s \perp \mu,
+\]
+and $\nu_a = f\mu$ for an extended $\mu$-integrable function $f$, unique $\mu$-almost everywhere. If $\nu$ is a complex measure, the same holds with complex measures $\nu_a$, $\nu_s$ and
+$f \in L^1(\mu)$. In particular, if $\nu \ll \mu$, then $\nu = f\mu$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: existence for signed $\nu$.} The positive measures $\nu^\pm$ are $\sigma$-finite, since $\nu^\pm \leq |\nu|$. By the Lebesgue decomposition for positive measures
+(Theorem~\ref{lebesgue-differentiation:theorem-lebesgue-decomposition}), $\nu^+ = g_1\mu + \sigma_1$ and $\nu^- = g_2\mu + \sigma_2$ with measurable $g_1, g_2 \geq 0$ and positive measures
+$\sigma_1, \sigma_2 \perp \mu$. One of $\nu^\pm$ is finite (Theorem~\ref{signed-measures:theorem-jordan}), say $\nu^-$; then $\int g_2\,d\mu \leq \nu^-(X) < \infty$ and $\sigma_2$ is finite. So
+$f = g_1 - g_2$ is extended $\mu$-integrable (redefine $g_2 = 0$ on the null set where it is infinite), and $\nu_a = f\mu = g_1\mu - g_2\mu$ and $\nu_s = \sigma_1 - \sigma_2$ are signed measures
+with $\nu = \nu_a + \nu_s$ (all subtractions involve a finite measure). Let $\sigma_j$ live on the $\mu$-null set $S_j$. Then $S = S_1 \cup S_2$ is $\mu$-null and $X \setminus S$ is null for
+$\sigma_1$ and $\sigma_2$, hence for $\nu_s$; so $\nu_s \perp \mu$. And $\nu_a \ll \mu$ because $\mu(E) = 0$ implies $\int_Ef\,d\mu = 0$.
+
+\emph{Step 2: uniqueness of the decomposition.} Let $\nu = \nu_a + \nu_s$ be any decomposition as in the statement, with $\nu_s$ living on a $\mu$-null set $S$. Then $\nu_a$ is null on $S$ (every subset
+of $S$ is $\mu$-null) and $\nu_s$ is null on $X \setminus S$, so $\nu_a(E) = \nu(E \setminus S)$ and $\nu_s(E) = \nu(E \cap S)$. If $\nu = \nu_a^{\prime} + \nu_s^{\prime}$ is another decomposition with
+$\mu$-null set $S^{\prime}$, then on $S \setminus S^{\prime}$ both $\nu_a^{\prime}$ (subsets are $\mu$-null) and $\nu_s^{\prime}$ (outside $S^{\prime}$) are null, so $\nu$ is null on $S \setminus S^{\prime}$, and
+likewise on $S^{\prime} \setminus S$. Hence $\nu(E \cap S) = \nu(E \cap S \cap S^{\prime}) = \nu(E \cap S^{\prime})$, that is $\nu_s = \nu_s^{\prime}$, and similarly $\nu_a = \nu_a^{\prime}$.
+
+\emph{Step 3: uniqueness of the density.} If $f\mu = f^{\prime}\mu$, then by Example~\ref{signed-measures:example-jordan-density}(1) and the uniqueness of the Jordan decomposition,
+$f^+\mu = f^{\prime +}\mu$ and $f^-\mu = f^{\prime -}\mu$. These are $\sigma$-finite positive measures (they are bounded by $|\nu|$), and the uniqueness part of
+Theorem~\ref{lebesgue-differentiation:theorem-radon-nikodym} gives $f^\pm = f^{\prime\pm}$ almost everywhere.
+
+\emph{Step 4: complex $\nu$.} Apply Steps 1--3 to $\nu_r$ and $\nu_i$, which are finite; then the densities are integrable, and $\nu_a = (\nu_r)_a + i(\nu_i)_a$ and $\nu_s = (\nu_r)_s + i(\nu_i)_s$ (the
+union of the two $\mu$-null sets carries $\nu_s$). Uniqueness follows from Step 2, whose argument works verbatim for complex measures, and from Step 3 applied to real and imaginary parts.
+\end{proof}
+
+\begin{notation}\label{signed-measures:notation-radon-nikodym}
+The function $f$ with $\nu = f\mu$ is the \emph{Radon--Nikodym derivative} of $\nu$ with respect to $\mu$, written $f = d\nu/d\mu$. It is an element of $L^1(\mu)$ (for complex $\nu$) or an extended
+integrable function, determined up to $\mu$-null sets. The notation is justified by the chain rule below.
+\end{notation}
+
+\begin{proposition}[Chain rule]\label{signed-measures:proposition-chain-rule}
+Let $\mu$, $\rho$ be $\sigma$-finite positive measures with $\mu \ll \rho$, and $\nu$ a complex measure with $\nu \ll \mu$. Then $\nu \ll \rho$ and
+\[
+\frac{d\nu}{d\rho} = \frac{d\nu}{d\mu}\,\frac{d\mu}{d\rho} \qquad \rho\text{-almost everywhere}.
+\]
+If moreover $\rho \ll \mu$, then $\frac{d\mu}{d\rho}\frac{d\rho}{d\mu} = 1$ almost everywhere (for $\mu$ or, equivalently, $\rho$). For $g \in L^1(|\nu|)$, $\int g\,d\nu = \int g\frac{d\nu}{d\mu}\,d\mu$.
+\end{proposition}
+
+\begin{proof}
+Clearly $\nu \ll \rho$. Let $f = d\nu/d\mu$ and $h = d\mu/d\rho \geq 0$. By Lemma~\ref{signed-measures:lemma-density-integral} with $g = f\mathbf{1}_E$ (applied to real and imaginary parts, positive and
+negative parts), $\nu(E) = \int_Ef\,d\mu = \int_Efh\,d\rho$; so $fh$ is a density of $\nu$ with respect to $\rho$, and by uniqueness it is $d\nu/d\rho$. If also $\rho \ll \mu$, let $k = d\rho/d\mu \geq 0$ (positive
+Radon--Nikodym theorem). By Lemma~\ref{signed-measures:lemma-density-integral}, $\rho(E) = \int_Ek\,d\mu = \int_Ekh\,d\rho$ for all $E$, so $kh$ and $1$ are both densities of $\rho$ with respect to
+itself, and $kh = 1$ $\rho$-almost everywhere by the uniqueness in Theorem~\ref{lebesgue-differentiation:theorem-radon-nikodym}; $\mu$ and $\rho$ have the same null sets. The last formula is
+Proposition~\ref{signed-measures:proposition-variation-density}.
+\end{proof}
+
+For finite measures, absolute continuity has a quantitative form, which explains its name and connects it with absolutely continuous functions
+(Definition~\ref{lebesgue-differentiation:definition-absolutely-continuous}).
+
+\begin{theorem}\label{signed-measures:theorem-epsilon-delta}
+Let $\mu$ be a positive measure and $\nu$ a complex measure on $(X, \mathcal{A})$. Then $\nu \ll \mu$ if and only if for every $\varepsilon > 0$ there is $\delta > 0$ such that $|\nu(E)| < \varepsilon$
+for every measurable $E$ with $\mu(E) < \delta$. In this case also $|\nu|(E) < \varepsilon$ whenever $\mu(E) < \delta^{\prime}$, for a suitable $\delta^{\prime} > 0$.
+\end{theorem}
+
+\begin{proof}
+If the condition holds and $\mu(E) = 0$, then $|\nu(E)| < \varepsilon$ for all $\varepsilon$. Conversely, let $\nu \ll \mu$; by Proposition~\ref{signed-measures:proposition-absolutely-continuous}
+$|\nu| \ll \mu$, and since $|\nu(E)| \leq |\nu|(E)$ it suffices to prove the condition for the finite positive measure $|\nu|$. Suppose it fails: there are $\varepsilon > 0$ and sets $E_n$ with
+$\mu(E_n) < 2^{-n}$ and $|\nu|(E_n) \geq \varepsilon$. Let $F_k = \bigcup_{n \geq k}E_n$ and $F = \bigcap_kF_k$. Then $\mu(F) \leq \mu(F_k) \leq \sum_{n \geq k}2^{-n} = 2^{1-k}$ for all $k$, so
+$\mu(F) = 0$; but $|\nu|(F_k) \geq \varepsilon$ and the $F_k$ decrease, so $|\nu|(F) = \lim_k|\nu|(F_k) \geq \varepsilon$ by Proposition~\ref{measure-theory:proposition-measure-properties}, as
+$|\nu|$ is finite. This contradicts $|\nu| \ll \mu$.
+\end{proof}
+
+\begin{counterexample}\label{signed-measures:counterexample-epsilon-delta}
+Finiteness of $\nu$ is needed. On $(0, 1)$ let $\nu = x^{-1}\lambda$, a positive measure with $\nu \ll \lambda$. Then $\nu((0, \delta)) = \int_0^\delta dx/x = \infty$ for every $\delta > 0$, so no
+$\delta$ works for any $\varepsilon$.
+\end{counterexample}
+
+\begin{remark}\label{signed-measures:remark-functions-measures}
+For $f \in L^1(\mu)$ the theorem applied to $f\mu$ gives: for every $\varepsilon > 0$ there is $\delta > 0$ with $\int_E|f|\,d\mu < \varepsilon$ whenever $\mu(E) < \delta$. This is
+Lemma~\ref{lebesgue-differentiation:lemma-absolutely-continuous}(1) for an arbitrary measure space. The dictionary between functions and measures on an interval reads: a continuous nondecreasing
+function $F$ on $[a, b]$ is absolutely continuous if and only if its measure $\mu_F$ (Lemma~\ref{lebesgue-differentiation:lemma-stieltjes}) is absolutely continuous with respect to $\lambda$. One
+direction is that lemma; for the other, if $\mu_F \ll \lambda$, then for disjoint intervals with total length $< \delta$, $\sum_k(F(b_k) - F(a_k)) = \mu_F(\bigsqcup_k(a_k, b_k)) < \varepsilon$ by the
+theorem. The Cantor function is the standard example where $\mu_F \perp \lambda$.
+\end{remark}
+
+\section{The dual of $L^p$}\label{signed-measures:section-duality}
+
+Let $(X, \mathcal{A}, \mu)$ be a measure space, $1 \leq p \leq \infty$, and let $q$ be the \emph{conjugate exponent}, $1/p + 1/q = 1$ (with $1/\infty = 0$). By H\"older's inequality
+(Proposition~\ref{measure-theory:proposition-holder}), every $g \in L^q(\mu)$ defines a linear functional
+\[
+\Lambda_g \colon L^p(\mu) \to \CC, \qquad \Lambda_g(f) = \int fg\,d\mu, \qquad |\Lambda_g(f)| \leq \|g\|_q\|f\|_p .
+\]
+The question of this section is whether every such functional arises in this way. We first fix the language; the general theory of Banach spaces and their duals is in
+Chapter~\ref{functional-analysis}.
+
+\begin{definition}\label{signed-measures:definition-bounded-functional}
+A linear map $\Lambda \colon L^p(\mu) \to \CC$ is \emph{bounded} if there is a constant $C$ with $|\Lambda(f)| \leq C\|f\|_p$ for all $f$. The least such $C$ is the \emph{norm}
+$\|\Lambda\| = \sup\{|\Lambda(f)| : \|f\|_p \leq 1\}$. The bounded linear functionals form the \emph{dual space} $L^p(\mu)^*$, a normed space.
+\end{definition}
+
+A linear functional is bounded if and only if it is continuous: a bounded $\Lambda$ satisfies $|\Lambda(f) - \Lambda(f^{\prime})| \leq \|\Lambda\|\|f - f^{\prime}\|_p$, and if $\Lambda$ is continuous at
+$0$, some $\delta > 0$ has $|\Lambda(f)| \leq 1$ for $\|f\|_p \leq \delta$, so $|\Lambda(f)| \leq \delta^{-1}\|f\|_p$ by scaling.
+
+\begin{proposition}[Converse of H\"older's inequality]\label{signed-measures:proposition-converse-holder}
+Let $g \in L^q(\mu)$. If $q < \infty$, or if $q = \infty$ and $\mu$ is $\sigma$-finite, then
+\[
+\|\Lambda_g\| = \|g\|_q = \sup\Bigl\{\Bigl|\int fg\,d\mu\Bigr| : \|f\|_p \leq 1\Bigr\}.
+\]
+If $g \geq 0$ and $q < \infty$, the supremum is attained by some $f \geq 0$. Consequently $g \mapsto \Lambda_g$ is a linear isometry $L^q(\mu) \to L^p(\mu)^*$; in particular it is injective.
+\end{proposition}
+
+\begin{proof}
+H\"older gives $\|\Lambda_g\| \leq \|g\|_q$, and we may assume $g \neq 0$. Let $\alpha = \operatorname{sgn}g$, so $\bar\alpha g = |g|$.
+
+\emph{Case $1 < q < \infty$.} Let $f = \bar\alpha|g|^{q-1}/\|g\|_q^{q-1}$. As $(q - 1)p = q$, $\|f\|_p^p = \int|g|^q/\|g\|_q^q = 1$, and $\int fg = \int|g|^q/\|g\|_q^{q-1} = \|g\|_q$.
+
+\emph{Case $q = 1$.} Take $f = \bar\alpha$; then $\|f\|_\infty \leq 1$ and $\int fg = \|g\|_1$.
+
+\emph{Case $q = \infty$, $\mu$ $\sigma$-finite.} Let $0 < t < \|g\|_\infty$. The set $\{|g| > t\}$ has positive measure, and as $X$ is a countable union of sets of finite measure, it contains a set $E$
+with $0 < \mu(E) < \infty$. Let $f = \mu(E)^{-1}\mathbf{1}_E\bar\alpha$; then $\|f\|_1 = 1$ and $\int fg = \mu(E)^{-1}\int_E|g| \geq t$. So $\|\Lambda_g\| \geq t$ for every $t < \|g\|_\infty$.
+
+In the first two cases $f \geq 0$ if $g \geq 0$. Linearity of $g \mapsto \Lambda_g$ is clear.
+\end{proof}
+
+\begin{counterexample}\label{signed-measures:counterexample-not-sigma-finite}
+For $q = \infty$ the hypothesis on $\mu$ cannot be dropped. Let $X = \{x\}$ be a point and $\mu(\{x\}) = \infty$. Then $L^1(\mu) = \{0\}$, since $\int|f|\,d\mu = |f(x)|\cdot\infty$, while
+$L^\infty(\mu) = \CC$. Every $\Lambda_g$ is the zero functional, and $g \mapsto \Lambda_g$ is not injective.
+\end{counterexample}
+
+\begin{theorem}[Riesz representation of $L^p(\mu)^*$]\label{signed-measures:theorem-lp-duality}
+Let $1 \leq p < \infty$ and $1/p + 1/q = 1$, and if $p = 1$ assume that $\mu$ is $\sigma$-finite. For every bounded linear functional $\Lambda$ on $L^p(\mu)$ there is a unique $g \in L^q(\mu)$ with
+\[
+\Lambda(f) = \int fg\,d\mu \qquad \text{for all } f \in L^p(\mu),
+\]
+and $\|\Lambda\| = \|g\|_q$. In other words, $g \mapsto \Lambda_g$ is an isometric isomorphism $L^q(\mu) \cong L^p(\mu)^*$.
+\end{theorem}
+
+We prove the theorem for $\sigma$-finite $\mu$, which covers all the applications in this book; for $1 < p < \infty$ it holds for arbitrary $\mu$ \cite[Theorem 6.15]{folland-real}, by reducing to the
+$\sigma$-finite sets $\{|f| > 1/n\}$.
+
+\begin{proof}
+Uniqueness and $\|\Lambda_g\| = \|g\|_q$ follow from Proposition~\ref{signed-measures:proposition-converse-holder}. We prove existence of $g$ with $\|g\|_q \leq \|\Lambda\|$.
+
+\emph{Step 1: a complex measure, for finite $\mu$.} Assume $\mu(X) < \infty$ and put $\nu(E) = \Lambda(\mathbf{1}_E)$, which makes sense because $\mathbf{1}_E \in L^p(\mu)$. Then $\nu$ is finitely
+additive since $\Lambda$ is linear. If $E = \bigsqcup_kE_k$ and $A_K = \bigsqcup_{k \leq K}E_k$, then $\|\mathbf{1}_E - \mathbf{1}_{A_K}\|_p = \mu(E \setminus A_K)^{1/p} \to 0$ because $p < \infty$
+(Proposition~\ref{measure-theory:proposition-measure-properties}), so $\sum_{k \leq K}\nu(E_k) = \Lambda(\mathbf{1}_{A_K}) \to \Lambda(\mathbf{1}_E) = \nu(E)$. So $\nu$ is a complex measure. If
+$\mu(E) = 0$, then $\mathbf{1}_E = 0$ in $L^p$ and $\nu(E) = 0$: $\nu \ll \mu$.
+
+\emph{Step 2: the density represents $\Lambda$ on bounded functions.} By Theorem~\ref{signed-measures:theorem-lebesgue-radon-nikodym} there is $g \in L^1(\mu)$ with $\Lambda(\mathbf{1}_E) = \int_Eg\,d\mu$
+for all $E$. By linearity $\Lambda(s) = \int sg\,d\mu$ for simple $s$. Every $f \in L^\infty(\mu)$ is a uniform limit of simple functions $s_k$ with $|s_k| \leq |f|$ (approximate $(\operatorname{Re}f)^\pm$
+and $(\operatorname{Im}f)^\pm$ from below by the standard simple functions, whose error is uniformly small where $f$ is bounded); since $\|f - s_k\|_p \leq \mu(X)^{1/p}\|f - s_k\|_\infty \to 0$ and
+$\int|f - s_k||g| \leq \|f - s_k\|_\infty\|g\|_1 \to 0$, we get $\Lambda(f) = \int fg\,d\mu$ for all $f \in L^\infty(\mu)$.
+
+\emph{Step 3: $g \in L^q$ with $\|g\|_q \leq \|\Lambda\|$, for finite $\mu$.} Let $\alpha = \operatorname{sgn}g$. If $p = 1$: for $\mu(E) > 0$,
+$|\int_Eg\,d\mu| = |\Lambda(\mathbf{1}_E)| \leq \|\Lambda\|\mu(E)$, so the averages of $g$ lie in the closed disc of radius $\|\Lambda\|$, and $|g| \leq \|\Lambda\|$ almost everywhere by
+Lemma~\ref{signed-measures:lemma-averages}. If $1 < p < \infty$: let $E_n = \{|g| \leq n\}$ and $f = \mathbf{1}_{E_n}|g|^{q-1}\bar\alpha \in L^\infty(\mu)$. Then $|f|^p = \mathbf{1}_{E_n}|g|^q$ and
+\[
+\int_{E_n}|g|^q\,d\mu = \int fg\,d\mu = \Lambda(f) \leq \|\Lambda\|\Bigl(\int_{E_n}|g|^q\,d\mu\Bigr)^{1/p},
+\]
+so $(\int_{E_n}|g|^q)^{1/q} \leq \|\Lambda\|$ (the integral being finite); by monotone convergence $\|g\|_q \leq \|\Lambda\|$.
+
+\emph{Step 4: $\Lambda = \Lambda_g$ on $L^p$, for finite $\mu$.} Both $\Lambda$ and $\Lambda_g$ are continuous on $L^p(\mu)$ and agree on $L^\infty(\mu)$, which is dense in $L^p(\mu)$: for $f \in L^p$, the
+truncations $f\mathbf{1}_{\{|f| \leq n\}}$ converge to $f$ in $L^p$ by dominated convergence. So $\Lambda = \Lambda_g$.
+
+\emph{Step 5: $\sigma$-finite $\mu$.} Let $X = \bigsqcup_nX_n$ with $\mu(X_n) < \infty$, and $w = \sum_n2^{-n}(1 + \mu(X_n))^{-1}\mathbf{1}_{X_n}$; then $0 < w \leq 1$ and $\int w\,d\mu \leq 1$, so
+$\tilde\mu = w\mu$ is a finite measure with the same null sets as $\mu$. By Lemma~\ref{signed-measures:lemma-density-integral}, $F \mapsto w^{1/p}F$ is a linear isometry of $L^p(\tilde\mu)$ onto
+$L^p(\mu)$, with inverse $f \mapsto w^{-1/p}f$. So $\Psi(F) = \Lambda(w^{1/p}F)$ is a bounded linear functional on $L^p(\tilde\mu)$ with $\|\Psi\| = \|\Lambda\|$, and Steps 1--4 give
+$G \in L^q(\tilde\mu)$ with $\|G\|_{L^q(\tilde\mu)} \leq \|\Lambda\|$ and $\Psi(F) = \int FGw\,d\mu$. If $p = 1$, put $g = G$: the essential suprema for $\mu$ and $\tilde\mu$ agree, and
+$\Lambda(f) = \Psi(w^{-1}f) = \int fG\,d\mu$. If $p > 1$, put $g = w^{1/q}G$; then $\int|g|^q\,d\mu = \int|G|^qw\,d\mu \leq \|\Lambda\|^q$ and
+$\Lambda(f) = \Psi(w^{-1/p}f) = \int fw^{1 - 1/p}G\,d\mu = \int fg\,d\mu$.
+\end{proof}
+
+\begin{example}\label{signed-measures:example-sequence-duals}
+For the counting measure on $\NN$, $L^p = \ell^p$, and the theorem says that every bounded linear functional on $\ell^p$, $1 \leq p < \infty$, is $a \mapsto \sum_na_nb_n$ for a unique
+$b \in \ell^q$, with $\|\Lambda\| = \|b\|_q$; here $b_n = \Lambda(e_n)$ for the unit vectors $e_n$. For instance $a \mapsto \sum_na_n/\sqrt n$ is bounded on $\ell^p$ exactly when
+$(n^{-1/2}) \in \ell^q$, that is for $q > 2$, or $p < 2$ (Exercise~\ref{signed-measures:exercise-sequence-functional}).
+\end{example}
+
+\begin{remark}\label{signed-measures:remark-linfty-dual}
+The theorem fails for $p = \infty$: $L^1(\mu)$ is in general only a proper part of $L^\infty(\mu)^*$. For $\ell^\infty$, the functional $\lim$ on the subspace of convergent sequences extends, by the
+Hahn--Banach theorem of Chapter~\ref{functional-analysis}, to a bounded linear functional $\Lambda$ on $\ell^\infty$ with $\|\Lambda\| = 1$. If $\Lambda(a) = \sum_na_nb_n$ with $b \in \ell^1$, then
+$b_n = \Lambda(e_n) = \lim_ke_n(k) = 0$ for all $n$, so $\Lambda = 0$, contradicting $\Lambda(1, 1, \ldots) = 1$. For $1 < p < \infty$, applying the theorem twice shows that the natural map $L^p \to (L^p)^{**}$, $f \mapsto (\Lambda \mapsto \Lambda(f))$, is onto: $L^p$ is \emph{reflexive}, in the language
+of Chapter~\ref{functional-analysis}. The spaces $L^1$ and $L^\infty$ are not reflexive in general.
+\end{remark}
+
+As a first application of the duality idea, an $L^p$ norm can be computed by testing against functions in the unit ball of $L^q$. This turns integrals of norms into norms of integrals.
+
+\begin{theorem}[Minkowski's integral inequality]\label{signed-measures:theorem-minkowski-integral}
+Let $(X, \mu)$ and $(Y, \rho)$ be $\sigma$-finite measure spaces, $F \colon X \times Y \to [0, \infty]$ measurable for the product $\sigma$-algebra, and $1 \leq p < \infty$. Then
+\[
+\Bigl(\int_Y\Bigl(\int_XF(x, y)\,d\mu(x)\Bigr)^pd\rho(y)\Bigr)^{1/p} \leq \int_X\Bigl(\int_YF(x, y)^p\,d\rho(y)\Bigr)^{1/p}d\mu(x).
+\]
+\end{theorem}
+
+In words: the $L^p$ norm of an integral is at most the integral of the $L^p$ norms, a continuous version of the triangle inequality
+$\|\sum_kf_k\|_p \leq \sum_k\|f_k\|_p$.
+
+\begin{proof}
+For $p = 1$ this is Tonelli's theorem (Theorem~\ref{measure-theory:theorem-fubini}), with equality. Let $p > 1$, let $H(y) = \int_XF(x, y)\,d\mu(x)$, measurable by Tonelli, and let $R$ be the right
+side, which is defined since $x \mapsto \int_YF(x, y)^p\,d\rho(y)$ is measurable by Tonelli. For measurable $g \geq 0$ on $Y$ with $\|g\|_q \leq 1$, Tonelli and H\"older give
+\[
+\int_YHg\,d\rho = \int_X\Bigl(\int_YF(x, y)g(y)\,d\rho(y)\Bigr)d\mu(x) \leq \int_X\Bigl(\int_YF(x, y)^p\,d\rho(y)\Bigr)^{1/p}d\mu(x) = R .
+\]
+Let $Y = \bigcup_nY_n$ with $Y_n$ increasing and $\rho(Y_n) < \infty$, and $H_n = \min(H, n)\mathbf{1}_{Y_n} \in L^p(\rho)$. By Proposition~\ref{signed-measures:proposition-converse-holder}, with
+the roles of $p$ and $q$ exchanged (possible since $p < \infty$), there is
+$g \geq 0$ with $\|g\|_q \leq 1$ and $\|H_n\|_p = \int H_ng \leq \int Hg \leq R$. By monotone convergence $\|H\|_p = \lim_n\|H_n\|_p \leq R$.
+\end{proof}
+
+\begin{remark}\label{signed-measures:remark-young}
+Young's inequality $\|f * g\|_p \leq \|f\|_1\|g\|_p$ for $f \in L^1(\RR^n)$ and $g \in L^p(\RR^n)$ (Exercise~\ref{measure-theory:exercise-convolution}) is a one-line consequence: apply the theorem to
+$F(y, x) = |f(y)||g(x - y)|$ with Borel representatives of $f$ and $g$ (Remark~\ref{signed-measures:remark-borel-representative}); by translation invariance of $\lambda$ the right side is
+$\int|f(y)|\,\|g\|_p\,dy = \|f\|_1\|g\|_p$. The theorem thus says that the convolution with $f$, an average of translates of $g$ with weights $|f(y)|$, is no larger in $L^p$ than the total weight times
+$\|g\|_p$.
+\end{remark}
+
+\begin{remark}\label{signed-measures:remark-borel-representative}
+Every Lebesgue measurable function $f$ on $\RR^n$ that is locally integrable agrees almost everywhere with a Borel function. Indeed, $f\mathbf{1}_{B(0, k)}$ is a limit in
+$L^1$ of continuous functions (Proposition~\ref{measure-theory:proposition-density}), hence a limit almost everywhere of a sequence of continuous functions
+(Theorem~\ref{measure-theory:theorem-riesz-fischer}); the $\limsup$ of the real and imaginary parts of such a sequence is Borel and equals $f$ almost everywhere on $B(0, k)$. Patching over $k$ gives a
+Borel representative. The issue arises because $(y, x) \mapsto g(x - y)$ is measurable for the product of the Borel $\sigma$-algebras when $g$ is Borel, but need not be product measurable for an arbitrary
+Lebesgue measurable $g$ unless one completes the product measure.
+\end{remark}
+
+\begin{theorem}[Hardy's inequality]\label{signed-measures:theorem-hardy}
+Let $1 < p < \infty$ and $f \in L^p((0, \infty))$, and let $Hf(x) = \frac1x\int_0^xf(t)\,dt$ for $x > 0$. Then $Hf$ is defined everywhere and
+\[
+\|Hf\|_p \leq \frac{p}{p - 1}\|f\|_p .
+\]
+The constant $p/(p - 1)$ is the best possible.
+\end{theorem}
+
+\begin{proof}
+$f$ is integrable on $(0, x)$ by H\"older, $\int_0^x|f| \leq x^{1/q}\|f\|_p$, so $Hf$ is defined. We may take $f \geq 0$ and Borel (Remark~\ref{signed-measures:remark-borel-representative}).
+Substituting $t = sx$ (Theorem~\ref{measure-theory:theorem-change-of-variables} in dimension one), $Hf(x) = \int_0^1f(sx)\,ds$. Apply
+Theorem~\ref{signed-measures:theorem-minkowski-integral} with $X = (0, 1)$, $Y = (0, \infty)$ and $F(s, x) = f(sx)$: since $\int_0^\infty f(sx)^p\,dx = s^{-1}\|f\|_p^p$,
+\[\begin{aligned}
+\|Hf\|_p &\leq \int_0^1\Bigl(\int_0^\infty f(sx)^p\,dx\Bigr)^{1/p}ds = \|f\|_p\int_0^1s^{-1/p}\,ds \\
+&= \frac{1}{1 - 1/p}\|f\|_p = \frac{p}{p - 1}\|f\|_p .
+\end{aligned}\]
+\end{proof}
+
+The optimality of the constant is Exercise~\ref{signed-measures:exercise-hardy-sharp}. The inequality fails for $p = 1$: for $f = \mathbf{1}_{(0, 1)}$, $Hf(x) = 1/x$ for $x \geq 1$, which is not integrable. Hardy found the inequality, first in a form for series, in connection with
+Hilbert's inequality for double series; the averaging operator $H$ is the continuous analogue of passing from a sequence to its Ces\`aro means.
+
+\section{Uniform integrability}\label{signed-measures:section-uniform-integrability}
+
+When does $f_n \to f$ almost everywhere, or in measure, imply $\int|f_n - f| \to 0$? The dominated convergence theorem gives a sufficient condition, an integrable function dominating all $|f_n|$. It is
+not necessary, and the sequence $f_n = n\mathbf{1}_{(0, 1/n)}$ on $(0, 1)$, which tends to $0$ everywhere while $\int f_n = 1$, shows what can go wrong: mass concentrates on small sets. Ruling this out
+gives a condition that is both necessary and sufficient, on spaces of finite measure.
+
+\begin{definition}\label{signed-measures:definition-uniformly-integrable}
+Let $\mu$ be a finite positive measure. A family $\mathcal{F} \subseteq L^1(\mu)$ is \emph{uniformly integrable} if
+\[
+\lim_{M \to \infty}\sup_{f \in \mathcal{F}}\int_{\{|f| > M\}}|f|\,d\mu = 0 .
+\]
+\end{definition}
+
+\begin{example}\label{signed-measures:example-uniformly-integrable}
+Let $\mu$ be finite.
+\begin{enumerate}
+\item A single $f \in L^1(\mu)$ forms a uniformly integrable family: $|f|\mathbf{1}_{\{|f| > M\}} \to 0$ almost everywhere as $M \to \infty$ and is dominated by $|f|$. Hence every finite family is uniformly
+integrable.
+\item If $|f| \leq g$ for all $f \in \mathcal{F}$, with $g \in L^1(\mu)$, then $\mathcal{F}$ is uniformly integrable, since $\int_{\{|f| > M\}}|f| \leq \int_{\{g > M\}}g$.
+\item If $\sup_{f \in \mathcal{F}}\int|f|^p\,d\mu = C < \infty$ for some $p > 1$, then $\mathcal{F}$ is uniformly integrable: on $\{|f| > M\}$, $|f| \leq M^{1-p}|f|^p$, so
+$\int_{\{|f| > M\}}|f| \leq CM^{1-p} \to 0$.
+\item The sequence $n\mathbf{1}_{(0, 1/n)}$ on $(0, 1)$ is bounded in $L^1$ but not uniformly integrable: for $n > M$, $\int_{\{f_n > M\}}f_n = 1$.
+\end{enumerate}
+\end{example}
+
+\begin{proposition}\label{signed-measures:proposition-uniformly-integrable}
+Let $\mu$ be finite. A family $\mathcal{F} \subseteq L^1(\mu)$ is uniformly integrable if and only if
+\begin{enumerate}
+\item it is bounded in $L^1$: $\sup_{f \in \mathcal{F}}\|f\|_1 < \infty$; and
+\item it is \emph{uniformly absolutely continuous}: for every $\varepsilon > 0$ there is $\delta > 0$ with $\sup_{f \in \mathcal{F}}\int_E|f|\,d\mu < \varepsilon$ whenever $\mu(E) < \delta$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+For every $M$ and measurable $E$,
+\[
+\int_E|f| = \int_{E \cap \{|f| \leq M\}}|f| + \int_{E \cap \{|f| > M\}}|f| \leq M\mu(E) + \int_{\{|f| > M\}}|f| .
+\]
+If $\mathcal{F}$ is uniformly integrable, choose $M$ with $\sup_f\int_{\{|f| > M\}}|f| < \varepsilon/2$: then $E = X$ gives (1), and $\delta = \varepsilon/(2M)$ gives (2). Conversely, assume (1) and (2),
+with $C = \sup_f\|f\|_1$. By Markov's inequality (Corollary~\ref{measure-theory:corollary-integral-properties}(4)), $\mu(\{|f| > M\}) \leq C/M < \delta$ for $M > C/\delta$, and then
+$\int_{\{|f| > M\}}|f| < \varepsilon$ for all $f \in \mathcal{F}$.
+\end{proof}
+
+\begin{counterexample}\label{signed-measures:counterexample-uniformly-integrable}
+Condition (1) does not follow from (2). Let $X = \{x\}$ with $\mu(\{x\}) = 1$ and $f_n = n$. Then (2) holds with $\delta = \frac12$, as only $E = \emptyset$ has $\mu(E) < \frac12$, but
+$\int_{\{f_n > M\}}f_n = n$ for $n > M$. On spaces that can be cut into finitely many pieces of arbitrarily small measure, such as $[0, 1]$, (2) does imply (1)
+(Exercise~\ref{signed-measures:exercise-atomless}).
+\end{counterexample}
+
+The next criterion, due to de la Vall\'ee Poussin, says that uniform integrability is the same as boundedness in a space slightly smaller than $L^1$, such as $L^p$ for $p > 1$ or $L\log L$, but
+which one depends on the family.
+
+\begin{theorem}[de la Vall\'ee Poussin]\label{signed-measures:theorem-de-la-vallee-poussin}
+Let $\mu$ be finite and $\mathcal{F} \subseteq L^1(\mu)$. Then $\mathcal{F}$ is uniformly integrable if and only if there is a nondecreasing convex function $\Phi \colon [0, \infty) \to [0, \infty)$ with
+$\Phi(t)/t \to \infty$ as $t \to \infty$ and $\sup_{f \in \mathcal{F}}\int\Phi(|f|)\,d\mu < \infty$.
+\end{theorem}
+
+\begin{proof}
+\emph{If.} Let $C = \sup_f\int\Phi(|f|)$ and $\varepsilon > 0$. Choose $M$ such that $\Phi(t) \geq (C/\varepsilon)t$ for $t \geq M$. On $\{|f| > M\}$, $|f| \leq (\varepsilon/C)\Phi(|f|)$, so
+$\int_{\{|f| > M\}}|f| \leq \varepsilon$ for all $f \in \mathcal{F}$.
+
+\emph{Only if.} Choose $M_1 < M_2 < \cdots$ with $M_k \geq k$ and $\sup_f\int_{\{|f| > M_k\}}|f| \leq 2^{-k}$, and let $\Phi(t) = \sum_k(t - M_k)^+$. For each $t$ only the finitely many $k$ with
+$M_k < t$ contribute, so $\Phi$ is a finite sum of nondecreasing convex functions on each bounded interval, hence nondecreasing and convex. For $t \geq 2M_k$ each of the first $k$ terms is at least
+$t - M_j \geq t/2$, so $\Phi(t) \geq kt/2$ and $\Phi(t)/t \to \infty$. Finally $(|f| - M_k)^+ \leq |f|\mathbf{1}_{\{|f| > M_k\}}$, so by monotone convergence
+$\int\Phi(|f|) = \sum_k\int(|f| - M_k)^+ \leq \sum_k2^{-k} = 1$.
+\end{proof}
+
+For $\Phi(t) = t^p$ with $p > 1$ this is Example~\ref{signed-measures:example-uniformly-integrable}(3); the function $\Phi(t) = t\log^+t$ gives the family bounded in $L\log L$, which is uniformly
+integrable without being bounded in any $L^p$, $p > 1$, in general.
+
+\begin{theorem}[Vitali convergence theorem]\label{signed-measures:theorem-vitali-convergence}
+Let $\mu$ be finite, $f_n \in L^1(\mu)$, and $f$ measurable with $f_n \to f$ in measure (for instance almost everywhere). Then $f \in L^1(\mu)$ and $\|f_n - f\|_1 \to 0$ if and only if
+$\{f_n\}$ is uniformly integrable.
+\end{theorem}
+
+\begin{proof}
+Almost everywhere convergence implies convergence in measure since $\mu$ is finite (Proposition~\ref{measure-theory:proposition-modes}(3)).
+
+\emph{If.} Let $C = \sup_n\|f_n\|_1$, finite by Proposition~\ref{signed-measures:proposition-uniformly-integrable}. A subsequence converges to $f$ almost everywhere
+(Proposition~\ref{measure-theory:proposition-modes}(2)), so by Fatou's lemma $\int|f| \leq C$ and $f \in L^1(\mu)$. Let $\varepsilon > 0$ and $E_n = \{|f_n - f| > \varepsilon\}$, so
+$\mu(E_n) \to 0$. Then
+\[
+\int|f_n - f| \leq \varepsilon\mu(X) + \int_{E_n}|f_n - f| \leq \varepsilon\mu(X) + \sup_m\int_{E_n}|f_m| + \int_{E_n}|f| .
+\]
+The last two terms tend to $0$: the first by uniform absolute continuity (Proposition~\ref{signed-measures:proposition-uniformly-integrable}(2)), the second by
+Theorem~\ref{signed-measures:theorem-epsilon-delta} applied to the measure $|f|\mu$. Hence $\limsup_n\|f_n - f\|_1 \leq \varepsilon\mu(X)$ for every $\varepsilon > 0$.
+
+\emph{Only if.} If $\|f_n - f\|_1 \to 0$, then $\sup_n\|f_n\|_1 < \infty$. Given $\varepsilon > 0$, choose $N$ with $\|f_n - f\|_1 < \varepsilon/2$ for $n > N$, and $\delta > 0$ such that
+$\int_E|g| < \varepsilon/2$ for $g \in \{f, f_1, \ldots, f_N\}$ whenever $\mu(E) < \delta$ (Theorem~\ref{signed-measures:theorem-epsilon-delta} for each of these finitely many functions). For
+$n > N$, $\int_E|f_n| \leq \int_E|f| + \|f_n - f\|_1 < \varepsilon$. So the family is uniformly absolutely continuous, and uniformly integrable by
+Proposition~\ref{signed-measures:proposition-uniformly-integrable}.
+\end{proof}
+
+The dominated convergence theorem on a finite measure space is the special case of Example~\ref{signed-measures:example-uniformly-integrable}(2). The theorem fails without finiteness of $\mu$
+(Exercise~\ref{signed-measures:exercise-vitali-infinite}); on general spaces one adds the condition that for every $\varepsilon > 0$ some set of finite measure carries all but $\varepsilon$ of every $\int|f_n|$.
+Uniform integrability is also not the same as domination (Exercise~\ref{signed-measures:exercise-not-dominated}).
+
+\begin{corollary}[Scheff\'e's lemma]\label{signed-measures:corollary-scheffe}
+Let $\mu$ be any positive measure, $f_n, f \in L^1(\mu)$, $f_n \to f$ almost everywhere and $\int|f_n|\,d\mu \to \int|f|\,d\mu$. Then $\|f_n - f\|_1 \to 0$.
+\end{corollary}
+
+\begin{proof}
+The functions $g_n = |f_n| + |f| - |f_n - f|$ are nonnegative and tend to $2|f|$ almost everywhere. By Fatou's lemma,
+\[
+2\int|f| \leq \liminf_n\int g_n = 2\int|f| - \limsup_n\int|f_n - f|,
+\]
+and since $\int|f| < \infty$, $\limsup_n\int|f_n - f| \leq 0$.
+\end{proof}
+
+\begin{example}\label{signed-measures:example-scheffe}
+If $f_n$, $f$ are probability densities on $\RR$ ($f_n, f \geq 0$, $\int f_n = \int f = 1$) and $f_n \to f$ almost everywhere, then by Scheff\'e's lemma and
+Proposition~\ref{signed-measures:proposition-variation-density} the probability measures $f_n\lambda$ converge to $f\lambda$ in total variation norm:
+$\sup_E|\int_Ef_n - \int_Ef| \leq \|f_n\lambda - f\lambda\| = \|f_n - f\|_1 \to 0$. For example the densities $(2\pi)^{-1/2}(1 + 1/n)^{1/2}e^{-(1 + 1/n)x^2/2}$ of centred normal distributions with variance
+$n/(n + 1)$ converge to the standard normal density, so the probabilities of all Borel sets converge, uniformly.
+\end{example}
+
+\section{Exercises}\label{signed-measures:section-exercises}
+
+\begin{exercise}\label{signed-measures:exercise-atoms}
+Let $x_1, x_2, \ldots$ be distinct points of $X$, $a_n \in \CC$ with $\sum_n|a_n| < \infty$, and $\nu = \sum_na_n\delta_{x_n}$ on $\mathcal{P}(X)$. Show that $|\nu| = \sum_n|a_n|\delta_{x_n}$ and
+$\|\nu\| = \sum_n|a_n|$.
+\end{exercise}
+
+\begin{solution}
+Let $\sigma = \sum_n|a_n|\delta_{x_n}$, a finite positive measure with $|\nu(E)| = |\sum_{x_n \in E}a_n| \leq \sigma(E)$; so $|\nu| \leq \sigma$ by Theorem~\ref{signed-measures:theorem-total-variation}.
+Conversely, for $E \subseteq X$ the partition of $E$ into the singletons $\{x_n\}$ with $x_n \in E$ and the rest $E \setminus \{x_1, x_2, \ldots\}$ (of measure $0$) gives
+$|\nu|(E) \geq \sum_{x_n \in E}|a_n| = \sigma(E)$.
+\end{solution}
+
+\begin{exercise}\label{signed-measures:exercise-one-over-pi}
+Show that the constant $\frac14$ in Lemma~\ref{signed-measures:lemma-quarter} can be replaced by $\frac1\pi$, and that $\frac1\pi$ is optimal.
+\end{exercise}
+
+\begin{solution}
+Write $z_k = |z_k|e^{i\alpha_k}$. For $\theta \in [0, 2\pi]$ let $S(\theta) = \{k : \cos(\alpha_k - \theta) > 0\}$. Then
+$|\sum_{k \in S(\theta)}z_k| \geq \operatorname{Re}(e^{-i\theta}\sum_{k \in S(\theta)}z_k) = \sum_k|z_k|\cos^+(\alpha_k - \theta)$, where $\cos^+ = \max(\cos, 0)$. The right side is a continuous function of
+$\theta$ whose average over $[0, 2\pi]$ is $\sum_k|z_k|\cdot\frac{1}{2\pi}\int_0^{2\pi}\cos^+ = \frac1\pi\sum_k|z_k|$, since $\int_{-\pi/2}^{\pi/2}\cos = 2$. A continuous function attains a value at least its
+average, so some $\theta$ gives $|\sum_{k \in S(\theta)}z_k| \geq \frac1\pi\sum_k|z_k|$. For optimality take $z_k = e^{2\pi ik/m}$, $k = 1, \ldots, m$. For any $S$, write
+$\sum_{k \in S}z_k = re^{i\theta}$; then $r = \sum_{k \in S}\cos(2\pi k/m - \theta) \leq \sum_{k=1}^m\cos^+(2\pi k/m - \theta)$. Since $\cos^+$ is $1$-Lipschitz and $2\pi$-periodic, each term differs by at most $2\pi/m$ from the
+average of $\cos^+(t - \theta)$ over the interval $[2\pi(k - 1)/m, 2\pi k/m]$, so the sum is at most $\frac{m}{2\pi}\int_0^{2\pi}\cos^+ + 2\pi = \frac m\pi + 2\pi$, while $\sum_k|z_k| = m$. As $m \to \infty$
+the ratio tends to $\frac1\pi$, so no larger constant works for all $m$.
+\end{solution}
+
+\begin{exercise}\label{signed-measures:exercise-singular-sums}
+Let $\mu$ be a positive measure and $\nu_1$, $\nu_2$ complex measures. Show: if $\nu_1 \perp \mu$ and $\nu_2 \perp \mu$, then $\nu_1 + \nu_2 \perp \mu$; if $\nu_1 \ll \mu$ and $\nu_2 \perp \mu$, then
+$\nu_1 \perp \nu_2$ and $\|\nu_1 + \nu_2\| = \|\nu_1\| + \|\nu_2\|$.
+\end{exercise}
+
+\begin{solution}
+If $\nu_j$ lives on the $\mu$-null set $S_j$ (that is, $X \setminus S_j$ is $\nu_j$-null), then $S_1 \cup S_2$ is $\mu$-null and its complement is null for both, hence for $\nu_1 + \nu_2$. In the second
+case, let $\nu_2$ live on the $\mu$-null set $S$. Every subset of $S$ is $\mu$-null, hence $\nu_1$-null, so $\nu_1 \perp \nu_2$. For a partition $\{E_k\}$ of $X$, refine it by $S$: since
+$(\nu_1 + \nu_2)(E_k \cap S) = \nu_2(E_k)$ and $(\nu_1 + \nu_2)(E_k \setminus S) = \nu_1(E_k)$, we get $\|\nu_1 + \nu_2\| \geq \sum_k(|\nu_2(E_k)| + |\nu_1(E_k)|)$; taking suprema over the partitions
+gives $\|\nu_1 + \nu_2\| \geq \|\nu_1\| + \|\nu_2\|$, and the reverse inequality is the triangle inequality.
+\end{solution}
+
+\begin{exercise}\label{signed-measures:exercise-norm-formula}
+For a complex measure $\nu$, show that $\|\nu\| = \sup\{|\int f\,d\nu| : f \text{ measurable}, |f| \leq 1\}$, and that the supremum is attained.
+\end{exercise}
+
+\begin{solution}
+By Theorem~\ref{signed-measures:theorem-polar}, $|\int f\,d\nu| \leq \int|f|\,d|\nu| \leq \|\nu\|$. With the polar density $h$, $f = \bar h$ gives $\int\bar h\,d\nu = \int\bar hh\,d|\nu| = \|\nu\|$.
+\end{solution}
+
+\begin{exercise}\label{signed-measures:exercise-sequence-functional}
+For which $1 \leq p < \infty$ is $\Lambda(a) = \sum_na_n/\sqrt n$ a bounded linear functional on $\ell^p$? Compute its norm.
+\end{exercise}
+
+\begin{solution}
+By Theorem~\ref{signed-measures:theorem-lp-duality} applied to the counting measure, a bounded functional is $a \mapsto \sum_na_nb_n$ with $b_n = \Lambda(e_n) = n^{-1/2}$, and this requires
+$b \in \ell^q$. Conversely if $b \in \ell^q$, H\"older shows that the series converges absolutely and $\Lambda$ is bounded. Now $\sum_nn^{-q/2} < \infty$ if and only if $q > 2$, that is $p < 2$ (for
+$p = 1$, $q = \infty$ and $b$ is bounded). Then $\|\Lambda\| = \|b\|_q = \zeta(q/2)^{1/q}$, with $\zeta(s) = \sum_nn^{-s}$; for $p = 1$, $\|\Lambda\| = 1$. For $p \geq 2$ the series need not even
+converge: $a_n = (n^{1/2}\log(n + 1))^{-1}$ lies in $\ell^2 \subseteq \ell^p$ but $\sum_na_n/\sqrt n = \sum_n1/(n\log(n + 1)) = \infty$.
+\end{solution}
+
+\begin{exercise}\label{signed-measures:exercise-hardy-sharp}
+Show that the constant $p/(p - 1)$ in Hardy's inequality (Theorem~\ref{signed-measures:theorem-hardy}) cannot be improved, using $f = x^{-\alpha}\mathbf{1}_{[1, \infty)}$ with $\alpha$ slightly larger than
+$1/p$.
+\end{exercise}
+
+\begin{solution}
+Let $\alpha = 1/p + \varepsilon$ with $0 < \varepsilon < 1/q$. Then $\|f\|_p^p = \int_1^\infty x^{-1 - p\varepsilon}\,dx = 1/(p\varepsilon)$, and for $x \geq 1$,
+$Hf(x) = \frac1x\int_1^xt^{-\alpha}\,dt = \frac{x^{-\alpha} - x^{-1}}{1 - \alpha} = \frac{x^{-\alpha}}{1 - \alpha}(1 - x^{\alpha - 1})$. Fix $R > 1$. For $x \geq R$, $Hf(x) \geq \frac{1 - R^{\alpha - 1}}{1 - \alpha}x^{-\alpha}$,
+so
+\[
+\frac{\|Hf\|_p^p}{\|f\|_p^p} \geq p\varepsilon\Bigl(\frac{1 - R^{\alpha - 1}}{1 - \alpha}\Bigr)^p\int_R^\infty x^{-1 - p\varepsilon}\,dx = \Bigl(\frac{1 - R^{\alpha - 1}}{1 - \alpha}\Bigr)^pR^{-p\varepsilon} .
+\]
+As $\varepsilon \to 0$, $\alpha \to 1/p$ and $1 - \alpha \to 1/q = (p - 1)/p$, so the right side tends to $\bigl(\frac{p}{p - 1}(1 - R^{1/p - 1})\bigr)^p$; letting $R \to \infty$ gives
+$(p/(p - 1))^p$. So no constant smaller than $p/(p - 1)$ works.
+\end{solution}
+
+\begin{exercise}\label{signed-measures:exercise-not-dominated}
+On $(0, 1]$ with Lebesgue measure, let $I_n = (\frac1{n+1}, \frac1n]$ and $f_n = \frac{n(n + 1)}{\log(n + 1)}\mathbf{1}_{I_n}$. Show that $(f_n)$ is uniformly integrable and $f_n \to 0$ everywhere, so
+$\|f_n\|_1 \to 0$, but that no integrable function dominates all $f_n$.
+\end{exercise}
+
+\begin{solution}
+Let $a_n = n(n + 1)/\log(n + 1)$, which increases to $\infty$. As $\lambda(I_n) = 1/(n(n + 1))$, $\int f_n = 1/\log(n + 1) \to 0$, and $\int_{\{f_n > M\}}f_n$ is $1/\log(n + 1)$ if $a_n > M$ and $0$
+otherwise, so $\sup_n\int_{\{f_n > M\}}f_n = 1/\log(n_M + 1) \to 0$ as $M \to \infty$, where $n_M$ is the least $n$ with $a_n > M$. Each $x$ lies in at most one $I_n$, so $f_n(x) \to 0$. If
+$g \geq f_n$ for all $n$, then $g \geq \sum_nf_n$ (the supports are disjoint), and $\int\sum_nf_n = \sum_n1/\log(n + 1) = \infty$.
+\end{solution}
+
+\begin{exercise}\label{signed-measures:exercise-vitali-infinite}
+On $\RR$ with Lebesgue measure let $f_n = \frac1n\mathbf{1}_{[0, n]}$. Show that $f_n \to 0$ uniformly and $\sup_n\int_{\{f_n > M\}}f_n = 0$ for $M \geq 1$, but $\|f_n\|_1 = 1$. Which hypothesis of
+Theorem~\ref{signed-measures:theorem-vitali-convergence} fails?
+\end{exercise}
+
+\begin{solution}
+$\sup|f_n| = 1/n \to 0$, and $\{f_n > M\} = \emptyset$ for $M \geq 1$; but $\int f_n = 1$ for every $n$, so $f_n \not\to 0$ in $L^1$. The measure is not finite: the mass escapes to infinity instead of
+concentrating on small sets, and uniform integrability in the sense of Definition~\ref{signed-measures:definition-uniformly-integrable} does not control this.
+\end{solution}
+
+\begin{exercise}\label{signed-measures:exercise-lr-convergence}
+Let $\mu$ be finite, $1 < p < \infty$, $\sup_n\|f_n\|_p < \infty$, and $f_n \to f$ in measure. Show that $f \in L^p$ and $\|f_n - f\|_r \to 0$ for every $1 \leq r < p$.
+\end{exercise}
+
+\begin{solution}
+A subsequence converges almost everywhere, so $\|f\|_p \leq \liminf\|f_{n_k}\|_p < \infty$ by Fatou's lemma. The functions $g_n = |f_n - f|^r$ tend to $0$ in measure, and
+$\int g_n^{p/r} = \|f_n - f\|_p^p \leq (\|f_n\|_p + \|f\|_p)^p$ is bounded, with $p/r > 1$; so $(g_n)$ is uniformly integrable by Example~\ref{signed-measures:example-uniformly-integrable}(3), and
+Theorem~\ref{signed-measures:theorem-vitali-convergence} gives $\int g_n \to 0$. For $r = p$ this fails: $n^{1/p}\mathbf{1}_{(0, 1/n)}$ on $(0, 1)$ is bounded in $L^p$, tends to $0$ everywhere, and has
+$L^p$ norm $1$.
+\end{solution}
+
+\begin{exercise}\label{signed-measures:exercise-atomless}
+Let $\mu$ be a finite positive measure on $(X, \mathcal{A})$ such that for every $\delta > 0$, $X$ is a finite union of measurable sets of measure $< \delta$ (for instance Lebesgue measure on
+$[0, 1]$, cut into short intervals). Show that condition (2) of Proposition~\ref{signed-measures:proposition-uniformly-integrable} implies condition (1).
+\end{exercise}
+
+\begin{solution}
+Take $\delta$ for $\varepsilon = 1$ in condition (2), and cut $X$ into $m$ measurable pieces $E_1, \ldots, E_m$ of measure $< \delta$. Then $\int|f| = \sum_{j \leq m}\int_{E_j}|f| < m$ for every
+$f \in \mathcal{F}$.
+\end{solution}
+
+\begin{exercise}\label{signed-measures:exercise-jordan-example}
+Let $\nu = f\lambda$ on $[0, 2\pi]$ with $f(x) = \sin x$. Find a Hahn decomposition, $\nu^\pm$, $\|\nu\|$, and $\sup_E\nu(E)$.
+\end{exercise}
+
+\begin{solution}
+By Example~\ref{signed-measures:example-jordan-density}, $P = [0, \pi]$ and $N = (\pi, 2\pi]$, $\nu^+ = (\sin)^+\lambda$ lives on $[0, \pi]$ with $\nu^+([0, 2\pi]) = \int_0^\pi\sin = 2$, $\nu^-$ lives on
+$[\pi, 2\pi]$ with total mass $2$, and $\|\nu\| = \int_0^{2\pi}|\sin| = 4$. By Proposition~\ref{signed-measures:proposition-variation-signed}(1), $\sup_E\nu(E) = \nu^+([0, 2\pi]) = 2$, attained at
+$E = [0, \pi]$.
+\end{solution}

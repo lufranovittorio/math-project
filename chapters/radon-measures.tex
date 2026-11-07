@@ -11,7 +11,7 @@ functional analysis (Chapter~\ref{functional-analysis}), in probability, and in 
 References: \cite{rudin-rca}, \cite{folland-real} and \cite{mattila-1995}.
 
 \noindent\textbf{Prerequisites.} Chapter~\ref{general-topology} (General Topology), Chapter~\ref{real-analysis} (Real Analysis), Chapter~\ref{measure-theory} (Measure and Integration) and
-Chapter~\ref{lebesgue-differentiation} (Differentiation and Absolute Continuity).
+Chapter~\ref{lebesgue-differentiation} (Differentiation and Absolute Continuity) and Chapter~\ref{signed-measures} (Signed and Complex Measures).
 
 \section{Radon measures and the Riesz representation theorem}\label{radon-measures:section-radon}
 
@@ -326,8 +326,9 @@ For a signed measure $\mu = \mu^+ - \mu^-$ as in the corollary, with $\|\mu\| = 
 $\|\mu\| = \sup\sum_i|\mu(E_i)|$ over all finite partitions of $X$ into Borel sets $E_i$. Indeed $\sum_i|\mu(E_i)| \leq \sum_i(\mu^+(E_i) + \mu^-(E_i)) = \|\mu\|$, with equality for the partition
 $\{X^+, X \setminus X^+\}$. For example $\|\delta_0 - \delta_1\| = 2$, and $\|h\lambda\| = \int|h|\,d\lambda$ for the measure $E \mapsto \int_Eh\,d\lambda$ with $h \in L^1$.
 So the dual space of $C(X)$, for a compact metrisable $X$, is the space of signed Radon measures with the total variation norm; this proves the statement quoted in
-Remark~\ref{radon-measures:remark-riesz-markov}(3) for the spaces of this section. The decomposition $X = X^+ \cup X^-$ is the \emph{Hahn decomposition} and $\mu^\pm$ the \emph{Jordan decomposition} of the
-signed measure $\mu^+ - \mu^-$.
+Remark~\ref{radon-measures:remark-riesz-markov}(3) for the spaces of this section. The decomposition $X = X^+ \cup X^-$ is a Hahn decomposition
+(Theorem~\ref{signed-measures:theorem-hahn}) and $\mu^\pm$ is the Jordan decomposition (Theorem~\ref{signed-measures:theorem-jordan}) of the signed measure $\mu^+ - \mu^-$; the partition formula for
+$\|\mu\|$ above is Proposition~\ref{signed-measures:proposition-variation-signed}(2).
 
 For a noncompact $X$ the natural Banach space is $C_0(X)$, the space of continuous $f \colon X \to \RR$ \emph{vanishing at infinity}: for every $\varepsilon > 0$ the set $\{|f| \geq \varepsilon\}$ is compact.
 With the norm $\|f\|_\infty$ it is a closed subspace of the bounded continuous functions, hence complete (a uniform limit of functions vanishing at infinity vanishes at infinity), and it contains
