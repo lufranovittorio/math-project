@@ -5712,3 +5712,17 @@
 04EM,radon-measures:exercise-haar-affine-line
 04EN,radon-measures:exercise-haar-finite
 04EO,radon-measures:exercise-haar-quotient-circle
+04EP,lebesgue-differentiation:theorem-vitali-covering
+04EQ,geometric-measure-theory:section-brunn-minkowski
+04ER,geometric-measure-theory:notation-minkowski-sum
+04ES,geometric-measure-theory:example-minkowski-sum
+04ET,geometric-measure-theory:theorem-brunn-minkowski
+04EU,geometric-measure-theory:equation-brunn-minkowski
+04EV,geometric-measure-theory:remark-brunn-minkowski
+04EW,geometric-measure-theory:corollary-brunn-minkowski-multiplicative
+04EX,geometric-measure-theory:theorem-isodiametric
+04EY,geometric-measure-theory:subsection-isoperimetric
+04EZ,geometric-measure-theory:definition-minkowski-content
+04F0,geometric-measure-theory:example-minkowski-content
+04F1,geometric-measure-theory:theorem-isoperimetric
+04F2,geometric-measure-theory:corollary-isoperimetric-plane

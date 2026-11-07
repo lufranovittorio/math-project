@@ -66,6 +66,29 @@ $1 < \tau$ in place of $2$ in the dyadic classes (radii in $(\tau^{-j}R, \tau^{1
 constant larger than $3$ can replace $5$. The constant $3$ itself is reached for finite families (Lemma~\ref{lebesgue-differentiation:lemma-vitali-covering}), where a ball of largest radius exists.
 \end{remark}
 
+The $5r$-covering lemma loses a factor $5^n$ in measure, but iterating it recovers everything: an open set can be filled, up to a null set, by disjoint small balls.
+
+\begin{theorem}[Vitali covering theorem]\label{lebesgue-differentiation:theorem-vitali-covering}
+Let $U \subseteq \RR^n$ be open with $\lambda(U) < \infty$, and $\delta > 0$. There are countably many pairwise disjoint closed balls $\overline{B}_1, \overline{B}_2, \ldots \subseteq U$ of diameter at most $\delta$
+with $\lambda(U \setminus \bigcup_i\overline{B}_i) = 0$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: a fixed proportion.} Let $V \subseteq \RR^n$ be open with $0 < \lambda(V) < \infty$. We find finitely many disjoint closed balls in $V$ of diameter at most $\delta$ whose union has measure at least
+$\theta\lambda(V)$, where $\theta = \frac12 5^{-n}$. Let $\mathcal{F}$ be the family of closed balls contained in $V$ with diameter at most $\delta$; every point of $V$ is the centre of such a ball. By
+Lemma~\ref{lebesgue-differentiation:lemma-five-r-covering} and Remark~\ref{lebesgue-differentiation:remark-five-r-countable} there is a countable disjoint subfamily $\mathcal{G}$ with
+$V \subseteq \bigcup_{B \in \mathcal{F}}B \subseteq \bigcup_{B^{\prime} \in \mathcal{G}}\widehat{B^{\prime}}$. Hence $\lambda(V) \leq \sum_{\mathcal{G}}5^n\lambda(B^{\prime})$, that is,
+$\sum_{\mathcal{G}}\lambda(B^{\prime}) \geq 5^{-n}\lambda(V) > \theta\lambda(V)$, and a finite subfamily already has total measure at least $\theta\lambda(V)$.
+
+\emph{Step 2: iteration.} Put $U_0 = U$. Given the open set $U_k$, if $\lambda(U_k) = 0$ stop; otherwise Step 1 gives finitely many disjoint closed balls in $U_k$ of diameter at most $\delta$, of total measure
+at least $\theta\lambda(U_k)$, and $U_{k+1}$ is $U_k$ minus these balls, which is open. Then $\lambda(U_{k+1}) \leq (1 - \theta)\lambda(U_k)$, so $\lambda(U_k) \leq (1 - \theta)^k\lambda(U) \to 0$. All
+the balls chosen are disjoint (those chosen at step $k$ lie in $U_k$, which misses the earlier ones), and $U \setminus \bigcup_i\overline{B}_i \subseteq U_k$ for every $k$, so it is a null set.
+\end{proof}
+
+The theorem is used in Chapter~\ref{geometric-measure-theory} to identify Hausdorff measure with Lebesgue measure. The proof used only two facts: the $5r$-covering lemma, valid in every metric
+space, and $\lambda(\overline{B}(x, 5r)) = 5^n\lambda(\overline{B}(x, r))$. So it works verbatim for balls of any norm on $\RR^n$ (for instance cubes, the balls of the maximum norm), and with
+$5^n$ replaced by a power of the doubling constant, for doubling measures on separable metric spaces (Chapter~\ref{radon-measures}).
+
 \begin{definition}\label{lebesgue-differentiation:definition-maximal-function}
 For $f \in L^1_{\mathrm{loc}}(\RR^n)$, $x \in \RR^n$ and $r > 0$, the \emph{average} of $f$ over $B(x, r)$ is
 $A_rf(x) = \frac{1}{\lambda(B(x, r))}\int_{B(x, r)}f\,d\lambda$, and the \emph{Hardy--Littlewood maximal function} is $Mf(x) = \sup_{r > 0}A_r|f|(x) \in [0, \infty]$.
