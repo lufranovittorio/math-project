@@ -5951,3 +5951,16 @@
 04L9,symplectic-geometry:section-survey
 04LA,symplectic-geometry:exercise-reduction-area
 04LB,symplectic-geometry:exercise-no-moment-map
+04LC,de-rham:subsection-compact-supports
+04LD,de-rham:lemma-integration-fibre
+04LE,de-rham:proposition-compact-poincare
+04LF,de-rham:proposition-mayer-vietoris-compact
+04LG,de-rham:section-degree
+04LH,de-rham:lemma-top-compact
+04LI,de-rham:definition-degree
+04LJ,de-rham:theorem-degree-local
+04LK,de-rham:proposition-degree-properties
+04LL,de-rham:example-degrees
+04LM,de-rham:remark-degree-applications
+04LN,de-rham:remark-degree-comparison
+04LO,de-rham:counterexample-degree

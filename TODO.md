@@ -179,13 +179,19 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
 - `smooth-manifolds`, `lie-groups`, `vector-bundles`, `differential-forms`, `de-rham`,
   `connections`, `characteristic-classes` (complete): slower rewrite (see Phase 2); Lie groups:
   maximal tori, Weyl group, classification of compact Lie groups, homogeneous spaces.
-- `riemannian-geometry` (complete, 4405): extract lemmas (Hopf–Rinow first); comparison
+- `riemannian-geometry` (complete, 4405): extract more lemmas (Hopf–Rinow done); comparison
   geometry, Bishop–Gromov, Cheeger–Gromoll splitting, sphere theorem (survey), Ricci flow (survey).
 - `k-theory` (planned): vector bundles to K-groups, Bott periodicity, Adams operations, Hopf invariant one.
 - `currents` (draft, 1207): finish.
-- `symplectic-geometry` (complete, 735): Darboux, Moser, Lagrangian submanifolds, moment maps,
-  toric manifolds and Delzant, Gromov non-squeezing (survey), Arnold conjecture (survey).
-- `elliptic-operators`, `hodge-theorem` (complete): fine.
+- `symplectic-geometry` (complete): still to do: toric manifolds and Delzant's theorem,
+  Lagrangian neighbourhood theorem with proof, generating functions.
+- `elliptic-operators`: the elliptic estimate is only sketched; a full proof needs a rebuild of
+  `distributions` first (Peetre's inequality, multiplication by smooth functions on H^s,
+  difference quotients, Rellich with proof on the torus), then the regularity theorem.
+- **Duplication to fix**: Wirtinger's inequality appears three times
+  (`distributions:proposition-wirtinger`, `elliptic-operators:example-wirtinger`,
+  `hodge-theorem:example-wirtinger`): keep the first, cite it from the others.
+- `de-rham`: still to do: Thom isomorphism and Euler class with forms (Bott–Tu), Leray–Hirsch.
 - `spin-geometry` (planned, new): Clifford algebras, spin structures, Dirac operator, index theorem.
 - Also: *Riemann surfaces* are covered by `complex-manifolds` and `curves`; *Morse theory* goes as
   sections in `riemannian-geometry` or `smooth-manifolds` (Morse lemma, handle decompositions,
@@ -527,6 +533,18 @@ spectral-sequences 300 (then everything below about 800 lines).
   parts).
 
 ## Done
+
+- [x] 2026-11-07: **Differential geometry, first round.** `riemannian-geometry`: Hopf–Rinow
+  split into lemma-geodesic-sphere, proposition-minimising-from-point,
+  lemma-extension-geodesics. `hodge-theorem`: elliptic complexes (Dolbeault, twisted de Rham),
+  spectrum and McKean–Singer, heat flow, Lichnerowicz, conformal invariance of * in the middle
+  degree and signature via self-dual forms, products. `symplectic-geometry`: Moser's formula
+  as a lemma (Darboux and Moser fully proved), compatible almost complex structures (contractible),
+  moment maps, Noether, KKS form on coadjoint orbits, symplectic reduction, Liouville–Arnold,
+  survey. `de-rham`: compact supports (fibre integration, compact Poincaré lemma,
+  Mayer–Vietoris), Poincaré duality proved by induction on good covers, degree theory with forms
+  (local formula, homotopy invariance, fundamental theorem of algebra, comparison with the
+  homological degree; Brouwer/hairy ball not repeated, only re-proved in a remark).
 
 - [x] 2026-11-07: **Varifolds** (new chapter after *Currents*, draft): Grassmannian as
   projections (compactness, G(2,1) as a circle), varifolds, weight, convergence and
