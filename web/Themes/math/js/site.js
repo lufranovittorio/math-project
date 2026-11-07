@@ -3,6 +3,91 @@
 
   var root = document.documentElement;
 
+  // Bibliography display options, remembered in the browser: labels
+  // "alpha" (author-year, as in the PDF; the default) or "numbers"
+  // (position in the alphabetical list), and, on the Bibliography page,
+  // the order "author" (the default) or "year". make.py puts the number
+  // of each entry in data-num on citation links and entry labels, and the
+  // year in data-year on the entries.
+  function readSetting(key, fallback) {
+    try { return window.localStorage.getItem(key) || fallback; } catch (e) { return fallback; }
+  }
+  function writeSetting(key, value) {
+    try { window.localStorage.setItem(key, value); } catch (e) { /* storage unavailable */ }
+  }
+  function applyBibLabels(scope) {
+    var numbers = readSetting("bib-labels", "alpha") === "numbers";
+    Array.prototype.forEach.call((scope || document).querySelectorAll("a[data-num]"), function (a) {
+      if (!a.getAttribute("data-num")) return;
+      if (!a.hasAttribute("data-alpha")) a.setAttribute("data-alpha", a.textContent);
+      a.textContent = numbers ? a.getAttribute("data-num") : a.getAttribute("data-alpha");
+    });
+  }
+  applyBibLabels(document);
+
+  var bibList = document.querySelector("div.bibliography > dl.bibliography");
+  if (bibList) {
+    var entries = [];
+    var lastAuthors = "";
+    Array.prototype.forEach.call(bibList.querySelectorAll(":scope > dt"), function (dt, index) {
+      var dd = dt.nextElementSibling;
+      var p = dd && dd.querySelector("p");
+      var original = p ? p.innerHTML : "";
+      // amsalpha replaces a repeated author list by a dash; in the order
+      // by year the entries are no longer next to each other, so the
+      // names are restored there.
+      var full = original;
+      var cut = original.indexOf(", <em>");
+      if (/^\s*———/.test(original) && lastAuthors) {
+        full = original.replace(/^\s*———/, lastAuthors);
+      } else if (cut > 0) {
+        lastAuthors = original.slice(0, cut);
+      }
+      entries.push({ dt: dt, dd: dd, p: p, original: original, full: full, index: index,
+                     year: parseInt(dt.getAttribute("data-year"), 10) || 99999 });
+    });
+
+    var sortEntries = function (order) {
+      var sorted = entries.slice().sort(function (a, b) {
+        return order === "year" ? (a.year - b.year) || (a.index - b.index) : a.index - b.index;
+      });
+      sorted.forEach(function (e) {
+        if (e.p) e.p.innerHTML = order === "year" ? e.full : e.original;
+        bibList.appendChild(e.dt);
+        if (e.dd) bibList.appendChild(e.dd);
+      });
+    };
+
+    var controls = document.createElement("div");
+    controls.className = "bib-options";
+    var makeGroup = function (label, key, fallback, options, onChange) {
+      var group = document.createElement("span");
+      group.className = "bib-option-group";
+      group.appendChild(document.createTextNode(label + " "));
+      options.forEach(function (option) {
+        var button = document.createElement("button");
+        button.type = "button";
+        button.textContent = option[1];
+        button.setAttribute("data-value", option[0]);
+        button.setAttribute("aria-pressed", String(readSetting(key, fallback) === option[0]));
+        button.addEventListener("click", function () {
+          writeSetting(key, option[0]);
+          Array.prototype.forEach.call(group.querySelectorAll("button"), function (b) {
+            b.setAttribute("aria-pressed", String(b === button));
+          });
+          onChange(option[0]);
+        });
+        group.appendChild(button);
+      });
+      controls.appendChild(group);
+    };
+    makeGroup("Labels:", "bib-labels", "alpha", [["alpha", "Author–year"], ["numbers", "Numbers"]],
+              function () { applyBibLabels(document); });
+    makeGroup("Order:", "bib-order", "author", [["author", "Author"], ["year", "Year"]], sortEntries);
+    bibList.parentNode.insertBefore(controls, bibList);
+    if (readSetting("bib-order", "author") === "year") sortEntries("year");
+  }
+
   // Theme: "light", "dark" or "auto" (dark from 20:00 to 7:00, local time);
   // the button cycles through them. Without a stored choice the operating
   // system preference is used. The inline script in the page head applies
@@ -168,6 +253,7 @@
         node.removeAttribute("id");
         node.removeAttribute("name");
       });
+      applyBibLabels(out);
       return out;
     };
 

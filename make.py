@@ -327,6 +327,19 @@ def bibliography_keys():
     return set(re.findall(r"@\w+\s*\{\s*([^,\s]+)\s*,", text))
 
 
+def bibliography_years():
+    """Year of each bibliography entry, from math-project.bib."""
+    if not BIBLIOGRAPHY.exists():
+        return {}
+    text = BIBLIOGRAPHY.read_text(encoding="utf-8")
+    years = {}
+    for m in re.finditer(r"@\w+\s*\{\s*([^,\s]+)\s*,(.*?)(?=\n@|\Z)", text, re.S):
+        y = re.search(r"\byear\s*=\s*[{\"]?\s*(\d{4})", m.group(2))
+        if y:
+            years[m.group(1)] = y.group(1)
+    return years
+
+
 def check_references(project):
     keys = bibliography_keys()
     for key, where in project.citations:
@@ -900,6 +913,10 @@ def command_serve(args):
 THM_HEADING_RE = re.compile(r'<div class="(\w+)_thmwrapper[^"]*" id="([^"]+)">\s*<div class="\1_thmheading">')
 HEADING_RE = re.compile(r'<h(\d) id="([^"]+)">(.*?)</h\1>', re.S)
 CITE_RE = re.compile(r'<span class="cite">.*?</span>', re.S)
+# A citation link as plasTeX writes it, and a bibliography entry heading;
+# neither matches again once decorated.
+BIB_CITE_RE = re.compile(r'<a href="Bibliography\.html#([^"]+)"\s*>')
+BIB_DT_RE = re.compile(r'<dt><a name="([^"]+)">')
 TOC_LINK_RE = re.compile(r'(<a [^>]*data-label="([^"]+)"[^>]*>.*?</a>)', re.S)
 ID_RE = re.compile(r'\bid="([^"]+)"')
 EQ_LABEL_RE = re.compile(r'(?<=\\begin\{equation\})\s*\\label\{[^}]*\}')
@@ -952,6 +969,23 @@ class PageDecorator:
         self.uses = dependency_graph(project)
         self.in_graph = set(self.uses).union(*self.uses.values()) if self.uses else set()
         self.html_dir = html_dir or HTML_DIR
+        # Bibliography numbers (position in the alphabetical order of the
+        # Bibliography page) and years, used by the site's display options.
+        bib_page = self.html_dir / "Bibliography.html"
+        if not bib_page.exists():
+            bib_page = HTML_DIR / "Bibliography.html"
+        keys = re.findall(r'<dt[^>]*><a name="([^"]+)"', bib_page.read_text(encoding="utf-8")) if bib_page.exists() else []
+        self.bib_num = {key: str(i + 1) for i, key in enumerate(keys)}
+        self.bib_year = bibliography_years()
+
+    def bib_cite(self, m):
+        num = self.bib_num.get(m.group(1))
+        return f'<a href="Bibliography.html#{m.group(1)}" data-num="{num}">' if num else m.group(0)
+
+    def bib_entry(self, m):
+        key = m.group(1)
+        year = self.bib_year.get(key, "")
+        return f'<dt data-year="{year}"><a name="{key}" data-num="{self.bib_num.get(key, "")}">'
 
     def thm(self, m):
         tag = self.label_tag.get(m.group(2))
@@ -988,6 +1022,9 @@ class PageDecorator:
         text = HEADING_RE.sub(self.heading, text)
         text = CITE_RE.sub(lambda m: re.sub(r"\s*([\[\],])\s*", r"\1 ", m.group(0))
                            .replace("[ ", "[").replace(" ]", "]").replace("] ", "]"), text)
+        text = BIB_CITE_RE.sub(self.bib_cite, text)
+        if name == "Bibliography.html":
+            text = BIB_DT_RE.sub(self.bib_entry, text)
         if name == "index.html":
             return TOC_LINK_RE.sub(self.toc_link, text)
         chapter = page_chapter(text, self.chapters)

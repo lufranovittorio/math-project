@@ -261,7 +261,7 @@ a.tag:hover { color: var(--accent); border-color: var(--accent); text-decoration
 }
 .status-banner.status-compact { margin: 0 auto 1rem; padding: 0.35rem 0.7rem; font-size: 0.75rem; }
 .report-error {
-  margin: 2.5rem 0 1rem;
+  margin: 2.5rem auto 1rem;
   padding-top: 0.75rem;
   border-top: 1px solid var(--rule);
   color: var(--ink-2);
@@ -410,6 +410,17 @@ a.part-pdf:hover { border-color: var(--accent); text-decoration: none; }
 .main-text dl.bibliography dt::before { content: "["; }
 .main-text dl.bibliography dt::after { content: "]"; }
 .main-text dl.bibliography dd { margin: 0; }
+.bib-options {
+  display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem;
+  margin: 0 0 1.25rem;
+  font-family: var(--sans); font-size: 0.8125rem; color: var(--ink-2);
+}
+.bib-option-group button {
+  margin-left: 0.25rem; padding: 0.15rem 0.6rem;
+  border: 1px solid var(--rule); border-radius: 4px;
+  background: transparent; color: var(--ink-2); font: inherit; cursor: pointer;
+}
+.bib-option-group button[aria-pressed="true"] { background: var(--surface-2); color: var(--ink); border-color: var(--ink-2); }
 .main-text dl.bibliography dd p { margin: 0; }
 .main-text dl.bibliography :target, .main-text dl.bibliography dt:target + dd { background: var(--surface-2); }
 .main-text .cite { white-space: nowrap; }
