@@ -80,6 +80,26 @@ counterexamples, exercises with solutions, citations for quoted results.
   `cycle-class`, `tate-conjecture` have 2 each).
 - [ ] Finish `deformations` (status `draft`).
 
+## Organisation and stated lemmas (user, 2026-11-07)
+
+- Chapters are the major areas; prefer new *sections* inside an existing chapter to new
+  chapters. Do not add chapters just because a topic was named as an example (varifolds, knot
+  theory): coverage must be balanced and comprehensive. To do:
+  - review the chapter list and merge thin chapters into bigger ones with many sections. Slugs
+    are permanent, so a merge means moving labels and editing their lines in `tags/tags`;
+  - candidate: merge `currents` and `varifolds` into a single chapter (or into the GMT
+    material) instead of two chapters;
+  - knot theory: not a chapter of its own unless needed. It could be part of a
+    low-dimensional topology chapter (surfaces, knots, 3-manifolds), with all topics of the
+    area, not only knots.
+- **State every reusable step as its own result.** Sweep the existing chapters for facts
+  proved inside proofs and extract them as lemmas/propositions with labels. First example,
+  `riemannian-geometry:theorem-hopf-rinow`:
+  - the geodesic-sphere lemma (every curve from p to q leaves the normal ball through the
+    geodesic sphere S, and d(p, q) = δ + min_S d(·, q); cf. Gallot–Hulin–Lafontaine 2.104);
+  - "exp_p defined on all of T_pM implies every q is joined to p by a minimising geodesic";
+  - extension of geodesics in complete manifolds.
+
 ## Order of work (user, 2026-11-05)
 
 Update (user, 2026-11-06): after `p-adic-numbers`, first rebuild measure
