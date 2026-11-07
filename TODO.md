@@ -111,9 +111,12 @@ together in one place.
    2026-11-06: "not just split, everything must be comprehensive, a nice
    reading of basically everything", as many chapters and sections as the
    Stacks project): grow the part into a complete treatise, slowly, e.g.
-   - `measure-theory`: semirings/π-λ (Dynkin), Carathéodory extension in full,
-     Lebesgue–Stieltjes measures and distribution functions, completion,
-     non-measurable sets (Vitali, Bernstein), inner/outer regularity;
+   - `measure-theory`: ~~π-λ (Dynkin), Carathéodory–Hahn extension,
+     Lebesgue–Stieltjes measures, completion~~ (done 2026-11-07, new section
+     *Extension and completion of measures*); still to do: rewrite the
+     compressed early sections slowly (σ-algebras with more examples, the
+     proof of Hölder with all cases, measurable functions), Bernstein sets,
+     image measures and the abstract change of variables;
    - ~~new `signed-measures`~~ (done 2026-11-07; Dunford–Pettis left for
      `functional-analysis`, where weak topologies are);
    - `lebesgue-differentiation`: functions of bounded variation, Banach–Zarecki,
@@ -267,6 +270,14 @@ spectral-sequences 300 (then everything below about 800 lines).
   parts).
 
 ## Done
+
+- [x] 2026-11-07: **Measure and Integration**: new section *Extension and
+  completion of measures* (π-systems and Dynkin systems, uniqueness, premeasures,
+  Carathéodory–Hahn extension theorem, completion, Lebesgue measurable = Borel
+  up to null sets, Lebesgue–Stieltjes measures with atoms/jumps, regularity,
+  examples and counterexamples; 3 exercises). The Stieltjes lemma of
+  Differentiation and Absolute Continuity now uses it instead of its own
+  construction.
 
 - [x] 2026-11-07: **Signed and Complex Measures** chapter (`signed-measures`,
   between differentiation and Radon measures): signed measures, Hahn and

@@ -7,7 +7,9 @@ The Lebesgue integral extends the Riemann integral to a class of functions that 
 monotone and dominated convergence theorems (Theorems~\ref{measure-theory:theorem-monotone-convergence}
 and~\ref{measure-theory:theorem-dominated-convergence}) and the completeness of the spaces $L^p$
 (Theorem~\ref{measure-theory:theorem-riesz-fischer}) are the basis of modern analysis and probability. This chapter is the first of the part on measure theory. It constructs measures from outer
-measures (Carath\'eodory's theorem) and Lebesgue measure in particular, shows why not every set can be measurable (Vitali, and the paradoxes of Hausdorff and Banach--Tarski), defines the integral and
+measures (Carath\'eodory's theorem) and Lebesgue measure in particular, shows why not every set can be measurable (Vitali, and the paradoxes of Hausdorff and Banach--Tarski), proves the uniqueness
+theorem for measures (Dynkin's $\pi$-$\lambda$ lemma) and the Carath\'eodory--Hahn extension theorem, completes measures, and constructs all locally finite Borel measures on the line from their
+distribution functions (the Lebesgue--Stieltjes measures, Theorem~\ref{measure-theory:theorem-lebesgue-stieltjes}). It then defines the integral and
 proves the convergence theorems, Jensen's inequality and the comparison with the Riemann integral; it studies the spaces $L^p$, the modes of convergence and Egorov's theorem, independence and the two
 Borel--Cantelli lemmas with Borel's normal number theorem (Theorem~\ref{measure-theory:theorem-borel-normal}), Littlewood's principles and Lusin's theorem, product measures and the theorems of Tonelli and
 Fubini with the layer cake formula, and the change of variables formula with Cavalieri's principle, volumes of solids of revolution and the theorems of Pappus--Guldin.
@@ -190,6 +192,39 @@ rigid motions preserve measure and $\lambda(B) \neq 2\lambda(B)$; so the theorem
 of volume, even finitely additive, extends to all subsets of $\RR^3$. On the line, Vitali's argument uses countable additivity in an essential way.
 \end{remark}
 
+\section{Extension and completion of measures}\label{measure-theory:section-extension}
+
+Lebesgue measure was obtained in two steps: the volume of boxes was given, and Carath\'eodory's theorem extended it to a $\sigma$-algebra through an outer measure. The same pattern occurs whenever a
+measure is known on a small family of sets: a probability distribution on $\RR$ is described by the probabilities of the half-lines $(-\infty, x]$, and the distribution of infinitely many coin tosses by
+the probabilities of the events depending on finitely many tosses. This section answers the two questions such descriptions raise. When does the data determine the measure (uniqueness)? And when
+does a measure with the prescribed values exist (extension)? We also show how to make any measure complete, and construct all locally finite Borel measures on the real line from their distribution
+functions.
+
+\subsection{Uniqueness of measures}\label{measure-theory:subsection-uniqueness}
+
+To show that two measures agreeing on a family $\mathcal{P}$ agree on $\sigma(\mathcal{P})$, one considers the sets on which they agree. This family is closed under complements and countable
+disjoint unions (when the measures are finite), but not obviously under intersections. The following definitions isolate the two halves of the notion of $\sigma$-algebra.
+
+\begin{definition}\label{measure-theory:definition-dynkin-system}
+A family $\mathcal{P}$ of subsets of $X$ is a \emph{$\pi$-system} if it is closed under finite intersections. A family $\mathcal{L}$ of subsets of $X$ is a \emph{Dynkin system} (or
+\emph{$\lambda$-system}) if it contains $X$ and is closed under complements and countable disjoint unions.
+\end{definition}
+
+\begin{example}\label{measure-theory:example-dynkin-systems}
+\begin{enumerate}
+\item A $\sigma$-algebra is both a $\pi$-system and a Dynkin system. Conversely, a Dynkin system $\mathcal{L}$ that is a $\pi$-system is a $\sigma$-algebra: it is closed under differences,
+$A \setminus B = A \cap (X \setminus B)$, so a countable union $\bigcup_kA_k$ can be written as the disjoint union of the sets $A_k \setminus (A_1 \cup \cdots \cup A_{k-1})
+= A_k \cap (X \setminus A_1) \cap \cdots \cap (X \setminus A_{k-1}) \in \mathcal{L}$.
+\item The intervals $(a, b]$, $-\infty \leq a < b \leq \infty$ (with $(a, \infty]$ read as $(a, \infty)$), together with $\emptyset$, form a $\pi$-system on $\RR$ generating the Borel $\sigma$-algebra; so do
+the half-lines $(-\infty, x]$, $x \in \RR$.
+\item On $X = \{1, 2, 3, 4\}$ the subsets with an even number of elements form a Dynkin system which is not a $\sigma$-algebra: complements and disjoint unions of even sets are even, but
+$\{1, 2\} \cap \{2, 3\} = \{2\}$.
+\item If $\mu$ and $\nu$ are finite measures on $(X, \mathcal{A})$ with $\mu(X) = \nu(X)$, the sets $A \in \mathcal{A}$ with $\mu(A) = \nu(A)$ form a Dynkin system: if $\mu(A) = \nu(A)$, then
+$\mu(X \setminus A) = \mu(X) - \mu(A) = \nu(X \setminus A)$, and countable additivity handles disjoint unions. In general it is not a $\pi$-system: for $\mu = \frac12(\delta_1 + \delta_2)$ and
+$\nu = \frac12(\delta_3 + \delta_4)$ on $\{1, 2, 3, 4\}$, both $\{1, 3\}$ and $\{2, 3\}$ have measure $\frac12$ under $\mu$ and $\nu$, but their intersection $\{3\}$ does not.
+\end{enumerate}
+\end{example}
+
 \begin{lemma}[Dynkin]\label{measure-theory:lemma-dynkin}
 Let $\mathcal{P}$ be a family of subsets of $X$ closed under finite intersections, and $\mathcal{L} \supseteq \mathcal{P}$ a family containing $X$, closed under complements and countable disjoint unions.
 Then $\mathcal{L}$ contains the $\sigma$-algebra generated by $\mathcal{P}$. Consequently two measures that agree on $\mathcal{P}$ and are finite on an increasing sequence of sets of $\mathcal{P}$ exhausting $X$ agree on
@@ -202,6 +237,262 @@ $A \setminus B = X \setminus ((X \setminus A) \sqcup (A \cap B))$) containing $\
 intersections, hence under all countable unions (disjointify), so it is a $\sigma$-algebra. For the consequence, if $\mu = \nu$ on $\mathcal{P}$ and $\mu(X_m) = \nu(X_m) < \infty$, the sets $B$ with
 $\mu(B \cap X_m) = \nu(B \cap X_m)$ form such a family; let $m \to \infty$.
 \end{proof}
+
+\begin{example}\label{measure-theory:example-distribution-function}
+A finite Borel measure $\mu$ on $\RR$ is determined by its \emph{distribution function} $F_\mu(x) = \mu((-\infty, x])$. Indeed, two finite measures with the same distribution function agree on the
+$\pi$-system of half-lines, and on $\RR = \bigcup_m(-\infty, m]$ (finite measure), so they agree on the $\sigma$-algebra generated, which is $\mathcal{B}(\RR)$ by
+Example~\ref{measure-theory:example-dynkin-systems}(2). Likewise, a Borel measure on $\RR^n$ that is finite on bounded sets is determined by its values on boxes $\prod_i(a_i, b_i]$; for instance it
+is Lebesgue measure if it gives every such box its volume.
+\end{example}
+
+\begin{counterexample}\label{measure-theory:counterexample-uniqueness}
+The finiteness hypothesis in Lemma~\ref{measure-theory:lemma-dynkin} cannot be dropped. On the Borel sets of $\RR$ let $\mu(E)$ be the number of rational points in $E$ (possibly $\infty$), and
+$\nu = 2\mu$. Both are measures, and they agree on the $\pi$-system of intervals $(a, b]$, all of which have measure $\infty$, and on $\emptyset$. But $\mu(\{0\}) = 1 \neq 2 = \nu(\{0\})$.
+\end{counterexample}
+
+\subsection{Premeasures and the extension theorem}\label{measure-theory:subsection-extension}
+
+\begin{definition}\label{measure-theory:definition-premeasure}
+An \emph{algebra} of subsets of $X$ is a family $\mathcal{A}_0$ containing $X$ and closed under complements and finite unions (hence under finite intersections and differences). A
+\emph{premeasure} on $\mathcal{A}_0$ is a map $\mu_0 \colon \mathcal{A}_0 \to [0, \infty]$ with $\mu_0(\emptyset) = 0$ such that $\mu_0(\bigsqcup_kA_k) = \sum_k\mu_0(A_k)$ for every sequence of
+pairwise disjoint $A_k \in \mathcal{A}_0$ \emph{whose union lies in $\mathcal{A}_0$}. It is \emph{$\sigma$-finite} if $X$ is a countable union of sets $A \in \mathcal{A}_0$ with $\mu_0(A) < \infty$.
+The \emph{outer measure induced} by $\mu_0$ is
+\[
+\mu^*(E) = \inf\Bigl\{\sum_k\mu_0(A_k) : A_k \in \mathcal{A}_0, \ E \subseteq \bigcup_kA_k\Bigr\} \qquad (E \subseteq X).
+\]
+\end{definition}
+
+A premeasure is finitely additive and monotone on $\mathcal{A}_0$ ($\mu_0(B) = \mu_0(A) + \mu_0(B \setminus A)$ for $A \subseteq B$). The condition that the union lies in $\mathcal{A}_0$ is
+essential, since an algebra need not contain countable unions: the finite and cofinite subsets of $\NN$ form an algebra containing all singletons but not the set of even numbers.
+
+\begin{theorem}[Carath\'eodory--Hahn extension theorem]\label{measure-theory:theorem-extension}
+Let $\mu_0$ be a premeasure on an algebra $\mathcal{A}_0$ and $\mu^*$ the induced outer measure. Then:
+\begin{enumerate}
+\item $\mu^*$ is an outer measure, and $\mu^*(A) = \mu_0(A)$ for $A \in \mathcal{A}_0$;
+\item every $A \in \mathcal{A}_0$ is $\mu^*$-measurable; hence $\mu = \mu^*|_{\sigma(\mathcal{A}_0)}$ is a measure on $\sigma(\mathcal{A}_0)$ extending $\mu_0$;
+\item if $\mu_0$ is $\sigma$-finite, $\mu$ is the only measure on $\sigma(\mathcal{A}_0)$ extending $\mu_0$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) $\mu^*(\emptyset) = 0$ and monotonicity are clear. Countable subadditivity: given $E_1, E_2, \ldots$ and $\varepsilon > 0$, cover each $E_j$ by sets of $\mathcal{A}_0$ with
+$\sum_k\mu_0(A_{jk}) \leq \mu^*(E_j) + \varepsilon2^{-j}$; all the $A_{jk}$ together cover $\bigcup_jE_j$, so $\mu^*(\bigcup_jE_j) \leq \sum_j\mu^*(E_j) + \varepsilon$. For $A \in \mathcal{A}_0$,
+$\mu^*(A) \leq \mu_0(A)$ by the cover $\{A\}$. Conversely, if $A \subseteq \bigcup_kA_k$ with $A_k \in \mathcal{A}_0$, the sets $B_k = A \cap A_k \setminus (A_1 \cup \cdots \cup A_{k-1})$ lie in
+$\mathcal{A}_0$, are disjoint and have union $A \in \mathcal{A}_0$; so $\mu_0(A) = \sum_k\mu_0(B_k) \leq \sum_k\mu_0(A_k)$ by the premeasure property and monotonicity. Hence
+$\mu_0(A) \leq \mu^*(A)$.
+
+(2) Let $A \in \mathcal{A}_0$, $E \subseteq X$ and $\varepsilon > 0$, and choose $A_k \in \mathcal{A}_0$ covering $E$ with $\sum_k\mu_0(A_k) \leq \mu^*(E) + \varepsilon$. The sets $A_k \cap A$ cover
+$E \cap A$ and the sets $A_k \setminus A$ cover $E \setminus A$, so by additivity of $\mu_0$,
+\[\begin{aligned}
+\mu^*(E \cap A) + \mu^*(E \setminus A) &\leq \sum_k\bigl(\mu_0(A_k \cap A) + \mu_0(A_k \setminus A)\bigr) \\
+&= \sum_k\mu_0(A_k) \leq \mu^*(E) + \varepsilon .
+\end{aligned}\]
+So $A$ is $\mu^*$-measurable. By Carath\'eodory's theorem (Theorem~\ref{measure-theory:theorem-caratheodory}) the $\mu^*$-measurable sets form a $\sigma$-algebra on which $\mu^*$ is a measure; it
+contains $\mathcal{A}_0$, hence $\sigma(\mathcal{A}_0)$, and $\mu$ extends $\mu_0$ by (1).
+
+(3) An algebra is a $\pi$-system. If $X = \bigcup_kC_k$ with $C_k \in \mathcal{A}_0$ and $\mu_0(C_k) < \infty$, the sets $X_m = C_1 \cup \cdots \cup C_m$ lie in $\mathcal{A}_0$, increase to $X$
+and have finite measure. Two measures extending $\mu_0$ agree on $\mathcal{A}_0$, so they agree on $\sigma(\mathcal{A}_0)$ by Lemma~\ref{measure-theory:lemma-dynkin}.
+\end{proof}
+
+\begin{remark}\label{measure-theory:remark-extension}
+\begin{enumerate}
+\item The construction of Lebesgue measure in Theorem~\ref{measure-theory:theorem-lebesgue-measure} is an instance of this pattern: its step ``volume of a box'' is the statement that volume is
+countably subadditive on boxes, which is what makes $\mu^*$ agree with the given values; here this is the premeasure property.
+\item The measure $\mu^*$ on \emph{all} $\mu^*$-measurable sets is complete (Theorem~\ref{measure-theory:theorem-caratheodory}), and in general larger than $\mu$ on $\sigma(\mathcal{A}_0)$. For
+Lebesgue measure it is exactly the completion of $\mu$ in the sense of the next subsection (Proposition~\ref{measure-theory:proposition-lebesgue-completion}), and the same holds for
+every $\sigma$-finite $\mu_0$ \cite[Section 1.4]{folland-real}.
+\item Without $\sigma$-finiteness the extension need not be unique. On $X = \QQ$ let $\mathcal{A}_0$ be the algebra of finite unions of sets $(a, b] \cap \QQ$ with $a < b$ real (and their complements, which
+are again such unions with $a = -\infty$ or $b = \infty$ allowed), and $\mu_0(A) = \infty$ for $A \neq \emptyset$. This is a premeasure, $\sigma(\mathcal{A}_0)$ is the power set (every singleton is a
+countable intersection of such sets), and both counting measure and twice counting measure extend $\mu_0$.
+\item A central application is the construction of measures on infinite products, such as the probability measure describing infinitely many independent coin tosses on $\{0, 1\}^\NN$: the premeasure is
+defined on the algebra of sets depending on finitely many coordinates, and its countable additivity follows from compactness of $\{0, 1\}^\NN$. This is taken up in Part~\ref{part-probability}.
+\end{enumerate}
+\end{remark}
+
+\subsection{Completion}\label{measure-theory:subsection-completion}
+
+Lebesgue measure is complete, but its restriction to the Borel sets is not (Remark~\ref{measure-theory:remark-lebesgue-not-borel} below). Completeness is convenient: properties holding almost
+everywhere then concern measurable sets, and modifying a measurable function on a null set keeps it measurable. Every measure can be completed, in a unique way.
+
+\begin{theorem}\label{measure-theory:theorem-completion}
+Let $(X, \mathcal{A}, \mu)$ be a measure space, and let $\overline{\mathcal{A}}$ be the family of sets $E \cup F$ with $E \in \mathcal{A}$ and $F \subseteq N$ for some $N \in \mathcal{A}$ with
+$\mu(N) = 0$. Then $\overline{\mathcal{A}}$ is a $\sigma$-algebra containing $\mathcal{A}$, and $\bar\mu(E \cup F) = \mu(E)$ defines the unique measure on $\overline{\mathcal{A}}$ extending $\mu$. The
+measure $\bar\mu$ is complete; it is the \emph{completion} of $\mu$.
+\end{theorem}
+
+\begin{proof}
+\emph{$\sigma$-algebra.} Countable unions: $\bigcup_k(E_k \cup F_k) = (\bigcup_kE_k) \cup (\bigcup_kF_k)$ and $\bigcup_kF_k \subseteq \bigcup_kN_k$, a null set. Complements: given $E \cup F$ with
+$F \subseteq N$, we may assume $E \cap N = \emptyset$, replacing $F$ by $F \setminus E$ and $N$ by $N \setminus E$. Then
+$X \setminus (E \cup F) = (X \setminus (E \cup N)) \cup (N \setminus F)$, with $X \setminus (E \cup N) \in \mathcal{A}$ and $N \setminus F \subseteq N$.
+
+\emph{$\bar\mu$ is well defined.} If $E_1 \cup F_1 = E_2 \cup F_2$ with $F_j \subseteq N_j$, then $E_1 \subseteq E_2 \cup N_2$, so $\mu(E_1) \leq \mu(E_2) + \mu(N_2) = \mu(E_2)$, and symmetrically.
+
+\emph{Measure, completeness, uniqueness.} If the sets $E_k \cup F_k$ are disjoint, so are the $E_k$, and $\bar\mu(\bigsqcup_k(E_k \cup F_k)) = \mu(\bigsqcup_kE_k) = \sum_k\mu(E_k)$. If
+$\bar\mu(E \cup F) = 0$, then $E \cup F \subseteq E \cup N$, a $\mu$-null set of $\mathcal{A}$, so every subset of $E \cup F$ lies in $\overline{\mathcal{A}}$. If $\nu$ is any measure on
+$\overline{\mathcal{A}}$ extending $\mu$, then $\mu(E) = \nu(E) \leq \nu(E \cup F) \leq \nu(E \cup N) = \mu(E \cup N) = \mu(E)$.
+\end{proof}
+
+\begin{example}\label{measure-theory:example-completion}
+\begin{enumerate}
+\item The completion of the Dirac measure $\delta_0$ on $\mathcal{B}(\RR)$ is defined on all subsets of $\RR$: every $A \subseteq \RR$ is $(A \cap \{0\}) \cup (A \setminus \{0\})$, and
+$A \setminus \{0\}$ lies in the null set $\RR \setminus \{0\}$.
+\item A complete measure stays the same: $\overline{\mathcal{A}} = \mathcal{A}$.
+\item For the completion, a function $g$ that agrees $\mu$-almost everywhere with an $\mathcal{A}$-measurable $f$ is $\overline{\mathcal{A}}$-measurable: $\{g > a\}$ differs from $\{f > a\}$ by a subset of
+a null set.
+\end{enumerate}
+\end{example}
+
+\begin{proposition}\label{measure-theory:proposition-lebesgue-completion}
+A set $E \subseteq \RR^n$ is Lebesgue measurable if and only if there are a countable union $A$ of compact sets and a countable intersection $B$ of open sets with $A \subseteq E \subseteq B$ and
+$\lambda(B \setminus A) = 0$. Consequently the Lebesgue $\sigma$-algebra is the completion of $\mathcal{B}(\RR^n)$ with respect to $\lambda$, and $\lambda$ is the completion of its restriction to
+$\mathcal{B}(\RR^n)$.
+\end{proposition}
+
+\begin{proof}
+Let $E$ be measurable and $E_m = E \cap [-m, m]^n$, of finite measure. By the regularity in Theorem~\ref{measure-theory:theorem-lebesgue-measure}, for all $m, j \geq 1$ there are a compact
+$K_{m,j} \subseteq E_m$ with $\lambda(E_m \setminus K_{m,j}) < 1/j$ and an open $U_{m,j} \supseteq E_m$ with $\lambda(U_{m,j} \setminus E_m) < 2^{-m}/j$. Let $A = \bigcup_{m,j}K_{m,j}$ and
+$B = \bigcap_j\bigcup_mU_{m,j}$. Then $A \subseteq E \subseteq B$. For each $m$, $\lambda(E_m \setminus A) < 1/j$ for all $j$, so $\lambda(E \setminus A) \leq \sum_m\lambda(E_m \setminus A) = 0$; and
+$\bigcup_mU_{m,j} \setminus E \subseteq \bigcup_m(U_{m,j} \setminus E_m)$ has measure $< 1/j$, so $\lambda(B \setminus E) = 0$.
+
+Conversely, if such $A$ and $B$ exist, then $E = A \cup (E \setminus A)$ with $A$ Borel and $E \setminus A$ contained in the Borel null set $B \setminus A$; so $E$ lies in the completion of
+$\mathcal{B}(\RR^n)$, and it is Lebesgue measurable because $\lambda$ is complete (Theorem~\ref{measure-theory:theorem-caratheodory}). This proves both statements, the measures agreeing on Borel sets.
+\end{proof}
+
+\begin{remark}\label{measure-theory:remark-lebesgue-not-borel}
+The completion is strictly larger: there are Lebesgue measurable sets that are not Borel. Such a set can be found inside the Cantor set $C$, which has measure $0$
+(Exercise~\ref{measure-theory:exercise-cantor}), so that all its subsets are Lebesgue measurable by completeness; an explicit non-Borel subset is constructed in Chapter~\ref{lebesgue-differentiation}
+with the help of the Cantor function.
+\end{remark}
+
+\subsection{Lebesgue--Stieltjes measures on the line}\label{measure-theory:subsection-stieltjes}
+
+By Example~\ref{measure-theory:example-distribution-function}, a finite Borel measure on $\RR$ is determined by its distribution function, which is nondecreasing. We now show that every nondecreasing
+right-continuous function arises, and allow infinite measures as long as bounded intervals have finite measure. The natural building blocks are the half-open intervals: they fit together without
+overlaps or gaps, $(a, b] \sqcup (b, c] = (a, c]$.
+
+\begin{lemma}\label{measure-theory:lemma-half-open-algebra}
+Call \emph{h-intervals} the sets $(a, b]$ with $-\infty \leq a < b < \infty$, the sets $(a, \infty)$ with $-\infty \leq a < \infty$, and $\emptyset$. The finite disjoint unions of h-intervals form an
+algebra $\mathcal{A}_h$ on $\RR$, and $\sigma(\mathcal{A}_h) = \mathcal{B}(\RR)$.
+\end{lemma}
+
+\begin{proof}
+The intersection of two h-intervals is an h-interval, and the complement of an h-interval is a disjoint union of at most two h-intervals (for instance $\RR \setminus (a, b] = (-\infty, a] \sqcup (b, \infty)$).
+If $A = \bigsqcup_iI_i$ and $B = \bigsqcup_jJ_j$ are in $\mathcal{A}_h$, then $A \cap B = \bigsqcup_{i,j}I_i \cap J_j \in \mathcal{A}_h$, and $\RR \setminus A = \bigcap_i(\RR \setminus I_i)$ is a finite
+intersection of members of $\mathcal{A}_h$, hence in $\mathcal{A}_h$. Closure under intersections and complements gives closure under unions. Every h-interval is Borel, and the open intervals are
+countable unions of h-intervals, $(a, b) = \bigcup_k(a, b - 1/k]$, so $\sigma(\mathcal{A}_h)$ contains the open sets.
+\end{proof}
+
+Let $F \colon \RR \to \RR$ be nondecreasing and right-continuous, and write $F(\infty) = \lim_{x \to \infty}F(x)$ and $F(-\infty) = \lim_{x \to -\infty}F(x)$, in $[-\infty, \infty]$. Define
+$\mu_0((a, b]) = F(b) - F(a)$ and $\mu_0((a, \infty)) = F(\infty) - F(a)$ for h-intervals (with $F(a) = F(-\infty)$ if $a = -\infty$, and the value $\infty$ if a difference involves an infinite
+limit), $\mu_0(\emptyset) = 0$, and $\mu_0(\bigsqcup_iI_i) = \sum_i\mu_0(I_i)$ for finite disjoint unions. This is well defined: if an h-interval $I$ is the disjoint union of h-intervals
+$I_1, \ldots, I_m$, ordering them from left to right shows that the right endpoint of each is the left endpoint of the next, so $\sum_i\mu_0(I_i)$ telescopes to $\mu_0(I)$; and two
+representations of the same set have a common refinement by the intersections $I_i \cap J_j$.
+
+\begin{lemma}\label{measure-theory:lemma-stieltjes-premeasure}
+$\mu_0$ is a $\sigma$-finite premeasure on $\mathcal{A}_h$.
+\end{lemma}
+
+\begin{proof}
+$\sigma$-finiteness: $\RR = \bigcup_m(-m, m]$ with $\mu_0((-m, m]) = F(m) - F(-m) < \infty$. Since every element of $\mathcal{A}_h$ is a finite disjoint union of h-intervals, and each piece of a
+countable disjoint decomposition can be intersected with these finitely many h-intervals, it suffices to show: if an h-interval $I$ is the disjoint union of countably many h-intervals $I_k$, then
+$\mu_0(I) = \sum_k\mu_0(I_k)$.
+
+\emph{Step 1: $\geq$.} For each $n$, $I \setminus (I_1 \cup \cdots \cup I_n) \in \mathcal{A}_h$, and finite additivity gives $\mu_0(I) \geq \sum_{k \leq n}\mu_0(I_k)$.
+
+\emph{Step 2: a finite covering inequality.} If a compact interval $[c, d]$ is covered by finitely many open intervals $(\alpha_1, \beta_1), \ldots, (\alpha_N, \beta_N)$, then
+$F(d) - F(c) \leq \sum_i(F(\beta_i) - F(\alpha_i))$. Indeed, choose an interval of the cover containing $c$, call it $(\alpha_{i_1}, \beta_{i_1})$; if $\beta_{i_1} \leq d$, choose one containing
+$\beta_{i_1}$, call it $(\alpha_{i_2}, \beta_{i_2})$; and so on. The right endpoints increase strictly, so no interval is chosen twice and the process stops after $r \leq N$ steps with $\beta_{i_r} > d$.
+Since $\alpha_{i_1} < c$ and $\alpha_{i_{s+1}} < \beta_{i_s}$, and $F$ is nondecreasing,
+\[
+F(d) - F(c) \leq F(\beta_{i_r}) - F(\alpha_{i_1}) = \sum_{s=1}^r\bigl(F(\beta_{i_s}) - F(\beta_{i_{s-1}})\bigr) \leq \sum_{s=1}^r\bigl(F(\beta_{i_s}) - F(\alpha_{i_s})\bigr),
+\]
+where $\beta_{i_0} = \alpha_{i_1}$.
+
+\emph{Step 3: $\leq$ for bounded $I = (a, b]$.} Let $I_k = (a_k, b_k]$ and $\varepsilon > 0$. By right continuity choose $0 < \delta < b - a$ with $F(a + \delta) < F(a) + \varepsilon$, and $\delta_k > 0$ with
+$F(b_k + \delta_k) < F(b_k) + \varepsilon2^{-k}$. The open intervals $(a_k, b_k + \delta_k)$ cover the compact interval $[a + \delta, b]$, so finitely many of them do, and Step 2 gives
+\[
+F(b) - F(a + \delta) \leq \sum_k\bigl(F(b_k + \delta_k) - F(a_k)\bigr) \leq \sum_k\mu_0(I_k) + \varepsilon .
+\]
+Hence $\mu_0(I) = F(b) - F(a) \leq \sum_k\mu_0(I_k) + 2\varepsilon$.
+
+\emph{Step 4: unbounded $I$.} For $M > 0$, $I \cap (-M, M]$ is a bounded h-interval (or empty), the disjoint union of the h-intervals $I_k \cap (-M, M]$, so by Step 3
+$\mu_0(I \cap (-M, M]) \leq \sum_k\mu_0(I_k \cap (-M, M]) \leq \sum_k\mu_0(I_k)$. As $M \to \infty$ the left side tends to $\mu_0(I)$, by the definition of $F(\pm\infty)$.
+\end{proof}
+
+\begin{theorem}[Lebesgue--Stieltjes measures]\label{measure-theory:theorem-lebesgue-stieltjes}
+\begin{enumerate}
+\item For every nondecreasing right-continuous $F \colon \RR \to \RR$ there is a unique Borel measure $\mu_F$ on $\RR$ with $\mu_F((a, b]) = F(b) - F(a)$ for all $a < b$.
+\item $\mu_F = \mu_G$ if and only if $F - G$ is constant.
+\item Conversely, let $\mu$ be a Borel measure on $\RR$ that is finite on bounded intervals, and put $F(x) = \mu((0, x])$ for $x \geq 0$ and $F(x) = -\mu((x, 0])$ for $x < 0$. Then $F$ is nondecreasing and
+right-continuous, and $\mu = \mu_F$.
+\item For all $x$ and $a < b$, $\mu_F(\{x\}) = F(x) - F(x-)$, $\mu_F([a, b]) = F(b) - F(a-)$ and $\mu_F((a, b)) = F(b-) - F(a)$, where $F(x-) = \lim_{t \uparrow x}F(t)$. So $\mu_F$ has an atom
+exactly at each point where $F$ jumps, of mass equal to the jump.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) Existence follows from Theorem~\ref{measure-theory:theorem-extension}, Lemma~\ref{measure-theory:lemma-stieltjes-premeasure} and $\sigma(\mathcal{A}_h) = \mathcal{B}(\RR)$. A Borel measure with the
+given values on bounded h-intervals has the values of $\mu_0$ on all h-intervals (by continuity from below, $(a, \infty) = \bigcup_m(a, m]$, and similarly for $a = -\infty$), hence on
+$\mathcal{A}_h$; uniqueness follows from Theorem~\ref{measure-theory:theorem-extension}(3).
+
+(2) If $\mu_F = \mu_G$, then $F(b) - F(a) = G(b) - G(a)$ for all $a < b$. Conversely, $F$ and $F + c$ define the same $\mu_0$.
+
+(3) In every case $\mu((x, y]) = F(y) - F(x)$ for $x < y$ (for $x < 0 \leq y$, $(x, y] = (x, 0] \sqcup (0, y]$), so $F$ is nondecreasing. If $x_k \downarrow x$, the sets $(x, x_k]$ decrease to
+$\emptyset$ and have finite measure, so $F(x_k) - F(x) = \mu((x, x_k]) \to 0$ (Proposition~\ref{measure-theory:proposition-measure-properties}): $F$ is right-continuous. Then $\mu$ and $\mu_F$ agree on
+bounded h-intervals, and $\mu = \mu_F$ by (1).
+
+(4) $\{x\} = \bigcap_k(x - 1/k, x]$, a decreasing sequence of sets of finite measure, so $\mu_F(\{x\}) = \lim_k(F(x) - F(x - 1/k)) = F(x) - F(x-)$. Then
+$\mu_F([a, b]) = \mu_F(\{a\}) + \mu_F((a, b])$ and $\mu_F((a, b)) = \mu_F((a, b]) - \mu_F(\{b\})$.
+\end{proof}
+
+\begin{definition}\label{measure-theory:definition-lebesgue-stieltjes}
+The measure $\mu_F$ is the \emph{Lebesgue--Stieltjes measure} of $F$; its completion is also called by this name. For a finite Borel measure $\mu$ on $\RR$ one usually normalises $F$ by
+$F(-\infty) = 0$, so that $F(x) = \mu((-\infty, x])$ is the distribution function of Example~\ref{measure-theory:example-distribution-function}.
+\end{definition}
+
+\begin{example}\label{measure-theory:example-lebesgue-stieltjes}
+\begin{enumerate}
+\item $F(x) = x$ gives Lebesgue measure: $\lambda((a, b]) = b - a$ by Theorem~\ref{measure-theory:theorem-lebesgue-measure} (the point $a$ has measure $\lambda^*([a, a]) = 0$), so $\lambda = \mu_F$ on
+$\mathcal{B}(\RR)$ by uniqueness. This is a second construction of one-dimensional Lebesgue measure.
+\item $F = \mathbf{1}_{[0, \infty)}$ gives $\delta_0$, and $F(x) = \lfloor x\rfloor$ gives counting measure on $\ZZ$, whose atoms are the jumps of the floor function.
+\item \emph{Probability distributions.} The distribution functions of Borel probability measures on $\RR$ are exactly the nondecreasing right-continuous $F$ with $F(-\infty) = 0$ and $F(\infty) = 1$.
+For instance $F(x) = (1 - e^{-x})^+$ is the exponential distribution, $\mu_F = e^{-x}\mathbf{1}_{[0, \infty)}\lambda$ (the two measures agree on h-intervals by the fundamental theorem of calculus and
+Proposition~\ref{measure-theory:proposition-riemann-lebesgue}), and a fair die has the step function $F(x) = \frac16\#\{k \in \{1, \ldots, 6\} : k \leq x\}$.
+\item \emph{A dense set of jumps.} Let $q_1, q_2, \ldots$ enumerate $\QQ$ and $F(x) = \sum_{q_n \leq x}2^{-n}$. Then $F$ is nondecreasing, and right-continuous: $F(x + h) - F(x)$ is the sum of $2^{-n}$
+over the $n$ with $x < q_n \leq x + h$; given $N$, for small $h$ no $q_n$ with $n \leq N$ lies in $(x, x + h]$, so the sum is at most $2^{-N}$. By (4) of the theorem, $F$ jumps by $2^{-n}$ at $q_n$
+and is continuous at every irrational point, and $\mu_F = \sum_n2^{-n}\delta_{q_n}$, a probability measure carried by the countable set $\QQ$.
+\item \emph{A continuous singular distribution.} The Cantor function of Chapter~\ref{lebesgue-differentiation}, extended by $0$ on $(-\infty, 0)$ and $1$ on $(1, \infty)$, is continuous, so $\mu_F$ has no
+atoms; yet $\mu_F$ is carried by the Cantor set, which has Lebesgue measure $0$.
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{measure-theory:counterexample-right-continuity}
+Right continuity cannot be dropped. For $F = \mathbf{1}_{(0, \infty)}$, which is nondecreasing but not right-continuous at $0$, the formula $\mu_0((a, b]) = F(b) - F(a)$ is still finitely additive on
+$\mathcal{A}_h$, but $(0, 1] = \bigsqcup_k(\frac1{k+1}, \frac1k]$ has $\mu_0((0, 1]) = 1$ while every piece has $\mu_0 = 0$. So $\mu_0$ is not a premeasure, and no measure $\mu$ satisfies
+$\mu((a, b]) = F(b) - F(a)$: it would have $\mu((0, 1/k]) = 1$ for all $k$, contradicting continuity from above. The convention that distribution functions are right-continuous corresponds to the choice
+of half-open intervals $(a, b]$; left-continuous functions go with $[a, b)$.
+\end{counterexample}
+
+\begin{proposition}\label{measure-theory:proposition-stieltjes-regular}
+Every Lebesgue--Stieltjes measure $\mu_F$ is regular: for every Borel set $E$,
+\[
+\mu_F(E) = \inf\{\mu_F(U) : U \supseteq E \text{ open}\} = \sup\{\mu_F(K) : K \subseteq E \text{ compact}\}.
+\]
+\end{proposition}
+
+\begin{proof}
+\emph{Outer regularity.} By Theorem~\ref{measure-theory:theorem-extension}, $\mu_F(E) = \mu^*(E)$ is the infimum of $\sum_k\mu_0(I_k)$ over covers of $E$ by h-intervals (members of
+$\mathcal{A}_h$ being finite unions of h-intervals); splitting $(a, \infty)$ into $(a, a + 1], (a + 1, a + 2], \ldots$ we may take all $I_k = (a_k, b_k]$ with $b_k < \infty$. Given $\varepsilon > 0$ and
+such a cover with $\sum_k\mu_0(I_k) \leq \mu_F(E) + \varepsilon$, choose $\delta_k > 0$ with $F(b_k + \delta_k) < F(b_k) + \varepsilon2^{-k}$. Then $U = \bigcup_k(a_k, b_k + \delta_k)$ is open, contains $E$, and
+$\mu_F(U) \leq \sum_k(F(b_k + \delta_k) - F(a_k)) \leq \mu_F(E) + 2\varepsilon$.
+
+\emph{Inner regularity.} If $E$ is bounded, contained in a compact interval $J$, choose by outer regularity an open $U \supseteq J \setminus E$ with $\mu_F(U) \leq \mu_F(J \setminus E) + \varepsilon$; then
+$K = J \setminus U$ is compact, contained in $E$, and $E \setminus K \subseteq U \setminus (J \setminus E)$ has measure $\leq \varepsilon$ (all measures here are finite). For general $E$ apply this to
+$E \cap [-m, m]$ and use continuity from below.
+\end{proof}
+
+The same argument, with boxes in place of h-intervals, would construct Lebesgue measure on $\RR^n$ once more; distribution functions in several variables exist as well, but nondecreasing in
+each variable is no longer enough: one needs that every box $\prod_i(a_i, b_i]$ receives a nonnegative value from the alternating sum of $F$ over its $2^n$ vertices.
 
 \section{The integral}\label{measure-theory:section-integral}
 
@@ -1070,4 +1361,36 @@ Show that the solid paraboloid $\{(x, y, z) : x^2 + y^2 \leq z \leq h\}$ has hal
 
 \begin{solution}
 By the disc method with $f(z) = \sqrt z$ on $[0, h]$, the volume is $\pi\int_0^hz\,dz = \frac12\pi h^2$, and the cylinder of radius $\sqrt h$ and height $h$ has volume $\pi h \cdot h = \pi h^2$.
+\end{solution}
+
+\begin{exercise}\label{measure-theory:exercise-monotone-discontinuities}
+Let $F \colon \RR \to \RR$ be nondecreasing. Show that $F$ has at most countably many points of discontinuity, using the Lebesgue--Stieltjes measure of $G(x) = F(x+) = \lim_{t \downarrow x}F(t)$.
+\end{exercise}
+
+\begin{solution}
+$G$ is nondecreasing, and right-continuous: for $x < t < s$, $F(t) \leq G(t) \leq F(s)$, so $G(t) \to G(x)$ as $t \downarrow x$. At every $x$, $G(x-) = F(x-)$ (both are the limit of $F$ from the
+left, as $F(t) \leq G(t) \leq F(t^{\prime})$ for $t < t^{\prime} < x$) and $G(x) = F(x+)$. A monotone function is continuous at $x$ if and only if $F(x-) = F(x+)$, so the discontinuities of $F$ are the
+atoms of $\mu_G$ (Theorem~\ref{measure-theory:theorem-lebesgue-stieltjes}(4)). In $(-m, m]$ there are at most $k\,\mu_G((-m, m])$ atoms of mass $> 1/k$, a finite number; taking the union over $m$ and $k$
+gives countably many atoms.
+\end{solution}
+
+\begin{exercise}\label{measure-theory:exercise-stieltjes-density}
+Let $F \colon \RR \to \RR$ be nondecreasing and continuously differentiable. Show that $\mu_F = F^{\prime}\lambda$, that is, $\mu_F(E) = \int_EF^{\prime}\,d\lambda$ for every Borel set $E$.
+\end{exercise}
+
+\begin{solution}
+$F^{\prime} \geq 0$ is continuous, so $E \mapsto \int_EF^{\prime}\,d\lambda$ is a Borel measure (Example~\ref{measure-theory:example-measures}(3)), finite on bounded intervals. For $a < b$,
+$\int_{(a, b]}F^{\prime}\,d\lambda$ equals the Riemann integral (Proposition~\ref{measure-theory:proposition-riemann-lebesgue}; the point $a$ is null), which is $F(b) - F(a)$ by the fundamental theorem
+of calculus. So the two measures agree on bounded h-intervals and are equal by Theorem~\ref{measure-theory:theorem-lebesgue-stieltjes}(1).
+\end{solution}
+
+\begin{exercise}\label{measure-theory:exercise-quadrants}
+Show that two Borel probability measures $\mu$, $\nu$ on $\RR^2$ with $\mu((-\infty, x] \times (-\infty, y]) = \nu((-\infty, x] \times (-\infty, y])$ for all $x, y \in \RR$ are equal.
+\end{exercise}
+
+\begin{solution}
+The quadrants $(-\infty, x] \times (-\infty, y]$, together with $\emptyset$, form a $\pi$-system: the intersection of two quadrants is the quadrant at $(\min(x, x^{\prime}), \min(y, y^{\prime}))$. It generates
+$\mathcal{B}(\RR^2)$: the box $(a, b] \times (c, d]$ is the quadrant at $(b, d)$ minus the quadrants at $(a, d)$ and $(b, c)$, which overlap in the quadrant at $(a, c)$, so boxes lie in the generated
+$\sigma$-algebra, and every open set is a countable union of such boxes with rational vertices. As $\mu(\RR^2) = \nu(\RR^2) = 1$, Lemma~\ref{measure-theory:lemma-dynkin} applies, with the quadrants at
+$(m, m)$ increasing to $\RR^2$.
 \end{solution}

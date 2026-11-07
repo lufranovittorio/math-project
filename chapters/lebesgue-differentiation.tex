@@ -276,10 +276,9 @@ $\mu_F((x, y]) = F(y) - F(x)$ and points have measure $0$. If $F$ is absolutely 
 \end{lemma}
 
 \begin{proof}
-Let $c = F(a)$ and $d = F(b)$. For $t \in [c, d]$ the set $\{x : F(x) = t\}$ is nonempty by the intermediate value theorem and closed, so it has a least element $G(t)$. The map
-$G \colon [c, d] \to [a, b]$ is nondecreasing, hence Borel measurable (preimages of intervals are intervals), and $G(t) \leq x$ if and only if $t \leq F(x)$: if $t \leq F(x)$ some
-$y \leq x$ has $F(y) = t$, and if $G(t) \leq x$ then $t = F(G(t)) \leq F(x)$. Let $\mu_F(E) = \lambda(\{t \in [c, d] : G(t) \in E\})$ for Borel $E \subseteq [a, b]$, the image of
-Lebesgue measure under $G$. Then $\mu_F([a, x]) = \lambda([c, F(x)]) = F(x) - c$.
+Extend $F$ to $\RR$ by $F(x) = F(a)$ for $x < a$ and $F(x) = F(b)$ for $x > b$; the extension is continuous and nondecreasing. Let $\mu_F$ be the restriction to $[a, b]$ of its
+Lebesgue--Stieltjes measure (Theorem~\ref{measure-theory:theorem-lebesgue-stieltjes}). Points have measure $0$ by part (4) of that theorem, since $F$ is continuous, and
+$\mu_F([a, x]) = F(x) - F(a-) = F(x) - F(a)$.
 
 Let $F$ be absolutely continuous and $E$ a Borel set with $\lambda(E) = 0$. Given $\varepsilon > 0$, take $\delta$ from the definition and an open $U \supseteq E$ with $\lambda(U) < \delta$
 (Theorem~\ref{measure-theory:theorem-lebesgue-measure}). The open set $U \cap (a, b)$ is the disjoint union of countably many open intervals $(a_k, b_k)$, its connected components,
