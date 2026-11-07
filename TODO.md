@@ -278,6 +278,14 @@ spectral-sequences 300 (then everything below about 800 lines).
 
 ## Done
 
+- [x] 2026-11-07: **Currents** (new chapter after *Riemannian Geometry*, draft): currents
+  as functionals on forms with multivector notation, push-forward, mass and normal
+  currents, representation T = ‖T‖∧T⃗, lower semicontinuity of mass (oscillating graphs),
+  compactness of currents of bounded mass, homotopy formula and cones, Lipschitz images,
+  integer-multiplicity rectifiable and integral currents, boundary rectifiability and
+  Federer–Fleming (cited), existence for Plateau's problem, calibrations (flat discs,
+  complex curves, minimal graphs), 3 exercises. *Varifolds* added as a planned chapter.
+
 - [x] 2026-11-07: **Frostman, energies, Marstrand** (new last section of *Geometric
   Measure Theory*): mass distribution principle as a lemma, Hausdorff content,
   Frostman's lemma for compact sets (dyadic proof), measure characterisation of

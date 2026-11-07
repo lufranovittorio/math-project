@@ -1,0 +1,414 @@
+\chapter{Currents}\label{currents}
+\chapterstatus{draft}
+
+\section{Introduction}\label{currents:section-introduction}
+
+Plateau's problem asks for a surface of least area spanning a given boundary curve. Its difficulty is that minimising sequences of smooth surfaces need not converge to a smooth surface: they may develop
+handles that shrink, thin tubes, or wild oscillations, and the limit, if there is one, must be found in a larger class of objects in which compactness holds and area is lower semicontinuous. Federer and
+Fleming found such a class in 1960 \cite{federer-fleming-1960}: the \emph{integral currents}, generalised oriented surfaces with integer multiplicities. This chapter develops the theory of currents in
+Euclidean space as far as the existence theorem for Plateau's problem and the method of calibrations, which proves that certain explicit surfaces minimise area.
+
+Currents were introduced by de Rham as forms with distribution coefficients (Section~\ref{de-rham:section-currents}), and studied there through their cohomology. Here we study them through their
+\emph{size}. We index currents by their dimension, as is customary in geometric measure theory, define the boundary operator and push-forwards, and introduce the \emph{mass}, which extends area. A
+current of finite mass is integration against a Radon measure with an orienting field of $k$-vectors (Theorem~\ref{currents:theorem-representation}); mass is lower semicontinuous under weak convergence, and
+currents of locally bounded mass form a weakly compact family (Theorem~\ref{currents:theorem-compactness-mass}). The homotopy formula gives cones and the isoperimetric-type estimate that every cycle with
+compact support bounds a current of controlled mass. Rectifiable and integral currents are defined through Lipschitz images of pieces of $\RR^k$, and we state, with references, the two deep theorems of
+the subject, the compactness theorem of Federer and Fleming and the boundary rectifiability theorem; from them the existence of mass-minimising integral currents with prescribed boundary follows in a few
+lines. Calibrations then show that flat discs and pieces of complex curves in $\CC^2$ minimise area among all competitors. The companion theory of varifolds, which forgets orientation and handles soap films
+with singularities, is in Chapter~\ref{varifolds}. References: \cite{federer-gmt}, \cite{simon-gmt}, \cite{federer-fleming-1960}.
+
+\noindent\textbf{Prerequisites.} Chapter~\ref{multilinear-algebra} (Multilinear Algebra), Chapter~\ref{radon-measures} (Radon Measures), Chapter~\ref{geometric-measure-theory} (Geometric Measure Theory),
+Chapter~\ref{de-rham} (De Rham Cohomology).
+
+\section{Currents in Euclidean space}\label{currents:section-currents}
+
+\begin{notation}\label{currents:notation-multivectors}
+Throughout, $U \subseteq \RR^n$ is open and $0 \leq k \leq n$. We write $\Lambda_k\RR^n = \Lambda^k(\RR^n)$ for the space of $k$-vectors and $\Lambda^k\RR^n = \Lambda^k((\RR^n)^*)$ for the space of $k$-covectors,
+with bases $e_I = e_{i_1} \wedge \cdots \wedge e_{i_k}$ and $dx^I = dx^{i_1} \wedge \cdots \wedge dx^{i_k}$, $I = (i_1 < \cdots < i_k)$, and with the dual pairing $\langle\varphi, \xi\rangle = \varphi(\xi)$, so that
+$\langle dx^I, e_J\rangle = \delta_{IJ}$. Both spaces carry the Euclidean inner product making these bases orthonormal, with norm $|\ |$, and the comass $\|\varphi\|$ and mass $\|\xi\|$ of
+Definition~\ref{multilinear-algebra:definition-comass}. A $k$-form on $U$ is a map $U \to \Lambda^k\RR^n$, and $\mathcal{D}^k(U)$ is the space of smooth $k$-forms with compact support in $U$. For a form
+$\omega$ we write $\|\omega\|_\infty = \sup_x\|\omega(x)\|$.
+\end{notation}
+
+The comass is the right norm on forms for measuring area: a unit simple $k$-vector $\xi = v_1 \wedge \cdots \wedge v_k$, with $v_1, \ldots, v_k$ orthonormal, represents an oriented $k$-plane with its unit area
+element, and $\|\varphi\| \leq 1$ says exactly that $\varphi$ is at most $1$ on every such element. For non-orthonormal vectors, $|\varphi(w_1, \ldots, w_k)| \leq \|\varphi\|\,|w_1 \wedge \cdots \wedge w_k| \leq \|\varphi\|\,|w_1|\cdots|w_k|$,
+by Proposition~\ref{multilinear-algebra:proposition-comass} and Hadamard's inequality (the volume of a parallelepiped is at most the product of its edges).
+
+As for distributions, $\omega_j \to \omega$ in $\mathcal{D}^k(U)$ means that all supports lie in one compact subset of $U$ and every partial derivative of every coefficient converges uniformly.
+
+\begin{definition}\label{currents:definition-current}
+A \emph{$k$-dimensional current} on $U$ is a linear map $T \colon \mathcal{D}^k(U) \to \RR$ with $T(\omega_j) \to T(\omega)$ whenever $\omega_j \to \omega$ in $\mathcal{D}^k(U)$. The $k$-currents form a vector space
+$\mathcal{D}_k(U)$. For $k \geq 1$ the \emph{boundary} of $T \in \mathcal{D}_k(U)$ is the $(k-1)$-current
+\[
+\partial T(\omega) = T(d\omega), \qquad \omega \in \mathcal{D}^{k-1}(U),
+\]
+and $\partial T = 0$ for $k = 0$. A current with $\partial T = 0$ is a \emph{cycle}. A sequence $T_j$ \emph{converges weakly} to $T$, $T_j \rightharpoonup T$, if $T_j(\omega) \to T(\omega)$ for every $\omega \in \mathcal{D}^k(U)$.
+The \emph{support} $\operatorname{supp}T$ is defined as in Definition~\ref{de-rham:definition-current-support}: the complement of the largest open set $V$ with $T(\omega) = 0$ for all $\omega$ supported in $V$.
+\end{definition}
+
+A $k$-dimensional current on $U$ is the same thing as a current of degree $n - k$ in the sense of Definition~\ref{de-rham:definition-current}, which acts on forms of degree $n - (n - k) = k$; de Rham's exterior
+derivative and our boundary differ only by a sign depending on $k$. So $\partial\partial = 0$, since $dd = 0$; and if $T_j \rightharpoonup T$, then $\partial T_j \rightharpoonup \partial T$, because
+$\partial T_j(\omega) = T_j(d\omega)$. The indexing by dimension makes the boundary lower the index, as for chains in homology.
+
+\begin{example}\label{currents:example-currents}
+\begin{enumerate}
+\item (\emph{Points.}) For $p \in U$, $[\![p]\!](f) = f(p)$ is a $0$-current, the Dirac mass. A $0$-current is a distribution.
+\item (\emph{Oriented submanifolds.}) Let $M \subseteq U$ be an oriented $k$-dimensional submanifold of class $C^1$, possibly with boundary, closed as a subset of $U$, with $\mathcal{H}^k(M \cap K) < \infty$ for
+compact $K$, and let $\vec{M}(x)$ be the unit simple $k$-vector orienting $T_xM$. Then
+\[
+[\![M]\!](\omega) = \int_M\omega = \int_M\langle\omega(x), \vec{M}(x)\rangle\,d\mathcal{H}^k(x)
+\]
+is a $k$-current, the second formula by the area formula (Theorem~\ref{geometric-measure-theory:theorem-area-formula}). If $M$ is smooth and compact, Stokes' theorem gives $\partial[\![M]\!] = [\![\partial M]\!]$,
+with the induced orientation on $\partial M$ (compare Proposition~\ref{de-rham:proposition-boundary-current}). For instance $\partial[\![a, b]\!] = [\![b]\!] - [\![a]\!]$ for an oriented segment, which is the
+fundamental theorem of calculus.
+\item (\emph{Forms and densities.}) A locally integrable $k$-vector field $\xi \colon U \to \Lambda_k\RR^n$ defines the $k$-current $\lambda \wedge \xi \colon \omega \mapsto \int_U\langle\omega(x), \xi(x)\rangle\,dx$. For
+$k = n$ and $\xi = e_1 \wedge \cdots \wedge e_n$, this is $[\![U]\!]$ with the standard orientation.
+\item (\emph{Multiplicity.}) For an integer $m$, $m[\![M]\!]$ is ``$M$ counted $m$ times''; $-[\![M]\!]$ is $M$ with the opposite orientation.
+\end{enumerate}
+\end{example}
+
+\begin{definition}\label{currents:definition-push-forward}
+Let $T \in \mathcal{D}_k(U)$ have compact support, $V \subseteq \RR^m$ open, and $f \colon U \to V$ smooth. The \emph{push-forward} $f_\#T \in \mathcal{D}_k(V)$ is
+\[
+f_\#T(\omega) = T(\chi\,f^*\omega), \qquad \omega \in \mathcal{D}^k(V),
+\]
+where $\chi \in C^\infty_c(U)$ is any function equal to $1$ on a neighbourhood of $\operatorname{supp}T$.
+\end{definition}
+
+The definition does not depend on $\chi$, since two choices differ by a form vanishing near $\operatorname{supp}T$, on which $T$ is $0$ (de Rham's Lemma~\ref{de-rham:lemma-currents-local} and the
+definition of support). We usually drop $\chi$ and write $T(f^*\omega)$.
+
+\begin{proposition}\label{currents:proposition-push-forward}
+Let $T \in \mathcal{D}_k(U)$ have compact support and $f \colon U \to V$, $g \colon V \to W$ be smooth.
+\begin{enumerate}
+\item $\partial f_\#T = f_\#\partial T$, $(g \circ f)_\#T = g_\#f_\#T$, and $\operatorname{supp}f_\#T \subseteq f(\operatorname{supp}T)$.
+\item If $f$ is constant and $k \geq 1$, then $f_\#T = 0$.
+\item For an oriented compact submanifold $M$ and a diffeomorphism $f$ onto its image, $f_\#[\![M]\!] = [\![f(M)]\!]$ with the image orientation.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) $\partial f_\#T(\omega) = T(\chi f^*d\omega) = T(\chi\,d(f^*\omega)) = T(d(\chi f^*\omega))$, as $d\chi = 0$ near $\operatorname{supp}T$; so $\partial f_\#T(\omega) = \partial T(\chi f^*\omega)$, and
+$\operatorname{supp}\partial T \subseteq \operatorname{supp}T$. Composition follows from $(g \circ f)^* = f^* \circ g^*$. If $\omega$ vanishes on a neighbourhood of the compact set $f(\operatorname{supp}T)$, then
+$f^*\omega$ vanishes near $\operatorname{supp}T$, so $f_\#T(\omega) = 0$. (2) The pull-back of a form of positive degree by a constant map is $0$. (3) is the change of variables formula for integrals of forms.
+\end{proof}
+
+\section{Mass and representation by integration}\label{currents:section-mass}
+
+\begin{definition}\label{currents:definition-mass}
+The \emph{mass} of $T \in \mathcal{D}_k(U)$ in an open set $V \subseteq U$ is
+\[
+\mathbf{M}_V(T) = \sup\{T(\omega) : \omega \in \mathcal{D}^k(U),\ \operatorname{supp}\omega \subseteq V,\ \|\omega\|_\infty \leq 1\} \in [0, \infty],
+\]
+and $\mathbf{M}(T) = \mathbf{M}_U(T)$. The current has \emph{locally finite mass} if $\mathbf{M}_V(T) < \infty$ for every open $V$ with compact closure in $U$. A current $T$ with compact support is \emph{normal} if
+$\mathbf{N}(T) = \mathbf{M}(T) + \mathbf{M}(\partial T) < \infty$.
+\end{definition}
+
+The mass is a norm on the currents of finite mass, and $|T(\omega)| \leq \mathbf{M}(T)\|\omega\|_\infty$. For $[\![M]\!]$ as in Example~\ref{currents:example-currents}(2),
+$[\![M]\!](\omega) \leq \int_M\|\omega\|\,\|\vec{M}\|\,d\mathcal{H}^k \leq \mathcal{H}^k(M)\|\omega\|_\infty$, since $\vec{M}$ is a unit simple $k$-vector; the reverse inequality is part of the next theorem, so
+$\mathbf{M}([\![M]\!]) = \mathcal{H}^k(M)$: mass extends area. For a point, $\mathbf{M}([\![p]\!]) = 1$.
+
+\begin{theorem}[Representation of currents of locally finite mass]\label{currents:theorem-representation}
+Let $T \in \mathcal{D}_k(U)$ have locally finite mass. There are a Radon measure $\|T\|$ on $U$ and a Borel map $\vec{T} \colon U \to \Lambda_k\RR^n$ with $\|\vec{T}(x)\| = 1$ for $\|T\|$-almost every $x$, such that
+\[
+T(\omega) = \int_U\langle\omega(x), \vec{T}(x)\rangle\,d\|T\|(x) \qquad \text{for all } \omega \in \mathcal{D}^k(U),
+\]
+and $\|T\|(V) = \mathbf{M}_V(T)$ for every open $V \subseteq U$. In particular $\mathbf{M}(T) = \|T\|(U)$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: extension to continuous forms.} Let $C_c(U, \Lambda^k\RR^n)$ be the continuous $k$-forms with compact support. For $\omega$ in it, the mollifications $\omega * \rho_\varepsilon$ are smooth, have supports
+in a fixed compact set for small $\varepsilon$, and converge uniformly to $\omega$; moreover $\|(\omega * \rho_\varepsilon)(x)\| \leq \sup\|\omega\|$, because $\omega * \rho_\varepsilon(x)$ is an average of values of $\omega$ and the
+comass is a norm. Since $|T(\eta)| \leq \mathbf{M}_V(T)\|\eta\|_\infty$ for smooth $\eta$ supported in $V$, $T$ extends uniquely to a linear functional on $C_c(U, \Lambda^k\RR^n)$ with the same bound, and
+$\mathbf{M}_V(T)$ is unchanged if continuous forms are allowed in its definition.
+
+\emph{Step 2: a Euclidean representation.} The comass is at most the Euclidean norm (Proposition~\ref{multilinear-algebra:proposition-comass}(1)), so $T$ is bounded on continuous forms of Euclidean norm at
+most $1$ supported in a fixed compact set. Identify $\Lambda^k\RR^n$ with $\Lambda_k\RR^n$ by the inner product. By Theorem~\ref{radon-measures:theorem-riesz-vector}, applied with $H = \Lambda_k\RR^n$, there are a Radon
+measure $\mu$ and a Borel map $\nu$ with $|\nu| = 1$ $\mu$-almost everywhere and $T(\omega) = \int\langle\omega, \nu\rangle\,d\mu$.
+
+\emph{Step 3: renormalisation.} Put $\|T\| = \|\nu\|\mu$ and $\vec{T} = \nu/\|\nu\|$, where $\|\nu(x)\| \geq |\nu(x)| = 1$ is the mass. Then $T(\omega) = \int\langle\omega, \vec{T}\rangle\,d\|T\|$ and $\|\vec{T}\| = 1$. As all norms on
+$\Lambda_k\RR^n$ are equivalent, $\|T\| \leq C\mu$, so $\|T\|$ is finite on compact sets, and it is a Radon measure by Proposition~\ref{radon-measures:proposition-radon-automatic}.
+
+\emph{Step 4: $\mathbf{M}_V(T) \leq \|T\|(V)$.} For $\|\omega\|_\infty \leq 1$ supported in $V$, $T(\omega) \leq \int_V\|\omega\|\,\|\vec{T}\|\,d\|T\| \leq \|T\|(V)$, by
+Proposition~\ref{multilinear-algebra:proposition-comass}(3).
+
+\emph{Step 5: $\|T\|(V) \leq \mathbf{M}_V(T)$.} Let $\varepsilon > 0$ and choose a compact $K \subseteq V$ with $\|T\|(V \setminus K) < \varepsilon$ (or $\|T\|(K) > 1/\varepsilon$ if $\|T\|(V) = \infty$). The comass unit ball
+$B^*$ of $\Lambda^k\RR^n$ is compact; let $\varphi_1, \varphi_2, \ldots$ be dense in it. By definition of the mass of a $k$-vector, $\sup_j\langle\varphi_j, \xi\rangle = \|\xi\|$ for every $\xi$. So the Borel sets
+$E_j = \{x \in K : \langle\varphi_j, \vec{T}(x)\rangle > 1 - \varepsilon\} \setminus (E_1 \cup \cdots \cup E_{j-1})$ cover $K$ up to a $\|T\|$-null set. Choose $J$ with $\|T\|(K \setminus \bigcup_{j \leq J}E_j) < \varepsilon$, compact
+sets $K_j \subseteq E_j$ with $\|T\|(E_j \setminus K_j) < \varepsilon/J$, pairwise disjoint open sets $V_j \subseteq V$ with $K_j \subseteq V_j$ and $\|T\|(V_j \setminus K_j) < \varepsilon/J$ (outer regularity), and
+$\psi_j \in C_c(V_j)$ with $0 \leq \psi_j \leq 1$ and $\psi_j = 1$ on $K_j$. The continuous form $\omega = \sum_{j \leq J}\psi_j\varphi_j$ has $\|\omega\|_\infty \leq 1$, as the $V_j$ are disjoint, and
+\[
+\begin{aligned}
+T(\omega) &= \sum_j\int\psi_j\langle\varphi_j, \vec{T}\rangle\,d\|T\| \geq (1 - \varepsilon)\sum_j\|T\|(K_j) - \sum_j\|T\|(V_j \setminus K_j) \\
+&\geq (1 - \varepsilon)(\|T\|(K) - 2\varepsilon) - \varepsilon,
+\end{aligned}
+\]
+using $|\langle\varphi_j, \vec{T}\rangle| \leq 1$. By Step 1, $\mathbf{M}_V(T) \geq T(\omega)$, and letting $\varepsilon \to 0$ gives the claim.
+\end{proof}
+
+We write $T = \|T\| \wedge \vec{T}$. For $[\![M]\!]$, $\|[\![M]\!]\| = \mathcal{H}^k\llcorner M$ and $\vec{T} = \vec{M}$, by uniqueness in Theorem~\ref{radon-measures:theorem-riesz-vector}. A current of locally finite mass
+can be evaluated on bounded Borel forms, and in particular \emph{restricted} to a Borel set $A$: $(T\llcorner A)(\omega) = \int_A\langle\omega, \vec{T}\rangle\,d\|T\|$. Restriction does not commute with the boundary: the
+restriction of $[\![0, 2]\!]$ to $[0, 1]$ is $[\![0, 1]\!]$, whose boundary has a new point $[\![1]\!]$.
+
+\begin{proposition}[Lower semicontinuity of mass]\label{currents:proposition-mass-lsc}
+If $T_j \rightharpoonup T$ in $\mathcal{D}_k(U)$, then $\mathbf{M}_V(T) \leq \liminf_j\mathbf{M}_V(T_j)$ for every open $V \subseteq U$.
+\end{proposition}
+
+\begin{proof}
+For $\omega$ supported in $V$ with $\|\omega\|_\infty \leq 1$, $T(\omega) = \lim_jT_j(\omega) \leq \liminf_j\mathbf{M}_V(T_j)$; take the supremum over $\omega$.
+\end{proof}
+
+\begin{example}\label{currents:example-mass-drop}
+The inequality can be strict, even for smooth curves. Let $\gamma_j(t) = (t, \frac1j\sin(jt))$, $t \in [0, 2\pi]$, and $T_j = (\gamma_j)_\#[\![0, 2\pi]\!]$, the oriented graph. Then
+$T_j(\omega) = \int_0^{2\pi}(\omega_1(\gamma_j(t)) + \omega_2(\gamma_j(t))\cos(jt))\,dt$ for $\omega = \omega_1dx + \omega_2dy$. The first term tends to $\int_0^{2\pi}\omega_1(t, 0)\,dt$ by uniform convergence. In the second,
+$\omega_2(\gamma_j(t)) = g(t) + o(1)$ uniformly with $g(t) = \omega_2(t, 0)$, and $\int_0^{2\pi}g(t)\cos(jt)\,dt = -\frac1j\int_0^{2\pi}g^{\prime}(t)\sin(jt)\,dt \to 0$ after an integration by parts. So
+$T_j \rightharpoonup [\![0, 2\pi]\!] \times \{0\}$, of mass $2\pi$, while $\mathbf{M}(T_j) = \int_0^{2\pi}\sqrt{1 + \cos^2(jt)}\,dt = \int_0^{2\pi}\sqrt{1 + \cos^2t}\,dt > 2\pi$. The oscillations cancel in the limit because of
+the orientation; their length is lost. (Compare Exercise~\ref{radon-measures:exercise-staircase}, where the length measures converge to a multiple of Lebesgue measure on the segment.)
+\end{example}
+
+\begin{theorem}[Compactness of currents of bounded mass]\label{currents:theorem-compactness-mass}
+Let $T_j \in \mathcal{D}_k(U)$ with $\sup_j\mathbf{M}_V(T_j) < \infty$ for every open $V$ with compact closure in $U$. Then a subsequence converges weakly to a current $T$ of locally finite mass. If moreover
+$\sup_j\mathbf{M}_V(\partial T_j) < \infty$ for all such $V$, then $\partial T$ has locally finite mass.
+\end{theorem}
+
+\begin{proof}
+Write $T_j = \|T_j\| \wedge \vec{T}_j$ (Theorem~\ref{currents:theorem-representation}). For each multi-index $I$ the functions $a_j^I = \langle dx^I, \vec{T}_j\rangle$ satisfy $|a_j^I| \leq \|dx^I\|\,\|\vec{T}_j\| = 1$,
+since $dx^I$ is a unit simple covector. So the positive Radon measures $\sigma_j^{I,\pm} = (a_j^I)^{\pm}\|T_j\|$ satisfy $\sigma_j^{I,\pm}(K) \leq \|T_j\|(K)$, which is bounded in $j$ for every compact $K \subseteq U$.
+Applying Theorem~\ref{radon-measures:theorem-weak-compactness} successively to the finitely many sequences $\sigma_j^{I,+}$ and $\sigma_j^{I,-}$, we find a subsequence along which $\sigma_j^{I,\pm} \rightharpoonup \sigma^{I,\pm}$ for all
+$I$. For $\omega = \sum_I\omega_Idx^I \in \mathcal{D}^k(U)$,
+\[\begin{aligned}
+T_j(\omega) &= \sum_I\int\omega_I\,a_j^I\,d\|T_j\| = \sum_I\Bigl(\int\omega_I\,d\sigma_j^{I,+} - \int\omega_I\,d\sigma_j^{I,-}\Bigr) \\
+&\longrightarrow \sum_I\Bigl(\int\omega_I\,d\sigma^{I,+} - \int\omega_I\,d\sigma^{I,-}\Bigr) =: T(\omega).
+\end{aligned}\]
+$T$ is linear, and continuous on $\mathcal{D}^k(U)$ because it is given by integration of the coefficients against Radon measures. So $T_j \rightharpoonup T$ along the subsequence, and $T$ and $\partial T$ have locally finite
+mass by Proposition~\ref{currents:proposition-mass-lsc}, as $\partial T_j \rightharpoonup \partial T$.
+\end{proof}
+
+\begin{corollary}\label{currents:corollary-normal-compactness}
+Let $T_j$ be normal $k$-currents in $\RR^n$ with supports in a fixed compact set $K$ and $\sup_j\mathbf{N}(T_j) < \infty$. Then a subsequence converges weakly to a normal current $T$ with
+$\operatorname{supp}T \subseteq K$ and $\mathbf{N}(T) \leq \liminf_j\mathbf{N}(T_j)$.
+\end{corollary}
+
+\begin{proof}
+By the theorem and Proposition~\ref{currents:proposition-mass-lsc}, applied to $T_j$ and $\partial T_j$ (after passing to a subsequence along which $\mathbf{M}(T_j)$ and $\mathbf{M}(\partial T_j)$ converge). If $\omega$ vanishes on a
+neighbourhood of $K$, then $T(\omega) = \lim T_j(\omega) = 0$; so $\operatorname{supp}T \subseteq K$.
+\end{proof}
+
+\section{Homotopies and cones}\label{currents:section-homotopies}
+
+The homotopy operator $K$ of Theorem~\ref{de-rham:theorem-homotopy-invariance}, which satisfies $i_1^* - i_0^* = dK + Kd$ on forms on $\RR^n \times \RR$, transposes to currents.
+
+\begin{definition}\label{currents:definition-homotopy-current}
+Let $T \in \mathcal{D}_k(\RR^n)$ have compact support, and let $F \colon \RR^n \times \RR \to \RR^m$ be smooth, with $F_t = F(\cdot, t)$. The \emph{homotopy current} of $T$ under $F$ is the $(k+1)$-current
+\[
+F_\#([\![0, 1]\!] \times T)(\omega) = T(K F^*\omega), \qquad \omega \in \mathcal{D}^{k+1}(\RR^m),
+\]
+where $T$ is evaluated on the smooth $k$-form $KF^*\omega$ as in Definition~\ref{currents:definition-push-forward}, after multiplication by a cutoff equal to $1$ near $\operatorname{supp}T$.
+\end{definition}
+
+The notation is suggestive: when $T = [\![M]\!]$, the homotopy current is the push-forward of the product $[0, 1] \times M$, by Remark~\ref{de-rham:remark-k-and-prism} and Fubini's theorem, up to a sign fixed by
+the orientation convention. We write $h(T) = F_\#([\![0, 1]\!] \times T)$ when $F$ is understood.
+
+\begin{proposition}[Homotopy formula]\label{currents:proposition-homotopy-formula}
+In this situation, $\operatorname{supp}h(T) \subseteq F([0, 1] \times \operatorname{supp}T)$ and
+\[
+\partial h(T) = F_{1\#}T - F_{0\#}T - h(\partial T),
+\]
+with $h(\partial T) = 0$ if $k = 0$. If $|\partial_tF(x, t)| \leq a$ and $\|D_xF(x, t)\| \leq L$ for $x \in \operatorname{supp}T$ and $t \in [0, 1]$, then $\mathbf{M}(h(T)) \leq aL^k\mathbf{M}(T)$.
+\end{proposition}
+
+\begin{proof}
+For $\omega \in \mathcal{D}^k(\RR^m)$, using $F^*d = dF^*$ and $Kd = i_1^* - i_0^* - dK$,
+\[
+\partial h(T)(\omega) = T(KF^*d\omega) = T(K\,dF^*\omega) = T(i_1^*F^*\omega) - T(i_0^*F^*\omega) - T(dKF^*\omega),
+\]
+and $i_s^*F^* = F_s^*$, $T(dKF^*\omega) = \partial T(KF^*\omega) = h(\partial T)(\omega)$. For $k = 0$ the last term is absent, since $K$ vanishes on functions. If $\omega$ vanishes near $F([0, 1] \times \operatorname{supp}T)$, then $F^*\omega$ vanishes near $\operatorname{supp}T \times [0, 1]$, so $KF^*\omega$ vanishes near
+$\operatorname{supp}T$. For the mass, $KF^*\omega = \int_0^1\beta_t\,dt$ with $\beta_t(x)(v_1, \ldots, v_k) = \omega(F(x, t))(\partial_tF, D_xF\,v_1, \ldots, D_xF\,v_k)$, whose comass at points of $\operatorname{supp}T$ is at
+most $aL^k\|\omega\|_\infty$ by the remark after Notation~\ref{currents:notation-multivectors}. So $h(T)(\omega) \leq \mathbf{M}(T)\,aL^k\|\omega\|_\infty$, by Theorem~\ref{currents:theorem-representation} if $\mathbf{M}(T) < \infty$
+(otherwise there is nothing to prove).
+\end{proof}
+
+\begin{corollary}[Cones]\label{currents:corollary-cone}
+Let $T \in \mathcal{D}_k(\RR^n)$ have support in $\overline{B}(0, R)$, and let $0 \mathbin{\times\!\!\!\!\times} T = h(T)$ for $F(x, t) = tx$, the \emph{cone} over $T$ with vertex $0$. Then
+$\mathbf{M}(0 \mathbin{\times\!\!\!\!\times} T) \leq R\,\mathbf{M}(T)$, and for $k \geq 1$
+\[
+\partial(0 \mathbin{\times\!\!\!\!\times} T) = T - 0 \mathbin{\times\!\!\!\!\times} \partial T .
+\]
+In particular every $k$-cycle $T$ with $k \geq 1$ and compact support is a boundary: $T = \partial(0 \mathbin{\times\!\!\!\!\times} T)$. For $k = 0$, $\partial(0 \mathbin{\times\!\!\!\!\times} T) = T - T(1)[\![0]\!]$.
+\end{corollary}
+
+\begin{proof}
+Here $F_1 = \id$ and $F_0$ is constant, so $F_{0\#}T = 0$ for $k \geq 1$ (Proposition~\ref{currents:proposition-push-forward}(2)), while for $k = 0$, $F_{0\#}T(f) = T(f(0)) = T(1)f(0)$. Also $\partial_tF = x$ has length at
+most $R$ on $\operatorname{supp}T$, and $D_xF = t\,\id$ has norm at most $1$. Apply Proposition~\ref{currents:proposition-homotopy-formula}.
+\end{proof}
+
+\begin{example}\label{currents:example-cone}
+For $T = [\![p]\!] - [\![q]\!]$, a $0$-cycle, the cone is the difference of the segments from $0$ to $p$ and from $0$ to $q$, and its boundary is $T$: the path $q \to 0 \to p$. For $T$ the oriented unit circle in
+$\RR^2$, the cone is the oriented unit disc, of mass $\pi \leq 1 \cdot 2\pi$. Coning is an isoperimetric inequality of the crudest kind: a cycle of mass $m$ in a ball of radius $R$ bounds a current of mass at
+most $Rm$. The Federer--Fleming isoperimetric inequality improves this to $C\,m^{(k+1)/k}$, independently of $R$ \cite{federer-fleming-1960}.
+\end{example}
+
+\section{Rectifiable and integral currents}\label{currents:section-rectifiable}
+
+Normal currents can be smeared out, like $\lambda \wedge e_1$ on a square, which is a ``continuum of parallel segments''. Surfaces are singled out among them by integer multiplicities on rectifiable sets. Since
+the tangent planes of rectifiable sets are defined only almost everywhere, we build the currents from Lipschitz parametrisations, which carry their own tangent vectors by Rademacher's theorem
+(Theorem~\ref{geometric-measure-theory:theorem-rademacher}).
+
+\begin{definition}\label{currents:definition-lipschitz-image}
+Let $k \geq 1$, $E \subseteq \RR^k$ a bounded Borel set and $f \colon \RR^k \to \RR^n$ Lipschitz. The current $f_\#[\![E]\!] \in \mathcal{D}_k(\RR^n)$ is
+\[
+f_\#[\![E]\!](\omega) = \int_E\bigl\langle\omega(f(y)), \partial_1f(y) \wedge \cdots \wedge \partial_kf(y)\bigr\rangle\,dy,
+\]
+where the partial derivatives exist almost everywhere. For $k = 0$ and a point $p$, $[\![p]\!]$ is as before.
+\end{definition}
+
+For smooth $f$ this is $[\![E]\!](f^*\omega)$ with $[\![E]\!] = \lambda\llcorner E \wedge e_1 \wedge \cdots \wedge e_k$, so it agrees with Definition~\ref{currents:definition-push-forward}. The integrand is bounded by
+$\|\omega\|_\infty\,Jf(y)$, with $Jf = |\partial_1f \wedge \cdots \wedge \partial_kf|$ the Jacobian of Definition~\ref{geometric-measure-theory:definition-jacobian}, so
+$\mathbf{M}(f_\#[\![E]\!]) \leq \int_EJf \leq \operatorname{Lip}(f)^k\lambda(E)$; if $f$ is injective on $E$, the area formula shows that this is $\mathcal{H}^k(f(E))$ counted once.
+
+\begin{proposition}\label{currents:proposition-lipschitz-curve}
+For a Lipschitz curve $\gamma \colon [a, b] \to \RR^n$ (extended to $\RR$ as a Lipschitz map), $\partial\gamma_\#[\![a, b]\!] = [\![\gamma(b)]\!] - [\![\gamma(a)]\!]$.
+\end{proposition}
+
+\begin{proof}
+For $f \in C^\infty_c(\RR^n)$, $\gamma_\#[\![a, b]\!](df) = \int_a^bdf(\gamma(t))(\gamma^{\prime}(t))\,dt = \int_a^b(f \circ \gamma)^{\prime}(t)\,dt$, by the chain rule at the points where $\gamma$ is differentiable. The function
+$f \circ \gamma$ is Lipschitz, hence absolutely continuous, and the integral is $f(\gamma(b)) - f(\gamma(a))$ by Theorem~\ref{lebesgue-differentiation:theorem-absolutely-continuous}.
+\end{proof}
+
+\begin{definition}\label{currents:definition-integral-current}
+A $k$-current $T$ on $\RR^n$, $k \geq 1$, is \emph{integer-multiplicity rectifiable} (or simply \emph{rectifiable}) if
+\[
+T = \sum_{j=1}^\infty m_j\,f_{j\#}[\![E_j]\!] \qquad \text{with } m_j \in \ZZ,\ \ \sum_j|m_j|\int_{E_j}Jf_j\,d\lambda < \infty,
+\]
+for bounded Borel sets $E_j \subseteq \RR^k$ and Lipschitz maps $f_j$; the series converges in mass. A rectifiable $0$-current is a sum $\sum_jm_j[\![p_j]\!]$ with $\sum_j|m_j| < \infty$. An \emph{integral current} is a
+rectifiable current $T$ with compact support such that $\partial T$ is also rectifiable (for $k = 0$, every rectifiable $0$-current with compact support and finitely many points).
+\end{definition}
+
+\begin{example}\label{currents:example-integral-currents}
+\begin{enumerate}
+\item Compact oriented $C^1$ submanifolds with boundary, with integer multiplicities, are integral currents: they are covered by finitely many charts, and $\partial[\![M]\!] = [\![\partial M]\!]$.
+\item \emph{Polyhedral chains}, integer combinations of oriented simplices, are integral currents; their boundaries are computed as in simplicial homology.
+\item By Proposition~\ref{currents:proposition-lipschitz-curve}, $\gamma_\#[\![a, b]\!]$ is an integral current for every Lipschitz curve.
+\item The current $T = \lambda^2\llcorner[0, 1]^2 \wedge e_1$ is normal: $\partial T(f) = \int_{[0, 1]^2}\partial_1f\,d\lambda^2 = \int_0^1(f(1, y) - f(0, y))\,dy$, so $\partial T$ is the difference of the
+length measures of the right and left sides, of mass $2$. But it is not rectifiable: its mass measure $\lambda^2\llcorner[0, 1]^2$ is $2$-dimensional, while the mass measure of a rectifiable $1$-current is
+carried by a countably $1$-rectifiable set, which is $\lambda^2$-null.
+\end{enumerate}
+\end{example}
+
+The cone over a rectifiable current with support in $\overline{B}(0, R)$ is rectifiable. For $T = f_\#[\![E]\!]$ with $f(E) \subseteq \overline{B}(0, R)$, the map $G(t, y) = tf(y)$ is Lipschitz on $[0, 1] \times E$; written out as in
+Corollary~\ref{de-rham:corollary-explicit-poincare}, the cone operator gives $KF^*\omega(x)(v_1, \ldots, v_k) = \int_0^1\omega(tx)(x, tv_1, \ldots, tv_k)\,dt$, and Fubini's theorem shows
+$0 \mathbin{\times\!\!\!\!\times} T = G_\#[\![[0, 1] \times E]\!]$, with $JG(t, y) = |f(y) \wedge t\partial_1f \wedge \cdots \wedge t\partial_kf| \leq R\,Jf(y)$. Summing over the pieces, the cone over a rectifiable current is rectifiable. So by Corollary~\ref{currents:corollary-cone}, an integral $(k-1)$-cycle with compact
+support, $k \geq 2$, bounds an integral $k$-current.
+
+The two deep theorems of the subject are the following; their proofs, based on the deformation theorem, which approximates normal currents by polyhedral chains on a cubical grid, take many pages, and we
+refer to \cite{federer-fleming-1960} and \cite[4.2]{federer-gmt}, \cite[Chapter 6]{simon-gmt}.
+
+\begin{theorem}[Boundary rectifiability]\label{currents:theorem-boundary-rectifiability}
+If $T$ is a rectifiable $k$-current with compact support and $\mathbf{M}(\partial T) < \infty$, then $\partial T$ is rectifiable; so $T$ is an integral current.
+\end{theorem}
+
+\begin{theorem}[Federer--Fleming compactness theorem]\label{currents:theorem-federer-fleming}
+Let $T_j$ be integral $k$-currents in $\RR^n$ with supports in a fixed compact set and $\sup_j\mathbf{N}(T_j) < \infty$. Then a subsequence converges weakly to an integral current.
+\end{theorem}
+
+By Corollary~\ref{currents:corollary-normal-compactness} a subsequence converges to a normal current; the content of the theorem is that integrality survives in the limit. Example~\ref{currents:example-mass-drop}
+shows that mass may drop, and Exercise~\ref{currents:exercise-boundary-bound} that the bound on the boundary masses cannot be omitted.
+
+\section{Plateau's problem and calibrations}\label{currents:section-plateau}
+
+\begin{theorem}[Existence of mass-minimising integral currents]\label{currents:theorem-plateau}
+Let $C \subseteq \RR^n$ be a compact convex set, $k \geq 1$, and $B$ an integral $(k-1)$-current with $\operatorname{supp}B \subseteq C$, with $\partial B = 0$ if $k \geq 2$ and $B(1) = 0$ if $k = 1$. Then among the integral
+$k$-currents $T$ with $\partial T = B$ and $\operatorname{supp}T \subseteq C$ there is one of least mass.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: the class is nonempty.} Translate so that $0 \in C$. By Corollary~\ref{currents:corollary-cone} and the remarks after Example~\ref{currents:example-integral-currents}, the cone $0 \mathbin{\times\!\!\!\!\times} B$ is an
+integral current with boundary $B$ (for $k = 1$ this uses $B(1) = 0$), supported in $C$ by convexity.
+
+\emph{Step 2: a minimising sequence.} Let $m$ be the infimum of the masses in the class, and $T_j$ in the class with $\mathbf{M}(T_j) \to m$. Then $\mathbf{N}(T_j) = \mathbf{M}(T_j) + \mathbf{M}(B)$ is bounded, and the supports lie in
+$C$. By Theorem~\ref{currents:theorem-federer-fleming} a subsequence converges weakly to an integral current $T$.
+
+\emph{Step 3: the limit is admissible and minimal.} $\partial T = \lim\partial T_j = B$, $\operatorname{supp}T \subseteq C$ (as in Corollary~\ref{currents:corollary-normal-compactness}), and
+$\mathbf{M}(T) \leq \liminf\mathbf{M}(T_j) = m$ by Proposition~\ref{currents:proposition-mass-lsc}. So $\mathbf{M}(T) = m$.
+\end{proof}
+
+The constraint $\operatorname{supp}T \subseteq C$ is harmless: the nearest-point projection onto $C$ is $1$-Lipschitz and does not increase mass, so a minimiser in $C$ minimises among all integral currents with
+boundary $B$ \cite{federer-gmt}. The theorem solves Plateau's problem in every dimension and codimension, at the price of a weak notion of surface; the \emph{regularity theory} then shows that the
+minimiser is a smooth submanifold away from a small singular set. For hypersurfaces, $k = n - 1$, the interior singular set has Hausdorff dimension at most $n - 8$ \cite{simon-gmt}, and the bound is sharp
+because the cone over $S^3 \times S^3 \subseteq \RR^8$ (Simons' cone) minimises area \cite{bombieri-de-giorgi-giusti-1969}.
+
+How does one recognise a minimiser? Calibrations give a simple sufficient condition.
+
+\begin{definition}\label{currents:definition-calibration}
+A \emph{calibration} on $U$ is a smooth closed $k$-form $\varphi$ with $\|\varphi(x)\| \leq 1$ for all $x \in U$. A current $T$ of locally finite mass is \emph{calibrated} by $\varphi$ if $\langle\varphi(x), \vec{T}(x)\rangle = 1$ for
+$\|T\|$-almost every $x$.
+\end{definition}
+
+\begin{theorem}[Calibrated currents minimise mass]\label{currents:theorem-calibration}
+Let $k \geq 1$, $\varphi$ a calibration on $\RR^n$, and $T$ a $k$-current with compact support and finite mass, calibrated by $\varphi$. Then $\mathbf{M}(T) \leq \mathbf{M}(S)$ for every $k$-current $S$ with compact support and
+$\partial S = \partial T$.
+\end{theorem}
+
+\begin{proof}
+$S - T$ is a cycle with compact support, so $S - T = \partial R$ with $R = 0 \mathbin{\times\!\!\!\!\times}(S - T)$, by Corollary~\ref{currents:corollary-cone}. Since $d\varphi = 0$, $(S - T)(\varphi) = R(d\varphi) = 0$, where $\varphi$ is replaced by $\chi\varphi$ for a cutoff $\chi$ equal to $1$ near the supports, which does not change the
+values. Hence
+\[
+\mathbf{M}(T) = \int\langle\varphi, \vec{T}\rangle\,d\|T\| = T(\varphi) = S(\varphi) \leq \mathbf{M}(S)\|\varphi\|_\infty \leq \mathbf{M}(S). \qedhere
+\]
+\end{proof}
+
+\begin{example}\label{currents:example-calibrations}
+\begin{enumerate}
+\item (\emph{Flat discs.}) The constant form $\varphi = dx^1 \wedge \cdots \wedge dx^k$ has comass $1$ and is closed. For a bounded open set $D \subseteq \RR^k \times \{0\}$ with smooth boundary, $[\![D]\!]$ is
+calibrated by $\varphi$. So a flat piece of a $k$-plane has the least mass among all currents with the same boundary: no surface, however twisted, spanning $\partial D$ has smaller area.
+\item (\emph{Complex curves in $\CC^2$.}) On $\RR^4 = \CC^2$ the K\"ahler form $\omega = dx^1 \wedge dx^2 + dx^3 \wedge dx^4$ has comass $1$, with $\omega(u, v) = 1$ for orthonormal $u, v$ exactly when $v = Ju$
+(Example~\ref{multilinear-algebra:example-comass}(2)), that is, on the complex lines. A complex curve, such as the graph $\Sigma = \{(z, f(z)) : |z| \leq 1\}$ of a holomorphic function $f$, has complex tangent
+lines, so with its complex orientation $[\![\Sigma]\!]$ is calibrated by $\omega$, and it minimises area among all surfaces with the same boundary. For $f(z) = z^2$ the boundary is the curve
+$t \mapsto (e^{it}, e^{2it})$ on the torus $|z| = |w| = 1$.
+\item (\emph{Minimal graphs.}) The area-minimising property of minimal graphs (Section~\ref{riemannian-geometry:section-minimal}) is a calibration argument: the calibrating form is $\iota_\nu(dx^1 \wedge \cdots \wedge dx^{n+1})$,
+extended from the graph by translation in the vertical direction, and it is closed because the graph is minimal.
+\end{enumerate}
+\end{example}
+
+Harvey and Lawson developed calibrated geometries systematically: special Lagrangian, associative, coassociative and Cayley calibrations on manifolds with special holonomy \cite{joyce-special-holonomy}.
+On a K\"ahler manifold, $\omega^p/p!$ calibrates the complex submanifolds of dimension $p$ (the Wirtinger inequality, Chapter~\ref{kahler}).
+
+\section{Exercises}\label{currents:section-exercises}
+
+\begin{exercise}\label{currents:exercise-boundary-point}
+Show that a $0$-current $T$ of finite mass with compact support satisfies $T = \partial S$ for some $1$-current $S$ with compact support if and only if $T(1) = 0$. Interpret the condition for
+$T = \sum_im_i[\![p_i]\!]$.
+\end{exercise}
+
+\begin{solution}
+If $T = \partial S$, then $T(1) = T(\chi) = S(d\chi) = 0$ for a cutoff $\chi$ equal to $1$ near the supports, as $d\chi = 0$ near $\operatorname{supp}S$. Conversely, if $T(1) = 0$, Corollary~\ref{currents:corollary-cone}
+gives $\partial(0 \mathbin{\times\!\!\!\!\times} T) = T - T(1)[\![0]\!] = T$. For $T = \sum_im_i[\![p_i]\!]$ the condition is $\sum_im_i = 0$: the points can be joined in pairs, with signs, by segments.
+\end{solution}
+
+\begin{exercise}\label{currents:exercise-boundary-bound}
+For $j \geq 1$ let $T_j = \sum_{i=1}^{j}[\![\{i/j\} \times [0, 1/j]]\!]$, the sum of $j$ vertical segments of length $1/j$ oriented upwards, an integral $1$-current in $\RR^2$. Compute $\mathbf{M}(T_j)$ and
+$\mathbf{M}(\partial T_j)$. Show that $T_j \rightharpoonup T = \mathcal{H}^1\llcorner([0, 1] \times \{0\}) \wedge e_2$, and that $\partial T$ does not have finite mass, so that $T$ is not an integral current. Why does this not
+contradict Theorem~\ref{currents:theorem-federer-fleming}?
+\end{exercise}
+
+\begin{solution}
+$\mathbf{M}(T_j) = j \cdot \frac1j = 1$, and $\partial T_j = \sum_i([\![(i/j, 1/j)]\!] - [\![(i/j, 0)]\!])$ has mass $2j$. For $\omega = \omega_1dx + \omega_2dy$,
+$T_j(\omega) = \sum_{i=1}^j\int_0^{1/j}\omega_2(i/j, t)\,dt$, and each term differs from $\frac1j\omega_2(i/j, 0)$ by at most $j^{-2}\sup|\partial_2\omega_2|$. So
+$T_j(\omega) = \frac1j\sum_{i=1}^j\omega_2(i/j, 0) + O(1/j)$, a Riemann sum plus an error, which tends to $\int_0^1\omega_2(x, 0)\,dx = T(\omega)$. Now $\partial T(f) = \int_0^1\partial_2f(x, 0)\,dx$. Take
+$f_N(x, y) = \phi(x)\psi(y)\sin(Ny)$ with $\phi, \psi \in C^\infty_c(\RR)$, $0 \leq \phi, \psi \leq 1$, $\phi = 1$ on $[0, 1]$ and $\psi = 1$ near $0$: then $|f_N| \leq 1$ and $\partial T(f_N) = N$, so
+$\mathbf{M}(\partial T) = \infty$. There is no contradiction, because $\mathbf{M}(\partial T_j) = 2j$ is unbounded: in the limit the vertical segments, whose lengths tend to $0$ while their number grows, leave a
+current oriented perpendicularly to its support.
+\end{solution}
+
+\begin{exercise}\label{currents:exercise-homotopy-segment}
+Let $T = [\![0, 1]\!] \times \{0\}$ in $\RR^2$ and $F(x, t) = x + te_2$. Show that the homotopy current $F_\#([\![0, 1]\!] \times T)$ is $\pm[\![[0, 1]^2]\!]$, and check the homotopy formula of
+Proposition~\ref{currents:proposition-homotopy-formula} against the boundary of the oriented square.
+\end{exercise}
+
+\begin{solution}
+For $\omega = g\,dx^1 \wedge dx^2$, $F^*\omega = g(x + te_2)\,dx^1 \wedge (dx^2 + dt)$, whose $dt$-part is $dt \wedge \beta_t$ with $\beta_t = -g(x + te_2)\,dx^1$ (as $dx^1 \wedge dt = -dt \wedge dx^1$). So
+$KF^*\omega = -\int_0^1g(x + te_2)\,dt\,dx^1$ and $T(KF^*\omega) = -\int_0^1\int_0^1g(x, t)\,dt\,dx = -[\![[0, 1]^2]\!](\omega)$ with the standard orientation. The homotopy formula reads
+$\partial(-[\![[0, 1]^2]\!]) = F_{1\#}T - T - h(\partial T)$, where $F_{1\#}T$ is the top side oriented to the right and $h(\partial T) = h([\![(1, 0)]\!] - [\![(0, 0)]\!])$ is the difference of the right and left sides oriented
+upwards. Indeed $\partial[\![[0, 1]^2]\!]$ is the bottom side to the right, the right side up, the top side to the left and the left side down, which is $T + h(\partial T) - F_{1\#}T$.
+\end{solution}
+
