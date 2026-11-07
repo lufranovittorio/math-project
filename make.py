@@ -399,6 +399,13 @@ def check_tags(project):
         if label not in seen_labels:
             project.warnings.append(f"label '{label}' has no tag yet (run: python make.py tags)")
     for tag, label in pairs:
+        # "alias:<label>": the tag of an item that was merged into another
+        # one (for instance the introduction of a chapter merged into an
+        # earlier chapter); its page leads to <label>.
+        if label.startswith("alias:"):
+            if label[len("alias:"):] not in project.labels:
+                project.warnings.append(f"tag {tag} is an alias of '{label[6:]}', which does not exist")
+            continue
         if label not in project.labels:
             project.warnings.append(
                 f"tag {tag} points to '{label}', which no longer exists "
@@ -1062,6 +1069,7 @@ def postprocess_html(project):
     tag_dir.mkdir(exist_ok=True)
     rows = []
     for tag, label in read_tags():
+        label = label.removeprefix("alias:")
         page = locations.get(label)
         if page is None:
             continue
