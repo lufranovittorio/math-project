@@ -85,10 +85,22 @@ counterexamples, exercises with solutions, citations for quoted results.
 - Chapters are the major areas; prefer new *sections* inside an existing chapter to new
   chapters. Do not add chapters just because a topic was named as an example (varifolds, knot
   theory): coverage must be balanced and comprehensive. To do:
-  - review the chapter list and merge thin chapters into bigger ones with many sections. Slugs
-    are permanent, so a merge means moving labels and editing their lines in `tags/tags`;
-  - candidate: merge `currents` and `varifolds` into a single chapter (or into the GMT
-    material) instead of two chapters;
+  - ~~merge thin adjacent chapters~~ (done 2026-11-07: 126 → 92 chapters). Each absorbed
+    chapter became a run of sections in the chapter before it; labels `guest:x` became
+    `host:x`, the chapter label became `host:section-guest`, and the old introduction tags
+    are `alias:` lines in `tags/tags`. Merged: spectral sequences and derived categories
+    into homological-algebra; singular cohomology into singular-homology; sheaf cohomology
+    into sheaves; the stochastic-process outlines into martingales; class groups and
+    cyclotomic fields into algebraic-number-theory; class field theory into local-fields;
+    dynamical systems into the ODE chapter; elliptic and evolution PDE into sobolev-spaces;
+    the numerical outlines into numerical-analysis; LP and nonlinear optimisation into
+    convex-analysis; varifolds into currents; holomorphic bundles and Dolbeault into
+    complex-manifolds; the Hodge decomposition and the Lefschetz theorems into kahler;
+    coherent sheaves and cohomology into schemes; abelian varieties into algebraic-groups;
+    cycle class and index theorems into intersection-theory; Mumford–Tate into
+    hodge-structures; Lefschetz (1,1) into hodge-conjecture; intermediate Jacobians into
+    vhs; failures into known-cases; the Tate and standard conjectures into absolute-hodge.
+    Still possible: cohomology-operations, calabi-yau, gaga, the small topology chapters;
   - knot theory: not a chapter of its own unless needed. It could be part of a
     low-dimensional topology chapter (surfaces, knots, 3-manifolds), with all topics of the
     area, not only knots.

@@ -13,7 +13,7 @@ Chapter~\ref{elliptic-operators} provides.
 
 The consequences drawn here are the Hodge decomposition of the space of forms (with the Helmholtz decomposition of vector fields on a torus as a concrete instance), Poincar\'e duality via the
 Hodge star, the conformal invariance of harmonic $1$-forms on surfaces, the Poincar\'e inequality, and Bochner's vanishing theorem, with a complete proof of the Bochner--Weitzenb\"ock formula on
-$1$-forms; the complex analogue is in Chapter~\ref{hodge-decomposition}. References: \cite[Chapter 6]{warner-foundations}, \cite[Chapter 4]{wells-differential-analysis},
+$1$-forms; the complex analogue is in Chapter~\ref{kahler}. References: \cite[Chapter 6]{warner-foundations}, \cite[Chapter 4]{wells-differential-analysis},
 \cite[Chapter 0]{griffiths-harris}, \cite[Chapter 5]{voisin-hodge-1}.
 
 \noindent\textbf{Prerequisites.} Chapter~\ref{elliptic-operators} (Elliptic Operators on Compact Manifolds) and
@@ -140,7 +140,7 @@ all classes.
 
 \begin{remark}\label{hodge-theorem:remark-dependence-on-metric}
 The space $\mathcal{H}^k$ depends on the metric, but its dimension does not, and the isomorphism of Theorem~\ref{hodge-theorem:theorem-hodge} identifies all of them with $H^k_{\mathrm{dR}}(M)$. This is the
-mechanism that produces the Hodge structures of Chapter~\ref{hodge-decomposition}: on a compact K\"ahler manifold the harmonic forms decompose by type, and the resulting decomposition of cohomology is
+mechanism that produces the Hodge structures of Chapter~\ref{kahler}: on a compact K\"ahler manifold the harmonic forms decompose by type, and the resulting decomposition of cohomology is
 independent of the metric, although the harmonic representatives are not (Exercise~\ref{hodge-theorem:exercise-harmonic-not-metric-independent}).
 \end{remark}
 
@@ -162,7 +162,7 @@ $\omega^1$ and $\omega^2$, hence on all $1$-forms. On a compact surface a $1$-fo
 For a compact Riemann surface, with any metric compatible with its complex structure, $*$ on $1$-forms is determined by the complex structure ($*\,dx = dy$ and $*\,dy = -dx$ in a holomorphic coordinate
 $z = x + iy$), and a real $1$-form $\alpha = a\,dx + b\,dy$ is harmonic exactly when $\alpha + i{*}\alpha = (a - ib)\,dz$ is a holomorphic $1$-form (the Cauchy--Riemann equations for $a - ib$ are
 $a_y = b_x$ and $a_x + b_y = 0$, that is, $d\alpha = 0$ and $d{*}\alpha = 0$); this identifies $\mathcal{H}^1$ with the real parts of holomorphic $1$-forms, and is the
-case of curves of the Hodge decomposition $H^1 = H^{1,0} \oplus H^{0,1}$ (Chapter~\ref{hodge-decomposition}).
+case of curves of the Hodge decomposition $H^1 = H^{1,0} \oplus H^{0,1}$ (Chapter~\ref{kahler}).
 
 \begin{proposition}\label{hodge-theorem:proposition-lie-group-harmonic}
 Let $G$ be a compact connected Lie group with a bi-invariant Riemannian metric (Example~\ref{riemannian-geometry:example-metrics}) and an orientation. Then the harmonic forms on $G$ are exactly the bi-invariant forms.
@@ -319,7 +319,7 @@ $\mathrm{Ric}(\partial_\theta, \partial_\theta) = 0$ is exactly what the proof r
 \begin{remark}\label{hodge-theorem:remark-elliptic-complexes}
 The proof of Theorem~\ref{hodge-theorem:theorem-decomposition} used only that $(\Omega^\bullet, d)$ is a complex of sections of vector bundles whose Laplacian is elliptic: an \emph{elliptic complex}. The same
 argument applies verbatim to any elliptic complex, in particular to the Dolbeault complex $(\Omega^{p,\bullet}, \bar\partial)$ on a compact complex manifold, giving the isomorphism between Dolbeault
-cohomology and $\bar\partial$-harmonic forms (Chapter~\ref{dolbeault}), which is how the Hodge decomposition of Chapter~\ref{hodge-decomposition} is proved. There is also a proof of the Hodge theorem by the
+cohomology and $\bar\partial$-harmonic forms (Chapter~\ref{complex-manifolds}), which is how the Hodge decomposition of Chapter~\ref{kahler} is proved. There is also a proof of the Hodge theorem by the
 heat equation, which constructs the harmonic projection as $\lim_{t \to \infty}e^{-t\Delta}$ and yields the local index formula \cite{lawson-michelsohn}; for functions this limit is computed in
 Exercise~\ref{elliptic-operators:exercise-heat-equation}.
 \end{remark}

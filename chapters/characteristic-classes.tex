@@ -209,7 +209,7 @@ sequences of bundles split topologically (Proposition~\ref{vector-bundles:propos
 On $\CC\PP^1$ let $h \in H^2(\CC\PP^1; \ZZ)$ be the positive generator, so $\int h = 1$ and $h^2 = 0$. Then $c_1(\mathcal{O}(k)) = kh$, $\mathrm{ch}(\mathcal{O}(k)) = e^{kh} = 1 + kh$, and
 $T\CC\PP^1 \cong \mathcal{O}(2)$ has $\mathrm{td}(T\CC\PP^1) = 1 + \frac12c_1 = 1 + h$. The Riemann--Roch formula (Remark~\ref{characteristic-classes:remark-signature}) then predicts
 $\chi(\CC\PP^1, \mathcal{O}(k)) = \int(1 + kh)(1 + h) = k + 1$, which is the number of homogeneous polynomials of degree $k$ in two variables when $k \geq 0$, the dimension of
-the space of holomorphic sections of $\mathcal{O}(k)$ (Chapter~\ref{holomorphic-bundles}).
+the space of holomorphic sections of $\mathcal{O}(k)$ (Chapter~\ref{complex-manifolds}).
 \end{example}
 
 \section{The Thom isomorphism in de Rham cohomology}\label{characteristic-classes:section-thom}
@@ -356,7 +356,7 @@ characteristic classes determined by the same axioms with $\ZZ/2$ coefficients; 
 \begin{remark}\label{characteristic-classes:remark-signature}
 Hirzebruch's signature theorem expresses the signature of a compact oriented $4m$-manifold (Definition~\ref{poincare-duality:definition-intersection-form}) as $\int_ML(p_1, \ldots, p_m)$ for a universal
 polynomial in the Pontryagin classes, and the Riemann--Roch--Hirzebruch theorem computes the holomorphic Euler characteristic of a holomorphic bundle on a compact complex manifold as
-$\int_X\mathrm{ch}(E)\,\mathrm{td}(TX)$ \cite{hirzebruch-topological}. Both are special cases of the Atiyah--Singer index theorem (Chapter~\ref{index-theorems}), and both are used in Chapter~\ref{kodaira} and
+$\int_X\mathrm{ch}(E)\,\mathrm{td}(TX)$ \cite{hirzebruch-topological}. Both are special cases of the Atiyah--Singer index theorem (Chapter~\ref{intersection-theory}), and both are used in Chapter~\ref{kodaira} and
 Chapter~\ref{intersection-theory}.
 \end{remark}
 
@@ -369,7 +369,7 @@ Theorem~\ref{cohomology-operations:theorem-representability}.
 
 \begin{example}\label{characteristic-classes:example-algebraic-chern}
 On a smooth projective complex variety, the Chern classes of an algebraic vector bundle are algebraic cycle classes, hence Hodge classes; for a line bundle, $c_1(L)$ is the class of a divisor
-(Chapter~\ref{divisors}), and the Lefschetz theorem on $(1,1)$-classes (Chapter~\ref{lefschetz-11}) says conversely that every integral $(1,1)$-class is of this form. This is the case $p = 1$ of the Hodge
+(Chapter~\ref{divisors}), and the Lefschetz theorem on $(1,1)$-classes (Chapter~\ref{hodge-conjecture}) says conversely that every integral $(1,1)$-class is of this form. This is the case $p = 1$ of the Hodge
 conjecture, and it is the only case known in general.
 \end{example}
 
@@ -822,7 +822,7 @@ Let $M$ be a closed smooth $n$-manifold. Then $w(TM) = \mathrm{Sq}(v)$, that is,
 Choose a basis $(b_j)$ of $H^*(M)$ and the dual basis $(b_j^\#)$ for the cup pairing, $\langle b_j \smile b_l^\#, [M]\rangle = \delta_{jl}$
 (Corollary~\ref{poincare-duality:corollary-cup-pairing}); then every $y \in H^*(M)$ is $y = \sum_j\langle y \smile b_j, [M]\rangle\,b_j^\#$. We quote two
 geometric facts \cite[Chapter 11]{milnor-stasheff}, which are the omitted verifications. First, the class $U = \sum_jb_j \times b_j^\# \in H^n(M \times M)$
-(K\"unneth, Theorem~\ref{singular-cohomology:theorem-kunneth}) is the Poincar\'e dual of the diagonal. Second, a tubular neighbourhood of the diagonal is
+(K\"unneth, Theorem~\ref{singular-homology:theorem-kunneth}) is the Poincar\'e dual of the diagonal. Second, a tubular neighbourhood of the diagonal is
 isomorphic to $TM$, and under this isomorphism and excision $U$ corresponds to the Thom class of $TM$; with
 Theorem~\ref{characteristic-classes:theorem-stiefel-whitney-thom}(2) this gives $\mathrm{Sq}(U) = (1 \times w(TM)) \smile U$.
 

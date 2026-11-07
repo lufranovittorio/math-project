@@ -10,7 +10,7 @@ and governed by $H^{n-1,1}$, and they are the setting of mirror symmetry. Ellipt
 compute the Hodge numbers of the quintic threefold completely (Proposition~\ref{calabi-yau:proposition-quintic}). References: \cite{gross-huybrechts-joyce},
 \cite[Chapter 6]{joyce-special-holonomy}, \cite{yau-1978}, \cite{beauville-1983}.
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{kodaira} (Vanishing and Embedding Theorems), Chapter~\ref{lefschetz-theorems} (Hard Lefschetz and the
+\noindent\textbf{Prerequisites.} Chapter~\ref{kodaira} (Vanishing and Embedding Theorems), Section~\ref{kahler:section-lefschetz-theorems} (Hard Lefschetz and the
 Hodge--Riemann Relations) and Chapter~\ref{characteristic-classes} (Characteristic Classes).
 
 Throughout, $X$ is a compact K\"ahler manifold of dimension $n$ with K\"ahler form $\omega = \frac{i}{2}\sum h_{j\bar k}dz^j \wedge d\bar z^k$ in local holomorphic
@@ -36,7 +36,7 @@ the metric induced by $\omega$. Hence
 
 \begin{proof}
 In a holomorphic chart, $e = \partial_1 \wedge \cdots \wedge \partial_n$ is a holomorphic frame of $K_X^{-1}$ whose norm for the induced metric is $|e|^2 = \det(g(\partial_j, \bar\partial_k)) = 2^{-n}\det(h_{j\bar k})$.
-So the local weight is $\varphi = -\log\det(h_{j\bar k}) + n\log 2$, and by Theorem~\ref{holomorphic-bundles:theorem-chern-connection} the curvature is
+So the local weight is $\varphi = -\log\det(h_{j\bar k}) + n\log 2$, and by Theorem~\ref{complex-manifolds:theorem-chern-connection} the curvature is
 $F = \partial\bar\partial\varphi = -\partial\bar\partial\log\det(h_{j\bar k})$, with $c_1(K_X^{-1}) = [\frac{i}{2\pi}F] = [\frac{1}{2\pi}\mathrm{Ric}(\omega)]$. This also shows that
 $\mathrm{Ric}(\omega)$ is independent of the chart: under a change of coordinates, $\det(h_{j\bar k})$ is multiplied by $|J|^2$ with $J$ the holomorphic Jacobian determinant, and
 $\partial\bar\partial\log|J|^2 = 0$. It is real and closed as a curvature form of a line bundle.
@@ -69,7 +69,7 @@ $\int_X(e^F - 1)\omega^n = 0$. A K\"ahler form $\omega' = \omega + i\partial\bar
 
 \begin{proof}
 $\rho$ and $\mathrm{Ric}(\omega)$ are cohomologous closed real $(1,1)$-forms, so $\rho = \mathrm{Ric}(\omega) - i\partial\bar\partial F$ by
-Corollary~\ref{hodge-decomposition:corollary-ddbar-real}, and adding a constant to $F$ achieves the normalisation. Every K\"ahler form in $[\omega]$ is
+Corollary~\ref{kahler:corollary-ddbar-real}, and adding a constant to $F$ achieves the normalisation. Every K\"ahler form in $[\omega]$ is
 $\omega + i\partial\bar\partial\varphi$ for a real $\varphi$, by the same corollary. The ratio of volume forms $\omega'^n/\omega^n = \det(h'_{j\bar k})/\det(h_{j\bar k})$ is a
 positive function, so $\mathrm{Ric}(\omega') - \mathrm{Ric}(\omega) = -i\partial\bar\partial\log(\omega'^n/\omega^n)$. Hence $\mathrm{Ric}(\omega') = \rho$ if and only if
 $i\partial\bar\partial(\log(\omega'^n/\omega^n) - F) = 0$, if and only if $\log(\omega'^n/\omega^n) = F + c$ with $c$ constant (a real function with $\partial\bar\partial u = 0$
@@ -104,7 +104,7 @@ $\Lambda^pT^{1,0}X \cong \Omega^{n-p}_X$. Hence $H^1(X, T_X) \cong H^{n-1,1}(X)$
 \end{proposition}
 
 \begin{proof}
-(1) $c_1(X) = -c_1(K_X) = 0$, and $h^{n,q} = h^q(X, K_X) = h^q(X, \mathcal{O}_X) = h^{0,q}$ (Theorem~\ref{hodge-decomposition:theorem-hodge-decomposition}(4)). For $q = 0$ this is
+(1) $c_1(X) = -c_1(K_X) = 0$, and $h^{n,q} = h^q(X, K_X) = h^q(X, \mathcal{O}_X) = h^{0,q}$ (Theorem~\ref{kahler:theorem-hodge-decomposition}(4)). For $q = 0$ this is
 $1$, and $h^{0,n} = h^{n,0}$ by Hodge symmetry. (2) At a point choose coordinates with $\Omega = f\,dz^1 \wedge \cdots \wedge dz^n$, $f \neq 0$. Then $\iota_{\partial_j}\Omega = (-1)^{j-1}f\,dz^1 \wedge \cdots \widehat{dz^j} \cdots \wedge dz^n$,
 and these form a basis of $\Omega^{n-1}$, so contraction is a holomorphic bundle isomorphism; the same computation with $\iota_{\partial_{j_1}} \cdots \iota_{\partial_{j_p}}$
 gives $\Lambda^pT^{1,0}X \cong \Omega^{n-p}_X$. By Dolbeault's theorem, $H^1(X, T_X) \cong H^1(X, \Omega^{n-1}) \cong H^{n-1,1}(X)$.
@@ -115,9 +115,9 @@ gives $\Lambda^pT^{1,0}X \cong \Omega^{n-p}_X$. By Dolbeault's theorem, $H^1(X, 
 \item Complex tori $\CC^n/\Lambda$, with $\Omega = dz^1 \wedge \cdots \wedge dz^n$ and the flat metric, which is Ricci-flat. They are not strict for $n \geq 2$.
 \item Elliptic curves are the Calabi--Yau manifolds of dimension $1$, since $K$ is trivial exactly in genus $1$.
 \item A \emph{K3 surface} is a strict Calabi--Yau surface, that is, $K_X \cong \mathcal{O}$ and $h^{1,0} = 0$. Smooth quartic surfaces in $\CC\PP^3$ are K3 surfaces
-(Example~\ref{hodge-decomposition:example-quartic}).
+(Example~\ref{kahler:example-quartic}).
 \item A smooth hypersurface of degree $n + 2$ in $\CC\PP^{n+1}$ has trivial canonical bundle by adjunction, $K = \mathcal{O}(n + 2 - n - 2) = \mathcal{O}$
-(Proposition~\ref{holomorphic-bundles:proposition-adjunction}), and for $n \geq 2$ it is strict by the Lefschetz hyperplane theorem
+(Proposition~\ref{complex-manifolds:proposition-adjunction}), and for $n \geq 2$ it is strict by the Lefschetz hyperplane theorem
 (Theorem~\ref{kodaira:theorem-lefschetz-hyperplane}), since $h^{p,0}(X) = h^{p,0}(\CC\PP^{n+1}) = 0$ for $0 < p < n$.
 \item Products of Calabi--Yau manifolds are Calabi--Yau, with $\Omega = \mathrm{pr}_1^*\Omega_1 \wedge \mathrm{pr}_2^*\Omega_2$; they are not strict.
 \end{enumerate}
@@ -137,7 +137,7 @@ so $h^{1,1} = b_2 - 2h^{2,0} = 1$. By Poincar\'e duality $b_4 = 1$ and $b_5 = 0$
 $\chi(X) = 1 + 1 - b_3 + 1 + 1 = 2 - 2h^{2,1}$.
 
 We compute $\chi(X) = \int_Xc_3(TX)$ (Theorem~\ref{characteristic-classes:theorem-euler}). Let $h$ be the hyperplane class. The tangent bundle of $\CC\PP^4$ has total Chern class $(1 + h)^5$
-(Example~\ref{characteristic-classes:example-tautological}). The normal bundle of $X$ is $\mathcal{O}(X)|_X = \mathcal{O}(5)|_X$ (Proposition~\ref{holomorphic-bundles:proposition-adjunction}),
+(Example~\ref{characteristic-classes:example-tautological}). The normal bundle of $X$ is $\mathcal{O}(X)|_X = \mathcal{O}(5)|_X$ (Proposition~\ref{complex-manifolds:proposition-adjunction}),
 with $c = 1 + 5h$. From $0 \to TX \to T\CC\PP^4|_X \to N \to 0$ and the Whitney formula,
 \[
 c(TX) = \frac{(1 + h)^5}{1 + 5h} = (1 + 5h + 10h^2 + 10h^3)(1 - 5h + 25h^2 - 125h^3) = 1 + 10h^2 - 40h^3
@@ -171,7 +171,7 @@ These five are all the possibilities with every $d_i \geq 2$.
 \end{proposition}
 
 \begin{proof}
-Write $X_j = V(f_1, \ldots, f_j)$, so that $X_j \subseteq X_{j-1}$ is a smooth hypersurface cut out by a section of $\mathcal{O}(d_j)$. By adjunction (Proposition~\ref{holomorphic-bundles:proposition-adjunction}) applied
+Write $X_j = V(f_1, \ldots, f_j)$, so that $X_j \subseteq X_{j-1}$ is a smooth hypersurface cut out by a section of $\mathcal{O}(d_j)$. By adjunction (Proposition~\ref{complex-manifolds:proposition-adjunction}) applied
 $r$ times, $K_X = \mathcal{O}(\sum_id_i - 4 - r)|_X = \mathcal{O}_X$. By the Lefschetz hyperplane theorem (Theorem~\ref{kodaira:theorem-lefschetz-hyperplane}) applied to each $X_j \subseteq X_{j-1}$, $H^k(X) \cong H^k(\CC\PP^{3+r})$
 for $k < 3$ (with $\QQ$-coefficients); so $b_1 = 0$ and $b_2 = 1 = 2h^{2,0} + h^{1,1}$, and since $h^{1,1} \geq 1$ (the K\"ahler class is nonzero,
 Proposition~\ref{kahler:proposition-kahler-class-powers}), $h^{1,0} = h^{2,0} = 0$ and $h^{1,1} = 1$, which makes $X$ strict. As in the proof of Proposition~\ref{calabi-yau:proposition-quintic}, $b_4 = 1$, $b_3 = 2 + 2h^{2,1}$ and
@@ -214,7 +214,7 @@ numbers of rational curves on the quintic \cite{candelas-1991} was a starting po
 
 \begin{remark}\label{calabi-yau:remark-hodge-conjecture}
 For projective Calabi--Yau manifolds the Hodge conjecture is known in some degrees. On any projective threefold it holds in all degrees, by the Lefschetz $(1,1)$-theorem
-in degree $2$ and hard Lefschetz in degree $4$ (Chapter~\ref{lefschetz-11}); the interesting group $H^3$ carries no Hodge classes, being of odd degree. For K3 surfaces it holds
+in degree $2$ and hard Lefschetz in degree $4$ (Chapter~\ref{hodge-conjecture}); the interesting group $H^3$ carries no Hodge classes, being of odd degree. For K3 surfaces it holds
 in all degrees (Chapter~\ref{known-cases}). For higher-dimensional hyperk\"ahler varieties it is largely open.
 \end{remark}
 

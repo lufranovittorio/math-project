@@ -1,6 +1,8 @@
-\chapter{Convex Analysis}\label{convex-analysis}
+\chapter{Convex Analysis and Optimisation}\label{convex-analysis}
 \chapterstatus{planned}
 
+
+\section{Convex Analysis}\label{convex-analysis:section-convex-analysis}
 Convex sets and convex functions in $\RR^n$ and in normed spaces: separation, duality and Fenchel
 conjugation.
 
@@ -12,5 +14,35 @@ conjugation.
 \item Separation and supporting hyperplanes; polar sets, cones.
 \item Convex functions: continuity, subdifferentials, Fenchel conjugates and the Fenchel--Moreau theorem.
 \item Lagrangian duality, Slater's condition.
+\item Exercises with solutions.
+\end{enumerate}
+
+\section{Linear Programming}\label{convex-analysis:section-linear-programming}
+Optimising a linear function over a polyhedron: the geometry of polyhedra, the simplex method and
+duality.
+
+\noindent\textbf{Prerequisites.} Section~\ref{convex-analysis:section-convex-analysis}.
+
+\noindent\textbf{Planned contents.}
+\begin{enumerate}
+\item Polyhedra, vertices, the Minkowski--Weyl theorem.
+\item Farkas' lemma revisited; strong duality and complementary slackness.
+\item The simplex method, degeneracy, Bland's rule.
+\item Integrality: totally unimodular matrices, network flows.
+\item Interior point methods and the ellipsoid method (introduction).
+\item Exercises with solutions.
+\end{enumerate}
+
+\section{Nonlinear Optimisation}\label{convex-analysis:section-nonlinear-optimisation}
+Optimality conditions and algorithms for smooth and convex optimisation.
+
+\noindent\textbf{Prerequisites.} Section~\ref{convex-analysis:section-convex-analysis} and Chapter~\ref{numerical-analysis} (Numerical Analysis).
+
+\noindent\textbf{Planned contents.}
+\begin{enumerate}
+\item First- and second-order conditions; Lagrange multipliers and KKT revisited, constraint qualifications.
+\item Gradient descent, line search, convergence rates for convex and strongly convex functions.
+\item Newton and quasi-Newton methods.
+\item Constrained methods: projection, penalties, augmented Lagrangian.
 \item Exercises with solutions.
 \end{enumerate}

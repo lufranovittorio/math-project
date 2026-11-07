@@ -8,7 +8,7 @@ $H^k(M; R) \cong H_{n-k}(M; R)$ (Theorem~\ref{poincare-duality:theorem-poincare-
 oriented submanifold, or a complex subvariety, of dimension $d$ into a cohomology class of degree $n - d$, and it makes the cup
 product pairing between complementary degrees nondegenerate. We follow \cite[Section 3.3]{hatcher-at}.
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{singular-cohomology} (Singular Cohomology).
+\noindent\textbf{Prerequisites.} Section~\ref{singular-homology:section-singular-cohomology} (Singular Cohomology).
 
 For a space $X$ and $A \subseteq X$ we write $H_i(X \mid A; R) = H_i(X, X \setminus A; R)$ and $H^i(X \mid A; R) = H^i(X, X \setminus A; R)$, and
 $H_i(X \mid x)$ for $A = \{x\}$.
@@ -195,7 +195,7 @@ Compactly supported cohomology is not a homotopy invariant.
 \begin{definition}\label{poincare-duality:definition-duality-map}
 Let $M$ be an $R$-oriented $n$-manifold. For compact $K$ let $\mu_K \in H_n(M \mid K; R)$ be the class of Lemma~\ref{poincare-duality:lemma-compact-sets} restricting to the
 orientation. For $K \subseteq L$, $\mu_L$ restricts to $\mu_K$, and naturality of the cap product
-$H_n(M \mid K) \times H^k(M \mid K) \to H_{n-k}(M)$ (Proposition~\ref{singular-cohomology:proposition-cap}) shows that the maps $\varphi \mapsto \mu_K \frown \varphi$ are compatible.
+$H_n(M \mid K) \times H^k(M \mid K) \to H_{n-k}(M)$ (Proposition~\ref{singular-homology:proposition-cap}) shows that the maps $\varphi \mapsto \mu_K \frown \varphi$ are compatible.
 They induce the \emph{duality map} $D_M \colon H^k_c(M; R) \to H_{n-k}(M; R)$. If $M$ is closed, $D_M(\varphi) = [M] \frown \varphi$.
 \end{definition}
 
@@ -241,7 +241,7 @@ so $D_M = \colim_i D_{U_i}$ is an isomorphism.
 compact set $\Delta^{m-1} \times D_1 \times \cdots \times D_m$ under $(t, x) \mapsto \sum_j t_jx_j$, hence a compact convex subset of $U$ containing $K$. So compact convex sets $C$ are
 cofinal, and for $x \in C$ the restriction $H^k(U \mid C) \to H^k(U \mid x)$ is an isomorphism (excise to $\RR^n$ and argue as in Step 2 of the proof of
 Lemma~\ref{poincare-duality:lemma-compact-sets}). Hence $H^k_c(U)$ is $0$ for $k \neq n$, and so is $H_{n-k}(U)$, as $U$ is contractible. For $k = n$, $H^n(U \mid C) \cong \Hom(H_n(U \mid C; \ZZ), R)$
-by universal coefficients, and the composite of $D_U$ with the augmentation $H_0(U) \cong R$ sends $\varphi$ to $\varphi(\mu_C)$ by Proposition~\ref{singular-cohomology:proposition-cap}(3)
+by universal coefficients, and the composite of $D_U$ with the augmentation $H_0(U) \cong R$ sends $\varphi$ to $\varphi(\mu_C)$ by Proposition~\ref{singular-homology:proposition-cap}(3)
 (with $\psi = 1$). Since $\mu_C$ is a unit times the image of a generator of $H_n(U \mid C; \ZZ) \cong \ZZ$, this is an isomorphism.
 
 \emph{(D) $M = U \subseteq \RR^n$ open.} Finite unions of convex open sets satisfy duality by (C) and (A), by induction on the number of sets, since
@@ -259,7 +259,7 @@ finite-dimensional (which is always the case \cite[Appendix]{hatcher-at}).
 \end{corollary}
 
 \begin{proof}
-By Proposition~\ref{singular-cohomology:proposition-cap}(3), $\langle \alpha \smile \beta, [M] \rangle = \langle \beta, [M] \frown \alpha \rangle$. By the universal coefficient
+By Proposition~\ref{singular-homology:proposition-cap}(3), $\langle \alpha \smile \beta, [M] \rangle = \langle \beta, [M] \frown \alpha \rangle$. By the universal coefficient
 theorem over a field, $H^{n-k}(M; F) = \Hom_F(H_{n-k}(M; F), F)$, so $\langle \alpha \smile -, [M] \rangle$ is the functional ``evaluate on $[M] \frown \alpha$'' on this dual space. Since
 $\alpha \mapsto [M] \frown \alpha$ is injective, and a nonzero vector is detected by the dual space, the map is injective; for finite dimensions it is bijective by counting
 dimensions.
@@ -279,7 +279,7 @@ $\dim H_i(M; \mathbb{F}_2) = \dim H^{n-i}(M; \mathbb{F}_2) = \dim H_{n-i}(M; \ma
 
 \begin{definition}\label{poincare-duality:definition-intersection-form}
 Let $M$ be a closed oriented manifold of dimension $4m$. The \emph{intersection form} is the symmetric bilinear form $Q(\alpha, \beta) = \langle \alpha \smile \beta, [M] \rangle$ on
-$H^{2m}(M; \RR)$; it is nondegenerate by Corollary~\ref{poincare-duality:corollary-cup-pairing}, and symmetric by Theorem~\ref{singular-cohomology:theorem-graded-commutative}. Its
+$H^{2m}(M; \RR)$; it is nondegenerate by Corollary~\ref{poincare-duality:corollary-cup-pairing}, and symmetric by Theorem~\ref{singular-homology:theorem-graded-commutative}. Its
 \emph{signature} $\sigma(M)$ is the number of positive minus the number of negative eigenvalues. On the free group $H^{2m}(M; \ZZ)/\mathrm{torsion}$ the integral form is
 unimodular (determinant $\pm 1$) \cite[Proposition 3.38]{hatcher-at}. In dimension $4m + 2$ the form on $H^{2m+1}$ is skew-symmetric and nondegenerate.
 \end{definition}
@@ -287,14 +287,14 @@ unimodular (determinant $\pm 1$) \cite[Proposition 3.38]{hatcher-at}. In dimensi
 \begin{example}\label{poincare-duality:example-intersection-forms}
 \begin{enumerate}
 \item For $\CC\PP^2$ with the orientation for which $\langle \alpha^2, [\CC\PP^2]\rangle = 1$, $Q = (1)$ and $\sigma = 1$. For $S^2 \times S^2$, in the basis $a, b$ of
-Example~\ref{singular-cohomology:example-torus}, $Q = \left(\begin{smallmatrix} 0 & 1 \\ 1 & 0 \end{smallmatrix}\right)$ and $\sigma = 0$. The connected sum
+Example~\ref{singular-homology:example-torus}, $Q = \left(\begin{smallmatrix} 0 & 1 \\ 1 & 0 \end{smallmatrix}\right)$ and $\sigma = 0$. The connected sum
 $\CC\PP^2 \# \overline{\CC\PP^2}$ (with reversed orientation on the second summand) has the same Betti numbers as $S^2 \times S^2$, but its integral form is
 $\operatorname{diag}(1, -1)$, which takes odd values, whereas the form of $S^2 \times S^2$ takes only even values on the diagonal; so the forms are not isomorphic over $\ZZ$
 and the two manifolds are not homotopy equivalent (Counterexample~\ref{poincare-duality:counterexample-four-manifolds}).
 \item (Cohomology of $\CC\PP^n$ via duality.) The inclusion $\CC\PP^{n-1} \to \CC\PP^n$ is an isomorphism on $H^i$ for $i \leq 2n - 2$ by cellular cohomology. By induction on $n$,
 $\alpha^{n-1}$ generates $H^{2n-2}(\CC\PP^n)$. Since $\CC\PP^n$ is a closed simply connected manifold (Example~\ref{homotopy:example-projective-cells}), it is orientable, and by unimodularity of the pairing
 $H^2 \times H^{2n-2} \to H^{2n} \cong \ZZ$ between free groups of rank $1$, $\alpha \smile \alpha^{n-1}$ generates $H^{2n}$. This proves the part of
-Theorem~\ref{singular-cohomology:theorem-projective-spaces} about $\CC\PP^n$; the argument for $\RR\PP^n$ with $\mathbb{F}_2$-coefficients is the same.
+Theorem~\ref{singular-homology:theorem-projective-spaces} about $\CC\PP^n$; the argument for $\RR\PP^n$ with $\mathbb{F}_2$-coefficients is the same.
 \end{enumerate}
 \end{example}
 
@@ -312,7 +312,7 @@ simply connected, so $\pi_1(N) = 1$ by Corollary~\ref{homotopy:corollary-spheres
 $N \to N/S^3 = \CC\PP^2 \vee \overline{\CC\PP^2}$ which, by the long exact sequence of the pair $(N, S^3)$ and $\tilde{H}^k(S^3) = 0$ for $k \leq 2$, is an isomorphism
 on $H^k$ for $k \leq 2$; on $H^4$ it sends the generator of each summand (the class pairing to $1$ with its fundamental class) to the generator of
 $H^4(N; \ZZ)$, since the collapse map has degree one on each summand. In the wedge the product of classes from different summands vanishes
-(Example~\ref{singular-cohomology:example-wedge-ring}). This gives the form $\operatorname{diag}(1, -1)$ on $H^2(N; \ZZ) \cong \ZZ^2$.
+(Example~\ref{singular-homology:example-wedge-ring}). This gives the form $\operatorname{diag}(1, -1)$ on $H^2(N; \ZZ) \cong \ZZ^2$.
 \item \emph{Not homotopy equivalent.} A homotopy equivalence $f \colon N \to M$ induces an isomorphism of cohomology rings, which is $\pm 1$ on
 $H^4 \cong \ZZ$; so $f^*$ would identify the integral intersection form of $M$ with $\pm$ that of $N$. But $Q_M(x, x) = 2pq$ is even for every
 $x = pa + qb \in H^2(M; \ZZ)$, while $Q_N(e, e) = \pm 1$ for the generator $e$ coming from $\CC\PP^2$.
@@ -376,7 +376,7 @@ These isomorphisms produce cohomology classes from subspaces. If $N \subseteq M$
 ``dimension'' $d$ with a fundamental class $[N] \in H^{BM}_d(N; R)$), its image under $H^{BM}_d(N) \cong H^{n-d}(M, M \setminus N) \to H^{n-d}(M)$ is the \emph{cohomology class of $N$}.
 When $N$ and $M$ are compact it is the Poincar\'e dual of $i_*[N] \in H_d(M)$. A complex subvariety $Z$ of complex dimension $d$ of a complex manifold of dimension $m$ has a
 fundamental class in $H^{BM}_{2d}(Z; \ZZ)$ because its singular locus has real codimension at least $2$; this gives the \emph{cycle class} $[Z] \in H^{2m-2d}(X; \ZZ)$ of
-Chapter~\ref{cycle-class}, and the Hodge conjecture asks which rational classes are combinations of such $[Z]$. Under these identifications, cup product corresponds to
+Chapter~\ref{intersection-theory}, and the Hodge conjecture asks which rational classes are combinations of such $[Z]$. Under these identifications, cup product corresponds to
 intersection of cycles meeting transversally.
 \end{remark}
 

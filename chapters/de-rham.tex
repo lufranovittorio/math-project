@@ -12,7 +12,7 @@ H^k_{\mathrm{dR}}(M) = \frac{\{\text{closed } k\text{-forms}\}}{\{\text{exact } 
 \]
 The de Rham theorem (Theorem~\ref{de-rham:theorem-de-rham}) says that this analytic invariant is the singular cohomology of $M$ with real coefficients, a topological invariant.
 This is the bridge between analysis and topology on which Hodge theory is built: the Hodge theorem selects a canonical harmonic representative in each de Rham class
-(Chapter~\ref{hodge-theorem}), and on a complex manifold the type decomposition of harmonic forms gives the Hodge decomposition (Chapter~\ref{hodge-decomposition}).
+(Chapter~\ref{hodge-theorem}), and on a complex manifold the type decomposition of harmonic forms gives the Hodge decomposition (Chapter~\ref{kahler}).
 
 The chapter goes as follows.
 \begin{enumerate}
@@ -27,7 +27,7 @@ angle form as a current with $d(\frac{1}{2\pi}T_\omega) = [0]$, the fact that cu
 \end{enumerate}
 References: \cite{bott-tu}, \cite{warner-foundations}, \cite[Chapter 0]{griffiths-harris}.
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{differential-forms} (Differential Forms and Integration), Chapter~\ref{sheaf-cohomology}
+\noindent\textbf{Prerequisites.} Chapter~\ref{differential-forms} (Differential Forms and Integration), Section~\ref{sheaves:section-sheaf-cohomology}
 (Sheaf Cohomology), Chapter~\ref{poincare-duality} (Topological Manifolds and Poincar\'e Duality) and Chapter~\ref{distributions}
 (Distributions and Sobolev Spaces).
 
@@ -220,10 +220,10 @@ Let $\underline{\Omega}^k$ be the sheaf $U \mapsto \Omega^k(U)$. The sequence of
 \]
 is exact: exactness at $\underline{\Omega}^0$ is Proposition~\ref{de-rham:proposition-h0}, and exactness at $\underline{\Omega}^k$ for $k \geq 1$ holds on stalks, because every point has a basis of convex
 coordinate neighbourhoods, on which closed forms are exact by the Poincar\'e lemma (Theorem~\ref{de-rham:theorem-homotopy-invariance}). Each $\underline{\Omega}^k$ is a module over the sheaf of smooth
-functions, hence fine, hence acyclic on the paracompact space $M$ (Example~\ref{sheaf-cohomology:example-fine} and
-Theorem~\ref{sheaf-cohomology:theorem-soft-acyclic}). So this is an acyclic resolution of $\RR_M$ and
-Proposition~\ref{sheaf-cohomology:proposition-hypercohomology}(3) gives $H^k(M, \RR_M) \cong H^k(\Gamma(M, \underline{\Omega}^\bullet)) = H^k_{\mathrm{dR}}(M)$. The second isomorphism is
-Theorem~\ref{sheaf-cohomology:theorem-singular-comparison}, since manifolds are locally contractible and paracompact, and it is compatible with products. The description by integration over smooth simplices
+functions, hence fine, hence acyclic on the paracompact space $M$ (Example~\ref{sheaves:example-fine} and
+Theorem~\ref{sheaves:theorem-soft-acyclic}). So this is an acyclic resolution of $\RR_M$ and
+Proposition~\ref{sheaves:proposition-hypercohomology}(3) gives $H^k(M, \RR_M) \cong H^k(\Gamma(M, \underline{\Omega}^\bullet)) = H^k_{\mathrm{dR}}(M)$. The second isomorphism is
+Theorem~\ref{sheaves:theorem-singular-comparison}, since manifolds are locally contractible and paracompact, and it is compatible with products. The description by integration over smooth simplices
 is the standard comparison of the two resolutions; see \cite[Chapter 5]{warner-foundations} or \cite[Chapter III]{bredon-sheaf}.
 \end{proof}
 
@@ -259,7 +259,7 @@ $1$-form is exact if and only if all its periods vanish.
 
 \begin{proof}
 Compose the isomorphism $H^1_{\mathrm{dR}}(M) \cong H^1(M; \RR)$ of Theorem~\ref{de-rham:theorem-de-rham}, given by integration over smooth simplices, with $H^1(M; \RR) \cong \Hom_\RR(H_1(M; \RR), \RR) = \Hom(H_1(M), \RR)$
-(Theorem~\ref{singular-cohomology:theorem-universal-coefficients} over the field $\RR$) and with $\Hom(H_1(M), \RR) \cong \Hom(\pi_1(M, x_0), \RR)$, which holds by the Hurewicz theorem
+(Theorem~\ref{singular-homology:theorem-universal-coefficients} over the field $\RR$) and with $\Hom(H_1(M), \RR) \cong \Hom(\pi_1(M, x_0), \RR)$, which holds by the Hurewicz theorem
 (Theorem~\ref{singular-homology:theorem-hurewicz}) because homomorphisms to the abelian group $\RR$ factor through the abelianisation. The composite is the period map.
 
 The last statement can also be seen directly. If $\omega = df$, then $\int_\gamma\omega = f(\gamma(1)) - f(\gamma(0)) = 0$ for loops. Conversely, if all periods vanish, $f(x) = \int_{x_0}^x\omega$ along any piecewise smooth path is
@@ -325,7 +325,7 @@ $\RR \oplus \RR[d\theta]$, which is the exterior algebra because $d\theta \wedge
 \emph{De Rham cohomology is a vector space, and it does not see torsion.} The spaces $\Omega^k(M)$ are real vector spaces and $d$ is $\RR$-linear, so $H^k_{\mathrm{dR}}(M)$ is a real vector space, not just an abelian group.
 When it is finite-dimensional, for instance for compact $M$ (Corollary~\ref{de-rham:corollary-consequences}), a choice of basis gives $H^k_{\mathrm{dR}}(M) \cong \RR^{b_k}$, and the only invariant left is the dimension.
 A real vector space has no torsion: $mv = 0$ with $m \neq 0$ forces $v = m^{-1}(mv) = 0$. Integer phenomena are therefore lost. By Theorem~\ref{de-rham:theorem-de-rham} and the universal coefficient theorem
-(Theorem~\ref{singular-cohomology:theorem-universal-coefficients}) over the field $\RR$,
+(Theorem~\ref{singular-homology:theorem-universal-coefficients}) over the field $\RR$,
 \[
 H^k_{\mathrm{dR}}(M) \cong H^k(M; \RR) \cong \Hom(H_k(M), \RR),
 \]
@@ -333,7 +333,7 @@ and $\Hom(\ZZ/m\ZZ, \RR) = 0$, since the image of a generator $x$ would satisfy 
 forgets $T$. For example (Examples~\ref{de-rham:example-spheres} and~\ref{de-rham:example-real-projective}), $S^3$ and $\RR\PP^3$ have the same de Rham cohomology, $\RR$ in degrees $0$ and $3$, although
 $H_1(\RR\PP^3) \cong \ZZ/2\ZZ$ while $H_1(S^3) = 0$; and the Klein bottle has $H_1 \cong \ZZ \oplus \ZZ/2\ZZ$ (Exercise~\ref{singular-homology:exercise-klein-bottle}) and $H^1_{\mathrm{dR}} \cong \RR$
 (Example~\ref{de-rham:example-dimension-counting}(2)). To see torsion one needs integer coefficients, singular or \v{C}ech cohomology with values in $\ZZ$. This matters for the Hodge conjecture: its rational form only
-concerns $H^{2p}(X; \QQ)$, while torsion classes in $H^{2p}(X; \ZZ)$ are responsible for the first counterexamples to the integral version (Chapter~\ref{failures}).
+concerns $H^{2p}(X; \QQ)$, while torsion classes in $H^{2p}(X; \ZZ)$ are responsible for the first counterexamples to the integral version (Chapter~\ref{known-cases}).
 \end{remark}
 
 Because the groups are vector spaces, computations can be done by counting dimensions. The basic tool is the following.
@@ -682,12 +682,12 @@ represents the Poincar\'e dual of $Z$.
 
 \begin{remark}\label{de-rham:remark-cycle-classes}
 Currents are the natural home for the cycle classes of Hodge theory: an analytic subvariety $Z$ of a compact complex manifold, possibly singular, defines a current of integration because its singular locus
-has measure zero and $\int_{Z_{\mathrm{reg}}}\varphi$ converges (Chapter~\ref{cycle-class}); its class in $H^{2n-2k}(X; \ZZ)$ is the cycle class whose Hodge-theoretic characterisation the Hodge conjecture
+has measure zero and $\int_{Z_{\mathrm{reg}}}\varphi$ converges (Chapter~\ref{intersection-theory}); its class in $H^{2n-2k}(X; \ZZ)$ is the cycle class whose Hodge-theoretic characterisation the Hodge conjecture
 concerns.
 \end{remark}
 
 \begin{remark}\label{de-rham:remark-complex-currents}
-On a complex manifold of complex dimension $n$, complex-valued currents split by type, as forms do (Chapter~\ref{dolbeault}): a current of \emph{bidegree} $(p, q)$ is evaluated on forms of type
+On a complex manifold of complex dimension $n$, complex-valued currents split by type, as forms do (Chapter~\ref{complex-manifolds}): a current of \emph{bidegree} $(p, q)$ is evaluated on forms of type
 $(n - p, n - q)$, and $d = \partial + \bar\partial$ on currents. The current of integration over a complex submanifold of complex codimension $p$ has bidegree $(p, p)$, because a form of type
 $(a, b)$ with $a \neq b$ restricts to zero on a complex manifold of dimension $\frac{a+b}{2}$; it is moreover \emph{positive}, a notion modelled on the positivity of the volume form of a complex
 submanifold. Lelong's theorem says that integration over the regular part of a possibly singular subvariety is a closed positive current, and the \emph{Poincar\'e--Lelong formula}
@@ -727,7 +727,7 @@ Compute $H^\bullet_{\mathrm{dR}}(T^n)$ and show that it is the exterior algebra 
 \end{exercise}
 
 \begin{solution}
-By Theorem~\ref{de-rham:theorem-de-rham} and Example~\ref{singular-cohomology:example-torus}, $H^\bullet_{\mathrm{dR}}(T^n) \cong \Lambda^\bullet\RR^n$. The classes of the closed forms $d\theta^i$, which are
+By Theorem~\ref{de-rham:theorem-de-rham} and Example~\ref{singular-homology:example-torus}, $H^\bullet_{\mathrm{dR}}(T^n) \cong \Lambda^\bullet\RR^n$. The classes of the closed forms $d\theta^i$, which are
 not exact since $\int_{S^1_i}d\theta^i = 2\pi$, generate: their products are the $\binom{n}{k}$ linearly independent classes of $d\theta^{i_1} \wedge \cdots \wedge d\theta^{i_k}$, which can be detected by
 integration over the corresponding subtori.
 \end{solution}

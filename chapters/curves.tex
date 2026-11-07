@@ -7,7 +7,7 @@ Curves are the one-dimensional case, in which almost everything can be computed.
 compact Riemann surfaces (Theorem~\ref{curves:theorem-riemann-surfaces}). The Riemann--Roch theorem (Theorem~\ref{curves:theorem-riemann-roch})
 computes dimensions of spaces of sections, and from it follow the classification of curves of genus $0$ and $1$, the Riemann--Hurwitz formula, and the
 theory of the canonical embedding. The Jacobian of a curve is the first nontrivial example of a Hodge structure that is not of Tate type, and its theory
-(Abel--Jacobi) leads to the abelian varieties of Chapter~\ref{abelian-varieties} and the intermediate Jacobians of Chapter~\ref{intermediate-jacobians}.
+(Abel--Jacobi) leads to the abelian varieties of Chapter~\ref{algebraic-groups} and the intermediate Jacobians of Chapter~\ref{vhs}.
 References: \cite[Chapter IV]{hartshorne-ag}, \cite[Chapter 2]{griffiths-harris}.
 
 \noindent\textbf{Prerequisites.} Chapter~\ref{gaga} (Analytic Spaces and GAGA).
@@ -83,13 +83,13 @@ $g(X) = h^1(X, \mathcal{O}_X) = h^0(X, \omega_X)$.
 \begin{proof}
 A compact Riemann surface is K\"ahler with $H^{2,0} = 0$, hence projective (Corollary~\ref{kodaira:corollary-h20-zero}), hence of the form $X^{\mathrm{an}}$
 (Corollary~\ref{gaga:corollary-consequences}); full faithfulness is also part of that corollary. By GAGA and the Hodge decomposition
-(Example~\ref{hodge-decomposition:example-curves}), $b_1(X^{\mathrm{an}})/2 = h^{0,1} = h^1(X, \mathcal{O}_X) = h^{1,0} = h^0(X, \omega_X)$.
+(Example~\ref{kahler:example-curves}), $b_1(X^{\mathrm{an}})/2 = h^{0,1} = h^1(X, \mathcal{O}_X) = h^{1,0} = h^0(X, \omega_X)$.
 \end{proof}
 
 \section{The Riemann--Roch theorem}\label{curves:section-riemann-roch}
 
 \begin{definition}\label{curves:definition-genus}
-The \emph{genus} of a curve is $g = h^1(X, \mathcal{O}_X)$. By Serre duality (Theorem~\ref{coherent-cohomology:theorem-serre-duality}) also $g = h^0(X, \omega_X) = l(K)$.
+The \emph{genus} of a curve is $g = h^1(X, \mathcal{O}_X)$. By Serre duality (Theorem~\ref{schemes:theorem-serre-duality}) also $g = h^0(X, \omega_X) = l(K)$.
 \end{definition}
 
 \begin{theorem}[Riemann--Roch]\label{curves:theorem-riemann-roch}
@@ -100,7 +100,7 @@ l(D) - l(K - D) = \deg D + 1 - g .
 \end{theorem}
 
 \begin{proof}
-First, $\chi(\mathcal{O}(D)) = \deg D + 1 - g$. This holds for $D = 0$, since $h^0(\mathcal{O}_X) = 1$ (Corollary~\ref{coherent-cohomology:corollary-finite-dimensional}) and
+First, $\chi(\mathcal{O}(D)) = \deg D + 1 - g$. This holds for $D = 0$, since $h^0(\mathcal{O}_X) = 1$ (Corollary~\ref{schemes:corollary-finite-dimensional}) and
 $h^1 = g$. For a point $P$, the sequence $0 \to \mathcal{O}(D) \to \mathcal{O}(D + P) \to k(P) \to 0$, where $k(P)$ is the skyscraper sheaf at $P$, gives
 $\chi(\mathcal{O}(D + P)) = \chi(\mathcal{O}(D)) + 1$. Both sides of the formula change by $1$ when a point is added or removed, and every divisor is reached from $0$ this way. Second,
 $h^1(\mathcal{O}(D)) = h^0(\omega \otimes \mathcal{O}(-D)) = l(K - D)$ by Serre duality.
@@ -122,7 +122,7 @@ $\deg D - 1 > 2g - 2$, so $P$ is not a base point. Similarly $l(D - P - Q) = l(D
 separates points and tangent vectors, and $D$ is very ample by Proposition~\ref{divisors:proposition-closed-immersion-criterion}. (4) If $g = 0$, then $l(P) = 2$ by (2), and a
 nonconstant $f \in \Gamma(\mathcal{O}(P))$ has a single simple pole, so $[K(X) : k(f)] = 1$ by Corollary~\ref{curves:corollary-degree-principal}, and $X \cong \PP^1$ by
 Theorem~\ref{curves:theorem-function-fields}. On $\PP^1$ all points are linearly equivalent. Conversely, if $P \sim Q$ with $P \neq Q$, then $l(P) \geq 2$, and as before
-$X \cong \PP^1$, which has $g = h^1(\mathcal{O}_{\PP^1}) = 0$ (Corollary~\ref{coherent-cohomology:corollary-p1}).
+$X \cong \PP^1$, which has $g = h^1(\mathcal{O}_{\PP^1}) = 0$ (Corollary~\ref{schemes:corollary-p1}).
 \end{proof}
 
 \begin{example}\label{curves:example-elliptic}
@@ -156,7 +156,7 @@ $\deg(f^*\omega) = n\deg(\omega) + \sum_P(e_P - 1)$.
 \item A \emph{hyperelliptic} curve $y^2 = h(x)$, with $h$ a polynomial of degree $2g + 1$ or $2g + 2$ without repeated roots (characteristic $\neq 2$), has a degree-$2$ map to
 $\PP^1$ branched at the $2g + 2$ roots of $h$ (and $\infty$ if $\deg h$ is odd). Riemann--Hurwitz gives $2g(X) - 2 = 2(-2) + 2g + 2$, so $g(X) = g$.
 \item For the Fermat curve $x^d + y^d = z^d$ and the projection $[x : y : z] \mapsto [x : z]$ of degree $d$, the ramification points are the $d$ points with $y = 0$, each with $e = d$.
-So $2g - 2 = -2d + d(d - 1)$, and $g = (d-1)(d-2)/2$, as for every plane curve of degree $d$ (Example~\ref{coherent-cohomology:example-hilbert-polynomials}).
+So $2g - 2 = -2d + d(d - 1)$, and $g = (d-1)(d-2)/2$, as for every plane curve of degree $d$ (Example~\ref{schemes:example-hilbert-polynomials}).
 \item Over $\CC$, Riemann--Hurwitz is the Euler characteristic computation $\chi(X) = n\chi(Y) - \sum(e_P - 1)$ for a branched covering of surfaces.
 \end{enumerate}
 \end{example}
@@ -201,7 +201,7 @@ $g^1_2$.
 \end{proof}
 
 \begin{example}\label{curves:example-canonical}
-A nonsingular plane quartic has genus $3$ and $\omega \cong \mathcal{O}(1)$ (Exercise~\ref{coherent-sheaves:exercise-canonical-curves}), so the plane embedding is the canonical
+A nonsingular plane quartic has genus $3$ and $\omega \cong \mathcal{O}(1)$ (Exercise~\ref{schemes:exercise-canonical-curves}), so the plane embedding is the canonical
 embedding, and plane quartics are not hyperelliptic. Conversely every non-hyperelliptic curve of genus $3$ is canonically a plane quartic, since its canonical image
 in $\PP^2$ is a curve of degree $\deg K = 4$.
 \end{example}
@@ -220,9 +220,9 @@ $\Pic^0(X^{\mathrm{an}}) \cong H^1(X, \mathcal{O})/H^1(X; \ZZ) \cong J(X)$ as co
 \end{proposition}
 
 \begin{proof}
-Holomorphic $1$-forms are closed (Proposition~\ref{hodge-decomposition:proposition-holomorphic-forms}), so the integrals depend only on homology classes. By the Hodge
-decomposition, $H^1(X; \RR) \to H^{0,1} \cong H^1(X, \mathcal{O})$ is an isomorphism of real vector spaces (Exercise~\ref{hodge-decomposition:exercise-h1-real}), so the image of
-$H^1(X; \ZZ)$ is a lattice in the $g$-dimensional complex space $H^1(X, \mathcal{O})$, and by Theorem~\ref{holomorphic-bundles:theorem-exponential}(2),
+Holomorphic $1$-forms are closed (Proposition~\ref{kahler:proposition-holomorphic-forms}), so the integrals depend only on homology classes. By the Hodge
+decomposition, $H^1(X; \RR) \to H^{0,1} \cong H^1(X, \mathcal{O})$ is an isomorphism of real vector spaces (Exercise~\ref{kahler:exercise-h1-real}), so the image of
+$H^1(X; \ZZ)$ is a lattice in the $g$-dimensional complex space $H^1(X, \mathcal{O})$, and by Theorem~\ref{complex-manifolds:theorem-exponential}(2),
 $\Pic^0(X^{\mathrm{an}}) \cong H^1(X, \mathcal{O})/H^1(X; \ZZ)$. Serre duality identifies $H^1(X, \mathcal{O})$ with $H^0(X, \Omega^1)^\vee$ via $(\alpha, \omega) \mapsto \int_X\alpha \wedge \omega$ for a
 Dolbeault representative $\alpha$, and Poincar\'e duality identifies $H^1(X; \ZZ)$ with $H_1(X; \ZZ)$. Under these identifications, the class of a closed real $1$-form
 $\eta$ Poincar\'e dual to $\gamma$ is sent to $\omega \mapsto \int_X\eta^{0,1} \wedge \omega = \int_X\eta \wedge \omega = \int_\gamma\omega$, since $\eta^{1,0} \wedge \omega = 0$ for type
@@ -250,8 +250,8 @@ periods are integral \cite[Chapter 2, Section 2]{griffiths-harris}.
 
 \begin{remark}\label{curves:remark-jacobian-hodge}
 The Jacobian is determined by the weight-one Hodge structure $H^1(X; \ZZ)$ with $H^1(X; \CC) = H^{1,0} \oplus H^{0,1}$, and it is polarised by the intersection form, which satisfies the
-Riemann bilinear relations (Example~\ref{lefschetz-theorems:example-curves-riemann}). So $J(X)$ is an abelian variety (Chapter~\ref{abelian-varieties}). By Torelli's
-theorem the polarised Jacobian determines $X$ \cite[Chapter 2, Section 7]{griffiths-harris}. Griffiths' intermediate Jacobians (Chapter~\ref{intermediate-jacobians}) generalise
+Riemann bilinear relations (Example~\ref{kahler:example-curves-riemann}). So $J(X)$ is an abelian variety (Chapter~\ref{algebraic-groups}). By Torelli's
+theorem the polarised Jacobian determines $X$ \cite[Chapter 2, Section 7]{griffiths-harris}. Griffiths' intermediate Jacobians (Chapter~\ref{vhs}) generalise
 this construction to higher-dimensional varieties.
 \end{remark}
 

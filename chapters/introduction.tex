@@ -33,11 +33,11 @@ conjecture says that on a smooth complex projective variety $X$ every rational
 cohomology class of type $(p,p)$ is a rational linear combination of the
 classes of algebraic subvarieties of $X$ (Chapter~\ref{hodge-conjecture}).
 Each word of this statement hides a substantial theory: rational cohomology
-classes come from algebraic topology (Chapter~\ref{singular-cohomology}), the
+classes come from algebraic topology (Chapter~\ref{singular-homology}), the
 type $(p,p)$ comes from the Hodge decomposition of a compact K\"ahler manifold
-(Chapter~\ref{hodge-decomposition}), which rests on the analysis of elliptic
+(Chapter~\ref{kahler}), which rests on the analysis of elliptic
 operators (Chapter~\ref{elliptic-operators}), and the classes of subvarieties
-come from algebraic geometry (Chapters~\ref{varieties} and~\ref{cycle-class}).
+come from algebraic geometry (Chapters~\ref{varieties} and~\ref{intersection-theory}).
 This is why the parts on topology, analysis and geometry are, at present, the
 most developed, and why the route to the Hodge conjecture is the most detailed
 of the reading paths of Section~\ref{introduction:section-path}. The other
@@ -152,7 +152,7 @@ Part~\ref{part-algebraic-number-theory}, whose chapters form a sequence, and alg
 Part~\ref{part-arithmetic-geometry}.
 \item \emph{Discrete mathematics.} Chapters~\ref{groups} (actions, for counting orbits), \ref{rings} (polynomial rings, which formal power series generalise)
 and~\ref{linear-algebra} (for spectral graph theory), then Part~\ref{part-discrete-mathematics}. The probabilistic method uses only finite probability spaces, defined there.
-\item \emph{Topology and geometry.} Chapters~\ref{general-topology}, \ref{homotopy}, \ref{singular-homology} and~\ref{singular-cohomology}, then manifolds
+\item \emph{Topology and geometry.} Chapters~\ref{general-topology}, \ref{homotopy} and~\ref{singular-homology}, then manifolds
 (Chapters~\ref{topological-manifolds} and~\ref{smooth-manifolds}) and the rest of Part~\ref{part-differential-geometry}. Real analysis up to the inverse function theorem
 (Chapter~\ref{real-analysis}) is needed from smooth manifolds onwards.
 \item \emph{Analysis.} Chapters~\ref{real-analysis}, \ref{general-topology} (metric spaces, compactness and completeness), \ref{measure-theory}, \ref{lebesgue-differentiation},
@@ -161,7 +161,7 @@ and~\ref{linear-algebra} (for spectral graph theory), then Part~\ref{part-discre
 (Brunn--Minkowski and isoperimetric inequalities, Hausdorff measures and dimension, self-similar fractals, Rademacher's theorem, the area and coarea formulas, densities and rectifiable
 sets, Frostman's lemma and projections); its results on Lipschitz maps and rectifiable sets are used again on manifolds (Chapter~\ref{smooth-manifolds}). The path continues, after
 Chapters~\ref{multilinear-algebra} (exterior algebra and comass) and~\ref{de-rham} (forms, Stokes' theorem, de Rham currents), with Chapter~\ref{currents} (mass, normal and integral currents, Plateau's
-problem, calibrations) and Chapter~\ref{varifolds} (first variation and monotonicity).
+problem, calibrations; varifolds, first variation and monotonicity).
 \item \emph{Probability and statistics.} The analysis path up to Chapter~\ref{radon-measures} (measures, the integral, $L^p$ spaces, modes of convergence, independence and the
 Borel--Cantelli lemmas, Fubini's theorem in Chapter~\ref{measure-theory}, the Radon--Nikodym theorem in Chapter~\ref{lebesgue-differentiation}, uniform integrability in Chapter~\ref{signed-measures}, weak convergence of measures in
 Chapter~\ref{radon-measures}), Hilbert spaces from Chapter~\ref{functional-analysis} (conditional
@@ -181,7 +181,7 @@ Chapter~\ref{singular-homology} (for Nash equilibria); then Part~\ref{part-optim
 \subsection{The route to the Hodge conjecture}\label{introduction:subsection-direct-route}
 
 The route to the Hodge conjecture reads only what is needed to understand its statement and the one case that is proved in full, the Lefschetz $(1,1)$ theorem: it ends with
-Chapter~\ref{hodge-conjecture}, which states the conjecture, and Chapter~\ref{lefschetz-11}, which proves it for divisors. Within a chapter, the sections that the route
+Chapter~\ref{hodge-conjecture}, which states the conjecture and, in Section~\ref{hodge-conjecture:section-lefschetz-11}, proves it for divisors. Within a chapter, the sections that the route
 actually uses can be found by following references backwards from these two chapters; on the website, the dependency graph of a result shows them directly. A reader who
 skips a section and later meets a reference to it can go back. Part by part, the route is as follows.
 \begin{itemize}
@@ -206,9 +206,9 @@ Chapter~\ref{riemannian-geometry} and Chapter~\ref{symplectic-geometry} can be p
 \item \emph{Complex geometry.} Complex manifolds, holomorphic bundles, Dolbeault cohomology, K\"ahler manifolds, the Hodge decomposition, hard Lefschetz and the Hodge--Riemann
 relations, positive line bundles and the Kodaira theorems. Chapters~\ref{deformations} and~\ref{calabi-yau} are not needed.
 \item \emph{Algebraic geometry.} Varieties; schemes, mainly as a language; coherent sheaves and their cohomology; divisors and line bundles; GAGA, which makes smooth projective
-varieties into compact K\"ahler manifolds; algebraic cycles and the cycle class map. Chapters~\ref{curves}, \ref{abelian-varieties}, \ref{index-theorems}
+varieties into compact K\"ahler manifolds; algebraic cycles and the cycle class map. Chapters~\ref{curves}, \ref{algebraic-groups}, \ref{intersection-theory}
 and~\ref{etale-cohomology} are not needed; from Chapter~\ref{algebraic-groups} only the Deligne torus is used.
-\item \emph{Hodge theory.} The definitions of Chapter~\ref{hodge-structures}, then Chapters~\ref{hodge-conjecture} and~\ref{lefschetz-11}. The remaining chapters of the part are the
+\item \emph{Hodge theory.} The definitions of Chapter~\ref{hodge-structures}, then Chapter~\ref{hodge-conjecture}. The remaining chapters of the part are the
 surrounding theory, to be read afterwards.
 \end{itemize}
 
@@ -217,8 +217,8 @@ surrounding theory, to be read afterwards.
 Seen from above, the direct route has the following stages; everything else in the book supports them or grows out of them.
 \begin{enumerate}
 \item \emph{Cohomology.} Singular cohomology and Poincar\'e duality
-(Chapters~\ref{singular-cohomology} and~\ref{poincare-duality}), sheaf
-cohomology (Chapter~\ref{sheaf-cohomology}) and de Rham's theorem
+(Chapters~\ref{singular-homology} and~\ref{poincare-duality}), sheaf
+cohomology (Chapter~\ref{sheaves}) and de Rham's theorem
 (Chapter~\ref{de-rham}) give the rational cohomology of a manifold and its
 description by differential forms.
 \item \emph{Harmonic theory.} Elliptic operators
@@ -227,23 +227,23 @@ has a unique harmonic representative (Chapter~\ref{hodge-theorem}).
 \item \emph{K\"ahler geometry.} On a compact K\"ahler manifold
 (Chapter~\ref{kahler}) the Laplacian respects the bidegree of forms, which gives
 the Hodge decomposition $H^k = \bigoplus_{p+q=k}H^{p,q}$
-(Chapter~\ref{hodge-decomposition}), hard Lefschetz and the Hodge--Riemann
-relations (Chapter~\ref{lefschetz-theorems}).
+(Section~\ref{kahler:section-hodge-decomposition}), hard Lefschetz and the Hodge--Riemann
+relations (Section~\ref{kahler:section-lefschetz-theorems}).
 \item \emph{Algebraic geometry.} Projective varieties are K\"ahler, and GAGA
 identifies analytic and algebraic objects on them (Chapter~\ref{gaga}).
 Subvarieties have cohomology classes, which are rational and of type $(p,p)$
-(Chapter~\ref{cycle-class}).
+(Chapter~\ref{intersection-theory}).
 \item \emph{The conjecture.} Hodge structures (Chapter~\ref{hodge-structures})
 isolate the linear algebra, and the Hodge conjecture asserts the converse of
 the last statement (Chapter~\ref{hodge-conjecture}). It is a theorem for
-divisors (Chapter~\ref{lefschetz-11}), it is known in further cases
+divisors (Chapter~\ref{hodge-conjecture}), it is known in further cases
 (Chapter~\ref{known-cases}), and its natural strengthenings are false
-(Chapter~\ref{failures}).
+(Chapter~\ref{known-cases}).
 \item \emph{The surrounding theory.} Variations of Hodge structure and normal
-functions (Chapters~\ref{vhs} and~\ref{intermediate-jacobians}), mixed Hodge
+functions (Chapter~\ref{vhs}), mixed Hodge
 structures (Chapter~\ref{mixed-hodge-structures}), absolute Hodge classes
 (Chapter~\ref{absolute-hodge}), and the Tate and standard conjectures
-(Chapters~\ref{tate-conjecture} and~\ref{standard-conjectures}) place the
+(Chapter~\ref{absolute-hodge}) place the
 conjecture in its wider landscape.
 \end{enumerate}
 

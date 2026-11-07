@@ -1,6 +1,8 @@
 \chapter{Numerical Analysis}\label{numerical-analysis}
 \chapterstatus{planned}
 
+
+\section{Numerical Analysis}\label{numerical-analysis:section-foundations}
 Computing with real numbers on a machine: errors, conditioning, approximation of functions and of
 integrals, and the solution of equations.
 
@@ -13,5 +15,49 @@ integrals, and the solution of equations.
 \item Best approximation, orthogonal polynomials.
 \item Quadrature: Newton--Cotes, Gaussian quadrature, Romberg, error estimates.
 \item Root finding: bisection, fixed point iteration, Newton's method and its convergence.
+\item Exercises with solutions.
+\end{enumerate}
+
+\section{Numerical Linear Algebra}\label{numerical-analysis:section-numerical-linear-algebra}
+Algorithms for linear systems, least squares and eigenvalues, and their stability.
+
+\noindent\textbf{Prerequisites.} Section~\ref{numerical-analysis:section-foundations}.
+
+\noindent\textbf{Planned contents.}
+\begin{enumerate}
+\item Gaussian elimination and LU factorisation, pivoting, Cholesky.
+\item QR factorisation: Gram--Schmidt, Householder, Givens; least squares.
+\item The singular value decomposition and its uses.
+\item Iterative methods: Jacobi, Gauss--Seidel, conjugate gradients, Krylov spaces.
+\item Eigenvalue algorithms: power method, QR algorithm.
+\item Exercises with solutions.
+\end{enumerate}
+
+\section{Numerical Methods for Ordinary Differential Equations}\label{numerical-analysis:section-numerical-ode}
+Approximating solutions of initial value problems: one-step and multistep methods, their convergence
+and stability.
+
+\noindent\textbf{Prerequisites.} Section~\ref{numerical-analysis:section-foundations} and Chapter~\ref{ordinary-differential-equations} (Ordinary Differential Equations).
+
+\noindent\textbf{Planned contents.}
+\begin{enumerate}
+\item Euler's method, consistency, stability, convergence.
+\item Runge--Kutta methods, order conditions, Butcher tableaux.
+\item Linear multistep methods, Dahlquist's theorems.
+\item Stiffness, A-stability, implicit methods.
+\item Geometric integration: symplectic methods.
+\item Exercises with solutions.
+\end{enumerate}
+
+\section{Numerical Methods for Partial Differential Equations}\label{numerical-analysis:section-numerical-pde}
+Finite differences and finite elements, with their stability and convergence theory.
+
+\noindent\textbf{Prerequisites.} Section~\ref{numerical-analysis:section-numerical-linear-algebra} (Numerical Linear Algebra) and Section~\ref{sobolev-spaces:section-evolution-equations} (Evolution Equations).
+
+\noindent\textbf{Planned contents.}
+\begin{enumerate}
+\item Finite differences for elliptic, parabolic and hyperbolic problems; the CFL condition.
+\item Stability and the Lax equivalence theorem; von Neumann analysis.
+\item Finite elements: Galerkin method, C\'ea's lemma, error estimates.
 \item Exercises with solutions.
 \end{enumerate}

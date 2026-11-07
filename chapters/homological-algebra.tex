@@ -5,9 +5,9 @@
 
 Homological algebra measures the failure of exactness. Its basic objects are complexes and their
 cohomology; its basic tools are the long exact sequence and derived functors. Everything in this project
-that is called a cohomology theory (singular cohomology in Chapter~\ref{singular-cohomology}, sheaf
-cohomology in Chapter~\ref{sheaf-cohomology}, de Rham and Dolbeault cohomology in
-Chapters~\ref{de-rham} and~\ref{dolbeault}) is built with the machinery of this chapter.
+that is called a cohomology theory (singular cohomology in Chapter~\ref{singular-homology}, sheaf
+cohomology in Chapter~\ref{sheaves}, de Rham and Dolbeault cohomology in
+Chapters~\ref{de-rham} and~\ref{complex-manifolds}) is built with the machinery of this chapter.
 
 We work in abelian categories, but prove the diagram lemmas for modules; by the Freyd--Mitchell embedding
 theorem they then hold in every abelian category (Remark~\ref{homological-algebra:remark-freyd-mitchell}).
@@ -541,7 +541,7 @@ $C_n \to Z_n \to H_n(C)$ is a cocycle.
 Let $C$ be the complex $\cdots \to 0 \to \ZZ \xrightarrow{2} \ZZ \to 0$ in degrees $1$ and $0$, so $H_0 = \ZZ/2\ZZ$ and $H_1 = 0$. Then
 $\Hom(C, \ZZ)$ is $\ZZ \xrightarrow{\pm 2} \ZZ$ in degrees $0$ and $1$, with $H^0 = 0$ and $H^1 = \ZZ/2\ZZ$. Indeed
 $\Hom(H_1, \ZZ) = 0$ and $\Ext^1(H_0, \ZZ) = \ZZ/2\ZZ$: torsion in homology shifts up one degree in cohomology. This is the
-algebraic reason why $H^2(\RR\PP^2, \ZZ) \cong \ZZ/2\ZZ$ while $H_2(\RR\PP^2, \ZZ) = 0$ (Chapter~\ref{singular-cohomology}).
+algebraic reason why $H^2(\RR\PP^2, \ZZ) \cong \ZZ/2\ZZ$ while $H_2(\RR\PP^2, \ZZ) = 0$ (Chapter~\ref{singular-homology}).
 \end{example}
 
 \section{Exercises}\label{homological-algebra:section-exercises}
@@ -597,4 +597,694 @@ Show that an abelian group is injective if and only if $\Ext^1_\ZZ(\ZZ/n\ZZ, A) 
 \begin{solution}
 By Example~\ref{homological-algebra:example-ext-tor-cyclic}, $\Ext^1(\ZZ/n\ZZ, A) = A/nA$, which vanishes for all $n$ iff $A$ is
 divisible, iff $A$ is injective by Theorem~\ref{homological-algebra:theorem-enough-injectives}.
+\end{solution}
+
+\section{Spectral Sequences}\label{homological-algebra:section-spectral-sequences}
+A spectral sequence is a bookkeeping device for computing the cohomology of a filtered complex from the
+cohomology of its graded pieces, in a sequence of successive approximations. This chapter constructs the
+spectral sequence of a filtered complex with complete proofs, derives the two spectral sequences of a double
+complex, and proves the Grothendieck spectral sequence of a composition of functors. Later chapters use the
+Leray spectral sequence (Chapter~\ref{sheaves}), the Fr\"olicher spectral sequence
+(Chapter~\ref{complex-manifolds}) and the weight and Hodge spectral sequences of mixed Hodge theory
+(Chapter~\ref{mixed-hodge-structures}).
+
+References are \cite[Chapter 5]{weibel-homological} and \cite{mccleary-users-guide}. As in
+Chapter~\ref{homological-algebra}, we argue with elements; by
+Remark~\ref{homological-algebra:remark-freyd-mitchell} the results hold in every abelian category.
+
+\noindent\textbf{Prerequisites.} Chapter~\ref{homological-algebra} (Homological Algebra).
+
+\section{Spectral sequences}\label{homological-algebra:section-definitions}
+
+\begin{definition}\label{homological-algebra:definition-spectral-sequence}
+A (cohomological) \emph{spectral sequence} starting at page $r_0$ consists of objects $E_r^{p,q}$ for $p, q \in \ZZ$
+and $r \geq r_0$, morphisms $d_r \colon E_r^{p,q} \to E_r^{p+r, q-r+1}$ with $d_r \circ d_r = 0$, and isomorphisms
+$E_{r+1}^{p,q} \cong \ker(d_r)/\im(d_r)$ at $E_r^{p,q}$. The object $E_r = \bigoplus_{p,q}E_r^{p,q}$ is the $r$-th \emph{page}, and
+$p + q$ is the \emph{total degree}. It is a \emph{first-quadrant} spectral sequence if $E_{r_0}^{p,q} = 0$ unless $p, q \geq 0$.
+\end{definition}
+
+\begin{lemma}\label{homological-algebra:lemma-first-quadrant-stable}
+In a first-quadrant spectral sequence $E_r^{p,q} = 0$ unless $p, q \geq 0$, for all $r$, and $E_r^{p,q} = E_{r+1}^{p,q}$ whenever
+$r > \max(p, q + 1)$. The common value is denoted $E_\infty^{p,q}$.
+\end{lemma}
+
+\begin{proof}
+The first claim holds because $E_{r+1}^{p,q}$ is a subquotient of $E_r^{p,q}$. For $r > p$ the source $E_r^{p-r, q+r-1}$ of the incoming
+differential has negative first index, and for $r > q + 1$ the target $E_r^{p+r, q-r+1}$ of the outgoing differential has negative
+second index; so both differentials vanish.
+\end{proof}
+
+\begin{definition}\label{homological-algebra:definition-convergence}
+A first-quadrant spectral sequence \emph{converges} to objects $H^n$, written $E_{r_0}^{p,q} \Rightarrow H^{p+q}$, if each $H^n$ has a
+finite decreasing filtration $H^n = F^0H^n \supseteq F^1H^n \supseteq \cdots \supseteq F^{n+1}H^n = 0$ with isomorphisms
+$E_\infty^{p,q} \cong F^pH^{p+q}/F^{p+1}H^{p+q}$. The spectral sequence \emph{degenerates} at page $r$ if $d_s = 0$ for all
+$s \geq r$, so that $E_r = E_\infty$.
+\end{definition}
+
+\begin{proposition}\label{homological-algebra:proposition-edge-maps}
+Let $E_2^{p,q} \Rightarrow H^{p+q}$ be a convergent first-quadrant spectral sequence.
+\begin{enumerate}
+\item There are \emph{edge maps} $E_2^{n,0} \to H^n$ and $H^n \to E_2^{0,n}$: the first is the composite
+$E_2^{n,0} \twoheadrightarrow E_\infty^{n,0} = F^nH^n \hookrightarrow H^n$, the second $H^n \twoheadrightarrow H^n/F^1H^n = E_\infty^{0,n} \hookrightarrow E_2^{0,n}$.
+\item (Five-term exact sequence) The sequence
+$0 \to E_2^{1,0} \to H^1 \to E_2^{0,1} \xrightarrow{d_2} E_2^{2,0} \to H^2$ is exact.
+\item If $E_2^{p,q} = 0$ for $q \neq 0$, then $H^n \cong E_2^{n,0}$. If $E_2^{p,q} = 0$ for $p \neq 0$, then $H^n \cong E_2^{0,n}$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) Since nothing is in negative degrees, $E_{r+1}^{n,0}$ is a quotient of $E_r^{n,0}$ (no outgoing differential lands in $q < 0$) and
+$E_{r+1}^{0,n}$ a subobject of $E_r^{0,n}$ (no incoming differential starts at $p < 0$). Also $F^{n+1}H^n = 0$, so
+$E_\infty^{n,0} = F^nH^n$, and $F^0H^n = H^n$, so $E_\infty^{0,n} = H^n/F^1H^n$.
+(2) In total degree $1$, $H^1$ has the filtration $0 \subseteq F^1H^1 \subseteq H^1$ with $F^1H^1 = E_\infty^{1,0} = E_2^{1,0}$ (no differential
+reaches or leaves $E_r^{1,0}$ nontrivially: incoming would start at $p = 1 - r < 0$, outgoing lands at $q = 1 - r < 0$) and
+$H^1/F^1H^1 = E_\infty^{0,1} = \ker(d_2 \colon E_2^{0,1} \to E_2^{2,0})$ (for $r \geq 3$ all differentials at $(0,1)$ vanish). This gives
+exactness at $E_2^{1,0}$, $H^1$ and $E_2^{0,1}$. Next $E_\infty^{2,0} = E_3^{2,0} = E_2^{2,0}/\im(d_2)$, and it injects into $H^2$ as
+$F^2H^2$; so the kernel of $E_2^{2,0} \to H^2$ is $\im(d_2)$.
+(3) All but one of the graded pieces $E_\infty^{p, n-p}$ of $H^n$ vanish, and all differentials vanish because either the source or the
+target is zero.
+\end{proof}
+
+\begin{proposition}\label{homological-algebra:proposition-two-rows}
+Let $E_2^{p,q} \Rightarrow H^{p+q}$ be a convergent first-quadrant spectral sequence with $E_2^{p,q} = 0$ unless $q \in \{0, s\}$, for some
+$s \geq 1$. Then there is a long exact sequence
+\[
+\cdots \to E_2^{n,0} \to H^n \to E_2^{n-s,s} \xrightarrow{d_{s+1}} E_2^{n+1,0} \to H^{n+1} \to \cdots.
+\]
+\end{proposition}
+
+\begin{proof}
+The only possibly nonzero differentials are $d_{s+1} \colon E_{s+1}^{p,s} \to E_{s+1}^{p+s+1,0}$, and $E_{s+1} = E_2$. So
+$E_\infty^{n,0} = \operatorname{coker}(d_{s+1} \colon E_2^{n-s-1,s} \to E_2^{n,0})$ and $E_\infty^{n-s,s} = \ker(d_{s+1} \colon E_2^{n-s,s} \to E_2^{n+1,0})$, and $H^n$ is
+an extension $0 \to E_\infty^{n,0} \to H^n \to E_\infty^{n-s,s} \to 0$. Splicing these sequences gives the claim.
+\end{proof}
+
+\begin{proposition}\label{homological-algebra:proposition-euler-characteristic}
+Let $E$ be a spectral sequence of finite-dimensional vector spaces over a field, with only finitely many nonzero $E_{r_0}^{p,q}$. Then $\chi(E_r) = \sum_{p,q}(-1)^{p+q}\dim E_r^{p,q}$ does not depend on $r$, and if
+$E_{r_0}^{p,q} \Rightarrow H^{p+q}$ converges, then $\chi(E_{r_0}) = \sum_n(-1)^n\dim H^n$. In particular $\dim H^n \leq \sum_{p+q=n}\dim E_r^{p,q}$ for every $r$.
+\end{proposition}
+
+\begin{proof}
+Grading $E_r$ by total degree $n = p + q$, the differential $d_r$ raises $n$ by one, so $(E_r, d_r)$ is a finite complex of finite-dimensional spaces with cohomology $E_{r+1}$. For such a complex
+$C^\bullet$, rank--nullity gives $\dim C^n = \dim Z^n + \dim B^{n+1}$ and $\dim H^n = \dim Z^n - \dim B^n$, so $\sum_n(-1)^n\dim C^n = \sum_n(-1)^n\dim H^n$. Hence $\chi(E_{r+1}) = \chi(E_r)$. Only finitely many
+positions are nonzero, so the pages stabilise, and convergence gives $\dim H^n = \sum_p\dim E_\infty^{p,n-p}$. The inequality holds because each $E_\infty^{p,q}$ is a subquotient of $E_r^{p,q}$.
+\end{proof}
+
+\begin{counterexample}\label{homological-algebra:counterexample-extension}
+The limit of a spectral sequence determines the abutment only up to extensions. Let $K$ and $K'$ be the complexes concentrated in degree $0$, with zero differential, given by $K^0 = \ZZ/4$ with the filtration
+$F^0 = \ZZ/4 \supseteq F^1 = 2\ZZ/4 \supseteq F^2 = 0$, and $K'^0 = \ZZ/2 \oplus \ZZ/2$ with $F^0 = K'^0 \supseteq F^1 = 0 \oplus \ZZ/2 \supseteq F^2 = 0$. In both cases all differentials vanish and the spectral
+sequence of the filtered complex (Section~\ref{homological-algebra:section-filtered-complex}) has $E_0^{0,0} = \ZZ/2$ and $E_0^{1,-1} = \ZZ/2$ on every page. The spectral sequences are isomorphic, but the abutments
+$\ZZ/4$ and $\ZZ/2 \oplus \ZZ/2$ are not. Over a field this cannot happen, since every extension of vector spaces splits and $H^n \cong \bigoplus_pE_\infty^{p,n-p}$.
+\end{counterexample}
+
+\section{The spectral sequence of a filtered complex}\label{homological-algebra:section-filtered-complex}
+
+\begin{definition}\label{homological-algebra:definition-filtered-complex}
+A \emph{filtered complex} is a complex $K^\bullet$ with subcomplexes $\cdots \supseteq F^pK \supseteq F^{p+1}K \supseteq \cdots$. The
+filtration is \emph{finite in each degree} if for every $n$ there are $a \leq b$ with $F^aK^n = K^n$ and $F^bK^n = 0$. The
+\emph{associated graded} complexes are $\mathrm{gr}^pK = F^pK/F^{p+1}K$, and the induced filtration on cohomology is
+$F^pH^n(K) = \im(H^n(F^pK) \to H^n(K))$.
+\end{definition}
+
+\begin{definition}\label{homological-algebra:definition-z-b}
+For a filtered complex $K$ we abbreviate $F^p = F^pK$ and, for $r \geq 0$,
+\[
+Z_r^p = F^p \cap d^{-1}(F^{p+r}), \qquad B_r^p = F^p \cap d(F^{p-r+1}), \qquad
+E_r^p = Z_r^p/(B_r^p + Z_{r-1}^{p+1}),
+\]
+with the convention $Z_{-1}^{p+1} = F^{p+1}$. These are graded by the degree of $K$, and we write $E_r^{p,q}$ for the part of $E_r^p$ in
+degree $p + q$. Let $d_r \colon E_r^p \to E_r^{p+r}$ be induced by $d$.
+\end{definition}
+
+\begin{lemma}\label{homological-algebra:lemma-well-defined}
+The inclusions $B_r^p \subseteq Z_r^p$ and $Z_{r-1}^{p+1} \subseteq Z_r^p$ hold, so $E_r^p$ is defined, and $d_r$ is a well-defined
+morphism with $d_r^2 = 0$, of bidegree $(r, 1 - r)$. Moreover $E_0^p = \mathrm{gr}^pK$ with $d_0$ induced by $d$, and
+$E_1^{p,q} = H^{p+q}(\mathrm{gr}^pK)$.
+\end{lemma}
+
+\begin{proof}
+Elements of $B_r^p$ are boundaries, hence cycles; and $x \in F^{p+1}$ with $dx \in F^{p+r}$ lies in $Z_r^p$. If $x \in Z_r^p$ then
+$dx \in F^{p+r}$ and $d(dx) = 0$, so $dx \in Z_r^{p+r}$. We must check that $d$ maps $B_r^p + Z_{r-1}^{p+1}$ into
+$B_r^{p+r} + Z_{r-1}^{p+r+1}$: $d(B_r^p) = 0$, and for $x \in Z_{r-1}^{p+1}$ we have $dx \in F^{p+r} \cap d(F^{p+1}) = B_r^{p+r}$.
+Clearly $d_r^2 = 0$. For $r = 0$: $Z_0^p = F^p$ and $B_0^p = d(F^{p+1}) \subseteq F^{p+1}$, so $E_0^p = F^p/F^{p+1}$. For $r = 1$:
+$Z_1^p$ consists of the elements of $F^p$ whose image in $\mathrm{gr}^p$ is a cocycle, $Z_0^{p+1} = F^{p+1}$ and $B_1^p = d(F^p)$, so
+$E_1^p = Z_1^p/(d(F^p) + F^{p+1})$ is the cohomology of $\mathrm{gr}^pK$.
+\end{proof}
+
+\begin{theorem}\label{homological-algebra:theorem-filtered-complex}
+For every filtered complex, the objects $E_r^{p,q}$ and differentials $d_r$, $r \geq 0$, form a spectral sequence:
+$H(E_r, d_r) \cong E_{r+1}$. If the filtration is finite in each degree, then for fixed $(p, q)$ and all sufficiently large $r$,
+$E_r^{p,q} = E_\infty^{p,q}$ with
+\[
+E_\infty^{p,q} \cong F^pH^{p+q}(K)/F^{p+1}H^{p+q}(K).
+\]
+In particular, if $F^0K = K$ and $F^{n+1}K^n = 0$ for all $n$, the spectral sequence is first-quadrant (from $E_1$ on, since
+$E_1^{p,q}$ vanishes for $p < 0$ or $q < 0$) and $E_1^{p,q} = H^{p+q}(\mathrm{gr}^pK) \Rightarrow H^{p+q}(K)$.
+\end{theorem}
+
+\begin{proof}
+\emph{Kernel of $d_r$ at $E_r^p$.} Let $x \in Z_r^p$ with $dx \in B_r^{p+r} + Z_{r-1}^{p+r+1}$, say $dx = dy + z$ with $y \in F^{p+1}$,
+$dy \in F^{p+r}$ and $z \in F^{p+r+1}$. Then $y \in Z_{r-1}^{p+1}$, and $x - y \in F^p$ with $d(x - y) = z \in F^{p+r+1}$, so
+$x - y \in Z_{r+1}^p$. Conversely, $Z_{r+1}^p$ maps into the kernel, since $dx \in F^{p+r+1}$ and $d(dx) = 0$ give
+$dx \in Z_{r-1}^{p+r+1}$. Hence the kernel is $(Z_{r+1}^p + Z_{r-1}^{p+1})/(B_r^p + Z_{r-1}^{p+1})$.
+
+\emph{Image of $d_r$ in $E_r^p$.} It consists of the classes of $dx$ with $x \in Z_r^{p-r}$, that is of the elements of
+$F^p \cap d(F^{p-r}) = B_{r+1}^p$. Since $B_r^p \subseteq B_{r+1}^p$, the image is $(B_{r+1}^p + Z_{r-1}^{p+1})/(B_r^p + Z_{r-1}^{p+1})$.
+
+\emph{Cohomology.} Therefore
+$H(E_r)^p = (Z_{r+1}^p + Z_{r-1}^{p+1})/(B_{r+1}^p + Z_{r-1}^{p+1})$. The map $Z_{r+1}^p \to H(E_r)^p$ is surjective, with kernel
+$Z_{r+1}^p \cap (B_{r+1}^p + Z_{r-1}^{p+1}) = B_{r+1}^p + (Z_{r+1}^p \cap Z_{r-1}^{p+1})$ (as $B_{r+1}^p \subseteq Z_{r+1}^p$). Now
+$Z_{r+1}^p \cap Z_{r-1}^{p+1} = F^{p+1} \cap d^{-1}(F^{p+r+1}) = Z_r^{p+1}$. So $H(E_r)^p \cong Z_{r+1}^p/(B_{r+1}^p + Z_r^{p+1}) = E_{r+1}^p$.
+
+\emph{Convergence.} Fix $n$ and $p$ and let $Z$, $B$ denote the cocycles and coboundaries of $K$. If the filtration is finite in degrees
+$n - 1$, $n$ and $n + 1$, then for large $r$ we have $F^{p+r}K^{n+1} = 0$ and $F^{p-r+1}K^{n-1} = K^{n-1}$, so in degree $n$:
+$Z_r^p = F^p \cap Z$, $Z_{r-1}^{p+1} = F^{p+1} \cap Z$ and $B_r^p = F^p \cap B$. Hence
+$E_\infty^p = (F^p \cap Z)/((F^p \cap B) + (F^{p+1} \cap Z))$. On the other hand $F^pH^n = (F^p \cap Z + B)/B$, and
+\[
+\frac{F^pH^n}{F^{p+1}H^n} \cong \frac{F^p \cap Z}{(F^p \cap Z) \cap (F^{p+1} \cap Z + B)} = \frac{F^p \cap Z}{F^{p+1} \cap Z + F^p \cap B},
+\]
+using the modular law. For the last statement, $\mathrm{gr}^pK = 0$ for $p < 0$ and $\mathrm{gr}^pK^n = 0$ for $p > n$, so $E_1^{p,q} = 0$ unless
+$p \geq 0$ and $q \geq 0$, and $F^pH^n$ runs from $H^n$ to $0$.
+\end{proof}
+
+\section{Double complexes}\label{homological-algebra:section-double-complexes-spectral-sequences}
+
+\begin{theorem}\label{homological-algebra:theorem-double-complex}
+Let $C$ be a first-quadrant double complex (Definition~\ref{homological-algebra:definition-double-complex}) and $T = \mathrm{Tot}(C)$.
+There are two convergent first-quadrant spectral sequences
+\[
+{}^{I}E_2^{p,q} = H^p_h(H^q_v(C)) \Rightarrow H^{p+q}(T), \qquad {}^{II}E_2^{p,q} = H^p_v(H^q_h(C)) \Rightarrow H^{p+q}(T),
+\]
+where $H_v^q(C)$ is the cohomology of the columns (a complex in $p$ via $d_h$), and $H_h^q(C)$ that of the rows (a complex in the
+other index via $d_v$).
+\end{theorem}
+
+\begin{proof}
+Filter $T$ by columns: ${}^IF^pT^n = \bigoplus_{i \geq p}C^{i, n-i}$. These are subcomplexes, $F^0T = T$ and $F^{n+1}T^n = 0$. The graded
+piece $\mathrm{gr}^pT$ is the column $C^{p,\bullet}$ (shifted by $p$) with differential $\pm d_v$, so
+${}^IE_1^{p,q} = H^q_v(C^{p,\bullet})$ by Theorem~\ref{homological-algebra:theorem-filtered-complex}. The differential $d_1$ is the
+connecting map of $0 \to \mathrm{gr}^{p+1} \to F^p/F^{p+2} \to \mathrm{gr}^p \to 0$; a cocycle $x \in C^{p,q}$ of $d_v$ lifts to itself, and its total
+differential is $d_hx \in C^{p+1,q}$, so $d_1 = H^q_v(d_h)$ and ${}^IE_2^{p,q} = H^p_h(H^q_v(C))$. Convergence follows from
+Theorem~\ref{homological-algebra:theorem-filtered-complex}. Filtering by rows, ${}^{II}F^pT^n = \bigoplus_{j \geq p}C^{n-j, j}$, gives the other
+spectral sequence in the same way.
+\end{proof}
+
+\begin{example}\label{homological-algebra:example-acyclic-assembly}
+If the rows of $C$ are exact in positive degrees, with kernel complex $K^\bullet$ in column $0$, then ${}^{II}E_1^{p,q} = H^q_h(C^{\bullet,p})$
+vanishes for $q > 0$ and equals $K^p$ for $q = 0$. So ${}^{II}E_2^{p,0} = H^p(K)$, all other terms vanish, and
+$H^n(T) \cong H^n(K)$ by Proposition~\ref{homological-algebra:proposition-edge-maps}(3). This recovers
+Lemma~\ref{homological-algebra:lemma-acyclic-assembly}.
+\end{example}
+
+\section{Exact couples}\label{homological-algebra:section-exact-couples}
+
+\begin{definition}\label{homological-algebra:definition-exact-couple}
+An \emph{exact couple} consists of objects $D$, $E$ and morphisms $i \colon D \to D$, $j \colon D \to E$, $k \colon E \to D$ such that the triangle
+$D \xrightarrow{i} D \xrightarrow{j} E \xrightarrow{k} D$ is exact at each vertex. Put $d = jk \colon E \to E$; then $d^2 = j(kj)k = 0$.
+\end{definition}
+
+\begin{proposition}\label{homological-algebra:proposition-derived-couple}
+Given an exact couple, let $D' = i(D)$, $E' = \ker d/\im d$, $i' = i|_{D'}$, $j'(i(x)) = [j(x)]$ and $k'([e]) = k(e)$. Then $(D', E', i', j', k')$
+is an exact couple, the \emph{derived couple}. Iterating gives a spectral sequence $E^{(r)}$ with differentials $d^{(r)} = j^{(r)}k^{(r)}$.
+\end{proposition}
+
+\begin{proof}
+$j'$ is well defined: if $i(x) = i(x')$ then $x - x' = k(e)$ and $j(x - x') = jk(e) = d(e)$; and $j(x)$ is a $d$-cocycle since
+$dj(x) = jkj(x) = 0$. $k'$ is well defined: if $e \in \ker d$ then $jk(e) = 0$ so $k(e) \in \ker j = \im i = D'$, and $k(d(e')) = kjk(e') = 0$.
+Exactness at $D'$ (between $i'$ and $j'$): $j'(i(x)) = 0$ iff $j(x) = jk(e)$ iff $x - k(e) \in \ker j = \im i$, iff $i(x) \in i(\im i) + ik(E) = i(D')$
+since $ik = 0$. Exactness at $E'$: $k'[e] = 0$ iff $k(e) = 0$ iff $e = j(x)$, iff $[e] = j'(i(x))$. Exactness at the other $D'$
+(between $k'$ and $i'$): $i'(i(x)) = 0$ iff $i(x) \in \ker i = \im k$, iff $i(x) = k(e)$ for some $e$, which is then a $d$-cocycle since
+$jk(e) = ji(x) = 0$; that is, iff $i(x) \in \im k'$.
+\end{proof}
+
+\begin{remark}\label{homological-algebra:remark-exact-couple-filtered}
+A filtered complex gives an exact couple with $D = \bigoplus_{p,n}H^n(F^pK)$, $E = \bigoplus_{p,n}H^n(\mathrm{gr}^pK)$, $i$ induced by the inclusions
+$F^{p+1} \subseteq F^p$, and $j$, $k$ from the long exact sequences of $0 \to F^{p+1} \to F^p \to \mathrm{gr}^p \to 0$. The resulting spectral sequence is
+the one of Theorem~\ref{homological-algebra:theorem-filtered-complex}, from $E_1$ on \cite[Section 5.9]{weibel-homological}.
+\end{remark}
+
+\section{The Grothendieck spectral sequence}\label{homological-algebra:section-grothendieck}
+
+\begin{definition}\label{homological-algebra:definition-cartan-eilenberg}
+Let $A^\bullet$ be a complex with $A^n = 0$ for $n < 0$ in an abelian category with enough injectives. A \emph{Cartan--Eilenberg resolution}
+of $A$ is a first-quadrant double complex $I^{\bullet,\bullet}$ of injectives with a morphism $A^p \to I^{p,0}$ for each $p$, such that for every $p$ the
+columns give injective resolutions $A^p \to I^{p,\bullet}$, $Z^p(A) \to Z^p_h(I)^\bullet$, $B^p(A) \to B^p_h(I)^\bullet$ and $H^p(A) \to H^p_h(I)^\bullet$, where
+$Z_h$, $B_h$, $H_h$ denote horizontal cocycles, coboundaries and cohomology.
+\end{definition}
+
+\begin{lemma}\label{homological-algebra:lemma-cartan-eilenberg-exists}
+Every such complex $A$ has a Cartan--Eilenberg resolution.
+\end{lemma}
+
+\begin{proof}
+For each $p$ choose injective resolutions $B^p(A) \to J_B^{p,\bullet}$ and $H^p(A) \to J_H^{p,\bullet}$. The horseshoe lemma
+(Lemma~\ref{homological-algebra:lemma-horseshoe}) applied to $0 \to B^p \to Z^p \to H^p \to 0$ gives a resolution $J_Z^{p,\bullet}$ of $Z^p$ with
+$J_Z^{p,q} = J_B^{p,q} \oplus J_H^{p,q}$, and applied to $0 \to Z^p \to A^p \to B^{p+1} \to 0$ gives a resolution $I^{p,\bullet}$ of $A^p$ with
+$I^{p,q} = J_Z^{p,q} \oplus J_B^{p+1,q}$. Define $d_h \colon I^{p,q} \to I^{p+1,q}$ as the composite
+$I^{p,q} \to J_B^{p+1,q} \to J_Z^{p+1,q} \to I^{p+1,q}$ of the projection and inclusions provided by the horseshoe lemma. Then $d_h^2 = 0$ (the
+projection $I^{p+1, q} \to J_B^{p+2,q}$ kills $J_Z^{p+1,q}$), $d_h$ commutes with the vertical differentials since all maps involved are morphisms
+of complexes, and it covers $d \colon A^p \to A^{p+1}$. By construction the horizontal cocycles, coboundaries and cohomology in column $p$ are
+$J_Z^{p,\bullet}$, $J_B^{p,\bullet}$ and $J_H^{p,\bullet}$.
+\end{proof}
+
+\begin{theorem}[Grothendieck spectral sequence]\label{homological-algebra:theorem-grothendieck}
+Let $\mathcal{A}, \mathcal{B}, \mathcal{C}$ be abelian categories, $\mathcal{A}$ and $\mathcal{B}$ with enough injectives, and $F \colon \mathcal{A} \to \mathcal{B}$,
+$G \colon \mathcal{B} \to \mathcal{C}$ left exact functors such that $F$ maps injective objects to $G$-acyclic objects. For every $X \in \mathcal{A}$ there is a
+convergent first-quadrant spectral sequence
+\[
+E_2^{p,q} = R^pG(R^qF(X)) \Rightarrow R^{p+q}(G \circ F)(X).
+\]
+\end{theorem}
+
+\begin{proof}
+Let $X \to A^\bullet$ be an injective resolution in $\mathcal{A}$, and let $I^{\bullet,\bullet}$ be a Cartan--Eilenberg resolution of the complex $F(A^\bullet)$ in
+$\mathcal{B}$. Consider the double complex $G(I)$ and its total complex $T$.
+
+\emph{First filtration (by columns).} For each $p$, the column $I^{p,\bullet}$ is an injective resolution of the $G$-acyclic object $F(A^p)$, so
+$H^q_v(G(I^{p,\bullet})) = R^qG(F(A^p))$ is $G(F(A^p))$ for $q = 0$ and $0$ for $q > 0$. So ${}^IE_2^{p,q} = 0$ for $q > 0$ and
+${}^IE_2^{p,0} = H^p(GF(A^\bullet)) = R^p(GF)(X)$, and $H^n(T) \cong R^n(GF)(X)$ by Proposition~\ref{homological-algebra:proposition-edge-maps}(3).
+
+\emph{Second filtration (by rows).} Fix a row index $j$. In the row $I^{\bullet,j}$ the sequences
+$0 \to B^{q,j}_h \to Z^{q,j}_h \to H^{q,j}_h \to 0$ and $0 \to Z^{q,j}_h \to I^{q,j} \to B^{q+1,j}_h \to 0$ consist of injective objects (they are terms of
+injective resolutions), hence split; so $G$ commutes with taking horizontal cocycles, coboundaries and cohomology of this row, and
+$H^q_h(G(I^{\bullet,j})) = G(H^{q,j}_h(I))$. For fixed $q$, the column $H^{q,\bullet}_h(I)$ is an injective resolution of
+$H^q(F(A^\bullet)) = R^qF(X)$. By Theorem~\ref{homological-algebra:theorem-double-complex},
+${}^{II}E_2^{p,q} = H^p_v(H^q_h(G(I))) = H^p(G(H^{q,\bullet}_h(I))) = R^pG(R^qF(X))$, and it converges to
+$H^{p+q}(T) \cong R^{p+q}(GF)(X)$.
+\end{proof}
+
+\section{Exercises on Spectral Sequences}\label{homological-algebra:section-exercises-spectral-sequences}
+
+\begin{exercise}\label{homological-algebra:exercise-two-columns}
+State and prove the analogue of Proposition~\ref{homological-algebra:proposition-two-rows} for a spectral sequence concentrated in two
+columns $p \in \{0, s\}$.
+\end{exercise}
+
+\begin{exercise}\label{homological-algebra:exercise-two-out-of-three}
+Let $0 \to A^\bullet \to B^\bullet \to C^\bullet \to 0$ be a short exact sequence of bounded below complexes, viewed as a double complex with three
+columns. Using both spectral sequences of Theorem~\ref{homological-algebra:theorem-double-complex} (after shifting so that the double complex is
+first-quadrant), show that if two of $A$, $B$, $C$ are acyclic, then so is the third.
+\end{exercise}
+
+\begin{exercise}\label{homological-algebra:exercise-balance-ss}
+Use Theorem~\ref{homological-algebra:theorem-double-complex} to give a second proof of
+Theorem~\ref{homological-algebra:theorem-balance}.
+\end{exercise}
+
+\begin{exercise}\label{homological-algebra:exercise-base-change-tor}
+Let $R \to S$ be a homomorphism of commutative rings, $M$ an $S$-module and $N$ an $R$-module. Construct a spectral sequence
+$\Tor_p^S(M, \Tor_q^R(S, N)) \Rightarrow \Tor_{p+q}^R(M, N)$ (homological indexing).
+\end{exercise}
+
+\section{Derived Categories}\label{homological-algebra:section-derived-categories}
+The derived category of an abelian category is obtained from complexes by declaring quasi-isomorphisms to be
+isomorphisms. It is the natural home of derived functors: instead of a sequence of functors $R^nF$ one has a
+single functor $RF$ on complexes, compositions of derived functors are derived functors of compositions, and
+hypercohomology of complexes (for instance of the de Rham complex of a manifold) is defined without choices.
+Filtered derived categories and strict morphisms, discussed at the end, are the framework of Deligne's mixed Hodge
+theory (Chapter~\ref{mixed-hodge-structures}).
+
+Some foundational verifications (the octahedral axiom, and the construction of localisations by roofs) are quoted
+from \cite[Chapter 10]{weibel-homological}, \cite[Chapter III]{gelfand-manin} and \cite{kashiwara-schapira}; everything
+used about derived functors is proved.
+
+\noindent\textbf{Prerequisites.} Chapter~\ref{categories} (Categories), Chapter~\ref{homological-algebra} (Homological
+Algebra) and Section~\ref{homological-algebra:section-spectral-sequences} (Spectral Sequences).
+
+Throughout, $\mathcal{A}$ is an abelian category, complexes are as in
+Definition~\ref{homological-algebra:definition-complex}, and we argue with elements as justified by
+Remark~\ref{homological-algebra:remark-freyd-mitchell}.
+
+\section{The homotopy category}\label{homological-algebra:section-homotopy-category}
+
+\begin{definition}\label{homological-algebra:definition-homotopy-category}
+The \emph{homotopy category} $K(\mathcal{A})$ has the complexes as objects and homotopy classes of morphisms of complexes
+(Definition~\ref{homological-algebra:definition-homotopy}) as morphisms. $K^+(\mathcal{A})$ is its full subcategory of bounded
+below complexes. The \emph{shift} $X \mapsto X[1]$ is an automorphism of $K(\mathcal{A})$. A \emph{distinguished triangle} in
+$K(\mathcal{A})$ is a diagram $X \to Y \to Z \to X[1]$ isomorphic (in $K(\mathcal{A})$) to one of the form
+$X \xrightarrow{f} Y \xrightarrow{i} \mathrm{Cone}(f) \xrightarrow{p} X[1]$, with $i$ and $p$ the maps of
+Proposition~\ref{homological-algebra:proposition-cone}.
+\end{definition}
+
+\begin{remark}\label{homological-algebra:remark-homotopy-well-defined}
+Homotopy is compatible with sums and compositions, so $K(\mathcal{A})$ is an additive category, and cohomology
+$H^n \colon K(\mathcal{A}) \to \mathcal{A}$ is a well-defined functor by Lemma~\ref{homological-algebra:lemma-homotopy-invariance}.
+\end{remark}
+
+\begin{definition}\label{homological-algebra:definition-triangulated}
+A \emph{triangulated category} is an additive category $\mathcal{T}$ with an additive automorphism $X \mapsto X[1]$ and a class of
+\emph{distinguished triangles} $X \to Y \to Z \to X[1]$ such that:
+\begin{enumerate}
+\item[(TR1)] $X \xrightarrow{\id} X \to 0 \to X[1]$ is distinguished; triangles isomorphic to distinguished ones are distinguished;
+every morphism $X \to Y$ is the first morphism of a distinguished triangle.
+\item[(TR2)] $X \xrightarrow{f} Y \xrightarrow{g} Z \xrightarrow{h} X[1]$ is distinguished if and only if
+$Y \xrightarrow{g} Z \xrightarrow{h} X[1] \xrightarrow{-f[1]} Y[1]$ is.
+\item[(TR3)] Given distinguished triangles $X \to Y \to Z \to X[1]$ and $X' \to Y' \to Z' \to X'[1]$ and morphisms $u \colon X \to X'$,
+$v \colon Y \to Y'$ making the first square commute, there is $w \colon Z \to Z'$ making the whole diagram commute.
+\item[(TR4)] (Octahedral axiom) For composable $X \xrightarrow{f} Y \xrightarrow{g} Z$ and distinguished triangles on $f$, $g$ and $gf$ with
+third vertices $Z'$, $X'$, $Y'$, there is a distinguished triangle $Z' \to Y' \to X' \to Z'[1]$ compatible with the given
+morphisms.
+\end{enumerate}
+An additive functor between triangulated categories commuting with the shifts and preserving distinguished triangles is
+\emph{exact} (or triangulated).
+\end{definition}
+
+\begin{theorem}\label{homological-algebra:theorem-homotopy-triangulated}
+$K(\mathcal{A})$ and $K^+(\mathcal{A})$ are triangulated categories.
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+(TR1): $\mathrm{Cone}(\id_X)$ is contractible, with contracting homotopy $(a, b) \mapsto (b, 0)$, so it is isomorphic to $0$ in
+$K(\mathcal{A})$; the other two parts hold by definition. (TR3): if $h$ is a homotopy with $vf - f'u = dh + hd$, then
+$(a, b) \mapsto (u(a), v(b) + h(a))$ is a morphism of complexes $\mathrm{Cone}(f) \to \mathrm{Cone}(f')$ (a direct check using the formula for
+the differential of the cone in Definition~\ref{homological-algebra:definition-cone}) compatible with the maps of the triangles. The
+omitted verifications are (TR2), which amounts to an explicit homotopy equivalence $\mathrm{Cone}(i) \simeq X[1]$ for
+$i \colon Y \to \mathrm{Cone}(f)$, and the octahedral axiom (TR4); see \cite[Sections 10.1--10.2]{weibel-homological}.
+\end{proof}
+
+\begin{proposition}\label{homological-algebra:proposition-cohomological}
+Let $X \xrightarrow{f} Y \xrightarrow{g} Z \xrightarrow{h} X[1]$ be a distinguished triangle in a triangulated category $\mathcal{T}$ and $W$ an
+object. Then $gf = 0$, and the sequence $\Hom(W, X) \to \Hom(W, Y) \to \Hom(W, Z)$ is exact; so by (TR2) there is a long exact
+sequence $\cdots \to \Hom(W, X) \to \Hom(W, Y) \to \Hom(W, Z) \to \Hom(W, X[1]) \to \cdots$. Similarly for $\Hom(-, W)$. For
+$\mathcal{T} = K(\mathcal{A})$, the functor $H^0$ sends distinguished triangles to long exact sequences.
+\end{proposition}
+
+\begin{proof}
+Apply (TR3) to the triangles $X \xrightarrow{\id} X \to 0 \to X[1]$ and $X \to Y \to Z \to X[1]$ with $u = \id$, $v = f$: the resulting $w$
+satisfies $gf = w \circ 0 = 0$. Let $\varphi \colon W \to Y$ with $g\varphi = 0$. By (TR1) and (TR2), the rotated triangles
+$W \to 0 \to W[1] \xrightarrow{-\id} W[1]$ and $Y \xrightarrow{g} Z \xrightarrow{h} X[1] \xrightarrow{-f[1]} Y[1]$ are distinguished. The square formed by
+$\varphi \colon W \to Y$ and $0 \colon 0 \to Z$ commutes because $g\varphi = 0$, so (TR3) gives $w \colon W[1] \to X[1]$ with
+$(-f[1]) \circ w = \varphi[1] \circ (-\id)$. Then $\psi = w[-1]$ satisfies $f\psi = \varphi$. The dual statement is proved in the same way. For $K(\mathcal{A})$ the last claim
+follows from the long exact sequence of the cone (Proposition~\ref{homological-algebra:proposition-cone}) and invariance under
+isomorphism.
+\end{proof}
+
+\section{The derived category}\label{homological-algebra:section-derived-category}
+
+\begin{definition}\label{homological-algebra:definition-multiplicative-system}
+A class $S$ of morphisms in a category $\mathcal{C}$ is a \emph{multiplicative system} if it contains the identities and is closed
+under composition, and:
+\begin{enumerate}
+\item for $s \colon X' \to X$ in $S$ and $f \colon Y \to X$ there are $t \colon Y' \to Y$ in $S$ and $g \colon Y' \to X'$ with $ft = sg$, and dually;
+\item if $f, g \colon X \to Y$ and $s \colon Y \to Y'$ in $S$ satisfy $sf = sg$, then $ft = gt$ for some $t \colon X' \to X$ in $S$, and dually.
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[Localisation]\label{homological-algebra:theorem-localisation}
+Let $S$ be a multiplicative system in $\mathcal{C}$. There is a category $\mathcal{C}[S^{-1}]$ with the same objects and a functor
+$Q \colon \mathcal{C} \to \mathcal{C}[S^{-1}]$ that is the identity on objects, sends $S$ to isomorphisms, and is universal: every functor sending
+$S$ to isomorphisms factors uniquely through $Q$. Morphisms $X \to Y$ in $\mathcal{C}[S^{-1}]$ are equivalence classes of \emph{roofs}
+$X \xleftarrow{s} X' \xrightarrow{f} Y$ with $s \in S$, representing $Q(f)Q(s)^{-1}$, and for $f, g \colon X \to Y$ in $\mathcal{C}$ one has
+$Q(f) = Q(g)$ if and only if $ft = gt$ for some $t \in S$. If $\mathcal{C}$ is additive (triangulated) and $S$ is compatible
+with the structure, then $\mathcal{C}[S^{-1}]$ is additive (triangulated), with distinguished triangles the images of those of $\mathcal{C}$.
+\end{theorem}
+
+This is proved in \cite[Chapter III]{gelfand-manin} and \cite[Chapter 7]{kashiwara-schapira}; for the triangulated case see
+\cite[Section 10.3]{weibel-homological}.
+
+\begin{proposition}\label{homological-algebra:proposition-qis-multiplicative}
+The quasi-isomorphisms form a multiplicative system in $K(\mathcal{A})$ and in $K^+(\mathcal{A})$.
+\end{proposition}
+
+\begin{proof}
+Identities and composites of quasi-isomorphisms are quasi-isomorphisms. Note that a morphism is a quasi-isomorphism iff its cone
+is acyclic (Proposition~\ref{homological-algebra:proposition-cone}), and by
+Proposition~\ref{homological-algebra:proposition-cohomological} the cohomology of the three vertices of a distinguished triangle
+forms a long exact sequence.
+
+(1) Let $s \colon X' \to X$ be a quasi-isomorphism and $f \colon Y \to X$. Complete $s$ to a triangle $X' \to X \xrightarrow{p} C \to X'[1]$, so $C$ is
+acyclic, and complete $pf \colon Y \to C$ to a triangle $Y' \xrightarrow{t} Y \xrightarrow{pf} C \to Y'[1]$ (using (TR1) and (TR2)). Then $t$ is a
+quasi-isomorphism since $C$ is acyclic, and (TR3) applied to the rotated triangles gives $g \colon Y' \to X'$ with $sg = ft$. The dual
+statement is proved in the same way.
+
+(2) Suppose $s(f - g) = 0$ with $s \colon Y \to Y'$ a quasi-isomorphism. Complete $s$ to a triangle $C[-1] \xrightarrow{k} Y \xrightarrow{s} Y' \to C$ with $C$
+acyclic. By Proposition~\ref{homological-algebra:proposition-cohomological}, $f - g = k\varphi$ for some $\varphi \colon X \to C[-1]$. Complete $\varphi$ to a
+triangle $X' \xrightarrow{t} X \xrightarrow{\varphi} C[-1] \to X'[1]$; then $t$ is a quasi-isomorphism and $(f - g)t = k\varphi t = 0$. Dually.
+\end{proof}
+
+\begin{definition}\label{homological-algebra:definition-derived-category}
+The \emph{derived category} is $D(\mathcal{A}) = K(\mathcal{A})[\mathrm{Qis}^{-1}]$, and $D^+(\mathcal{A}) = K^+(\mathcal{A})[\mathrm{Qis}^{-1}]$. By
+Theorem~\ref{homological-algebra:theorem-localisation} and Proposition~\ref{homological-algebra:proposition-qis-multiplicative} they are
+triangulated, $H^n$ factors through them, and a morphism in $D(\mathcal{A})$ is an isomorphism if and only if it induces
+isomorphisms on all $H^n$.
+\end{definition}
+
+\begin{remark}\label{homological-algebra:remark-size}
+The morphism classes of $D(\mathcal{A})$ need not be small sets for an arbitrary locally small $\mathcal{A}$, since roofs involve all complexes.
+For $\mathcal{A}$ with enough injectives this problem disappears for $D^+(\mathcal{A})$ by
+Corollary~\ref{homological-algebra:corollary-hom-injectives}, which computes morphisms using a single complex of injectives.
+\end{remark}
+
+\section{Injective resolutions of complexes}\label{homological-algebra:section-injective-resolutions}
+
+\begin{lemma}\label{homological-algebra:lemma-acyclic-to-injective}
+Let $X$ be an acyclic complex and $I$ a bounded below complex of injective objects. Every morphism of complexes $f \colon X \to I$ is
+homotopic to zero.
+\end{lemma}
+
+\begin{proof}
+Let $I^n = 0$ for $n < n_0$; put $h^n = 0 \colon X^n \to I^{n-1}$ for $n \leq n_0$. Suppose $h^k$ is defined for $k \leq n$ with
+$f^{k-1} = dh^{k-1} + h^kd$ for $k \leq n$. Let $g = f^n - dh^n \colon X^n \to I^n$. Then
+$gd = df^{n-1} - dh^nd = df^{n-1} - d(f^{n-1} - dh^{n-1}) = 0$, so $g$ vanishes on $\im(X^{n-1} \to X^n) = \ker(X^n \to X^{n+1})$. Hence $g$
+factors through $X^n/\ker \cong \im(X^n \to X^{n+1}) \subseteq X^{n+1}$ and extends, by injectivity of $I^n$, to $h^{n+1} \colon X^{n+1} \to I^n$ with
+$h^{n+1}d = g$, that is, $f^n = dh^n + h^{n+1}d$.
+\end{proof}
+
+\begin{corollary}\label{homological-algebra:corollary-hom-injectives}
+Let $I$ be a bounded below complex of injectives. For every quasi-isomorphism $s \colon X' \to X$, composition with $s$ is a bijection
+$\Hom_{K(\mathcal{A})}(X, I) \to \Hom_{K(\mathcal{A})}(X', I)$. Consequently $\Hom_{D(\mathcal{A})}(X, I) = \Hom_{K(\mathcal{A})}(X, I)$, and every quasi-isomorphism
+$I \to I'$ between bounded below complexes of injectives is a homotopy equivalence.
+\end{corollary}
+
+\begin{proof}
+Complete $s$ to a distinguished triangle $X' \to X \to C \to X'[1]$ with $C$ acyclic. By Lemma~\ref{homological-algebra:lemma-acyclic-to-injective},
+$\Hom_K(C, I) = \Hom_K(C[-1], I) = 0$ ($C[-1]$ is also acyclic), and the long exact sequence of
+Proposition~\ref{homological-algebra:proposition-cohomological} gives the bijection. For the second statement, we use the description of morphisms in
+Theorem~\ref{homological-algebra:theorem-localisation}. The map $Q \colon \Hom_K(X, I) \to \Hom_D(X, I)$ is surjective: a roof
+$X \xleftarrow{s} X' \xrightarrow{f} I$ has $f = f's$ for some $f' \colon X \to I$, and then $Q(f)Q(s)^{-1} = Q(f')$. It is injective: if $Q(f_1) = Q(f_2)$,
+then $f_1t = f_2t$ for a quasi-isomorphism $t$, so $f_1 = f_2$ by the bijection just proved. For the last, a quasi-isomorphism $I \to I'$ is an isomorphism in
+$D(\mathcal{A})$, hence by the second statement an isomorphism in $K(\mathcal{A})$.
+\end{proof}
+
+\begin{proposition}\label{homological-algebra:proposition-resolutions-complexes}
+If $\mathcal{A}$ has enough injectives, every bounded below complex $X$ admits a quasi-isomorphism $X \to I$ to a bounded below complex of
+injectives. Hence $K^+(\mathrm{Inj}\,\mathcal{A}) \to D^+(\mathcal{A})$ is an equivalence of categories.
+\end{proposition}
+
+\begin{proof}
+Shifting, assume $X^n = 0$ for $n < 0$. Let $J^{\bullet,\bullet}$ be a Cartan--Eilenberg resolution of $X$
+(Lemma~\ref{homological-algebra:lemma-cartan-eilenberg-exists}) and $I = \mathrm{Tot}(J)$, a bounded below complex of injectives (each $I^n$ is a
+finite sum). The augmentations $X^p \to J^{p,0}$ define a morphism $X \to I$. For each $p$ the column $0 \to X^p \to J^{p,0} \to J^{p,1} \to \cdots$ is
+exact, so by Lemma~\ref{homological-algebra:lemma-acyclic-assembly} (applied with the roles of rows and columns exchanged) the map
+$X \to I$ is a quasi-isomorphism. (The total complex of the transposed double complex is isomorphic to $I$ by the signs $(-1)^{pq}$, and the
+compatibility of $X^p \to J^{p,0}$ with the differentials holds because the column differential kills the image of $X^p$.) The functor $K^+(\mathrm{Inj}\,\mathcal{A}) \to D^+(\mathcal{A})$ is fully faithful by
+Corollary~\ref{homological-algebra:corollary-hom-injectives} and essentially surjective by the first statement.
+\end{proof}
+
+\begin{definition}\label{homological-algebra:definition-right-derived}
+Let $\mathcal{A}$ have enough injectives and $F \colon \mathcal{A} \to \mathcal{B}$ be an additive functor to an abelian category. For each bounded
+below complex $X$ choose a quasi-isomorphism $X \to I_X$ as in Proposition~\ref{homological-algebra:proposition-resolutions-complexes}. The
+\emph{right derived functor} is $RF \colon D^+(\mathcal{A}) \to D^+(\mathcal{B})$, $RF(X) = F(I_X)$ (with $F$ applied termwise), on morphisms via
+$\Hom_{D}(X, Y) \cong \Hom_K(I_X, I_Y)$. For $X \in D^+(\mathcal{A})$ and $n \in \ZZ$, $R^nF(X) = H^n(RF(X))$ is the $n$-th \emph{hypercohomology}
+of $F$ at $X$.
+\end{definition}
+
+\begin{proposition}\label{homological-algebra:proposition-derived-functor-properties}
+$RF$ is an exact functor of triangulated categories, independent of the choices up to canonical isomorphism. If $F$ is left exact and
+$X \in \mathcal{A}$ is viewed as a complex in degree $0$, then $H^n(RF(X)) = R^nF(X)$ as in
+Definition~\ref{homological-algebra:definition-derived-functor}. For $X, Y \in \mathcal{A}$ and $n \in \ZZ$,
+$\Hom_{D(\mathcal{A})}(X, Y[n]) \cong R^n\Hom(X, -)(Y)$; in particular $\Hom_{D(R\text{-}\cat{Mod})}(M, N[n]) \cong \Ext^n_R(M, N)$ for
+$R$-modules $M$, $N$.
+\end{proposition}
+
+\begin{proof}
+Independence of the choices follows from uniqueness of $I_X$ up to unique isomorphism in $K(\mathcal{A})$
+(Corollary~\ref{homological-algebra:corollary-hom-injectives}). For exactness, a distinguished triangle of $D^+(\mathcal{A})$ is isomorphic to one
+of the form $X \xrightarrow{g} Y \to \mathrm{Cone}(g) \to X[1]$ with $g$ a morphism of bounded below complexes. By
+Corollary~\ref{homological-algebra:corollary-hom-injectives} there is $g_I \colon I_X \to I_Y$ with $g_I\iota_X = \iota_Y g$ in $K(\mathcal{A})$, where
+$\iota$ denotes the resolutions, and (TR3) in $K(\mathcal{A})$ gives a morphism of triangles $(\iota_X, \iota_Y, w)$ from the triangle of $g$ to that of
+$g_I$. By Proposition~\ref{homological-algebra:proposition-cohomological}, the five lemma (Lemma~\ref{homological-algebra:lemma-five}) shows
+that $w$ is a quasi-isomorphism. So the triangle is isomorphic in $D(\mathcal{A})$ to $I_X \to I_Y \to \mathrm{Cone}(g_I) \to I_X[1]$, whose vertices are
+bounded below complexes of injectives, and $RF$ sends it to $F(I_X) \to F(I_Y) \to F(\mathrm{Cone}(g_I)) \to F(I_X)[1]$. Since $F$ is additive and applied
+termwise, $F(\mathrm{Cone}(g_I)) = \mathrm{Cone}(F(g_I))$ with the corresponding maps, so this triangle is distinguished.
+
+For $X \in \mathcal{A}$, an injective resolution is a quasi-isomorphism $X \to I$, so $H^n(RF(X)) = H^n(F(I)) = R^nF(X)$. Finally
+$\Hom_D(X, Y[n]) = \Hom_K(X, I_Y[n])$ by Corollary~\ref{homological-algebra:corollary-hom-injectives}. A morphism of complexes $X \to I_Y[n]$ is a
+morphism $\varphi \colon X \to I_Y^n$ with $d\varphi = 0$, that is, an element of $\ker(\Hom(X, I_Y^n) \to \Hom(X, I_Y^{n+1}))$, and it is homotopic to
+zero if and only if $\varphi = dh$ for some $h \colon X \to I_Y^{n-1}$. So $\Hom_K(X, I_Y[n]) = H^n(\Hom(X, I_Y)) = R^n\Hom(X, -)(Y)$. For modules this
+is $\Ext^n_R(M, N)$ by Definition~\ref{homological-algebra:definition-ext-tor}, as $R\text{-}\cat{Mod}$ has enough injectives
+(Theorem~\ref{homological-algebra:theorem-enough-injectives}).
+\end{proof}
+
+\begin{lemma}\label{homological-algebra:lemma-acyclic-complexes}
+Let $\mathcal{B}$ have enough injectives, $G \colon \mathcal{B} \to \mathcal{C}$ be left exact, and $Y$ a bounded below acyclic complex of
+$G$-acyclic objects (Proposition~\ref{homological-algebra:proposition-acyclic-resolutions}). Then $G(Y)$ is acyclic.
+Consequently, if $Y$ is any bounded below complex of $G$-acyclic objects, then $RG(Y) \cong G(Y)$ in $D^+(\mathcal{C})$.
+\end{lemma}
+
+\begin{proof}
+Let $Z^n = \ker(Y^n \to Y^{n+1})$. Acyclicity gives short exact sequences $0 \to Z^n \to Y^n \to Z^{n+1} \to 0$, and $Z^n = 0$ for $n \ll 0$. By induction
+and the long exact sequence of Theorem~\ref{homological-algebra:theorem-derived-functors}, all $Z^n$ are $G$-acyclic, so $G$ preserves the
+exactness of these sequences ($R^1G(Z^n) = 0$). Since $G(Z^{n+1}) \to G(Y^{n+1})$ is a monomorphism, the kernel of $G(Y^n) \to G(Y^{n+1})$ is
+$G(Z^n)$, which is the image of $G(Y^{n-1}) \to G(Z^n) \to G(Y^n)$; so $G(Y)$ is acyclic. For the second statement, let $Y \to I$ be a quasi-isomorphism to a complex of
+injectives; its cone is a bounded below acyclic complex (Proposition~\ref{homological-algebra:proposition-cone}) of $G$-acyclic objects
+(termwise $Y^{n+1} \oplus I^n$, and $R^kG$ is additive). By the first statement $G(\mathrm{Cone}) = \mathrm{Cone}(G(Y) \to G(I))$ is acyclic, so
+$G(Y) \to G(I) = RG(Y)$ is a quasi-isomorphism.
+\end{proof}
+
+\begin{theorem}\label{homological-algebra:theorem-composition}
+Let $F \colon \mathcal{A} \to \mathcal{B}$ and $G \colon \mathcal{B} \to \mathcal{C}$ be left exact, with $\mathcal{A}$ and $\mathcal{B}$ having enough injectives,
+and suppose $F$ sends injectives to $G$-acyclic objects. Then $R(G \circ F) \cong RG \circ RF$.
+\end{theorem}
+
+\begin{proof}
+For $X \in D^+(\mathcal{A})$ with resolution $X \to I_X$, $RF(X) = F(I_X)$ is a bounded below complex of $G$-acyclic objects, so
+$RG(RF(X)) \cong G(F(I_X)) = R(GF)(X)$ by Lemma~\ref{homological-algebra:lemma-acyclic-complexes}.
+\end{proof}
+
+\begin{proposition}[Hypercohomology spectral sequences]\label{homological-algebra:proposition-hypercohomology}
+Let $F$ be left exact, $\mathcal{A}$ with enough injectives, and $X$ a complex with $X^n = 0$ for $n < 0$. There are convergent first-quadrant
+spectral sequences
+\[
+{}'E_1^{p,q} = R^qF(X^p) \Rightarrow R^{p+q}F(X), \qquad {}''E_2^{p,q} = R^pF(H^q(X)) \Rightarrow R^{p+q}F(X).
+\]
+\end{proposition}
+
+\begin{proof}
+Let $J$ be a Cartan--Eilenberg resolution of $X$; by the proof of Proposition~\ref{homological-algebra:proposition-resolutions-complexes},
+$RF(X) = F(\mathrm{Tot}(J)) = \mathrm{Tot}(F(J))$. Filtering by columns as in the proof of Theorem~\ref{homological-algebra:theorem-double-complex},
+${}'E_1^{p,q} = H^q_v(F(J^{p,\bullet})) = R^qF(X^p)$, since $J^{p,\bullet}$ is an injective resolution of $X^p$. Filtering by rows, the rows of $J$ are split
+(second filtration in the proof of Theorem~\ref{homological-algebra:theorem-grothendieck}), so $H^q_h(F(J)) = F(H^q_h(J))$, and $H^q_h(J)^{\bullet}$ is
+an injective resolution of $H^q(X)$; hence ${}''E_2^{p,q} = H^p(F(H^q_h(J))) = R^pF(H^q(X))$. Convergence is
+Theorem~\ref{homological-algebra:theorem-double-complex}.
+\end{proof}
+
+\section{$t$-structures}\label{homological-algebra:section-t-structures}
+
+\begin{definition}\label{homological-algebra:definition-truncation}
+For a complex $X$ and $n \in \ZZ$ the \emph{truncations} are
+\[
+\tau_{\leq n}X = (\cdots \to X^{n-1} \to Z^n(X) \to 0 \to \cdots), \qquad
+\tau_{\geq n}X = (\cdots \to 0 \to X^n/B^n(X) \to X^{n+1} \to \cdots).
+\]
+\end{definition}
+
+\begin{proposition}\label{homological-algebra:proposition-truncation}
+There are natural morphisms $\tau_{\leq n}X \to X \to \tau_{\geq n}X$, and $H^k(\tau_{\leq n}X) = H^k(X)$ for $k \leq n$ and $0$ otherwise, while
+$H^k(\tau_{\geq n}X) = H^k(X)$ for $k \geq n$ and $0$ otherwise. There is a distinguished triangle
+$\tau_{\leq n}X \to X \to \tau_{\geq n+1}X \to (\tau_{\leq n}X)[1]$ in $D(\mathcal{A})$.
+\end{proposition}
+
+\begin{proof}
+The cohomology computations are immediate from the definitions. The morphism $X \to \tau_{\geq n+1}X$ is surjective with kernel the complex
+$K = (\cdots \to X^{n-1} \to X^n \to B^{n+1}(X) \to 0 \to \cdots)$, and $\tau_{\leq n}X \to K$ is a quasi-isomorphism (both have cohomology $H^k(X)$ for
+$k \leq n$ and zero above, $H^{n+1}(K) = 0$ as $X^n \to B^{n+1}$ is onto). Finally, a short exact sequence of complexes $0 \to K \xrightarrow{\iota} X \xrightarrow{\pi} Q \to 0$ gives a distinguished triangle
+$K \to X \to Q \to K[1]$ in $D(\mathcal{A})$: the map $\mathrm{Cone}(\iota) \to Q$, $(a, b) \mapsto \pi(b)$, is a surjective morphism of complexes whose kernel
+$K^{n+1} \oplus K^n$ is $\mathrm{Cone}(\id_K)$, which is contractible (proof of
+Theorem~\ref{homological-algebra:theorem-homotopy-triangulated}); by the long exact sequence
+(Theorem~\ref{homological-algebra:theorem-long-exact-sequence}) it is a quasi-isomorphism, so the triangle of $\iota$ is isomorphic in
+$D(\mathcal{A})$ to $K \to X \to Q \to K[1]$. Apply this to $K \to X \to \tau_{\geq n+1}X$ and replace $K$ by $\tau_{\leq n}X$.
+\end{proof}
+
+\begin{remark}\label{homological-algebra:remark-t-structures}
+The full subcategories $D^{\leq 0}$ and $D^{\geq 0}$ of complexes with cohomology in degrees $\leq 0$, respectively $\geq 0$, form the \emph{standard
+$t$-structure} on $D(\mathcal{A})$: $\Hom(D^{\leq 0}, D^{\geq 1}) = 0$, $D^{\leq 0}[1] \subseteq D^{\leq 0}$, and every object sits in a triangle as in
+Proposition~\ref{homological-algebra:proposition-truncation}. Its \emph{heart} $D^{\leq 0} \cap D^{\geq 0}$ is equivalent to $\mathcal{A}$. Abstract
+$t$-structures, and in particular the perverse $t$-structure on derived categories of sheaves, were introduced in \cite{bbd}; perverse sheaves
+and M.~Saito's mixed Hodge modules are the modern setting for the Hodge theory of singular varieties.
+\end{remark}
+
+\section{Filtered complexes and strictness}\label{homological-algebra:section-filtered}
+
+\begin{definition}\label{homological-algebra:definition-strict}
+A \emph{filtered object} $(A, F)$ is an object with a decreasing filtration $F^pA$, \emph{finite} if $F^aA = A$ and $F^bA = 0$ for some $a, b$. A
+morphism $f \colon (A, F) \to (B, F)$ is \emph{filtered} if $f(F^pA) \subseteq F^pB$, and \emph{strict} if $f(F^pA) = f(A) \cap F^pB$ for all $p$. A
+morphism of filtered complexes is a \emph{filtered quasi-isomorphism} if it induces quasi-isomorphisms on all $\mathrm{gr}^p$.
+\end{definition}
+
+\begin{counterexample}\label{homological-algebra:counterexample-not-strict}
+Filtered morphisms need not be strict, and the category of filtered vector spaces is not abelian. Let $A = B = k$ with $F^0A = A$, $F^1A = 0$ and
+$F^0B = F^1B = B$, $F^2B = 0$. The identity $A \to B$ is filtered and bijective, but not strict ($f(F^1A) = 0 \neq F^1B \cap B = k$), and it is not an
+isomorphism of filtered objects, because its inverse is not filtered. Its kernel and cokernel (with the induced filtrations) are zero, so it is a
+monomorphism and an epimorphism; by Lemma~\ref{homological-algebra:lemma-mono-epi-iso} the category is not abelian.
+\end{counterexample}
+
+\begin{proposition}[Deligne]\label{homological-algebra:proposition-degeneration-strictness}
+Let $K$ be a complex with a filtration that is finite in each degree. The spectral sequence of
+Theorem~\ref{homological-algebra:theorem-filtered-complex} degenerates at $E_1$ (that is, $d_r = 0$ for all $r \geq 1$) if and only if every
+differential $d \colon K^n \to K^{n+1}$ is strict. In this case $H^n(\mathrm{gr}^pK) \cong \mathrm{gr}^pH^n(K)$.
+\end{proposition}
+
+\begin{proof}
+We use the notation of Definition~\ref{homological-algebra:definition-z-b}; strictness of $d$ means $F^p \cap d(K) = d(F^p)$.
+
+Suppose $d$ is strict. Let $x \in Z_r^p$ with $r \geq 1$. Then $dx \in F^{p+1} \cap d(K) = d(F^{p+1})$, so $dx = dy$ with $y \in F^{p+1}$. Since
+$dy = dx \in F^{p+r}$, $y \in Z_{r-1}^{p+1}$, so $x$ and the cocycle $x - y$ have the same class in $E_r^p$. Hence every class in $E_r^p$ is represented by
+a cocycle of $K$, and $d_r = 0$.
+
+Suppose all $d_r$, $r \geq 1$, vanish. Fix a degree $n$. We show $F^p \cap d(K^{n-1}) \subseteq d(F^pK^{n-1})$ for all $p$ by descending
+induction on $p$ (for $p$ large, $F^pK^n = 0$). Let $y = dx \in F^p$ with $x \in F^aK^{n-1}$; since the filtration is finite in degree $n - 1$, it suffices
+to treat all $a$, by descending induction on $a$. If $a \geq p$ there is nothing to show. If $a < p$, then
+$x \in Z_{p-a}^a$, and $d_{p-a}[x] = [dx] = 0$ in $E_{p-a}^p$, so $dx \in B_{p-a}^p + Z_{p-a-1}^{p+1}$: $dx = dx' + z$ with $x' \in F^{a+1}$, $dx' \in F^p$,
+and $z \in F^{p+1}$ with $z = d(x - x') \in d(K)$. By induction on $a$ (as $x' \in F^{a+1}$), $dx' \in d(F^p)$; by induction on $p$, $z \in d(F^{p+1}) \subseteq d(F^p)$. So
+$y \in d(F^p)$. The last statement follows from $E_1 = E_\infty$ and Theorem~\ref{homological-algebra:theorem-filtered-complex}.
+\end{proof}
+
+\begin{remark}\label{homological-algebra:remark-filtered-derived}
+Localising the homotopy category of filtered complexes at filtered quasi-isomorphisms gives the \emph{filtered derived category} $DF(\mathcal{A})$.
+Deligne used it to construct mixed Hodge structures on the cohomology of algebraic varieties \cite{deligne-hodge-2}; the degeneration of the
+Hodge-to-de Rham spectral sequence of a compact K\"ahler manifold (Chapter~\ref{kahler}) is, by
+Proposition~\ref{homological-algebra:proposition-degeneration-strictness}, the strictness of the de Rham differential with respect to the
+Hodge filtration.
+\end{remark}
+
+\section{Exercises on Derived Categories}\label{homological-algebra:section-exercises-derived-categories}
+
+\begin{exercise}\label{homological-algebra:exercise-five-lemma-triangles}
+Show that in a triangulated category, if $(u, v, w)$ is a morphism of distinguished triangles and two of $u$, $v$, $w$ are isomorphisms, so is the
+third.
+\end{exercise}
+
+\begin{solution}
+Let $(u, v, w)$ be a morphism from $X \to Y \to Z \to X[1]$ to $X' \to Y' \to Z' \to X'[1]$ with $u$, $v$ isomorphisms, and let $W$ be any object.
+Applying $\Hom(W, -)$ and Proposition~\ref{homological-algebra:proposition-cohomological} gives two long exact sequences of abelian groups
+connected by the maps induced by $u$, $v$, $w$, $u[1]$, $v[1]$. The five lemma (Lemma~\ref{homological-algebra:lemma-five}) shows that
+$w_* \colon \Hom(W, Z) \to \Hom(W, Z')$ is bijective for all $W$. Taking $W = Z'$ gives $s \colon Z' \to Z$ with $ws = \id$; then $w(sw) = w$, and
+injectivity of $w_*$ for $W = Z$ gives $sw = \id$. The other cases follow by rotating the triangles with (TR2).
+\end{solution}
+
+\begin{exercise}\label{homological-algebra:exercise-split-complex}
+Let $k$ be a field. Show that every complex $X$ of $k$-vector spaces is isomorphic in $D(\cat{Vect}_k)$ to the complex $\bigoplus_n H^n(X)[-n]$ with
+zero differential.
+\end{exercise}
+
+\begin{solution}
+Every subspace has a complement. Choose complements $X^n = Z^n \oplus C^n$ and $Z^n = B^n \oplus H^n$, where $H^n \cong H^n(X)$. The subcomplex
+$H = \bigoplus_n H^n$ has zero differential. Choose linear maps $r^n \colon X^n \to H^n$ that are the identity on $H^n$ and vanish on $B^n \oplus C^n$. Then
+$r \colon X \to H$ is a morphism of complexes: $r(dx) = 0$ because $dx \in B^{n+1}$. It induces the identity on cohomology, so it is a
+quasi-isomorphism, hence an isomorphism in $D(\cat{Vect}_k)$.
+\end{solution}
+
+\begin{exercise}\label{homological-algebra:exercise-ext-composition}
+Using Proposition~\ref{homological-algebra:proposition-derived-functor-properties}, define the Yoneda product
+$\Ext^m(Y, Z) \times \Ext^n(X, Y) \to \Ext^{m+n}(X, Z)$ as composition in $D(\mathcal{A})$ and show that it is associative.
+\end{exercise}
+
+\begin{exercise}\label{homological-algebra:exercise-not-abelian}
+Show that $D(\mathcal{A})$ is not abelian unless every short exact sequence in $\mathcal{A}$ splits. (Hint: a monomorphism in a triangulated category
+is split.)
+\end{exercise}
+
+\begin{solution}
+Let $f \colon X \to Y$ be a monomorphism in a triangulated category, and complete it to a triangle $Z[-1] \xrightarrow{h} X \xrightarrow{f} Y \to Z$. Then
+$fh = 0$, so $h = 0$. Applying Proposition~\ref{homological-algebra:proposition-cohomological} with $\Hom(-, X)$ shows that
+$\Hom(Y, X) \to \Hom(X, X)$ is surjective (the next term maps through $h = 0$), so $f$ has a retraction. Dually, epimorphisms have sections.
+
+Suppose $D(\mathcal{A})$ is abelian and let $0 \to A \to B \xrightarrow{g} C \to 0$ be exact in $\mathcal{A}$. As in the proof of
+Proposition~\ref{homological-algebra:proposition-truncation}, it gives a distinguished triangle $A \to B \xrightarrow{g} C \xrightarrow{\delta} A[1]$.
+Factor $\delta = me$ with $e \colon C \to I$ an epimorphism and $m \colon I \to A[1]$ a monomorphism. Both split, so $I$ is a direct summand of $C$ and of
+$A[1]$ in $D(\mathcal{A})$. Cohomology is additive, so $H^k(I)$ vanishes for $k \neq 0$ (as a summand of $C$) and for $k \neq -1$ (as a summand of $A[1]$).
+Hence $I$ is acyclic, $I \cong 0$ and $\delta = 0$. By Proposition~\ref{homological-algebra:proposition-cohomological}, the sequence
+$\Hom(C, B) \to \Hom(C, C) \to \Hom(C, A[1])$ is exact and $\id_C \mapsto \delta = 0$, so $g\sigma = \id_C$ for some $\sigma \colon C \to B$ in
+$D(\mathcal{A})$. Applying $H^0$ gives $g \circ H^0(\sigma) = \id_C$ in $\mathcal{A}$, so the sequence splits.
 \end{solution}

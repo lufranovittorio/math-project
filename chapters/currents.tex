@@ -1,4 +1,4 @@
-\chapter{Currents}\label{currents}
+\chapter{Currents and Varifolds}\label{currents}
 \chapterstatus{draft}
 
 \section{Introduction}\label{currents:section-introduction}
@@ -15,7 +15,7 @@ currents of locally bounded mass form a weakly compact family (Theorem~\ref{curr
 compact support bounds a current of controlled mass. Rectifiable and integral currents are defined through Lipschitz images of pieces of $\RR^k$, and we state, with references, the two deep theorems of
 the subject, the compactness theorem of Federer and Fleming and the boundary rectifiability theorem; from them the existence of mass-minimising integral currents with prescribed boundary follows in a few
 lines. Calibrations then show that flat discs and pieces of complex curves in $\CC^2$ minimise area among all competitors. The companion theory of varifolds, which forgets orientation and handles soap films
-with singularities, is in Chapter~\ref{varifolds}. References: \cite{federer-gmt}, \cite{simon-gmt}, \cite{federer-fleming-1960}.
+with singularities, is in Section~\ref{currents:section-varifolds}. References: \cite{federer-gmt}, \cite{simon-gmt}, \cite{federer-fleming-1960}.
 
 \noindent\textbf{Prerequisites.} Chapter~\ref{multilinear-algebra} (Multilinear Algebra), Chapter~\ref{radon-measures} (Radon Measures), Chapter~\ref{geometric-measure-theory} (Geometric Measure Theory),
 Chapter~\ref{de-rham} (De Rham Cohomology).
@@ -412,3 +412,796 @@ $\partial(-[\![[0, 1]^2]\!]) = F_{1\#}T - T - h(\partial T)$, where $F_{1\#}T$ i
 upwards. Indeed $\partial[\![[0, 1]^2]\!]$ is the bottom side to the right, the right side up, the top side to the left and the left side down, which is $T + h(\partial T) - F_{1\#}T$.
 \end{solution}
 
+\section{Varifolds}\label{currents:section-varifolds}
+Integral currents (Chapter~\ref{currents}) solve Plateau's problem for oriented surfaces, but soap films are not oriented and are not always mass minimising: a M\"obius strip of soap is a stable
+film, and the triple junctions of soap films, where three sheets meet at angles of $120^\circ$, cannot be described by currents with integer multiplicities in a way that sees their balance, because
+orientations cannot be chosen consistently around the junction. Currents also forget too much in limits: the oscillating graphs of Example~\ref{currents:example-mass-drop} converge, as currents, to a
+segment of smaller length, because oscillations with opposite orientations cancel.
+
+\emph{Varifolds}, introduced by Almgren and developed by Allard \cite{allard-1972}, keep exactly the information that area sees: a varifold is a measure on the space of pairs (position, unoriented
+tangent plane). Its \emph{first variation} is the derivative of its area under deformations, and the critical points of area, the \emph{stationary} varifolds, include minimal submanifolds, pairs of
+crossing planes, the triple junctions of soap films and many objects without any smooth structure. The basic tool is the \emph{monotonicity formula}: for a stationary varifold the area in a ball
+divided by the area of a flat disc of the same radius increases with the radius. It gives densities at every point and lower bounds for area, and it is the starting point of Allard's compactness and
+regularity theorems.
+
+The chapter proceeds as follows. Section~\ref{currents:section-grassmannian} describes the space of unoriented planes. Section~\ref{currents:section-varifold-convergence} defines varifolds, their convergence and
+push-forward, and computes the varifold limit of the oscillating graphs: unlike the current limit, it keeps all the length, and remembers the directions of the oscillations.
+Section~\ref{currents:section-rectifiable-varifolds} introduces rectifiable and integral varifolds and shows that their densities are their multiplicities. Section~\ref{currents:section-first-variation} defines
+the first variation, computes it for submanifolds (mean curvature and boundary terms) and for cones over finitely many rays, and introduces the generalised mean curvature.
+Section~\ref{currents:section-monotonicity} proves the monotonicity formula and its consequences, and Section~\ref{currents:section-allard} states Allard's theorems and surveys further results with
+references \cite{allard-1972}, \cite{simon-gmt}.
+
+\noindent\textbf{Prerequisites.} Chapter~\ref{radon-measures} (Radon Measures), Chapter~\ref{geometric-measure-theory} (Geometric Measure Theory), Chapter~\ref{riemannian-geometry} (Riemannian Geometry),
+Chapter~\ref{currents} (Currents).
+
+\section{The Grassmannian of unoriented planes}\label{currents:section-grassmannian}
+
+A $k$-dimensional surface has at each smooth point a tangent plane, a $k$-dimensional linear subspace of $\RR^n$, without a preferred orientation. To integrate functions of the tangent plane, and to say
+when tangent planes are close, we need a topology on the set of such subspaces. The simplest way to get one is to replace a subspace by the orthogonal projection onto it, which is a matrix.
+
+\begin{definition}\label{currents:definition-grassmannian}
+Let $1 \leq k \leq n - 1$. The \emph{Grassmannian} $G(n, k)$ is the set of $k$-dimensional linear subspaces of $\RR^n$. For $S \in G(n, k)$ let $P_S \colon \RR^n \to \RR^n$ be the orthogonal projection onto
+$S$, and $P_S^\perp = I - P_S$ the projection onto $S^\perp$. We identify $S$ with the matrix $P_S \in \RR^{n \times n}$ and give $G(n, k)$ the metric $d(S, T) = \|P_S - P_T\|$, the operator norm. For an
+open set $U \subseteq \RR^n$ we write
+\[
+G_k(U) = U \times G(n, k),
+\]
+with the product topology.
+\end{definition}
+
+\begin{lemma}\label{currents:lemma-grassmannian-compact}
+The map $S \mapsto P_S$ is a bijection from $G(n, k)$ onto the set $\mathcal{P}_k = \{P \in \RR^{n \times n} : P^T = P,\ P^2 = P,\ \operatorname{tr}P = k\}$, which is compact. Hence $G(n, k)$ is a compact metric
+space, and $G_k(U)$ is a locally compact separable metric space; a set $A \subseteq G_k(U)$ has compact closure if and only if its projection to $U$ has compact closure in $U$.
+\end{lemma}
+
+\begin{proof}
+\emph{Step 1: $P_S \in \mathcal{P}_k$.} If $e_1, \ldots, e_k$ is an orthonormal basis of $S$, then $P_S = \sum_ie_ie_i^T$, which is symmetric, satisfies $P_S^2 = \sum_{i, j}e_i(e_i^Te_j)e_j^T = P_S$, and has
+trace $\sum_ie_i^Te_i = k$.
+
+\emph{Step 2: every $P \in \mathcal{P}_k$ is some $P_S$.} A symmetric matrix is orthogonally diagonalisable, and $P^2 = P$ forces its eigenvalues to satisfy $\lambda^2 = \lambda$, so they are $0$ and $1$; the
+trace counts the eigenvalue $1$, so the eigenspace $S$ of $1$ has dimension $k$, and $P$ is the orthogonal projection onto $S$ (it is the identity on $S$ and zero on the orthogonal eigenspace of $0$).
+Distinct subspaces have distinct projections, since $S$ is the image of $P_S$.
+
+\emph{Step 3: compactness.} $\mathcal{P}_k$ is closed, being defined by polynomial equations, and bounded, since $\operatorname{tr}(P^TP) = \operatorname{tr}P = k$ is the squared Hilbert--Schmidt norm.
+So it is compact (Heine--Borel), and so is $G(n, k)$ with the induced metric. The statements about $G_k(U)$ follow, as $U$ is locally compact and separable and $G(n, k)$ is compact.
+\end{proof}
+
+\begin{example}\label{currents:example-grassmannian}
+\begin{enumerate}
+\item \emph{Lines in the plane.} The line $\ell_\theta$ spanned by $(\cos\theta, \sin\theta)$ has
+\[
+P_{\ell_\theta} = \begin{pmatrix}\cos^2\theta & \cos\theta\sin\theta \\ \cos\theta\sin\theta & \sin^2\theta\end{pmatrix} = \frac12\begin{pmatrix}1 + \cos2\theta & \sin2\theta \\ \sin2\theta & 1 - \cos2\theta\end{pmatrix}.
+\]
+So $\theta \mapsto P_{\ell_\theta}$ is a homeomorphism from $\RR/\pi\ZZ$ onto a circle in the space of symmetric matrices: $G(2, 1)$ is a circle, the real projective line. The difference
+$P_{\ell_\theta} - P_{\ell_0}$ is symmetric with trace $0$ and determinant $-\sin^2\theta$, so its eigenvalues are $\pm|\sin\theta|$, and $d(\ell_\theta, \ell_0) = |\sin\theta|$: the distance between two
+lines is the sine of the angle between them, and the lines $\ell_\theta$ and $\ell_{\theta + \pi}$, which are the same line, are at distance $0$.
+\item \emph{Complements.} $S \mapsto S^\perp$ is an isometry $G(n, k) \to G(n, n - k)$, since $P_{S^\perp} - P_{T^\perp} = -(P_S - P_T)$. For instance $G(3, 2)$, the set of planes in $\RR^3$, is
+isometric to $G(3, 1)$, the real projective plane.
+\item \emph{Dimension.} Near a plane $S_0$, every $S$ close to $S_0$ is the graph $\{v + Av : v \in S_0\}$ of a unique linear map $A \colon S_0 \to S_0^\perp$, and $S \mapsto A$ is a chart; so $G(n, k)$ is
+a compact manifold of dimension $k(n - k)$ (Chapter~\ref{smooth-manifolds}). We will not need this structure.
+\end{enumerate}
+\end{example}
+
+\section{Varifolds and their convergence}\label{currents:section-varifold-convergence}
+
+A smooth $k$-dimensional surface $M$ gives a measure on $G_k(U)$: integrate a function $\varphi(x, S)$ of the position and of the plane over $M$, at the point $x$ with the plane $T_xM$, with respect to area.
+A varifold is any such measure.
+
+\begin{definition}\label{currents:definition-varifold}
+Let $U \subseteq \RR^n$ be open and $1 \leq k \leq n - 1$. A \emph{$k$-varifold} in $U$ is a Radon measure $V$ on $G_k(U)$. Its \emph{weight} is the Radon measure $\|V\| = \pi_\#V$ on $U$, where
+$\pi(x, S) = x$:
+\[
+\|V\|(A) = V(A \times G(n, k)) \qquad \text{for Borel } A \subseteq U,
+\]
+and its \emph{mass} is $\mathbf{M}(V) = \|V\|(U)$. A sequence of $k$-varifolds $V_j$ \emph{converges} to $V$, written $V_j \to V$, if $V_j \rightharpoonup V$ as Radon measures on $G_k(U)$
+(Definition~\ref{radon-measures:definition-weak-convergence}): $\int\varphi\,dV_j \to \int\varphi\,dV$ for every $\varphi \in C_c(G_k(U))$.
+\end{definition}
+
+The weight is a Borel measure on $U$ that is finite on compact sets, because $K \times G(n, k)$ is compact for compact $K \subseteq U$; so it is a Radon measure by
+Proposition~\ref{radon-measures:proposition-radon-automatic}. It forgets the planes and keeps only the area.
+
+\begin{notation}\label{currents:notation-varifolds}
+We write $V(\varphi) = \int_{G_k(U)}\varphi(x, S)\,dV(x, S)$. A function $\psi$ on $U$ is regarded as a function on $G_k(U)$ that does not depend on $S$, so that $V(\psi) = \int\psi\,d\|V\|$. We write
+$\omega_k = \lambda^k(B^k(0, 1))$ for the volume of the unit ball in $\RR^k$, so that a flat $k$-disc of radius $r$ has area $\omega_kr^k$; in the notation of
+Definition~\ref{geometric-measure-theory:definition-density}, $\omega_kr^k = \alpha(k)(2r)^k$. Balls $B(x, r)$ are open and $\overline{B}(x, r)$ closed.
+\end{notation}
+
+\begin{example}\label{currents:example-varifolds}
+\begin{enumerate}
+\item \emph{Submanifolds.} An \emph{embedded $k$-dimensional submanifold of class $C^1$} is a set satisfying at each of its points the equivalent conditions of
+Proposition~\ref{smooth-manifolds:proposition-submanifold-criteria} with ``smooth'' replaced by ``of class $C^1$''; the proof of the equivalence uses only the inverse function theorem
+(Theorem~\ref{real-analysis:theorem-inverse-function}), which holds in class $C^1$. Let $M \subseteq U$ be such a submanifold with $\mathcal{H}^k(M \cap K) < \infty$ for every compact $K \subseteq U$, and let
+$\theta \colon M \to (0, \infty)$ be a Borel function with $\int_{M \cap K}\theta\,d\mathcal{H}^k < \infty$ for compact $K$. The varifold $v(M, \theta)$ is
+\[
+v(M, \theta)(\varphi) = \int_M\varphi(x, T_xM)\,\theta(x)\,d\mathcal{H}^k(x),
+\]
+the image of the measure $\theta\mathcal{H}^k\llcorner M$ under the map $x \mapsto (x, T_xM)$, which is continuous on $M$. We write $v(M) = v(M, 1)$. Its weight is $\theta\mathcal{H}^k\llcorner M$, and for a
+smooth $M$ its mass is the Riemannian volume of $M$ weighted by $\theta$ (Proposition~\ref{riemannian-geometry:proposition-hausdorff-measure}).
+\item \emph{Crossing lines.} For two distinct lines $L_1$, $L_2$ through $0$ in $\RR^2$, $V = v(L_1) + v(L_2)$ has weight $\mathcal{H}^1\llcorner(L_1 \cup L_2)$, and at the crossing point the two
+directions are recorded separately. The varifold $W(\varphi) = \int_{L_1 \cup L_2}\varphi(x, L_1)\,d\mathcal{H}^1(x)$ has the same weight, but assigns the wrong plane to the points of $L_2$; varifolds with the
+same weight can be very different.
+\item \emph{Smeared varifolds.} $V = (\lambda^2\llcorner[0, 1]^2) \otimes \delta_{\ell_0}$, that is $V(\varphi) = \int_{[0, 1]^2}\varphi(x, \ell_0)\,dx$, is a $1$-varifold in $\RR^2$: a ``continuum of
+horizontal segments'', like the current of Example~\ref{currents:example-integral-currents}(4). More generally, $\mu \otimes \nu$ is a varifold for every Radon measure $\mu$ on $U$ and every finite measure $\nu$
+on $G(n, k)$; its weight is $\nu(G(n, k))\mu$.
+\item \emph{Atoms.} $\delta_{(x_0, S)}$ is a $k$-varifold: a point carrying a unit of $k$-dimensional area and a plane.
+\end{enumerate}
+\end{example}
+
+\begin{proposition}\label{currents:proposition-varifold-convergence}
+\begin{enumerate}
+\item If $V_j \to V$, then $\|V_j\| \rightharpoonup \|V\|$, and $\mathbf{M}(V) \leq \liminf_j\mathbf{M}(V_j)$. If moreover all $\|V_j\|$ are supported in a fixed compact set $K \subseteq U$, then
+$\mathbf{M}(V_j) \to \mathbf{M}(V)$.
+\item (\emph{Compactness.}) If $\sup_j\|V_j\|(K) < \infty$ for every compact $K \subseteq U$, then a subsequence of $(V_j)$ converges to a $k$-varifold.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) A function $\psi \in C_c(U)$ is, as a function on $G_k(U)$, continuous with compact support $\operatorname{supp}\psi \times G(n, k)$, so $\int\psi\,d\|V_j\| = V_j(\psi) \to V(\psi) = \int\psi\,d\|V\|$. The
+mass inequality is Proposition~\ref{radon-measures:proposition-weak-convergence-sets}(1) for the open set $U$. If the weights are supported in $K$, choose $\psi \in C_c(U)$ with $\psi = 1$ on a neighbourhood
+of $K$ (Lemma~\ref{general-topology:lemma-lch-shrinking}); then $\mathbf{M}(V_j) = \|V_j\|(\psi) \to \|V\|(\psi) = \mathbf{M}(V)$, as $\|V\|$ is also supported in $K$ by
+Proposition~\ref{radon-measures:proposition-weak-convergence-sets}(1) applied to $U \setminus K$.
+
+(2) By Lemma~\ref{currents:lemma-grassmannian-compact} every compact subset of $G_k(U)$ lies in some $K \times G(n, k)$ with $K \subseteq U$ compact, and $V_j(K \times G(n, k)) = \|V_j\|(K)$ is bounded in
+$j$. Apply Theorem~\ref{radon-measures:theorem-weak-compactness} on the space $G_k(U)$.
+\end{proof}
+
+The next lemma is an averaging principle: a continuous function of a fast oscillating quantity integrates, in the limit, to its average over one period.
+
+\begin{lemma}\label{currents:lemma-averaging}
+Let $h \colon [0, 2\pi] \times [-1, 1] \to \RR$ be continuous. Then
+\[
+\lim_{j \to \infty}\int_0^{2\pi}h(t, \cos(jt))\,dt = \frac1{2\pi}\int_0^{2\pi}\int_0^{2\pi}h(t, \cos s)\,ds\,dt .
+\]
+\end{lemma}
+
+\begin{proof}
+Let $\varpi$ be a modulus of uniform continuity of $h$ in the first variable: $|h(t, c) - h(t^{\prime}, c)| \leq \varpi(|t - t^{\prime}|)$, with $\varpi(\delta) \to 0$ as $\delta \to 0$ (Heine--Cantor). Split
+$[0, 2\pi]$ into the intervals $I_i = [t_i, t_{i+1}]$, $t_i = 2\pi i/j$, $0 \leq i < j$. On $I_i$ replace $h(t, \cos(jt))$ by $h(t_i, \cos(jt))$, with an error at most $\varpi(2\pi/j)$, and substitute
+$s = jt - 2\pi i$:
+\[
+\int_{I_i}h(t_i, \cos(jt))\,dt = \frac1j\int_0^{2\pi}h(t_i, \cos s)\,ds = \frac1{2\pi}\cdot\frac{2\pi}j\,F(t_i),
+\]
+where $F(t) = \int_0^{2\pi}h(t, \cos s)\,ds$.
+Summing over $i$, $\int_0^{2\pi}h(t, \cos(jt))\,dt$ differs by at most $2\pi\varpi(2\pi/j)$ from $\frac1{2\pi}\sum_i\frac{2\pi}jF(t_i)$, a Riemann sum of the continuous function $F$, which tends to
+$\frac1{2\pi}\int_0^{2\pi}F(t)\,dt$.
+\end{proof}
+
+\begin{example}\label{currents:example-oscillating}
+\emph{Oscillating graphs: varifolds keep the length.} Let $\gamma_j(t) = (t, \frac1j\sin(jt))$, $M_j = \gamma_j((0, 2\pi))$, and $V_j = v(M_j)$, $1$-varifolds in $\RR^2$. As currents the oriented curves
+converge to the segment $[0, 2\pi] \times \{0\}$ of length $2\pi$, losing length (Example~\ref{currents:example-mass-drop}). As varifolds: for $c \in [-1, 1]$ let $\ell(c) \in G(2, 1)$ be the line spanned by
+$(1, c)$; its projection $(1, c)(1, c)^T/(1 + c^2)$ depends continuously on $c$. The tangent line of $M_j$ at $\gamma_j(t)$ is $\ell(\cos(jt))$ and $|\gamma_j^{\prime}(t)| = \sqrt{1 + \cos^2(jt)}$, so by
+Proposition~\ref{riemannian-geometry:proposition-parametrised-volume}(1) and Proposition~\ref{riemannian-geometry:proposition-hausdorff-measure}
+\[
+V_j(\varphi) = \int_0^{2\pi}\varphi\bigl(\gamma_j(t), \ell(\cos(jt))\bigr)\sqrt{1 + \cos^2(jt)}\,dt .
+\]
+Since $|\gamma_j(t) - (t, 0)| \leq 1/j$ and $\varphi$ is uniformly continuous, we may replace $\gamma_j(t)$ by $(t, 0)$ at the cost of an error tending to $0$. Lemma~\ref{currents:lemma-averaging}, with
+$h(t, c) = \varphi((t, 0), \ell(c))\sqrt{1 + c^2}$, gives $V_j \to V$, where
+\[
+V(\varphi) = \frac1{2\pi}\int_0^{2\pi}\int_0^{2\pi}\varphi\bigl((t, 0), \ell(\cos s)\bigr)\sqrt{1 + \cos^2s}\,ds\,dt .
+\]
+So $V = (\mathcal{H}^1\llcorner([0, 2\pi] \times \{0\})) \otimes \nu$, where $\nu$ is the image of the measure $\frac1{2\pi}\sqrt{1 + \cos^2s}\,ds$ on $[0, 2\pi]$ under $s \mapsto \ell(\cos s)$. Three things
+happened. The mass is preserved: $\mathbf{M}(V) = \int_0^{2\pi}\sqrt{1 + \cos^2s}\,ds = \mathbf{M}(V_j)$, in accordance with Proposition~\ref{currents:proposition-varifold-convergence}(1). The weight is a
+constant multiple $c_0\mathcal{H}^1$ of length on the segment, $c_0 = \frac1{2\pi}\int_0^{2\pi}\sqrt{1 + \cos^2s}\,ds \approx 1.216$, as in Exercise~\ref{radon-measures:exercise-staircase}. And at each point of
+the segment the varifold remembers a whole distribution $\nu$ of directions, the directions of the oscillations, rather than the tangent line of the segment.
+\end{example}
+
+Varifolds can be pushed forward by maps, and the tangent planes are moved by the differential. Area changes by the Jacobian of the restriction of the differential to the plane.
+
+\begin{definition}\label{currents:definition-push-forward-varifolds}
+Let $S \in G(n, k)$ and let $A \colon \RR^n \to \RR^m$ be linear. The \emph{Jacobian of $A$ on $S$} is $J_SA = J(A \circ \iota)$ (Definition~\ref{geometric-measure-theory:definition-jacobian}), where
+$\iota \colon \RR^k \to \RR^n$ is any linear isometry onto $S$. Let $U \subseteq \RR^n$ and $U^{\prime} \subseteq \RR^m$ be open, $f \colon U \to U^{\prime}$ a proper map of class $C^1$ (preimages of compact sets
+are compact), and $V$ a $k$-varifold in $U$. The \emph{push-forward} $f_\#V$ is the $k$-varifold in $U^{\prime}$ with
+\[
+f_\#V(\varphi) = \int_{G_k(U)}\varphi\bigl(f(x), Df(x)S\bigr)\,J_Sf(x)\,dV(x, S), \qquad J_Sf(x) = J_S(Df(x)),
+\]
+where the integrand is taken to be $0$ at the points where $J_Sf(x) = 0$.
+\end{definition}
+
+\begin{lemma}\label{currents:lemma-push-forward}
+\begin{enumerate}
+\item $J_SA$ does not depend on the choice of $\iota$, and $J_SA > 0$ if and only if $A$ is injective on $S$, in which case $AS \in G(m, k)$.
+\item If $L \colon \RR^k \to \RR^n$ is linear and injective with image $S$, then $J(A \circ L) = J_SA \cdot JL$.
+\item The integrand in Definition~\ref{currents:definition-push-forward-varifolds} is continuous with compact support on $G_k(U)$ for $\varphi \in C_c(G_k(U^{\prime}))$; hence $f_\#V$ is a well-defined $k$-varifold.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) Two isometries onto $S$ differ by an orthogonal $Q$ of $\RR^k$, and $\det(Q^TBQ) = \det B$. The second statement is Lemma~\ref{geometric-measure-theory:lemma-jacobian}(1).
+
+(2) By Lemma~\ref{geometric-measure-theory:lemma-jacobian}(2), $L = O \circ R$ with $O$ an isometry onto $S$ and $R$ symmetric positive definite with $\det R = JL$. Then
+$J(AL)^2 = \det(R^TO^TA^TAOR) = (\det R)^2\det((AO)^T(AO)) = (JL)^2(J_SA)^2$.
+
+(3) Fix $(x_0, S_0)$, an orthonormal basis $v_1, \ldots, v_k$ of $S_0$, and put $b_i(S) = P_Sv_i$; for $S$ near $S_0$ these vectors are close to the $v_i$, hence a basis of $S$, depending continuously on
+$S$. With $B(S) = (b_1(S), \ldots, b_k(S)) \colon \RR^k \to \RR^n$ and $L(x, S) = Df(x)B(S)$, part (2) gives $J_Sf(x) = J(L(x, S))/J(B(S))$, continuous near $(x_0, S_0)$. Where $J_Sf(x) > 0$, $L$ is
+injective with image $Df(x)S$, and the projection onto it is $L(L^TL)^{-1}L^T$, continuous. So the integrand is continuous where $J_Sf > 0$; at a point where $J_Sf(x_0) = 0$ it is bounded by
+$\sup|\varphi|\,J_Sf(x)$, which tends to $0$, so it is continuous there too. It vanishes unless $f(x)$ lies in the projection $C$ of $\operatorname{supp}\varphi$ to $U^{\prime}$, which is compact, so its
+support lies in $f^{-1}(C) \times G(n, k)$, compact by properness. Hence $\varphi \mapsto f_\#V(\varphi)$ is a positive linear functional on $C_c(G_k(U^{\prime}))$, and the Riesz--Markov theorem
+(Theorem~\ref{radon-measures:theorem-riesz-markov}) with Proposition~\ref{radon-measures:proposition-radon-automatic} gives the Radon measure $f_\#V$.
+\end{proof}
+
+\begin{proposition}\label{currents:proposition-push-forward-submanifold}
+Let $M \subseteq U$ be as in Example~\ref{currents:example-varifolds}(1), and let $f \colon U \to U^{\prime}$ be proper of class $C^1$, injective on $M$, with $Df(x)$ injective on $T_xM$ for every $x \in M$.
+Then
+\[
+f_\#v(M)(\varphi) = \int_{f(M)}\varphi\bigl(y, Df(x)T_xM\bigr)\,d\mathcal{H}^k(y), \qquad x = f^{-1}(y) \in M .
+\]
+In particular $\|f_\#v(M)\| = \mathcal{H}^k\llcorner f(M)$, and if $f$ is a $C^1$ diffeomorphism of $U$ onto $U^{\prime}$, then $f_\#v(M) = v(f(M))$.
+\end{proposition}
+
+\begin{proof}
+Cover $M$ by countably many images $\Gamma_i(\Omega_i)$ of local parametrisations, injective $C^1$ immersions $\Gamma_i \colon \Omega_i \to M$ with $\Omega_i \subseteq \RR^k$ open, and choose disjoint Borel sets
+$A_i \subseteq \Omega_i$ with $M = \bigsqcup_i\Gamma_i(A_i)$. The map $f \circ \Gamma_i$ is an injective $C^1$ immersion, as $D(f \circ \Gamma_i)(u) = Df(\Gamma_i(u))\,D\Gamma_i(u)$ and $Df$ is injective on
+$T_{\Gamma_i(u)}M = D\Gamma_i(u)(\RR^k)$; its differential has image $Df(x)T_xM$ at $x = \Gamma_i(u)$, and $J(f \circ \Gamma_i)(u) = J_{T_xM}f(x)\,J\Gamma_i(u)$ by
+Lemma~\ref{currents:lemma-push-forward}(2). The area formula (Theorem~\ref{geometric-measure-theory:theorem-area-formula}), applied to $\Gamma_i$ and to $f \circ \Gamma_i$, gives
+\[
+\begin{aligned}
+&\int_{\Gamma_i(A_i)}\varphi\bigl(f(x), Df(x)T_xM\bigr)J_{T_xM}f(x)\,d\mathcal{H}^k(x) \\
+&= \int_{A_i}\varphi\bigl(f(\Gamma_i(u)), Df(\Gamma_i(u))T_{\Gamma_i(u)}M\bigr)\,J(f \circ \Gamma_i)(u)\,du \\
+&= \int_{f(\Gamma_i(A_i))}\varphi\bigl(y, Df(x)T_xM\bigr)\,d\mathcal{H}^k(y),
+\end{aligned}
+\]
+for $\varphi \geq 0$, and by linearity for all $\varphi$. Summing over $i$ gives the formula, because $f$ is injective on $M$ and the sets $f(\Gamma_i(A_i))$ are disjoint. If $f$ is a diffeomorphism, $f(M)$ is an
+embedded submanifold of $U^{\prime}$ with $T_{f(x)}f(M) = Df(x)T_xM$, and $\mathcal{H}^k(f(M) \cap K) < \infty$ for compact $K$ by the formula with $\varphi = \psi \in C_c(U^{\prime})$, $\psi \geq \mathbf{1}_K$.
+\end{proof}
+
+\section{Rectifiable and integral varifolds}\label{currents:section-rectifiable-varifolds}
+
+Surfaces with singularities, such as crossing planes, are not submanifolds but are countable unions of pieces of submanifolds. To attach a tangent plane to almost every point of such a union we must know
+that two pieces have the same tangent plane at almost every common point. We first prove this, and that a $C^1$ submanifold looks flat at every point in the sense of area.
+
+\begin{lemma}\label{currents:lemma-secant}
+Let $N \subseteq \RR^n$ be an embedded $k$-dimensional submanifold of class $C^1$ and $x \in N$.
+\begin{enumerate}
+\item There are an open set $W \ni x$, a number $\delta > 0$ and a $C^1$ map $g \colon B_S(0, \delta) \to S^\perp$, where $S = T_xN$ and $B_S(0, \delta)$ is the open ball of $S$, with $g(0) = 0$, $Dg(0) = 0$
+and $N \cap W = \{x + u + g(u) : u \in B_S(0, \delta)\}$.
+\item If $y_m \in N \setminus \{x\}$ and $y_m \to x$, every limit point of the unit vectors $(y_m - x)/|y_m - x|$ lies in $T_xN$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) Translate $x$ to $0$. Near $0$, $N$ is the zero set of a $C^1$ map $F \colon W \to \RR^{n-k}$ with $DF(0)$ surjective (condition (4) of
+Proposition~\ref{smooth-manifolds:proposition-submanifold-criteria}), and the kernel of $DF(0)$ is $S = T_0N$.
+Writing $\RR^n = S \oplus S^\perp$, the partial derivative of $F$ in the $S^\perp$ directions at $0$ is injective on $S^\perp$, hence invertible, and the implicit function theorem
+(Theorem~\ref{real-analysis:theorem-implicit-function}) gives $g$ with $g(0) = 0$; differentiating $F(u + g(u)) = 0$ at $0$ gives $DF(0)(v + Dg(0)v) = 0$, so $Dg(0)v \in S \cap S^\perp = 0$.
+
+(2) For $m$ large, $y_m = x + u_m + g(u_m)$ with $u_m \to 0$ and $u_m \neq 0$. Since $Dg(0) = 0$, $|g(u_m)| = o(|u_m|)$, so $(y_m - x)/|y_m - x|$ and $u_m/|u_m|$ have the same limit points, and the latter lie in
+the unit sphere of $S$.
+\end{proof}
+
+\begin{lemma}\label{currents:lemma-submanifold-density}
+Let $N$ be an embedded $k$-dimensional submanifold of class $C^1$ of $\RR^n$ and $x \in N$. Then
+\[
+\lim_{r \to 0}\frac{\mathcal{H}^k(N \cap \overline{B}(x, r))}{\omega_kr^k} = 1 .
+\]
+\end{lemma}
+
+\begin{proof}
+Use the representation of Lemma~\ref{currents:lemma-secant}(1) with $x = 0$, and identify $S$ with $\RR^k$ by an isometry. Let $\varepsilon > 0$ and choose $\delta^{\prime} \leq \delta$ with $|Dg| \leq \varepsilon$ on
+$B_S(0, \delta^{\prime})$, so that $|g(u)| \leq \varepsilon|u|$ there. The map $\Gamma(u) = u + g(u)$ is an injective $C^1$ immersion with $D\Gamma(u)^TD\Gamma(u) = I + Dg(u)^TDg(u)$, because $Dg(u)v \in S^\perp$ is
+orthogonal to $S$; the eigenvalues of this matrix lie in $[1, 1 + \varepsilon^2]$, so $1 \leq J\Gamma \leq (1 + \varepsilon^2)^{k/2}$. For $r < \delta^{\prime}$ small enough that $\overline{B}(0, r) \subseteq W$,
+$N \cap \overline{B}(0, r) = \Gamma(E_r)$ with $E_r = \{u : |u|^2 + |g(u)|^2 \leq r^2\}$, and $\overline{B}_S(0, r/\sqrt{1 + \varepsilon^2}) \subseteq E_r \subseteq \overline{B}_S(0, r)$. By the area formula
+(Theorem~\ref{geometric-measure-theory:theorem-area-formula}), $\mathcal{H}^k(N \cap \overline{B}(0, r)) = \int_{E_r}J\Gamma$ lies between $(1 + \varepsilon^2)^{-k/2}\omega_kr^k$ and
+$(1 + \varepsilon^2)^{k/2}\omega_kr^k$. As $\varepsilon$ is arbitrary, the ratio tends to $1$.
+\end{proof}
+
+\begin{lemma}\label{currents:lemma-tangent-agree}
+Let $N_1$, $N_2$ be embedded $k$-dimensional submanifolds of class $C^1$ of $\RR^n$. Then $T_xN_1 = T_xN_2$ for $\mathcal{H}^k$-almost every $x \in N_1 \cap N_2$.
+\end{lemma}
+
+\begin{proof}
+\emph{Step 1: reduction to a parametrisation.} Embedded submanifolds are locally closed, hence Borel. Cover $N_1$ by countably many local parametrisations $\Gamma \colon \Omega \to N_1$ (injective $C^1$
+immersions, $\Omega \subseteq \RR^k$ open, $\Gamma$ a homeomorphism onto an open subset of $N_1$). It suffices to show the claim on each $\Gamma(\Omega) \cap N_2 = \Gamma(E)$, $E = \Gamma^{-1}(N_2)$ Borel. By the
+Lebesgue density theorem (Corollary~\ref{lebesgue-differentiation:corollary-density}), almost every $u_0 \in E$ is a density point of $E$, and by the area formula the image of the remaining null set is
+$\mathcal{H}^k$-null. So fix a density point $u_0 \in E$ and $x = \Gamma(u_0)$.
+
+\emph{Step 2: $E$ is seen from $u_0$ in every direction.} Let $w \in \RR^k$ be a unit vector and $0 < \eta < 1$. The ball $B(u_0 + rw/2, \eta r/2)$ occupies the fraction $(\eta/2)^k$ of $B(u_0, r)$, and for small $r$
+the set $E$ fills more than the fraction $1 - (\eta/2)^k$ of $B(u_0, r)$; so $E$ meets $B(u_0 + rw/2, \eta r/2)$. Choosing $\eta = 1/m$ and $r = r_m \to 0$ we get $u_m \in E$ with $u_m \to u_0$, $u_m \neq u_0$
+and $(u_m - u_0)/|u_m - u_0| \to w$.
+
+\emph{Step 3: conclusion.} The points $y_m = \Gamma(u_m)$ lie in $N_2$ and tend to $x$, and by differentiability $(y_m - x)/|u_m - u_0| \to D\Gamma(u_0)w \neq 0$. So
+$(y_m - x)/|y_m - x| \to D\Gamma(u_0)w/|D\Gamma(u_0)w|$, which lies in $T_xN_2$ by Lemma~\ref{currents:lemma-secant}(2). As $w$ varies, $D\Gamma(u_0)w$ spans $T_xN_1$; so $T_xN_1 \subseteq T_xN_2$, and the
+two planes are equal, having the same dimension.
+\end{proof}
+
+\begin{definition}\label{currents:definition-rectifiable-varifold}
+A set $M \subseteq U$ is \emph{countably $k$-rectifiable of class $C^1$} if it is $\mathcal{H}^k$-measurable and there are embedded $k$-dimensional $C^1$ submanifolds $N_1, N_2, \ldots$ of $\RR^n$ with
+$\mathcal{H}^k(M \setminus \bigcup_iN_i) = 0$. For such $M$ its \emph{tangent plane} is $T_xM = T_xN_i$ for $x \in M \cap N_i \setminus \bigcup_{l < i}N_l$; it is defined for $\mathcal{H}^k$-almost every
+$x \in M$. Let $\theta \colon M \to (0, \infty)$ be $\mathcal{H}^k$-measurable with $\int_{M \cap K}\theta\,d\mathcal{H}^k < \infty$ for every compact $K \subseteq U$, the \emph{multiplicity}. The
+\emph{rectifiable varifold} $v(M, \theta)$ is
+\[
+v(M, \theta)(\varphi) = \int_M\varphi(x, T_xM)\,\theta(x)\,d\mathcal{H}^k(x) .
+\]
+It is an \emph{integral varifold} if $\theta$ takes integer values.
+\end{definition}
+
+By Lemma~\ref{currents:lemma-tangent-agree}, a different choice of the $N_i$, or of their order, changes $T_xM$ only on an $\mathcal{H}^k$-null set, so $v(M, \theta)$ is well defined. It is the image of
+$\theta\mathcal{H}^k\llcorner M$ under $x \mapsto (x, T_xM)$, a Borel measure finite on compact sets, so a Radon measure on $G_k(U)$; its weight is $\theta\mathcal{H}^k\llcorner M$. Each $N_i$ is a countable
+union of open pieces with finite $\mathcal{H}^k$-measure (graphs as in Lemma~\ref{currents:lemma-secant}(1) over smaller balls), so we may assume $\mathcal{H}^k(N_i) < \infty$.
+
+\begin{example}\label{currents:example-rectifiable}
+\begin{enumerate}
+\item The varifolds $v(M, \theta)$ of Example~\ref{currents:example-varifolds}(1) are rectifiable, and integral when $\theta$ is integer valued. The crossing lines $v(L_1) + v(L_2) = v(L_1 \cup L_2, 1)$ are
+an integral varifold, and so is $v(L, 2) = 2v(L)$, a line counted twice. Finite unions of pieces of submanifolds, polyhedra, and the cones of Example~\ref{currents:example-stationary} below are integral.
+\item \emph{The limit of the oscillating graphs is not rectifiable.} Suppose that the varifold $V$ of Example~\ref{currents:example-oscillating} were $v(M, \theta)$. Its weight vanishes outside the segment
+$I = [0, 2\pi] \times \{0\}$, so $\mathcal{H}^1(M \setminus I) = 0$, and by Lemma~\ref{currents:lemma-tangent-agree} (with $N_2$ the open segment) $T_xM = \ell_0$, the horizontal line, for almost every
+$x \in M$. Take $\varphi(x, S) = \psi(x)\,d(S, \ell_0)$ with $\psi \geq 0$ in $C_c(\RR^2)$, $\psi > 0$ on $(0, 2\pi) \times \{0\}$. Then $v(M, \theta)(\varphi) = 0$, while
+$V(\varphi) = \frac1{2\pi}\int\int\psi(t, 0)\,|\sin\alpha(s)|\sqrt{1 + \cos^2s}\,ds\,dt > 0$, where $\alpha(s) = \arctan(\cos s)$ is the angle of $\ell(\cos s)$; a contradiction.
+\item The smeared varifold $(\lambda^2\llcorner[0, 1]^2) \otimes \delta_{\ell_0}$ is not rectifiable: its weight is not carried by a set $M$ of $\sigma$-finite $\mathcal{H}^1$-measure, as such sets are
+$\lambda^2$-null. It is the limit of the rectifiable varifolds $V_N = \frac1N\sum_{i=1}^Nv([0, 1] \times \{i/N\})$ (test against $\varphi$ and use Riemann sums), whose multiplicities $1/N$ are not integers.
+So limits of rectifiable varifolds need not be rectifiable; Allard's compactness theorem (Section~\ref{currents:section-allard}) says that integrality together with a bound on the first variation prevents
+this.
+\end{enumerate}
+\end{example}
+
+\begin{theorem}\label{currents:theorem-rectifiable-density}
+Let $V = v(M, \theta)$ be a rectifiable $k$-varifold in $U$. Then for $\mathcal{H}^k$-almost every $x \in M$
+\[
+\Theta^k(\|V\|, x) = \lim_{r \to 0}\frac{\|V\|(\overline{B}(x, r))}{\omega_kr^k} \quad\text{exists and equals } \theta(x).
+\]
+\end{theorem}
+
+\begin{proof}
+Let $N = N_i$ with $\mathcal{H}^k(N) < \infty$, and let $K \subseteq U$ be compact. The measures $\nu = \mathcal{H}^k\llcorner N$ and $\mu = \theta\mathbf{1}_{M \cap K}\mathcal{H}^k$, extended by zero, are finite Borel
+measures on $\RR^n$, hence Radon measures. Write $\mu = \theta\mathbf{1}_{M \cap K}\nu + \theta\mathbf{1}_{(M \cap K) \setminus N}\mathcal{H}^k$: the first term is absolutely continuous with respect to $\nu$, and
+the second is concentrated on the $\nu$-null set $\RR^n \setminus N$, so this is the Lebesgue decomposition of $\mu$ with respect to $\nu$. By
+Theorem~\ref{radon-measures:theorem-besicovitch-differentiation}, $D_\nu\mu = \theta\mathbf{1}_{M \cap K}$ $\nu$-almost everywhere: for $\mathcal{H}^k$-almost every $x \in N \cap M \cap K$,
+$\mu(\overline{B}(x, r))/\nu(\overline{B}(x, r)) \to \theta(x)$. By Lemma~\ref{currents:lemma-submanifold-density}, $\nu(\overline{B}(x, r))/(\omega_kr^k) \to 1$. For $x$ in the interior of $K$ and small $r$,
+$\mu(\overline{B}(x, r)) = \|V\|(\overline{B}(x, r))$. Hence $\Theta^k(\|V\|, x) = \theta(x)$ for almost every $x \in M \cap N \cap \operatorname{int}K$. Letting $K$ run through an exhaustion of $U$ and $N$ through the
+$N_i$, which cover $M$ up to a null set, gives the claim.
+\end{proof}
+
+\begin{remark}\label{currents:remark-rectifiable}
+\begin{enumerate}
+\item \emph{Lipschitz versus $C^1$.} By a theorem of Federer, a set is countably $k$-rectifiable in the sense of Definition~\ref{geometric-measure-theory:definition-rectifiable} (Lipschitz images) if and only if
+it is countably $k$-rectifiable of class $C^1$ \cite{federer-gmt}, \cite{simon-gmt}: Lipschitz maps agree with $C^1$ maps outside sets of small measure. So the rectifiable varifolds are those carried by
+the rectifiable sets of Chapter~\ref{geometric-measure-theory}, and $T_xM$ is the approximate tangent plane of $M$ at almost every point.
+\item \emph{Rectifiability criterion.} By Theorem~\ref{currents:theorem-rectifiable-density} the weight of a rectifiable varifold has a positive finite density almost everywhere. Allard proved a converse in the
+spirit of Theorem~\ref{geometric-measure-theory:theorem-rectifiability-criteria}: a varifold with locally bounded first variation whose weight has positive lower density $\|V\|$-almost everywhere is
+rectifiable \cite{allard-1972}.
+\item \emph{Currents and varifolds.} An integer-multiplicity rectifiable current $T$ carried by $M$ with multiplicity $m$ and orientation $\vec{T}$ determines the integral varifold $|T| = v(M, |m|)$ by
+forgetting the orientation, and the weight of $|T|$ is the mass measure $\|T\|$ \cite{simon-gmt}. The map $T \mapsto |T|$ is not additive: $[\![M]\!]$ and $-[\![M]\!]$ both give $v(M)$, their sum is the
+current $0$, but $|[\![M]\!]| + |-[\![M]\!]| = v(M, 2)$. This is the cancellation responsible for the loss of mass in Example~\ref{currents:example-mass-drop}, which varifolds do not see.
+\end{enumerate}
+\end{remark}
+
+\section{The first variation}\label{currents:section-first-variation}
+
+Deform a $k$-dimensional surface $M$ by the flow of a vector field $X$, $\varphi_t(x) = x + tX(x)$. The area of $\varphi_t(M)$ changes, to first order in $t$, by the integral over $M$ of the divergence of $X$
+along the tangent planes of $M$. This quantity only involves the measure $v(M)$, so it makes sense for every varifold.
+
+\begin{definition}\label{currents:definition-first-variation}
+Let $X \in C^1(U, \RR^n)$ be a vector field and $S \in G(n, k)$. The \emph{divergence of $X$ along $S$} is
+\[
+\operatorname{div}_SX(x) = \operatorname{tr}\bigl(P_S\,DX(x)\bigr) = \sum_{i=1}^k\langle DX(x)e_i, e_i\rangle
+\]
+for any orthonormal basis $e_1, \ldots, e_k$ of $S$. The \emph{first variation} of a $k$-varifold $V$ in $U$ is the linear functional on $C^1_c(U, \RR^n)$
+\[
+\delta V(X) = \int_{G_k(U)}\operatorname{div}_SX(x)\,dV(x, S) .
+\]
+$V$ is \emph{stationary} in $U$ if $\delta V(X) = 0$ for every $X \in C^1_c(U, \RR^n)$.
+\end{definition}
+
+The two expressions for $\operatorname{div}_SX$ agree because $P_S = \sum_ie_ie_i^T$ and $\operatorname{tr}(e_ie_i^TA) = e_i^TAe_i$. The function $(x, S) \mapsto \operatorname{div}_SX(x)$ is continuous on
+$G_k(U)$ with support in $\operatorname{supp}X \times G(n, k)$, so $\delta V(X)$ is defined. For $V = v(M)$ we write $\operatorname{div}_MX(x) = \operatorname{div}_{T_xM}X(x)$; then
+$\delta v(M)(X) = \int_M\operatorname{div}_MX\,d\mathcal{H}^k$. For $k = n$ and $S = \RR^n$ this would be the ordinary divergence.
+
+\begin{lemma}\label{currents:lemma-jacobian-expansion}
+For every $a > 0$ there is $C = C(n, a)$ such that for all $S \in G(n, k)$, all linear $A \colon \RR^n \to \RR^n$ with $\|A\| \leq a$, and all $|t| \leq 1$,
+\[
+\bigl|J_S(I + tA) - 1 - t\operatorname{tr}(P_SA)\bigr| \leq Ct^2 .
+\]
+\end{lemma}
+
+\begin{proof}
+Let $e_1, \ldots, e_k$ be an orthonormal basis of $S$. The Gram matrix $G(t)_{ij} = \langle(I + tA)e_i, (I + tA)e_j\rangle$ equals $I + tB + t^2B^{\prime}$ with
+$B_{ij} = \langle Ae_i, e_j\rangle + \langle e_i, Ae_j\rangle$ and $B^{\prime}_{ij} = \langle Ae_i, Ae_j\rangle$, entries bounded by $2a$ and $a^2$. Its determinant $J_S(I + tA)^2$ is a polynomial in $t$ with constant
+term $1$, linear coefficient $\operatorname{tr}B = 2\sum_i\langle Ae_i, e_i\rangle = 2\tau$, $\tau = \operatorname{tr}(P_SA)$, and remaining coefficients bounded in terms of $n$ and $a$. So
+$\det G(t) = 1 + y$ with $y = 2t\tau + t^2q$, $|q| \leq C_1(n, a)$ for $|t| \leq 1$. For $y \geq -1$, with $s = \sqrt{1 + y}$, we have $1 + \frac y2 - s = \frac12(s - 1)^2 = \frac{y^2}{2(s + 1)^2}$, so
+$|\sqrt{1 + y} - 1 - \frac y2| \leq \frac{y^2}2$. Since $|\tau| \leq ka$ and $|y| \leq |t|(2ka + C_1)$, the claim follows with $C = \frac{C_1}2 + \frac12(2na + C_1)^2$.
+\end{proof}
+
+\begin{proposition}[The first variation is the derivative of area]\label{currents:proposition-first-variation-area}
+Let $V$ be a $k$-varifold in $U$, $X \in C^1_c(U, \RR^n)$ with support $K$, $\varphi_t(x) = x + tX(x)$, and $W$ an open set with $K \subseteq W$ and $\overline{W}$ compact in $U$. There is $t_0 > 0$ such that for
+$|t| < t_0$ the map $\varphi_t \colon U \to U$ is proper, of class $C^1$, injective, with $D\varphi_t(x)$ invertible, and
+\[
+\|\varphi_{t\#}V\|(W) = \int_{G_k(W)}J_S\varphi_t(x)\,dV(x, S), \qquad \frac{d}{dt}\Big|_{t=0}\|\varphi_{t\#}V\|(W) = \delta V(X) .
+\]
+In particular, for $V = v(M)$ as in Example~\ref{currents:example-varifolds}(1), $\frac{d}{dt}\big|_{t=0}\mathcal{H}^k(\varphi_t(M) \cap W) = \delta v(M)(X)$.
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1: the deformation.} Extend $X$ by $0$ to $\RR^n$; it is Lipschitz with constant $a = \sup\|DX\|$. Choose $t_0$ with $t_0a < 1$ and $t_0\sup|X| < \operatorname{dist}(K, \RR^n \setminus W)$. For
+$|t| < t_0$: $\varphi_t$ is the identity outside $K$ and maps $K$ into $W$, so $\varphi_t(U) \subseteq U$; $|\varphi_t(x) - \varphi_t(y)| \geq (1 - |t|a)|x - y|$, so $\varphi_t$ is injective;
+$D\varphi_t = I + tDX$ is invertible. For compact $C \subseteq U$, $\varphi_t^{-1}(C)$ is closed in $U$ and contained in the compact set $C \cup K$, hence compact.
+
+\emph{Step 2: the weight.} If $\psi_m \in C_c(W)$ increase to $\mathbf{1}_W$, monotone convergence in Definition~\ref{currents:definition-push-forward-varifolds} gives
+$\|\varphi_{t\#}V\|(W) = \int\mathbf{1}_W(\varphi_t(x))J_S\varphi_t(x)\,dV(x, S)$. For $x \in K$ both $x$ and $\varphi_t(x)$ lie in $W$, and for $x \notin K$, $\varphi_t(x) = x$; so
+$\mathbf{1}_W(\varphi_t(x)) = \mathbf{1}_W(x)$, which gives the formula.
+
+\emph{Step 3: the derivative.} By Lemma~\ref{currents:lemma-jacobian-expansion} with $A = DX(x)$, $J_S\varphi_t(x) = 1 + t\operatorname{div}_SX(x) + R_t(x, S)$ with $|R_t| \leq Ct^2$, and $R_t = 0$ for
+$x \notin K$. Integrating over $G_k(W)$,
+\[
+\|\varphi_{t\#}V\|(W) = \|V\|(W) + t\,\delta V(X) + O\bigl(t^2\|V\|(K)\bigr),
+\]
+which gives the derivative. For $V = v(M)$, $\|\varphi_{t\#}v(M)\| = \mathcal{H}^k\llcorner\varphi_t(M)$ by Proposition~\ref{currents:proposition-push-forward-submanifold}.
+\end{proof}
+
+So a varifold is stationary if and only if its area is critical under all compactly supported deformations. For submanifolds the first variation is computed by the classical formula, which involves the
+\emph{mean curvature vector}. We use the trace normalisation, which is customary for varifolds.
+
+\begin{definition}\label{currents:definition-mean-curvature-vector}
+Let $M \subseteq \RR^n$ be a smooth $k$-dimensional submanifold with second fundamental form $\mathrm{II}$ (Theorem~\ref{riemannian-geometry:theorem-gauss-formula}, with $\overline{M} = \RR^n$). Its \emph{mean
+curvature vector} is
+\[
+\vec{H}(x) = \sum_{i=1}^k\mathrm{II}(e_i, e_i), \qquad e_1, \ldots, e_k \text{ an orthonormal basis of } T_xM,
+\]
+a normal vector at $x$, independent of the basis since it is the trace of the bilinear form $\mathrm{II}_x$. $M$ is \emph{minimal} if $\vec{H} = 0$.
+\end{definition}
+
+\begin{remark}\label{currents:remark-mean-curvature-conventions}
+For a hypersurface $M \subseteq \RR^{k+1}$ with unit normal $\nu$ and shape operator $S = -d\nu$, $\mathrm{II}(v, w) = \langle\overline{\nabla}_vW, \nu\rangle\nu = -\langle W, \overline{\nabla}_v\nu\rangle\nu = \langle Sv, w\rangle\nu$, so
+$\vec{H} = (\operatorname{tr}S)\nu = kH\nu$, where $H = \frac1k\operatorname{tr}S$ is the averaged mean curvature of Section~\ref{riemannian-geometry:section-minimal}. The two conventions differ by the factor $k$;
+the trace convention avoids the factor $k$ in the first variation formula. For the sphere of radius $r$ in $\RR^{k+1}$, $\vec{H}(x) = -kx/r^2$, pointing to the centre. The proposition below with $X = \phi\nu$
+gives $\delta v(M)(\phi\nu) = -\int kH\phi$, the formula $A^{\prime}(0) = -n\int_KH\phi\,dA$ of Proposition~\ref{riemannian-geometry:proposition-variation-area} (there $n = k$).
+\end{remark}
+
+\begin{proposition}[First variation formula for submanifolds]\label{currents:proposition-first-variation-submanifold}
+Let $X \in C^1_c(U, \RR^n)$.
+\begin{enumerate}
+\item If $M \subseteq U$ is a smooth $k$-dimensional submanifold without boundary, closed as a subset of $U$, then
+\[
+\delta v(M)(X) = -\int_M\langle\vec{H}, X\rangle\,d\mathcal{H}^k .
+\]
+\item If $M \subseteq U$ is a compact oriented smooth $k$-dimensional submanifold with boundary, and $\eta$ is the outward unit normal of $\partial M$ in $M$ (the \emph{conormal}), then
+\[
+\delta v(M)(X) = -\int_M\langle\vec{H}, X\rangle\,d\mathcal{H}^k + \int_{\partial M}\langle X, \eta\rangle\,d\mathcal{H}^{k-1} .
+\]
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1: a pointwise identity for smooth $X$.} Let $X$ be smooth, and along $M$ write $X = X^\top + X^\perp$ with $X^\top(x) = P_{T_xM}X(x)$; both parts are smooth on $M$. For a vector field $Y$ along $M$
+(a smooth map $M \to \RR^n$) and $v \in T_xM$ write $D_vY$ for the derivative of $Y$ along a curve in $M$ with velocity $v$, and $\operatorname{div}_MY = \sum_i\langle D_{e_i}Y, e_i\rangle$; for $Y = X|_M$ this is
+$\operatorname{div}_MX$, since $DX(x)e_i$ is such a derivative. For the tangent part, the Gauss formula in the form of Corollary~\ref{riemannian-geometry:corollary-tangential-projection}(1) gives
+$\langle D_{e_i}X^\top, e_i\rangle = \langle\nabla_{e_i}X^\top, e_i\rangle$, so $\operatorname{div}_MX^\top$ is the Riemannian divergence of the tangent field $X^\top$
+(Definition~\ref{riemannian-geometry:definition-gradient-hessian}(3)). For the normal part, extend $e_1, \ldots, e_k$ to a local orthonormal frame $E_1, \ldots, E_k$ of $TM$ (Gram--Schmidt applied to coordinate
+fields). Differentiating $\langle X^\perp, E_i\rangle = 0$ along $E_i$,
+\[
+\langle D_{E_i}X^\perp, E_i\rangle = -\langle X^\perp, D_{E_i}E_i\rangle = -\langle X^\perp, \mathrm{II}(E_i, E_i)\rangle,
+\]
+by the Gauss formula, as $\nabla_{E_i}E_i$ is tangent. Summing, $\operatorname{div}_MX^\perp = -\langle X^\perp, \vec{H}\rangle = -\langle X, \vec{H}\rangle$, as $\vec{H}$ is normal. Hence
+\[
+\operatorname{div}_MX = \operatorname{div}X^\top - \langle X, \vec{H}\rangle \qquad\text{on } M .
+\]
+
+\emph{Step 2: part (2) for smooth $X$.} Integrate the identity over $M$. Riemannian measures of submanifolds are Hausdorff measures (Proposition~\ref{riemannian-geometry:proposition-hausdorff-measure}), and the
+divergence theorem (Proposition~\ref{riemannian-geometry:proposition-riemannian-divergence}) gives $\int_M\operatorname{div}X^\top\,d\mathcal{H}^k = \int_{\partial M}\langle X^\top, \eta\rangle\,d\mathcal{H}^{k-1}$,
+and $\langle X^\top, \eta\rangle = \langle X, \eta\rangle$ because $\eta$ is tangent to $M$.
+
+\emph{Step 3: part (2) for $X \in C^1_c$.} Let $X_\varepsilon = X * \rho_\varepsilon$ be the convolution of $X$ (extended by $0$) with a smooth mollifier supported in $B(0, \varepsilon)$. For small $\varepsilon$ the
+supports lie in a fixed compact subset of $U$, $X_\varepsilon \to X$ and $DX_\varepsilon = (DX) * \rho_\varepsilon \to DX$ uniformly, by uniform continuity. Both sides of (2) are continuous under this
+convergence, so (2) holds for $X$.
+
+\emph{Step 4: part (1).} If $\operatorname{supp}X \cap M = \emptyset$, both sides vanish. Each $x_0 \in M$ has, by Lemma~\ref{currents:lemma-secant}(1), a neighbourhood $W$ with $M \cap W$ a graph
+$\Gamma(B_S(0, \delta))$; the set $M_0 = \Gamma(\overline{B}_S(0, \delta/2))$ is a compact smooth submanifold with boundary, oriented by the parametrisation, and there is $r > 0$ with
+$M \cap B(x_0, r) \subseteq \Gamma(B_S(0, \delta/4))$. Cover the compact set $\operatorname{supp}X$ by finitely many such balls and by the open set $U \setminus M$, and take a smooth partition of unity
+$(\psi_j)$ subordinate to this cover (Theorem~\ref{smooth-manifolds:theorem-partitions-of-unity}). For a term $\psi_jX$ supported in a ball $B(x_0, r)$, $\delta v(M)(\psi_jX) = \delta v(M_0)(\psi_jX)$ and
+$\psi_jX = 0$ on $\partial M_0$, so (2) gives $\delta v(M)(\psi_jX) = -\int_M\langle\vec{H}, \psi_jX\rangle$; terms supported in $U \setminus M$ contribute $0$ to both sides. Sum over $j$.
+\end{proof}
+
+\begin{corollary}\label{currents:corollary-stationary-minimal}
+A smooth $k$-dimensional submanifold $M$ without boundary, closed in $U$, is stationary in $U$ if and only if it is minimal.
+\end{corollary}
+
+\begin{proof}
+If $\vec{H} = 0$, Proposition~\ref{currents:proposition-first-variation-submanifold}(1) gives $\delta v(M) = 0$. Conversely, if $\vec{H}(x_0) = w \neq 0$, choose $r > 0$ with $\langle\vec{H}(x), w\rangle > 0$ for
+$x \in M \cap B(x_0, r)$, by continuity, and $\psi \in C^\infty_c(B(x_0, r))$ with $\psi \geq 0$ and $\psi(x_0) > 0$. For $X = \psi w$, $\delta v(M)(X) = -\int_M\psi\langle\vec{H}, w\rangle\,d\mathcal{H}^k < 0$.
+\end{proof}
+
+The first variation behaves well under convergence, unlike the area of surfaces, which is only lower semicontinuous: being stationary is a closed condition.
+
+\begin{proposition}\label{currents:proposition-first-variation-continuous}
+If $V_j \to V$, then $\delta V_j(X) \to \delta V(X)$ for every $X \in C^1_c(U, \RR^n)$. In particular limits of stationary varifolds are stationary.
+\end{proposition}
+
+\begin{proof}
+The function $(x, S) \mapsto \operatorname{div}_SX(x) = \operatorname{tr}(P_SDX(x))$ is continuous on $G_k(U)$ with compact support.
+\end{proof}
+
+\begin{example}\label{currents:example-stationary}
+\begin{enumerate}
+\item \emph{Minimal submanifolds}: planes, and the catenoid and helicoid of Section~\ref{riemannian-geometry:section-minimal}, are stationary by Corollary~\ref{currents:corollary-stationary-minimal}. Since $\delta V$
+is linear in $V$, sums of stationary varifolds are stationary: the crossing lines $v(L_1) + v(L_2)$ are stationary in $\RR^2$, although their support is not a submanifold at $0$.
+\item \emph{Cones over rays.} Let $u_1, \ldots, u_N$ be distinct unit vectors in $\RR^n$, $R_i = \{tu_i : t \geq 0\}$, $\theta_i > 0$ and $V = \sum_i\theta_iv(R_i)$, a $1$-varifold in $\RR^n$. On $R_i$ the tangent line is
+spanned by $u_i$, and $\operatorname{div}_{R_i}X(tu_i) = \langle DX(tu_i)u_i, u_i\rangle = \frac{d}{dt}\langle X(tu_i), u_i\rangle$. As $X$ has compact support,
+\[
+\delta V(X) = \sum_i\theta_i\int_0^\infty\frac{d}{dt}\langle X(tu_i), u_i\rangle\,dt = -\Bigl\langle X(0), \sum_i\theta_iu_i\Bigr\rangle .
+\]
+So $V$ is stationary if and only if $\sum_i\theta_iu_i = 0$: the forces exerted at the vertex by the rays, each pulling with its multiplicity, balance. A single ray is never stationary; its first variation
+$-\langle X(0), u\rangle$ is the boundary term of Proposition~\ref{currents:proposition-first-variation-submanifold}(2) with conormal $-u$.
+\item \emph{Triple junctions.} Three rays of multiplicity one are stationary if and only if $u_1 + u_2 + u_3 = 0$. Then $|u_1 + u_2|^2 = |u_3|^2$ gives $2 + 2\langle u_1, u_2\rangle = 1$, so
+$\langle u_1, u_2\rangle = -\frac12$, and likewise for the other pairs: the rays lie in a plane and meet at angles of $120^\circ$. Conversely three coplanar rays at $120^\circ$ satisfy
+$|u_1 + u_2 + u_3|^2 = 3 + 2 \cdot 3 \cdot (-\frac12) = 0$. The same computation, integrated along a line, shows that three half-planes meeting along a common line at angles of $120^\circ$ form a stationary
+$2$-varifold in $\RR^3$, the model for the edges of soap films. If the angles are not $120^\circ$, moving the vertex in the direction of $\sum_iu_i$ shortens the configuration: this is the solution of
+the Fermat--Steiner problem of joining three points by a network of least length.
+\item \emph{Non-rectifiable stationary varifolds.} Let $\nu$ be a finite measure on $G(n, k)$ and $V = \lambda^n \otimes \nu$. With the constant symmetric matrix $Q = \int P_S\,d\nu(S)$,
+$\delta V(X) = \int\operatorname{tr}(Q\,DX(x))\,dx = \sum_{a,b}Q_{ab}\int\partial_bX_a\,dx = 0$, since the integral of a derivative of a $C^1$ function with compact support vanishes. So every such $V$, for instance
+$\lambda^2 \otimes \delta_{\ell_0}$, the plane filled with horizontal lines, is stationary: stationarity alone does not force any regularity, and integrality is needed in the regularity theory.
+\end{enumerate}
+\end{example}
+
+\begin{remark}\label{currents:remark-plateau-laws}
+\emph{Plateau's laws.} Plateau observed in the nineteenth century that soap films have only two kinds of singularities: curves along which three smooth sheets meet at $120^\circ$, as in
+Example~\ref{currents:example-stationary}(3), and isolated points where four such curves meet at the angle $\arccos(-1/3) \approx 109.47^\circ$, like the cone over the edges of a regular tetrahedron from its
+centre. Jean Taylor proved that this is exactly the list of singularities of Almgren's mathematical models of soap films in $\RR^3$ \cite{taylor-1976}. Both cones are stationary integral varifolds. Neither carries an
+integral current with multiplicity one on each sheet and no boundary along the singular curves: along such a curve three sheets meet, and the boundary there would be a sum of three terms $\pm1$, an odd
+number, never $0$. This is why soap films are modelled by varifolds, or by Almgren's minimal sets, rather than by currents.
+\end{remark}
+
+When $\delta V$ is not zero, it may still be a measure. This is the varifold version of a surface whose mean curvature is integrable and whose boundary has finite length.
+
+\begin{definition}\label{currents:definition-bounded-first-variation}
+A $k$-varifold $V$ in $U$ has \emph{locally bounded first variation} if for every compact $K \subseteq U$ there is $C_K$ with $|\delta V(X)| \leq C_K\sup|X|$ for all $X \in C^1_c(U, \RR^n)$ with support in $K$.
+\end{definition}
+
+\begin{proposition}\label{currents:proposition-generalised-mean-curvature}
+Let $V$ have locally bounded first variation. There are a Radon measure $\|\delta V\|$ on $U$ and a Borel map $\nu \colon U \to \RR^n$ with $|\nu| = 1$ $\|\delta V\|$-almost everywhere, both unique, such that
+$\delta V(X) = \int\langle X, \nu\rangle\,d\|\delta V\|$ for $X \in C^1_c(U, \RR^n)$. Writing the Lebesgue decomposition $\|\delta V\| = h\|V\| + \sigma$ with $h \geq 0$ locally $\|V\|$-integrable and
+$\sigma \perp \|V\|$, and $\vec{H} = -h\nu$,
+\[
+\delta V(X) = -\int_U\langle\vec{H}, X\rangle\,d\|V\| + \int_U\langle X, \nu\rangle\,d\sigma \qquad\text{for } X \in C^1_c(U, \RR^n).
+\]
+$\vec{H} \in L^1_{\mathrm{loc}}(\|V\|)$ is the \emph{generalised mean curvature} of $V$, and $\sigma$ is its \emph{generalised boundary measure}.
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1: extension.} Let $X \in C_c(U, \RR^n)$ with support $K$, and $K^{\prime} \subseteq U$ a compact neighbourhood of $K$. The mollified fields $X_\varepsilon = X * \rho_\varepsilon$ are smooth, supported in
+$K^{\prime}$ for small $\varepsilon$, and converge uniformly to $X$; by the bound, $\delta V(X_\varepsilon)$ is a Cauchy family, and $L(X) = \lim_{\varepsilon \to 0}\delta V(X_\varepsilon)$ does not depend on
+the mollifier (interlace two families). $L$ is linear, $|L(X)| \leq C_{K^{\prime}}\sup|X|$, and $L = \delta V$ on $C^1_c$, since for $X \in C^1_c$ also $DX_\varepsilon \to DX$ uniformly.
+
+\emph{Step 2: representation.} Theorem~\ref{radon-measures:theorem-riesz-vector} applied to $L$ on $X = U$, $H = \RR^n$ gives $\|\delta V\|$ and $\nu$, with uniqueness. Radon measures on $U$ are
+$\sigma$-finite, so Theorem~\ref{signed-measures:theorem-lebesgue-radon-nikodym} gives $\|\delta V\| = h\|V\| + \sigma$; $h$ is locally integrable as $\|\delta V\|$ is finite on compact sets. On the set where
+$h > 0$, $h\|V\|$ is absolutely continuous with respect to $\|\delta V\|$, so $\nu$ is defined $h\|V\|$-almost everywhere, and $\int\langle X, \nu\rangle\,d\|\delta V\| = \int\langle X, h\nu\rangle\,d\|V\| + \int\langle X, \nu\rangle\,d\sigma$.
+\end{proof}
+
+\begin{example}\label{currents:example-generalised-mean-curvature}
+\begin{enumerate}
+\item For a compact oriented smooth submanifold $M$ with boundary, Proposition~\ref{currents:proposition-first-variation-submanifold}(2) gives
+$|\delta v(M)(X)| \leq (\int_M|\vec{H}| + \mathcal{H}^{k-1}(\partial M))\sup|X|$, and by uniqueness $\|\delta v(M)\| = |\vec{H}|\mathcal{H}^k\llcorner M + \mathcal{H}^{k-1}\llcorner\partial M$, with
+$\nu = -\vec{H}/|\vec{H}|$ where $\vec{H} \neq 0$ and $\nu = \eta$ on $\partial M$. The generalised mean curvature is the classical $\vec{H}$, and $\sigma = \mathcal{H}^{k-1}\llcorner\partial M$, singular because
+$\mathcal{H}^k(\partial M) = 0$.
+\item For the cone of Example~\ref{currents:example-stationary}(2) with $w = \sum_i\theta_iu_i \neq 0$, $\delta V(X) = -\langle X(0), w\rangle$, so $\|\delta V\| = |w|\delta_0$, $\nu(0) = -w/|w|$,
+$\vec{H} = 0$ and $\sigma = |w|\delta_0$: the unbalanced vertex behaves like a boundary point.
+\item For $V$ in Example~\ref{currents:example-oscillating}, the first variation is not locally bounded near the interior of the segment (Exercise~\ref{currents:exercise-oscillating-variation}): the
+oscillating curves have curvatures of size $j$, and in the limit the varifold has no generalised mean curvature at all.
+\end{enumerate}
+\end{example}
+
+\section{The monotonicity formula}\label{currents:section-monotonicity}
+
+For a plane through $x_0$, the area in the ball $B(x_0, \rho)$ is exactly $\omega_k\rho^k$. For a stationary varifold the ratio of the two is a non-decreasing function of $\rho$, and the derivative of the ratio
+measures how far the tangent planes are from containing the radial direction. The proof tests stationarity against radial vector fields.
+
+\begin{theorem}[Monotonicity formula]\label{currents:theorem-monotonicity}
+Let $V$ be a stationary $k$-varifold in $U$, $x_0 \in U$, and $0 < \sigma < \rho$ with $\overline{B}(x_0, \rho) \subseteq U$. Then
+\[
+\frac{\|V\|(B(x_0, \rho))}{\rho^k} - \frac{\|V\|(B(x_0, \sigma))}{\sigma^k} = \int_{G_k(A)}\frac{|P_S^\perp(x - x_0)|^2}{|x - x_0|^{k+2}}\,dV(x, S),
+\]
+where $A = \{x : \sigma \leq |x - x_0| < \rho\}$.
+In particular the function $\rho \mapsto \|V\|(B(x_0, \rho))/(\omega_k\rho^k)$ is non-decreasing on $(0, \operatorname{dist}(x_0, \RR^n \setminus U))$.
+\end{theorem}
+
+\begin{proof}
+Translate $x_0$ to $0$ and write $r = |x|$.
+
+\emph{Step 1: the divergence of a radial field.} Let $\gamma \in C^1([0, \infty))$ be constant near $0$ and zero on $[\rho, \infty)$, and $X(x) = \gamma(r)x$, a field in $C^1_c(U, \RR^n)$. For $x \neq 0$,
+$DX(x) = \gamma(r)I + \gamma^{\prime}(r)\frac{xx^T}r$, so, using $\operatorname{tr}(P_Sxx^T) = |P_Sx|^2 = r^2 - |P_S^\perp x|^2$,
+\[
+\operatorname{div}_SX(x) = k\gamma(r) + r\gamma^{\prime}(r) - r\gamma^{\prime}(r)\frac{|P_S^\perp x|^2}{r^2};
+\]
+near $0$, $\gamma^{\prime} = 0$ and $\operatorname{div}_SX = k\gamma(0)$, so the formula holds there with the last two terms read as $0$.
+
+\emph{Step 2: a differential identity.} Let $\phi \in C^1(\RR)$ be non-increasing with $\phi = 1$ on $(-\infty, a]$ and $\phi = 0$ on $[1, \infty)$, for some $a \in (0, 1)$, and for
+$0 < \tau < d = \operatorname{dist}(0, \RR^n \setminus U)$ let
+\[
+I(\tau) = \int\phi(r/\tau)\,d\|V\|, \qquad J(\tau) = \int\phi(r/\tau)\frac{|P_S^\perp x|^2}{r^2}\,dV(x, S) .
+\]
+Take $\gamma(r) = \phi(r/\tau)$; then $r\gamma^{\prime}(r) = \frac r\tau\phi^{\prime}(r/\tau) = -\tau\frac{\partial}{\partial\tau}\phi(r/\tau)$. The integrands are bounded, with bounded $\tau$-derivatives, and supported
+in $G_k(\overline{B}(0, \tau_1))$ for $\tau \leq \tau_1 < d$, which has finite $V$-measure; so we may differentiate under the integral sign, and $\delta V(X) = 0$ with Step 1 reads
+$kI(\tau) - \tau I^{\prime}(\tau) + \tau J^{\prime}(\tau) = 0$. Equivalently
+\[
+\frac{d}{d\tau}\bigl(\tau^{-k}I(\tau)\bigr) = \tau^{-k}J^{\prime}(\tau), \qquad J^{\prime}(\tau) = \int\frac r{\tau^2}\bigl(-\phi^{\prime}(r/\tau)\bigr)\frac{|P_S^\perp x|^2}{r^2}\,dV \geq 0 .
+\]
+
+\emph{Step 3: integration.} Integrate from $\sigma$ to $\rho$ and use Tonelli's theorem (the integrand is non-negative). For fixed $(x, S)$ with $r > 0$, the substitution $s = r/\tau$ gives
+$\int_\sigma^\rho\tau^{-k}\frac r{\tau^2}(-\phi^{\prime}(r/\tau))\,d\tau = r^{-k}\int_{r/\rho}^{r/\sigma}s^k(-\phi^{\prime}(s))\,ds$, so
+\begin{equation}\label{currents:equation-monotonicity-smooth}
+\frac{I(\rho)}{\rho^k} - \frac{I(\sigma)}{\sigma^k} = \int\Bigl(r^{-k}\int_{r/\rho}^{r/\sigma}s^k\bigl(-\phi^{\prime}(s)\bigr)\,ds\Bigr)\frac{|P_S^\perp x|^2}{r^2}\,dV(x, S),
+\end{equation}
+where the inner integral vanishes for $r$ near $0$, because $\phi^{\prime} = 0$ on $[0, a]$.
+
+\emph{Step 4: the limit $\phi \to \mathbf{1}_{(-\infty, 1)}$.} For $m \geq 2$ let $a_m = 1 - 1/m$ and $\phi_m(s) = 1 - 3u^2 + 2u^3$ with $u = m(s - a_m)$ for $s \in [a_m, 1]$, $\phi_m = 1$ before and $0$ after; it is $C^1$,
+non-increasing, and $\int(-\phi_m^{\prime}) = 1$. Then $\phi_m(r/\tau) \to \mathbf{1}_{\{r < \tau\}}$ for every $r$, so $I_m(\rho) \to \|V\|(B(0, \rho))$ and $I_m(\sigma) \to \|V\|(B(0, \sigma))$ by dominated
+convergence. The bracket in \eqref{currents:equation-monotonicity-smooth} is at most $r^{-k}$ (as $s \leq 1$ on the support of $\phi_m^{\prime}$), and it vanishes unless $r/\sigma > a_m \geq \frac12$ and
+$r/\rho < 1$; so it is bounded by $(2/\sigma)^k\mathbf{1}_{B(0, \rho)}$, which is integrable. It converges to $r^{-k}\mathbf{1}_{\{\sigma \leq r < \rho\}}$: if $\sigma \leq r < \rho$, then for large $m$ the interval
+$(r/\rho, r/\sigma)$ contains $(a_m, 1)$ and the bracket is between $a_m^kr^{-k}$ and $r^{-k}$; if $r < \sigma$ or $r \geq \rho$, the interval misses $[a_m, 1]$ for large $m$. Dominated convergence gives the
+formula, and the right-hand side is non-negative.
+\end{proof}
+
+\begin{corollary}[Densities of stationary varifolds]\label{currents:corollary-density}
+Let $V$ be stationary in $U$. For every $x \in U$ the density
+\[
+\Theta^k(\|V\|, x) = \lim_{\rho \to 0}\frac{\|V\|(B(x, \rho))}{\omega_k\rho^k} = \lim_{\rho \to 0}\frac{\|V\|(\overline{B}(x, \rho))}{\omega_k\rho^k}
+\]
+exists, and the function $x \mapsto \Theta^k(\|V\|, x)$ is upper semicontinuous on $U$. For $V = v(M, \theta)$, $\Theta^k(\|V\|, x)$ is the density of Definition~\ref{geometric-measure-theory:definition-density}
+for the weighted measure, and for $\theta = 1$ it equals $\Theta^k(M, x)$.
+\end{corollary}
+
+\begin{proof}
+Let $f_x(\rho) = \|V\|(B(x, \rho))/(\omega_k\rho^k)$, non-decreasing by Theorem~\ref{currents:theorem-monotonicity}; its limit as $\rho \to 0$ exists. Since $\overline{B}(x, \rho) = \bigcap_{\rho^{\prime} > \rho}B(x, \rho^{\prime})$,
+$\|V\|(\overline{B}(x, \rho))/(\omega_k\rho^k) = \lim_{\rho^{\prime} \downarrow \rho}f_x(\rho^{\prime})$, which lies between $f_x(\rho)$ and $f_x(\rho^{\prime\prime})$ for every $\rho^{\prime\prime} > \rho$; so the two limits agree, and
+\[
+\Theta^k(\|V\|, x) = \inf_{0 < \rho < \rho_0}\frac{\|V\|(\overline{B}(x, \rho))}{\omega_k\rho^k}
+\]
+for $x \in B(x_0, \rho_0)$, if $2\rho_0 < \operatorname{dist}(x_0, \RR^n \setminus U)$. For fixed $\rho$, $x \mapsto \|V\|(\overline{B}(x, \rho))$ is upper semicontinuous: if $x_j \to x$, then
+$\overline{B}(x_j, \rho) \subseteq \overline{B}(x, \rho + |x_j - x|)$, and $\|V\|(\overline{B}(x, \rho + \varepsilon)) \to \|V\|(\overline{B}(x, \rho))$ as $\varepsilon \downarrow 0$. An infimum of upper semicontinuous
+functions is upper semicontinuous. The last statement compares the normalisations: $\omega_k\rho^k = \alpha(k)(2\rho)^k$.
+\end{proof}
+
+\begin{example}\label{currents:example-densities}
+\begin{enumerate}
+\item A plane with multiplicity $m$ has density $m$ at each of its points, and density $0$ outside.
+\item For the crossing lines, $\|V\|(B(0, \rho)) = 4\rho$ and $\omega_1 = 2$, so $\Theta^1(\|V\|, 0) = 2$, while $\Theta^1 = 1$ at the other points of the lines. For a stationary triple junction,
+$\Theta^1(\|V\|, 0) = 3\rho/(2\rho) = \frac32$. For a cone over rays with multiplicities $\theta_i$, $\Theta^1(\|V\|, 0) = \frac12\sum_i\theta_i$. In all these cases the ratio in
+Theorem~\ref{currents:theorem-monotonicity} is constant in $\rho$, as it must be: $P_S^\perp x = 0$ when $x$ lies on a ray and $S$ is its line, so the right-hand side vanishes.
+\item Upper semicontinuity cannot be improved to continuity: for the crossing lines $\Theta^1$ jumps from $1$ to $2$ at the origin, and is $0$ off the lines.
+\end{enumerate}
+\end{example}
+
+\begin{corollary}[Lower area bound]\label{currents:corollary-lower-bound}
+Let $V = v(M, \theta)$ be a stationary rectifiable $k$-varifold in $U$ with $\theta \geq 1$ $\mathcal{H}^k$-almost everywhere on $M$, for instance a stationary integral varifold. Then
+$\Theta^k(\|V\|, x) \geq 1$ for every $x \in \operatorname{supp}\|V\|$, and
+\[
+\|V\|(B(x, \rho)) \geq \omega_k\rho^k \qquad\text{for } x \in \operatorname{supp}\|V\| \text{ and } \overline{B}(x, \rho) \subseteq U .
+\]
+If $U = \RR^n$ and $V \neq 0$, then $\mathbf{M}(V) = \infty$; in particular there is no compact minimal submanifold without boundary in $\RR^n$.
+\end{corollary}
+
+\begin{proof}
+By Theorem~\ref{currents:theorem-rectifiable-density}, $\Theta^k(\|V\|, x) = \theta(x) \geq 1$ for $\|V\|$-almost every $x$. By Corollary~\ref{currents:corollary-density} the set
+$\{x : \Theta^k(\|V\|, x) \geq 1\}$ is closed in $U$; its complement is open and $\|V\|$-null, so it does not meet $\operatorname{supp}\|V\|$. The area bound follows from the monotonicity of the ratio, which is at
+least its limit $\Theta^k(\|V\|, x)$. If $U = \RR^n$, letting $\rho \to \infty$ gives infinite mass. A compact minimal submanifold without boundary gives a stationary integral varifold $v(M)$ of finite mass, by
+Corollary~\ref{currents:corollary-stationary-minimal}.
+\end{proof}
+
+\begin{remark}\label{currents:remark-monotonicity}
+\begin{enumerate}
+\item \emph{Mean curvature.} If $V$ has generalised mean curvature with $|\vec{H}| \leq \Lambda$ and no generalised boundary in $U$, the same proof, with an error term, shows that
+$e^{\Lambda\rho}\rho^{-k}\|V\|(B(x_0, \rho))$ is non-decreasing \cite{simon-gmt}; so densities exist and are upper semicontinuous in that case too.
+\item \emph{Equality and cones.} If the ratio is constant on $(0, R)$, the formula gives $P_S^\perp x = 0$ for $V$-almost every $(x, S)$ with $|x| < R$: the planes contain the radial direction. One shows that
+$V$ is then invariant under the dilations $x \mapsto \lambda x$ in $B(0, R)$, a \emph{cone} \cite{simon-gmt}.
+\item \emph{Tangent cones.} Let $\eta_r(x) = (x - x_0)/r$. Since $J_S\eta_r = r^{-k}$, the push-forward satisfies $\|\eta_{r\#}V\|(B(0, R)) = r^{-k}\|V\|(B(x_0, rR))$, which by monotonicity is bounded by
+$R^k\rho_0^{-k}\|V\|(B(x_0, \rho_0))$ for $rR \leq \rho_0$. By Proposition~\ref{currents:proposition-varifold-convergence}(2) the blow-ups $\eta_{r\#}V$ have convergent subsequences as $r \to 0$; their limits
+are stationary in $\RR^n$ (Proposition~\ref{currents:proposition-first-variation-continuous}, as dilations preserve stationarity), have ratio $\Theta^k(\|V\|, x_0)$ at every radius, and so are cones by (2): the
+\emph{tangent cones} of $V$ at $x_0$. For the crossing lines and triple junctions the tangent cone at the vertex is the varifold itself. Whether tangent cones are unique is a deep question, answered
+positively in some cases and negatively in others.
+\end{enumerate}
+\end{remark}
+
+\section{Allard's theorems}\label{currents:section-allard}
+
+The two fundamental theorems of the subject are due to Allard \cite{allard-1972}; their proofs, which use the monotonicity formula, a Lipschitz approximation of the varifold by graphs and a harmonic
+approximation of these graphs, are long, and we state them with references \cite{allard-1972}, \cite{simon-gmt}.
+
+\begin{theorem}[Allard's compactness theorem]\label{currents:theorem-allard-compactness}
+Let $V_j$ be integral $k$-varifolds in $U$ with locally bounded first variation, such that $\sup_j(\|V_j\|(K) + \|\delta V_j\|(K)) < \infty$ for every compact $K \subseteq U$. Then a subsequence converges to an
+integral $k$-varifold $V$ with locally bounded first variation.
+\end{theorem}
+
+By Proposition~\ref{currents:proposition-first-variation-continuous}, if the $V_j$ are stationary, so is $V$. The multiplicity of the limit can exceed $1$ even when all $V_j$ have multiplicity one: the shrunken
+catenoids $\frac1jC$, $C = \{(x, y, z) : x^2 + y^2 = \cosh^2z\}$, are minimal surfaces whose two sheets approach the plane $\{z = 0\}$, with a neck of radius $\frac1j$, and their varifolds converge to the
+plane counted twice. Without integrality the theorem fails, by Example~\ref{currents:example-rectifiable}(3).
+
+\begin{theorem}[Allard's regularity theorem]\label{currents:theorem-allard-regularity}
+For all $1 \leq k < n$ there is $\varepsilon = \varepsilon(n, k) > 0$ with the following property. Let $V$ be a stationary integral $k$-varifold in $U$, $x_0 \in \operatorname{supp}\|V\|$ and
+$\overline{B}(x_0, \rho) \subseteq U$, with
+\[
+\|V\|(B(x_0, \rho)) \leq (1 + \varepsilon)\,\omega_k\rho^k .
+\]
+Then $\operatorname{supp}\|V\| \cap B(x_0, \varepsilon\rho)$ is an embedded $k$-dimensional submanifold of class $C^{1,\alpha}$ for every $\alpha < 1$ (in fact smooth, by elliptic regularity for the minimal surface
+system), and $V$ has multiplicity one there.
+\end{theorem}
+
+A version holds for varifolds whose generalised mean curvature lies in $L^p(\|V\|)$, $p > k$, with $C^{1, 1 - k/p}$ regularity. By Theorem~\ref{currents:theorem-rectifiable-density} the hypothesis holds near
+almost every point where the multiplicity is $1$, at small scales; one deduces that for a stationary integral varifold the \emph{regular set}, where the support is locally a smooth submanifold, is open and
+dense in $\operatorname{supp}\|V\|$ \cite{allard-1972}. The density threshold is sharp in examples: the crossing lines have density $2$ and the triple junction $\frac32$ at their singular points, and in the
+plane a stationary integral cone over rays with density less than $\frac32$ at the vertex is a line (Exercise~\ref{currents:exercise-density-cones}).
+
+\begin{remark}\label{currents:remark-survey}
+\begin{enumerate}
+\item \emph{The singular set.} Whether the singular set of a stationary integral varifold has $\|V\|$-measure zero is a well-known open problem. Much more is known for minimisers: for instance, the
+singular set of a mass-minimising integral current of codimension one has dimension at most $k - 7$ \cite{simon-gmt}. Stationary $1$-varifolds with density bounded below are locally finite networks of
+segments \cite{allard-almgren-1976}.
+\item \emph{Min--max.} Varifolds are the natural setting for constructing minimal surfaces that are not minimisers. Almgren and Pitts proved that every closed Riemannian manifold of dimension $3 \leq n + 1 \leq 7$
+contains a closed embedded minimal hypersurface, obtained as a stationary integral varifold by a min--max procedure over sweepouts \cite{pitts-1981}. Marques and Neves used min--max theory to prove the
+Willmore conjecture: every torus in $\RR^3$ has $\int H^2\,dA \geq 2\pi^2$ ($H$ the averaged mean curvature) \cite{marques-neves-2014}.
+\end{enumerate}
+\end{remark}
+
+\section{Exercises on Varifolds}\label{currents:section-exercises-varifolds}
+
+\begin{exercise}\label{currents:exercise-segment}
+Let $I = \{a + tu : 0 \leq t \leq L\}$ be a segment, $u$ a unit vector. Show that $\delta v(I)(X) = \langle X(a + Lu) - X(a), u\rangle$, and find $\|\delta v(I)\|$, $\nu$ and the generalised boundary measure.
+\end{exercise}
+
+\begin{solution}
+On $I$ the tangent line is spanned by $u$, so $\operatorname{div}_IX(a + tu) = \langle DX(a + tu)u, u\rangle = \frac{d}{dt}\langle X(a + tu), u\rangle$, and integrating over $[0, L]$ gives the formula. So
+$\delta v(I)(X) = \langle X(b), u\rangle + \langle X(a), -u\rangle$ with $b = a + Lu$: $\|\delta v(I)\| = \delta_a + \delta_b$, $\nu(b) = u$, $\nu(a) = -u$, the outward conormals, $\vec{H} = 0$ and $\sigma = \delta_a + \delta_b$,
+in agreement with Proposition~\ref{currents:proposition-first-variation-submanifold}(2) for $k = 1$, where $\mathcal{H}^0$ is counting measure.
+\end{solution}
+
+\begin{exercise}\label{currents:exercise-circle}
+Let $C = \{x \in \RR^2 : |x| = r\}$. Verify directly from Definition~\ref{currents:definition-first-variation} that $\delta v(C)(X) = \int_C\langle X, x\rangle r^{-2}\,d\mathcal{H}^1$, so that $\vec{H}(x) = -x/r^2$.
+\end{exercise}
+
+\begin{solution}
+Parametrise $x(t) = r(\cos t, \sin t)$, with unit tangent $e(t) = (-\sin t, \cos t)$, $e^{\prime}(t) = -x(t)/r$ and $d\mathcal{H}^1 = r\,dt$. Since $\frac{d}{dt}X(x(t)) = r\,DX(x(t))e(t)$,
+\[
+\begin{aligned}
+\operatorname{div}_CX = \langle DX\,e, e\rangle &= \frac1r\Bigl(\frac{d}{dt}\langle X(x(t)), e(t)\rangle - \langle X(x(t)), e^{\prime}(t)\rangle\Bigr) \\
+&= \frac1r\frac{d}{dt}\langle X(x(t)), e(t)\rangle + \frac{\langle X, x\rangle}{r^2} .
+\end{aligned}
+\]
+Integrating against $r\,dt$ over $[0, 2\pi]$, the derivative term integrates to $0$ by periodicity, leaving $\int_0^{2\pi}\langle X, x\rangle r^{-2}\,r\,dt = \int_C\langle X, x\rangle r^{-2}\,d\mathcal{H}^1$.
+Comparing with $-\int_C\langle\vec{H}, X\rangle$ gives $\vec{H} = -x/r^2$, the curvature vector of the circle: length $1/r$, pointing to the centre.
+\end{solution}
+
+\begin{exercise}\label{currents:exercise-compact-support}
+Show that a stationary $k$-varifold $V$ in $\RR^n$ with $\operatorname{supp}\|V\|$ compact is zero, without using rectifiability.
+\end{exercise}
+
+\begin{solution}
+Choose $\psi \in C^\infty_c(\RR^n)$ with $\psi = 1$ on a neighbourhood of $\operatorname{supp}\|V\|$, and let $X(x) = \psi(x)x$. On that neighbourhood $DX = I$, so $\operatorname{div}_SX = \operatorname{tr}P_S = k$
+there, and $V$ is concentrated on $\operatorname{supp}\|V\| \times G(n, k)$. Hence $0 = \delta V(X) = k\,\mathbf{M}(V)$.
+\end{solution}
+
+\begin{exercise}\label{currents:exercise-four-rays}
+Let $u_1, \ldots, u_4$ be distinct unit vectors in $\RR^2$ with $u_1 + u_2 + u_3 + u_4 = 0$. Show that after renumbering $u_3 = -u_1$ and $u_4 = -u_2$: a stationary cone over four rays of multiplicity
+one in the plane is a pair of crossing lines. Show by an example that this fails in $\RR^3$.
+\end{exercise}
+
+\begin{solution}
+Put $w = u_1 + u_2 = -(u_3 + u_4)$. If $w = 0$, then $u_2 = -u_1$ and $u_4 = -u_3$, which is the claim after renumbering. If $w \neq 0$: two unit vectors with sum $w$ make equal angles $\alpha$ with $w$, on
+opposite sides, where $\cos\alpha = |w|/2$; so in an angular coordinate with $w$ at angle $\beta$, $\{u_1, u_2\}$ are at angles $\beta \pm \alpha$, and $\{u_3, u_4\}$, with sum $-w$ of the same length, are at
+angles $\beta + \pi \pm \alpha$. Thus $\{u_3, u_4\} = \{-u_1, -u_2\}$. In $\RR^3$ the four unit vectors from the centre of a regular tetrahedron to its vertices sum to $0$ and no two are opposite; the cone
+over them is a stationary integral $1$-varifold that is not a union of lines.
+\end{solution}
+
+\begin{exercise}\label{currents:exercise-density-cones}
+Let $V = \sum_{i=1}^N\theta_iv(R_i)$ be a cone over distinct rays $R_i = \{tu_i : t \geq 0\}$ in $\RR^n$ with integer multiplicities $\theta_i \geq 1$, and suppose $V$ is stationary. Show that
+$\Theta^1(\|V\|, 0) \geq 1$, and that if $\Theta^1(\|V\|, 0) < \frac32$, then $V$ is a line with multiplicity one.
+\end{exercise}
+
+\begin{solution}
+By Example~\ref{currents:example-densities}(2), $\Theta^1(\|V\|, 0) = \frac12\sum_i\theta_i$, and by Example~\ref{currents:example-stationary}(2), $\sum_i\theta_iu_i = 0$. A single ray cannot satisfy this, so
+$\sum_i\theta_i \geq 2$ and $\Theta^1 \geq 1$. If $\Theta^1 < \frac32$, then $\sum_i\theta_i = 2$: either one ray with $\theta = 2$, impossible as $2u_1 \neq 0$, or two rays with $\theta_1 = \theta_2 = 1$ and
+$u_1 + u_2 = 0$, a line with multiplicity one.
+\end{solution}
+
+\begin{exercise}\label{currents:exercise-oscillating-variation}
+Let $V$ be the limit varifold of Example~\ref{currents:example-oscillating}. Show that
+\[
+\delta V(X) = q_{11}\int_0^{2\pi}\partial_1X_1(t, 0)\,dt + q_{22}\int_0^{2\pi}\partial_2X_2(t, 0)\,dt,
+\]
+where
+$q_{11} = \frac1{2\pi}\int_0^{2\pi}(1 + \cos^2s)^{-1/2}ds$ and $q_{22} = \frac1{2\pi}\int_0^{2\pi}\cos^2s\,(1 + \cos^2s)^{-1/2}ds > 0$, and deduce that $V$ does not have locally bounded first variation in
+any open set meeting the open segment $(0, 2\pi) \times \{0\}$.
+\end{exercise}
+
+\begin{solution}
+By the formula for $V$, $\delta V(X) = \int_0^{2\pi}\operatorname{tr}(Q\,DX(t, 0))\,dt$ with $Q = \int P_S\,d\nu(S)$. For $S = \ell(c)$, $P_S = (1, c)(1, c)^T/(1 + c^2)$, so with $c = \cos s$ and the weight
+$\frac1{2\pi}\sqrt{1 + c^2}$, $Q_{11} = q_{11}$, $Q_{22} = q_{22}$ and $Q_{12} = \frac1{2\pi}\int_0^{2\pi}\cos s\,(1 + \cos^2s)^{-1/2}ds = 0$, by the symmetry $s \mapsto \pi - s$. This gives the formula. Take a
+point $(t_0, 0)$, $0 < t_0 < 2\pi$, in the given open set, and $\varepsilon > 0$ with $[t_0 - \varepsilon, t_0 + \varepsilon] \times [-\varepsilon, \varepsilon]$ inside it. Choose $\chi, \zeta \in C^\infty_c((-\varepsilon, \varepsilon))$
+with $\chi \geq 0$, $\chi \neq 0$, and $\zeta = 1$ near $0$, and let $X_m(x, y) = \bigl(0, \chi(x - t_0)\zeta(y)\sin(my)/m\bigr)$. These fields are supported in a fixed compact set, $\sup|X_m| \leq \sup|\chi|/m \to 0$,
+$X_{m,1} = 0$ and $\partial_2X_{m,2}(t, 0) = \chi(t - t_0)$. So $\delta V(X_m) = q_{22}\int\chi > 0$ for every $m$, while a bound $|\delta V(X)| \leq C\sup|X|$ would force $\delta V(X_m) \to 0$.
+\end{solution}

@@ -22,7 +22,7 @@ $n^2 + n + 41$ is prime for $0 \leq n \leq 39$; this leads to the Heegner number
 \end{enumerate}
 The theme running through the chapter is that questions about the integers become questions about finite groups and rings, $\ZZ/n\ZZ$ and its group of units, or about larger rings such as the Gaussian
 integers $\ZZ[i]$, where the answers are visible. This point of view leads to algebraic number theory, and, through the zeta functions of varieties over finite fields, to the arithmetic side of Hodge theory
-(Chapters~\ref{etale-cohomology} and~\ref{tate-conjecture}).
+(Chapters~\ref{etale-cohomology} and~\ref{absolute-hodge}).
 
 References: \cite{ireland-rosen}, \cite{serre-arithmetic} and \cite{hardy-wright}.
 
@@ -878,7 +878,7 @@ $p = (c - d/2)^2 + 3(d/2)^2$.
 
 For example $7 = 2^2 + 2 + 1 = 2^2 + 3 \cdot 1^2$, $13 = 3^2 + 3 + 1 = 1^2 + 3 \cdot 2^2$, $31 = 5^2 + 5 + 1 = 2^2 + 3 \cdot 3^2$, while $5$, $11$, $17$ are of neither form. The ring $\ZZ[\omega]$ is
 the setting of Euler's proof of Fermat's last theorem for exponent $3$, and its sixfold symmetry is that of the hexagonal lattice and of the elliptic curve $\CC/\ZZ[\omega]$
-(Chapter~\ref{abelian-varieties}).
+(Chapter~\ref{algebraic-groups}).
 
 \subsection{Failure of unique factorisation}\label{number-theory:subsection-failure-ufd}
 
@@ -1060,7 +1060,7 @@ $41$ is the largest.
 \item \emph{An almost integer.} The number $e^{\pi\sqrt{163}} = 262537412640768743.99999999999925\ldots$ is extraordinarily close to the integer $640320^3 + 744$. The reason is again $h(-163) = 1$: the
 $j$-invariant of the elliptic curve $\CC/\ZZ[\frac{1 + \sqrt{-163}}{2}]$ is then an integer, equal to $-640320^3$, and the expansion $j(\tau) = e^{-2\pi i\tau} + 744 + 196884e^{2\pi i\tau} + \cdots$ at
 $\tau = \frac{1 + \sqrt{-163}}{2}$, where $e^{2\pi i\tau} = -e^{-\pi\sqrt{163}}$ is tiny, gives $-e^{\pi\sqrt{163}} + 744 \approx -640320^3$ \cite{cox-primes}. This is the theory of complex
-multiplication, which connects class numbers with elliptic curves (Chapter~\ref{abelian-varieties}).
+multiplication, which connects class numbers with elliptic curves (Chapter~\ref{algebraic-groups}).
 \item \emph{Class numbers grow.} Although $h(D) = 1$ only finitely often, $h(D) \to \infty$ as $D \to -\infty$ (Heilbronn, 1934); roughly, $h(D)$ is of size $\sqrt{|D|}$. The class number is also given
 by Dirichlet's \emph{class number formula}, which for $D < -4$ fundamental reads $h(D) = -\frac1{|D|}\sum_{m=1}^{|D|}\bigl(\frac{D}{m}\bigr)m$ with the Kronecker symbol \cite{cox-primes}; for $D = -23$ it
 gives $3$.

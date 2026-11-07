@@ -10,7 +10,7 @@ for compact varieties too. Three of them are proved in Section~\ref{mixed-hodge-
 algebraicity of a Hodge class can be tested on a Zariski open subset, modulo lower dimensions; and the birational invariance of the Hodge conjecture, modulo lower dimensions. References:
 \cite{deligne-hodge-2}, \cite{deligne-hodge-3}, \cite{peters-steenbrink}, \cite[Chapter 8]{voisin-hodge-1}.
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{hodge-structures} (Hodge Structures), Chapter~\ref{derived-categories} (Derived Categories) and Chapter~\ref{gaga} (Analytic Spaces and GAGA).
+\noindent\textbf{Prerequisites.} Chapter~\ref{hodge-structures} (Hodge Structures), Section~\ref{homological-algebra:section-derived-categories} (Derived Categories) and Chapter~\ref{gaga} (Analytic Spaces and GAGA).
 
 \noindent\textbf{Conventions.} Filtrations are finite and exhaustive. $W_\bullet$ always denotes an increasing filtration ($W_{k-1} \subseteq W_k$) and $F^\bullet$ a decreasing one
 ($F^{p+1} \subseteq F^p$). For an increasing filtration, $\mathrm{Gr}^W_k = W_k/W_{k-1}$. The Tate structure $\QQ(m)$ is $(2\pi i)^m\QQ \subseteq \CC$, pure of weight $-2m$ and type $(-m,-m)$
@@ -277,7 +277,7 @@ weight $k$, hence a sub-Hodge structure (Theorem~\ref{hodge-structures:theorem-a
 
 \begin{remark}\label{mixed-hodge-structures:remark-fixed-part}
 Theorem~\ref{mixed-hodge-structures:theorem-global-invariant} is the proof of Theorem~\ref{vhs:theorem-fixed-part} promised in Chapter~\ref{vhs}. The only input not proved in this book is the degeneration
-of the Leray spectral sequence, which Deligne deduces from the hard Lefschetz theorem (Chapter~\ref{lefschetz-theorems}) applied to the fibres \cite{deligne-1968}. The coniveau filtration is handled in
+of the Leray spectral sequence, which Deligne deduces from the hard Lefschetz theorem (Section~\ref{kahler:section-lefschetz-theorems}) applied to the fibres \cite{deligne-1968}. The coniveau filtration is handled in
 the same way: $N^cH^k(X)$ is a sum of kernels of restrictions $H^k(X) \to H^k(X \setminus Z)$, which by Corollary~\ref{mixed-hodge-structures:corollary-restriction}(2) are images of Gysin maps and so
 sub-Hodge structures (Proposition~\ref{hodge-conjecture:proposition-coniveau}).
 \end{remark}
@@ -292,7 +292,7 @@ Then $\alpha$ is algebraic.
 \end{proposition}
 
 \begin{proof}
-Put $\beta = \alpha - \mathrm{cl}(V)$. It is a Hodge class, by Corollary~\ref{cycle-class:corollary-hodge-classes}, and $\beta|_U = 0$. By Corollary~\ref{mixed-hodge-structures:corollary-restriction}(2),
+Put $\beta = \alpha - \mathrm{cl}(V)$. It is a Hodge class, by Corollary~\ref{intersection-theory:corollary-hodge-classes}, and $\beta|_U = 0$. By Corollary~\ref{mixed-hodge-structures:corollary-restriction}(2),
 $\beta$ lies in the image of
 \[
 g_* = \sum_ig_{i*} \colon A = \bigoplus_iH^{2p-2c_i}(\tilde Z_i; \QQ)(-c_i) \longrightarrow H^{2p}(\bar X; \QQ),
@@ -302,7 +302,7 @@ to currents of type $(a + c_i, b + c_i)$. The source $A$ is a direct sum of pola
 Theorem~\ref{hodge-structures:theorem-semisimple}, $\ker g_*$ has a complement $A'$ in $A$ that is a sub-Hodge structure, and $g_*|_{A'} \colon A' \to g_*(A)$ is an isomorphism of Hodge structures onto the
 sub-Hodge structure $g_*(A)$. The preimage $\gamma = (\gamma_i) \in A'$ of $\beta$ is then a Hodge class, since isomorphisms of Hodge structures preserve Hodge classes
 (Proposition~\ref{hodge-structures:proposition-hodge-classes-morphisms}); that is, $\gamma_i \in \mathrm{Hdg}^{p-c_i}(\tilde Z_i)$. By hypothesis (2), $\gamma_i = \mathrm{cl}(V_i)$ for cycles $V_i$ on $\tilde Z_i$
-with $\QQ$-coefficients. By compatibility of the cycle class with proper pushforward (Theorem~\ref{cycle-class:theorem-cycle-class}(2)), $\beta = \sum_ig_{i*}\mathrm{cl}(V_i) = \mathrm{cl}(\sum_ig_{i*}V_i)$.
+with $\QQ$-coefficients. By compatibility of the cycle class with proper pushforward (Theorem~\ref{intersection-theory:theorem-cycle-class}(2)), $\beta = \sum_ig_{i*}\mathrm{cl}(V_i) = \mathrm{cl}(\sum_ig_{i*}V_i)$.
 Hence $\alpha = \mathrm{cl}(V + \sum_ig_{i*}V_i)$ is algebraic.
 \end{proof}
 
@@ -329,14 +329,14 @@ rational and lies in $F^p$, so it is a Hodge class of this pure structure (Propo
 $r' \colon H^{2p}(\bar X'; \QQ) \to W_{2p}H^{2p}(U; \QQ)$ is a surjective morphism of pure Hodge structures of weight $2p$, by Corollary~\ref{mixed-hodge-structures:corollary-restriction}(1) applied to $\bar X'$.
 As in the proof of Proposition~\ref{mixed-hodge-structures:proposition-localisation}, semisimplicity (Theorem~\ref{hodge-structures:theorem-semisimple}) gives a Hodge class $\alpha' \in \mathrm{Hdg}^p(\bar X')$ with
 $r'(\alpha') = \alpha|_U$. By hypothesis $\alpha' = \mathrm{cl}(V')$ for a cycle $V'$ on $\bar X'$ with $\QQ$-coefficients. Let $V$ be the closure in $\bar X$ of the cycle $V'|_U$. Since the cycle class
-commutes with restriction to open subsets (Theorem~\ref{cycle-class:theorem-cycle-class}(2)), $\mathrm{cl}(V)|_U = \mathrm{cl}(V'|_U) = \alpha'|_U = \alpha|_U$. By
+commutes with restriction to open subsets (Theorem~\ref{intersection-theory:theorem-cycle-class}(2)), $\mathrm{cl}(V)|_U = \mathrm{cl}(V'|_U) = \alpha'|_U = \alpha|_U$. By
 Corollary~\ref{mixed-hodge-structures:corollary-localisation}, $\alpha$ is algebraic. The converse follows by symmetry.
 \end{proof}
 
 \begin{remark}\label{mixed-hodge-structures:remark-integral}
 The arguments of Proposition~\ref{mixed-hodge-structures:proposition-localisation} and Corollary~\ref{mixed-hodge-structures:corollary-birational} use semisimplicity to lift Hodge classes along surjections,
 and this is a statement about $\QQ$-structures. Over $\ZZ$ an integral Hodge class in the image of a morphism need not be the image of an integral Hodge class, and the integral analogues must be proved
-by other means: for classes of degree $4$, the birational invariance of the defect $Z^4(X)$ is a theorem of Colliot-Th\'el\`ene and Voisin (Theorem~\ref{failures:theorem-what-survives}).
+by other means: for classes of degree $4$, the birational invariance of the defect $Z^4(X)$ is a theorem of Colliot-Th\'el\`ene and Voisin (Theorem~\ref{known-cases:theorem-what-survives}).
 \end{remark}
 
 \section{Exercises}\label{mixed-hodge-structures:section-exercises}

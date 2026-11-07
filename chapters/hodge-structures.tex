@@ -10,7 +10,7 @@ structures form an abelian category with tensor products (Theorem~\ref{hodge-str
 about the Hodge classes of the Hodge structures $H^{2p}(X; \QQ)$ (Chapter~\ref{hodge-conjecture}). References: \cite[Chapter 7]{voisin-hodge-1}, \cite{deligne-hodge-2},
 \cite[Chapter 2]{peters-steenbrink}.
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{lefschetz-theorems} (Hard Lefschetz and the Hodge--Riemann Relations) and Chapter~\ref{algebraic-groups} (Linear Algebraic
+\noindent\textbf{Prerequisites.} Section~\ref{kahler:section-lefschetz-theorems} (Hard Lefschetz and the Hodge--Riemann Relations) and Chapter~\ref{algebraic-groups} (Linear Algebraic
 Groups).
 
 Throughout, $A$ denotes one of the rings $\ZZ$, $\QQ$ or $\RR$, and for an $A$-module $H_A$ we write $H_\CC = H_A \otimes_A\CC$, with complex conjugation acting on the second
@@ -44,7 +44,7 @@ $F^p = F^{p+1} \oplus (F^p \cap \overline{F^{k-p}}) = F^{p+1} \oplus H^{p,k-p}$.
 \begin{enumerate}
 \item The \emph{Tate structure} $\ZZ(n)$ is the rank-one lattice $(2\pi i)^n\ZZ \subseteq \CC$, of weight $-2n$ and type $(-n, -n)$. We write $H(n) = H \otimes \ZZ(n)$ for the
 \emph{Tate twist}, of weight $k - 2n$.
-\item For a compact K\"ahler manifold $X$, $H^k(X; \ZZ)$ is a $\ZZ$-Hodge structure of weight $k$ by Theorem~\ref{hodge-decomposition:theorem-hodge-decomposition}.
+\item For a compact K\"ahler manifold $X$, $H^k(X; \ZZ)$ is a $\ZZ$-Hodge structure of weight $k$ by Theorem~\ref{kahler:theorem-hodge-decomposition}.
 \item For a compact Riemann surface of genus $g$, $H^1$ has $h^{1,0} = h^{0,1} = g$. For a K3 surface, $H^2$ has Hodge numbers $(1, 20, 1)$.
 \item A Hodge structure of weight $k$ with $H^{p,q} = 0$ unless $p = q$ is of \emph{Tate type}; for instance $H^{2p}(\CC\PP^n; \ZZ) \cong \ZZ(-p)$.
 \end{enumerate}
@@ -133,13 +133,13 @@ of the Lefschetz decomposition, a polarisation is
 
 \begin{proof}
 $P^k$ is a sub-Hodge structure, as the kernel of the morphism $L^{n-k+1}$ of type $(n-k+1, n-k+1)$ (Theorem~\ref{hodge-structures:theorem-abelian}), and it is defined over $\QQ$ because $[\omega]$
-is rational. Conditions (1)--(3) for $Q_k$ on $P^k$ are Theorem~\ref{lefschetz-theorems:theorem-hodge-riemann}. For $H^k$, the summands $L^jP^{k-2j}$ of the Lefschetz decomposition
-(Theorem~\ref{lefschetz-theorems:theorem-hard-lefschetz}) are sub-Hodge structures defined over $\QQ$, since $L^j$ is a morphism of type $(j,j)$, and $L^j \colon P^{k-2j} \to H^k$ is injective. So
+is rational. Conditions (1)--(3) for $Q_k$ on $P^k$ are Theorem~\ref{kahler:theorem-hodge-riemann}. For $H^k$, the summands $L^jP^{k-2j}$ of the Lefschetz decomposition
+(Theorem~\ref{kahler:theorem-hard-lefschetz}) are sub-Hodge structures defined over $\QQ$, since $L^j$ is a morphism of type $(j,j)$, and $L^j \colon P^{k-2j} \to H^k$ is injective. So
 $\tilde Q$ is well defined, $(-1)^k$-symmetric, and pairs $H^{p,q}$ only with $H^{q,p}$. For $a \in P^{p',q'}$ with $p' + q' = k - 2j$, the element $x = L^ja$ lies in $H^{p'+j,q'+j}$, and
 $i^{(p'+j)-(q'+j)}\tilde Q(x, \bar x) = i^{p'-q'}Q_{k-2j}(a, \bar a) > 0$ by the primitive case. As the summands are $\tilde Q$-orthogonal and the $H^{p,q}$-components of different summands
 pair to zero, (3) holds on all of $H^k$. For comparison, $Q_k(L^ja, L^jb) = (-1)^jQ_{k-2j}(a, b)$, because both are $\pm\int a \cup b \cup [\omega]^{n-k+2j}$ and
 $\frac{k(k-1)}{2} - \frac{(k-2j)(k-2j-1)}{2} = 2jk - 2j^2 - j \equiv j \pmod 2$. So $\tilde Q$ is $Q_k$ with the sign changed on the summands with $j$ odd; $Q_k$ itself is not a polarisation of $H^k$ in
-general (Counterexample~\ref{lefschetz-theorems:counterexample-non-primitive-sign}).
+general (Counterexample~\ref{kahler:counterexample-non-primitive-sign}).
 \end{proof}
 
 \begin{theorem}\label{hodge-structures:theorem-semisimple}
@@ -159,7 +159,7 @@ polarised by $Q|_{W^\perp}$. Semisimplicity follows by induction on the dimensio
 Not every Hodge structure is polarisable. In dimension $2$ every weight-one $\QQ$-Hodge structure is polarisable: $V_\CC = V^{1,0} \oplus V^{0,1}$ with $V^{1,0}$ spanned by $(1, \tau)$,
 $\tau \notin \RR$, is polarised by $\pm\det$, and it is the Hodge structure of an elliptic curve. But a weight-one Hodge structure of dimension $4$ whose $H^{1,0}$ is a general $2$-dimensional
 subspace of $\CC^4$ with $H^{1,0} \cap \overline{H^{1,0}} = 0$ admits no polarisation: it is the Hodge structure of a non-algebraic complex torus
-(Counterexample~\ref{abelian-varieties:counterexample-non-algebraic-torus} and Theorem~\ref{hodge-structures:theorem-weight-one}).
+(Counterexample~\ref{algebraic-groups:counterexample-non-algebraic-torus} and Theorem~\ref{hodge-structures:theorem-weight-one}).
 \end{counterexample}
 
 \begin{proposition}\label{hodge-structures:proposition-automorphisms-finite}
@@ -183,7 +183,7 @@ A \emph{Hodge class} in a $\QQ$-Hodge structure $H$ of even weight $2p$ is an el
 
 \begin{proposition}\label{hodge-structures:proposition-hodge-classes-morphisms}
 Morphisms of Hodge structures $H \to H'$ of the same weight are exactly the Hodge classes in $\Hom(H, H')$, and $\mathrm{End}_{\mathrm{HS}}(H) = \mathrm{Hdg}(\End H)$. Morphisms of Hodge structures
-map Hodge classes to Hodge classes. For a compact K\"ahler manifold $X$, $\mathrm{Hdg}^p(X) = \mathrm{Hdg}(H^{2p}(X; \QQ))$ (Definition~\ref{cycle-class:definition-hodge-classes}) is a
+map Hodge classes to Hodge classes. For a compact K\"ahler manifold $X$, $\mathrm{Hdg}^p(X) = \mathrm{Hdg}(H^{2p}(X; \QQ))$ (Definition~\ref{intersection-theory:definition-hodge-classes}) is a
 $\QQ$-subalgebra of $\bigoplus_pH^{2p}(X; \QQ)$ under cup product.
 \end{proposition}
 
@@ -195,7 +195,7 @@ $H^{2p} \otimes H^{2q} \to H^{2p+2q}$ is a morphism of Hodge structures, as the 
 \begin{example}\label{hodge-structures:example-hodge-classes}
 \begin{enumerate}
 \item In $H^2(X; \QQ)$ of a compact K\"ahler manifold, the Hodge classes are the rational classes of type $(1,1)$; for a complex torus they form $\mathrm{NS}(T) \otimes \QQ$
-(Exercise~\ref{abelian-varieties:exercise-hodge-classes-torus}).
+(Exercise~\ref{algebraic-groups:exercise-hodge-classes-torus}).
 \item Hodge classes can be scarce even when $H^{p,p}$ is large: for a very general projective K3 surface of given degree, the rational classes of type $(1,1)$ in $H^2$ are only the
 multiples of the polarisation, although $h^{1,1} = 20$.
 \item The polarisation $Q$ of a Hodge structure $H$ of weight $k$ is a Hodge class in $(H^\vee)^{\otimes 2}(-k)$, a Hodge structure of weight $0$.
@@ -214,15 +214,15 @@ correspond exactly to the polarisable Hodge structures, and a polarisation of th
 $\Lambda \otimes_\ZZ\RR = V$ as real vector spaces, so $\Lambda_\CC = V \otimes_\RR\CC = V^{1,0} \oplus V^{0,1}$, the $\pm i$-eigenspaces of the complex structure, and the projection to $V^{1,0} \cong V$
 restricts to the identity of $V$ on $\Lambda_\RR = V$. So $V \cong \Lambda_\CC/V^{0,1} = \Lambda_\CC/F^0$, and $T = \Lambda_\CC/(F^0 + \Lambda)$. Conversely, for a Hodge structure $H$ of this type,
 $H_\RR \to H_\CC/F^0 = H^{-1,0}$ is an isomorphism of real vector spaces, since $H_\RR \cap F^0 = H_\RR \cap H^{0,-1} = 0$ (a real vector in $H^{0,-1}$ lies in $H^{-1,0} \cap H^{0,-1} = 0$). So $H_\ZZ$
-is a lattice in the complex vector space $H^{-1,0}$. Homomorphisms of tori are $\CC$-linear maps preserving lattices (Lemma~\ref{abelian-varieties:lemma-homomorphisms}), which are exactly
+is a lattice in the complex vector space $H^{-1,0}$. Homomorphisms of tori are $\CC$-linear maps preserving lattices (Lemma~\ref{algebraic-groups:lemma-homomorphisms}), which are exactly
 the morphisms of Hodge structures. A polarisation $Q$ of weight $-1$ is an alternating integral (after scaling) form on $\Lambda$ with $Q(V, V) = 0$ and $iQ(x, \bar x) > 0$ on $V^{1,0}$, up to the
-sign conventions; this is Riemann's condition in the form of Theorem~\ref{abelian-varieties:theorem-riemann-conditions}.
+sign conventions; this is Riemann's condition in the form of Theorem~\ref{algebraic-groups:theorem-riemann-conditions}.
 \end{proof}
 
 \begin{remark}\label{hodge-structures:remark-weight-one-cohomology}
 Dually, $H^1(T; \ZZ) = \Hom(\Lambda, \ZZ)$ is of weight one with $H^{1,0} = V^\vee$. For a curve $C$, $H^1(C; \ZZ)$ is polarised by the cup product, and the corresponding torus is the Jacobian
-(Theorem~\ref{abelian-varieties:theorem-jacobian}). In higher weight there is no such dictionary: a Hodge structure of weight $3$ does not in general come from a complex torus in a way compatible
-with polarisations, which is the origin of the difference between Griffiths' intermediate Jacobians and Weil's (Chapter~\ref{intermediate-jacobians}).
+(Theorem~\ref{algebraic-groups:theorem-jacobian}). In higher weight there is no such dictionary: a Hodge structure of weight $3$ does not in general come from a complex torus in a way compatible
+with polarisations, which is the origin of the difference between Griffiths' intermediate Jacobians and Weil's (Chapter~\ref{vhs}).
 \end{remark}
 
 \begin{corollary}\label{hodge-structures:corollary-torus-automorphisms}
@@ -244,7 +244,7 @@ $\mathrm{GL}_2(\ZZ)$ is infinite. Consequently no single polarisation of $H_1(T)
 Let $E_\tau = \CC/(\ZZ + \ZZ\tau)$ with $\operatorname{Im}\tau > 0$, and $H = H_1(E_\tau; \QQ) = \QQ + \QQ\tau \subseteq \CC$, of type $\{(-1,0), (0,-1)\}$. An $\RR$-linear endomorphism of $H_\RR = \CC$ preserves the
 decomposition $H_\CC = H^{-1,0} \oplus H^{0,-1}$ exactly when it commutes with the complex structure, that is, when it is multiplication by some $\alpha \in \CC$ (as in the proof of
 Theorem~\ref{hodge-structures:theorem-weight-one}). So $\End_{\mathrm{HS}}(H) = \{\alpha \in \CC : \alpha(\QQ + \QQ\tau) \subseteq \QQ + \QQ\tau\}$, which is $\End(E_\tau) \otimes \QQ$: clearing denominators,
-$\alpha$ preserves $\QQ + \QQ\tau$ if and only if $n\alpha$ preserves $\ZZ + \ZZ\tau$ for some integer $n \geq 1$. By Proposition~\ref{abelian-varieties:proposition-elliptic-endomorphisms},
+$\alpha$ preserves $\QQ + \QQ\tau$ if and only if $n\alpha$ preserves $\ZZ + \ZZ\tau$ for some integer $n \geq 1$. By Proposition~\ref{algebraic-groups:proposition-elliptic-endomorphisms},
 \[
 \End_{\mathrm{HS}}(H) = \begin{cases}\QQ(\tau) & \text{if } [\QQ(\tau) : \QQ] = 2 \quad (\text{$E_\tau$ has \emph{complex multiplication}}),\\ \QQ & \text{otherwise.}\end{cases}
 \]
@@ -276,5 +276,216 @@ Let $H = H^1(E_\tau; \QQ)$ with basis dual to $1, \tau$ and $Q$ the cup product 
 \end{exercise}
 
 \begin{solution}
-$H^{1,0}$ is spanned by $[dz]$, and $iQ([dz], \overline{[dz]}) = i\int_{E_\tau}dz \wedge d\bar z = 2\operatorname{Im}\tau > 0$, as in Example~\ref{lefschetz-theorems:example-curves-riemann}.
+$H^{1,0}$ is spanned by $[dz]$, and $iQ([dz], \overline{[dz]}) = i\int_{E_\tau}dz \wedge d\bar z = 2\operatorname{Im}\tau > 0$, as in Example~\ref{kahler:example-curves-riemann}.
+\end{solution}
+
+\section{Mumford--Tate Groups}\label{hodge-structures:section-mumford-tate}
+The Mumford--Tate group of a rational Hodge structure $H$ is the smallest algebraic group over $\QQ$ whose real points contain the image of the Deligne torus.
+It is the symmetry group of $H$: a rational subspace of any tensor space built from $H$ is a sub-Hodge structure exactly when it is stable under the
+Mumford--Tate group, and Hodge classes are exactly the invariants of the special Mumford--Tate group (Theorem~\ref{hodge-structures:theorem-hodge-classes-invariants}). So
+determining all Hodge classes on a variety, the first step in any attack on the Hodge conjecture, amounts to computing a group and its invariants. For abelian varieties this is
+a problem in the representation theory of reductive groups, and it is how the known cases, and the exceptional Weil classes, are found (Chapter~\ref{known-cases}). References:
+\cite{deligne-abelian}, \cite{birkenhake-lange}, \cite{ggk-mumford-tate}.
+
+\noindent\textbf{Prerequisites.} Chapter~\ref{hodge-structures} (Hodge Structures) and Section~\ref{algebraic-groups:section-abelian-varieties} (Abelian Varieties).
+
+Throughout, $H$ is a $\QQ$-Hodge structure with representation $h \colon \mathbb{S} \to \mathrm{GL}(H_\RR)$ (Proposition~\ref{hodge-structures:proposition-deligne-torus}), and
+$T^{m,n}(H) = H^{\otimes m} \otimes (H^\vee)^{\otimes n}$ are the tensor spaces, which are Hodge structures (Theorem~\ref{hodge-structures:theorem-abelian}).
+
+\section{Definition and first properties}\label{hodge-structures:section-definition-mumford-tate}
+
+\begin{definition}\label{hodge-structures:definition-mumford-tate}
+The \emph{Mumford--Tate group} $\mathrm{MT}(H)$ is the smallest algebraic subgroup $G \subseteq \mathrm{GL}(H_\QQ)$, defined over $\QQ$, such that $h(\mathbb{S}(\RR)) \subseteq G(\RR)$. The
+\emph{Hodge group}, or special Mumford--Tate group, $\mathrm{Hg}(H)$ is the smallest algebraic subgroup defined over $\QQ$ with $h(\mathbb{U}(1)(\RR)) \subseteq \mathrm{Hg}(H)(\RR)$, where
+$\mathbb{U}(1) \subseteq \mathbb{S}$ is the circle group (Example~\ref{algebraic-groups:example-weil-restriction}).
+\end{definition}
+
+\begin{proposition}\label{hodge-structures:proposition-basic}
+\begin{enumerate}
+\item $\mathrm{MT}(H)$ and $\mathrm{Hg}(H)$ exist and are connected, and $\mathrm{Hg}(H) \subseteq \mathrm{MT}(H)$.
+\item If $H$ is pure of weight $k \neq 0$, then $\mathrm{MT}(H) = \mathbb{G}_m \cdot \mathrm{Hg}(H)$, where $\mathbb{G}_m$ is the group of scalars; if $k = 0$, $\mathrm{MT}(H) = \mathrm{Hg}(H)$.
+\item $\mathrm{MT}(H)$ acts on each $T^{m,n}(H)$, and $\mathrm{MT}(H \oplus H') \subseteq \mathrm{MT}(H) \times \mathrm{MT}(H')$ projects onto each factor.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) Intersections of algebraic subgroups defined over $\QQ$ are algebraic subgroups defined over $\QQ$, and the Noetherian property of $\mathrm{GL}(H_\QQ)$ makes the intersection of all
+subgroups with the property a finite intersection, which still has it. The identity component of $\mathrm{MT}(H)$ is defined over $\QQ$ and contains the image of the connected group
+$\mathbb{S}(\RR) = \CC^*$, so it equals $\mathrm{MT}(H)$; likewise for $\mathrm{Hg}(H)$. (2) $\mathbb{S}(\RR) = \RR_{>0} \cdot \mathbb{U}(1)(\RR)$, and $h(r) = r^{-k}$ for $r \in \RR_{>0}$ by the
+weight condition. So $h(\mathbb{S}(\RR)) \subseteq (\mathbb{G}_m \cdot \mathrm{Hg}(H))(\RR)$, which gives $\subseteq$. Conversely $\mathrm{MT}(H)$ contains the scalars $h(\RR_{>0})$ if $k \neq 0$,
+hence the $\QQ$-group $\mathbb{G}_m$, and it contains $\mathrm{Hg}(H)$. If $k = 0$, $h$ is trivial on $\RR_{>0}$. (3) The action on tensors is functorial. For the direct sum, the image of
+$\mathrm{MT}(H \oplus H')$ in $\mathrm{GL}(H_\QQ)$ is a $\QQ$-subgroup containing $h(\mathbb{S})$, so it contains $\mathrm{MT}(H)$, and it is contained in it because
+$\mathrm{MT}(H) \times \mathrm{MT}(H')$ contains the image of $h \oplus h'$.
+\end{proof}
+
+\begin{theorem}\label{hodge-structures:theorem-sub-hodge}
+A $\QQ$-subspace $W \subseteq T^{m,n}(H)$ is a sub-Hodge structure if and only if it is stable under $\mathrm{MT}(H)$. A vector $t \in T^{m,n}(H)_\QQ$ spans a sub-Hodge structure if and only if
+$\mathrm{MT}(H)$ stabilises the line $\QQ t$.
+\end{theorem}
+
+\begin{proof}
+By Proposition~\ref{hodge-structures:proposition-deligne-torus}, $W_\CC = \bigoplus(W_\CC \cap T^{p,q})$ if and only if $W_\RR$ is stable under $h(\mathbb{S}(\RR))$, since the $T^{p,q}$ are the
+eigenspaces of the torus. The stabiliser of $W$ in $\mathrm{GL}(T^{m,n}(H)_\QQ)$, pulled back to $\mathrm{GL}(H_\QQ)$, is an algebraic subgroup defined over $\QQ$
+(Proposition~\ref{algebraic-groups:proposition-subgroup-fixing}). It contains $h(\mathbb{S}(\RR))$ if and only if it contains $\mathrm{MT}(H)$, by minimality. The second statement is the case
+$W = \QQ t$.
+\end{proof}
+
+\begin{corollary}\label{hodge-structures:corollary-endomorphisms}
+$\End_{\mathrm{HS}}(H) = \End(H_\QQ)^{\mathrm{MT}(H)}$, the endomorphisms commuting with the Mumford--Tate group. In particular $H$ is irreducible as a Hodge structure if and only if $H_\QQ$ is
+irreducible as a representation of $\mathrm{MT}(H)$.
+\end{corollary}
+
+\begin{proof}
+An endomorphism is a morphism of Hodge structures if and only if its graph, a subspace of $H \oplus H$, is a sub-Hodge structure. By Theorem~\ref{hodge-structures:theorem-sub-hodge} applied to $H \oplus H$
+(whose Mumford--Tate group is the diagonal copy of $\mathrm{MT}(H)$), this means that the graph is $\mathrm{MT}(H)$-stable, that is, the endomorphism commutes with $\mathrm{MT}(H)$. Sub-Hodge
+structures are the $\mathrm{MT}(H)$-stable subspaces.
+\end{proof}
+
+\section{Reductivity and Hodge classes}\label{hodge-structures:section-reductive}
+
+\begin{theorem}\label{hodge-structures:theorem-reductive}
+If $H$ is polarisable, then $\mathrm{MT}(H)$ and $\mathrm{Hg}(H)$ are reductive.
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{hodge-structures:theorem-sub-hodge}, the $\mathrm{MT}(H)$-stable subspaces of $H_\QQ$ are the sub-Hodge structures. Since $H$ is polarisable, every sub-Hodge structure has a complement
+(Theorem~\ref{hodge-structures:theorem-semisimple}), so $H_\QQ$ is a semisimple representation of $\mathrm{MT}(H)$. It remains semisimple after extension of scalars to $\bar{\QQ}$, as we are in
+characteristic $0$ \cite{milne-algebraic-groups}. Let $U = R_u(\mathrm{MT}(H)_{\bar{\QQ}})$. On each irreducible summand $W$ of $H_{\bar{\QQ}}$, the unipotent normal subgroup $U$ has a nonzero fixed
+vector (Kolchin's theorem \cite{borel-lag}), and the fixed space $W^U$ is stable under $\mathrm{MT}(H)$ because $U$ is normal, so $W^U = W$. Hence $U$ acts trivially on the faithful
+representation $H_{\bar{\QQ}}$, so $U = 1$ and $\mathrm{MT}(H)$ is reductive. The same argument applies to $\mathrm{Hg}(H)$, a normal subgroup of the reductive group $\mathrm{MT}(H)$ (it is normalised by
+$\mathrm{MT}(H)$ because $h(\mathbb{S})$ is commutative), whose representation $H_{\bar{\QQ}}$ remains semisimple.
+\end{proof}
+
+\begin{theorem}\label{hodge-structures:theorem-hodge-classes-invariants}
+Let $H$ be a $\QQ$-Hodge structure, pure of weight $k$.
+\begin{enumerate}
+\item A rational tensor $t \in T^{m,n}(H)_\QQ$ is a Hodge class, that is, of type $(p, p)$ with $2p = k(m - n)$, if and only if it is fixed by $\mathrm{Hg}(H)$.
+\item If $H$ is polarisable, $\mathrm{Hg}(H)$ is the subgroup of $\mathrm{GL}(H_\QQ)$ fixing all Hodge classes in all tensor spaces $T^{m,n}(H)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) The circle $z \in \mathbb{U}(1)(\RR)$, $|z| = 1$, acts on $T^{p,q}$ by $z^{-p}\bar z^{-q} = z^{q-p}$. So a rational $t$ is fixed by $h(\mathbb{U}(1)(\RR))$ if and only if all its components have
+$p = q$, that is, $t$ is a Hodge class. The stabiliser of $t$ is an algebraic subgroup defined over $\QQ$ (Proposition~\ref{algebraic-groups:proposition-subgroup-fixing}), and it contains
+$h(\mathbb{U}(1)(\RR))$ if and only if it contains $\mathrm{Hg}(H)$. (2) By (1), $\mathrm{Hg}(H)$ is contained in the subgroup fixing all Hodge classes. By Theorem~\ref{hodge-structures:theorem-reductive}
+$\mathrm{Hg}(H)$ is reductive, so by Theorem~\ref{algebraic-groups:theorem-tannakian}(3) it is the subgroup fixing all tensors fixed by $\mathrm{Hg}(H)$, which by (1) are the Hodge classes.
+\end{proof}
+
+\begin{corollary}\label{hodge-structures:corollary-hodge-ring-abelian}
+Let $A$ be a complex abelian variety and $H = H^1(A; \QQ)$. Then $H^\bullet(A; \QQ) \cong \Lambda^\bullet H$ as Hodge structures, and the Hodge classes on $A$ are
+$\bigoplus_p\mathrm{Hdg}^p(A) = (\Lambda^\bullet H)^{\mathrm{Hg}(H)}$. The same holds for all powers $A^r$, with $H^1(A^r) = H^{\oplus r}$ and the same Hodge group.
+\end{corollary}
+
+\begin{proof}
+$H^\bullet(A; \QQ) = \Lambda^\bullet H^1(A; \QQ)$ by Proposition~\ref{algebraic-groups:proposition-torus-cohomology}, compatibly with Hodge decompositions (cup product is a morphism of Hodge
+structures), and $\Lambda^\bullet H$ is a direct summand of the tensor algebra. Apply Theorem~\ref{hodge-structures:theorem-hodge-classes-invariants}(1). For $A^r$, the Hodge group of $H^{\oplus r}$ is the
+diagonal image of $\mathrm{Hg}(H)$ by Proposition~\ref{hodge-structures:proposition-basic}(3).
+\end{proof}
+
+\begin{proposition}\label{hodge-structures:proposition-polarisation}
+Let $H$ be pure of weight $k$ with a polarisation $Q$. Then $\mathrm{Hg}(H)$ is contained in the automorphism group $\mathrm{Aut}(H_\QQ, Q)$ of the form, which is the symplectic group $\mathrm{Sp}(H_\QQ, Q)$ for $k$ odd and
+the orthogonal group $\mathrm{O}(H_\QQ, Q)$ for $k$ even. Consequently $\mathrm{MT}(H)$ is contained in the group of similitudes $\{g : Q(gx, gy) = \lambda(g)Q(x, y)\}$.
+\end{proposition}
+
+\begin{proof}
+Viewed as an element of $T^{0,2}(H) = (H^\vee)^{\otimes 2}$, a Hodge structure of weight $-2k$, the form $Q$ is rational and lies in $\bigoplus_{p+q=k}(H^{p,q})^\vee \otimes (H^{q,p})^\vee$ by condition (2) of
+Definition~\ref{hodge-structures:definition-polarisation}. By Theorem~\ref{hodge-structures:theorem-abelian} the dual $(H^{p,q})^\vee$ has type $(-p,-q)$, so $Q$ has type $(-k, -k)$ and is a Hodge class. By
+Theorem~\ref{hodge-structures:theorem-hodge-classes-invariants}(1) it is fixed by $\mathrm{Hg}(H)$, that is, $Q(gx, gy) = Q(x, y)$ for $g \in \mathrm{Hg}(H)$. The form is alternating for $k$ odd and symmetric for $k$ even. The
+last statement follows from Proposition~\ref{hodge-structures:proposition-basic}(2), since scalars are similitudes.
+\end{proof}
+
+\begin{proposition}\label{hodge-structures:proposition-tate-type}
+For a $\QQ$-Hodge structure $H$ pure of weight $k$, the following are equivalent: $\mathrm{Hg}(H) = 1$; every element of $H_\QQ$ is a Hodge class; $H$ is of Tate type, that is, $k = 2p$ is even and
+$H \cong \QQ(-p)^{\oplus r}$. In that case $\mathrm{MT}(H) = \mathbb{G}_m$ (scalars) if $p \neq 0$, and $\mathrm{MT}(H) = 1$ if $p = 0$.
+\end{proposition}
+
+\begin{proof}
+If $\mathrm{Hg}(H) = 1$, every rational vector is fixed, hence a Hodge class by Theorem~\ref{hodge-structures:theorem-hodge-classes-invariants}(1). If every rational vector is a Hodge class, then $H_\CC$,
+spanned by $H_\QQ$, equals $H^{p,p}$, and a basis of $H_\QQ$ gives $H \cong \QQ(-p)^{\oplus r}$. If $H$ is of Tate type, $\mathbb{U}(1)(\RR)$ acts on $H^{p,p}$ by $z^{-p}\bar z^{-p} = |z|^{-2p} = 1$, so the smallest
+$\QQ$-group containing its image is trivial. The last statement follows from Proposition~\ref{hodge-structures:proposition-basic}(2): $\mathrm{MT}(H) = \mathbb{G}_m \cdot \mathrm{Hg}(H) = \mathbb{G}_m$ if the weight
+$2p$ is nonzero, and $\mathrm{MT}(H) = \mathrm{Hg}(H) = 1$ if $p = 0$.
+\end{proof}
+
+\begin{example}\label{hodge-structures:example-weight-two}
+Let $S$ be a nonsingular projective surface and $H = H^2(S; \QQ)$. By Proposition~\ref{hodge-structures:proposition-tate-type}, $\mathrm{Hg}(H)$ is trivial exactly when $h^{2,0}(S) = 0$, and then every class in
+$H^2(S; \QQ)$ is a Hodge class; by the Lefschetz $(1,1)$-theorem (Chapter~\ref{hodge-conjecture}) all of them are then classes of divisors. When $h^{2,0} \neq 0$, the Hodge group fixes every Hodge class, in particular the class of a hyperplane section and all of
+$\mathrm{NS}(S) \otimes \QQ$, and it preserves the polarisation of Theorem~\ref{hodge-structures:theorem-cohomology-polarised} (Proposition~\ref{hodge-structures:proposition-polarisation}); so it acts on the orthogonal
+complement of $\mathrm{NS}(S) \otimes \QQ$ for the intersection form, the \emph{transcendental part}, preserving the intersection form, and it is nontrivial there.
+\end{example}
+
+\section{Examples}\label{hodge-structures:section-examples}
+
+\begin{proposition}\label{hodge-structures:proposition-elliptic-curves}
+Let $E$ be a complex elliptic curve and $H = H^1(E; \QQ)$. If $E$ has complex multiplication by the imaginary quadratic field $K$, then $\mathrm{MT}(H) = \mathrm{Res}_{K/\QQ}\mathbb{G}_m$, a torus of
+dimension $2$, and $\mathrm{Hg}(H)$ is the norm-one subtorus. If $E$ has no complex multiplication, then $\mathrm{MT}(H) = \mathrm{GL}_2$ and $\mathrm{Hg}(H) = \mathrm{SL}_2$.
+\end{proposition}
+
+\begin{proof}
+By Corollary~\ref{hodge-structures:corollary-endomorphisms} and Theorem~\ref{hodge-structures:theorem-weight-one}, the commutant of $\mathrm{MT}(H)$ in $\End(H_\QQ)$ is $\End(E) \otimes \QQ$. In the CM case, $K$
+acts on the $2$-dimensional space $H_\QQ$, making it a $1$-dimensional $K$-vector space, so the commutant of $K$ in $\mathrm{GL}(H_\QQ)$ is the torus $T_K = \mathrm{Res}_{K/\QQ}\mathbb{G}_m$, and
+$\mathrm{MT}(H) \subseteq T_K$. It contains the scalars (weight $1 \neq 0$) and the Weil operator $C = h(i)^{-1}$, which acts as $i$ on $H^{1,0}$ and $-i$ on $H^{0,1}$ and is not a scalar. So
+$\dim\mathrm{MT}(H) = 2$ and $\mathrm{MT}(H) = T_K$. Without CM, the commutant is $\QQ$. The group $\mathrm{MT}(H)$ is connected and reductive (Theorem~\ref{hodge-structures:theorem-reductive}). A
+connected reductive subgroup of $\mathrm{GL}_2$ is a torus or contains $\mathrm{SL}_2$. A torus of $\mathrm{GL}_2$ containing a non-scalar element has as commutant a $2$-dimensional commutative
+algebra, not $\QQ$. So $\mathrm{MT}(H) \supseteq \mathrm{SL}_2$, and with the scalars, $\mathrm{MT}(H) = \mathrm{GL}_2$. The Hodge groups follow from Proposition~\ref{hodge-structures:proposition-basic}(2)
+and the fact that $\mathrm{Hg}$ preserves the polarisation (it fixes the Hodge class $Q$), so lies in $\mathrm{SL}_2 = \mathrm{Sp}_2$.
+\end{proof}
+
+\begin{proposition}\label{hodge-structures:proposition-cm}
+If $A$ is an abelian variety with complex multiplication by a CM field $F$ of degree $2g$, then $\mathrm{MT}(H^1(A; \QQ))$ is a torus, contained in $\mathrm{Res}_{F/\QQ}\mathbb{G}_m$. Conversely, a
+polarisable weight-one Hodge structure whose Mumford--Tate group is a torus is of CM type.
+\end{proposition}
+
+\begin{proof}
+$F$ acts on $H_\QQ$ by Hodge endomorphisms, and $\dim_\QQ H_\QQ = 2g = [F : \QQ]$, so $H_\QQ$ is a $1$-dimensional $F$-vector space. Its commutant in $\mathrm{GL}(H_\QQ)$ is $\mathrm{Res}_{F/\QQ}\mathbb{G}_m$, a
+torus, which contains $\mathrm{MT}$ by Corollary~\ref{hodge-structures:corollary-endomorphisms}; subgroups of tori that are connected are tori. Conversely, if $\mathrm{MT}$ is a torus $T$, its commutant
+contains the $\QQ$-algebra generated by $T(\QQ)$, which is commutative semisimple; one shows that it contains a maximal commutative subalgebra of dimension $2g$ \cite{birkenhake-lange}.
+\end{proof}
+
+\begin{theorem}\label{hodge-structures:theorem-very-general}
+For a very general principally polarised abelian variety $A$ of dimension $g$ (outside a countable union of proper analytic subsets of the moduli space), $\mathrm{MT}(H^1(A)) = \mathrm{GSp}_{2g}$ and
+$\mathrm{Hg}(H^1(A)) = \mathrm{Sp}_{2g}$. Consequently $\mathrm{Hdg}^\bullet(A^r)$ is generated by divisor classes for every $r$, and the Hodge conjecture holds for all powers of $A$.
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+For each of the countably many $\QQ$-subgroups $G \subsetneq \mathrm{GSp}_{2g}$, the set of points of the Siegel space $\mathfrak{H}_g$ (Proposition~\ref{algebraic-groups:proposition-period-matrix})
+where $h$ factors through $G(\RR)$ is a proper analytic subset, since $\mathrm{GSp}_{2g}(\RR)$ acts transitively on $\mathfrak{H}_g$ and the $h$ of a general point generates. Outside these
+subsets $\mathrm{MT} = \mathrm{GSp}_{2g}$. By classical invariant theory for $\mathrm{Sp}_{2g}$, the invariants in $\Lambda^\bullet(H^{\oplus r})$ are generated by the symplectic forms pairing the
+various copies, which are the classes of divisors \cite{birkenhake-lange}. By Corollary~\ref{hodge-structures:corollary-hodge-ring-abelian} these are all the Hodge classes. Rational Hodge classes of
+degree $2$ are classes of divisors: a multiple lifts to an integral class of type $(1,1)$, which is $c_1$ of a line bundle (Lemma~\ref{kodaira:lemma-integral-11}), algebraic by GAGA
+(Theorem~\ref{gaga:theorem-gaga}), whose class is that of a divisor (Example~\ref{intersection-theory:example-classes}(2)).
+\end{proof}
+
+\begin{remark}\label{hodge-structures:remark-mumford-example}
+The Mumford--Tate group is not determined by the endomorphism algebra. Mumford constructed abelian fourfolds with $\End(A) = \ZZ$ whose Mumford--Tate group is much smaller than
+$\mathrm{GSp}_8$: a form of $\mathbb{G}_m \cdot (\mathrm{SL}_2)^3$ acting through the tensor product of three standard representations \cite{mumford-1969}. For such $A$ the ring of Hodge
+classes is not detected by endomorphisms.
+\end{remark}
+
+\begin{remark}\label{hodge-structures:remark-mumford-tate-conjecture}
+For $A$ defined over a number field $k$, the \emph{Mumford--Tate conjecture} predicts that the identity component of the Zariski closure of the image of $G_k$ in $\mathrm{GL}(H^1(\bar A, \QQ_\ell))$
+equals $\mathrm{MT}(H^1(A; \QQ)) \otimes \QQ_\ell$, under Artin's comparison isomorphism (Theorem~\ref{etale-cohomology:theorem-comparison}). It relates the Hodge conjecture to the Tate conjecture
+(Chapter~\ref{absolute-hodge}), and it is known for elliptic curves (Serre) and in many cases for abelian varieties.
+\end{remark}
+
+\section{Exercises on Mumford--Tate Groups}\label{hodge-structures:section-exercises-mumford-tate}
+
+\begin{exercise}\label{hodge-structures:exercise-tate}
+Show that $\mathrm{MT}(\QQ(n)) = \mathbb{G}_m$ for $n \neq 0$ and $\mathrm{MT}(\QQ(0)) = 1$.
+\end{exercise}
+
+\begin{solution}
+$h(z)$ acts on $\QQ(n)$, of type $(-n, -n)$, by $z^n\bar z^n = |z|^{2n}$. For $n \neq 0$ the image of $\mathbb{S}(\RR)$ is $\RR_{>0}$, whose $\QQ$-Zariski closure in $\mathrm{GL}_1$ is $\mathbb{G}_m$. For $n = 0$
+the action is trivial.
+\end{solution}
+
+\begin{exercise}\label{hodge-structures:exercise-product-elliptic}
+Let $E_1$, $E_2$ be non-isogenous elliptic curves without complex multiplication. Show that $\mathrm{Hg}(H^1(E_1) \oplus H^1(E_2)) = \mathrm{SL}_2 \times \mathrm{SL}_2$, and deduce that
+$\mathrm{Hdg}^1(E_1 \times E_2)$ has dimension $2$.
+\end{exercise}
+
+\begin{solution}
+By Proposition~\ref{hodge-structures:proposition-basic}(3) the Hodge group is a connected reductive subgroup of $\mathrm{SL}_2 \times \mathrm{SL}_2$ projecting onto both factors. By Goursat's lemma for the
+simple groups $\mathrm{SL}_2$, it is either the product or the graph of an isomorphism $\mathrm{SL}_2 \to \mathrm{SL}_2$. In the second case the two representations would be isomorphic as Hodge
+group representations, giving a nonzero Hodge class in $\Hom(H^1(E_1), H^1(E_2))$, hence an isogeny (Theorem~\ref{hodge-structures:theorem-weight-one}), which is excluded. The invariants of
+$\mathrm{SL}_2 \times \mathrm{SL}_2$ in $\Lambda^2(H_1 \oplus H_2) = \Lambda^2H_1 \oplus (H_1 \otimes H_2) \oplus \Lambda^2H_2$ are $\Lambda^2H_1 \oplus \Lambda^2H_2$, of dimension $2$.
 \end{solution}

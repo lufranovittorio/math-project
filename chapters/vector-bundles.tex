@@ -106,7 +106,7 @@ $\Phi_i\Phi_j^{-1}(p, v) = (p, g_{ij}(p)v)$; they satisfy the \emph{cocycle cond
 \item Conversely, every such family $(g_{ij})$ arises from a vector bundle, unique up to isomorphism, namely $E = (\bigsqcup_i U_i \times \mathbb{K}^r)/\sim$ with $(p, v)_j \sim (p, g_{ij}(p)v)_i$.
 \item Two cocycles $(g_{ij})$, $(g'_{ij})$ define isomorphic bundles if and only if there are smooth $h_i \colon U_i \to \GL_r(\mathbb{K})$ with $g'_{ij} = h_ig_{ij}h_j^{-1}$. Hence isomorphism classes of rank
 $r$ bundles correspond to $\check{H}^1(M, \underline{\GL_r})$, \v{C}ech cohomology with values in the sheaf of smooth $\GL_r(\mathbb{K})$-valued functions
-(Remark~\ref{sheaf-cohomology:remark-cech-limit}).
+(Remark~\ref{sheaves:remark-cech-limit}).
 \end{enumerate}
 \end{proposition}
 
@@ -165,7 +165,7 @@ Every section vanishes somewhere (Counterexample~\ref{vector-bundles:counterexam
 \item \emph{Sections of a bundle given by a cocycle} are families of functions $s_i \colon U_i \to \mathbb{K}^r$ with $s_i = g_{ij}s_j$ on $U_i \cap U_j$. For $\mathcal{O}(-1)$ on
 $\CC\PP^1$, with Example~\ref{vector-bundles:example-cocycles}(4), a section is a pair of functions $a$ on $U_0$ and $b$ on $U_1$ with $a = z^{-1}b$; holomorphic sections would be
 power series $a(z)$ and $b(w)$ with $a(z) = z^{-1}b(1/z)$, and comparing the powers of $z$ shows that only $a = b = 0$ is possible. So $\mathcal{O}(-1)$ has no nonzero holomorphic
-section, although it has many smooth ones (Chapter~\ref{holomorphic-bundles}).
+section, although it has many smooth ones (Chapter~\ref{complex-manifolds}).
 \end{enumerate}
 \end{example}
 
@@ -487,7 +487,7 @@ since $S^2$ has no nowhere vanishing vector field (the hairy ball theorem, Corol
 
 \begin{example}\label{vector-bundles:example-euler-sequence}
 On $\CC\PP^n$ there is an exact sequence of holomorphic vector bundles
-$0 \to \mathcal{O} \to \mathcal{O}(1)^{\oplus(n+1)} \to T\CC\PP^n \to 0$ (the \emph{Euler sequence}), where $\mathcal{O}(1) = \mathcal{O}(-1)^\vee$ (Chapter~\ref{holomorphic-bundles}). Over the smooth category it
+$0 \to \mathcal{O} \to \mathcal{O}(1)^{\oplus(n+1)} \to T\CC\PP^n \to 0$ (the \emph{Euler sequence}), where $\mathcal{O}(1) = \mathcal{O}(-1)^\vee$ (Chapter~\ref{complex-manifolds}). Over the smooth category it
 splits by Proposition~\ref{vector-bundles:proposition-metrics}, but it does not split holomorphically: holomorphic splittings are much rarer, which is why holomorphic bundles carry more information than
 smooth ones.
 \end{example}
@@ -514,14 +514,14 @@ $c_1(L \otimes L') = c_1(L) + c_1(L')$, $c_1(f^*L) = f^*c_1(L)$, and $L$ is triv
 
 \begin{proof}
 Line bundles are classified by $\check{H}^1$ of the sheaf of smooth nonvanishing functions by Proposition~\ref{vector-bundles:proposition-cocycles}(3), and \v{C}ech and sheaf cohomology agree in degree one
-(Remark~\ref{sheaf-cohomology:remark-cech-limit}); the group structures agree because the cocycle of a tensor product is the product of the cocycles. The exponential sequence is exact as a sequence of
+(Remark~\ref{sheaves:remark-cech-limit}); the group structures agree because the cocycle of a tensor product is the product of the cocycles. The exponential sequence is exact as a sequence of
 sheaves: surjectivity holds because a nonvanishing function has a smooth logarithm on any set where it is defined and contractible, for instance a small ball, and the kernel of $\exp(2\pi i\,\cdot)$ is the
 constant sheaf $\ZZ$ (Theorem~\ref{real-analysis:theorem-pi}). Its long exact sequence reads
 \[
 H^1(M, \underline{\CC}_M) \to H^1(M, \underline{\CC}^\times_M) \to H^2(M, \ZZ_M) \to H^2(M, \underline{\CC}_M),
 \]
-and the outer terms vanish because $\underline{\CC}_M$ is a sheaf of modules over $\mathcal{C}_M$, hence fine, hence acyclic (Corollary~\ref{sheaf-cohomology:corollary-fine-acyclic}); manifolds are
-paracompact (Proposition~\ref{general-topology:proposition-exhaustion}). Finally $H^2(M, \ZZ_M) \cong H^2(M; \ZZ)$ by Theorem~\ref{sheaf-cohomology:theorem-singular-comparison}, since manifolds are locally
+and the outer terms vanish because $\underline{\CC}_M$ is a sheaf of modules over $\mathcal{C}_M$, hence fine, hence acyclic (Corollary~\ref{sheaves:corollary-fine-acyclic}); manifolds are
+paracompact (Proposition~\ref{general-topology:proposition-exhaustion}). Finally $H^2(M, \ZZ_M) \cong H^2(M; \ZZ)$ by Theorem~\ref{sheaves:theorem-singular-comparison}, since manifolds are locally
 contractible. Additivity and naturality follow from the corresponding properties of the cocycles and of the connecting homomorphism, and triviality of $L$ means exactly that its class in
 $H^1(M, \underline{\CC}^\times_M)$ vanishes.
 \end{proof}

@@ -1,6 +1,8 @@
-\chapter{Conditional Expectation and Martingales}\label{martingales}
+\chapter{Stochastic Processes}\label{martingales}
 \chapterstatus{planned}
 
+
+\section{Conditional Expectation and Martingales}\label{martingales:section-martingales}
 Conditional expectation given a $\sigma$-algebra, and the processes that are fair games: martingales,
 their stopping theorems and convergence theorems.
 
@@ -13,5 +15,53 @@ their stopping theorems and convergence theorems.
 \item Doob's inequalities, upcrossings and the martingale convergence theorems; uniform integrability.
 \item Backward martingales and a martingale proof of the strong law; the Radon--Nikodym theorem via martingales.
 \item Applications: random walks, branching processes, Azuma--Hoeffding.
+\item Exercises with solutions.
+\end{enumerate}
+
+\section{Markov Chains}\label{martingales:section-markov-chains}
+Random processes without memory on countable state spaces: classification of states, stationary
+distributions, convergence to equilibrium and mixing times.
+
+\noindent\textbf{Prerequisites.} Section~\ref{martingales:section-martingales} and Chapter~\ref{linear-algebra} (Linear Algebra).
+
+\noindent\textbf{Planned contents.}
+\begin{enumerate}
+\item Markov chains, transition matrices, the strong Markov property.
+\item Recurrence and transience; P\'olya's theorem on random walks in $\ZZ^d$.
+\item Stationary distributions, the ergodic theorem for chains, convergence to equilibrium by coupling.
+\item Reversibility, random walks on graphs and electrical networks.
+\item Mixing times, spectral gap, Markov chain Monte Carlo.
+\item Continuous-time chains and the Poisson process.
+\item Exercises with solutions.
+\end{enumerate}
+
+\section{Brownian Motion}\label{martingales:section-brownian-motion}
+The central object of stochastic analysis: its construction, its path properties and its connection
+with the Laplace operator.
+
+\noindent\textbf{Prerequisites.} Section~\ref{martingales:section-martingales} and Chapter~\ref{general-topology} (General Topology).
+
+\noindent\textbf{Planned contents.}
+\begin{enumerate}
+\item Gaussian processes; construction of Brownian motion (L\'evy, Kolmogorov's extension and continuity theorems).
+\item Path properties: nowhere differentiability, H\"older continuity, quadratic variation, the law of the iterated logarithm.
+\item The Markov and strong Markov properties, the reflection principle.
+\item Brownian motion and harmonic functions: the Dirichlet problem, recurrence and transience.
+\item Donsker's invariance principle.
+\item Exercises with solutions.
+\end{enumerate}
+
+\section{Stochastic Calculus}\label{martingales:section-stochastic-calculus}
+Integration against Brownian motion, It\^o's formula, and stochastic differential equations.
+
+\noindent\textbf{Prerequisites.} Section~\ref{martingales:section-brownian-motion} (Brownian Motion).
+
+\noindent\textbf{Planned contents.}
+\begin{enumerate}
+\item Continuous martingales, quadratic variation, local martingales.
+\item The It\^o integral and its isometry; It\^o's formula.
+\item L\'evy's characterisation, Girsanov's theorem, martingale representation.
+\item Stochastic differential equations: existence and uniqueness, the Markov property, Feynman--Kac.
+\item Applications: the Black--Scholes model, Ornstein--Uhlenbeck processes.
 \item Exercises with solutions.
 \end{enumerate}

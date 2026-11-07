@@ -4,12 +4,12 @@
 \section{Introduction}\label{divisors:section-introduction}
 
 Divisors are the codimension-one cycles. They are the first case of the algebraic cycles whose cohomology classes the Hodge conjecture is
-about, and the case in which the conjecture is a theorem (the Lefschetz $(1,1)$-theorem, Chapter~\ref{lefschetz-11}). This chapter treats
+about, and the case in which the conjecture is a theorem (the Lefschetz $(1,1)$-theorem, Chapter~\ref{hodge-conjecture}). This chapter treats
 Weil divisors and the class group, Cartier divisors and their identification with line bundles, linear systems and morphisms to projective
 space, ample line bundles, intersection numbers on surfaces, and the N\'eron--Severi group. References: \cite[Sections II.6, II.7 and V.1]{hartshorne-ag},
 \cite[Chapter 1]{lazarsfeld-positivity-1}, \cite[Chapter I]{beauville-surfaces}.
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{coherent-cohomology} (Cohomology of Coherent Sheaves).
+\noindent\textbf{Prerequisites.} Section~\ref{schemes:section-coherent-cohomology} (Cohomology of Coherent Sheaves).
 
 Throughout, schemes are Noetherian and separated. $K(X)$ is the function field of an integral scheme and $\mathcal{K}_X$ the constant sheaf $K(X)$.
 
@@ -119,13 +119,13 @@ are the common points of its members.
 \begin{proposition}\label{divisors:proposition-linear-system}
 In the situation of Definition~\ref{divisors:definition-linear-system}, sending a nonzero $s \in \Gamma(X, \mathcal{O}(D))$ to its divisor of zeros $(s)_0$ gives a bijection
 $(\Gamma(X, \mathcal{O}(D)) \setminus 0)/k^* \cong |D|$. So $|D|$ is a projective space of dimension $h^0(\mathcal{O}(D)) - 1$, finite by
-Corollary~\ref{coherent-cohomology:corollary-finite-dimensional}.
+Corollary~\ref{schemes:corollary-finite-dimensional}.
 \end{proposition}
 
 \begin{proof}
 A section $s$ of $\mathcal{O}(D) \subseteq \mathcal{K}$ is an element $f \in K(X)$ with $f_if$ regular on each $U_i$, and $(s)_0$ is the effective divisor with local equations
 $f_if$, which equals $D + (f)$. Conversely, if $D' = D + (f) \geq 0$, then $f \in \Gamma(X, \mathcal{O}(D))$. Two sections give the same divisor if and only if their quotient
-is a unit on $X$, that is, an element of $\Gamma(X, \mathcal{O}_X)^* = k^*$ (Corollary~\ref{coherent-cohomology:corollary-finite-dimensional}).
+is a unit on $X$, that is, an element of $\Gamma(X, \mathcal{O}_X)^* = k^*$ (Corollary~\ref{schemes:corollary-finite-dimensional}).
 \end{proof}
 
 \begin{proposition}\label{divisors:proposition-closed-immersion-criterion}
@@ -140,13 +140,13 @@ morphism that is injective on closed points and on tangent spaces is a closed im
 \section{Ample line bundles}\label{divisors:section-ample}
 
 \begin{theorem}\label{divisors:theorem-ample-very-ample}
-Let $X$ be of finite type over a Noetherian ring $A$ and $\mathcal{L}$ invertible. Then $\mathcal{L}$ is ample (Definition~\ref{coherent-sheaves:definition-very-ample}) if and only
+Let $X$ be of finite type over a Noetherian ring $A$ and $\mathcal{L}$ invertible. Then $\mathcal{L}$ is ample (Definition~\ref{schemes:definition-very-ample}) if and only
 if $\mathcal{L}^m$ is very ample over $A$ for some $m > 0$.
 \end{theorem}
 
 \begin{proof}
 If $\mathcal{L}^m$ is very ample, $X$ is an open subscheme of a projective scheme $\bar X$ with $\mathcal{L}^m = \mathcal{O}(1)|_X$. A coherent $\mathcal{F}$ on $X$ extends to a coherent sheaf
-on $\bar X$ \cite[Exercise II.5.15]{hartshorne-ag}. Applying Theorem~\ref{coherent-sheaves:theorem-serre-generation} to the extensions of
+on $\bar X$ \cite[Exercise II.5.15]{hartshorne-ag}. Applying Theorem~\ref{schemes:theorem-serre-generation} to the extensions of
 $\mathcal{F}, \mathcal{F} \otimes \mathcal{L}, \ldots, \mathcal{F} \otimes \mathcal{L}^{m-1}$ shows that $\mathcal{F} \otimes \mathcal{L}^n$ is globally generated for $n \gg 0$.
 
 Conversely, let $\mathcal{L}$ be ample. \emph{Step 1: affine cover by sets $X_s$.} Let $P \in X$, $U$ an affine neighbourhood on which $\mathcal{L}$ is trivial, and $\mathcal{I}$
@@ -156,7 +156,7 @@ open subset of the affine $U$ (where $s$ becomes a function), hence affine. By q
 the $s_i$ by powers we may assume they are all sections of the same $\mathcal{L}^n$.
 
 \emph{Step 2: coordinates.} Let $B_i = \Gamma(X_{s_i}, \mathcal{O})$, a finitely generated $A$-algebra with generators $b_{ij}$. By
-Lemma~\ref{coherent-sheaves:lemma-extend-sections}(2) there is $N$ such that $s_i^Nb_{ij}$ extends to a global section $c_{ij}$ of $\mathcal{L}^{nN}$ for all $i$, $j$. The
+Lemma~\ref{schemes:lemma-extend-sections}(2) there is $N$ such that $s_i^Nb_{ij}$ extends to a global section $c_{ij}$ of $\mathcal{L}^{nN}$ for all $i$, $j$. The
 sections $s_i^N$ and $c_{ij}$ of $\mathcal{L}^{nN}$ generate it, because the $s_i^N$ have no common zero. Let $\varphi \colon X \to \PP^M_A$ be the morphism they define
 (Proposition~\ref{divisors:proposition-morphisms-projective}), with homogeneous coordinates $y_i$, $y_{ij}$ corresponding to $s_i^N$, $c_{ij}$.
 
@@ -172,11 +172,11 @@ $H^i(X, \mathcal{F} \otimes \mathcal{L}^n) = 0$ for all $i > 0$ and $n \geq n_0$
 
 \begin{proof}
 If $\mathcal{L}$ is ample, some $\mathcal{L}^m$ is very ample (Theorem~\ref{divisors:theorem-ample-very-ample}). As $X$ is proper, the immersion is closed, so $X$ is
-projective. Apply Theorem~\ref{coherent-cohomology:theorem-finiteness}(2) to $\mathcal{F} \otimes \mathcal{L}^r$, $0 \leq r < m$.
+projective. Apply Theorem~\ref{schemes:theorem-finiteness}(2) to $\mathcal{F} \otimes \mathcal{L}^r$, $0 \leq r < m$.
 
 Conversely, let $P$ be a closed point with ideal sheaf $\mathcal{I}_P$. From $0 \to \mathcal{I}_P\mathcal{F} \to \mathcal{F} \to \mathcal{F} \otimes k(P) \to 0$ and
 $H^1(\mathcal{I}_P\mathcal{F} \otimes \mathcal{L}^n) = 0$ for $n$ large, $\Gamma(\mathcal{F} \otimes \mathcal{L}^n) \to \mathcal{F} \otimes \mathcal{L}^n \otimes k(P)$ is onto. By Nakayama's lemma
-(Proposition~\ref{coherent-sheaves:proposition-fibre-dimension}(1)), $\mathcal{F} \otimes \mathcal{L}^n$ is then generated by global sections on a neighbourhood of $P$,
+(Proposition~\ref{schemes:proposition-fibre-dimension}(1)), $\mathcal{F} \otimes \mathcal{L}^n$ is then generated by global sections on a neighbourhood of $P$,
 a neighbourhood that depends on $n$. Apply this to $\mathcal{F} = \mathcal{O}_X$ to find $n_0$ and a neighbourhood $V$ of $P$ on which $\mathcal{L}^{n_0}$ is globally
 generated. Apply it to $\mathcal{F} \otimes \mathcal{L}^r$, $0 \leq r < n_0$, to find $n_1$ and neighbourhoods $V_r$ on which $\mathcal{F} \otimes \mathcal{L}^{r + n_1}$ is globally
 generated. On $W_P = V \cap \bigcap_rV_r$, every $\mathcal{F} \otimes \mathcal{L}^n$ with $n \geq n_1$ is globally generated, being a tensor product
@@ -188,10 +188,10 @@ subset contains a closed point, so finitely many suffice.
 \begin{enumerate}
 \item $\mathcal{O}(d)$ on $\PP^n_k$, $n \geq 1$, is ample if and only if $d > 0$: for $d > 0$ it is very ample (Example~\ref{varieties:example-projective}(2)), and for
 $d \leq 0$ and $\mathcal{F} = \mathcal{O}(-1)$ the sheaf $\mathcal{F} \otimes \mathcal{O}(d)^m = \mathcal{O}(dm - 1)$ is nonzero without nonzero global sections
-(Proposition~\ref{coherent-sheaves:proposition-twisting}).
+(Proposition~\ref{schemes:proposition-twisting}).
 \item The restriction of an ample sheaf to a closed subscheme is ample, and a tensor product of ample sheaves is ample.
 \item For a smooth projective variety over $\CC$, a line bundle is ample if and only if the associated holomorphic line bundle is positive
-(Definition~\ref{holomorphic-bundles:definition-positive}). This combines Theorem~\ref{kodaira:theorem-embedding} with GAGA (Chapter~\ref{gaga}).
+(Definition~\ref{complex-manifolds:definition-positive}). This combines Theorem~\ref{kodaira:theorem-embedding} with GAGA (Chapter~\ref{gaga}).
 \end{enumerate}
 \end{example}
 
@@ -231,7 +231,7 @@ divisor as a difference of very ample ones, which are linearly equivalent to non
 
 \begin{example}\label{divisors:example-intersections}
 \begin{enumerate}
-\item On $\PP^2$, $H \cdot H = \chi(\mathcal{O}) - 2\chi(\mathcal{O}(-1)) + \chi(\mathcal{O}(-2)) = 1 - 0 + 0 = 1$ by Theorem~\ref{coherent-cohomology:theorem-projective-space}. By
+\item On $\PP^2$, $H \cdot H = \chi(\mathcal{O}) - 2\chi(\mathcal{O}(-1)) + \chi(\mathcal{O}(-2)) = 1 - 0 + 0 = 1$ by Theorem~\ref{schemes:theorem-projective-space}. By
 bilinearity, curves of degrees $d$ and $e$ satisfy $C \cdot D = de$ (\emph{B\'ezout's theorem}).
 \item On $\PP^1 \times \PP^1$, with fibres $F_1 = \{pt\} \times \PP^1$ and $F_2 = \PP^1 \times \{pt\}$, $\chi(\mathcal{O}(a, b)) = (a + 1)(b + 1)$ by the K\"unneth formula for the
 \v{C}ech complexes, and the definition gives $F_1^2 = F_2^2 = 0$ and $F_1 \cdot F_2 = 1$.
@@ -246,8 +246,8 @@ then $D^2 < 0$. Equivalently, the intersection form on $\mathrm{Num}(X) \otimes 
 \end{theorem}
 
 This is \cite[Theorem V.1.9]{hartshorne-ag}, proved there with Riemann--Roch on surfaces. Over $\CC$ it is the part of
-Corollary~\ref{lefschetz-theorems:corollary-surfaces} concerning classes of divisors, once intersection numbers are identified with cup products of cycle classes
-(Chapter~\ref{cycle-class}).
+Corollary~\ref{kahler:corollary-surfaces} concerning classes of divisors, once intersection numbers are identified with cup products of cycle classes
+(Chapter~\ref{intersection-theory}).
 
 \begin{theorem}[Nakai--Moishezon criterion]\label{divisors:theorem-nakai}
 A divisor $D$ on a nonsingular projective surface is ample if and only if $D^2 > 0$ and $D \cdot C > 0$ for every irreducible curve $C$.
@@ -271,15 +271,15 @@ $\rho(X)$, the quotient of $\mathrm{NS}(X)$ by its torsion.
 \end{theorem}
 
 This is due to Severi and N\'eron; see \cite[Section 1.1]{lazarsfeld-positivity-1}. Over $\CC$ it follows from Hodge theory. The kernel $\Pic^0(X)$ of the first Chern
-class is the Picard torus (Remark~\ref{holomorphic-bundles:remark-picard-variety}), and $\mathrm{NS}(X)$ embeds into $H^2(X; \ZZ)$ with image the integral classes of type
-$(1,1)$ (Chapter~\ref{lefschetz-11}). So $\rho(X) \leq h^{1,1}(X)$.
+class is the Picard torus (Remark~\ref{complex-manifolds:remark-picard-variety}), and $\mathrm{NS}(X)$ embeds into $H^2(X; \ZZ)$ with image the integral classes of type
+$(1,1)$ (Chapter~\ref{hodge-conjecture}). So $\rho(X) \leq h^{1,1}(X)$.
 
 \begin{example}\label{divisors:example-picard-numbers}
 \begin{enumerate}
 \item $\rho(\PP^n) = 1$ and $\rho(\PP^1 \times \PP^1) = 2$, since $\Pic(\PP^1 \times \PP^1) \cong \ZZ^2$, generated by the two rulings.
-\item For a quartic surface $X \subseteq \PP^3$, $1 \leq \rho(X) \leq h^{1,1} = 20$ (Example~\ref{hodge-decomposition:example-quartic}). The very general quartic has $\rho = 1$
+\item For a quartic surface $X \subseteq \PP^3$, $1 \leq \rho(X) \leq h^{1,1} = 20$ (Example~\ref{kahler:example-quartic}). The very general quartic has $\rho = 1$
 (Noether--Lefschetz), and the Fermat quartic $x^4 + y^4 + z^4 + w^4 = 0$ has $\rho = 20$.
-\item For $E \times E'$ a product of elliptic curves, $\rho = 2 + \operatorname{rank}\Hom(E, E')$, which is $2$, $3$ or $4$ (Chapter~\ref{abelian-varieties}).
+\item For $E \times E'$ a product of elliptic curves, $\rho = 2 + \operatorname{rank}\Hom(E, E')$, which is $2$, $3$ or $4$ (Chapter~\ref{algebraic-groups}).
 \end{enumerate}
 \end{example}
 
@@ -299,7 +299,7 @@ $v_2 \colon \PP^2 \to \PP^5$.
 \end{exercise}
 
 \begin{solution}
-$\Gamma(\PP^2, \mathcal{O}(2))$ is the $6$-dimensional space of quadratic forms (Proposition~\ref{coherent-sheaves:proposition-twisting}), so $\dim|2H| = 5$ by
+$\Gamma(\PP^2, \mathcal{O}(2))$ is the $6$-dimensional space of quadratic forms (Proposition~\ref{schemes:proposition-twisting}), so $\dim|2H| = 5$ by
 Proposition~\ref{divisors:proposition-linear-system}. The monomials $x_i^2$ have no common zero, so there are no base points, and the morphism of
 Proposition~\ref{divisors:proposition-morphisms-projective} given by the six quadratic monomials is $v_2$.
 \end{solution}
@@ -322,5 +322,5 @@ Show that if $\mathcal{L}$ is ample on $X$ and $Y \subseteq X$ is a closed subsc
 
 \begin{solution}
 For coherent $\mathcal{G}$ on $Y$, $i_*\mathcal{G}$ is coherent on $X$ and $H^j(Y, \mathcal{G} \otimes \mathcal{L}|_Y^n) = H^j(X, i_*\mathcal{G} \otimes \mathcal{L}^n)$ by the projection formula and
-Example~\ref{sheaf-cohomology:example-leray}. These vanish for $j > 0$ and $n \gg 0$.
+Example~\ref{sheaves:example-leray}. These vanish for $j > 0$ and $n \gg 0$.
 \end{solution}

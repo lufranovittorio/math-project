@@ -8,7 +8,7 @@ relations between them are the objects on the algebraic side of the conjecture. 
 equivalence, with their functoriality (proper pushforward, flat pullback) and the intersection product on smooth varieties, and compares the adequate
 equivalence relations (rational, algebraic, homological, numerical) that appear in the standard conjectures. We follow Fulton \cite{fulton-intersection}.
 Many constructions are quoted from there, but the computations for affine and projective spaces and the elementary exact sequences are proved.
-Chapter~\ref{cycle-class} attaches cohomology classes to cycles.
+Section~\ref{intersection-theory:section-cycle-class} attaches cohomology classes to cycles.
 
 \noindent\textbf{Prerequisites.} Chapter~\ref{divisors} (Divisors and Line Bundles) and Chapter~\ref{schemes} (Schemes).
 
@@ -167,7 +167,7 @@ $f \colon X \to Y$ acts as $f_*$, its transpose as $f^*$.
 \end{proposition}
 
 This is \cite[Proposition 16.1.1]{fulton-intersection}; it follows from the projection formula and the compatibility of pullback and pushforward in fibre squares. Correspondences are
-the morphisms in the category of Chow motives, and the idempotent correspondences, projectors, cut motives out of varieties (Chapter~\ref{standard-conjectures}).
+the morphisms in the category of Chow motives, and the idempotent correspondences, projectors, cut motives out of varieties (Chapter~\ref{absolute-hodge}).
 
 \section{Adequate equivalence relations}\label{intersection-theory:section-equivalences}
 
@@ -176,7 +176,7 @@ Let $X$ be a nonsingular projective variety and $\alpha \in Z^p(X)$.
 \begin{enumerate}
 \item $\alpha$ is \emph{algebraically equivalent to zero} if there are a nonsingular projective curve $C$, points $c_0, c_1 \in C$ and a cycle $\Gamma$ on $C \times X$ with
 $\alpha = \Gamma(c_1) - \Gamma(c_0)$, where $\Gamma(c) = \mathrm{pr}_{2*}(\Gamma \cdot [\{c\} \times X])$.
-\item For a Weil cohomology theory $H^\bullet$ with a cycle class map $\mathrm{cl} \colon Z^p(X) \to H^{2p}(X)$ compatible with pullbacks, proper pushforwards, products and degrees, for instance singular cohomology when $k = \CC$ (Chapter~\ref{cycle-class}),
+\item For a Weil cohomology theory $H^\bullet$ with a cycle class map $\mathrm{cl} \colon Z^p(X) \to H^{2p}(X)$ compatible with pullbacks, proper pushforwards, products and degrees, for instance singular cohomology when $k = \CC$ (Section~\ref{intersection-theory:section-cycle-class}),
 $\alpha$ is \emph{homologically equivalent to zero} if $\mathrm{cl}(\alpha) = 0$.
 \item $\alpha$ is \emph{numerically equivalent to zero} if $\deg(\alpha \cdot \beta) = 0$ for all $\beta \in Z^{n-p}(X)$.
 \end{enumerate}
@@ -197,8 +197,8 @@ cycle class map is assumed compatible with products and degrees: $\deg(\alpha \c
 \begin{remark}\label{intersection-theory:remark-griffiths-group}
 All three inclusions can be strict. Rational and algebraic equivalence differ already for points on an elliptic curve, since $\Pic^0(E) \neq 0$. Algebraic and homological equivalence
 differ in codimension $\geq 2$: the \emph{Griffiths group} $\mathrm{Hom}^p(X)/\mathrm{Alg}^p(X)$ can be nonzero, and even not finitely generated, for $1$-cycles on a general quintic threefold
-(Griffiths, Clemens; Chapter~\ref{intermediate-jacobians}). Whether homological and numerical equivalence coincide is Grothendieck's standard conjecture D
-(Chapter~\ref{standard-conjectures}); it is known for divisors (Matsusaka) and in characteristic $0$ it follows from the Hodge conjecture.
+(Griffiths, Clemens; Chapter~\ref{vhs}). Whether homological and numerical equivalence coincide is Grothendieck's standard conjecture D
+(Chapter~\ref{absolute-hodge}); it is known for divisors (Matsusaka) and in characteristic $0$ it follows from the Hodge conjecture.
 \end{remark}
 
 \section{Riemann--Roch}\label{intersection-theory:section-riemann-roch}
@@ -290,4 +290,486 @@ Check Noether's formula for a smooth quartic surface and for $\PP^1 \times \PP^1
 \begin{solution}
 For the quartic, $K = 0$, $c_2 = 24$, and $\chi(\mathcal{O}) = 2$ as computed in Example~\ref{intersection-theory:example-riemann-roch}. For $\PP^1 \times \PP^1$, $K = -2a - 2b$ has
 $K^2 = 8$, $c_2 = \chi_{\mathrm{top}} = 4$, and $\frac{8 + 4}{12} = 1 = \chi(\mathcal{O})$.
+\end{solution}
+
+\section{The Cycle Class Map}\label{intersection-theory:section-cycle-class}
+A subvariety $Z$ of codimension $p$ in a complex projective manifold $X$ has a cohomology class $[Z] \in H^{2p}(X; \ZZ)$. Topologically it is the
+Poincar\'e dual of the fundamental class of $Z$, which exists although $Z$ may be singular. Analytically it is represented by the current of integration
+over $Z$. The resulting \emph{cycle class map} $\mathrm{cl} \colon \CH^p(X) \to H^{2p}(X; \ZZ)$ is a ring homomorphism compatible with pullbacks, pushforwards
+and Chern classes. Its image consists of Hodge classes (Corollary~\ref{intersection-theory:corollary-hodge-classes}), and the Hodge conjecture asks whether, after tensoring
+with $\QQ$, every Hodge class is in the image. This chapter constructs the map, states its properties, and shows that the conjecture can equivalently be
+phrased with Chern classes of vector bundles. References: \cite[Chapter 19]{fulton-intersection}, \cite[Chapter 11]{voisin-hodge-1}, \cite[Chapter 0, Section 4]{griffiths-harris}.
+
+\noindent\textbf{Prerequisites.} Chapter~\ref{intersection-theory} (Algebraic Cycles and Chow Groups), Chapter~\ref{gaga} (Analytic Spaces and GAGA),
+Chapter~\ref{de-rham} (de Rham Cohomology), Chapter~\ref{poincare-duality} (Topological Manifolds and Poincar\'e Duality) and Section~\ref{kahler:section-hodge-decomposition}
+(The Hodge Decomposition).
+
+Throughout, $X$ is a nonsingular complex variety of dimension $n$, identified with the complex manifold $X^{\mathrm{an}}$ (Chapter~\ref{gaga}), and cohomology is singular
+cohomology of $X^{\mathrm{an}}$.
+
+\section{Fundamental classes}\label{intersection-theory:section-fundamental-classes}
+
+\begin{lemma}\label{intersection-theory:lemma-bm-vanishing}
+Let $S$ be a closed complex analytic subset of complex dimension $\leq d$ of a complex manifold. Then $H^{BM}_i(S; \ZZ) = 0$ for $i > 2d$, and $H^{BM}_{2d}(S; \ZZ)$ is free on the
+irreducible components of dimension $d$.
+\end{lemma}
+
+\begin{proof}[Sketch of proof]
+Analytic sets admit triangulations compatible with a stratification by complex submanifolds, the strata of $S$ having real dimension $\leq 2d$
+\cite[Chapter 19]{fulton-intersection}. So the locally finite chain complex of $S$ vanishes above degree $2d$, which gives the first statement. For the second, let
+$\Sigma = \mathrm{Sing}(S) \cup S_{<d}$, where $S_{<d}$ is the union of the components of dimension $< d$. It has complex dimension $\leq d - 1$, and the long exact sequence
+$H^{BM}_{2d}(\Sigma) \to H^{BM}_{2d}(S) \to H^{BM}_{2d}(S \setminus \Sigma) \to H^{BM}_{2d-1}(\Sigma)$ has outer terms zero by the first statement. The complex manifold $S \setminus \Sigma$ is
+canonically oriented, of real dimension $2d$, with one connected component for each $d$-dimensional irreducible component of $S$ (the regular locus of an irreducible analytic set is
+connected), and $H^{BM}_{2d}$ of an oriented $2d$-manifold is free on its connected components (Remark~\ref{poincare-duality:remark-borel-moore}).
+\end{proof}
+
+\begin{definition}\label{intersection-theory:definition-cycle-class}
+Let $Z \subseteq X$ be a subvariety of codimension $p$. Its \emph{fundamental class} $[Z] \in H^{BM}_{2n-2p}(Z; \ZZ)$ is the class corresponding to $Z$ in
+Lemma~\ref{intersection-theory:lemma-bm-vanishing}. Its \emph{cycle class} $\mathrm{cl}(Z) \in H^{2p}(X; \ZZ)$ is the image of $[Z]$ under
+$H^{BM}_{2n-2p}(Z) \cong H^{2p}(X, X \setminus Z) \to H^{2p}(X)$ (Remark~\ref{poincare-duality:remark-fundamental-classes-subspaces}). It extends linearly to
+$\mathrm{cl} \colon Z^p(X) \to H^{2p}(X; \ZZ)$. For $X$ compact, $\mathrm{cl}(Z)$ is the Poincar\'e dual of $i_*[Z] \in H_{2n-2p}(X; \ZZ)$.
+\end{definition}
+
+\begin{proposition}\label{intersection-theory:proposition-current}
+Let $X$ be compact. The image of $\mathrm{cl}(Z)$ in $H^{2p}(X; \RR) \cong H^{2p}_{\mathrm{dR}}(X)$ is the class of the current of integration over $Z_{\mathrm{reg}}$ of
+Proposition~\ref{complex-manifolds:proposition-subvariety-class}: for every closed $(2n - 2p)$-form $\varphi$,
+\[
+\int_X\mathrm{cl}(Z) \wedge \varphi = \int_{Z_{\mathrm{reg}}}\varphi .
+\]
+\end{proposition}
+
+\begin{proof}[Sketch of proof]
+For $Z$ nonsingular this is Theorem~\ref{de-rham:theorem-currents}. In general both sides are determined by their restriction to the complement of $\Sigma = \mathrm{Sing}(Z)$. The
+topological class is determined there by Lemma~\ref{intersection-theory:lemma-bm-vanishing}, and the current by the fact that integration over $Z_{\mathrm{reg}}$ is a closed current whose
+restriction to $X \setminus \Sigma$ is the integration current of a closed submanifold. Two closed currents of degree $2p$ that agree off an analytic set of real codimension
+$> 2p$ in $X$ are equal (the difference would be a closed current supported on $\Sigma$ of degree below its codimension, which vanishes by the support theorem) \cite[Chapter 3]{griffiths-harris},
+\cite[Section 11.1]{voisin-hodge-1}.
+\end{proof}
+
+\section{The cycle class map and its properties}\label{intersection-theory:section-properties}
+
+\begin{theorem}\label{intersection-theory:theorem-cycle-class}
+Let $X$ be a nonsingular complex variety.
+\begin{enumerate}
+\item $\mathrm{cl}$ factors through rational equivalence and gives homomorphisms $\mathrm{cl} \colon \CH^p(X) \to H^{2p}(X; \ZZ)$, which form a ring homomorphism
+$\CH^\bullet(X) \to H^{2\bullet}(X; \ZZ)$ for the intersection product and the cup product.
+\item It is compatible with pullback along morphisms of nonsingular varieties and with proper pushforward (Gysin maps in cohomology), and with exterior products.
+\item $\mathrm{cl}(c_i(E) \cap [X]) = c_i(E)$, the topological Chern class of the underlying complex vector bundle.
+\item For $X$ projective, $\deg\alpha = \int_X\mathrm{cl}(\alpha)$ for $\alpha \in \CH^n(X)$.
+\end{enumerate}
+\end{theorem}
+
+This is \cite[Chapter 19]{fulton-intersection}. For (1), rational equivalence is generated by the fibres $\Gamma(0) - \Gamma(\infty)$ of a family
+$\Gamma \subseteq \PP^1 \times X$ (Proposition~\ref{intersection-theory:proposition-equivalences}), and $\mathrm{cl}(\Gamma(0)) = \mathrm{cl}(\Gamma(\infty))$ because the two points of $\PP^1$
+have the same class in $H^2(\PP^1; \ZZ)$ and $\mathrm{cl}(\Gamma(t)) = \mathrm{pr}_{2*}(\mathrm{cl}(\Gamma) \cup \mathrm{pr}_1^*\mathrm{cl}(t))$. Multiplicativity reduces, by the moving lemma or
+deformation to the normal cone, to transverse intersections, where it is the statement that cup product is Poincar\'e dual to transverse intersection
+(Remark~\ref{poincare-duality:remark-fundamental-classes-subspaces}).
+
+\begin{example}\label{intersection-theory:example-classes}
+\begin{enumerate}
+\item On $\PP^n$, $\mathrm{cl}(h^k)$ is the $k$-th power of the positive generator of $H^2(\CC\PP^n; \ZZ)$, and $\mathrm{cl} \colon \CH^\bullet(\PP^n) \to H^{2\bullet}(\CC\PP^n; \ZZ)$ is an isomorphism of
+rings (Example~\ref{intersection-theory:example-chow-ring-projective} and Theorem~\ref{singular-homology:theorem-projective-spaces}).
+\item For a divisor $D$, $\mathrm{cl}(D) = c_1(\mathcal{O}(D))$, by (3) applied to $E = \mathcal{O}(D)$ and $c_1(\mathcal{O}(D)) \cap [X] = [D]$. So on $\CH^1(X) = \Pic(X)$ the cycle class map is the first
+Chern class of Theorem~\ref{complex-manifolds:theorem-exponential}.
+\item For a point $x$ of a projective $X$, $\mathrm{cl}(x)$ is the generator of $H^{2n}(X; \ZZ) \cong \ZZ$ dual to the fundamental class. So $\mathrm{cl}$ on $\CH_0$ is the degree, and it loses all the
+information in the huge kernel of Example~\ref{intersection-theory:example-chow-zero-surfaces}.
+\end{enumerate}
+\end{example}
+
+\begin{example}\label{intersection-theory:example-kernel-curves}
+\begin{enumerate}
+\item Let $C$ be a nonsingular projective curve of genus $g$. On $\CH^1(C) = \Pic(C)$ the cycle class map is the degree $\CH^1(C) \to H^2(C; \ZZ) \cong \ZZ$ (Example~\ref{intersection-theory:example-classes}(2) and~(3)),
+which is surjective, and its kernel $\CH^1(C)_{\mathrm{hom}}$ is the group of divisor classes of degree $0$, isomorphic to the Jacobian $J(C)$ by the Abel--Jacobi theorem
+(Theorem~\ref{curves:theorem-abel-jacobi}). For $g \geq 1$ this kernel is an uncountable group; for an elliptic curve and points $p \neq q$ the class of $p - q$ is nonzero
+(Counterexample~\ref{complex-manifolds:counterexample-topologically-trivial} and GAGA). For $g = 0$, $\mathrm{cl}$ is an isomorphism.
+\item Let $Z = V(f_1, \ldots, f_p) \subseteq \PP^n$ be a complete intersection of hypersurfaces of degrees $d_1, \ldots, d_p$, meeting properly and generically transversally. Then
+$[Z] = [V(f_1)] \cdots [V(f_p)]$ in $\CH^p(\PP^n)$, so by Theorem~\ref{intersection-theory:theorem-cycle-class}(1) and Exercise~\ref{intersection-theory:exercise-hypersurface-class},
+$\mathrm{cl}(Z) = d_1 \cdots d_p\,h^p$, and $\int\mathrm{cl}(Z) \cup h^{n-p} = d_1 \cdots d_p$ is the degree of $Z$ (B\'ezout).
+\end{enumerate}
+\end{example}
+
+\section{Cycle classes are Hodge classes}\label{intersection-theory:section-hodge-classes}
+
+\begin{definition}\label{intersection-theory:definition-hodge-classes}
+Let $X$ be a compact K\"ahler manifold. The group of \emph{rational Hodge classes} of degree $2p$ is $\mathrm{Hdg}^p(X) = H^{2p}(X; \QQ) \cap H^{p,p}(X)$, the intersection taken inside
+$H^{2p}(X; \CC)$. The group of \emph{integral Hodge classes} $\mathrm{Hdg}^p(X; \ZZ)$ is the preimage of $H^{p,p}(X)$ under $H^{2p}(X; \ZZ) \to H^{2p}(X; \CC)$; it contains the torsion
+subgroup.
+\end{definition}
+
+\begin{corollary}\label{intersection-theory:corollary-hodge-classes}
+For a nonsingular projective complex variety $X$, $\mathrm{cl}(\CH^p(X)) \subseteq \mathrm{Hdg}^p(X; \ZZ)$, and $\mathrm{cl}(\CH^p(X)) \otimes \QQ \subseteq \mathrm{Hdg}^p(X)$.
+\end{corollary}
+
+\begin{proof}
+By Proposition~\ref{intersection-theory:proposition-current}, the image of $\mathrm{cl}(Z)$ in $H^{2p}(X; \CC)$ is the class of the integration current over $Z$, which lies in $H^{p,p}(X)$ by
+Proposition~\ref{kahler:proposition-cycle-classes-type}. Extend linearly.
+\end{proof}
+
+\begin{corollary}\label{intersection-theory:corollary-effective}
+Let $X \subseteq \PP^N$ be a nonsingular projective variety of dimension $n$, let $h \in H^2(X; \ZZ)$ be the class of a hyperplane section, and let $Z = \sum_ia_iZ_i \in Z^p(X)$ be a nonzero effective cycle
+($a_i \geq 0$). Then $\int_X\mathrm{cl}(Z) \cup h^{n-p} > 0$. In particular $\mathrm{cl}(Z)$ is not a torsion class, and a nonzero effective cycle is not homologically, hence not rationally, equivalent to zero.
+\end{corollary}
+
+\begin{proof}
+By Example~\ref{intersection-theory:example-classes}(2), $h = c_1(\mathcal{O}(1)|_X)$, which is represented by the restriction $\omega$ of the Fubini--Study form (Example~\ref{complex-manifolds:example-fubini-study}
+and naturality of Chern--Weil forms), a K\"ahler form on $X$. By Proposition~\ref{intersection-theory:proposition-current} and Proposition~\ref{kahler:proposition-volume},
+\[
+\int_X\mathrm{cl}(Z_i) \cup h^{n-p} = \int_{Z_{i,\mathrm{reg}}}\omega^{n-p} = (n-p)!\,\mathrm{vol}(Z_{i,\mathrm{reg}}) > 0,
+\]
+and summing with the coefficients $a_i \geq 0$, not all zero, gives a positive number. A torsion class, or the class $0$, would give $0$.
+\end{proof}
+
+\begin{counterexample}\label{intersection-theory:counterexample-not-effective}
+Corollary~\ref{intersection-theory:corollary-effective} is a constraint on which Hodge classes can be classes of \emph{effective} cycles, and the Hodge conjecture cannot be strengthened to effective
+cycles. On $X = \PP^1 \times \PP^1$ with the classes $a$, $b$ of the two rulings, $\int(a - b) \cup (a + b) = 0$ for the hyperplane class $a + b$ of the Segre embedding (as $a^2 = b^2 = 0$), so $a - b$ is an
+integral Hodge class, the class of the divisor $\{p\} \times \PP^1 - \PP^1 \times \{q\}$, but not the class of any effective cycle. In general the classes of effective cycles of codimension $p$ form a monoid, closed under addition, which by the corollary meets the hyperplane
+$\{\alpha : \int_X\alpha \cup h^{n-p} = 0\}$ only in $0$.
+\end{counterexample}
+
+\begin{remark}\label{intersection-theory:remark-hodge-conjecture}
+The \emph{Hodge conjecture} (Chapter~\ref{hodge-conjecture}) asserts that $\mathrm{cl}(\CH^p(X)) \otimes \QQ = \mathrm{Hdg}^p(X)$ for every nonsingular projective complex variety. The
+integral version, $\mathrm{cl}(\CH^p(X)) = \mathrm{Hdg}^p(X; \ZZ)$, is false: Atiyah and Hirzebruch found torsion classes that are not algebraic \cite{atiyah-hirzebruch-1962}, and
+Koll\'ar found non-torsion counterexamples (Chapter~\ref{known-cases}). For $p = 1$ the integral statement is true: this is the Lefschetz $(1,1)$-theorem
+(Chapter~\ref{hodge-conjecture}), which for projective $X$ follows from Lemma~\ref{kodaira:lemma-integral-11} together with Example~\ref{intersection-theory:example-classes}(2) and GAGA.
+\end{remark}
+
+\section{Cycles and coherent sheaves}\label{intersection-theory:section-chern-character}
+
+\begin{proposition}\label{intersection-theory:proposition-chern-character-cycle}
+Let $X$ be a nonsingular projective variety and $Z \subseteq X$ a subvariety of codimension $p$. Then $\mathrm{ch}(\mathcal{O}_Z) = [Z] + (\text{terms in } \CH^{>p}(X) \otimes \QQ)$, where
+$\mathrm{ch}$ is computed with a finite locally free resolution of $\mathcal{O}_Z$. Consequently the $\QQ$-subspace of $H^{2\bullet}(X; \QQ)$ spanned by the classes of algebraic cycles equals the
+$\QQ$-subalgebra generated by the Chern classes of algebraic vector bundles on $X$.
+\end{proposition}
+
+\begin{proof}
+The first statement is in \cite[Chapter 15]{fulton-intersection}: it follows from Grothendieck--Riemann--Roch (Theorem~\ref{intersection-theory:theorem-grr}) applied to a resolution
+of singularities of $Z$, or directly from the fact that the lowest nonzero term of $\mathrm{ch}$ of a sheaf supported in codimension $p$ is its fundamental cycle. On a nonsingular projective
+variety every coherent sheaf has a finite resolution by locally free sheaves \cite[Exercises III.6.8 and III.6.9]{hartshorne-ag}, so $\mathrm{ch}(\mathcal{O}_Z)$ is a polynomial with rational
+coefficients in Chern classes of vector bundles. By descending induction on $p$, every $[Z]$ lies in the $\QQ$-algebra generated by Chern classes of vector bundles. Conversely, Chern
+classes of vector bundles are classes of algebraic cycles, $c_i(E) \cap [X] \in \CH^i(X)$ (Theorem~\ref{intersection-theory:theorem-cycle-class}(3)), and products of cycle classes are cycle
+classes (Theorem~\ref{intersection-theory:theorem-cycle-class}(1)).
+\end{proof}
+
+\begin{remark}\label{intersection-theory:remark-kahler-version}
+Proposition~\ref{intersection-theory:proposition-chern-character-cycle} suggests versions of the Hodge conjecture for compact K\"ahler manifolds: with analytic cycles, with Chern classes of
+holomorphic vector bundles, or with Chern classes of coherent analytic sheaves. All of these fail for suitable complex tori: Voisin constructed a
+four-dimensional torus with a nonzero Hodge class in $H^4$ that is not a combination of Chern classes of coherent sheaves \cite{voisin-2002}. So projectivity is essential
+(Chapter~\ref{known-cases}).
+\end{remark}
+
+\begin{remark}\label{intersection-theory:remark-deligne-cohomology}
+The cycle class map refines to the \emph{Deligne cycle class} with values in Deligne cohomology $H^{2p}_{\mathcal{D}}(X; \ZZ(p))$. Its restriction to homologically trivial cycles is the
+Abel--Jacobi map to the intermediate Jacobian (Chapter~\ref{vhs}), which sees information about $\CH^p(X)$ invisible to cohomology, such as $\Pic^0$ for $p = 1$.
+\end{remark}
+
+\section{Exercises on The Cycle Class Map}\label{intersection-theory:section-exercises-cycle-class}
+
+\begin{exercise}\label{intersection-theory:exercise-hypersurface-class}
+Let $X \subseteq \PP^n$ be a hypersurface of degree $d$. Show that $\mathrm{cl}(X) = dh$ in $H^2(\CC\PP^n; \ZZ)$.
+\end{exercise}
+
+\begin{solution}
+$[X] = \mathrm{div}(f/x_0^d) + d[H_0]$ in $Z^1(\PP^n)$ for a defining polynomial $f$, so $[X] = dh$ in $\CH^1(\PP^n)$, and $\mathrm{cl}(h)$ is the generator. Alternatively,
+$\mathrm{cl}(X) = c_1(\mathcal{O}(X)) = c_1(\mathcal{O}(d)) = dh$ by Example~\ref{intersection-theory:example-classes}(2).
+\end{solution}
+
+\begin{exercise}\label{intersection-theory:exercise-diagonal}
+Let $X$ be a nonsingular projective variety of dimension $n$ and $\Delta \subseteq X \times X$ the diagonal. Show that $\deg(\Delta \cdot \Delta) = \chi_{\mathrm{top}}(X)$, and more generally
+the \emph{Lefschetz fixed point formula}: for a morphism $f \colon X \to X$ with graph $\Gamma_f$, $\deg(\Gamma_f \cdot \Delta) = \sum_i(-1)^i\operatorname{tr}(f^* \mid H^i(X; \QQ))$.
+\end{exercise}
+
+\begin{solution}
+Choose a basis $(e_a)$ of $H^\bullet(X; \QQ)$ with dual basis $(e^a)$ for the Poincar\'e pairing, $\int_Xe_a \cup e^b = \delta_a^b$. By the K\"unneth formula,
+$\mathrm{cl}(\Delta) = \sum_a(-1)^{\deg e_a}e_a \otimes e^a$ (the sign makes $\int_{X \times X}\mathrm{cl}(\Delta) \cup (\alpha \otimes \beta) = \int_X\alpha \cup \beta$). Then
+$\mathrm{cl}(\Gamma_f) = (1 \times f)^*\mathrm{cl}(\Delta)$ up to the ordering of factors, and $\int\mathrm{cl}(\Gamma_f) \cup \mathrm{cl}(\Delta) = \sum_a(-1)^{\deg e_a}\int_Xf^*e_a \cup e^a$, which is the
+alternating trace. For $f = \mathrm{id}$ the traces are the Betti numbers. Degrees of intersections are integrals of cup products by Theorem~\ref{intersection-theory:theorem-cycle-class}(4).
+\end{solution}
+
+\begin{exercise}\label{intersection-theory:exercise-torsion-hodge}
+Show that every torsion class in $H^{2p}(X; \ZZ)$ is an integral Hodge class, and that for $X$ with $H^{2p}(X; \ZZ)$ torsion-free and $H^{2p}(X; \CC) = H^{p,p}(X)$ every integral class is a
+Hodge class.
+\end{exercise}
+
+\begin{solution}
+A torsion class maps to $0 \in H^{2p}(X; \CC)$, which lies in $H^{p,p}$. The second statement is immediate from the definition.
+\end{solution}
+
+\section{Index Theorems and Riemann--Roch}\label{intersection-theory:section-index-theorems}
+An elliptic operator on a compact manifold has a finite-dimensional kernel and cokernel (Theorem~\ref{elliptic-operators:theorem-fredholm}), and the difference of their dimensions, the \emph{index}, is remarkably stable: it does
+not change under deformations, and the Atiyah--Singer index theorem computes it from characteristic classes. For the three classical elliptic complexes the index is a familiar invariant: the Euler characteristic, the
+signature, and the holomorphic Euler characteristic $\chi(X, E) = \sum_q(-1)^q\dim H^q(X, E)$. The corresponding cases of the index theorem are the Gauss--Bonnet--Chern theorem, Hirzebruch's signature theorem and the
+Hirzebruch--Riemann--Roch theorem. This chapter identifies the three indices with complete proofs, states the index theorem and its three cases, proves Hirzebruch--Riemann--Roch directly for line bundles on curves and for
+all line bundles on projective spaces, and draws the integrality consequences (Noether's formula, divisibility of Chern numbers) that make these theorems useful in algebraic geometry. References: \cite{hirzebruch-topological},
+\cite{atiyah-singer-1968-1}, \cite{atiyah-singer-1968-3}, \cite{lawson-michelsohn}, \cite{griffiths-harris}.
+
+\noindent\textbf{Prerequisites.} Chapter~\ref{hodge-theorem} (Harmonic Forms and the Hodge Theorem), Section~\ref{complex-manifolds:section-dolbeault} (Dolbeault Cohomology), Chapter~\ref{characteristic-classes} (Characteristic Classes),
+Chapter~\ref{curves} (Algebraic Curves), Section~\ref{schemes:section-coherent-cohomology} (Cohomology of Coherent Sheaves) and Section~\ref{intersection-theory:section-cycle-class} (The Cycle Class Map).
+
+\noindent\textbf{Conventions.} Manifolds are compact, and characteristic classes are taken in de Rham cohomology (or rational cohomology), identified by the de Rham theorem. For a real vector bundle $V$ we write
+$V_\CC = V \otimes_\RR \CC$. For a class $a$ in the cohomology of a compact oriented manifold, $\int_Ma$ is the integral of its top-degree component.
+
+\section{The index of an elliptic operator}\label{intersection-theory:section-index}
+
+\begin{definition}\label{intersection-theory:definition-index}
+The \emph{index} of an elliptic differential operator $P \colon \Gamma(M, E) \to \Gamma(M, F)$ on a compact manifold is $\operatorname{ind}P = \dim\ker P - \dim\ker P^*$, where $P^*$ is the formal adjoint
+(Definition~\ref{elliptic-operators:definition-formal-adjoint}).
+\end{definition}
+
+By Theorem~\ref{elliptic-operators:theorem-fredholm}, $\ker P^*$ is isomorphic to the cokernel of $P$ on smooth sections, so $\operatorname{ind}P = \dim\ker P - \dim\operatorname{coker}P$, and it is the Fredholm index of
+$P \colon H^{s+m}(E) \to H^s(F)$ for every $s$. As the Fredholm index is locally constant on the space of Fredholm operators (Chapter~\ref{functional-analysis}), $\operatorname{ind}P$ is unchanged when $P$ is deformed through a
+continuous family of elliptic operators of the same order; in particular it depends only on the principal symbol up to homotopy through invertible symbols.
+
+\begin{proposition}[Euler characteristic operator]\label{intersection-theory:proposition-euler-operator}
+For a compact oriented Riemannian manifold, $d + \delta \colon \Omega^{\mathrm{even}}(M) \to \Omega^{\mathrm{odd}}(M)$ is elliptic with index $\chi(M)$.
+\end{proposition}
+
+\begin{proof}
+This is Corollary~\ref{hodge-theorem:corollary-euler-characteristic}; ellipticity holds because $(d + \delta)^2 = \Delta$ has principal symbol $|\xi|^2$, so the symbol of $d + \delta$ is injective for $\xi \neq 0$, and it maps between bundles of
+the same rank ($2^{n-1}$).
+\end{proof}
+
+\begin{proposition}[Dolbeault operator]\label{intersection-theory:proposition-dolbeault-operator}
+Let $X$ be a compact complex manifold with a Hermitian metric and $E$ a holomorphic vector bundle with a Hermitian metric. The operator
+$\bar\partial_E + \bar\partial_E^* \colon \mathcal{A}^{0,\mathrm{even}}(X, E) \to \mathcal{A}^{0,\mathrm{odd}}(X, E)$ is elliptic, and its index is $\chi(X, E) = \sum_q(-1)^q\dim H^q(X, E)$.
+\end{proposition}
+
+\begin{proof}
+Let $D = \bar\partial_E + \bar\partial_E^*$ on $\mathcal{A}^{0,\bullet}(X, E)$. As $\bar\partial_E^2 = 0$, $D^2 = \bar\partial_E\bar\partial_E^* + \bar\partial_E^*\bar\partial_E = \Box_E$, which is elliptic with principal symbol $\frac12|\xi|^2$
+(Theorem~\ref{complex-manifolds:theorem-dbar-hodge}); so $D$ is elliptic, and it is formally self-adjoint, so the formal adjoint of its even part is its odd part. If $D\alpha = 0$, then $\Box_E\alpha = 0$; conversely
+$(\Box_E\alpha, \alpha) = \|D\alpha\|^2$, so $\ker D = \ker\Box_E = \bigoplus_q\mathcal{H}^{0,q}(X, E)$, split into even and odd $q$. By Theorem~\ref{complex-manifolds:theorem-dbar-hodge}, $\mathcal{H}^{0,q}(X, E) \cong H^q(X, E)$, and the index is
+$\sum_q(-1)^q\dim H^q(X, E)$.
+\end{proof}
+
+\begin{proposition}[Signature operator]\label{intersection-theory:proposition-signature-operator}
+Let $M$ be a compact oriented Riemannian manifold of dimension $4m$, and $\tau$ the operator on $\Omega^\bullet(M) \otimes \CC$ equal to $i^{k(k-1)+2m}{*}$ on $k$-forms. Then $\tau^2 = 1$, $\tau$ anticommutes with $d + \delta$,
+and $d + \delta \colon \Omega^+ \to \Omega^-$, between the $\pm1$-eigenspaces of $\tau$, is elliptic with index the signature $\sigma(M)$ (Definition~\ref{poincare-duality:definition-intersection-form}).
+\end{proposition}
+
+\begin{proof}[Sketch of proof]
+We omit the verification of $\tau^2 = 1$ and $\tau(d + \delta) = -(d + \delta)\tau$, which follow from $** = (-1)^{k(n-k)}$ and $\delta = -{*}d{*}$ in even dimension (Proposition~\ref{riemannian-geometry:proposition-adjoint}) by
+tracking signs \cite[Chapter 3]{lawson-michelsohn}. Granting these, $d + \delta$ maps $\Omega^+$ to $\Omega^-$, the kernel of $d + \delta$ on $\Omega^\pm$ is the space $\mathcal{H}^\pm$ of harmonic forms in $\Omega^\pm$, and the index is
+$\dim\mathcal{H}^+ - \dim\mathcal{H}^-$, exactly as in Proposition~\ref{intersection-theory:proposition-euler-operator}. As $\tau$ commutes with $\Delta$ and maps harmonic $k$-forms to harmonic $(4m - k)$-forms, for $k < 2m$ the space
+$\mathcal{H}^k \oplus \mathcal{H}^{4m-k}$ is $\tau$-stable, and $\alpha \mapsto \alpha \pm \tau\alpha$ identifies $\mathcal{H}^k$ with its $\pm1$-eigenspaces, which therefore have equal dimensions and cancel in the index. On
+$\mathcal{H}^{2m}$, $\tau = i^{2m(2m-1)+2m}{*} = *$, and for a real harmonic $2m$-form $\alpha$ with $*\alpha = \pm\alpha$, $\int_M\alpha \wedge \alpha = \pm\int_M\alpha \wedge *\alpha = \pm\|\alpha\|^2$. So the intersection form is positive definite on
+the self-dual and negative definite on the anti-self-dual harmonic forms, which are orthogonal for it, and by the Hodge theorem the index $\dim\mathcal{H}^{2m}_+ - \dim\mathcal{H}^{2m}_-$ is the signature.
+\end{proof}
+
+\section{The Atiyah--Singer index theorem}\label{intersection-theory:section-atiyah-singer}
+
+\begin{definition}\label{intersection-theory:definition-genera}
+For a complex vector bundle with Chern roots $x_1, \ldots, x_r$ and a real vector bundle $V$ whose complexification has Chern roots $\pm y_1, \ldots, \pm y_s$ (and $0$ if the rank is odd), define
+\[
+\mathrm{td}(E) = \prod_i\frac{x_i}{1 - e^{-x_i}}, \qquad L(V) = \prod_j\frac{y_j}{\tanh y_j}, \qquad \hat A(V) = \prod_j\frac{y_j/2}{\sinh(y_j/2)}.
+\]
+$L$ and $\hat A$ are even in each $y_j$, hence polynomials in the Pontryagin classes: $L = 1 + \frac13p_1 + \frac{1}{45}(7p_2 - p_1^2) + \cdots$ and $\hat A = 1 - \frac{1}{24}p_1 + \cdots$. For a compact oriented $4m$-manifold, the
+\emph{$L$-genus} is $\int_ML(TM)$; for a compact complex manifold, the \emph{Todd genus} is $\int_X\mathrm{td}(T_X)$.
+\end{definition}
+
+\begin{theorem}[Atiyah--Singer]\label{intersection-theory:theorem-atiyah-singer}
+The index of an elliptic operator on a compact manifold depends only on the class of its principal symbol in the compactly supported K-theory of the tangent bundle, and it is given by a universal cohomological formula in
+the Chern character of that class and the Todd class of $TM_\CC$. For the three classical operators the formula gives:
+\begin{enumerate}
+\item (Gauss--Bonnet--Chern) $\chi(M) = \int_Me(TM)$ for a compact oriented manifold;
+\item (Hirzebruch signature theorem) $\sigma(M) = \int_ML(TM)$ for a compact oriented $4m$-manifold;
+\item (Hirzebruch--Riemann--Roch) $\chi(X, E) = \int_X\mathrm{ch}(E)\,\mathrm{td}(T_X)$ for a holomorphic vector bundle $E$ on a compact complex manifold $X$, where $T_X$ is the holomorphic tangent bundle.
+\end{enumerate}
+\end{theorem}
+
+This is \cite{atiyah-singer-1968-1} and \cite{atiyah-singer-1968-3}; for the formulation and the heat equation proof see \cite{lawson-michelsohn}. The signature theorem and Riemann--Roch for projective manifolds were proved
+earlier by Hirzebruch, using Thom's cobordism theory \cite{hirzebruch-topological}. Case (1) is also Theorem~\ref{characteristic-classes:theorem-euler}(3). For the Dirac operator of a spin manifold the index is the
+$\hat A$-genus, which is therefore an integer on spin manifolds.
+
+\begin{remark}\label{intersection-theory:remark-grr}
+For a projective manifold $X$ and an algebraic vector bundle $E$, case (3) also follows from the Grothendieck--Riemann--Roch theorem (Theorem~\ref{intersection-theory:theorem-grr}): it gives
+$\chi(X, E) = \deg(\mathrm{ch}(E)\,\mathrm{td}(T_X))$ in the Chow ring, and the cycle class map is a ring homomorphism compatible with Chern classes and degrees (Theorem~\ref{intersection-theory:theorem-cycle-class}), so the right-hand
+side is $\int_X\mathrm{ch}(E)\,\mathrm{td}(T_X)$; by GAGA the algebraic and analytic Euler characteristics agree (Chapter~\ref{gaga}).
+\end{remark}
+
+\section{Riemann--Roch: direct verifications}\label{intersection-theory:section-verifications}
+
+\begin{proposition}\label{intersection-theory:proposition-rr-curves}
+Hirzebruch--Riemann--Roch holds for line bundles on a nonsingular projective curve $X$ of genus $g$: $\chi(X, \mathcal{O}(D)) = \int_X\mathrm{ch}(\mathcal{O}(D))\,\mathrm{td}(T_X) = \deg D + 1 - g$.
+\end{proposition}
+
+\begin{proof}
+The left side is $l(D) - h^1(\mathcal{O}(D)) = l(D) - l(K - D)$ by Serre duality (Theorem~\ref{schemes:theorem-serre-duality}), which is $\deg D + 1 - g$ by the Riemann--Roch theorem
+(Theorem~\ref{curves:theorem-riemann-roch}). On the right, $\mathrm{ch}(\mathcal{O}(D)) = 1 + c_1(\mathcal{O}(D))$ and $\mathrm{td}(T_X) = 1 + \frac12c_1(T_X)$ in $H^\bullet(X)$, as $H^{>2}(X) = 0$; so the integrand of degree $2$ is
+$c_1(\mathcal{O}(D)) + \frac12c_1(T_X)$. Now $\int_Xc_1(\mathcal{O}(D)) = \deg D$, because $c_1(\mathcal{O}(D))$ is the cycle class of $D$ and the cycle class map is compatible with degrees
+(Theorem~\ref{intersection-theory:theorem-cycle-class}); and $c_1(T_X) = -c_1(K_X)$ with $\deg K = 2g - 2$ (Corollary~\ref{curves:corollary-riemann-roch-consequences}). So the right side is $\deg D - (g - 1)$.
+\end{proof}
+
+\begin{corollary}\label{intersection-theory:corollary-rr-bundles-curves}
+Let $E$ be a holomorphic vector bundle on a compact connected Riemann surface $C$ of genus $g$, and $\deg E = \int_Cc_1(E)$. Then
+\[
+\chi(C, E) = \deg E + \operatorname{rk}(E)\,(1 - g) .
+\]
+For a line bundle this reads $\chi(C, L) = \int_C\big(c_1(L) + \frac12c_1(C)\big) = \deg L + \frac12\deg K_C^\vee$, where $c_1(C) = c_1(T_C)$ and $T_C = K_C^\vee$, the dual of the canonical bundle.
+\end{corollary}
+
+\begin{proof}
+On a curve only classes of degree $0$ and $2$ survive, so $\mathrm{ch}(E) = \operatorname{rk}(E) + c_1(E)$ and $\mathrm{td}(T_C) = 1 + \frac12c_1(T_C)$ (Definition~\ref{characteristic-classes:definition-chern-character}), and the degree-$2$ part of their
+product is $c_1(E) + \frac12\operatorname{rk}(E)c_1(T_C)$. Since $T_C = K_C^\vee$ (both have the local frame $\partial/\partial z$, dual to $dz$), $\int_Cc_1(T_C) = -\deg K_C = 2 - 2g$
+(Proposition~\ref{characteristic-classes:proposition-chern-properties}(4) and Proposition~\ref{kodaira:proposition-positive-curves}). Theorem~\ref{intersection-theory:theorem-atiyah-singer}(3) gives
+$\chi(C, E) = \deg E + \operatorname{rk}(E)(1 - g)$.
+\end{proof}
+
+\begin{remark}\label{intersection-theory:remark-forms-of-riemann-roch}
+The same theorem appears in several guises, and it helps to translate between them. For a divisor $D$ on a curve, $\chi(C, \mathcal{O}(D)) = h^0 - h^1$, and Serre duality $h^1(\mathcal{O}(D)) = h^0(K_C - D)$ turns
+Corollary~\ref{intersection-theory:corollary-rr-bundles-curves} into the classical form $l(D) - l(K - D) = \deg D + 1 - g$ of Theorem~\ref{curves:theorem-riemann-roch}. The Hirzebruch form $\int\mathrm{ch}(E)\,\mathrm{td}(X)$ writes the correction
+term through the Todd class of the tangent bundle, $c_1(X) := c_1(T_X) = -c_1(K_X)$; this is why $\frac12c_1(C)$, $\frac12\deg K_C^\vee = 1 - g$ and $-\frac12K$ appear, for instance in the surface formula
+$\chi(S, L) = \chi(S, \mathcal{O}_S) + \frac12L \cdot (L - K_S)$ of Corollary~\ref{intersection-theory:corollary-noether}. In every form, the Euler characteristic depends only on topological data (degrees and Chern classes), while
+$h^0$ alone does not; vanishing theorems (Chapter~\ref{kodaira}) are what turn the formula into a computation of $h^0$.
+\end{remark}
+
+\begin{lemma}\label{intersection-theory:lemma-todd-projective}
+On $\PP^n$ with hyperplane class $h$, $\mathrm{td}(T_{\PP^n}) = \big(h/(1 - e^{-h})\big)^{n+1}$ and $\mathrm{ch}(\mathcal{O}(k)) = e^{kh}$.
+\end{lemma}
+
+\begin{proof}
+The Euler sequence $0 \to \mathcal{O} \to \mathcal{O}(1)^{\oplus(n+1)} \to T_{\PP^n} \to 0$ (Example~\ref{vector-bundles:example-euler-sequence}) and the multiplicativity of the Todd class in exact sequences
+(Proposition~\ref{characteristic-classes:proposition-chern-character}) give $\mathrm{td}(T)\,\mathrm{td}(\mathcal{O}) = \mathrm{td}(\mathcal{O}(1))^{n+1}$, with $\mathrm{td}(\mathcal{O}) = 1$ and $\mathrm{td}(\mathcal{O}(1)) = h/(1 - e^{-h})$,
+as $c_1(\mathcal{O}(1)) = h$ (Example~\ref{characteristic-classes:example-tautological}). Also $\mathrm{ch}(\mathcal{O}(k)) = e^{c_1(\mathcal{O}(k))} = e^{kh}$.
+\end{proof}
+
+\begin{proposition}\label{intersection-theory:proposition-rr-projective}
+For all $n \geq 1$ and $k \in \ZZ$,
+\[
+\chi(\PP^n, \mathcal{O}(k)) = \int_{\PP^n}\mathrm{ch}(\mathcal{O}(k))\,\mathrm{td}(T_{\PP^n}) = \binom{n + k}{n} = \frac{(k + 1)(k + 2)\cdots(k + n)}{n!}.
+\]
+\end{proposition}
+
+\begin{proof}
+\emph{The left side.} By Theorem~\ref{schemes:theorem-projective-space}, $H^q(\PP^n, \mathcal{O}(k)) = 0$ for $0 < q < n$; $h^0(\mathcal{O}(k))$ is the number of monomials of degree $k$ in $n + 1$ variables, which is
+$\binom{n+k}{n}$ for $k \geq 0$ and $0$ for $k < 0$; and $h^n(\mathcal{O}(k))$ is the number of Laurent monomials $x_0^{a_0}\cdots x_n^{a_n}$ with all $a_i \leq -1$ and $\sum a_i = k$, which is the number of monomials of degree $-k - n - 1$,
+that is $\binom{-k-1}{n}$ for $k \leq -n - 1$ and $0$ otherwise. For $k \geq 0$ the polynomial $P(k) = (k + 1)\cdots(k + n)/n!$ equals $\binom{n+k}{n}$; for $-n \leq k \leq -1$ it vanishes, as does $\chi$; and for $k \leq -n - 1$,
+$P(k) = (-1)^n(-k - 1)(-k - 2)\cdots(-k - n)/n! = (-1)^n\binom{-k-1}{n} = (-1)^nh^n(\mathcal{O}(k))$. So $\chi(\PP^n, \mathcal{O}(k)) = P(k)$ in all cases.
+
+\emph{The right side.} By Lemma~\ref{intersection-theory:lemma-todd-projective} and $\int_{\PP^n}h^n = 1$, the integral is the coefficient of $h^n$ in $e^{kh}(h/(1 - e^{-h}))^{n+1}$, a power series convergent near $0$, that is, the residue at
+$0$ of the meromorphic function $e^{kh}(1 - e^{-h})^{-n-1}$:
+\[
+\frac{1}{2\pi i}\oint_{|h| = \varepsilon}\frac{e^{kh}\,dh}{(1 - e^{-h})^{n+1}}.
+\]
+The substitution $u = 1 - e^{-h}$ is biholomorphic near $0$ with $u(0) = 0$, so it maps the small circle to a loop winding once around $0$; since $e^{-h} = 1 - u$, $e^{kh} = (1 - u)^{-k}$ and $dh = du/(1 - u)$, the integral becomes
+$\frac{1}{2\pi i}\oint(1 - u)^{-k-1}u^{-n-1}\,du$, the coefficient of $u^n$ in $(1 - u)^{-k-1} = \sum_j\binom{k + j}{j}u^j$ (Chapter~\ref{complex-analysis}). This coefficient is $\binom{k+n}{n} = P(k)$, read as a polynomial in $k$.
+\end{proof}
+
+\begin{corollary}[Noether's formula]\label{intersection-theory:corollary-noether}
+For a compact complex surface $S$, $\chi(S, \mathcal{O}_S) = \frac{1}{12}\int_S(c_1^2 + c_2)$, where $c_i = c_i(T_S)$. Consequently $\int_S(c_1^2 + c_2)$ is divisible by $12$, and for a line bundle $L$ with $l = c_1(L)$,
+\[
+\chi(S, L) = \chi(S, \mathcal{O}_S) + \frac12\int_Sl(l + c_1) = \chi(S, \mathcal{O}_S) + \frac12L \cdot (L - K_S),
+\]
+where $L \cdot M = \int_Sc_1(L)c_1(M)$ is the intersection number and $K_S$ is the canonical bundle.
+\end{corollary}
+
+\begin{proof}
+By Definition~\ref{intersection-theory:definition-genera}, the degree-$4$ part of the Todd class is $\frac{1}{12}(c_1^2 + c_2)$ (Definition~\ref{characteristic-classes:definition-chern-character}), and Theorem~\ref{intersection-theory:theorem-atiyah-singer}(3) with
+$E = \mathcal{O}_S$ gives the formula; the left side is an integer. For $L$, the degree-$4$ part of $(1 + l + \frac12l^2)(1 + \frac12c_1 + \frac{1}{12}(c_1^2 + c_2))$ is $\frac12l^2 + \frac12lc_1 + \frac{1}{12}(c_1^2 + c_2)$. Finally
+$K_S = \Lambda^2T_S^\vee$ and, with Chern roots $x_1$, $x_2$ of $T_S$ (Theorem~\ref{characteristic-classes:theorem-splitting}), $T_S^\vee$ has roots $-x_1$, $-x_2$
+(Proposition~\ref{characteristic-classes:proposition-chern-properties}(4)) and $\Lambda^2T_S^\vee$ has the single root $-x_1 - x_2$. So $c_1(K_S) = -c_1$, and $\int_Sl(l + c_1) = L \cdot L - L \cdot K_S$.
+\end{proof}
+
+\begin{lemma}\label{intersection-theory:lemma-pontryagin-complex}
+For a complex vector bundle $E$, $(E_\RR)_\CC \cong E \oplus \bar E$, and hence $p_1(E_\RR) = c_1(E)^2 - 2c_2(E)$.
+\end{lemma}
+
+\begin{proof}
+The complex structure $J$ of $E$ extends $\CC$-linearly to $(E_\RR)_\CC$, where it has eigenvalues $\pm i$; the $+i$-eigenbundle $\{v - iJv\}$ is isomorphic to $E$ by $v \mapsto \frac12(v - iJv)$, and the $-i$-eigenbundle to $\bar E$. By
+Definition~\ref{characteristic-classes:definition-pontryagin} and the Whitney formula, $p_1(E_\RR) = -c_2(E \oplus \bar E) = -(c_2(E) + c_1(E)c_1(\bar E) + c_2(\bar E)) = c_1^2 - 2c_2$, using $c_1(\bar E) = -c_1(E)$ and $c_2(\bar E) = c_2(E)$
+(Proposition~\ref{characteristic-classes:proposition-chern-properties}(4)).
+\end{proof}
+
+\begin{corollary}[Gauss--Bonnet for complex manifolds]\label{intersection-theory:corollary-gauss-bonnet-complex}
+Let $X$ be a compact complex manifold of dimension $n$ and $c_i(X) = c_i(T_X)$ the Chern classes of its holomorphic tangent bundle. Then
+\[
+\chi(X) = \int_Xc_n(X) = \sum_{p,q}(-1)^{p+q}h^{p,q}(X) = \sum_p(-1)^p\chi(X, \Omega^p_X).
+\]
+For a curve of genus $g$ this is $\int_Cc_1(C) = 2 - 2g$, and for a surface $\chi(S) = \int_Sc_2(S)$, so Noether's formula reads $\chi(S, \mathcal{O}_S) = \frac{1}{12}(K_S^2 + \chi(S))$.
+\end{corollary}
+
+\begin{proof}
+The real tangent bundle $TX$ with the complex structure $J$ is isomorphic, as a complex vector bundle, to $T_X = T^{1,0}X$, by $v \mapsto \frac12(v - iJv)$ (as in Lemma~\ref{intersection-theory:lemma-pontryagin-complex}), and the
+orientation of $X$ is the one induced by $J$. So $e(TX) = c_n(T_X)$ and $\int_Xc_n(X) = \chi(X)$ by Theorem~\ref{characteristic-classes:theorem-euler}(2),(3). The Fr\"olicher spectral sequence gives
+$\chi(X) = \sum_{p,q}(-1)^{p+q}h^{p,q}(X)$ (Proposition~\ref{complex-manifolds:proposition-frolicher-inequality}), and grouping the terms with the same $p$ gives $\sum_p(-1)^p\chi(X, \Omega^p_X)$.
+
+The equality $\sum_p(-1)^p\chi(X, \Omega^p_X) = \int_Xc_n(X)$ also follows from Hirzebruch--Riemann--Roch (Theorem~\ref{intersection-theory:theorem-atiyah-singer}(3)), which is how it is often presented. If $x_1, \ldots, x_n$ are the Chern roots of
+$T_X$, those of $\Omega^1_X = T_X^\vee$ are $-x_1, \ldots, -x_n$, so $\mathrm{ch}(\Omega^p_X) = \mathrm{ch}(\Lambda^p\Omega^1_X)$ is the $p$-th elementary symmetric function of the $e^{-x_i}$, and
+\[
+\sum_p(-1)^p\,\mathrm{ch}(\Omega^p_X)\,\mathrm{td}(T_X) = \prod_{i=1}^n(1 - e^{-x_i}) \cdot \prod_{i=1}^n\frac{x_i}{1 - e^{-x_i}} = x_1 \cdots x_n = c_n(X).
+\]
+Integrating and summing Theorem~\ref{intersection-theory:theorem-atiyah-singer}(3) over $p$ gives the claim. For a curve, $c_1(C) = c_1(T_C)$ has degree $2 - 2g$ (Corollary~\ref{intersection-theory:corollary-rr-bundles-curves}), and for
+a surface $c_1^2 = K_S^2$ since $c_1(S) = -c_1(K_S)$ (Corollary~\ref{intersection-theory:corollary-noether}).
+\end{proof}
+
+\begin{example}\label{intersection-theory:example-surfaces}
+\begin{enumerate}
+\item $\PP^2$: $c(T) = (1 + h)^3$, so $c_1^2 = 9$, $c_2 = 3$ and Noether's formula gives $\chi(\mathcal{O}) = 12/12 = 1$, as it must. By Lemma~\ref{intersection-theory:lemma-pontryagin-complex}, $p_1 = 9 - 6 = 3$, and the signature theorem
+$\sigma = \frac13\int p_1 = 1$ agrees with the intersection form $(1)$ on $H^2(\PP^2) = \ZZ h$.
+\item $\PP^1 \times \PP^1$: $c_1 = 2a + 2b$ and $c_2 = 4ab$, where $a$, $b$ are the pullbacks of the point classes, with $a^2 = b^2 = 0$ and $\int ab = 1$. So $c_1^2 = 8$, $c_2 = 4$, $\chi(\mathcal{O}) = 1$, and $p_1 = 8 - 8 = 0$, in agreement with the
+hyperbolic intersection form on $H^2$, of signature $0$.
+\item A K3 surface has $c_1 = 0$ and $\chi(\mathcal{O}) = h^0 - h^1 + h^2 = 1 - 0 + 1 = 2$ (Chapter~\ref{calabi-yau}), so Noether's formula gives $\int c_2 = 24$, the topological Euler characteristic; then $p_1 = -48$ and
+$\sigma = -16$. As $b_2 = 22$, the intersection form has $3$ positive and $19$ negative eigenvalues.
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{intersection-theory:counterexample-integrality}
+The characteristic numbers appearing in the index theorems are a priori rational, and their integrality is a real constraint. There is no compact complex surface with $\int c_1^2 = \int c_2 = 1$, since $12 \nmid 2$ would contradict
+Noether's formula. By the signature theorem, $\int_Mp_1(TM) = 3\sigma(M)$ is divisible by $3$ for every compact oriented $4$-manifold $M$; so no such manifold has first Pontryagin number $1$, although nothing in the formal properties
+of characteristic classes excludes it.
+\end{counterexample}
+
+\begin{proposition}[Riemann--Roch on complex tori]\label{intersection-theory:proposition-rr-tori}
+Let $T = \CC^g/\Lambda$ be a complex torus and $L$ a holomorphic line bundle on $T$. Then
+\[
+\chi(T, L) = \frac{1}{g!}\int_Tc_1(L)^g .
+\]
+If $L$ is positive, then $H^q(T, L) = 0$ for $q > 0$, and $h^0(T, L) = \frac{1}{g!}\int_Tc_1(L)^g > 0$.
+\end{proposition}
+
+\begin{proof}
+The vector fields $\partial/\partial z_1, \ldots, \partial/\partial z_g$ descend to $T$ and form a global holomorphic frame of $T_T$, which is therefore trivial, so all its Chern classes vanish and all its Chern roots may be taken
+to be $0$; hence $\mathrm{td}(T_T) = 1$. With one Chern root, $\mathrm{ch}(L) = e^{c_1(L)}$ (Definition~\ref{characteristic-classes:definition-chern-character}). By
+Theorem~\ref{intersection-theory:theorem-atiyah-singer}(3), $\chi(T, L) = \int_Te^{c_1(L)}$, and only the term of degree $2g$ contributes. If $L$ is positive, then since $K_T = \Omega^g_T$ is trivial (it has the frame
+$dz_1 \wedge \cdots \wedge dz_g$), $H^q(T, L) = H^q(T, \Omega^g_T \otimes L) = 0$ for $q > 0$ by Kodaira--Nakano vanishing (Theorem~\ref{kodaira:theorem-kodaira-nakano}), so $h^0 = \chi$. Finally $c_1(L)$ is
+represented by a positive $(1,1)$-form $\omega_L$, the fundamental form of a Hermitian metric (Definition~\ref{complex-manifolds:definition-positive}), and $\int_T\omega_L^g = g!\,\mathrm{vol}(T) > 0$
+(Proposition~\ref{kahler:proposition-volume}).
+\end{proof}
+
+\begin{example}\label{intersection-theory:example-rr-tori}
+\begin{enumerate}
+\item For $g = 1$ the proposition says $\chi(E, L) = \deg L$, in accordance with Proposition~\ref{intersection-theory:proposition-rr-curves} for genus $1$.
+\item On $T = E \times E'$ with $L = \mathrm{pr}_1^*\mathcal{O}(p) \otimes \mathrm{pr}_2^*\mathcal{O}(q)$, $c_1(L) = a + b$ with $a$, $b$ the classes of the fibres $\{p\} \times E'$ and $E \times \{q\}$, so
+$c_1(L)^2 = 2ab$. The bundles $\mathcal{O}(p)$ and $\mathcal{O}(q)$ have degree $1$, hence are positive (Proposition~\ref{kodaira:proposition-positive-curves}), and the product of positive metrics has curvature form
+$\mathrm{pr}_1^*\omega_1 + \mathrm{pr}_2^*\omega_2 > 0$, so $L$ is positive and $h^0(T, L) = \frac12 \cdot 2 = 1$: the only sections are the multiples of the product of the canonical sections. A line bundle with $h^0 = 1$ of this kind is a \emph{principal polarisation}; its section is,
+in the analytic description of Section~\ref{algebraic-groups:section-abelian-varieties}, a theta function.
+\end{enumerate}
+\end{example}
+
+\section{Exercises on Index Theorems and Riemann--Roch}\label{intersection-theory:section-exercises-index-theorems}
+
+\begin{exercise}\label{intersection-theory:exercise-quadric}
+Using Hirzebruch--Riemann--Roch on $\PP^1 \times \PP^1$, show that $\chi(\mathcal{O}(p, q)) = (p + 1)(q + 1)$ for the line bundle of bidegree $(p, q)$, and check it for $p, q \geq 0$ by counting bihomogeneous polynomials.
+\end{exercise}
+
+\begin{solution}
+With $l = pa + qb$ and $c_1 = 2a + 2b$, Corollary~\ref{intersection-theory:corollary-noether} gives $\chi = 1 + \frac12\int(pa + qb)((p + 2)a + (q + 2)b) = 1 + \frac12(p(q + 2) + q(p + 2)) = pq + p + q + 1$. For $p, q \geq 0$ the higher cohomology
+vanishes (by the K\"unneth formula and Theorem~\ref{schemes:theorem-projective-space}) and the sections are the polynomials of bidegree $(p, q)$, of which there are $(p + 1)(q + 1)$.
+\end{solution}
+
+\begin{exercise}\label{intersection-theory:exercise-todd-genus}
+Show that the Todd genus of $\PP^n$ is $1$, and that the Todd genus of a compact complex manifold equals $\chi(X, \mathcal{O}_X) = \sum_q(-1)^qh^{0,q}(X)$.
+\end{exercise}
+
+\begin{solution}
+The second statement is Theorem~\ref{intersection-theory:theorem-atiyah-singer}(3) with $E = \mathcal{O}_X$, since $\mathrm{ch}(\mathcal{O}_X) = 1$. For $\PP^n$, Proposition~\ref{intersection-theory:proposition-rr-projective} with $k = 0$ gives
+$\binom{n}{n} = 1$.
+\end{solution}
+
+\begin{exercise}\label{intersection-theory:exercise-hypersurface-euler}
+Let $S \subseteq \PP^3$ be a smooth surface of degree $d$. Using the adjunction formula $c_1(T_S) = (4 - d)h$ and Noether's formula, show that $\int_Sc_2(T_S) = d^3 - 4d^2 + 6d$, and check that this gives $24$ for a quartic.
+\end{exercise}
+
+\begin{solution}
+From the exact sequence $0 \to \mathcal{O}_{\PP^3}(-d) \to \mathcal{O}_{\PP^3} \to \mathcal{O}_S \to 0$, additivity of $\chi$ and Proposition~\ref{intersection-theory:proposition-rr-projective},
+$\chi(\mathcal{O}_S) = 1 - \frac{(1 - d)(2 - d)(3 - d)}{6} = 1 + \frac{(d - 1)(d - 2)(d - 3)}{6}$. As
+$\int_Sh^2 = d$, $\int c_1^2 = (4 - d)^2d$. Noether's formula gives $\int c_2 = 12\chi(\mathcal{O}_S) - (4 - d)^2d = 12 + 2(d - 1)(d - 2)(d - 3) - d(4 - d)^2 = d^3 - 4d^2 + 6d$. For $d = 4$: $64 - 64 + 24 = 24$.
 \end{solution}
