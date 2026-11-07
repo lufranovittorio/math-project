@@ -6,7 +6,8 @@
 To solve $\Delta u = f$ one first finds a weak solution in a space of distributions and then proves that it is smooth. This chapter
 sets up the two tools that make this work: the Fourier transform, which turns differentiation into multiplication, and the Sobolev
 spaces $H^s$, in which the elliptic estimate (Theorem~\ref{distributions:theorem-elliptic-estimate}) and Rellich's compactness
-theorem (Theorem~\ref{distributions:theorem-rellich}) hold. The Poincar\'e inequalities, which bound a function by its gradient once the constants are
+theorem (Theorem~\ref{distributions:theorem-rellich}) hold. For operators with variable coefficients the estimate and the regularity theorem are proved by freezing the coefficients and by difference
+quotients (Theorems~\ref{distributions:theorem-local-estimate} and~\ref{distributions:theorem-local-regularity}), with Peetre's inequality and the behaviour of $H^s$ under multiplication as tools. The Poincar\'e inequalities, which bound a function by its gradient once the constants are
 excluded, give the simplest existence theorem, for the Dirichlet problem (Subsection~\ref{distributions:subsection-poincare}). On a compact manifold these local statements are patched together with
 partitions of unity to prove the Hodge theorem (Chapter~\ref{hodge-theorem}). References: \cite{hormander-pdo1},
 \cite[Chapters 6--7]{rudin-fa}, \cite{brezis-functional}, \cite[Chapter 6]{warner-foundations}.
@@ -428,11 +429,241 @@ $\sum_k\langle k\rangle^{2(s+m)}|\hat u(k)|^2$ is finite whenever $\sum_k\langle
 Theorem~\ref{distributions:theorem-sobolev-embedding}, since then $u \in H^s$ for all $s$.
 \end{proof}
 
+For operators with variable coefficients the Fourier transform no longer diagonalises $P$, and the estimate is proved by \emph{freezing the coefficients}. Near a point $x_0$, $P$ is close to the
+constant-coefficient operator $P_0$ obtained by evaluating its top-order coefficients at $x_0$. The estimate for $P_0$ holds, and the difference $P - P_0$ is either small (top order, near $x_0$) or of
+lower order. The errors are absorbed, and the local estimates are patched with a partition of unity. Regularity then follows by applying the estimate to difference quotients. The next subsection
+collects the tools: how $\langle\xi\rangle^s$ behaves under translation of $\xi$, multiplication by smooth functions on $H^s$, interpolation between Sobolev norms, and difference quotients.
+
+\subsection{Tools for variable coefficients}\label{distributions:subsection-tools}
+
+\begin{notation}\label{distributions:notation-vector-valued}
+Elliptic operators on vector bundles act on vector-valued functions. For $r \geq 1$, $H^s(\RR^n; \CC^r)$ is the space of $u = (u_1, \ldots, u_r)$ with all $u_i \in H^s(\RR^n)$, with
+$\|u\|_s^2 = \sum_i\|u_i\|_s^2 = \int\langle\xi\rangle^{2s}|\hat u(\xi)|^2\,d\xi$, where $|\cdot|$ is the Hermitian norm of $\CC^r$. For a matrix $A$, $|A|$ is its operator norm. Products $\varphi u$ of a
+matrix-valued function $\varphi$ and a vector-valued $u$ are taken componentwise, $(\varphi u)_i = \sum_j\varphi_{ij}u_j$. We write $\Lambda^su$ for the function with $\widehat{\Lambda^su} = \langle\xi\rangle^s\hat u$, so that
+$\|u\|_s = \|\Lambda^su\|_{L^2}$ by Plancherel's theorem (Theorem~\ref{distributions:theorem-fourier-schwartz}(3)); $\Lambda^s$ maps $\mathcal{S}$ to $\mathcal{S}$, since $\langle\xi\rangle^s$ is smooth with derivatives bounded by powers of $\langle\xi\rangle$.
+\end{notation}
+
+\begin{lemma}\label{distributions:lemma-peetre}
+\begin{enumerate}
+\item (\emph{Peetre's inequality}) For $\xi, \eta \in \RR^n$ and $s \in \RR$, $\langle\xi\rangle^s \leq 2^{|s|/2}\langle\xi - \eta\rangle^{|s|}\langle\eta\rangle^s$.
+\item (\emph{Convolution bound}) If $k \in L^1(\RR^n)$ and $g \in L^2(\RR^n)$ are nonnegative, then $\|k * g\|_2 \leq \|k\|_1\|g\|_2$.
+\item For $\varphi, u \in \mathcal{S}$, $\widehat{\varphi u} = \hat\varphi * \hat u$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) Since $|\xi|^2 \leq (|\xi - \eta| + |\eta|)^2 \leq 2|\xi - \eta|^2 + 2|\eta|^2$, we get $1 + |\xi|^2 \leq 2(1 + |\xi - \eta|^2)(1 + |\eta|^2)$, that is,
+$\langle\xi\rangle^2 \leq 2\langle\xi - \eta\rangle^2\langle\eta\rangle^2$. For $s \geq 0$ raise this to the power $s/2$. For $s < 0$ apply the case $-s > 0$ with $\xi$ and $\eta$ exchanged:
+$\langle\eta\rangle^{-s} \leq 2^{-s/2}\langle\eta - \xi\rangle^{-s}\langle\xi\rangle^{-s}$, and rearrange.
+
+(2) By the Cauchy--Schwarz inequality applied to $k(\xi - \eta)^{1/2} \cdot k(\xi - \eta)^{1/2}g(\eta)$,
+$(k * g)(\xi)^2 \leq \|k\|_1\int k(\xi - \eta)g(\eta)^2\,d\eta$. Integrating in $\xi$ and using Tonelli's theorem (Theorem~\ref{measure-theory:theorem-fubini}) gives $\|k * g\|_2^2 \leq \|k\|_1^2\|g\|_2^2$.
+
+(3) By Fourier inversion, $\varphi(x) = \int\hat\varphi(\eta)e^{2\pi ix\cdot\eta}\,d\eta$. Substituting and using Fubini's theorem, which applies because $\hat\varphi$ and $u$ are integrable,
+$\widehat{\varphi u}(\xi) = \int\hat\varphi(\eta)\int u(x)e^{-2\pi ix\cdot(\xi - \eta)}\,dx\,d\eta = \int\hat\varphi(\eta)\hat u(\xi - \eta)\,d\eta$.
+\end{proof}
+
+Peetre's inequality says that the weight $\langle\xi\rangle^s$ changes by a bounded factor when $\xi$ moves by a bounded amount. Multiplying by a smooth function $\varphi$ convolves $\hat u$ with $\hat\varphi$, which
+moves frequencies by amounts concentrated near $0$; so it does not change Sobolev regularity.
+
+\begin{proposition}\label{distributions:proposition-multiplication}
+Let $\varphi \in \mathcal{S}(\RR^n; \CC^{r \times r})$ and $s \in \RR$, and put $N_t(\varphi) = \int\langle\xi\rangle^{t}|\hat\varphi(\xi)|\,d\xi$ for $t \geq 0$. Then $u \mapsto \varphi u$ extends from $\mathcal{S}$ to a bounded
+operator on $H^s(\RR^n; \CC^r)$, and for all $u \in H^s(\RR^n; \CC^r)$:
+\begin{enumerate}
+\item $\|\varphi u\|_s \leq 2^{|s|/2}N_{|s|}(\varphi)\|u\|_s$;
+\item $\|\varphi u\|_s \leq \sup|\varphi|\,\|u\|_s + |s|2^{|s-1|/2}N_{|s-1|+1}(\varphi)\|u\|_{s-1}$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+First let $u \in \mathcal{S}$. By Lemma~\ref{distributions:lemma-peetre}(3) (componentwise), $\widehat{\varphi u}(\xi) = \int\hat\varphi(\xi - \eta)\hat u(\eta)\,d\eta$.
+
+(1) By Peetre's inequality, $\langle\xi\rangle^s|\widehat{\varphi u}(\xi)| \leq 2^{|s|/2}\int k(\xi - \eta)g(\eta)\,d\eta$ with $k = \langle\cdot\rangle^{|s|}|\hat\varphi|$ and $g = \langle\cdot\rangle^s|\hat u|$. Lemma~\ref{distributions:lemma-peetre}(2)
+gives $\|\varphi u\|_s \leq 2^{|s|/2}\|k\|_1\|g\|_2 = 2^{|s|/2}N_{|s|}(\varphi)\|u\|_s$.
+
+(2) Split $\langle\xi\rangle^s\widehat{\varphi u}(\xi) = \int\hat\varphi(\xi - \eta)\langle\eta\rangle^s\hat u(\eta)\,d\eta + \int\hat\varphi(\xi - \eta)\bigl(\langle\xi\rangle^s - \langle\eta\rangle^s\bigr)\hat u(\eta)\,d\eta$. The first term is
+$\widehat{\varphi\Lambda^su}(\xi)$, whose $L^2$ norm is $\|\varphi\Lambda^su\|_2 \leq \sup|\varphi|\,\|\Lambda^su\|_2 = \sup|\varphi|\,\|u\|_s$ by Plancherel's theorem. For the second, the gradient of $\zeta \mapsto \langle\zeta\rangle^s$ is
+$s\langle\zeta\rangle^{s-2}\zeta$, of length at most $|s|\langle\zeta\rangle^{s-1}$. By the mean value theorem on the segment from $\eta$ to $\xi$, and Peetre's inequality for the points $\zeta$ of this segment,
+which satisfy $|\zeta - \eta| \leq |\xi - \eta|$,
+\[
+\bigl|\langle\xi\rangle^s - \langle\eta\rangle^s\bigr| \leq |s|\,|\xi - \eta|\max_\zeta\langle\zeta\rangle^{s-1} \leq |s|2^{|s-1|/2}\langle\xi - \eta\rangle^{|s-1|+1}\langle\eta\rangle^{s-1} .
+\]
+Lemma~\ref{distributions:lemma-peetre}(2) bounds the $L^2$ norm of the second term by $|s|2^{|s-1|/2}N_{|s-1|+1}(\varphi)\|u\|_{s-1}$.
+
+\emph{Extension.} $\mathcal{S}$ is dense in $H^s$ (Proposition~\ref{distributions:proposition-sobolev-basic}), so by (1) the map extends uniquely to a bounded operator, and (1), (2) extend by continuity. The
+extension is the product of the distribution $u$ with $\varphi$ (Definition~\ref{distributions:definition-derivative}): if $u_k \to u$ in $H^s$ with $u_k \in \mathcal{S}$, then $u_k \to u$ and $\varphi u_k \to \varphi u$ as
+distributions, because $|\int v\psi| \leq \|v\|_s\|\bar\psi\|_{-s}$ for test functions $\psi$ (the duality of Proposition~\ref{distributions:proposition-sobolev-basic}).
+\end{proof}
+
+Estimate (2) is the one that makes the freezing argument work: up to a term of lower order, multiplication by $\varphi$ costs only the factor $\sup|\varphi|$, which is small when $\varphi$ is small,
+however wildly $\varphi$ oscillates.
+
+\begin{example}\label{distributions:example-multiplication}
+\begin{enumerate}
+\item For $s = 0$ both estimates are the trivial bound $\|\varphi u\|_2 \leq \sup|\varphi|\,\|u\|_2$, up to the constant $N_0(\varphi) \geq \sup|\varphi|$ in (1).
+\item Some smoothness of $\varphi$ is needed: multiplication by the indicator function $\mathbf{1}_{[0, \infty)}$ does not preserve $H^1(\RR)$, since it turns a smooth function with $u(0) \neq 0$ into a
+function with a jump, which is not in $H^1$ (its derivative contains $u(0)\delta_0$, which is not in $L^2$).
+\item The weight in $N_{|s|}(\varphi)$ cannot be replaced by $\sup|\varphi|$ in (1). Multiplication by $e^{2\pi ix\cdot a}$ translates $\hat u$ by $a$. If $\hat u$ is concentrated near $0$, then $\|u\|_s \approx \|u\|_0$, while
+$\|e^{2\pi ix\cdot a}u\|_s \approx \langle a\rangle^s\|u\|_0$. So for $s > 0$, multiplication by $\varphi(x) = e^{2\pi ix\cdot a}\psi(x)$, with $\psi \in \mathcal{S}$ equal to $1$ on a large ball, has norm of order $\langle a\rangle^s$ on
+$H^s$, although $\sup|\varphi| = \sup|\psi|$ does not depend on $a$. This agrees with Peetre's inequality, and with (2): the oscillation of $\varphi$ only enters the lower-order term.
+\end{enumerate}
+\end{example}
+
+\begin{lemma}[Interpolation]\label{distributions:lemma-interpolation}
+Let $r < t < s$ and $0 < \varepsilon \leq 1$. Then $\|u\|_t \leq \varepsilon\|u\|_s + \varepsilon^{-(t-r)/(s-t)}\|u\|_r$ for $u \in H^s(\RR^n; \CC^r)$. Also $\|\partial^\alpha u\|_t \leq (2\pi)^{|\alpha|}\|u\|_{t+|\alpha|}$.
+\end{lemma}
+
+\begin{proof}
+Where $\langle\xi\rangle^{s-t} \geq 1/\varepsilon$, $\langle\xi\rangle^t \leq \varepsilon\langle\xi\rangle^s$; elsewhere $\langle\xi\rangle^t = \langle\xi\rangle^{t-r}\langle\xi\rangle^r \leq \varepsilon^{-(t-r)/(s-t)}\langle\xi\rangle^r$. So
+$\langle\xi\rangle^t \leq \varepsilon\langle\xi\rangle^s + \varepsilon^{-(t-r)/(s-t)}\langle\xi\rangle^r$ for every $\xi$, and the first claim follows from the triangle inequality in $L^2$ applied to these functions times $|\hat u|$.
+The second follows from $|(2\pi i\xi)^\alpha| \leq (2\pi)^{|\alpha|}\langle\xi\rangle^{|\alpha|}$.
+\end{proof}
+
+High frequencies are controlled by the strong norm with a small constant, low frequencies by the weak norm with a large one. This is why lower-order terms never matter in elliptic estimates.
+
+\begin{lemma}[Difference quotients]\label{distributions:lemma-difference-quotients}
+For $h \in \RR \setminus \{0\}$ and $1 \leq j \leq n$ let $\tau_hu(x) = u(x + he_j)$ and $\Delta_hu = (\tau_hu - u)/h$ (on distributions, $(\tau_hT)(\psi) = T(\tau_{-h}\psi)$).
+\begin{enumerate}
+\item $\|\tau_hu\|_s = \|u\|_s$ and $\|\Delta_hu\|_s \leq 2\pi\|u\|_{s+1}$.
+\item If $u \in H^s$ and there are $A$ and $h_0 > 0$ with $\|\Delta_hu\|_s \leq A$ for all $j$ and all $0 < |h| \leq h_0$, then $u \in H^{s+1}$ and $\|u\|_{s+1}^2 \leq \|u\|_s^2 + nA^2/(4\pi^2)$.
+\item For a smooth function $\varphi$, $\varphi\,\Delta_hu = \Delta_h(\varphi u) - (\Delta_h\varphi)\,\tau_hu$; and for $\varphi \in \mathcal{S}$, $N_t(\tau_h\varphi) = N_t(\varphi)$ and $N_t(\Delta_h\varphi) \leq 2\pi N_{t+1}(\varphi)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+By the translation rule (Example~\ref{distributions:example-fourier-computations}(3)), $\widehat{\tau_hu}(\xi) = e^{2\pi ih\xi_j}\hat u(\xi)$ and $\widehat{\Delta_hu}(\xi) = \frac{e^{2\pi ih\xi_j} - 1}{h}\hat u(\xi)$.
+
+(1) $|e^{2\pi ih\xi_j}| = 1$, and $|e^{i\theta} - 1| \leq |\theta|$ gives $|e^{2\pi ih\xi_j} - 1|/|h| \leq 2\pi|\xi_j| \leq 2\pi\langle\xi\rangle$.
+
+(2) As $h \to 0$, $|e^{2\pi ih\xi_j} - 1|^2/h^2 \to 4\pi^2\xi_j^2$. By Fatou's lemma (Corollary~\ref{measure-theory:corollary-integral-properties}(2)),
+$\int\langle\xi\rangle^{2s}4\pi^2\xi_j^2|\hat u|^2 \leq \liminf_{h \to 0}\|\Delta_hu\|_s^2 \leq A^2$. Summing over $j$ and using $\langle\xi\rangle^{2s+2} = \langle\xi\rangle^{2s}(1 + |\xi|^2)$ gives the claim.
+
+(3) $\Delta_h(\varphi u) = (\tau_h\varphi)\Delta_hu + (\Delta_h\varphi)u$, and $\tau_h\varphi - \varphi = h\Delta_h\varphi$, $u + h\Delta_hu = \tau_hu$; so
+$\varphi\,\Delta_hu = \Delta_h(\varphi u) - (\Delta_h\varphi)(u + h\Delta_hu) = \Delta_h(\varphi u) - (\Delta_h\varphi)\tau_hu$. The bounds on $N_t$ follow from the formulas for $\widehat{\tau_h\varphi}$ and $\widehat{\Delta_h\varphi}$ and from (1).
+\end{proof}
+
+Part (2) is a converse to (1): a function whose difference quotients are bounded in $H^s$ uniformly in $h$ has one more derivative in $H^s$. In $L^2$ this is the familiar fact that a function with
+bounded difference quotients in $L^2$ has a derivative in $L^2$; it fails in $L^\infty$, where bounded difference quotients only give Lipschitz functions, which need not be $C^1$.
+
+\begin{lemma}\label{distributions:lemma-constant-coefficients-rn}
+Let $P_0 = \sum_{|\alpha| = m}A_\alpha\partial^\alpha$ with constant matrices $A_\alpha \in \CC^{r \times r}$, $m \geq 1$, and suppose that $\sigma_0(\xi) = \sum_{|\alpha| = m}A_\alpha(2\pi i\xi)^\alpha$ is invertible for $\xi \neq 0$.
+Let $c = \min\{|\sigma_0(\xi)v| : |\xi| = 1, |v| = 1\} > 0$. Then for every $s$ and all $u \in H^{s+m}(\RR^n; \CC^r)$,
+\[
+\|u\|_{s+m} \leq 2^{(m-1)/2}\max(1, c^{-1})\bigl(\|P_0u\|_s + \|u\|_s\bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+The minimum is attained, by compactness, and is positive. By homogeneity $|\sigma_0(\xi)v| \geq c|\xi|^m|v|$. By convexity of $t \mapsto t^m$, $(1 + a)^m \leq 2^{m-1}(1 + a^m)$ for $a \geq 0$, so
+$\langle\xi\rangle^{2m}|\hat u(\xi)|^2 \leq 2^{m-1}\bigl(|\hat u(\xi)|^2 + c^{-2}|\sigma_0(\xi)\hat u(\xi)|^2\bigr)$. Since $\widehat{P_0u} = \sigma_0\hat u$ (Definition~\ref{distributions:definition-fourier-tempered}), multiplying by
+$\langle\xi\rangle^{2s}$ and integrating gives $\|u\|_{s+m}^2 \leq 2^{m-1}(\|u\|_s^2 + c^{-2}\|P_0u\|_s^2)$, and $\sqrt{a^2 + b^2} \leq a + b$.
+\end{proof}
+
+\subsection{Variable coefficients}\label{distributions:subsection-variable-coefficients}
+
+\begin{definition}\label{distributions:definition-elliptic-variable}
+Let $U \subseteq \RR^n$ be open. A \emph{linear differential operator} of order $m$ on $U$ is $P = \sum_{|\alpha| \leq m}a_\alpha(x)\partial^\alpha$ with $a_\alpha \in C^\infty(U; \CC^{r \times r})$. Its \emph{principal symbol} is
+$\sigma_P(x, \xi) = \sum_{|\alpha| = m}a_\alpha(x)(2\pi i\xi)^\alpha$, and $P$ is \emph{elliptic at $x$} if $\sigma_P(x, \xi)$ is invertible for all $\xi \neq 0$.
+\end{definition}
+
+\begin{notation}\label{distributions:notation-pu}
+If $u \in H^t(\RR^n; \CC^r)$ has support in a compact set $K \subseteq U$, we put $Pu = \sum_\alpha(\chi a_\alpha)\partial^\alpha u$, where $\chi \in C_c^\infty(U)$ equals $1$ on a neighbourhood of $K$
+(Corollary~\ref{real-analysis:corollary-bump-function} and a finite cover of $K$ by balls). Since $\partial^\alpha u$ is supported in $K$, this does not depend on $\chi$, and $Pu \in H^{t-m}$ by
+Proposition~\ref{distributions:proposition-multiplication} and Lemma~\ref{distributions:lemma-interpolation}. We say that $u$ is supported in $K$ if its support as a distribution is.
+\end{notation}
+
+\begin{theorem}[Local elliptic estimate]\label{distributions:theorem-local-estimate}
+Let $P$ be a differential operator of order $m \geq 1$ on $U$, and let $K \subseteq U$ be a compact set at every point of which $P$ is elliptic. For every $s \in \RR$ there is $C$ such that
+\[
+\|u\|_{s+m} \leq C\bigl(\|Pu\|_s + \|u\|_s\bigr) \qquad \text{for all } u \in H^{s+m}(\RR^n; \CC^r) \text{ supported in } K.
+\]
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: freezing the coefficients at one point.} Fix $x_0 \in K$, let $P_0 = \sum_{|\alpha| = m}a_\alpha(x_0)\partial^\alpha$ and let $C_0$ be the constant of Lemma~\ref{distributions:lemma-constant-coefficients-rn} for $P_0$. Let
+$N$ be the number of multi-indices with $|\alpha| = m$. Choose $\delta > 0$ with $B(x_0, 2\delta) \subseteq U$ and
+\[
+\eta = \max_{|\alpha| = m}\sup_{B(x_0, 2\delta)}|a_\alpha - a_\alpha(x_0)| \leq \frac{1}{2C_0N(2\pi)^m},
+\]
+possible by continuity, and $\chi \in C_c^\infty(B(x_0, 2\delta))$ with $0 \leq \chi \leq 1$ and $\chi = 1$ on $B(x_0, \delta)$. Let $v \in H^{s+m}$ be supported in a compact subset of $B(x_0, \delta)$. Then
+$Pv - P_0v = \sum_{|\alpha| = m}\varphi_\alpha\partial^\alpha v + \sum_{|\alpha| < m}\chi a_\alpha\partial^\alpha v$ with $\varphi_\alpha = \chi(a_\alpha - a_\alpha(x_0))$, $\sup|\varphi_\alpha| \leq \eta$. By
+Proposition~\ref{distributions:proposition-multiplication}(2) and Lemma~\ref{distributions:lemma-interpolation}, $\|\varphi_\alpha\partial^\alpha v\|_s \leq \eta(2\pi)^m\|v\|_{s+m} + C\|v\|_{s+m-1}$, and by
+Proposition~\ref{distributions:proposition-multiplication}(1) the lower-order terms are bounded by $C\|v\|_{s+m-1}$. Here and below $C$ denotes constants independent of $v$ (and later of $u$). Hence
+\[
+\|v\|_{s+m} \leq C_0\bigl(\|P_0v\|_s + \|v\|_s\bigr) \leq C_0\|Pv\|_s + \tfrac12\|v\|_{s+m} + C\|v\|_{s+m-1},
+\]
+using $\|v\|_s \leq \|v\|_{s+m-1}$. Since $\|v\|_{s+m}$ is finite, $\|v\|_{s+m} \leq 2C_0\|Pv\|_s + C\|v\|_{s+m-1}$.
+
+\emph{Step 2: a partition of unity.} Cover $K$ by finitely many balls $B(x_i, \delta_i/2)$, $x_i \in K$, with $\delta_i$ as in Step 1. Let $\theta_i \in C_c^\infty(B(x_i, \delta_i))$ be nonnegative and equal to $1$ on
+$B(x_i, \delta_i/2)$ (Corollary~\ref{real-analysis:corollary-bump-function}), so $\Theta = \sum_i\theta_i \geq 1$ on a neighbourhood $V$ of $K$, and let $\zeta \in C_c^\infty(V)$ be equal to $1$ near $K$. Then
+$\psi_i = \zeta\theta_i/\Theta$ is smooth with compact support in $B(x_i, \delta_i)$, and $\sum_i\psi_i = 1$ near $K$. For $u$ supported in $K$, $u = \sum_i\psi_iu$, and $\psi_iu$ is supported in a compact
+subset of $B(x_i, \delta_i)$. By the Leibniz rule (which holds for distributions, by Definition~\ref{distributions:definition-derivative}),
+$P(\psi_iu) = \psi_iPu + \sum_{|\alpha| \leq m}\sum_{0 < \beta \leq \alpha}\binom{\alpha}{\beta}\chi a_\alpha(\partial^\beta\psi_i)\partial^{\alpha - \beta}u$, and the double sum has $H^s$ norm at most $C\|u\|_{s+m-1}$. With Step 1,
+\[
+\|u\|_{s+m} \leq \sum_i\|\psi_iu\|_{s+m} \leq C\sum_i\bigl(\|P(\psi_iu)\|_s + \|\psi_iu\|_{s+m-1}\bigr) \leq C\bigl(\|Pu\|_s + \|u\|_{s+m-1}\bigr).
+\]
+
+\emph{Step 3: absorbing the error.} If $m = 1$ this is the claim. If $m \geq 2$, Lemma~\ref{distributions:lemma-interpolation} with $\varepsilon = 1/(2C)$ gives $C\|u\|_{s+m-1} \leq \frac12\|u\|_{s+m} + C^{\prime}\|u\|_s$, and
+absorbing $\frac12\|u\|_{s+m}$ gives the estimate.
+\end{proof}
+
+\begin{theorem}[Local elliptic regularity]\label{distributions:theorem-local-regularity}
+Let $P$ be a differential operator of order $m \geq 1$ on $U$, elliptic at every point of $U$. If $u \in H^t(\RR^n; \CC^r)$ has compact support in $U$ and $Pu \in H^s$, then $u \in H^{s+m}$. In
+particular, if $Pu$ is smooth, so is $u$.
+\end{theorem}
+
+\begin{proof}
+Let $K$ be the support of $u$ and $\rho > 0$ such that $K^{\prime} = \{x : d(x, K) \leq \rho\} \subseteq U$; we compute $P$ with a cut-off equal to $1$ near $K^{\prime}$, and write $Pv = \sum_\alpha b_\alpha\partial^\alpha v$ with
+$b_\alpha \in C_c^\infty$ for $v$ supported in $K^{\prime}$. If $t \geq s + m$ there is nothing to prove. Otherwise we show that $u \in H^{t_1}$ with $t_1 = \min(t + 1, s + m)$; repeating, $u \in H^{s+m}$ after finitely many steps.
+
+Let $0 < |h| \leq \rho$ and $1 \leq j \leq n$. Then $\Delta_hu \in H^t \subseteq H^{t_1 - 1}$ is supported in $K^{\prime}$, and Theorem~\ref{distributions:theorem-local-estimate} on $K^{\prime}$ with $s$ replaced by
+$t_1 - 1 - m$ gives
+\[
+\|\Delta_hu\|_{t_1 - 1} \leq C\bigl(\|P\Delta_hu\|_{t_1 - 1 - m} + \|\Delta_hu\|_{t_1 - 1 - m}\bigr).
+\]
+By Lemma~\ref{distributions:lemma-difference-quotients}(3), applied to $w = \partial^\alpha u$ (difference quotients commute with derivatives), $P\Delta_hu = \Delta_h(Pu) - \sum_\alpha(\Delta_hb_\alpha)\,\partial^\alpha\tau_hu$. We bound
+the terms with Lemma~\ref{distributions:lemma-difference-quotients}, Proposition~\ref{distributions:proposition-multiplication}(1) and Lemma~\ref{distributions:lemma-interpolation}, using $t_1 - m \leq s$ and $t_1 - 1 \leq t$:
+\[
+\begin{aligned}
+\|\Delta_h(Pu)\|_{t_1 - 1 - m} &\leq 2\pi\|Pu\|_{t_1 - m} \leq 2\pi\|Pu\|_s, \\
+\|(\Delta_hb_\alpha)\,\partial^\alpha\tau_hu\|_{t_1 - 1 - m} &\leq C\,N_{|t_1 - 1 - m| + 1}(b_\alpha)\,\|u\|_{t_1 - 1} \leq C\|u\|_t, \\
+\|\Delta_hu\|_{t_1 - 1 - m} &\leq 2\pi\|u\|_{t_1 - m} \leq 2\pi\|u\|_t .
+\end{aligned}
+\]
+The bounds do not depend on $h$ or $j$, so Lemma~\ref{distributions:lemma-difference-quotients}(2) gives $u \in H^{t_1}$. If $Pu$ is smooth, it is in every $H^s$ (it has compact support), so $u \in \bigcap_sH^s$
+is smooth by the Sobolev embedding theorem (Theorem~\ref{distributions:theorem-sobolev-embedding}).
+\end{proof}
+
+\begin{corollary}\label{distributions:corollary-local-regularity}
+Let $P$ be elliptic of order $m \geq 1$ at every point of $U$, and let $u$ be a distribution on $U$ such that $\chi u \in H^t(\RR^n; \CC^r)$ for every $\chi \in C_c^\infty(U)$, for some fixed $t$. If $Pu$ is smooth on $U$,
+then $u$ is smooth on $U$.
+\end{corollary}
+
+\begin{proof}
+We show by induction on $k$ that $\chi u \in H^{t+k}$ for all $\chi \in C_c^\infty(U)$ and all $k \geq 0$. Given $\chi$, choose $\tilde\chi \in C_c^\infty(U)$ equal to $1$ near the support of $\chi$. By the Leibniz rule,
+$P(\chi u) = \chi Pu + \sum_{|\alpha| \leq m}\sum_{0 < \beta \leq \alpha}\binom{\alpha}{\beta}a_\alpha(\partial^\beta\chi)\partial^{\alpha - \beta}(\tilde\chi u)$. The first term is smooth with compact support, and by the induction hypothesis
+$\tilde\chi u \in H^{t+k}$, so the sum is in $H^{t+k-m+1}$. By Theorem~\ref{distributions:theorem-local-regularity}, $\chi u \in H^{t+k+1}$. Hence $\chi u$ is smooth for every $\chi$, and so is $u$.
+\end{proof}
+
+\begin{example}\label{distributions:example-weyl-lemma}
+\emph{Weyl's lemma.} If $u \in L^2_{\mathrm{loc}}(U)$ satisfies $\sum_j\partial_j^2u = 0$ as a distribution, then $u$ is (almost everywhere equal to) a smooth harmonic function. Indeed $\chi u \in L^2 = H^0$ for every
+$\chi \in C_c^\infty(U)$, and the Laplacian is elliptic, so Corollary~\ref{distributions:corollary-local-regularity} applies. The same argument shows that a locally square integrable weak solution of the Cauchy--Riemann
+equation $\frac12(\partial_x + i\partial_y)u = 0$, an operator with principal symbol $\pi i(\xi_1 + i\xi_2) \neq 0$, is a holomorphic function. For the Laplacian the continuity of $u$ is already a strong
+statement: a weak solution of $\Delta u = 0$ cannot have the jumps that the wave equation allows (Counterexample~\ref{distributions:counterexample-degenerate} below shows what goes wrong without ellipticity).
+\end{example}
+
+\begin{counterexample}\label{distributions:counterexample-degenerate}
+Ellipticity at every point is needed, even for operators of order $1$ in one variable. The operator $P = x\frac{d}{dx}$ on $\RR$ has symbol $2\pi ix\xi$, which vanishes at $x = 0$ only. The Heaviside function
+$H = \mathbf{1}_{[0, \infty)}$ satisfies $PH = x\delta_0 = 0$, since $(x\delta_0)(\varphi) = \delta_0(x\varphi) = 0$ (Example~\ref{distributions:example-heaviside}). So $PH$ is smooth, while $H$ is not even continuous; the
+singularity sits exactly at the point where $P$ fails to be elliptic. Away from $0$, $H$ is smooth, as Corollary~\ref{distributions:corollary-local-regularity} predicts on $U = \RR \setminus \{0\}$.
+\end{counterexample}
+
 \begin{remark}\label{distributions:remark-variable-coefficients}
-For operators with variable coefficients the estimate is proved by freezing the coefficients at a point, using the constant-coefficient case and absorbing the error terms; on a compact manifold one patches
-the local estimates with a partition of unity. The result is that an elliptic operator $P$ of order $m$ between sections of vector bundles over a compact manifold satisfies
-$\|u\|_{s+m} \leq C(\|Pu\|_s + \|u\|_s)$, is Fredholm as an operator $H^{s+m} \to H^s$ by Rellich's theorem, and has smooth kernel; this is proved in Chapter~\ref{elliptic-operators} and applied to the
-Laplacian in Chapter~\ref{hodge-theorem}. The general theory is in \cite[Chapters 7--10]{hormander-pdo1} and \cite[Chapter 6]{warner-foundations}.
+On a compact manifold the local estimates are patched with a partition of unity, and the result is that an elliptic operator $P$ of order $m$ between sections of vector bundles satisfies
+$\|u\|_{s+m} \leq C(\|Pu\|_s + \|u\|_s)$, is Fredholm as an operator $H^{s+m} \to H^s$ by Rellich's theorem, and has smooth kernel; this is done in Chapter~\ref{elliptic-operators} and applied to the
+Laplacian in Chapter~\ref{hodge-theorem}. A more powerful approach replaces difference quotients by \emph{pseudodifferential operators}, operators of the form
+$u \mapsto \int a(x, \xi)\hat u(\xi)e^{2\pi ix\cdot\xi}\,d\xi$ with symbols $a$ more general than polynomials in $\xi$; an elliptic operator then has a \emph{parametrix}, an inverse up to smoothing operators, which
+gives estimate and regularity at once \cite[Chapters 7--10]{hormander-pdo1}, \cite[Chapter 6]{warner-foundations}.
 \end{remark}
 
 \section{Exercises}\label{distributions:section-exercises}
@@ -493,4 +724,27 @@ that the Poincar\'e constant of a ball of radius $r$ is $c_nr^2$ for a constant 
 For $u \in C^1_c(r\Omega)$ put $w(y) = u(ry)$, in $C^1_c(\Omega)$. Substituting $x = ry$, $\int_{r\Omega}|u|^2 = r^n\int_\Omega|w|^2$ and, since $\nabla w(y) = r(\nabla u)(ry)$,
 $\int_{r\Omega}|\nabla u|^2 = r^{n-2}\int_\Omega|\nabla w|^2$. So $\int_{r\Omega}|u|^2 \leq r^nC\int_\Omega|\nabla w|^2 = r^2C\int_{r\Omega}|\nabla u|^2$. Applying this to $r\Omega$ and $r^{-1}$ shows that the best constants
 satisfy $C(r\Omega) = r^2C(\Omega)$; take $\Omega$ the unit ball, whose best constant is finite by Theorem~\ref{distributions:theorem-poincare-dirichlet}, and the best constant is invariant under translations.
+\end{solution}
+
+\begin{exercise}\label{distributions:exercise-sobolev-algebra}
+Let $s > n/2$. Show that $\|uv\|_s \leq C\|u\|_s\|v\|_s$ for $u, v \in \mathcal{S}(\RR^n)$, so that $H^s(\RR^n)$ is an algebra under pointwise multiplication. (Use $\langle\xi\rangle \leq \langle\xi - \eta\rangle + \langle\eta\rangle$.)
+\end{exercise}
+
+\begin{solution}
+Squaring shows $\langle\xi\rangle \leq \langle\xi - \eta\rangle + \langle\eta\rangle$, as $1 + |\xi|^2 \leq 1 + (|\xi - \eta| + |\eta|)^2 \leq 2 + |\xi - \eta|^2 + |\eta|^2 + 2\langle\xi - \eta\rangle\langle\eta\rangle$. Hence
+$\langle\xi\rangle^s \leq 2^s(\langle\xi - \eta\rangle^s + \langle\eta\rangle^s)$. By Lemma~\ref{distributions:lemma-peetre}(3), $\langle\xi\rangle^s|\widehat{uv}(\xi)| \leq 2^s\bigl((a * |\hat v|)(\xi) + (|\hat u| * b)(\xi)\bigr)$ with
+$a = \langle\cdot\rangle^s|\hat u|$ and $b = \langle\cdot\rangle^s|\hat v|$. By Lemma~\ref{distributions:lemma-peetre}(2), $\|a * |\hat v|\|_2 \leq \|\hat v\|_1\|a\|_2 = \|\hat v\|_1\|u\|_s$, and by the Cauchy--Schwarz inequality
+$\|\hat v\|_1 \leq (\int\langle\xi\rangle^{-2s}d\xi)^{1/2}\|v\|_s$, where the integral is finite because $2s > n$. The other term is symmetric. For $s \leq n/2$ this fails: $H^{n/2}$ contains unbounded functions
+(Exercise~\ref{distributions:exercise-sobolev-sharp}), and their powers leave $H^{n/2}$.
+\end{solution}
+
+\begin{exercise}\label{distributions:exercise-estimate-not-elliptic}
+Show that the local estimate of Theorem~\ref{distributions:theorem-local-estimate} fails for the non-elliptic operator $P = \partial_1$ on $\RR^2$. Find $u_k \in C_c^\infty(\RR^2)$, supported in a fixed compact set, with
+$\|Pu_k\|_0 + \|u_k\|_0$ bounded and $\|u_k\|_1 \to \infty$.
+\end{exercise}
+
+\begin{solution}
+Fix $\varphi \in C_c^\infty(\RR)$, $\varphi \neq 0$, and let $u_k(x, y) = \varphi(x)\varphi(y)e^{2\pi iky}$. Then $\|u_k\|_0 = \|\varphi\|_2^2$ and $\partial_1u_k = \varphi^{\prime}(x)\varphi(y)e^{2\pi iky}$ has the constant norm
+$\|\varphi^{\prime}\|_2\|\varphi\|_2$. But $\partial_2u_k = \varphi(x)(\varphi^{\prime}(y) + 2\pi ik\varphi(y))e^{2\pi iky}$ has norm at least $2\pi k\|\varphi\|_2^2 - \|\varphi\|_2\|\varphi^{\prime}\|_2$, and
+$\|u_k\|_1 \geq \|\partial_2u_k\|_0/(2\pi)$ by Lemma~\ref{distributions:lemma-interpolation}, which tends to infinity. The functions $u_k$ oscillate in the direction $dy$, where the symbol $2\pi i\xi_1$ of $\partial_1$ vanishes.
 \end{solution}

@@ -56,7 +56,7 @@ conventions differ by the harmless factor $(2\pi)^m$. Ellipticity means that $P$
 \]
 the squared length of the covector $\xi$ for the metric. It is nonzero for $\xi \neq 0$, so $\Delta$ is elliptic. The first-order terms, which involve the derivatives of the metric, do not enter.
 \item On $\CC$ with $z = x + iy$, the Cauchy--Riemann operator $\partial_{\bar z} = \frac12(\partial_x + i\partial_y)$ has symbol $\frac i2(\xi_1 + i\xi_2)$, nonzero for $(\xi_1, \xi_2) \neq 0$; it is elliptic. Its
-solutions are the holomorphic functions, and the local form of elliptic regularity (Theorem~\ref{elliptic-operators:theorem-elliptic-estimate}) is, in this case, the fact that a weak solution of the
+solutions are the holomorphic functions, and local elliptic regularity (Example~\ref{distributions:example-weyl-lemma}) is, in this case, the fact that a weak solution of the
 Cauchy--Riemann equations is smooth, indeed holomorphic.
 \item On $\RR^2$ the operator $\partial_x$ is not elliptic: its symbol $i\xi_1$ vanishes for $\xi = dy$. It sees no derivatives in the $y$ direction, and correspondingly $\partial_xu = 0$ has the
 non-smooth solutions $u(x, y) = h(y)$ for every function $h$.
@@ -149,6 +149,22 @@ each $\psi_iu$. The identification of $\bigcap_sH^s$ with smooth sections is the
 follows because differentiation lowers $s$ by the order and multiplication by smooth functions is bounded.
 \end{proof}
 
+\begin{lemma}\label{elliptic-operators:lemma-localisation}
+Let $(U, x)$ be a chart of $M$ over which $E$ is trivialised, and $L \subseteq U$ compact.
+\begin{enumerate}
+\item If $\chi \in C^\infty(M)$ is supported in $L$, then $\|\chi u\|_{H^s(\RR^n)} \leq C\|u\|_s$ for $u \in H^s(E)$, where $\chi u$ is read in the chart and the trivialisation.
+\item If $v \in H^s(\RR^n; \CC^r)$ is supported in $x(L)$, then the section defined by $v$ (zero outside $U$) lies in $H^s(E)$, and $\|v\|_s \leq C\|v\|_{H^s(\RR^n)}$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Choose $\psi_0 \in C^\infty(M)$ supported in $U$, with $0 \leq \psi_0 \leq 1$ and $\psi_0 = 1$ on a neighbourhood $W$ of $L$. Cover the compact set $M \setminus W$ by finitely many charts $U_k$ over which $E$ is trivial
+and which do not meet $L$, take a partition of unity $(\rho_k)$ subordinate to them on a neighbourhood of $M \setminus W$, and put $\psi_k = (1 - \psi_0)\rho_k$. Then $\psi_0 + \sum_k\psi_k = 1$, and by
+Proposition~\ref{elliptic-operators:proposition-sobolev-sections} the norm defined by this atlas and partition of unity is equivalent to $\|\cdot\|_s$. For a section $w$ supported in $L$, $\psi_kw = 0$ and $\psi_0w = w$,
+so this norm of $w$ is exactly $\|w\|_{H^s(\RR^n)}$, computed in the chart $U$. This gives (2), and (1) follows with $w = \chi u$, since multiplication by $\chi$ is bounded on $H^s(E)$
+(Proposition~\ref{elliptic-operators:proposition-sobolev-sections}).
+\end{proof}
+
 \begin{example}\label{elliptic-operators:example-sobolev-circle}
 On the circle $T^1 = \RR/\ZZ$ the Sobolev norm is $\|u\|_s^2 = \sum_k\langle k\rangle^{2s}|\hat u(k)|^2$ with $\langle k\rangle = (1 + k^2)^{1/2}$ (Definition~\ref{distributions:definition-sobolev}), and the
 membership of a function in $H^s$ is read off from the decay of its Fourier coefficients.
@@ -180,23 +196,36 @@ Let $P$ be an elliptic differential operator of order $m$ from $E$ to $F$ over t
 and (\emph{elliptic regularity}) if $u \in H^t(E)$ for some $t$ and $Pu \in H^s(F)$, then $u \in H^{s+m}(E)$; in particular $Pu$ smooth implies $u$ smooth.
 \end{theorem}
 
-\begin{proof}[Sketch of proof]
-Locally one freezes the coefficients: near a point $x_0$, $P$ differs from the constant-coefficient elliptic operator $P_0 = \sum_{|\alpha| = m}A_\alpha(x_0)\partial^\alpha$ by an operator whose top-order
-coefficients are small on a small neighbourhood and whose remaining terms have order $< m$. The constant-coefficient estimate
-(Theorem~\ref{distributions:theorem-elliptic-estimate}, transported to $\RR^n$ by a cut-off and to the torus) then gives
-$\|u\|_{s+m} \leq C(\|Pu\|_s + \|u\|_{s+m-1})$ for $u$ supported in that neighbourhood, and the error term is absorbed using the interpolation inequality
-$\|u\|_{s+m-1} \leq \varepsilon\|u\|_{s+m} + C_\varepsilon\|u\|_s$, which follows from
-$\langle\xi\rangle^{s+m-1} \leq \varepsilon\langle\xi\rangle^{s+m} + C_\varepsilon\langle\xi\rangle^s$. Summing over a finite cover with a partition of unity gives the global estimate. Regularity is proved by the same
-estimates applied to difference quotients, or by constructing a \emph{parametrix}: an operator $Q$ with $QP = I + S$ and $PQ = I + S'$ where $S$, $S'$ are smoothing operators; then $u = Q(Pu) - Su$ is as
-regular as $Pu$ allows. The omitted verifications are the construction of the parametrix and the coordinate invariance of the estimates; see \cite[Chapter 6]{warner-foundations},
-\cite[Chapter 4]{wells-differential-analysis} or \cite[Chapters 17--18]{hormander-pdo1}.
+\begin{proof}
+Ellipticity forces $\operatorname{rank}E = \operatorname{rank}F = r$. In a chart $(U_i, x_i)$ with trivialisations, $P$ becomes an operator $P_i = \sum_{|\alpha| \leq m}A^i_\alpha\partial^\alpha$ on $x_i(U_i)$ with smooth
+$\CC^{r \times r}$-valued coefficients, elliptic at every point in the sense of Definition~\ref{distributions:definition-elliptic-variable}; the factor $2\pi$ in the symbol of Chapter~\ref{distributions} only rescales $\xi$. Fix the
+atlas and the partition of unity $(\psi_i)$ defining the norms (Definition~\ref{elliptic-operators:definition-sobolev-sections}), and choose $\chi_i \in C^\infty(M)$ supported in $U_i$ with $\chi_i = 1$ near the support of
+$\psi_i$. We read $\psi_iu$, $\chi_iu$ in the chart $i$, as compactly supported functions with values in $\CC^r$. By Lemma~\ref{elliptic-operators:lemma-localisation}(1), $\|\psi_if\|_{H^\sigma(\RR^n)}$ and $\|\chi_if\|_{H^\sigma(\RR^n)}$ are
+at most $C\|f\|_\sigma$ for every section $f$.
+
+\emph{Step 1: the commutator.} By the Leibniz rule, $P(\psi_iu) = \psi_iPu + [P, \psi_i]u$, where $[P, \psi_i]$ is a differential operator of order $m - 1$ whose coefficients are supported in $\operatorname{supp}\psi_i$. Since
+$\chi_i = 1$ there, $[P, \psi_i]u = [P, \psi_i](\chi_iu)$. In the chart, Proposition~\ref{distributions:proposition-multiplication}(1) and Lemma~\ref{distributions:lemma-interpolation} give
+$\|[P, \psi_i](\chi_iu)\|_{H^\sigma(\RR^n)} \leq C\|\chi_iu\|_{H^{\sigma+m-1}(\RR^n)} \leq C\|u\|_{\sigma+m-1}$ for every $\sigma$.
+
+\emph{Step 2: the estimate.} By density of smooth sections and continuity of both sides on $H^{s+m}(E)$ (Proposition~\ref{elliptic-operators:proposition-sobolev-sections}), it suffices to take $u$ smooth. The section $\psi_iu$ is supported in
+the compact set $x_i(\operatorname{supp}\psi_i) \subseteq x_i(U_i)$, so Theorem~\ref{distributions:theorem-local-estimate} and Step 1 give
+\[
+\|\psi_iu\|_{H^{s+m}(\RR^n)} \leq C\bigl(\|P_i(\psi_iu)\|_{H^s(\RR^n)} + \|\psi_iu\|_{H^s(\RR^n)}\bigr) \leq C\bigl(\|Pu\|_s + \|u\|_{s+m-1}\bigr).
+\]
+Summing the squares over $i$, $\|u\|_{s+m} \leq C(\|Pu\|_s + \|u\|_{s+m-1})$. For $m \geq 2$, Lemma~\ref{distributions:lemma-interpolation} applied to each $\psi_iu$ gives
+$\|u\|_{s+m-1}^2 = \sum_i\|\psi_iu\|_{s+m-1}^2 \leq 2\varepsilon^2\|u\|_{s+m}^2 + 2C_\varepsilon^2\|u\|_s^2$; with $\varepsilon$ small the term $\|u\|_{s+m}$ is absorbed into the left side, and the estimate follows.
+
+\emph{Step 3: regularity.} Let $u \in H^t(E)$ with $Pu \in H^s(F)$, where $Pu \in H^{t-m}$ is defined by continuity. If $t \geq s + m$ there is nothing to prove; otherwise we show $u \in H^{t_1}(E)$ with
+$t_1 = \min(t + 1, s + m)$, and repeat. By Step 1, in the chart $i$,
+\[
+P_i(\psi_iu) = \psi_iPu + [P, \psi_i](\chi_iu) \in H^{\min(s, t - m + 1)}(\RR^n; \CC^r),
+\]
+and $\psi_iu \in H^t(\RR^n; \CC^r)$ has compact support in $x_i(U_i)$. By Theorem~\ref{distributions:theorem-local-regularity}, $\psi_iu \in H^{\min(s+m, t+1)} = H^{t_1}$. By Lemma~\ref{elliptic-operators:lemma-localisation}(2),
+each $\psi_iu$ is in $H^{t_1}(E)$, and so is $u = \sum_i\psi_iu$. Finally, if $Pu$ is smooth, then $u \in \bigcap_sH^s(E) = \Gamma(M, E)$.
 \end{proof}
 
-The interpolation inequality used in the sketch deserves a word, as it is the reason why lower-order terms never matter. Let $0 < \varepsilon \leq 1$ and $m \geq 1$. Where
-$\langle\xi\rangle \geq 1/\varepsilon$, $\langle\xi\rangle^{s+m-1} = \langle\xi\rangle^{s+m}/\langle\xi\rangle \leq \varepsilon\langle\xi\rangle^{s+m}$; where $\langle\xi\rangle \leq 1/\varepsilon$,
-$\langle\xi\rangle^{s+m-1} = \langle\xi\rangle^{m-1}\langle\xi\rangle^s \leq \varepsilon^{1-m}\langle\xi\rangle^s$. So $\langle\xi\rangle^{s+m-1} \leq \varepsilon\langle\xi\rangle^{s+m} + \varepsilon^{1-m}\langle\xi\rangle^s$ everywhere, and
-squaring (with $(a + b)^2 \leq 2a^2 + 2b^2$) and integrating against $|\hat u|^2$ gives $\|u\|_{s+m-1} \leq \sqrt2\bigl(\varepsilon\|u\|_{s+m} + \varepsilon^{1-m}\|u\|_s\bigr)$: high frequencies are controlled by
-the strong norm with a small constant, low frequencies by the weak norm with a large one.
+The proof shows where each hypothesis enters. Ellipticity is used only through the constant-coefficient estimate at each point (Lemma~\ref{distributions:lemma-constant-coefficients-rn}). Compactness of $M$ gives a finite atlas, so the
+constants can be summed. The term $\|u\|_s$ cannot be dropped, because of the kernel: for $P = \Delta$ on the torus the constants have $\|u\|_{s+2} \neq 0 = \|Pu\|_s$.
 
 \begin{counterexample}\label{elliptic-operators:counterexample-wave}
 Regularity fails for non-elliptic operators. On $\RR^2$ with coordinates $(t, x)$ let $P = \partial_t^2 - \partial_x^2$, whose symbol $-\tau^2 + \xi^2$ vanishes on the lines $\tau = \pm\xi$. For every locally integrable $g$ on $\RR$,
@@ -206,7 +235,7 @@ $\partial_t^2 - \partial_x^2 = -4\partial_r\partial_s$ and $dt\,dx = \frac12ds\,
 \langle Pu, \varphi\rangle = \int u\,(\partial_t^2 - \partial_x^2)\varphi\,dt\,dx = -2\int g(s)\Big(\int\partial_r(\partial_s\tilde\varphi)\,dr\Big)ds = 0,
 \]
 since $\partial_s\tilde\varphi$ has compact support in $r$. Taking $g$ the indicator function of $[0, \infty)$ gives a discontinuous solution of $Pu = 0$, although $0$ is smooth. For elliptic operators this cannot happen: a
-distribution $u$ with $\sum_j\partial_j^2u$ smooth is smooth, by the local form of Theorem~\ref{elliptic-operators:theorem-elliptic-estimate}.
+locally square integrable $u$ with $\sum_j\partial_j^2u$ smooth is smooth, by Corollary~\ref{distributions:corollary-local-regularity}.
 \end{counterexample}
 
 The discontinuity of the solution travels along the line $x = t$, a direction in which the symbol vanishes: singularities of solutions of $Pu = 0$ can only sit in the directions where
@@ -393,11 +422,9 @@ the potential raises every eigenvalue. Characterisation (3) does not involve the
 
 \begin{example}\label{elliptic-operators:example-wirtinger}
 \emph{Wirtinger's inequality.} On $S^1 = \RR/2\pi\ZZ$, $P = -d^2/d\theta^2$ has eigenvalues $0, 1, 1, 4, 4, 9, 9, \ldots$, with eigenfunctions $1$, $e^{\pm i\theta}$, $e^{\pm2i\theta}$, \ldots, and
-$\int\langle Pu, u\rangle = \int_0^{2\pi}|u^{\prime}|^2$ by integration by parts. Proposition~\ref{elliptic-operators:proposition-min-max}(2) with $k = 2$ says: for a smooth $2\pi$-periodic $u$ with $\int_0^{2\pi}u = 0$,
-\[
-\int_0^{2\pi}|u^{\prime}|^2\,d\theta \geq \int_0^{2\pi}|u|^2\,d\theta,
-\]
-with equality exactly for $u = ae^{i\theta} + be^{-i\theta}$. This sharp \emph{Poincar\'e inequality} on the circle gives Hurwitz's proof of the isoperimetric inequality
+$\int\langle Pu, u\rangle = \int_0^{2\pi}|u^{\prime}|^2$ by integration by parts. Since the functions with $\int_0^{2\pi}u = 0$ are those orthogonal to $u_1 = 1/\sqrt{2\pi}$, Proposition~\ref{elliptic-operators:proposition-min-max}(2) with
+$k = 2$ is Wirtinger's inequality $\int_0^{2\pi}|u|^2 \leq \int_0^{2\pi}|u^{\prime}|^2$ for smooth functions (Proposition~\ref{distributions:proposition-wirtinger} with $L = 2\pi$), with the same extremals $ae^{i\theta} + be^{-i\theta}$:
+the min-max principle explains the best constant as the first nonzero eigenvalue. The inequality gives Hurwitz's proof of the isoperimetric inequality
 (Exercise~\ref{elliptic-operators:exercise-isoperimetric}).
 \end{example}
 
@@ -533,7 +560,7 @@ $1$. Deduce that a closed curve of length $L$ bounds area at most $L^2/4\pi$.
 \begin{solution}
 Expand $\gamma = \sum_kc_ke^{ik\theta}$ (converging with all derivatives, as $\gamma$ is smooth). By Parseval's identity, with $\frac{1}{2\pi}\int_0^{2\pi}$ as normalised measure, $1 = \frac{1}{2\pi}\int|\gamma^{\prime}|^2 = \sum_kk^2|c_k|^2$, and
 $\frac{1}{2\pi}\int\bar\gamma\gamma^{\prime} = \sum_k\bar c_k\,ikc_k = i\sum_kk|c_k|^2$, so $A = \pi\sum_kk|c_k|^2$. Since $k \leq k^2$ for all integers $k$, $A \leq \pi\sum_kk^2|c_k|^2 = \pi$, with equality exactly when
-$c_k = 0$ for $k \neq 0, 1$, that is, $\gamma(\theta) = c_0 + c_1e^{i\theta}$ with $|c_1| = 1$, a unit circle. (This is Wirtinger's inequality, Example~\ref{elliptic-operators:example-wirtinger}, applied to
+$c_k = 0$ for $k \neq 0, 1$, that is, $\gamma(\theta) = c_0 + c_1e^{i\theta}$ with $|c_1| = 1$, a unit circle. (This is Wirtinger's inequality, Proposition~\ref{distributions:proposition-wirtinger}, applied to
 $\gamma - c_0$.) For a curve of length $L$, rescaling by $2\pi/L$ gives one of length $2\pi$, and areas scale by $(2\pi/L)^2$, so $A(2\pi/L)^2 \leq \pi$.
 \end{solution}
 
