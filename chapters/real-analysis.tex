@@ -2151,10 +2151,8 @@ $\|f(x') - f(x)\| < \varepsilon$ for all $x' \in U$ and $f \in \mathcal{F}$) and
 \end{theorem}
 
 \begin{proof}
-$C(K, \RR^m)$ is complete, so by Theorem~\ref{general-topology:theorem-compact-metric} it suffices to show that $\mathcal{F}$ is totally bounded. Let $\varepsilon > 0$. Choose finitely many points $x_1, \ldots, x_k$
-with neighbourhoods $U_i$ as in the definition covering $K$. The set $\{(f(x_1), \ldots, f(x_k)) : f \in \mathcal{F}\}$ is bounded in $\RR^{mk}$, hence totally bounded, so there are $f_1, \ldots, f_N \in \mathcal{F}$
-such that every $f \in \mathcal{F}$ satisfies $\max_i\|f(x_i) - f_j(x_i)\| < \varepsilon$ for some $j$. For $x \in U_i$,
-$\|f(x) - f_j(x)\| \leq \|f(x) - f(x_i)\| + \|f(x_i) - f_j(x_i)\| + \|f_j(x_i) - f_j(x)\| < 3\varepsilon$.
+This is the case $Y = \RR^m$ of Theorem~\ref{general-topology:theorem-arzela-ascoli}: a bounded subset of $\RR^m$ has compact closure by the Heine--Borel theorem (Theorem~\ref{general-topology:theorem-heine-borel}), so the pointwise bounded family $\mathcal{F}$
+satisfies condition (2) there.
 \end{proof}
 
 \section{Exercises}\label{real-analysis:section-exercises}
