@@ -766,6 +766,151 @@ Proposition~\ref{multilinear-algebra:proposition-pq-decomposition}(3) and
 Proposition~\ref{linear-algebra:proposition-compatible-metric}.
 \end{example}
 
+\section{Super linear algebra}\label{multilinear-algebra:section-super}
+
+The exterior algebra is not commutative, but it is commutative up to a sign that depends only on degrees: $\alpha \wedge \beta = (-1)^{pq}\beta \wedge \alpha$
+(Proposition~\ref{multilinear-algebra:proposition-exterior-properties}(1)). Physics meets the same sign: the wave function of two identical fermions changes sign when they are exchanged, while that of
+bosons does not. \emph{Super linear algebra} is linear algebra in which every object is split into an even and an odd part and every exchange of two odd objects costs a sign. Remarkably many formulas
+become uniform this way: the Euler characteristic is a dimension, the Pfaffian and the determinant are integrals, and traces that should vanish do vanish. It is the algebra behind
+\emph{supersymmetry}, which treats bosons and fermions on an equal footing, and behind the heat-kernel proofs of index theorems. In this section $k$ is a field of characteristic $\neq 2$.
+
+\begin{definition}\label{multilinear-algebra:definition-super-vector-space}
+A \emph{super vector space} is a vector space with a decomposition $V = V_{\bar 0} \oplus V_{\bar 1}$ indexed by $\ZZ/2 = \{\bar 0, \bar 1\}$. Elements of $V_{\bar 0}$ are \emph{even}, those of $V_{\bar 1}$ \emph{odd},
+and a nonzero element of $V_{\bar 0} \cup V_{\bar 1}$ is \emph{homogeneous}, of \emph{parity} $|v| \in \ZZ/2$. If $\dim V_{\bar 0} = m$ and $\dim V_{\bar 1} = n$, the \emph{dimension} of $V$ is $m|n$ and its
+\emph{superdimension} is $\operatorname{sdim}V = m - n$. A linear map $f \colon V \to W$ is \emph{even} if $f(V_i) \subseteq W_i$ and \emph{odd} if $f(V_i) \subseteq W_{i + \bar 1}$; so $\Hom(V, W)$ is again a super vector space.
+The \emph{tensor product} $V \otimes W$ is graded by $(V \otimes W)_{\bar c} = \bigoplus_{\bar a + \bar b = \bar c}V_{\bar a} \otimes W_{\bar b}$.
+\end{definition}
+
+\begin{notation}\label{multilinear-algebra:notation-super}
+We write $k^{m|n}$ for $k^m \oplus k^n$ with $k^m$ even and $k^n$ odd. Formulas containing $|v|$ are stated for homogeneous elements and extended by linearity. \emph{Koszul's sign rule}: whenever two homogeneous
+symbols $a$, $b$ are written in the opposite order, the sign $(-1)^{|a||b|}$ appears. Every $\ZZ$-graded vector space $\bigoplus_pV^p$ is a super vector space with $V_{\bar 0} = \bigoplus_{p \text{ even}}V^p$ and
+$V_{\bar 1} = \bigoplus_{p \text{ odd}}V^p$.
+\end{notation}
+
+\begin{example}\label{multilinear-algebra:example-super-vector-spaces}
+\begin{enumerate}
+\item $\Lambda(k^n)$ is a super vector space of dimension $2^{n-1}|2^{n-1}$ for $n \geq 1$, since the even and odd binomial coefficients both add up to $2^{n-1}$. Its superdimension
+$\sum_p(-1)^p\binom np = (1 - 1)^n$ is $0$.
+\item For a finite complex of vector spaces (a sequence of maps $d \colon C^p \to C^{p+1}$ with $d \circ d = 0$), $\operatorname{sdim}\bigoplus_pC^p = \sum_p(-1)^p\dim C^p$ is the Euler characteristic; it equals the
+Euler characteristic $\sum_p(-1)^p\dim H^p$ of the cohomology, by rank--nullity. So the Euler characteristic is a dimension in the super sense.
+\item The map $d$ of a complex is odd, as an endomorphism of $\bigoplus_pC^p$.
+\end{enumerate}
+\end{example}
+
+\begin{proposition}\label{multilinear-algebra:proposition-braiding}
+The map $c \colon V \otimes W \to W \otimes V$, $c(v \otimes w) = (-1)^{|v||w|}w \otimes v$, is a well-defined even isomorphism, and $c \circ c = \id$.
+\end{proposition}
+
+\begin{proof}
+On each summand $V_{\bar a} \otimes W_{\bar b}$ the map is $(-1)^{ab}$ times the ordinary flip $v \otimes w \mapsto w \otimes v$, which is well defined by the universal property
+(Proposition~\ref{multilinear-algebra:proposition-tensor-basis}); it maps this summand to $W_{\bar b} \otimes V_{\bar a}$, of the same parity $\bar a + \bar b$. Applying it twice gives the sign $(-1)^{2ab} = 1$.
+\end{proof}
+
+The map $c$ is the \emph{symmetry} of super vector spaces. Replacing the ordinary flip by $c$ is the whole difference between ordinary and super linear algebra: every definition that uses the flip,
+such as commutativity, symmetric powers or the trace, has a super version obtained by inserting the Koszul sign.
+
+\begin{definition}\label{multilinear-algebra:definition-superalgebra}
+A \emph{superalgebra} is an associative unital algebra $A$ which is a super vector space with $A_{\bar a}A_{\bar b} \subseteq A_{\bar a + \bar b}$. It is \emph{supercommutative} if $ab = (-1)^{|a||b|}ba$ for homogeneous $a$, $b$.
+The \emph{super tensor product} $A \hat\otimes B$ of superalgebras is $A \otimes B$ with the product $(a \otimes b)(a^{\prime} \otimes b^{\prime}) = (-1)^{|b||a^{\prime}|}aa^{\prime} \otimes bb^{\prime}$. The
+\emph{supercommutator} of homogeneous elements is $[a, b] = ab - (-1)^{|a||b|}ba$.
+\end{definition}
+
+\begin{example}\label{multilinear-algebra:example-superalgebras}
+\begin{enumerate}
+\item $\Lambda(V)$ is supercommutative, by Proposition~\ref{multilinear-algebra:proposition-exterior-properties}(1). It is called the \emph{Grassmann algebra} on $\dim V$ odd generators. A commutative algebra
+concentrated in even degree is supercommutative.
+\item In a supercommutative algebra every odd $a$ satisfies $a^2 = -a^2$, hence $a^2 = 0$: odd elements are nilpotent, the algebraic shadow of Pauli's exclusion principle.
+\item $\operatorname{End}(V)$, for a super vector space $V$, is a superalgebra (Definition~\ref{multilinear-algebra:definition-super-vector-space}), not supercommutative in general. With the supercommutator it is the
+basic example of a \emph{Lie superalgebra}, denoted $\mathfrak{gl}(m|n)$ for $V = k^{m|n}$.
+\end{enumerate}
+\end{example}
+
+\begin{proposition}\label{multilinear-algebra:proposition-super-tensor-algebra}
+The super tensor product $A \hat\otimes B$ is a superalgebra, and it is supercommutative if $A$ and $B$ are. For vector spaces $V$, $W$, the map $\Lambda(V) \hat\otimes \Lambda(W) \to \Lambda(V \oplus W)$,
+$\alpha \otimes \beta \mapsto \alpha \wedge \beta$, is an isomorphism of superalgebras.
+\end{proposition}
+
+\begin{proof}
+\emph{Associativity.} For homogeneous elements both $((a \otimes b)(a^{\prime} \otimes b^{\prime}))(a^{\prime\prime} \otimes b^{\prime\prime})$ and $(a \otimes b)((a^{\prime} \otimes b^{\prime})(a^{\prime\prime} \otimes b^{\prime\prime}))$ equal
+$aa^{\prime}a^{\prime\prime} \otimes bb^{\prime}b^{\prime\prime}$ times the sign $(-1)^{|b||a^{\prime}| + |b||a^{\prime\prime}| + |b^{\prime}||a^{\prime\prime}|}$: in each case every $b$-factor is moved past every $a$-factor to its right exactly once.
+The unit is $1 \otimes 1$, and the grading is multiplicative.
+
+\emph{Supercommutativity.} Let $x = a \otimes b$, $y = a^{\prime} \otimes b^{\prime}$, so $|x| = |a| + |b|$ and $|y| = |a^{\prime}| + |b^{\prime}|$. Then $xy = (-1)^{|b||a^{\prime}|}aa^{\prime} \otimes bb^{\prime}$ and
+$yx = (-1)^{|b^{\prime}||a|}a^{\prime}a \otimes b^{\prime}b = (-1)^{|b^{\prime}||a| + |a||a^{\prime}| + |b||b^{\prime}|}aa^{\prime} \otimes bb^{\prime}$. The quotient of the two signs is $(-1)^{|b||a^{\prime}| + |b^{\prime}||a| + |a||a^{\prime}| + |b||b^{\prime}|} = (-1)^{|x||y|}$.
+
+\emph{Exterior algebras.} The map $\phi(\alpha \otimes \beta) = \alpha \wedge \beta$ is linear. It is multiplicative: $\phi((\alpha \otimes \beta)(\alpha^{\prime} \otimes \beta^{\prime})) = (-1)^{|\beta||\alpha^{\prime}|}\alpha \wedge \alpha^{\prime} \wedge \beta \wedge \beta^{\prime}$, which equals
+$\alpha \wedge \beta \wedge \alpha^{\prime} \wedge \beta^{\prime}$ by supercommutativity of $\Lambda(V \oplus W)$. If $(e_i)$ and $(f_j)$ are bases of $V$ and $W$, $\phi$ maps the basis $e_I \otimes f_J$ of $\Lambda(V) \otimes \Lambda(W)$
+(Proposition~\ref{multilinear-algebra:proposition-tensor-basis}) to the basis $e_I \wedge f_J$ of $\Lambda(V \oplus W)$ (Proposition~\ref{multilinear-algebra:proposition-exterior-properties}(3)), so it is bijective.
+\end{proof}
+
+\begin{counterexample}\label{multilinear-algebra:counterexample-unsigned-tensor}
+The sign in the product of $A \hat\otimes B$ is necessary. In the ordinary tensor product algebra $\Lambda(V) \otimes \Lambda(W)$, where $(a \otimes b)(a^{\prime} \otimes b^{\prime}) = aa^{\prime} \otimes bb^{\prime}$, take nonzero $v \in V$,
+$w \in W$, and put $x = v \otimes 1 + 1 \otimes w$. Then $x^2 = v \otimes w + v \otimes w = 2\,v \otimes w \neq 0$, whereas the corresponding element $v + w$ of $\Lambda(V \oplus W)$ has square $0$. So the ordinary
+tensor product is not isomorphic to $\Lambda(V \oplus W)$ by $\phi$; with the Koszul sign, $x^2 = v \otimes w - v \otimes w = 0$.
+\end{counterexample}
+
+\begin{definition}\label{multilinear-algebra:definition-supertrace}
+Let $V = V_{\bar 0} \oplus V_{\bar 1}$ be finite-dimensional, and write $f \in \operatorname{End}(V)$ as a block matrix $\begin{pmatrix} f_{00} & f_{01} \\ f_{10} & f_{11}\end{pmatrix}$ with $f_{ij} \colon V_{\bar j} \to V_{\bar i}$. The
+\emph{supertrace} is $\operatorname{str}(f) = \operatorname{tr}(f_{00}) - \operatorname{tr}(f_{11})$.
+\end{definition}
+
+So $\operatorname{str}(\id_V) = \operatorname{sdim}V$, and odd endomorphisms, whose diagonal blocks vanish, have supertrace $0$. The ordinary trace vanishes on commutators; the supertrace vanishes on supercommutators.
+
+\begin{proposition}\label{multilinear-algebra:proposition-supertrace}
+For homogeneous $f, g \in \operatorname{End}(V)$, $\operatorname{str}([f, g]) = 0$, that is, $\operatorname{str}(fg) = (-1)^{|f||g|}\operatorname{str}(gf)$.
+\end{proposition}
+
+\begin{proof}
+If $f$ and $g$ have different parities, $fg$ and $gf$ are odd, and both sides vanish. If both are even, the off-diagonal blocks vanish, $\operatorname{str}(fg) = \operatorname{tr}(f_{00}g_{00}) - \operatorname{tr}(f_{11}g_{11})$, and
+$\operatorname{tr}(XY) = \operatorname{tr}(YX)$ gives $\operatorname{str}(fg) = \operatorname{str}(gf)$. If both are odd, the diagonal blocks vanish, and
+\[
+\operatorname{str}(fg) + \operatorname{str}(gf) = \operatorname{tr}(f_{01}g_{10}) - \operatorname{tr}(f_{10}g_{01}) + \operatorname{tr}(g_{01}f_{10}) - \operatorname{tr}(g_{10}f_{01}) = 0,
+\]
+again by $\operatorname{tr}(XY) = \operatorname{tr}(YX)$ for rectangular matrices.
+\end{proof}
+
+\begin{example}\label{multilinear-algebra:example-supertrace-complex}
+Let $C = \bigoplus_pC^p$ be a finite complex with differential $d$, which is odd, and let $\delta \colon C^{p+1} \to C^p$ be any maps, also odd. Then $\Delta = [d, \delta] = d\delta + \delta d$ is even, and
+$\operatorname{str}(\Delta) = 0$ by Proposition~\ref{multilinear-algebra:proposition-supertrace}. More generally $\operatorname{str}(e^{-t\Delta})$ does not depend on $t$: its derivative is $-\operatorname{str}(\Delta e^{-t\Delta}) = -\operatorname{str}([d, \delta e^{-t\Delta}])$,
+since $d$ commutes with $\Delta$. As $t$ varies, $\operatorname{str}(e^{-t\Delta})$ interpolates between $\operatorname{sdim}C$ at $t = 0$ and, for $\delta$ the adjoint of $d$ for inner products and $t \to \infty$, the supertrace of
+the projection to $\ker\Delta$, which by Hodge theory for finite complexes is the Euler characteristic of the cohomology. This is the finite-dimensional model of the McKean--Singer formula and of the
+heat-kernel proof of the index theorem (Chapters~\ref{hodge-theorem} and~\ref{spin-geometry}).
+\end{example}
+
+The odd variables can also be integrated, by a rule found by Berezin. It looks strange, as it picks a coefficient rather than taking a limit of sums, but it is characterised by integration by parts
+(Exercise~\ref{multilinear-algebra:exercise-berezin-unique}), and it turns determinants and Pfaffians into Gaussian integrals.
+
+\begin{definition}\label{multilinear-algebra:definition-berezin}
+Let $\theta_1, \ldots, \theta_N$ be a basis of $V$, viewed as odd generators of $\Lambda(V)$. The \emph{Berezin integral} with respect to this ordered basis is the linear form $\int d\theta \colon \Lambda(V) \to k$ which
+takes the value $1$ on $\theta_1\theta_2 \cdots \theta_N$ and $0$ on the basis elements $\theta_I$ with $|I| < N$. For $\alpha \in \Lambda(V)$ we write $e^\alpha = \sum_{j \geq 0}\alpha^j/j!$ when $\alpha$ is even with no component in
+$\Lambda^0$; the sum is finite because $\alpha^j \in \bigoplus_{p \geq j}\Lambda^p$ vanishes for $j > N$. (Here and below the wedge sign is omitted.)
+\end{definition}
+
+\begin{proposition}\label{multilinear-algebra:proposition-fermionic-gaussian}
+\begin{enumerate}
+\item Let $A \in M_{2m}(k)$ be skew-symmetric and $\alpha_A = \sum_{i < j}A_{ij}\theta_i\theta_j$ in $\Lambda(k^{2m})$. Then $\int d\theta\,e^{\alpha_A} = \mathrm{Pf}(A)$.
+\item Let $A \in M_n(k)$, and let $\Lambda(k^{2n})$ have odd generators $\theta_1, \ldots, \theta_n, \eta_1, \ldots, \eta_n$, integrated with respect to the order $\theta_1, \eta_1, \theta_2, \eta_2, \ldots, \theta_n, \eta_n$. Then
+$\int e^{\sum_{i,j}A_{ij}\theta_i\eta_j} = \det A$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) The component of $e^{\alpha_A}$ in $\Lambda^{2m}$ is $\alpha_A^m/m!$, which is $\mathrm{Pf}(A)\,\theta_1 \cdots \theta_{2m}$ by Definition~\ref{multilinear-algebra:definition-pfaffian} (with $e_i^*$ replaced by $\theta_i$).
+
+(2) Put $\xi_i = \sum_jA_{ij}\eta_j$, so the exponent is $\sum_i\theta_i\xi_i$. The even elements $\theta_i\xi_i$ commute with each other and square to $0$ (as $\theta_i\xi_i\theta_i\xi_i = -\theta_i\theta_i\xi_i\xi_i = 0$), so
+$e^{\sum_i\theta_i\xi_i} = \prod_i(1 + \theta_i\xi_i)$, whose top component is $\theta_1\xi_1\theta_2\xi_2 \cdots \theta_n\xi_n$. Moving the odd elements into the order $\theta_1 \cdots \theta_n\xi_1 \cdots \xi_n$ costs the
+sign $\epsilon_n = (-1)^{n(n-1)/2}$, whatever the $\xi_i$ are; and $\xi_1 \cdots \xi_n = \det(A)\,\eta_1 \cdots \eta_n$ by Proposition~\ref{multilinear-algebra:proposition-exterior-properties}(5). So the top component is
+$\epsilon_n\det(A)\,\theta_1 \cdots \theta_n\eta_1 \cdots \eta_n = \det(A)\,\theta_1\eta_1 \cdots \theta_n\eta_n$, using the same rearrangement with $\xi_i = \eta_i$.
+\end{proof}
+
+\begin{remark}\label{multilinear-algebra:remark-boson-fermion}
+Compare with the Gaussian integral over even, real variables: for a positive definite symmetric $A \in M_n(\RR)$, $\int_{\RR^n}e^{-x^TAx}\,dx = \pi^{n/2}(\det A)^{-1/2}$, a consequence of
+Chapter~\ref{measure-theory}. Bosonic Gaussian integrals produce the determinant in the denominator, fermionic ones in the numerator. In a supersymmetric theory, with as many fermions as bosons, the
+two cancel, which is the mechanism behind the localisation formulas and the index computations of supersymmetric quantum mechanics. Supermanifolds, spaces whose functions are locally
+$C^\infty(\RR^m) \otimes \Lambda(\RR^n)$, and the Berezinian, the super analogue of the determinant needed to change variables in Berezin integrals, are developed in \cite{varadarajan-supersymmetry} and
+\cite{deligne-morgan-supersymmetry}.
+\end{remark}
+
 \section{Exercises}\label{multilinear-algebra:section-exercises}
 
 \begin{exercise}\label{multilinear-algebra:exercise-symmetric-dimension}
@@ -845,4 +990,29 @@ $C^2_1(A \otimes B) = \varphi(w)\,v \otimes \psi$, the endomorphism $x \mapsto \
 (Proposition~\ref{multilinear-algebra:proposition-contraction}(2)), gives $\operatorname{tr}(AB)$, which equals $\varphi(w)\psi(v)$. On the other hand $C^1_1(A \otimes B) = \varphi(v)\,w \otimes \psi$
 and then $C^1_1$ gives $\varphi(v)\psi(w) = \operatorname{tr}A\operatorname{tr}B$. Finally $\operatorname{tr}(BA)$ is computed by the same formula with the roles exchanged, $\psi(v)\varphi(w)$,
 which is the same number as $\operatorname{tr}(AB) = \varphi(w)\psi(v)$; both sides being bilinear in $(A, B)$, the identity holds for all $A$, $B$.
+\end{solution}
+
+\begin{exercise}\label{multilinear-algebra:exercise-berezin-unique}
+Let $\theta_1, \ldots, \theta_N$ be a basis of $V$. Show that there is a unique odd linear map $\partial_i \colon \Lambda(V) \to \Lambda(V)$ with $\partial_i(1) = 0$, $\partial_i(\theta_j) = \delta_{ij}$ and
+$\partial_i(\alpha\beta) = \partial_i(\alpha)\beta + (-1)^{|\alpha|}\alpha\,\partial_i(\beta)$. Deduce that the linear forms $I$ on $\Lambda(V)$ with $I(\partial_i\alpha) = 0$ for all $i$ and $\alpha$ are exactly the multiples of the
+Berezin integral.
+\end{exercise}
+
+\begin{solution}
+The rule forces $\partial_i(\theta_{j_1} \cdots \theta_{j_p}) = \sum_r(-1)^{r-1}\delta_{ij_r}\theta_{j_1} \cdots \widehat{\theta_{j_r}} \cdots \theta_{j_p}$, which proves uniqueness. Conversely, this formula defines a linear map
+on the basis $\theta_J$ ($J$ increasing): if $i \in J$ is in position $r$, then $\partial_i\theta_J = (-1)^{r-1}\theta_{J \setminus \{i\}}$, and otherwise $\partial_i\theta_J = 0$; checking the product rule on basis elements
+is a sign count, since moving $\partial_i$ past $\theta_{j_1}, \ldots, \theta_{j_{r-1}}$ costs $(-1)^{r-1}$. Hence the image of $\partial_i$ is the span of the $\theta_J$ with $i \notin J$, and the sum of the images is
+the span of all $\theta_J$ with $|J| < N$. A linear form vanishes on all the images exactly when it vanishes on these $\theta_J$, that is, when it is a multiple of $\int d\theta$.
+\end{solution}
+
+\begin{exercise}\label{multilinear-algebra:exercise-supertrace-tensor}
+For finite-dimensional super vector spaces $V$, $W$ and even endomorphisms $f$, $g$, show that $\operatorname{str}(f \otimes g) = \operatorname{str}(f)\operatorname{str}(g)$ on $V \otimes W$, and deduce
+$\operatorname{sdim}(V \otimes W) = \operatorname{sdim}V\operatorname{sdim}W$. Check this for $\Lambda(V \oplus W) \cong \Lambda(V) \hat\otimes \Lambda(W)$.
+\end{exercise}
+
+\begin{solution}
+$(V \otimes W)_{\bar 0} = V_{\bar 0} \otimes W_{\bar 0} \oplus V_{\bar 1} \otimes W_{\bar 1}$ and $(V \otimes W)_{\bar 1} = V_{\bar 0} \otimes W_{\bar 1} \oplus V_{\bar 1} \otimes W_{\bar 0}$, and $f \otimes g$ preserves the four summands.
+With $\operatorname{tr}(f_{ii} \otimes g_{jj}) = \operatorname{tr}(f_{ii})\operatorname{tr}(g_{jj})$, the supertrace is $t_0s_0 + t_1s_1 - t_0s_1 - t_1s_0 = (t_0 - t_1)(s_0 - s_1)$, where $t_i = \operatorname{tr}f_{ii}$ and
+$s_i = \operatorname{tr}g_{ii}$. For $f = \id$, $g = \id$ this is the formula for superdimensions; for exterior algebras both sides are $0$ unless $V$ or $W$ is $0$
+(Example~\ref{multilinear-algebra:example-super-vector-spaces}(1)).
 \end{solution}

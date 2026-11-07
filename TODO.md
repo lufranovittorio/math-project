@@ -218,6 +218,12 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
 - All complete but thin (363–1016): computed examples, counterexamples, exercises (Phase 2).
 
 ### XV. Mathematical Physics (new part)
+- Supersymmetry and supermathematics (user, 2026-11-07): super linear algebra is in
+  `multilinear-algebra` (section-super: super vector spaces, Koszul rule, superalgebras, supertrace,
+  Berezin integral, fermionic Gaussians). Still to do: Lie superalgebras (gl(m|n), osp, Kac's
+  classification, survey) in `representation-theory`; supersymmetric QM, Witten index, Morse
+  inequalities via Witten deformation in `quantum-mechanics`; supermanifolds, Berezinian, Getzler's
+  proof of the index theorem in `spin-geometry`.
 - `classical-mechanics`, `quantum-mechanics`, `general-relativity` (planned, new).
 - Later candidates (only if they become real regions): statistical mechanics (Ising model, phase
   transitions), quantum field theory (survey), gauge theory (Yang–Mills, instantons).
