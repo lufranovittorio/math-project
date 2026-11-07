@@ -278,6 +278,17 @@ spectral-sequences 300 (then everything below about 800 lines).
 
 ## Done
 
+- [x] 2026-11-07: **Varifolds** (new chapter after *Currents*, draft): Grassmannian as
+  projections (compactness, G(2,1) as a circle), varifolds, weight, convergence and
+  compactness, averaging lemma and the varifold limit of oscillating graphs (no mass loss),
+  push-forward and Jacobians on planes, C^1-rectifiable sets (tangent planes agree a.e.,
+  densities of submanifolds), rectifiable/integral varifolds with Θ = θ a.e., first variation
+  as derivative of area, first variation formula with mean curvature and conormal, stationary
+  ⇔ minimal, cones over rays and triple junctions (120°), space-filling stationary varifolds,
+  Plateau's laws and Taylor (cited), generalised mean curvature and boundary, monotonicity
+  formula with full proof, densities (usc), lower area bound, tangent cones, Allard compactness
+  and regularity (cited), min–max survey; 6 exercises.
+
 - [x] 2026-11-07: **Currents** (new chapter after *Riemannian Geometry*, draft): currents
   as functionals on forms with multivector notation, push-forward, mass and normal
   currents, representation T = ‖T‖∧T⃗, lower semicontinuity of mass (oscillating graphs),
