@@ -113,10 +113,12 @@ together in one place.
    Stacks project): grow the part into a complete treatise, slowly, e.g.
    - `measure-theory`: ~~π-λ (Dynkin), Carathéodory–Hahn extension,
      Lebesgue–Stieltjes measures, completion~~ (done 2026-11-07, new section
-     *Extension and completion of measures*); still to do: rewrite the
-     compressed early sections slowly (σ-algebras with more examples, the
-     proof of Hölder with all cases, measurable functions), Bernstein sets,
-     image measures and the abstract change of variables;
+     *Extension and completion of measures*); ~~rewrite the early sections
+     slowly (σ-algebras, measures, measurable functions, image measures and
+     the abstract change of variables, Hölder with all cases)~~ (done
+     2026-11-07); still to do: Bernstein sets, a slower rewrite of the
+     sections *Modes of convergence* and *Product measures* (Fubini
+     counterexamples, infinite products of probability measures);
    - ~~new `signed-measures`~~ (done 2026-11-07; Dunford–Pettis left for
      `functional-analysis`, where weak topologies are);
    - `lebesgue-differentiation`: functions of bounded variation, Banach–Zarecki,
@@ -270,6 +272,16 @@ spectral-sequences 300 (then everything below about 800 lines).
   parts).
 
 ## Done
+
+- [x] 2026-11-07: **Measure and Integration**: opening rewritten slowly in three
+  sections, *σ-algebras* (closure lemma, trace/preimage σ-algebras, generated and
+  Borel σ-algebras, Borel generators with proof, increasing unions, ℚ is F_σ but
+  not G_δ), *Measures* (full definition, notation, cocountable and infinite
+  measures, inclusion–exclusion with derangements) and *Measurable functions*
+  (generators lemma, examples, five-part proposition with full proofs,
+  counterexamples, image measures); abstract change of variables
+  ∫g d(f_*μ) = ∫g∘f dμ; Hölder/Minkowski with all cases, Young's product
+  inequality, equality case, interpolation of L^p norms, failure for p < 1.
 
 - [x] 2026-11-07: **Measure and Integration**: new section *Extension and
   completion of measures* (π-systems and Dynkin systems, uniqueness, premeasures,
