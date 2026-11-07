@@ -622,7 +622,8 @@ A sequence of Radon measures $\mu_k$ on $X$ \emph{converges weakly} to a Radon m
 \end{definition}
 
 The limit is unique, by the uniqueness in Theorem~\ref{radon-measures:theorem-riesz-markov}. In probability theory this is called \emph{vague} convergence, and \emph{weak} convergence of probability
-measures means testing against all bounded continuous functions; the two agree when no mass is lost (Exercise~\ref{radon-measures:exercise-weak-mass}). In functional analysis it is the weak-$*$
+measures means testing against all bounded continuous functions; we call it \emph{narrow} convergence, and the two agree when no mass is lost
+(Lemma~\ref{radon-measures:lemma-weak-to-narrow}). In functional analysis it is the weak-$*$
 convergence of functionals on $C_c(X)$.
 
 \begin{example}\label{radon-measures:example-weak-convergence}
@@ -740,6 +741,65 @@ surface, perhaps with singularities. For curves, Exercise~\ref{radon-measures:ex
 \end{enumerate}
 \end{remark}
 
+\subsection{Narrow convergence and Prokhorov's theorem}\label{radon-measures:subsection-prokhorov}
+
+In probability one tests probability measures against all bounded continuous functions, not only those with compact support; then the total mass $\int1\,d\mu_k = 1$ is preserved in the limit,
+and escape of mass to infinity, as in Example~\ref{radon-measures:example-weak-convergence}(4), is excluded. We write $C_b(X)$ for the space of bounded continuous functions $X \to \RR$.
+
+\begin{definition}\label{radon-measures:definition-narrow}
+Finite Radon measures $\mu_k$ \emph{converge narrowly} to a finite Radon measure $\mu$ if $\int f\,d\mu_k \to \int f\,d\mu$ for every $f \in C_b(X)$. A family $\mathcal{M}$ of finite Radon measures is
+\emph{tight} if for every $\varepsilon > 0$ there is a compact $K \subseteq X$ with $\mu(X \setminus K) < \varepsilon$ for all $\mu \in \mathcal{M}$.
+\end{definition}
+
+Narrow convergence implies weak convergence and, testing with $f = 1$, convergence of the total masses. A single finite Radon measure is tight, by inner regularity; so is a finite family. The
+sequences $\delta_k$ and $\frac1k\mathbf{1}_{[0, k]}\lambda$ on $\RR$ are not tight: every compact set lies in some $[-m, m]$, which eventually carries no mass, respectively mass $m/k \to 0$.
+
+\begin{lemma}\label{radon-measures:lemma-weak-to-narrow}
+Let $\mu_k \rightharpoonup \mu$ be finite Radon measures on $X$ with $\mu_k(X) \to \mu(X) < \infty$. Then $\mu_k \to \mu$ narrowly.
+\end{lemma}
+
+\begin{proof}
+Let $f \in C_b(X)$ and $\varepsilon > 0$. By inner regularity choose a compact $K$ with $\mu(X \setminus K) < \varepsilon$, and by Lemma~\ref{general-topology:lemma-lch-shrinking} a function $\phi \in C_c(X)$ with
+$0 \leq \phi \leq 1$ and $\phi = 1$ on $K$. Then $\int(1 - \phi)\,d\mu < \varepsilon$, and $\int(1 - \phi)\,d\mu_k = \mu_k(X) - \int\phi\,d\mu_k \to \mu(X) - \int\phi\,d\mu < \varepsilon$, so
+$\int(1 - \phi)\,d\mu_k < \varepsilon$ for $k$ large. Since $f\phi \in C_c(X)$, for such $k$
+\[\begin{aligned}
+\Bigl|\int f\,d\mu_k - \int f\,d\mu\Bigr| &\leq \Bigl|\int f\phi\,d\mu_k - \int f\phi\,d\mu\Bigr| \\
+&\quad + \|f\|_\infty\Bigl(\int(1 - \phi)\,d\mu_k + \int(1 - \phi)\,d\mu\Bigr) \\
+&\leq \Bigl|\int f\phi\,d\mu_k - \int f\phi\,d\mu\Bigr| + 2\varepsilon\|f\|_\infty,
+\end{aligned}\]
+and the first term tends to $0$.
+\end{proof}
+
+\begin{theorem}[Prokhorov]\label{radon-measures:theorem-prokhorov}
+Let $(\mu_k)$ be a tight sequence of Borel probability measures on $X$. Then a subsequence converges narrowly to a Borel probability measure. Conversely, a narrowly convergent sequence of
+probability measures on $X$ is tight.
+\end{theorem}
+
+\begin{proof}
+\emph{Compactness.} The masses on compact sets are bounded by $1$, so by Theorem~\ref{radon-measures:theorem-weak-compactness} a subsequence converges weakly to a Radon measure $\mu$, and
+$\mu(X) \leq \liminf_k\mu_k(X) = 1$ by Proposition~\ref{radon-measures:proposition-weak-convergence-sets}(1). Given $\varepsilon > 0$ choose a compact $K$ with $\mu_k(X \setminus K) < \varepsilon$ for all
+$k$, and $\phi \in C_c(X)$ with $0 \leq \phi \leq 1$, $\phi = 1$ on $K$. Then $\mu(X) \geq \int\phi\,d\mu = \lim_k\int\phi\,d\mu_k \geq 1 - \varepsilon$. So $\mu(X) = 1$, and the subsequence
+converges narrowly by Lemma~\ref{radon-measures:lemma-weak-to-narrow}.
+
+\emph{Tightness.} Let $\mu_k \to \mu$ narrowly and $\varepsilon > 0$. Choose a compact $K$ with $\mu(X \setminus K) < \varepsilon$, and an open $V \supseteq K$ with compact closure
+(Lemma~\ref{general-topology:lemma-lch-shrinking}). By Proposition~\ref{radon-measures:proposition-weak-convergence-sets}(1), $\liminf_k\mu_k(V) \geq \mu(V) > 1 - \varepsilon$, so
+$\mu_k(X \setminus \overline{V}) < \varepsilon$ for all $k \geq k_0$. The finitely many measures $\mu_1, \ldots, \mu_{k_0}$ are each tight, so a compact set containing $\overline{V}$ and
+compact sets for these finitely many measures does the job.
+\end{proof}
+
+\begin{example}\label{radon-measures:example-prokhorov}
+\begin{enumerate}
+\item On $\RR$, a family of probability measures with $\int|x|\,d\mu \leq C$ is tight, by Markov's inequality: $\mu(\RR \setminus [-m, m]) \leq C/m$. So, for instance, the distributions of a sequence of
+random variables with bounded means of absolute values have a narrowly convergent subsequence.
+\item The Gaussian measures $\gamma_\sigma = (2\pi\sigma^2)^{-1/2}e^{-x^2/2\sigma^2}\lambda$ are tight for $\sigma \leq 1$, and converge narrowly to $\delta_0$ as $\sigma \to 0$; for $\sigma \to \infty$ they are
+not tight, and converge weakly to $0$.
+\end{enumerate}
+\end{example}
+
+Prokhorov proved the theorem for complete separable metric spaces, which need not be locally compact; there every finite Borel measure is tight, and tightness is equivalent to relative compactness of
+a family in the topology of narrow convergence \cite[Section 5]{billingsley-convergence}. This is the form used for measures on spaces of paths, where it yields Brownian motion as a limit of random
+walks (Part~\ref{part-probability}).
+
 \section{Differentiation of measures}\label{radon-measures:section-differentiation-measures}
 
 The Lebesgue differentiation theorem (Theorem~\ref{lebesgue-differentiation:theorem-lebesgue-differentiation}) says that for $h \in L^1_{\mathrm{loc}}(\RR^n)$ the averages $\frac1{\lambda(B(x, r))}\int_{B(x, r)}h$
@@ -840,17 +900,178 @@ part to its measure \cite[Chapter 7]{rudin-rca}. Since a function of bounded var
 
 \begin{remark}\label{radon-measures:remark-besicovitch}
 The proof used Lebesgue measure through the Vitali covering lemma, that is, through the fact that $\lambda(3B) = 3^n\lambda(B)$. To differentiate a Radon measure $\nu$ with respect to an arbitrary Radon
-measure $\mu$ on $\RR^n$, which may give very different masses to $B$ and $3B$, one uses instead the \emph{Besicovitch covering theorem}: from every family of balls whose centres form a bounded set
-$A$ one can extract a subfamily covering $A$ that splits into a number of disjoint subfamilies depending only on $n$. With it one shows that $\nu(B(x, r))/\mu(B(x, r))$ converges $\mu$-almost
-everywhere to the density of the part of $\nu$ absolutely continuous with respect to $\mu$, and tends to $\infty$ almost everywhere for the singular part \cite[Chapter 1]{evans-gariepy}. This is the
-setting of geometric measure theory, where $\mu$ is often a Hausdorff measure restricted to a set.
+measure $\mu$ on $\RR^n$, which may give very different masses to $B$ and $3B$, enlarging balls is not allowed. The \emph{Besicovitch covering theorem} of the next subsection avoids enlargement
+altogether, at the price of allowing a bounded overlap; it uses the geometry of $\RR^n$, but no property of any measure. This is the setting of geometric measure theory, where $\mu$ is often a
+Hausdorff measure restricted to a set.
 \end{remark}
+
+\subsection{The Besicovitch covering theorem}\label{radon-measures:subsection-besicovitch}
+
+Throughout this subsection, for a Radon measure $\mu$ on $\RR^n$ and an arbitrary set $A \subseteq \RR^n$ we write
+\[
+\mu^*(A) = \inf\{\mu(E) : E \supseteq A \text{ Borel}\} = \inf\{\mu(U) : U \supseteq A \text{ open}\},
+\]
+the two infima being equal by outer regularity (Proposition~\ref{radon-measures:proposition-radon-automatic}). This outer measure is countably subadditive, and a set with $\mu^*(A) = 0$ lies in a
+Borel set of measure $0$. Closed balls are written $\overline{B}(a, r) = \{x : |x - a| \leq r\}$.
+
+\begin{theorem}[Besicovitch covering theorem]\label{radon-measures:theorem-besicovitch}
+There is a number $N = N(n)$ with the following property. Let $\mathcal{F}$ be a family of closed balls in $\RR^n$ of positive radius with $\sup\{\operatorname{diam}B : B \in \mathcal{F}\} < \infty$,
+and let $A$ be a bounded set such that every point of $A$ is the centre of some ball of $\mathcal{F}$. Then there are countable subfamilies $\mathcal{G}_1, \ldots, \mathcal{G}_N \subseteq \mathcal{F}$, each
+consisting of pairwise disjoint balls, with $A \subseteq \bigcup_{i=1}^N\bigcup_{B \in \mathcal{G}_i}B$.
+\end{theorem}
+
+\begin{proof}
+For each $a \in A$ fix a ball $\overline{B}(a, r(a)) \in \mathcal{F}$; then $R = \sup_ar(a) < \infty$.
+
+\emph{Step 1: greedy choice.} Choose $a_1 \in A$ with $r_1 = r(a_1) \geq \frac34R$, and put $B_j = \overline{B}(a_j, r_j)$. Inductively, let $A_j = A \setminus (B_1 \cup \cdots \cup B_{j-1})$; if $A_j = \emptyset$ stop,
+and otherwise choose $a_j \in A_j$ with $r_j = r(a_j) \geq \frac34\sup\{r(a) : a \in A_j\}$. Let $J \leq \infty$ be the number of balls chosen.
+
+\emph{Step 2: properties of the choice.} (a) If $i < j$, then $r_j \leq \frac43r_i$, since $a_j \in A_j \subseteq A_i$ and $r_i \geq \frac34r(a_j)$.
+(b) The balls $\overline{B}(a_j, r_j/3)$ are pairwise disjoint: for $i < j$, $a_j \notin B_i$, so $|a_j - a_i| > r_i = \frac{r_i}3 + \frac{2r_i}3 \geq \frac{r_i}3 + \frac{r_j}2 > \frac{r_i}3 + \frac{r_j}3$ by (a).
+(c) If $J = \infty$, then $r_j \to 0$: the disjoint balls $\overline{B}(a_j, r_j/3)$ lie in the bounded set $A + \overline{B}(0, R)$, so $\sum_jr_j^n < \infty$.
+(d) $A \subseteq \bigcup_jB_j$. This is clear if $J < \infty$. If $J = \infty$ and $a \in A$ lies in no $B_j$, then $a \in A_j$ for all $j$, so $r_j \geq \frac34r(a) > 0$ for all $j$, contradicting (c).
+
+\emph{Step 3: few earlier balls meet a given one.} Fix $k$ and let $I = \{j < k : B_j \cap B_k \neq \emptyset\}$. We show $|I| \leq L = 20^n + (1 + 3\sqrt2)^n$. Split
+$I = I_1 \cup I_2$ with $I_1 = \{j \in I : r_j \leq 3r_k\}$ and $I_2 = \{j \in I : r_j > 3r_k\}$.
+
+For $j \in I_1$: $r_j \geq \frac34r_k$ by (a), and $|a_j - a_k| \leq r_j + r_k$, so the ball $\overline{B}(a_j, r_j/3)$, of radius at least $r_k/4$, lies in
+$\overline{B}(a_k, r_k + \frac43r_j) \subseteq \overline{B}(a_k, 5r_k)$. These balls are disjoint by (b), so comparing volumes, $|I_1|(r_k/4)^n \leq (5r_k)^n$, and $|I_1| \leq 20^n$.
+
+For $i, j \in I_2$ with $i < j$, let $x = a_i - a_k$, $y = a_j - a_k$ and $\theta$ the angle between them. We claim $\cos\theta < \frac89$. Since $k > j > i$, the point $a_k$ lies outside $B_i$ and $B_j$, and $a_j$
+lies outside $B_i$; since $B_k$ meets $B_i$ and $B_j$,
+\[
+r_i < |x| \leq r_i + r_k, \qquad r_j < |y| \leq r_j + r_k, \qquad |x - y| = |a_j - a_i| > r_i,
+\]
+and moreover $r_k < \frac13\min(r_i, r_j)$ and $r_j \leq \frac43r_i$. Suppose $\cos\theta \geq \frac89$. If $|y| \geq |x|$, then $0 \leq |y| - |x| < r_j + r_k - r_i \leq \frac13r_i + \frac13r_i$, and
+\[
+|x - y|^2 = (|y| - |x|)^2 + 2|x||y|(1 - \cos\theta) < \tfrac49r_i^2 + 2\cdot\tfrac43r_i\cdot\tfrac53r_i\cdot\tfrac19 = \tfrac{76}{81}r_i^2 < r_i^2,
+\]
+using $|x| < \frac43r_i$ and $|y| \leq r_j + r_k < \frac53r_i$; a contradiction. If $|y| < |x|$, then $2|x|\cos\theta - |y| > |x|(2\cos\theta - 1) \geq \frac79|x|$, so
+\[\begin{aligned}
+|x - y|^2 &= |x|^2 - |y|\bigl(2|x|\cos\theta - |y|\bigr) \leq |x|^2 - 3r_k\cdot\tfrac79|x| \\
+&< (r_i + r_k)^2 - \tfrac73r_kr_i = r_i^2 - \tfrac13r_kr_i + r_k^2 < r_i^2,
+\end{aligned}\]
+using $|y| > r_j > 3r_k$, $r_i < |x| \leq r_i + r_k$ and $r_k < \frac13r_i$; again a contradiction. So the unit vectors $u_j = (a_j - a_k)/|a_j - a_k|$, $j \in I_2$, satisfy
+$|u_i - u_j|^2 = 2 - 2\cos\theta > \frac29$. The balls of radius $\frac{\sqrt2}6$ around them are disjoint and lie in $\overline{B}(0, 1 + \frac{\sqrt2}6)$, so comparing volumes,
+$|I_2| \leq \bigl((1 + \frac{\sqrt2}6)/\frac{\sqrt2}6\bigr)^n = (1 + 3\sqrt2)^n$.
+
+\emph{Step 4: colouring.} Let $N = L + 1$. Distribute the balls $B_1, B_2, \ldots$ in turn among $N$ families: put $B_k$ into a family containing no $B_j$, $j < k$, that meets $B_k$. This is possible,
+since by Step 3 at most $L$ earlier balls meet $B_k$. Each family consists of pairwise disjoint balls, and by (d) their union covers $A$.
+\end{proof}
+
+\begin{counterexample}\label{radon-measures:counterexample-besicovitch}
+\begin{enumerate}
+\item The balls must be centred at the points to be covered. In $\RR$, let $A = (0, 1]$ and let $\mathcal{F}$ consist of the intervals $[1/k, 2]$, $k \geq 1$, whose centres lie in $(1, \frac32]$. They
+cover $A$, but they all contain $1$, so a disjoint subfamily has at most one member, and $N$ disjoint subfamilies cover only $[1/k, 2]$ for some $k$, never $A$.
+\item Some overlap cannot be avoided. Let $A = \{-1, 1\}$ and $\mathcal{F} = \{[-2, 0], [0, 2]\}$, the balls of radius $1$ centred at the two points. Covering $A$ needs both intervals, and they meet
+at $0$; so one disjoint family does not suffice.
+\item Some bound is needed when $A$ is unbounded. In $\RR$ let $A = \ZZ_{\geq 0}$ and $\mathcal{F} = \{\overline{B}(k, k) : k \geq 1\} \cup \{\overline{B}(0, 1)\}$. Every ball contains $0$, so a
+disjoint family has at most one member, and finitely many disjoint families cover a bounded set, never $A$.
+\end{enumerate}
+\end{counterexample}
+
+The constant of the proof is far from optimal; the least possible $N(n)$, the \emph{Besicovitch constant}, is known only in low dimensions. The theorem uses the Euclidean structure (Step 3
+measures angles), and it fails in some metric spaces; there the doubling condition of the next subsection is the usual substitute. Besicovitch's theorem gives Vitali-type coverings for every
+Radon measure.
+
+\begin{corollary}\label{radon-measures:corollary-besicovitch-vitali}
+Let $\mu$ be a Radon measure on $\RR^n$, $A \subseteq \RR^n$ a bounded set, and $\mathcal{F}$ a family of closed balls of positive radius such that every $a \in A$ is the centre of balls of
+$\mathcal{F}$ of arbitrarily small radius. Then for every open $U \supseteq A$ there is a countable family of pairwise disjoint balls $B_i \in \mathcal{F}$ contained in $U$ with
+$\mu^*(A \setminus \bigcup_iB_i) = 0$.
+\end{corollary}
+
+\begin{proof}
+Replacing $U$ by its intersection with a large ball, we may assume $U$ bounded, and we may assume $\mu^*(A) > 0$. Let $N$ be as in the theorem and $\theta = \frac1{4N}$.
+
+\emph{Step 1: a fixed proportion.} If $A^{\prime} \subseteq A$ has $\mu^*(A^{\prime}) > 0$ and $U^{\prime} \supseteq A^{\prime}$ is a bounded open set, there are finitely many disjoint balls of $\mathcal{F}$ in
+$U^{\prime}$ with $\mu^*(A^{\prime} \setminus \bigcup B_i) \leq (1 - \theta)\mu^*(A^{\prime})$. Indeed, replacing $U^{\prime}$ by a smaller open set we may assume
+$\mu(U^{\prime}) \leq (1 + \theta)\mu^*(A^{\prime})$. Apply Theorem~\ref{radon-measures:theorem-besicovitch} to the balls of $\mathcal{F}$ centred in $A^{\prime}$, contained in $U^{\prime}$, of radius at most
+$1$: we get $N$ disjoint families covering $A^{\prime}$, so one of them, $\mathcal{G}$, has $\mu(\bigcup_{\mathcal{G}}B) \geq \mu^*(A^{\prime})/N$, and a finite subfamily $B_1, \ldots, B_m$ has
+$\mu(\bigcup B_i) \geq \mu^*(A^{\prime})/(2N)$. Then
+\[\begin{aligned}
+\mu^*\Bigl(A^{\prime} \setminus \bigcup_iB_i\Bigr) &\leq \mu\Bigl(U^{\prime} \setminus \bigcup_iB_i\Bigr) = \mu(U^{\prime}) - \mu\Bigl(\bigcup_iB_i\Bigr) \\
+&\leq \Bigl(1 + \theta - \frac1{2N}\Bigr)\mu^*(A^{\prime}) = (1 - \theta)\mu^*(A^{\prime}).
+\end{aligned}\]
+
+\emph{Step 2: iteration.} Apply Step 1 to $A$ and $U$, then to the remainder $A^{\prime} = A \setminus (B_1 \cup \cdots \cup B_m)$ and the open set $U^{\prime} = U \setminus (B_1 \cup \cdots \cup B_m)$, and so on,
+stopping if the remainder becomes $\mu^*$-null. The balls chosen are pairwise disjoint and lie in $U$, and after $k$ steps the uncovered part of $A$ has outer measure at most
+$(1 - \theta)^k\mu^*(A) \to 0$.
+\end{proof}
+
+\begin{definition}\label{radon-measures:definition-derivative-radon}
+Let $\mu$ and $\nu$ be Radon measures on $\RR^n$, and $S = \operatorname{supp}\mu$, so that $\mu(\overline{B}(x, r)) > 0$ for $x \in S$ and $r > 0$, and $\mu(\RR^n \setminus S) = 0$. For $x \in S$ put
+\[
+\overline{D}_\mu\nu(x) = \limsup_{r \to 0}\frac{\nu(\overline{B}(x, r))}{\mu(\overline{B}(x, r))}, \qquad \underline{D}_\mu\nu(x) = \liminf_{r \to 0}\frac{\nu(\overline{B}(x, r))}{\mu(\overline{B}(x, r))},
+\]
+and, where they agree, write $D_\mu\nu(x)$ for the common value, the \emph{derivative of $\nu$ with respect to $\mu$}.
+\end{definition}
+
+\begin{theorem}[Differentiation of Radon measures]\label{radon-measures:theorem-besicovitch-differentiation}
+Let $\mu$ and $\nu$ be Radon measures on $\RR^n$. Then $D_\mu\nu(x)$ exists and is finite for $\mu$-almost every $x$, and it is a Borel function (defined $\mu$-almost everywhere). If
+$\nu = \nu_a + \nu_s$ is the Lebesgue decomposition with respect to $\mu$, then $\nu_a = (D_\mu\nu)\mu$ and $D_\mu\nu_s = 0$ $\mu$-almost everywhere. In particular $\nu \ll \mu$ if and only if
+$\nu(E) = \int_ED_\mu\nu\,d\mu$ for all Borel sets $E$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: two comparison inequalities.} Let $0 < \alpha < \infty$ and $A \subseteq S$ bounded. (i) If $\underline{D}_\mu\nu(x) \leq \alpha$ for all $x \in A$, then $\nu^*(A) \leq \alpha\mu^*(A)$. (ii) If
+$\overline{D}_\mu\nu(x) \geq \alpha$ for all $x \in A$, then $\nu^*(A) \geq \alpha\mu^*(A)$. For (i), let $\varepsilon > 0$ and $U \supseteq A$ open with $\mu(U) \leq \mu^*(A) + \varepsilon$. The closed balls
+$\overline{B}(a, r)$ with $a \in A$ and $\nu(\overline{B}(a, r)) \leq (\alpha + \varepsilon)\mu(\overline{B}(a, r))$ have arbitrarily small radii at every $a \in A$, so by
+Corollary~\ref{radon-measures:corollary-besicovitch-vitali}, applied to the measure $\nu$, disjoint ones $B_i \subseteq U$ cover $\nu$-almost all of $A$. Then
+\[
+\nu^*(A) \leq \sum_i\nu(B_i) \leq (\alpha + \varepsilon)\sum_i\mu(B_i) \leq (\alpha + \varepsilon)\mu(U) \leq (\alpha + \varepsilon)(\mu^*(A) + \varepsilon),
+\]
+and $\varepsilon \to 0$ gives (i). For (ii), let $\varepsilon < \alpha$, take $U \supseteq A$ open with $\nu(U) \leq \nu^*(A) + \varepsilon$, and balls with $\nu(B) \geq (\alpha - \varepsilon)\mu(B)$; by the
+corollary, applied to $\mu$, disjoint ones $B_i \subseteq U$ cover $\mu$-almost all of $A$, and $(\alpha - \varepsilon)\mu^*(A) \leq (\alpha - \varepsilon)\sum_i\mu(B_i) \leq \nu(U) \leq \nu^*(A) + \varepsilon$.
+
+\emph{Step 2: the limit exists and is finite.} For rationals $0 < a < b$ and $m \geq 1$, the set $A = \{x \in S : \underline{D}_\mu\nu(x) < a < b < \overline{D}_\mu\nu(x)\} \cap B(0, m)$ satisfies
+$b\mu^*(A) \leq \nu^*(A) \leq a\mu^*(A)$ by Step 1, hence $\mu^*(A) = 0$, as $\mu^*(A) < \infty$. Similarly $A = \{\overline{D}_\mu\nu = \infty\} \cap B(0, m)$ satisfies
+$\alpha\mu^*(A) \leq \nu(B(0, m)) < \infty$ for all $\alpha$, so $\mu^*(A) = 0$. Taking countable unions, $\underline{D}_\mu\nu = \overline{D}_\mu\nu < \infty$ $\mu$-almost everywhere.
+
+\emph{Step 3: measurability.} For fixed $x$, the functions $r \mapsto \mu(\overline{B}(x, r))$ and $r \mapsto \nu(\overline{B}(x, r))$ are right-continuous, because $\overline{B}(x, r)$ is the decreasing
+intersection of the $\overline{B}(x, s)$, $s > r$; so $\overline{D}_\mu\nu$ and $\underline{D}_\mu\nu$ can be computed along rational $r$. For fixed $r$, $x \mapsto \mu(\overline{B}(x, r))$ is upper
+semicontinuous: if $x_k \to x$, then $\limsup_k\mathbf{1}_{\overline{B}(x_k, r)} \leq \mathbf{1}_{\overline{B}(x, r)}$ pointwise, and Fatou's lemma applied to $\mathbf{1}_K - \mathbf{1}_{\overline{B}(x_k, r)}$,
+for a compact $K$ containing all these balls, gives $\limsup_k\mu(\overline{B}(x_k, r)) \leq \mu(\overline{B}(x, r))$. So these functions are Borel, and so are $\overline{D}_\mu\nu$ and $\underline{D}_\mu\nu$
+($\limsup$ and $\liminf$ of countably many Borel functions on the closed set $S$) and the set where they agree and are finite.
+
+\emph{Step 4: singular measures.} If $\nu \perp \mu$, let $Z$ be a Borel set with $\mu(Z) = 0 = \nu(\RR^n \setminus Z)$. For $\alpha > 0$ and $m \geq 1$, the set
+$A = \{\overline{D}_\mu\nu \geq \alpha\} \cap B(0, m) \setminus Z$ has $\alpha\mu^*(A) \leq \nu^*(A) = 0$ by (ii). So $D_\mu\nu = 0$ $\mu$-almost everywhere.
+
+\emph{Step 5: absolutely continuous measures.} Let $\nu \ll \mu$ and $E$ Borel. The set $\{D_\mu\nu = 0\} \cap B(0, m)$ has $\nu$-measure at most $\alpha\mu(B(0, m))$ for every $\alpha > 0$ by (i), so
+$\nu(\{D_\mu\nu = 0\}) = 0$; the $\mu$-null set where $D_\mu\nu$ is undefined or infinite is $\nu$-null too. Fix $t > 1$ and let $E_m = E \cap \{t^m \leq D_\mu\nu < t^{m+1}\}$, $m \in \ZZ$, which
+cover $E$ up to a $\nu$-null set on which $D_\mu\nu$ is $0$ or undefined. By Step 1, applied to the bounded pieces $E_m \cap B(0, j)$ and letting $j \to \infty$,
+\[
+\nu(E_m) \leq t^{m+1}\mu(E_m) \leq t\int_{E_m}D_\mu\nu\,d\mu, \qquad \nu(E_m) \geq t^m\mu(E_m) \geq t^{-1}\int_{E_m}D_\mu\nu\,d\mu .
+\]
+Summing over $m$, $t^{-1}\int_ED_\mu\nu\,d\mu \leq \nu(E) \leq t\int_ED_\mu\nu\,d\mu$, and letting $t \to 1$, $\nu(E) = \int_ED_\mu\nu\,d\mu$.
+
+\emph{Step 6: general $\nu$.} Radon measures on $\RR^n$ are $\sigma$-finite, so the Lebesgue decomposition $\nu = \nu_a + \nu_s$ exists (Theorem~\ref{signed-measures:theorem-lebesgue-radon-nikodym}); $\nu_a$ and
+$\nu_s$ are Borel measures with $\nu_a, \nu_s \leq \nu$, hence Radon (Proposition~\ref{radon-measures:proposition-radon-automatic}). The quotients are additive in $\nu$, so
+$D_\mu\nu = D_\mu\nu_a + D_\mu\nu_s = D_\mu\nu_a$ $\mu$-almost everywhere by Step 4, and $\nu_a = (D_\mu\nu_a)\mu = (D_\mu\nu)\mu$ by Step 5. The last assertion follows: if $\nu \ll \mu$, then $\nu = \nu_a$;
+conversely, $\nu = (D_\mu\nu)\mu$ is absolutely continuous with respect to $\mu$.
+\end{proof}
+
+\begin{example}\label{radon-measures:example-besicovitch-differentiation}
+\begin{enumerate}
+\item For $\mu = \lambda$ the theorem recovers Theorem~\ref{radon-measures:theorem-differentiation-measures}, with closed instead of open balls, by a proof that does not use the Lebesgue differentiation
+theorem.
+\item Let $\mu = \delta_0 + \lambda$ on $\RR$ and $\nu = \lambda$. Then $\nu \ll \mu$, with density $\mathbf{1}_{\RR \setminus \{0\}}$. At $x \neq 0$ the quotient is $2r/(2r) = 1$ for small $r$, and at $0$ it
+is $2r/(1 + 2r) \to 0$: the derivative detects the atom, a $\mu$-non-null point where the density vanishes.
+\item Let $\mu = \mu_F$ for the Cantor function $F$, restricted to $[0, 1]$, and $\nu = \lambda$ on $[0, 1]$. We saw after Corollary~\ref{radon-measures:corollary-monotone-differentiable} that $\mu$ is singular,
+and indeed $D_\mu\lambda = 0$ $\mu$-almost everywhere: a point $x$ of the Cantor set lies in one of the $2^{k+1}$ intervals of length $3^{-k-1}$ of the $(k+1)$-st stage, which has $\mu$-mass $2^{-k-1}$ and lies in
+$\overline{B}(x, r)$ for $r \geq 3^{-k-1}$; so for $3^{-k-1} \leq r \leq 3^{-k}$ the quotient $\lambda(\overline{B}(x, r))/\mu(\overline{B}(x, r))$ is at most $2\cdot3^{-k}/2^{-k-1} = 4(2/3)^k$, which tends to $0$.
+\end{enumerate}
+\end{example}
+
+The theorem is the measure-theoretic form of the Radon--Nikodym theorem: the derivative $d\nu_a/d\mu$, obtained abstractly in Chapter~\ref{signed-measures}, is a limit of quotients of masses of small
+balls. Applied to $\nu = f^{\pm}\mu$ it shows that for $f \in L^1_{\mathrm{loc}}(\mu)$ the $\mu$-averages of $f$ over $\overline{B}(x, r)$ tend to $f(x)$ for $\mu$-almost every $x$; so the Lebesgue
+differentiation theorem holds for every Radon measure on $\RR^n$ \cite[Section 1.7]{evans-gariepy}.
+
 
 \subsection{Differentiation with respect to doubling measures}\label{radon-measures:subsection-doubling}
 
 Densities measure a measure $\mu$ against the function $r \mapsto \alpha(s)(2r)^s$. Measuring it against another measure $\nu$ instead, through the ratios $\mu(\overline{B}(x, r))/\nu(\overline{B}(x, r))$,
 leads to the general form of the Radon--Nikodym theorem in which the derivative $d\mu/d\nu$ is computed as a limit, as in Theorem~\ref{radon-measures:theorem-differentiation-measures} for
-$\nu = \lambda$. The proof there used $\lambda(3B) = 3^n\lambda(B)$, and the $5r$-covering lemma (Lemma~\ref{lebesgue-differentiation:lemma-five-r-covering}) shows that a weak form of this property is all one
+$\nu = \lambda$ and in Theorem~\ref{radon-measures:theorem-besicovitch-differentiation} for every Radon measure on $\RR^n$, whose proof used the Euclidean geometry through Besicovitch's theorem. The proof there used $\lambda(3B) = 3^n\lambda(B)$, and the $5r$-covering lemma (Lemma~\ref{lebesgue-differentiation:lemma-five-r-covering}) shows that a weak form of this property is all one
 needs, in any metric space. Throughout, $X$ is a nonempty metric space, and for a Borel measure $\nu$ on $X$ and any $A \subseteq X$ we write $\nu^*(A) = \inf\{\nu(E) : E \supseteq A \text{ Borel}\}$.
 This outer measure is countably subadditive (take a union of Borel supersets), and a set with $\nu^*(A) = 0$ lies in a Borel set of measure $0$.
 
@@ -1039,19 +1260,16 @@ measure $\beta - \alpha$.
 Let $\mu_k \rightharpoonup \mu$ be Radon measures on $X$ (locally compact Hausdorff with a countable basis).
 \begin{enumerate}
 \item Show that $\mu(X) \leq \liminf_k\mu_k(X)$, and that $\mu_k(X) \to \mu(X)$ if $X$ is compact.
-\item Suppose that the $\mu_k$ and $\mu$ are probability measures. Show that $\int f\,d\mu_k \to \int f\,d\mu$ for every bounded continuous $f \colon X \to \RR$.
+\item On $X = \RR$ let $\mu_k = (1 - \frac1k)\delta_0 + \frac1k\delta_k$. Show that $\mu_k \to \delta_0$ narrowly, but $\int x\,d\mu_k = 1$ for all $k$, while
+$\int x\,d\delta_0 = 0$: narrow convergence does not control integrals of unbounded functions such as moments.
 \end{enumerate}
 \end{exercise}
 
 \begin{solution}
-(1) The first statement is Proposition~\ref{radon-measures:proposition-weak-convergence-sets}(1) with $U = X$; if $X$ is compact, $1 \in C_c(X)$. (2) Let $\varepsilon > 0$. By inner regularity choose a
-compact $K$ with $\mu(K) > 1 - \varepsilon$, and $\phi \in C_c(X)$ with $0 \leq \phi \leq 1$ and $\phi = 1$ on $K$. Then $\int\phi\,d\mu_k \to \int\phi\,d\mu > 1 - \varepsilon$, so
-$\int(1 - \phi)\,d\mu_k < 2\varepsilon$ for $k$ large, while $\int(1 - \phi)\,d\mu < \varepsilon$. As $f\phi \in C_c(X)$,
-\[\begin{aligned}
-\Bigl|\int f\,d\mu_k - \int f\,d\mu\Bigr| &\leq \Bigl|\int f\phi\,d\mu_k - \int f\phi\,d\mu\Bigr| \\
-&\quad + \|f\|_\infty\Bigl(\int(1 - \phi)\,d\mu_k + \int(1 - \phi)\,d\mu\Bigr),
-\end{aligned}\]
-whose $\limsup$ is at most $3\varepsilon\|f\|_\infty$. So when no mass is lost, testing against $C_c(X)$ and against bounded continuous functions give the same notion of convergence.
+(1) The first statement is Proposition~\ref{radon-measures:proposition-weak-convergence-sets}(1) with $U = X$; if $X$ is compact, $1 \in C_c(X)$. (2) For $f \in C_b(\RR)$,
+$\int f\,d\mu_k = (1 - \frac1k)f(0) + \frac1kf(k)$, and $|f(k)|/k \leq \|f\|_\infty/k \to 0$, so $\int f\,d\mu_k \to f(0) = \int f\,d\delta_0$. But
+$\int x\,d\mu_k = (1 - \frac1k)\cdot0 + \frac1k\cdot k = 1$. The small mass $\frac1k$ escapes to infinity at a rate that keeps the first moment constant; tightness alone does not prevent
+this, and one needs a bound such as $\sup_k\int|x|^{1 + \varepsilon}\,d\mu_k < \infty$ (uniform integrability) to pass to the limit in $\int x\,d\mu_k$.
 \end{solution}
 
 \begin{exercise}\label{radon-measures:exercise-staircase}

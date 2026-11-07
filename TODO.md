@@ -125,8 +125,8 @@ together in one place.
      `functional-analysis`, where weak topologies are);
    - `lebesgue-differentiation`: functions of bounded variation, Banach–Zarecki,
      Lebesgue points, unify the doubling maximal inequality with Hardy–Littlewood;
-   - `radon-measures`: Besicovitch covering theorem with proof, Prokhorov;
-     ~~Haar measure~~ (done 2026-11-07);
+   - ~~`radon-measures`: Besicovitch covering theorem with proof, Prokhorov;
+     Haar measure~~ (done 2026-11-07);
    - `geometric-measure-theory`: Frostman's lemma, ~~Brunn–Minkowski and the
      isoperimetric inequality~~ (done 2026-11-07, for the Minkowski content;
      the perimeter version needs BV functions), Steiner symmetrisation, Marstrand projection,
@@ -275,6 +275,12 @@ spectral-sequences 300 (then everything below about 800 lines).
   parts).
 
 ## Done
+
+- [x] 2026-11-07: **Besicovitch and Prokhorov** (*Radon Measures*): Besicovitch covering
+  theorem with full proof (explicit constant), Vitali-type coverings for every Radon
+  measure, differentiation of a Radon measure with respect to any Radon measure on R^n
+  (Lebesgue decomposition as a limit of ratios), examples (atoms, Cantor measure);
+  narrow convergence, tightness, Prokhorov's theorem, moments example.
 
 - [x] 2026-11-07: **Haar measure** (new section of *Radon Measures*): Weil's existence
   proof, uniqueness, modular function, unimodular groups, the affine group,
