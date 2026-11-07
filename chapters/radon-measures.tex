@@ -5,13 +5,14 @@
 
 On a locally compact Hausdorff space the measures compatible with the topology are the Radon measures: Borel measures finite on compact sets and approximable from outside by open sets and from inside
 by compact sets. They are exactly the positive linear functionals on continuous functions with compact support (the Riesz--Markov theorem), and their signed and vector-valued versions describe the duals
-of spaces of continuous functions. This chapter proves these representation theorems, studies weak convergence of measures and its compactness theorem, and differentiates one Radon measure with
+of spaces of continuous functions. This chapter proves these representation theorems, constructs Haar measure on locally compact groups (with the modular function and
+Steinhaus' theorem), studies weak convergence of measures and its compactness theorem, and differentiates one Radon measure with
 respect to another on $\RR^n$, and with respect to doubling measures on metric spaces; Lebesgue's theorem on the differentiability of monotone functions is a corollary. These results are used in
 functional analysis (Chapter~\ref{functional-analysis}), in probability, and in geometric measure theory (Chapter~\ref{geometric-measure-theory}).
 References: \cite{rudin-rca}, \cite{folland-real} and \cite{mattila-1995}.
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{general-topology} (General Topology), Chapter~\ref{real-analysis} (Real Analysis), Chapter~\ref{measure-theory} (Measure and Integration) and
-Chapter~\ref{lebesgue-differentiation} (Differentiation and Absolute Continuity) and Chapter~\ref{signed-measures} (Signed and Complex Measures).
+\noindent\textbf{Prerequisites.} Chapter~\ref{general-topology} (General Topology), Chapter~\ref{real-analysis} (Real Analysis), Chapter~\ref{topological-manifolds} (Topological Manifolds and Group Actions),
+Chapter~\ref{measure-theory} (Measure and Integration), Chapter~\ref{lebesgue-differentiation} (Differentiation and Absolute Continuity) and Chapter~\ref{signed-measures} (Signed and Complex Measures).
 
 \section{Radon measures and the Riesz representation theorem}\label{radon-measures:section-radon}
 
@@ -390,6 +391,221 @@ defines functions of \emph{bounded variation}; De Giorgi's structure theorem sho
 \cite[Chapter 5]{evans-gariepy}. This is the setting in which the isoperimetric problem and minimal surfaces are solved in geometric measure theory.
 \end{remark}
 
+\section{Haar measure}\label{radon-measures:section-haar}
+
+Lebesgue measure on $\RR^n$ is characterised, up to a constant factor, by being invariant under translations and finite on compact sets (Example~\ref{radon-measures:example-haar}(1) below). Many other groups
+carry such a measure: the circle, with arc length; the multiplicative group $\RR_{>0}$, with $dx/x$; matrix groups; discrete groups, with counting measure. The Riesz representation theorem gives a uniform
+construction for all locally compact groups. Haar's theorem is the basis of harmonic analysis on groups (Fourier analysis on $\RR^n$, Fourier series on the circle, Peter--Weyl theory on compact
+groups) and of averaging arguments such as the unitarity of representations of compact groups. Throughout, $G$ is a topological group (Definition~\ref{topological-manifolds:definition-topological-group})
+which is locally compact, Hausdorff, and has a countable basis.
+
+\begin{notation}\label{radon-measures:notation-translates}
+For $E \subseteq G$ and $x \in G$ write $xE = \{xy : y \in E\}$, $Ex = \{yx : y \in E\}$ and $E^{-1} = \{y^{-1} : y \in E\}$. For a function $f$ on $G$ and $y \in G$, the \emph{left translate} is
+$L_yf(x) = f(y^{-1}x)$ and the \emph{right translate} is $R_yf(x) = f(xy)$; the inverses are chosen so that $L_{yz} = L_yL_z$ and $R_{yz} = R_yR_z$, and $L_y\mathbf{1}_E = \mathbf{1}_{yE}$. We write
+$C_c^+(G)$ for the set of $f \in C_c(G)$ with $f \geq 0$ and $f \neq 0$. The group operation is written multiplicatively, with identity $e$, even for abelian groups such as $\RR^n$.
+\end{notation}
+
+\begin{definition}\label{radon-measures:definition-haar}
+A \emph{left Haar measure} on $G$ is a nonzero Borel measure $\mu$, finite on compact sets, that is \emph{left invariant}: $\mu(xE) = \mu(E)$ for all $x \in G$ and Borel $E \subseteq G$. A \emph{right Haar
+measure} is defined in the same way with $\mu(Ex) = \mu(E)$.
+\end{definition}
+
+By Proposition~\ref{radon-measures:proposition-radon-automatic} a Haar measure is a Radon measure. Left invariance for sets is equivalent to $\int L_yf\,d\mu = \int f\,d\mu$, that is,
+$\int f(y^{-1}x)\,d\mu(x) = \int f(x)\,d\mu(x)$, for all $y$ and all $f \in C_c(G)$ (or all Borel $f \geq 0$). Indeed, the formula for $f = \mathbf{1}_E$ is the invariance of sets, it extends to simple and
+then to nonnegative functions by monotone convergence; conversely, if it holds on $C_c(G)$, the measures $E \mapsto \mu(yE)$ and $\mu$ represent the same functional, and agree by the uniqueness in the
+Riesz--Markov theorem (Theorem~\ref{radon-measures:theorem-riesz-markov}).
+
+\begin{example}\label{radon-measures:example-haar}
+\begin{enumerate}
+\item On $\RR^n$, Lebesgue measure is a Haar measure (Theorem~\ref{measure-theory:theorem-lebesgue-measure}). On a discrete group, such as $\ZZ^n$ or a finite group, counting measure is a left and right Haar
+measure: compact sets are finite.
+\item On $\RR_{>0}$ under multiplication, $\mu(E) = \int_E\frac{dx}{x}$ is a Haar measure: $\mu(aE) = \int_{aE}\frac{dx}{x} = \int_E\frac{a\,dt}{at} = \mu(E)$ by the substitution $x = at$. It is the image of
+Lebesgue measure under the isomorphism $\exp \colon (\RR, +) \to (\RR_{>0}, \cdot)$, and $[1, 2]$ and $[10, 20]$ have the same measure $\log 2$. On $\RR^\times = \RR \setminus \{0\}$ the Haar
+measure is $dx/|x|$, and on $\CC^\times$ it is $dx\,dy/(x^2 + y^2)$.
+\item On the circle $S^1 = \{z \in \CC : |z| = 1\}$, the image of Lebesgue measure on $[0, 2\pi)$ under $\theta \mapsto e^{i\theta}$ is a Haar measure (Example~\ref{measure-theory:example-image-measure}(3)).
+\item On $\GL_n(\RR)$, an open subset of $\RR^{n^2}$, the measure $\mu(E) = \int_E|\det X|^{-n}\,dX$, with $dX$ Lebesgue measure on $\RR^{n^2}$, is a left and right Haar measure. For
+$A \in \GL_n(\RR)$, the linear map $X \mapsto AX$ of $\RR^{n^2}$ acts on each of the $n$ columns of $X$ by $A$, so its determinant is $(\det A)^n$, and by the change of variables formula
+(Theorem~\ref{measure-theory:theorem-change-of-variables}, or Lemma~\ref{measure-theory:lemma-linear-change}),
+\[
+\mu(AE) = \int_{AE}|\det X|^{-n}\,dX = \int_E|\det AY|^{-n}|\det A|^n\,dY = \mu(E).
+\]
+The same computation with rows applies to $X \mapsto XA$.
+\end{enumerate}
+\end{example}
+
+\subsection{Existence}\label{radon-measures:subsection-haar-existence}
+
+The construction imitates the definition of Lebesgue measure by covers: to measure a function $f$, count how many small translates of a fixed bump $\varphi$ are needed to dominate $f$, compare with a
+fixed function $f_0$, and let the support of $\varphi$ shrink to the identity. Two lemmas prepare this.
+
+\begin{lemma}\label{radon-measures:lemma-uniform-continuity}
+Let $f \in C_c(G)$ and $\varepsilon > 0$. There is a neighbourhood $V$ of $e$ such that $|f(yx) - f(x)| < \varepsilon$ and $|f(xy) - f(x)| < \varepsilon$ for all $x \in G$ and $y \in V$.
+\end{lemma}
+
+\begin{proof}
+We prove the first inequality; the second follows by applying the first to the function $x \mapsto f(x^{-1})$, which is in $C_c(G)$ because inversion is a homeomorphism. Let $K = \operatorname{supp}f$.
+For each $x \in K$ continuity of $y \mapsto f(yx)$ at $y = e$ gives an open neighbourhood $U_x$ of $e$ with $|f(yx) - f(x)| < \varepsilon/2$ for $y \in U_x$, and continuity of multiplication gives an
+open neighbourhood $W_x$ of $e$ with $W_x = W_x^{-1}$ and $W_xW_x \subseteq U_x$. The open sets $W_xx$ cover $K$; choose $x_1, \ldots, x_m$ with $K \subseteq \bigcup_jW_{x_j}x_j$, and let
+$V = \bigcap_jW_{x_j}$, a neighbourhood of $e$ with $V = V^{-1}$.
+
+Let $y \in V$. If $x \in K$, say $x \in W_{x_j}x_j$, then $xx_j^{-1} \in W_{x_j} \subseteq U_{x_j}$ and $yxx_j^{-1} \in VW_{x_j} \subseteq U_{x_j}$, so $|f(x) - f(x_j)| < \varepsilon/2$ and
+$|f(yx) - f(x_j)| < \varepsilon/2$, whence $|f(yx) - f(x)| < \varepsilon$. If $x \notin K$ but $yx \in K$, the previous case applied to the point $yx$ and to $y^{-1} \in V$ gives
+$|f(x) - f(yx)| < \varepsilon$. If neither $x$ nor $yx$ lies in $K$, both values vanish.
+\end{proof}
+
+\begin{lemma}\label{radon-measures:lemma-haar-positive}
+Let $\mu$ be a left Haar measure. Then $\mu(U) > 0$ for every nonempty open $U$, and $\int f\,d\mu > 0$ for every $f \in C_c^+(G)$.
+\end{lemma}
+
+\begin{proof}
+If $\mu(U) = 0$, every compact $K$ is covered by finitely many translates $xU$, each of measure $0$, so $\mu(K) = 0$; by inner regularity $\mu = 0$, which is excluded. If $f \in C_c^+(G)$, then
+$U = \{f > \frac12\max f\}$ is a nonempty open set and $\int f\,d\mu \geq \frac12\max f\cdot\mu(U) > 0$.
+\end{proof}
+
+\begin{theorem}[Haar]\label{radon-measures:theorem-haar}
+Every locally compact Hausdorff group $G$ with a countable basis has a left Haar measure. It is unique up to a positive factor: if $\mu$ and $\nu$ are left Haar measures, then $\nu = c\mu$ for some
+$c > 0$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: covering numbers.} For $f, \varphi \in C_c^+(G)$ let
+\[
+(f : \varphi) = \inf\Bigl\{\sum_{j=1}^mc_j : c_j \geq 0, \ y_j \in G, \ f \leq \sum_{j=1}^mc_jL_{y_j}\varphi\Bigr\},
+\]
+the cost of covering $f$ by translates of $\varphi$. It is finite: $\varphi > a$ on a nonempty open set $U$ for some $a > 0$, so $L_y\varphi > a$ on $yU$; finitely many $y_jU$ cover the compact support of $f$,
+and $f \leq \sum_j(\max f/a)L_{y_j}\varphi$. Directly from the definition, for $f, g, \varphi, \psi \in C_c^+(G)$, $c > 0$ and $y \in G$:
+\begin{enumerate}
+\item $(L_yf : \varphi) = (f : \varphi)$, $(cf : \varphi) = c(f : \varphi)$, and $(f : \varphi) \leq (g : \varphi)$ if $f \leq g$;
+\item $(f + g : \varphi) \leq (f : \varphi) + (g : \varphi)$;
+\item $(f : \varphi) \leq (f : \psi)(\psi : \varphi)$: if $f \leq \sum_jc_jL_{y_j}\psi$ and $\psi \leq \sum_kd_kL_{z_k}\varphi$, then $f \leq \sum_{j,k}c_jd_kL_{y_jz_k}\varphi$;
+\item $(f : \varphi) \geq \max f/\max\varphi > 0$, by evaluating a covering inequality at a point where $f$ is maximal.
+\end{enumerate}
+Fix $f_0 \in C_c^+(G)$ and put $I_\varphi(f) = (f : \varphi)/(f_0 : \varphi)$. By (3), applied to $(f_0 : \varphi) \leq (f_0 : f)(f : \varphi)$ and to $(f : \varphi) \leq (f : f_0)(f_0 : \varphi)$,
+\begin{equation}\label{radon-measures:equation-haar-bounds}
+\frac{1}{(f_0 : f)} \leq I_\varphi(f) \leq (f : f_0).
+\end{equation}
+Each $I_\varphi$ is left invariant, positively homogeneous, monotone and subadditive, by (1) and (2).
+
+\emph{Step 2: approximate additivity.} We show: for $f_1, f_2 \in C_c^+(G)$ and $\varepsilon > 0$ there is a neighbourhood $V$ of $e$ such that
+$I_\varphi(f_1) + I_\varphi(f_2) \leq I_\varphi(f_1 + f_2) + \varepsilon$ whenever $\operatorname{supp}\varphi \subseteq V$. Choose $g \in C_c(G)$ with $0 \leq g \leq 1$ and $g = 1$ on
+$\operatorname{supp}(f_1 + f_2)$ (Lemma~\ref{general-topology:lemma-lch-shrinking}), let $\delta > 0$, and put $h = f_1 + f_2 + \delta g$ and $h_i = f_i/h$, with $h_i = 0$ where $f_i = 0$. Since $h \geq \delta/2$ on
+the open set $\{g > \frac12\}$, which contains $\operatorname{supp}f_i$, the functions $h_i$ are continuous with compact support, and $h_1 + h_2 \leq 1$. By
+Lemma~\ref{radon-measures:lemma-uniform-continuity} there is a neighbourhood $V$ of $e$ with $|h_i(yu) - h_i(y)| < \delta$ for $u \in V$, $y \in G$, $i = 1, 2$. Let $\operatorname{supp}\varphi \subseteq V$ and
+$h \leq \sum_jc_jL_{y_j}\varphi$. Where $L_{y_j}\varphi(x) = \varphi(y_j^{-1}x) \neq 0$ we have $x = y_ju$ with $u \in V$, so $h_i(x) \leq h_i(y_j) + \delta$; hence
+\[
+f_i = h_ih \leq \sum_jc_jh_i(x)L_{y_j}\varphi(x) \leq \sum_jc_j\bigl(h_i(y_j) + \delta\bigr)L_{y_j}\varphi(x),
+\]
+so $(f_1 : \varphi) + (f_2 : \varphi) \leq \sum_jc_j(h_1(y_j) + h_2(y_j) + 2\delta) \leq (1 + 2\delta)\sum_jc_j$. Taking the infimum over the covers of $h$ and using (1), (2),
+$(f_1 : \varphi) + (f_2 : \varphi) \leq (1 + 2\delta)\bigl((f_1 + f_2 : \varphi) + \delta(g : \varphi)\bigr)$. Dividing by $(f_0 : \varphi)$ and using \eqref{radon-measures:equation-haar-bounds},
+\[
+I_\varphi(f_1) + I_\varphi(f_2) \leq I_\varphi(f_1 + f_2) + 2\delta(f_1 + f_2 : f_0) + \delta(1 + 2\delta)(g : f_0),
+\]
+and the error is less than $\varepsilon$ for $\delta$ small enough; $V$ depends on $\delta$, but not on $\varphi$.
+
+\emph{Step 3: a limit by compactness.} The product $P = \prod_{f \in C_c^+(G)}[1/(f_0 : f), (f : f_0)]$ of compact intervals is compact (Theorem~\ref{general-topology:theorem-tychonoff}), and by
+\eqref{radon-measures:equation-haar-bounds} each $I_\varphi$ is a point of $P$. For a neighbourhood $V$ of $e$ let $\Phi_V$ be the closure in $P$ of $\{I_\varphi : \varphi \in C_c^+(G),\
+\operatorname{supp}\varphi \subseteq V\}$, which is nonempty by Lemma~\ref{general-topology:lemma-lch-shrinking}. Since $\Phi_{V_1} \cap \cdots \cap \Phi_{V_m} \supseteq \Phi_{V_1 \cap \cdots \cap V_m} \neq \emptyset$,
+the closed sets $\Phi_V$ have the finite intersection property, and by compactness there is a point $I \in \bigcap_V\Phi_V$. Concretely: for every neighbourhood $V$ of $e$, every finite set
+$f_1, \ldots, f_k \in C_c^+(G)$ and every $\eta > 0$ there is $\varphi$ with $\operatorname{supp}\varphi \subseteq V$ and $|I(f_i) - I_\varphi(f_i)| < \eta$ for $i \leq k$.
+
+\emph{Step 4: properties of $I$.} Any identity or inequality involving finitely many values of $I_\varphi$ and holding for all $\varphi$ passes to $I$ by the last remark. So $I$ is left invariant,
+positively homogeneous and subadditive on $C_c^+(G)$, with $I(f) \geq 1/(f_0 : f) > 0$. Given $f_1, f_2$ and $\varepsilon$, take $V$ as in Step 2 and $\varphi$ with support in $V$ approximating $I$ at
+$f_1$, $f_2$, $f_1 + f_2$ within $\varepsilon$: then $I(f_1) + I(f_2) \leq I(f_1 + f_2) + 4\varepsilon$. Hence $I$ is additive on $C_c^+(G)$.
+
+\emph{Step 5: the measure.} Put $I(0) = 0$. For $f \in C_c(G)$ write $f = f^+ - f^-$ and set $I(f) = I(f^+) - I(f^-)$; if $f = g - h$ with $g, h \geq 0$ in $C_c(G)$, then $g + f^- = h + f^+$, and additivity gives
+$I(f) = I(g) - I(h)$. This makes $I$ a positive linear functional on $C_c(G)$, and the Riesz--Markov theorem (Theorem~\ref{radon-measures:theorem-riesz-markov}) gives a Radon measure $\mu$ with
+$\int f\,d\mu = I(f)$. It is nonzero, as $I(f_0) = 1$, and left invariant, since $\int L_yf\,d\mu = I(L_yf) = I(f)$ for $f \in C_c(G)$.
+
+\emph{Step 6: uniqueness.} Let $\mu$, $\nu$ be left Haar measures. $G$ is $\sigma$-compact (it has an exhaustion by compact sets), so both are $\sigma$-finite, and
+$\mathcal{B}(G \times G) = \mathcal{B}(G) \otimes \mathcal{B}(G)$ (Proposition~\ref{measure-theory:proposition-borel-product}); so Tonelli's theorem applies to nonnegative continuous functions on $G \times G$. Fix
+$f \in C_c^+(G)$ and put $F(x) = \int f(tx)\,d\mu(t)$. Then $F(x) > 0$ by Lemma~\ref{radon-measures:lemma-haar-positive}, applied to $t \mapsto f(tx)$, and $F$ is continuous: given $x$ and $\varepsilon$,
+Lemma~\ref{radon-measures:lemma-uniform-continuity} gives a neighbourhood $V$ of $e$ with compact closure and $|f(txu) - f(tx)| < \varepsilon$ for all $t$ and $u \in V$; both terms vanish unless
+$t \in C = \operatorname{supp}(f)\overline{V}^{-1}x^{-1}$, a compact set, so $|F(xu) - F(x)| \leq \varepsilon\mu(C)$. For $g \in C_c^+(G)$, the function $(x, y) \mapsto g(x)f(yx)/F(x)$ is continuous and
+nonnegative, and we integrate it in two orders. First,
+\[
+\int\!\!\int\frac{g(x)f(yx)}{F(x)}\,d\mu(y)\,d\nu(x) = \int g(x)\frac{F(x)}{F(x)}\,d\nu(x) = \int g\,d\nu.
+\]
+Second, using left invariance of $\nu$ ($x \mapsto y^{-1}x$) and then of $\mu$ ($y \mapsto xy$),
+\[\begin{aligned}
+\int\!\!\int\frac{g(x)f(yx)}{F(x)}\,d\nu(x)\,d\mu(y) &= \int\!\!\int\frac{g(y^{-1}x)f(x)}{F(y^{-1}x)}\,d\nu(x)\,d\mu(y) \\
+&= \int f(x)\int\frac{g(y^{-1}x)}{F(y^{-1}x)}\,d\mu(y)\,d\nu(x) \\
+&= \int f(x)\int\frac{g(y^{-1})}{F(y^{-1})}\,d\mu(y)\,d\nu(x) = c_g\int f\,d\nu,
+\end{aligned}\]
+where $c_g = \int g(y^{-1})/F(y^{-1})\,d\mu(y)$ depends on $\mu$, $f$, $g$ but not on $\nu$. Hence $\int g\,d\nu = c_g\int f\,d\nu$, and with $\nu = \mu$, $\int g\,d\mu = c_g\int f\,d\mu$. Therefore
+$\int g\,d\nu = c\int g\,d\mu$ for all $g \in C_c^+(G)$, with $c = \int f\,d\nu/\int f\,d\mu > 0$ (Lemma~\ref{radon-measures:lemma-haar-positive}); by linearity this holds on $C_c(G)$, and $\nu = c\mu$ by
+the uniqueness in the Riesz--Markov theorem.
+\end{proof}
+
+\begin{remark}\label{radon-measures:remark-haar}
+The theorem holds for all locally compact Hausdorff groups, without the countable basis, with the same proof once the Riesz representation theorem and Fubini's theorem are available for Radon
+measures in that generality \cite[Section 11.1]{folland-real}. The first construction, for compact metric groups, is due to Haar (1933); von Neumann proved uniqueness, and Weil gave the general
+case. For Lie groups an invariant measure can be written down as the integral of a left-invariant volume form (Chapter~\ref{lie-groups}).
+\end{remark}
+
+\subsection{The modular function}\label{radon-measures:subsection-modular}
+
+Left Haar measure need not be right invariant, but right translation can only change it by a factor.
+
+\begin{proposition}\label{radon-measures:proposition-modular}
+Let $\mu$ be a left Haar measure on $G$. There is a unique map $\Delta \colon G \to \RR_{>0}$, the \emph{modular function}, with $\mu(Ex) = \Delta(x)\mu(E)$ for all $x \in G$ and Borel $E$. It does not depend on
+the choice of $\mu$, it is a continuous homomorphism, and $\int R_xf\,d\mu = \Delta(x^{-1})\int f\,d\mu$ for $f \in C_c(G)$.
+\end{proposition}
+
+\begin{proof}
+For fixed $x$, $E \mapsto \mu(Ex)$ is a Borel measure, finite on compact sets (as $Kx$ is compact), nonzero, and left invariant, since $(yE)x = y(Ex)$. By uniqueness it is $\Delta(x)\mu$ for a number
+$\Delta(x) > 0$; replacing $\mu$ by $c\mu$ does not change $\Delta(x)$. From $\mu(Exy) = \Delta(y)\mu(Ex) = \Delta(y)\Delta(x)\mu(E)$ we get $\Delta(xy) = \Delta(x)\Delta(y)$. For $f = \mathbf{1}_E$,
+$R_x\mathbf{1}_E = \mathbf{1}_{Ex^{-1}}$, so $\int R_x\mathbf{1}_E\,d\mu = \Delta(x^{-1})\mu(E)$; this extends to $C_c(G)$ as before. Finally, for $f \in C_c^+(G)$, $\Delta(x^{-1}) = \int f(tx)\,d\mu(t)/\int f\,d\mu$
+is continuous in $x$, by the argument for $F$ in Step 6 of the proof of Theorem~\ref{radon-measures:theorem-haar}, and so is its inverse $\Delta$.
+\end{proof}
+
+$G$ is \emph{unimodular} if $\Delta = 1$, that is, if a left Haar measure is also right invariant.
+
+\begin{corollary}\label{radon-measures:corollary-unimodular}
+Abelian groups, discrete groups and compact groups are unimodular. On a unimodular group, a Haar measure is invariant under inversion: $\mu(E^{-1}) = \mu(E)$. On a compact group there is a unique Haar
+probability measure, and it is left and right invariant and invariant under inversion.
+\end{corollary}
+
+\begin{proof}
+For abelian groups $Ex = xE$. For discrete groups counting measure is right invariant. If $G$ is compact, $\Delta(G)$ is a compact subgroup of $(\RR_{>0}, \cdot)$, hence $\{1\}$: a subgroup containing some
+$a \neq 1$ contains all $a^n$, $n \in \ZZ$, which is unbounded or accumulates at $0$. If $G$ is unimodular, $\check\mu(E) = \mu(E^{-1})$ is a Borel measure, finite on compacts, and left invariant,
+since $(xE)^{-1} = E^{-1}x^{-1}$ and $\mu$ is right invariant; so $\check\mu = c\mu$, and applying this twice gives $c^2 = 1$, $c = 1$. On a compact group $0 < \mu(G) < \infty$, and $\mu/\mu(G)$ is the
+unique left Haar measure of total mass $1$.
+\end{proof}
+
+\begin{example}\label{radon-measures:example-ax-plus-b}
+\emph{A group that is not unimodular.} Let $G = \{(a, b) : a > 0, b \in \RR\}$ with $(a, b)(a^{\prime}, b^{\prime}) = (aa^{\prime}, ab^{\prime} + b)$, the group of affine maps $t \mapsto at + b$ of the line, an open subset
+of $\RR^2$. Left multiplication by $(a, b)$ is the map $(a^{\prime}, b^{\prime}) \mapsto (aa^{\prime}, ab^{\prime} + b)$, with Jacobian determinant $a^2$; by the change of variables formula
+$d\mu = a^{-2}\,da\,db$ is a left Haar measure. Right multiplication by $(a^{\prime}, b^{\prime})$ is $(a, b) \mapsto (aa^{\prime}, ab^{\prime} + b)$, with Jacobian determinant $a^{\prime}$, so $\mu(E(a^{\prime}, b^{\prime})) = \mu(E)/a^{\prime}$:
+$\Delta(a, b) = 1/a$, and $a^{-1}\,da\,db$ is a right Haar measure, different from the left one.
+\end{example}
+
+\subsection{Steinhaus' theorem}\label{radon-measures:subsection-steinhaus}
+
+\begin{theorem}[Steinhaus]\label{radon-measures:theorem-steinhaus}
+Let $\mu$ be a left Haar measure on $G$ and $A \subseteq G$ a Borel set with $\mu(A) > 0$. Then $AA^{-1} = \{ab^{-1} : a, b \in A\}$ contains a neighbourhood of $e$.
+\end{theorem}
+
+\begin{proof}
+By inner regularity choose a compact $K \subseteq A$ with $\mu(K) > 0$, and by outer regularity an open $U \supseteq K$ with $\mu(U) < 2\mu(K)$. The continuous map $(v, k) \mapsto vk$ sends $\{e\} \times K$ into $U$,
+so each $(e, k)$ has a product neighbourhood $V_k \times W_k$ mapped into $U$; finitely many $W_{k_i}$ cover $K$, and $V = \bigcap_iV_{k_i}$ is a neighbourhood of $e$ with $VK \subseteq U$. For $v \in V$ the
+sets $vK$ and $K$ lie in $U$ and have measure $\mu(K)$; if they were disjoint, $\mu(U) \geq 2\mu(K)$. So $vk = k^{\prime}$ for some $k, k^{\prime} \in K$, and $v = k^{\prime}k^{-1} \in KK^{-1} \subseteq AA^{-1}$.
+\end{proof}
+
+\begin{corollary}\label{radon-measures:corollary-measurable-homomorphism}
+A Borel measurable homomorphism $\phi \colon (\RR, +) \to (\RR, +)$ is of the form $\phi(x) = cx$. In particular every Lebesgue measurable solution of Cauchy's equation $\phi(x + y) = \phi(x) + \phi(y)$
+is linear.
+\end{corollary}
+
+\begin{proof}
+For a Lebesgue measurable $\phi$, the sets $A_n = \phi^{-1}((-n, n))$ are Lebesgue measurable and cover $\RR$, so some $A_n$ has positive measure, and so does a Borel subset of it (the measurable sets are the
+Borel sets up to null sets, Proposition~\ref{measure-theory:proposition-lebesgue-completion}). By Steinhaus' theorem $A_n - A_n \supseteq (-\delta, \delta)$ for some $\delta > 0$, and
+$\phi(a - b) = \phi(a) - \phi(b) \in (-2n, 2n)$; so $|\phi| < 2n$ on $(-\delta, \delta)$. Additivity gives $\phi(x/m) = \phi(x)/m$, so $|\phi| < 2n/m$ on $(-\delta/m, \delta/m)$: $\phi$ is continuous at
+$0$, hence everywhere, as $\phi(x + h) - \phi(x) = \phi(h)$. Finally $\phi(q) = q\phi(1)$ for rational $q$ by additivity, and by continuity $\phi(x) = \phi(1)x$.
+\end{proof}
+
+Without measurability the statement fails: viewing $\RR$ as a vector space over $\QQ$ and choosing a basis (a \emph{Hamel basis}, which exists by the axiom of choice), any $\QQ$-linear map that is not
+$\RR$-linear, such as a projection onto the line spanned by one basis vector, is a non-measurable solution of Cauchy's equation.
+
 \section{Weak convergence of measures}\label{radon-measures:section-weak-convergence}
 
 Sequences of measures appear whenever something discrete approximates something continuous, or something smooth approximates something singular. Riemann sums are integrals against finitely many
@@ -490,7 +706,7 @@ Let $(\mu_k)$ be a sequence of Radon measures on $X$ with $\sup_k\mu_k(K) < \inf
 
 \begin{proof}
 Let $(K_m)$ be an exhaustion as in Lemma~\ref{radon-measures:lemma-cc-separable}, $C_m = \sup_k\mu_k(K_m)$, and $\mathcal{D} = \{g_1, g_2, \ldots\}$ the countable set of the lemma. For each $i$ the
-sequence $\int g_i\,d\mu_k$ is bounded, by $\|g_i\|_\infty\sup_k\mu_k(\operatorname{supp}g_i)$, so it has a convergent subsequence (Theorem~\ref{real-analysis:theorem-bolzano-weierstrass-real}).
+sequence $\int g_i\,d\mu_k$ is bounded, by $\|g_i\|_\infty$ times $\sup_k\mu_k(\operatorname{supp}g_i)$, so it has a convergent subsequence (Theorem~\ref{real-analysis:theorem-bolzano-weierstrass-real}).
 Choose a subsequence along which $\int g_1\,d\mu_k$ converges, a further subsequence along which $\int g_2\,d\mu_k$ converges, and so on; the diagonal sequence, the $k$-th term of the $k$-th
 subsequence, is a subsequence of each of them from its $i$-th term on. Renaming it $(\mu_k)$, $\int g\,d\mu_k$ converges for every $g \in \mathcal{D}$.
 
@@ -574,7 +790,8 @@ $\nu_s(B(x, r)) > t\lambda(B(x, r))$ for some of these $r$. Let $K \subseteq G$ 
 By inner regularity of $\lambda$, $\lambda^*(A) \leq \lambda(G) \leq 3^n\varepsilon/t$, and as $\varepsilon$ is arbitrary, $A$ is a null set. Taking the union over $t = 1/j$ and $R = j$, $j \geq 1$, and
 adding the null set $S$, we find that $\overline{D}\nu_s = 0$ outside a null set.
 
-Finally, $\nu(B(x, r))/\lambda(B(x, r))$ differs from the average of $h$ over $B(x, r)$ by $\nu_s(B(x, r))/\lambda(B(x, r))$, and the average differs from $h(x)$ by at most the average of $|h - h(x)|$; so
+Finally, $\nu(B(x, r))/\lambda(B(x, r))$ differs from the average of $h$ over $B(x, r)$ by the quotient $\nu_s(B(x, r))/\lambda(B(x, r))$, and the average differs from $h(x)$ by
+at most the average of $|h - h(x)|$; so
 $D\nu = h$ almost everywhere. If $\nu \perp \lambda$, then $h = 0$ almost everywhere by uniqueness of the decomposition, so $D\nu = 0$ almost everywhere; conversely, if $D\nu = 0$ almost everywhere,
 then $h = 0$ almost everywhere and $\nu = \nu_s$.
 \end{proof}
@@ -863,4 +1080,40 @@ Let $L(F) = F_1(0) + 2F_2(0)$ for $F = (F_1, F_2) \in C_c(\RR, \RR^2)$. Find the
 $L(F) = \langle F(0), (1, 2)\rangle$, so $L(F) = \int\langle F, \nu\rangle\,d\mu$ with $\mu = \sqrt5\,\delta_0$ and $\nu(0) = (1, 2)/\sqrt5$, a unit vector. For an open $V \ni 0$ and $|F| \leq 1$ with
 support in $V$, the Cauchy--Schwarz inequality gives $L(F) \leq |(1, 2)| = \sqrt5$, with equality when $F(0) = (1, 2)/\sqrt5$, which is possible for $F = \psi\,(1, 2)/\sqrt5$ with $\psi \prec V$, $\psi(0) = 1$; for
 $0 \notin V$ the supremum is $0$. So the total variation is $\sqrt5\,\delta_0$, not $\delta_0 + 2\delta_0 = 3\delta_0$: the components cannot be estimated separately, as $|F| \leq 1$ couples them.
+\end{solution}
+
+\begin{exercise}\label{radon-measures:exercise-haar-affine-line}
+Let $G$ be the group of Example~\ref{radon-measures:example-ax-plus-b}. Show directly, without the change of variables formula, that $\mu(E) = \int_Ea^{-2}\,da\,db$ is left invariant for rectangles
+$E = [a_1, a_2] \times [b_1, b_2]$, and compute $\mu(E(2, 0))$ and $\mu((2, 0)E)$ for $E = [1, 2] \times [0, 1]$.
+\end{exercise}
+
+\begin{solution}
+Left multiplication by $(a, b)$ maps $(a^{\prime}, b^{\prime})$ to $(aa^{\prime}, ab^{\prime} + b)$, so it maps $[a_1, a_2] \times [b_1, b_2]$ onto $[aa_1, aa_2] \times [ab_1 + b, ab_2 + b]$. By Fubini,
+$\mu([a_1, a_2] \times [b_1, b_2]) = (b_2 - b_1)(a_1^{-1} - a_2^{-1})$, and for the image this is $a(b_2 - b_1)\cdot a^{-1}(a_1^{-1} - a_2^{-1})$, the same. For $E = [1, 2] \times [0, 1]$,
+$\mu(E) = \frac12$; $(2, 0)E = [2, 4] \times [0, 2]$ has measure $2(\frac12 - \frac14) = \frac12$, while $E(2, 0) = \{(2a, b)\} = [2, 4] \times [0, 1]$ has measure $\frac14 = \Delta(2, 0)\mu(E)$ with
+$\Delta(2, 0) = \frac12$.
+\end{solution}
+
+\begin{exercise}\label{radon-measures:exercise-haar-finite}
+Show that a left Haar measure $\mu$ on $G$ is finite if and only if $G$ is compact, and that $\mu(\{e\}) > 0$ if and only if $G$ is discrete.
+\end{exercise}
+
+\begin{solution}
+If $G$ is compact, $\mu(G) < \infty$ by definition. If $G$ is not compact, let $V$ be a compact neighbourhood of $e$ with $V = V^{-1}$, and $U$ an open neighbourhood of $e$ with $UU^{-1} \subseteq V$.
+Choose inductively $x_1, x_2, \ldots$ with $x_{n+1} \notin x_1V \cup \cdots \cup x_nV$, possible because a finite union of compact sets is not $G$. The sets $x_nU$ are pairwise disjoint: if $x_mu = x_nu^{\prime}$
+with $m < n$, then $x_n = x_muu^{\prime-1} \in x_mV$. They have the same measure $\mu(U) > 0$ (Lemma~\ref{radon-measures:lemma-haar-positive}), so $\mu(G) = \infty$. If $G$ is discrete, $\{e\}$ is open and
+has positive measure by the same lemma. If $\mu(\{e\}) = c > 0$, then every point has measure $c$, a compact neighbourhood of $e$ has finite measure and so is finite, and $\{e\}$, being the complement in
+it of finitely many closed points, is open; so $G$ is discrete.
+\end{solution}
+
+\begin{exercise}\label{radon-measures:exercise-haar-quotient-circle}
+Show that the Haar probability measure $\sigma$ on $S^1$ satisfies $\int_{S^1}z^k\,d\sigma(z) = 0$ for all integers $k \neq 0$, and deduce that a Borel probability measure $\nu$ on $S^1$ invariant under the
+rotation $z \mapsto e^{i\alpha}z$ with $\alpha/2\pi$ irrational equals $\sigma$.
+\end{exercise}
+
+\begin{solution}
+By invariance under the rotation by $w$, $\int z^k\,d\sigma = \int(wz)^k\,d\sigma = w^k\int z^k\,d\sigma$; choosing $w$ with $w^k \neq 1$ gives $0$. If $\nu$ is invariant under $z \mapsto e^{i\alpha}z$, the
+same computation with $w = e^{i\alpha}$, for which $w^k \neq 1$ when $k \neq 0$, gives $\int z^k\,d\nu = 0$ for $k \neq 0$. So $\int p\,d\nu = \int p\,d\sigma$ for every trigonometric polynomial
+$p(z) = \sum_{|k| \leq N}a_kz^k$. Trigonometric polynomials are uniformly dense in $C(S^1)$ (by the Stone--Weierstrass theorem, Theorem~\ref{real-analysis:theorem-stone-weierstrass}: they form an algebra closed under conjugation, separating points and containing
+constants), so $\int f\,d\nu = \int f\,d\sigma$ for every continuous $f$, and $\nu = \sigma$ by the uniqueness in the Riesz--Markov theorem.
 \end{solution}
