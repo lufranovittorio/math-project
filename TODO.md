@@ -116,9 +116,11 @@ together in one place.
      *Extension and completion of measures*); ~~rewrite the early sections
      slowly (σ-algebras, measures, measurable functions, image measures and
      the abstract change of variables, Hölder with all cases)~~ (done
-     2026-11-07); still to do: Bernstein sets, a slower rewrite of the
-     sections *Modes of convergence* and *Product measures* (Fubini
-     counterexamples, infinite products of probability measures);
+     2026-11-07); ~~Bernstein sets, slower *Modes of convergence* and
+     *Product measures* with infinite products~~ (done 2026-11-07); still to
+     do: a slower *Littlewood's principles* section, and the change of
+     variables section (polar and spherical coordinates, the Jacobian of
+     linear maps proved via elementary matrices, Sard's lemma);
    - ~~new `signed-measures`~~ (done 2026-11-07; Dunford–Pettis left for
      `functional-analysis`, where weak topologies are);
    - `lebesgue-differentiation`: functions of bounded variation, Banach–Zarecki,
@@ -272,6 +274,17 @@ spectral-sequences 300 (then everything below about 800 lines).
   parts).
 
 ## Done
+
+- [x] 2026-11-07: **Measure and Integration**, second round: Cantor–Bendixson
+  lemma and Bernstein sets (with Solovay's theorem quoted); *Modes of
+  convergence* rewritten (almost uniform convergence, Riesz's theorem on Cauchy
+  sequences in measure, the metric of convergence in measure, a.e. convergence
+  is not topological, dominated convergence in measure, diagram of
+  implications); *Product measures* rewritten in three subsections plus a new
+  one on infinite products of probability measures (existence theorem with full
+  proof, independent random variables, coin tossing = Lebesgue measure),
+  sections lemma, Borel σ-algebra of products, σ-finiteness and continuous
+  Fubini counterexamples, Sierpiński's set, layer-cake examples.
 
 - [x] 2026-11-07: **Measure and Integration**: opening rewritten slowly in three
   sections, *σ-algebras* (closure lemma, trace/preimage σ-algebras, generated and

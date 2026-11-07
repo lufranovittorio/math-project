@@ -393,6 +393,63 @@ rigid motions preserve measure and $\lambda(B) \neq 2\lambda(B)$; so the theorem
 of volume, even finitely additive, extends to all subsets of $\RR^3$. On the line, Vitali's argument uses countable additivity in an essential way.
 \end{remark}
 
+The Vitali set is non-measurable in a mild way: its translates by rationals have the same outer measure, and nothing more is known. A sharper example is a set that is ``half of every interval''
+in the strongest sense: it meets every set of positive measure, and so does its complement. It is built by transfinite recursion, and its construction needs one fact about closed sets.
+
+\begin{lemma}[Cantor--Bendixson]\label{measure-theory:lemma-cantor-bendixson}
+Every uncountable closed set $F \subseteq \RR$ has cardinality $2^{\aleph_0}$. More precisely, there is an injective map $\{0, 1\}^\NN \to F$.
+\end{lemma}
+
+\begin{proof}
+\emph{Step 1: condensation points.} Call $x \in F$ a \emph{condensation point} if every open interval containing $x$ meets $F$ in uncountably many points, and let $P$ be the set of condensation points.
+A point of $F \setminus P$ lies in an open interval with rational endpoints meeting $F$ in a countable set; there are countably many such intervals, so $F \setminus P$ is countable, and $P$ is
+uncountable, in particular nonempty. Moreover, if an open interval $I$ meets $P$, then $I \cap F$ is uncountable, so $I \cap P = (I \cap F) \setminus (F \setminus P)$ is uncountable too.
+
+\emph{Step 2: splitting.} If $J$ is a closed bounded interval whose interior meets $P$, its interior contains two points of $P$, and so there are two disjoint closed subintervals $J_0, J_1 \subseteq J$
+of length at most half that of $J$ whose interiors meet $P$.
+
+\emph{Step 3: the tree.} Start with a closed bounded interval $J_\emptyset$ whose interior meets $P$, and apply Step 2 repeatedly: for every finite string $s$ of $0$s and $1$s we obtain $J_s$ with
+$J_{s0}, J_{s1} \subseteq J_s$ disjoint, of length at most $2^{-|s|}$ times that of $J_\emptyset$, with interiors meeting $P$. For $\omega \in \{0, 1\}^\NN$ the nested closed intervals
+$J_{\omega_1 \cdots \omega_k}$ have lengths tending to $0$; their left endpoints form a nondecreasing bounded sequence, whose limit lies in all of them, so their intersection is a single point $\phi(\omega)$. Each $J_{\omega_1 \cdots \omega_k}$
+meets $P \subseteq F$, so it contains points of $F$ at distance at most its length from $\phi(\omega)$, and $\phi(\omega) \in F$ as $F$ is closed. If $\omega \neq \omega^{\prime}$ first differ at place
+$k$, $\phi(\omega)$ and $\phi(\omega^{\prime})$ lie in the disjoint intervals $J_{s0}$, $J_{s1}$ with $|s| = k - 1$. So $\phi$ is injective, and
+$2^{\aleph_0} = |\{0, 1\}^\NN| \leq |F| \leq |\RR| = 2^{\aleph_0}$ (Theorem~\ref{sets:theorem-schroder-bernstein}).
+\end{proof}
+
+\begin{theorem}[Bernstein sets]\label{measure-theory:theorem-bernstein}
+Assume the axiom of choice. There is a set $B \subseteq \RR$ such that both $B$ and $\RR \setminus B$ meet every uncountable closed subset of $\RR$. Such a set satisfies
+$\lambda^*(B \cap E) = \lambda^*(E \setminus B) = \lambda(E)$ for every Lebesgue measurable $E$; in particular, $B \cap E$ is not measurable whenever $\lambda(E) > 0$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: counting closed sets.} A closed set is the complement of an open set, and an open set is the union of the intervals with rational endpoints it contains; so there are at most
+$|\mathcal{P}(\NN)| = 2^{\aleph_0}$ closed sets, and exactly that many uncountable ones (the intervals $[0, t]$ are distinct). Let $\mathfrak{c} = 2^{\aleph_0}$, regarded as a cardinal, that is, as an
+ordinal no smaller ordinal is equinumerous with (Definition~\ref{sets:definition-cardinal}; $\RR$ can be well-ordered by the axiom of choice, Theorem~\ref{sets:theorem-choice-equivalents}). Enumerate the
+uncountable closed sets as $(F_\alpha)_{\alpha < \mathfrak{c}}$.
+
+\emph{Step 2: recursion.} By transfinite recursion (Theorem~\ref{sets:theorem-transfinite-recursion}) choose, for $\alpha < \mathfrak{c}$, points $a_\alpha \neq b_\alpha$ of $F_\alpha$ different from all
+$a_\beta$, $b_\beta$ with $\beta < \alpha$. This is possible: the set of points already chosen has cardinality at most $|\alpha \times \{0, 1\}|$, which is finite or equal to $|\alpha|$
+(Corollary~\ref{sets:corollary-cardinal-arithmetic}), hence less than $\mathfrak{c}$ since $\alpha < \mathfrak{c}$ and $\mathfrak{c}$ is a cardinal; while $|F_\alpha| = \mathfrak{c}$ by
+Lemma~\ref{measure-theory:lemma-cantor-bendixson}. (The choices are made with a fixed well-ordering of $\RR$: take the two least admissible points.)
+
+\emph{Step 3: the set.} Let $B = \{a_\alpha : \alpha < \mathfrak{c}\}$. The $a_\alpha$ and $b_\beta$ are all distinct, so every $b_\alpha$ lies in $\RR \setminus B$; thus $B$ meets each $F_\alpha$ in
+$a_\alpha$, and $\RR \setminus B$ meets it in $b_\alpha$.
+
+\emph{Step 4: outer measures.} Let $E$ be measurable. If $M \subseteq E \setminus B$ is measurable with $\lambda(M) > 0$, then by inner regularity (Theorem~\ref{measure-theory:theorem-lebesgue-measure}) $M$
+contains a compact $K$ with $\lambda(K) > 0$; $K$ is closed and uncountable (countable sets are null), so it meets $B$, contradicting $K \subseteq M \subseteq \RR \setminus B$. So every measurable
+subset of $E \setminus B$ is null. Now choose a measurable $G \supseteq B \cap E$ with $\lambda^*(B \cap E) = \lambda(G)$ (outer regularity gives open sets $U_k \supseteq B \cap E$ with
+$\lambda(U_k) \leq \lambda^*(B \cap E) + 1/k$; take $G = \bigcap_kU_k$); we may replace $G$ by $G \cap E$. Then $E \setminus G \subseteq E \setminus B$ is measurable, hence null, and
+$\lambda^*(B \cap E) = \lambda(G) = \lambda(E)$. The same argument with $B$ and $\RR \setminus B$ exchanged gives $\lambda^*(E \setminus B) = \lambda(E)$. Finally, if $B \cap E$ were measurable with
+$\lambda(E) > 0$, take $E$ of finite positive measure (intersect with a bounded interval); then $\lambda(E) = \lambda(B \cap E) + \lambda(E \setminus B) = 2\lambda(E)$, a contradiction.
+\end{proof}
+
+\begin{remark}\label{measure-theory:remark-solovay}
+The axiom of choice cannot be avoided in Counterexample~\ref{measure-theory:counterexample-vitali} and Theorem~\ref{measure-theory:theorem-bernstein}: Solovay showed that, assuming the consistency of
+an inaccessible cardinal, there is a model of set theory with the axiom of dependent choice (enough for all of analysis on separable spaces, including countable additivity arguments) in which every set
+of real numbers is Lebesgue measurable \cite{solovay-1970}. On the other hand, the non-measurable sets of the theorem are as wild as possible: by Theorem~\ref{measure-theory:theorem-bernstein}, the
+inner measure $\sup\{\lambda(K) : K \subseteq B \text{ compact}\}$ of a Bernstein set is $0$ while its outer measure in every interval is the length of the interval.
+\end{remark}
+
 \section{Extension and completion of measures}\label{measure-theory:section-extension}
 
 Lebesgue measure was obtained in two steps: the volume of boxes was given, and Carath\'eodory's theorem extended it to a $\sigma$-algebra through an outer measure. The same pattern occurs whenever a
@@ -506,7 +563,8 @@ every $\sigma$-finite $\mu_0$ \cite[Section 1.4]{folland-real}.
 are again such unions with $a = -\infty$ or $b = \infty$ allowed), and $\mu_0(A) = \infty$ for $A \neq \emptyset$. This is a premeasure, $\sigma(\mathcal{A}_0)$ is the power set (every singleton is a
 countable intersection of such sets), and both counting measure and twice counting measure extend $\mu_0$.
 \item A central application is the construction of measures on infinite products, such as the probability measure describing infinitely many independent coin tosses on $\{0, 1\}^\NN$: the premeasure is
-defined on the algebra of sets depending on finitely many coordinates, and its countable additivity follows from compactness of $\{0, 1\}^\NN$. This is taken up in Part~\ref{part-probability}.
+defined on the algebra of sets depending on finitely many coordinates, and its countable additivity follows from compactness of $\{0, 1\}^\NN$, or in general from Fubini's theorem; this is done in
+Subsection~\ref{measure-theory:subsection-infinite-products}.
 \end{enumerate}
 \end{remark}
 
@@ -1044,35 +1102,90 @@ $L^\infty([0, 1])$ is not separable at all: the functions $\mathbf{1}_{[0, t]}$,
 
 \section{Modes of convergence}\label{measure-theory:section-modes}
 
+A sequence of functions can converge in many ways, and on a measure space there are several natural ones in addition to pointwise and uniform convergence: one may neglect null sets, neglect sets of
+small measure, or measure the size of $f_n - f$ by an integral. Each of the convergence theorems of Section~\ref{measure-theory:section-integral} passes from one mode to another (dominated
+convergence: from almost everywhere convergence to $L^1$ convergence), so it is worth knowing exactly which implications hold.
+
 \begin{definition}\label{measure-theory:definition-modes}
 Let $f_n$, $f$ be measurable functions on a measure space $(X, \mu)$ with values in $\CC$. Then $f_n \to f$ \emph{almost everywhere} if $f_n(x) \to f(x)$ for $x$ outside a null set; \emph{in measure} if
 $\mu(\{|f_n - f| > \varepsilon\}) \to 0$ for every $\varepsilon > 0$; and \emph{in $L^p$} if $\|f_n - f\|_p \to 0$.
 \end{definition}
+
+\begin{definition}\label{measure-theory:definition-almost-uniform}
+In the situation of Definition~\ref{measure-theory:definition-modes}, $f_n \to f$ \emph{almost uniformly} if for every $\delta > 0$ there is a measurable set $B$ with $\mu(B) < \delta$ such that
+$f_n \to f$ uniformly on $X \setminus B$. The sequence is \emph{Cauchy in measure} if for every $\varepsilon > 0$, $\mu(\{|f_n - f_m| > \varepsilon\}) \to 0$ as $n, m \to \infty$.
+\end{definition}
+
+\begin{notation}\label{measure-theory:notation-modes}
+We write $f_n \to f$ a.e., $f_n \to f$ in measure, and $f_n \to f$ in $L^p$; in all three cases the limit is determined only up to equality almost everywhere. Uniform convergence on $X$ is convergence in $L^\infty$ for counting measure; for a general $\mu$,
+convergence in $L^\infty(\mu)$ is uniform convergence outside a null set.
+\end{notation}
+
+In probability, where $\mu(X) = 1$ and measurable functions are random variables, almost everywhere convergence is called convergence \emph{almost surely}, and convergence in measure is
+convergence \emph{in probability}. The difference between the two is the difference between the strong and the weak law of large numbers.
+
+\begin{example}\label{measure-theory:example-modes}
+\begin{enumerate}
+\item On $[0, 1]$ with Lebesgue measure, $f_n(x) = x^n$ converges to $0$ at every $x < 1$, hence almost everywhere; not uniformly, since $\sup_{[0, 1)}x^n = 1$; but uniformly on $[0, 1 - \delta]$ for every $\delta > 0$,
+hence almost uniformly; in measure, since $\{x^n > \varepsilon\} = (\varepsilon^{1/n}, 1]$ has length $1 - \varepsilon^{1/n} \to 0$; and in every $L^p$, $p < \infty$, since $\|x^n\|_p^p = 1/(np + 1)$.
+It does not converge to $0$ in $L^\infty$: $\|x^n\|_\infty = 1$.
+\item For counting measure on $\NN$, a set of measure less than $1$ is empty. So convergence in measure is uniform convergence, almost uniform convergence is uniform convergence, and almost
+everywhere convergence is pointwise convergence.
+\item On $[0, 1]$, $f_n = \mathbf{1}_{[0, 1/n]}$ converges to $0$ in measure and in every $L^p$, $p < \infty$, and almost everywhere (at every $x > 0$), but not at $x = 0$: modes of convergence that
+neglect null sets cannot see a single point.
+\end{enumerate}
+\end{example}
 
 \begin{theorem}[Egorov]\label{measure-theory:theorem-egorov}
 Let $\mu(X) < \infty$ and $f_n \to f$ almost everywhere. For every $\delta > 0$ there is a measurable $E$ with $\mu(X \setminus E) < \delta$ such that $f_n \to f$ uniformly on $E$.
 \end{theorem}
 
 \begin{proof}
-For $k, n \geq 1$ let $E_{k,n} = \bigcup_{m \geq n}\{|f_m - f| \geq 1/k\}$. For fixed $k$ these sets decrease in $n$, and their intersection consists of points where $|f_m - f| \geq 1/k$ for infinitely many $m$, a null set. As
-$\mu(X) < \infty$, $\mu(E_{k,n}) \to 0$ as $n \to \infty$ (Proposition~\ref{measure-theory:proposition-measure-properties}). Choose $n_k$ with $\mu(E_{k,n_k}) < \delta2^{-k}$ and let $E = X \setminus \bigcup_kE_{k,n_k}$. Then
-$\mu(X \setminus E) < \delta$, and on $E$, $|f_m - f| < 1/k$ for all $m \geq n_k$, for every $k$.
+\emph{Step 1: the bad sets.} For $k, n \geq 1$ let $E_{k,n} = \bigcup_{m \geq n}\{|f_m - f| \geq 1/k\}$, the set of points where some $f_m$ with $m \geq n$ is $1/k$-far from $f$. For fixed $k$ these sets
+decrease in $n$, and their intersection consists of points where $|f_m - f| \geq 1/k$ for infinitely many $m$, a null set.
+
+\emph{Step 2: finiteness.} As $\mu(X) < \infty$, continuity from above (Proposition~\ref{measure-theory:proposition-measure-properties}) gives $\mu(E_{k,n}) \to 0$ as $n \to \infty$.
+
+\emph{Step 3: diagonal choice.} Choose $n_k$ with $\mu(E_{k,n_k}) < \delta2^{-k}$ and let $E = X \setminus \bigcup_kE_{k,n_k}$. Then $\mu(X \setminus E) < \sum_k\delta2^{-k} = \delta$, and on $E$,
+$|f_m - f| < 1/k$ for all $m \geq n_k$, for every $k$; that is, $f_n \to f$ uniformly on $E$.
 \end{proof}
+
+In other words, on a finite measure space almost everywhere convergence implies almost uniform convergence. The converse holds on every measure space: if $f_n \to f$ uniformly outside sets $B_k$
+with $\mu(B_k) < 1/k$, then $f_n \to f$ outside $\bigcap_kB_k$, a null set. Egorov's theorem is the second of \emph{Littlewood's three principles} (Section~\ref{measure-theory:section-lusin}): a
+convergent sequence of measurable functions is nearly uniformly convergent.
 
 \begin{proposition}\label{measure-theory:proposition-modes}
 \begin{enumerate}
 \item If $f_n \to f$ in $L^p$ for some $1 \leq p < \infty$, then $f_n \to f$ in measure.
 \item If $f_n \to f$ in measure, a subsequence converges to $f$ almost everywhere.
 \item If $\mu(X) < \infty$ and $f_n \to f$ almost everywhere, then $f_n \to f$ in measure.
+\item If $f_n \to f$ almost uniformly, then $f_n \to f$ almost everywhere and in measure.
+\item If $f_n \to f$ in $L^\infty$, then $f_n \to f$ almost uniformly, and in $L^p$ for all $p < \infty$ if $\mu(X) < \infty$.
 \end{enumerate}
 \end{proposition}
 
 \begin{proof}
-(1) By Markov's inequality (Corollary~\ref{measure-theory:corollary-integral-properties}(4)) applied to $|f_n - f|^p$, $\mu(\{|f_n - f| > \varepsilon\}) \leq \varepsilon^{-p}\|f_n - f\|_p^p$. (2) Choose $n_1 < n_2 < \cdots$ with
-$\mu(A_k) < 2^{-k}$, where $A_k = \{|f_{n_k} - f| > 2^{-k}\}$. The set $A$ of points lying in infinitely many $A_k$ is contained in $\bigcup_{k \geq K}A_k$ for every $K$, so $\mu(A) \leq \sum_{k \geq K}2^{-k} = 2^{1-K}$ for all $K$, and
-$\mu(A) = 0$. For $x \notin A$, $|f_{n_k}(x) - f(x)| \leq 2^{-k}$ for large $k$. (3) Given $\varepsilon, \delta > 0$, Egorov's theorem gives $E$ with $\mu(X \setminus E) < \delta$ and $|f_n - f| < \varepsilon$ on $E$ for large $n$, so
-$\mu(\{|f_n - f| > \varepsilon\}) < \delta$ for large $n$.
+(1) By Markov's inequality (Corollary~\ref{measure-theory:corollary-integral-properties}(4)) applied to $|f_n - f|^p$, $\mu(\{|f_n - f| > \varepsilon\}) \leq \varepsilon^{-p}\|f_n - f\|_p^p$.
+
+(2) Choose $n_1 < n_2 < \cdots$ with $\mu(A_k) < 2^{-k}$, where $A_k = \{|f_{n_k} - f| > 2^{-k}\}$. The set $A$ of points lying in infinitely many $A_k$ is contained in $\bigcup_{k \geq K}A_k$ for every $K$,
+so $\mu(A) \leq \sum_{k \geq K}2^{-k} = 2^{1-K}$ for all $K$, and $\mu(A) = 0$. For $x \notin A$, $|f_{n_k}(x) - f(x)| \leq 2^{-k}$ for large $k$.
+
+(3) Given $\varepsilon, \delta > 0$, Egorov's theorem gives $E$ with $\mu(X \setminus E) < \delta$ and $|f_n - f| < \varepsilon$ on $E$ for large $n$, so $\mu(\{|f_n - f| > \varepsilon\}) < \delta$ for large $n$.
+
+(4) Almost everywhere convergence was shown after Egorov's theorem. Given $\varepsilon, \delta > 0$, let $\mu(B) < \delta$ with uniform convergence off $B$; for large $n$, $\{|f_n - f| > \varepsilon\} \subseteq B$.
+
+(5) Outside the null set $\bigcup_n\{|f_n - f| > \|f_n - f\|_\infty\}$, $|f_n - f| \leq \|f_n - f\|_\infty \to 0$ uniformly. And $\|f_n - f\|_p \leq \mu(X)^{1/p}\|f_n - f\|_\infty$.
 \end{proof}
+
+The implications are summarised in the following diagram, where a label on an arrow is the hypothesis it needs, and the dashed arrow holds only for a subsequence (the
+implication from a.e.\ convergence to convergence in measure for finite $\mu$, part (3), is the composite of two arrows); Counterexample~\ref{measure-theory:counterexample-modes} shows that no arrow can be added
+without hypotheses.
+\begin{center}
+\begin{tikzcd}[column sep=large, row sep=large]
+L^\infty \arrow[r] \arrow[d, "\mu(X) < \infty"'] & \text{almost uniform} \arrow[r, shift right] \arrow[d] & \text{a.e.} \arrow[l, shift right, "\mu(X) < \infty"'] \\
+L^p \arrow[r] & \text{in measure} \arrow[ur, dashed, "\text{subsequence}"'] &
+\end{tikzcd}
+\end{center}
 
 \begin{counterexample}\label{measure-theory:counterexample-modes}
 No other implications hold in general. Take $X = [0, 1]$ or $\RR$ with Lebesgue measure.
@@ -1082,8 +1195,67 @@ No other implications hold in general. Take $X = [0, 1]$ or $\RR$ with Lebesgue 
 \item (The typewriter sequence.) For $n = 2^k + j$ with $0 \leq j < 2^k$ let $f_n = \mathbf{1}_{[j2^{-k}, (j+1)2^{-k}]}$ on $[0, 1]$. Then $\|f_n\|_1 = 2^{-k} \to 0$, so $f_n \to 0$ in $L^1$ and in measure; but every $x \in [0, 1]$ lies in one of the
 intervals for each $k$ and outside most of them, so $f_n(x) = 1$ and $f_n(x) = 0$ both happen infinitely often, and $(f_n(x))$ converges for no $x$. The subsequence in part (2) of
 Proposition~\ref{measure-theory:proposition-modes} is necessary.
+\item $f_n = n^{-1}\mathbf{1}_{[0, n]}$ on $\RR$ converges to $0$ uniformly, hence in $L^\infty$, almost uniformly and in measure, but $\|f_n\|_1 = 1$ and $\|f_n\|_p = n^{1/p - 1} \to 0$ only for
+$p > 1$: on an infinite measure space $L^\infty$ convergence does not imply $L^1$ convergence.
+\item Egorov's theorem cannot be improved to $\mu(X \setminus E) = 0$: for $f_n(x) = x^n$ on $[0, 1]$, if $f_n \to 0$ uniformly on $E$, then $E \cap (1 - \eta, 1) = \emptyset$ for some $\eta > 0$, since
+$x^n \geq \frac12$ on $(2^{-1/n}, 1)$; so $\lambda([0, 1] \setminus E) \geq \eta > 0$.
 \end{enumerate}
 \end{counterexample}
+
+\begin{theorem}[Riesz]\label{measure-theory:theorem-cauchy-in-measure}
+A sequence of measurable functions that is Cauchy in measure converges in measure to a measurable function $f$, unique up to equality almost everywhere, and a subsequence converges to $f$
+almost everywhere.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: a fast subsequence.} Choose $n_1 < n_2 < \cdots$ such that $A_k = \{|f_{n_{k+1}} - f_{n_k}| > 2^{-k}\}$ has $\mu(A_k) < 2^{-k}$. Let $B_K = \bigcup_{k \geq K}A_k$, so
+$\mu(B_K) < 2^{1-K}$, and $N = \bigcap_KB_K$, a null set.
+
+\emph{Step 2: almost uniform convergence.} For $x \notin B_K$ and $K \leq k < l$, $|f_{n_l}(x) - f_{n_k}(x)| \leq \sum_{j \geq k}2^{-j} = 2^{1-k}$. So $(f_{n_k})$ is uniformly Cauchy off $B_K$, and
+converges off $N$; let $f$ be its limit there and $f = 0$ on $N$, a measurable function (Proposition~\ref{measure-theory:proposition-measurable-functions}(3)). Off $B_K$, $|f - f_{n_k}| \leq 2^{1-k}$
+for $k \geq K$.
+
+\emph{Step 3: the whole sequence.} Given $\varepsilon > 0$, $\{|f_n - f| > \varepsilon\} \subseteq \{|f_n - f_{n_k}| > \varepsilon/2\} \cup \{|f_{n_k} - f| > \varepsilon/2\}$. For $k$ large, with
+$2^{1-k} < \varepsilon/2$, the second set lies in $B_k$, of measure $< 2^{1-k}$; and the first has small measure for $n$ and $n_k$ large, by the Cauchy condition. So $f_n \to f$ in measure.
+
+\emph{Step 4: uniqueness.} If $f_n \to f$ and $f_n \to g$ in measure, then $\{|f - g| > 2\varepsilon\} \subseteq \{|f - f_n| > \varepsilon\} \cup \{|f_n - g| > \varepsilon\}$, so
+$\mu(\{|f - g| > 2\varepsilon\}) = 0$ for all $\varepsilon > 0$, and $f = g$ a.e.
+\end{proof}
+
+\begin{proposition}\label{measure-theory:proposition-measure-metric}
+Let $\mu$ be a finite measure, and for measurable $f, g \colon X \to \CC$ put $\rho(f, g) = \int\min(1, |f - g|)\,d\mu$. Then $\rho$ is a metric on the space $L^0(\mu)$ of measurable functions modulo
+equality a.e., $f_n \to f$ in measure if and only if $\rho(f_n, f) \to 0$, and $(L^0(\mu), \rho)$ is complete.
+\end{proposition}
+
+\begin{proof}
+\emph{Metric.} Symmetry is clear; $\rho(f, g) = 0$ means $\min(1, |f - g|) = 0$ a.e., that is, $f = g$ a.e. The triangle inequality follows from the pointwise inequality
+$\min(1, s + t) \leq \min(1, s) + \min(1, t)$ for $s, t \geq 0$, applied to $s = |f - h|$, $t = |h - g|$ together with $|f - g| \leq s + t$.
+
+\emph{Comparison.} For $0 < \varepsilon \leq 1$, Markov's inequality gives $\varepsilon\,\mu(\{|f - g| > \varepsilon\}) \leq \rho(f, g)$; and splitting $X$ into $\{|f - g| > \varepsilon\}$ and its
+complement, $\rho(f, g) \leq \mu(\{|f - g| > \varepsilon\}) + \varepsilon\mu(X)$. The first inequality shows that $\rho$-convergence implies convergence in measure, the second the converse.
+
+\emph{Completeness.} By the comparison, a $\rho$-Cauchy sequence is Cauchy in measure, and Theorem~\ref{measure-theory:theorem-cauchy-in-measure} gives a limit in measure, which is a $\rho$-limit.
+\end{proof}
+
+\begin{remark}\label{measure-theory:remark-ae-not-topological}
+\emph{Almost everywhere convergence is not topological.} On $[0, 1]$ with Lebesgue measure there is no topology on $L^0$ whose convergent sequences are exactly the almost everywhere convergent
+ones. In a topological space, if every subsequence of $(f_n)$ has a further subsequence converging to $f$, then $f_n \to f$: otherwise some neighbourhood of $f$ misses infinitely many $f_n$,
+and that subsequence has no subsequence converging to $f$. The typewriter sequence (Counterexample~\ref{measure-theory:counterexample-modes}(3)) converges to $0$ in measure, so every subsequence
+does, and by Proposition~\ref{measure-theory:proposition-modes}(2) has a further subsequence converging to $0$ almost everywhere; but the sequence itself converges nowhere. Convergence in measure, by
+contrast, is the convergence of the metric $\rho$; it is the ``topological shadow'' of almost everywhere convergence: $f_n \to f$ in measure if and only if every subsequence has a further subsequence
+converging almost everywhere to $f$ (for finite $\mu$; one direction is part (2), the other follows from part (3) and the subsequence principle just used).
+\end{remark}
+
+\begin{proposition}[Dominated convergence in measure]\label{measure-theory:proposition-dominated-in-measure}
+Let $f_n \to f$ in measure and $|f_n| \leq g$ a.e.\ with $g$ integrable. Then $f$ is integrable and $\int|f_n - f| \to 0$.
+\end{proposition}
+
+\begin{proof}
+Suppose not. Then there are $\eta > 0$ and a subsequence with $\int|f_{n_k} - f| \geq \eta$ for all $k$. This subsequence still converges to $f$ in measure, so by
+Proposition~\ref{measure-theory:proposition-modes}(2) a further subsequence converges to $f$ almost everywhere, and by the dominated convergence theorem
+(Theorem~\ref{measure-theory:theorem-dominated-convergence}) $f$ is integrable and the integrals $\int|f_{n_{k_j}} - f|$ tend to $0$, a contradiction. (That $f$ is integrable follows from the
+same subsequence: $|f| \leq g$ a.e.)
+\end{proof}
 
 \section{Independence and the Borel--Cantelli lemmas}\label{measure-theory:section-borel-cantelli}
 
@@ -1336,10 +1508,46 @@ For such $x$ and all large $k > \|x\|$, $g_k(x) = f(x)$.
 
 \section{Product measures and Fubini's theorem}\label{measure-theory:section-fubini}
 
+The area of a rectangle is the product of the lengths of its sides, and the volume of a solid is the integral of the areas of its slices. The first statement defines a measure on a product of
+measure spaces; the second, Cavalieri's principle, is a theorem about it, and its generalisation to functions is Fubini's theorem: a double integral can be computed as an iterated integral, in
+either order. Both statements need hypotheses, and the counterexamples below show which.
+
+\subsection{The product $\sigma$-algebra}\label{measure-theory:subsection-product-sigma-algebra}
+
 \begin{definition}\label{measure-theory:definition-product-measure}
 For measurable spaces $(X, \mathcal{A})$ and $(Y, \mathcal{B})$, the \emph{product $\sigma$-algebra} $\mathcal{A} \otimes \mathcal{B}$ on $X \times Y$ is generated by the \emph{rectangles} $A \times B$. For
 $E \subseteq X \times Y$, the sections are $E_x = \{y : (x, y) \in E\}$ and $E^y = \{x : (x, y) \in E\}$.
 \end{definition}
+
+The rectangles form a $\pi$-system, since $(A \times B) \cap (A^{\prime} \times B^{\prime}) = (A \cap A^{\prime}) \times (B \cap B^{\prime})$, and the finite disjoint unions of rectangles form an algebra:
+the complement of $A \times B$ is $((X \setminus A) \times Y) \sqcup (A \times (Y \setminus B))$. The product $\sigma$-algebra is the smallest $\sigma$-algebra for which the two projections
+$X \times Y \to X$ and $X \times Y \to Y$ are measurable, since $A \times B = \pi_X^{-1}(A) \cap \pi_Y^{-1}(B)$. Products of finitely many measurable spaces are defined in the same way, and are
+associative: $(\mathcal{A}_1 \otimes \mathcal{A}_2) \otimes \mathcal{A}_3 = \mathcal{A}_1 \otimes (\mathcal{A}_2 \otimes \mathcal{A}_3) = \mathcal{A}_1 \otimes \mathcal{A}_2 \otimes \mathcal{A}_3$, as each is generated by
+the boxes $A_1 \times A_2 \times A_3$ (a set $E \times A_3$ with $E \in \mathcal{A}_1 \otimes \mathcal{A}_2$ lies in the $\sigma$-algebra generated by boxes, because the sets $E$ with this property form a
+$\sigma$-algebra containing the rectangles).
+
+\begin{lemma}\label{measure-theory:lemma-sections}
+Let $E \in \mathcal{A} \otimes \mathcal{B}$ and let $f \colon X \times Y \to [-\infty, \infty]$ or $\CC$ be $\mathcal{A} \otimes \mathcal{B}$-measurable. For every $x \in X$ and $y \in Y$ the sections
+$E_x$ and $E^y$ are measurable, and so are the functions $f(x, -) \colon Y \to [-\infty, \infty]$ and $f(-, y) \colon X \to [-\infty, \infty]$.
+\end{lemma}
+
+\begin{proof}
+Fix $x$. The sets $E \subseteq X \times Y$ with $E_x \in \mathcal{B}$ form a $\sigma$-algebra, since $(X \times Y \setminus E)_x = Y \setminus E_x$ and $(\bigcup_kE_k)_x = \bigcup_k(E_k)_x$; it contains the
+rectangles, as $(A \times B)_x$ is $B$ or $\emptyset$. So it contains $\mathcal{A} \otimes \mathcal{B}$. For $f$, note $\{y : f(x, y) > a\} = \{f > a\}_x$. The other variable is symmetric.
+\end{proof}
+
+\begin{proposition}\label{measure-theory:proposition-borel-product}
+For topological spaces $X$, $Y$, $\mathcal{B}(X) \otimes \mathcal{B}(Y) \subseteq \mathcal{B}(X \times Y)$, with equality if $X$ and $Y$ have countable bases of open sets. In particular
+$\mathcal{B}(\RR^m) \otimes \mathcal{B}(\RR^n) = \mathcal{B}(\RR^{m+n})$.
+\end{proposition}
+
+\begin{proof}
+The projections are continuous, hence Borel (Lemma~\ref{measure-theory:lemma-measurable-generators}); so $A \times B = \pi_X^{-1}(A) \cap \pi_Y^{-1}(B)$ is Borel for Borel $A$, $B$, and the rectangles,
+hence their $\sigma$-algebra, lie in $\mathcal{B}(X \times Y)$. If $(U_i)$ and $(V_j)$ are countable bases, the products $U_i \times V_j$ form a countable base of $X \times Y$, so every open subset of
+$X \times Y$ is a countable union of rectangles $U_i \times V_j$, and lies in $\mathcal{B}(X) \otimes \mathcal{B}(Y)$. For $\RR^n$ take the open boxes with rational vertices.
+\end{proof}
+
+\subsection{Product measures}\label{measure-theory:subsection-product-measures}
 
 \begin{theorem}\label{measure-theory:theorem-product-measure}
 Let $\mu$ and $\nu$ be $\sigma$-finite measures on $X$ and $Y$. For $E \in \mathcal{A} \otimes \mathcal{B}$, the sections are measurable, the functions $x \mapsto \nu(E_x)$ and $y \mapsto \mu(E^y)$ are measurable, and
@@ -1350,11 +1558,51 @@ defines the unique measure on $\mathcal{A} \otimes \mathcal{B}$ with $(\mu \time
 \end{theorem}
 
 \begin{proof}
-Assume first that $\mu$ and $\nu$ are finite. The sets $E$ for which all claims hold (including equality of the two integrals) contain the rectangles, which are closed under finite intersections, and
-they are closed under complements and countable disjoint unions (by additivity and monotone convergence). Measurability of sections holds for all $E \in \mathcal{A} \otimes \mathcal{B}$ since the sets with
-measurable sections form a $\sigma$-algebra. By Lemma~\ref{measure-theory:lemma-dynkin} the claims hold on $\mathcal{A} \otimes \mathcal{B}$, and countable additivity follows from monotone convergence.
-For $\sigma$-finite measures write $X \times Y$ as an increasing union of $X_m \times Y_m$ with finite measures and pass to the limit. Uniqueness follows from Lemma~\ref{measure-theory:lemma-dynkin}.
+Measurability of the sections is Lemma~\ref{measure-theory:lemma-sections}.
+
+\emph{Step 1: finite measures.} Assume $\mu(X), \nu(Y) < \infty$, and let $\mathcal{L}$ be the family of $E \in \mathcal{A} \otimes \mathcal{B}$ such that $x \mapsto \nu(E_x)$ and $y \mapsto \mu(E^y)$ are
+measurable and $\int\nu(E_x)\,d\mu = \int\mu(E^y)\,d\nu$. A rectangle lies in $\mathcal{L}$: $\nu((A \times B)_x) = \nu(B)\mathbf{1}_A(x)$ and $\mu((A \times B)^y) = \mu(A)\mathbf{1}_B(y)$, and both
+integrals equal $\mu(A)\nu(B)$. In particular $X \times Y \in \mathcal{L}$. If $E \in \mathcal{L}$, then $\nu((X \times Y \setminus E)_x) = \nu(Y) - \nu(E_x)$, a measurable function, and the two integrals
+are $\mu(X)\nu(Y)$ minus the (finite) integrals for $E$; so the complement lies in $\mathcal{L}$. If $E = \bigsqcup_kE_k$ with $E_k \in \mathcal{L}$, then $\nu(E_x) = \sum_k\nu((E_k)_x)$ is measurable,
+and by monotone convergence (Corollary~\ref{measure-theory:corollary-integral-properties}(1)) both integrals are the sums of the integrals for the $E_k$. So $\mathcal{L}$ is a Dynkin system
+containing the $\pi$-system of rectangles, and by Lemma~\ref{measure-theory:lemma-dynkin} it is all of $\mathcal{A} \otimes \mathcal{B}$.
+
+\emph{Step 2: the formula defines a measure.} With $(\mu \times \nu)(E) = \int\nu(E_x)\,d\mu$, the empty set has measure $0$, and countable additivity is the computation with $\sum_k$ just made.
+
+\emph{Step 3: $\sigma$-finite measures.} Choose $X_m \uparrow X$ and $Y_m \uparrow Y$ measurable with $\mu(X_m), \nu(Y_m) < \infty$. Apply Step 1 to the finite measures $\mu_m = \mu_{X_m}$ and
+$\nu_m = \nu_{Y_m}$ (restrictions, Example~\ref{measure-theory:example-measures}(3)): $x \mapsto \nu(E_x \cap Y_m)\mathbf{1}_{X_m}(x)$ and $y \mapsto \mu(E^y \cap X_m)\mathbf{1}_{Y_m}(y)$ are measurable, and their
+integrals against $\mu$ and $\nu$ agree. As $m \to \infty$ these functions increase to $\nu(E_x)$ and $\mu(E^y)$ (continuity from below), which are therefore measurable, and monotone convergence gives
+the equality of the integrals. Countable additivity follows as in Step 2.
+
+\emph{Step 4: uniqueness.} Two measures with the stated values on rectangles agree on the $\pi$-system of rectangles, and are finite on the rectangles $X_m \times Y_m$ increasing to $X \times Y$; by
+Lemma~\ref{measure-theory:lemma-dynkin} they agree on $\mathcal{A} \otimes \mathcal{B}$.
 \end{proof}
+
+Product measures of finitely many $\sigma$-finite measures are defined inductively, $\mu_1 \times \cdots \times \mu_n = (\mu_1 \times \cdots \times \mu_{n-1}) \times \mu_n$; by uniqueness, this is the only
+measure with $(\mu_1 \times \cdots \times \mu_n)(A_1 \times \cdots \times A_n) = \prod_i\mu_i(A_i)$, so the bracketing does not matter.
+
+\begin{example}\label{measure-theory:example-product-measures}
+\begin{enumerate}
+\item For counting measures on countable sets $X$ and $Y$, $\mu \times \nu$ is counting measure on $X \times Y$: both are measures on $\mathcal{P}(X \times Y)$ (every subset is a countable union of
+points, which are rectangles) and agree on points.
+\item For Dirac measures, $\delta_a \times \delta_b = \delta_{(a, b)}$. For a fair die, the product of two copies of the uniform measure on $\{1, \ldots, 6\}$ is the uniform measure on the $36$ pairs:
+the model of two independent throws.
+\item For Lebesgue measure, $\lambda^m \times \lambda^n$ and $\lambda^{m+n}$ agree on the Borel sets (Remark~\ref{measure-theory:remark-lebesgue-product} below). The area of a disc of radius $r$ is
+$\int_{-r}^r2\sqrt{r^2 - x^2}\,dx = \pi r^2$, the integral of the lengths of its vertical sections.
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{measure-theory:counterexample-product-sigma-finite}
+\emph{$\sigma$-finiteness is needed.} Let $\mu = \lambda$ on $X = [0, 1]$ with the Borel sets, $\nu$ counting measure on $Y = [0, 1]$ with the Borel sets, and $E = \{(x, x)\}$ the diagonal, which is
+closed, hence in $\mathcal{B}([0, 1]) \otimes \mathcal{B}([0, 1]) = \mathcal{B}([0, 1]^2)$ (Proposition~\ref{measure-theory:proposition-borel-product}). Every section is a point, so
+\[
+\int\nu(E_x)\,d\mu(x) = \int_0^11\,dx = 1, \qquad \int\mu(E^y)\,d\nu(y) = \int0\,d\nu = 0.
+\]
+The counting measure on $[0, 1]$ is not $\sigma$-finite. The theory of products of measures that are not $\sigma$-finite is delicate (the product property on rectangles no longer determines a
+measure), and we avoid it.
+\end{counterexample}
+
+\subsection{The theorems of Tonelli and Fubini}\label{measure-theory:subsection-tonelli-fubini}
 
 \begin{theorem}[Tonelli and Fubini]\label{measure-theory:theorem-fubini}
 Let $\mu$, $\nu$ be $\sigma$-finite.
@@ -1366,18 +1614,51 @@ $\int_{X \times Y}f\,d(\mu \times \nu) = \int\left(\int f(x, y)\,d\nu(y)\right)d
 \end{theorem}
 
 \begin{proof}
-(1) For indicator functions this is Theorem~\ref{measure-theory:theorem-product-measure}; it extends to simple functions by linearity and to all $f \geq 0$ by monotone convergence. (2) Apply (1) to $|f|$ to see that
-$\int|f(x, y)|\,d\nu(y) < \infty$ for a.e. $x$, and then to the positive and negative parts of the real and imaginary parts.
+\emph{Step 1: indicators.} For $f = \mathbf{1}_E$, $\int f(x, y)\,d\nu(y) = \nu(E_x)$, and (1) is Theorem~\ref{measure-theory:theorem-product-measure}.
+
+\emph{Step 2: simple functions.} Each of the three expressions is additive and positively homogeneous in $f \geq 0$ (Corollary~\ref{measure-theory:corollary-integral-properties}(1)), and a sum of
+measurable functions is measurable; so (1) holds for nonnegative simple functions.
+
+\emph{Step 3: Tonelli.} For measurable $f \geq 0$ choose simple $0 \leq s_k \uparrow f$ (Proposition~\ref{measure-theory:proposition-measurable-functions}(4)). For each $x$, $s_k(x, -) \uparrow f(x, -)$, so by
+monotone convergence $\int s_k(x, y)\,d\nu(y) \uparrow \int f(x, y)\,d\nu(y)$; the limit of measurable functions is measurable, and monotone convergence on $X$ and on $X \times Y$ passes the equalities of
+Step 2 to the limit. The other order is symmetric.
+
+\emph{Step 4: Fubini.} Let $f \in L^1(\mu \times \nu)$. By (1) applied to $|f|$, $\int(\int|f(x, y)|\,d\nu(y))\,d\mu(x) = \int|f| < \infty$, so the inner integral is finite for $x$ outside a null set $N$
+(Corollary~\ref{measure-theory:corollary-integral-properties}(4)), and $f(x, -) \in L^1(\nu)$ there. For real $f$ write $f = f^+ - f^-$ with $f^\pm \leq |f|$ integrable; for $x \notin N$,
+$\int f(x, y)\,d\nu = \int f^+(x, y)\,d\nu - \int f^-(x, y)\,d\nu$, a difference of two integrable functions of $x$ (by (1) for $f^\pm$), and integrating over $X$ gives
+$\int f^+\,d(\mu \times \nu) - \int f^-\,d(\mu \times \nu) = \int f\,d(\mu \times \nu)$. For complex $f$ treat the real and imaginary parts.
 \end{proof}
 
+In practice one uses the two parts together: to justify exchanging the order of integration for a function $f$ of variable sign, first compute an iterated integral of $|f|$ with Tonelli's theorem,
+in whichever order is convenient; if it is finite, $f$ is integrable and Fubini's theorem applies in both orders.
+
 \begin{counterexample}\label{measure-theory:counterexample-fubini}
-Integrability is needed in (2). On $\NN \times \NN$ with counting measures let $f(n, n) = 1$, $f(n, n+1) = -1$ and $f = 0$ otherwise. Then $\sum_m\sum_nf(n, m) = 1$, since only column $m = 0$ has nonzero
-sum, whereas $\sum_n\sum_mf(n, m) = 0$.
+Integrability is needed in (2). On $\NN \times \NN$ with counting measures let $f(n, n) = 1$, $f(n, n+1) = -1$ and $f = 0$ otherwise. Then $\sum_m\sum_nf(n, m) = 1$, since only the first column $m = \min\NN$ has nonzero
+sum, whereas $\sum_n\sum_mf(n, m) = 0$, since every row sums to $0$.
 \end{counterexample}
+
+\begin{counterexample}\label{measure-theory:counterexample-fubini-continuous}
+The same happens for a function continuous outside one point of the unit square. Let $f(x, y) = \dfrac{x^2 - y^2}{(x^2 + y^2)^2}$ on $(0, 1]^2$. Since
+$\dfrac{\partial}{\partial y}\dfrac{y}{x^2 + y^2} = \dfrac{x^2 - y^2}{(x^2 + y^2)^2}$, for fixed $x > 0$
+\[
+\int_0^1f(x, y)\,dy = \frac{1}{1 + x^2}, \qquad \int_0^1\int_0^1f(x, y)\,dy\,dx = \frac\pi4,
+\]
+and by the antisymmetry $f(y, x) = -f(x, y)$ the other order gives $-\pi/4$. Tonelli's theorem therefore says that $\int\!\!\int|f| = \infty$; directly, in polar coordinates $|f| = |\cos2\theta|/r^2$, whose
+integral over a quarter disc diverges like $\int_0r^{-1}\,dr$.
+\end{counterexample}
+
+\begin{remark}\label{measure-theory:remark-fubini-measurability}
+\emph{Measurability on the product is needed.} Tonelli's theorem assumes that $f$ is measurable for $\mathcal{A} \otimes \mathcal{B}$, not only that all sections are measurable. Assuming the
+continuum hypothesis, Sierpi\'nski constructed a set $E \subseteq [0, 1]^2$ all of whose vertical sections have countable complement and all of whose horizontal sections are countable; then
+$\int\lambda(E_x)\,dx = 1$ and $\int\lambda(E^y)\,dy = 0$, so $E$ is not measurable although all its sections are \cite[Chapter 8]{rudin-rca}. The construction uses a well-ordering of $[0, 1]$ in which
+every initial segment is countable: $E = \{(x, y) : x \prec y\}$.
+\end{remark}
 
 \begin{remark}\label{measure-theory:remark-lebesgue-product}
 $\lambda^{m+n}$ and $\lambda^m \times \lambda^n$ agree on boxes, hence on Borel sets by Lemma~\ref{measure-theory:lemma-dynkin}, and $\lambda^{m+n}$ is the completion of $\lambda^m \times \lambda^n$. So
 Fubini's theorem applies to Lebesgue measure on $\RR^{m+n} = \RR^m \times \RR^n$ for Borel functions, and for Lebesgue measurable functions with ``for almost every $x$'' qualifications.
+The product of the complete measures $\lambda^m$ and $\lambda^n$, on the $\sigma$-algebra generated by products of Lebesgue measurable sets, is not complete: if $N \subseteq \RR^m$ is not Lebesgue
+measurable, $N \times \{0\}$ is contained in the null set $\RR^m \times \{0\}$, but it is not measurable for the product, since its section at $y = 0$ is $N$ (Lemma~\ref{measure-theory:lemma-sections}).
 \end{remark}
 
 \begin{proposition}[Layer cake formula]\label{measure-theory:proposition-layer-cake}
@@ -1397,6 +1678,103 @@ $x$ gives $\psi(t)\mu(\{f > t\})$. The first formula is the case $\psi = 1$, and
 \end{proof}
 
 The name describes the picture: the region under the graph of $f$ is cut into horizontal layers $\{f > t\}$ of thickness $dt$.
+
+\begin{example}\label{measure-theory:example-layer-cake}
+\begin{enumerate}
+\item \emph{Expectation from the tail.} For a random variable $f \geq 0$ on a probability space, $\int f\,dP = \int_0^\infty P(f > t)\,dt$. If $f$ takes values in $\{0, 1, 2, \ldots\}$, then
+$P(f > t) = P(f > n)$ for $n \leq t < n + 1$, and $\int f\,dP = \sum_{n \geq 0}P(f > n)$. For the number $f$ of throws of a fair die up to and including the first six,
+$P(f > n) = (5/6)^n$, and $\int f\,dP = \sum_n(5/6)^n = 6$.
+\item \emph{Integrability of powers.} On $\RR^n$ and for $a > 0$, $\int_{\{|x| \leq 1\}}|x|^{-a}\,dx < \infty$ if and only if $a < n$: here $\lambda(\{|x|^{-a} > t\} \cap \{|x| \leq 1\})$ equals $\omega_nt^{-n/a}$ for $t \geq 1$, with
+$\omega_n$ the volume of the unit ball, and $\int_1^\infty t^{-n/a}\,dt < \infty$ exactly when $n/a > 1$.
+\end{enumerate}
+\end{example}
+
+\subsection{Infinite products of probability measures}\label{measure-theory:subsection-infinite-products}
+
+Infinitely many independent throws of a die, or tosses of a coin, are described by a probability measure on an infinite product, and Fubini's theorem is the tool to construct it. Let
+$(X_k, \mathcal{A}_k, \mu_k)$, $k \geq 1$, be probability spaces, $X = \prod_kX_k$, and $\pi_k \colon X \to X_k$ the projections. For $n \geq 1$ write $X^{(n)} = X_1 \times \cdots \times X_n$, with the product
+$\sigma$-algebra $\mathcal{A}^{(n)}$ and the product measure $\mu^{(n)} = \mu_1 \times \cdots \times \mu_n$, and $p_n \colon X \to X^{(n)}$ for the projection onto the first $n$ coordinates.
+
+\begin{definition}\label{measure-theory:definition-cylinder}
+A \emph{cylinder} in $X$ is a set $C = p_n^{-1}(B)$ with $n \geq 1$ and $B \in \mathcal{A}^{(n)}$: whether $x \in C$ depends only on $x_1, \ldots, x_n$. The \emph{product $\sigma$-algebra}
+$\bigotimes_k\mathcal{A}_k$ is the $\sigma$-algebra generated by the cylinders, equivalently the smallest one for which all $\pi_k$ are measurable.
+\end{definition}
+
+A cylinder $p_n^{-1}(B)$ is also $p_{n+1}^{-1}(B \times X_{n+1})$, so two cylinders can always be written with the same $n$; hence the cylinders form an algebra $\mathcal{C}$. On a cylinder put
+\[
+\mu_0(p_n^{-1}(B)) = \mu^{(n)}(B).
+\]
+This does not depend on the representation: $\mu^{(n+1)}(B \times X_{n+1}) = \mu^{(n)}(B)\mu_{n+1}(X_{n+1}) = \mu^{(n)}(B)$, and two representations of the same cylinder become equal after enlarging the
+smaller $n$ (if $p_n^{-1}(B) = p_n^{-1}(B^{\prime})$ then $B = B^{\prime}$, as $p_n$ is surjective). Writing two disjoint cylinders with the same $n$ shows that $\mu_0$ is finitely additive on $\mathcal{C}$,
+with $\mu_0(X) = 1$.
+
+\begin{theorem}[Infinite product measures]\label{measure-theory:theorem-infinite-product}
+There is a unique probability measure $\mu = \bigotimes_k\mu_k$ on $\bigotimes_k\mathcal{A}_k$ such that $\mu(p_n^{-1}(B)) = \mu^{(n)}(B)$ for all $n$ and $B \in \mathcal{A}^{(n)}$; in particular
+\[
+\mu(\{x : x_1 \in A_1, \ldots, x_n \in A_n\}) = \mu_1(A_1) \cdots \mu_n(A_n) \qquad (A_k \in \mathcal{A}_k).
+\]
+\end{theorem}
+
+\begin{proof}
+By the Carath\'eodory--Hahn theorem (Theorem~\ref{measure-theory:theorem-extension}) it suffices to show that $\mu_0$ is a premeasure on $\mathcal{C}$; the extension is unique since $\mu_0$ is finite, and it is
+determined by its values on boxes, since the boxes form a $\pi$-system generating $\bigotimes_k\mathcal{A}_k$ (Lemma~\ref{measure-theory:lemma-dynkin}).
+
+\emph{Step 1: reduction to continuity at $\emptyset$.} Suppose that every decreasing sequence of cylinders $C_1 \supseteq C_2 \supseteq \cdots$ with $\mu_0(C_j) \geq \varepsilon > 0$ for all $j$ has a nonempty
+intersection. Let $C = \bigsqcup_kC^{\prime}_k$ with $C, C^{\prime}_k \in \mathcal{C}$. Then $D_j = C \setminus (C^{\prime}_1 \cup \cdots \cup C^{\prime}_j)$ are decreasing cylinders with empty intersection, so
+$\mu_0(D_j) \to 0$ (otherwise $\mu_0(D_j) \geq \varepsilon$ for all $j$, the sequence being nonincreasing), and by finite additivity $\mu_0(C) = \sum_{k \leq j}\mu_0(C^{\prime}_k) + \mu_0(D_j) \to \sum_k\mu_0(C^{\prime}_k)$.
+
+\emph{Step 2: sections of cylinders.} For $a \in X_1$ and $C \subseteq X$ let $C_a = \{(x_2, x_3, \ldots) : (a, x_2, x_3, \ldots) \in C\}$, a subset of $X^{\prime} = \prod_{k \geq 2}X_k$. Let $\mu^{\prime}_0$ be the
+function defined in the same way as $\mu_0$ on the cylinders of $X^{\prime}$, built from $\mu_2, \mu_3, \ldots$. If $C = p_n^{-1}(B)$, then $C_a$ is the cylinder of $X^{\prime}$ over the section
+$B_a \subseteq X_2 \times \cdots \times X_n$, and $X^{(n)} = X_1 \times (X_2 \times \cdots \times X_n)$ with $\mu^{(n)} = \mu_1 \times (\mu_2 \times \cdots \times \mu_n)$. By
+Theorem~\ref{measure-theory:theorem-product-measure}, $a \mapsto \mu^{\prime}_0(C_a)$ is measurable and
+\[
+\mu_0(C) = \int_{X_1}\mu^{\prime}_0(C_a)\,d\mu_1(a).
+\]
+
+\emph{Step 3: choosing the first coordinate.} Let $C_j$ be decreasing cylinders with $\mu_0(C_j) \geq \varepsilon$. Let $F_j = \{a \in X_1 : \mu^{\prime}_0((C_j)_a) \geq \varepsilon/2\}$, a decreasing sequence of
+measurable sets. Splitting the integral of Step 2 over $F_j$ and its complement, and using $\mu^{\prime}_0 \leq 1$,
+$\varepsilon \leq \mu_0(C_j) \leq \mu_1(F_j) + \varepsilon/2$, so $\mu_1(F_j) \geq \varepsilon/2$. By continuity from above, $\mu_1(\bigcap_jF_j) \geq \varepsilon/2 > 0$; choose $a_1 \in \bigcap_jF_j$.
+Then the sections $(C_j)_{a_1}$ are decreasing cylinders of $X^{\prime}$ with $\mu^{\prime}_0((C_j)_{a_1}) \geq \varepsilon/2$ for all $j$.
+
+\emph{Step 4: induction.} Applying Step 3 to $X^{\prime}$ and the sections $(C_j)_{a_1}$, with $\varepsilon/2$ in place of $\varepsilon$, gives $a_2 \in X_2$ such that the sets
+$\{(x_3, \ldots) : (a_1, a_2, x_3, \ldots) \in C_j\}$ have measure $\geq \varepsilon/4$ for all $j$; and so on. This produces $a = (a_1, a_2, \ldots) \in X$ such that for every $n$ and $j$ the set
+$\{(x_{n+1}, \ldots) : (a_1, \ldots, a_n, x_{n+1}, \ldots) \in C_j\}$ has positive measure, so is nonempty.
+
+\emph{Step 5: $a$ lies in every $C_j$.} Write $C_j = p_n^{-1}(B)$. By Step 4 some point $(a_1, \ldots, a_n, x_{n+1}, \ldots)$ lies in $C_j$; since membership depends only on the first $n$ coordinates,
+$(a_1, \ldots, a_n) \in B$ and $a \in C_j$. So $\bigcap_jC_j \neq \emptyset$, and Step 1 concludes.
+\end{proof}
+
+\begin{definition}\label{measure-theory:definition-independent-variables}
+Measurable functions (random variables) $f_k \colon \Omega \to Y_k$, $k \geq 1$, on a probability space $(\Omega, P)$ are \emph{independent} if for all measurable $B_k \subseteq Y_k$ the events
+$\{f_k \in B_k\}$ are independent (Definition~\ref{measure-theory:definition-independent}).
+\end{definition}
+
+\begin{corollary}\label{measure-theory:corollary-independent-sequences}
+For probability measures $\nu_k$ on measurable spaces $Y_k$ there is a probability space carrying independent random variables $f_k$ with distributions $\nu_k$: on $\prod_kY_k$ with
+$\bigotimes_k\nu_k$, take the coordinate maps $f_k = \pi_k$.
+\end{corollary}
+
+\begin{proof}
+$\pi_k$ is measurable and $(\pi_k)_*(\bigotimes\nu_j)(B) = \nu_k(B)$, by the theorem applied to the box with $A_k = B$ and all other $A_j = Y_j$. For distinct $k_1 < \cdots < k_m$ the event
+$\{\pi_{k_1} \in B_1\} \cap \cdots \cap \{\pi_{k_m} \in B_m\}$ is a box, of measure $\prod_i\nu_{k_i}(B_i)$.
+\end{proof}
+
+\begin{example}\label{measure-theory:example-coin-tossing}
+\emph{Coin tossing and Lebesgue measure.} Let $X = \{0, 1\}^{\NN_{\geq 1}}$ with $\mu = \bigotimes_k(\frac12\delta_0 + \frac12\delta_1)$, the model of infinitely many tosses of a fair coin, and
+$\beta(x) = \sum_kx_k2^{-k} \in [0, 1]$. The map $\beta$ is measurable (a pointwise limit of functions depending on finitely many coordinates), and $\beta_*\mu = \lambda$ on $[0, 1]$. Indeed, for a dyadic
+interval $I = [N2^{-K}, (N + 1)2^{-K}]$, $\beta^{-1}(I)$ consists of the sequences beginning with the $K$ binary digits of $N$, together with at most two sequences ending in all $0$s or all $1$s from
+the $(K+1)$-st place on, which form a null set; so $\beta_*\mu(I) = 2^{-K} = \lambda(I)$. An interval $[0, t]$ with dyadic $t$ is a finite union of such intervals overlapping in finitely many points, so
+again $\beta_*\mu([0, t]) = t$ (single points are null for both measures). These intervals form a $\pi$-system generating $\mathcal{B}([0, 1])$, and
+Lemma~\ref{measure-theory:lemma-dynkin} gives $\beta_*\mu = \lambda$. Conversely, the binary digit maps $d_k$ of Lemma~\ref{measure-theory:lemma-binary-digits} send $\lambda$ to $\mu$. Thus ``a point of
+$[0, 1]$ chosen uniformly at random'' and ``an infinite sequence of fair coin tosses'' are the same probability space, up to null sets; this is why Borel's normal number theorem
+(Theorem~\ref{measure-theory:theorem-borel-normal}) is a theorem about coin tossing.
+\end{example}
+
+\begin{remark}\label{measure-theory:remark-kolmogorov-extension}
+The theorem constructs only \emph{independent} sequences. Dependent ones, such as Markov chains or Brownian motion, are built from a consistent family of finite-dimensional distributions by
+\emph{Kolmogorov's extension theorem}, whose proof is the same as above once the compactness used in Steps 3--5 is supplied by inner regularity of measures on $\RR^n$ (Part~\ref{part-probability}). For
+products of uncountably many probability spaces the same construction works, since every set of the product $\sigma$-algebra depends on countably many coordinates.
+\end{remark}
 
 \section{Change of variables}\label{measure-theory:section-change-of-variables}
 
@@ -1481,7 +1859,7 @@ In particular, two Borel sets whose slices at every height have the same $(n-1)$
 \end{proposition}
 
 \begin{proof}
-Apply Tonelli's theorem (Theorem~\ref{measure-theory:theorem-fubini}(1)) to the indicator function $\mathbf{1}_E$ on $\RR^{n-1} \times \RR$, with $\lambda^n = \lambda^{n-1} \times \lambda^1$ on Borel sets
+Apply Tonelli's theorem (Theorem~\ref{measure-theory:theorem-fubini}(1)) to $\mathbf{1}_E$ on $\RR^{n-1} \times \RR$, with $\lambda^n = \lambda^{n-1} \times \lambda^1$ on Borel sets
 (Remark~\ref{measure-theory:remark-lebesgue-product}), integrating first over $y$: $\int\mathbf{1}_E(y, t)\,d\lambda^{n-1}(y) = \lambda^{n-1}(E_t)$.
 \end{proof}
 
