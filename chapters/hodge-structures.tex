@@ -251,34 +251,6 @@ $\alpha$ preserves $\QQ + \QQ\tau$ if and only if $n\alpha$ preserves $\ZZ + \ZZ
 For instance $\tau = i$ gives $\QQ(i)$. Elliptic curves with complex multiplication are thus exactly those whose Hodge structure has extra symmetry; they are countably many up to isomorphism.
 \end{example}
 
-\section{Exercises}\label{hodge-structures:section-exercises}
-
-\begin{exercise}\label{hodge-structures:exercise-tate-tensor}
-Show that $\ZZ(m) \otimes \ZZ(n) \cong \ZZ(m + n)$ and $\ZZ(n)^\vee \cong \ZZ(-n)$, and that a rank-one $\QQ$-Hodge structure is isomorphic to $\QQ(n)$ for a unique $n$.
-\end{exercise}
-
-\begin{solution}
-The lattices multiply, $(2\pi i)^m\ZZ \otimes (2\pi i)^n\ZZ \to (2\pi i)^{m+n}\ZZ$, and the types add. A rank-one structure $H$ has $H_\CC$ one-dimensional, so it is a single $H^{p,q}$ with
-$\overline{H^{p,q}} = H^{q,p}$ forcing $p = q$; the weight is $2p$, and any nonzero rational vector gives an isomorphism with $\QQ(-p)$.
-\end{solution}
-
-\begin{exercise}\label{hodge-structures:exercise-hodge-numbers-tensor}
-Compute the Hodge numbers of $\Lambda^2H$ for the weight-one Hodge structure $H = H^1(E)$ of an elliptic curve, and of $H^1(E)^{\otimes 2}$.
-\end{exercise}
-
-\begin{solution}
-$H^{1,0}$ and $H^{0,1}$ are one-dimensional. $\Lambda^2H$ is one-dimensional of type $(1,1)$, isomorphic to $\QQ(-1)$ (it is $H^2(E)$). $H^{\otimes 2}$ has Hodge numbers
-$h^{2,0} = 1$, $h^{1,1} = 2$, $h^{0,2} = 1$, and $\mathrm{Sym}^2H$ has $(1, 1, 1)$.
-\end{solution}
-
-\begin{exercise}\label{hodge-structures:exercise-polarisation-elliptic}
-Let $H = H^1(E_\tau; \QQ)$ with basis dual to $1, \tau$ and $Q$ the cup product pairing. Verify condition (3) of Definition~\ref{hodge-structures:definition-polarisation} directly.
-\end{exercise}
-
-\begin{solution}
-$H^{1,0}$ is spanned by $[dz]$, and $iQ([dz], \overline{[dz]}) = i\int_{E_\tau}dz \wedge d\bar z = 2\operatorname{Im}\tau > 0$, as in Example~\ref{kahler:example-curves-riemann}.
-\end{solution}
-
 \section{Mumford--Tate Groups}\label{hodge-structures:section-mumford-tate}
 The Mumford--Tate group of a rational Hodge structure $H$ is the smallest algebraic group over $\QQ$ whose real points contain the image of the Deligne torus.
 It is the symmetry group of $H$: a rational subspace of any tensor space built from $H$ is a sub-Hodge structure exactly when it is stable under the
@@ -467,7 +439,37 @@ equals $\mathrm{MT}(H^1(A; \QQ)) \otimes \QQ_\ell$, under Artin's comparison iso
 (Chapter~\ref{absolute-hodge}), and it is known for elliptic curves (Serre) and in many cases for abelian varieties.
 \end{remark}
 
-\section{Exercises on Mumford--Tate Groups}\label{hodge-structures:section-exercises-mumford-tate}
+\section{Exercises}\label{hodge-structures:section-exercises}
+
+\subsection{Hodge Structures}\label{hodge-structures:subsection-exercises-hodge-structures}
+
+\begin{exercise}\label{hodge-structures:exercise-tate-tensor}
+Show that $\ZZ(m) \otimes \ZZ(n) \cong \ZZ(m + n)$ and $\ZZ(n)^\vee \cong \ZZ(-n)$, and that a rank-one $\QQ$-Hodge structure is isomorphic to $\QQ(n)$ for a unique $n$.
+\end{exercise}
+
+\begin{solution}
+The lattices multiply, $(2\pi i)^m\ZZ \otimes (2\pi i)^n\ZZ \to (2\pi i)^{m+n}\ZZ$, and the types add. A rank-one structure $H$ has $H_\CC$ one-dimensional, so it is a single $H^{p,q}$ with
+$\overline{H^{p,q}} = H^{q,p}$ forcing $p = q$; the weight is $2p$, and any nonzero rational vector gives an isomorphism with $\QQ(-p)$.
+\end{solution}
+
+\begin{exercise}\label{hodge-structures:exercise-hodge-numbers-tensor}
+Compute the Hodge numbers of $\Lambda^2H$ for the weight-one Hodge structure $H = H^1(E)$ of an elliptic curve, and of $H^1(E)^{\otimes 2}$.
+\end{exercise}
+
+\begin{solution}
+$H^{1,0}$ and $H^{0,1}$ are one-dimensional. $\Lambda^2H$ is one-dimensional of type $(1,1)$, isomorphic to $\QQ(-1)$ (it is $H^2(E)$). $H^{\otimes 2}$ has Hodge numbers
+$h^{2,0} = 1$, $h^{1,1} = 2$, $h^{0,2} = 1$, and $\mathrm{Sym}^2H$ has $(1, 1, 1)$.
+\end{solution}
+
+\begin{exercise}\label{hodge-structures:exercise-polarisation-elliptic}
+Let $H = H^1(E_\tau; \QQ)$ with basis dual to $1, \tau$ and $Q$ the cup product pairing. Verify condition (3) of Definition~\ref{hodge-structures:definition-polarisation} directly.
+\end{exercise}
+
+\begin{solution}
+$H^{1,0}$ is spanned by $[dz]$, and $iQ([dz], \overline{[dz]}) = i\int_{E_\tau}dz \wedge d\bar z = 2\operatorname{Im}\tau > 0$, as in Example~\ref{kahler:example-curves-riemann}.
+\end{solution}
+
+\subsection{Mumford--Tate Groups}\label{hodge-structures:subsection-exercises-mumford-tate}
 
 \begin{exercise}\label{hodge-structures:exercise-tate}
 Show that $\mathrm{MT}(\QQ(n)) = \mathbb{G}_m$ for $n \neq 0$ and $\mathrm{MT}(\QQ(0)) = 1$.

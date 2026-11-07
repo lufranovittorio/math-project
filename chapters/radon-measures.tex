@@ -1067,7 +1067,6 @@ The theorem is the measure-theoretic form of the Radon--Nikodym theorem: the der
 balls. Applied to $\nu = f^{\pm}\mu$ it shows that for $f \in L^1_{\mathrm{loc}}(\mu)$ the $\mu$-averages of $f$ over $\overline{B}(x, r)$ tend to $f(x)$ for $\mu$-almost every $x$; so the Lebesgue
 differentiation theorem holds for every Radon measure on $\RR^n$ \cite[Section 1.7]{evans-gariepy}.
 
-
 \subsection{Differentiation with respect to doubling measures}\label{radon-measures:subsection-doubling}
 
 Densities measure a measure $\mu$ against the function $r \mapsto \alpha(s)(2r)^s$. Measuring it against another measure $\nu$ instead, through the ratios $\mu(\overline{B}(x, r))/\nu(\overline{B}(x, r))$,
@@ -1213,35 +1212,6 @@ still differentiates. In general metric spaces some covering property is needed;
 spaces \cite[Chapter 1]{heinonen-2001}.
 \end{remark}
 
-\begin{exercise}\label{radon-measures:exercise-doubling-totally-bounded}
-Let $\nu$ be a doubling measure on $X$ with constant $C$.
-\begin{enumerate}
-\item Let $0 < \varepsilon \leq R$ and let $m \geq 0$ be an integer with $2^m\varepsilon \geq 2R$. Show that a set of points of $\overline{B}(x, R)$ with pairwise distances $> 2\varepsilon$ has at most $C^{m+1}$
-elements.
-\item Deduce that closed balls in $X$ are totally bounded, that $X$ is separable, and that if $X$ is complete, closed balls are compact.
-\item Deduce that the Hilbert space $\ell^2$ of square-summable real sequences carries no doubling measure.
-\end{enumerate}
-\end{exercise}
-
-\begin{solution}
-(1) Let $y_1, \ldots, y_N \in \overline{B}(x, R)$ with $d(y_i, y_j) > 2\varepsilon$ for $i \neq j$. The balls $\overline{B}(y_i, \varepsilon)$ are pairwise disjoint and lie in $\overline{B}(x, R + \varepsilon) \subseteq \overline{B}(x, 2R)$.
-Moreover $\overline{B}(x, R) \subseteq \overline{B}(y_i, 2R)$, so
-$\nu(\overline{B}(x, R)) \leq \nu(\overline{B}(y_i, 2R)) \leq C^m\nu(\overline{B}(y_i, 2^{-m}2R)) \leq C^m\nu(\overline{B}(y_i, \varepsilon))$. Summing over $i$,
-\[
-NC^{-m}\nu(\overline{B}(x, R)) \leq \sum_i\nu(\overline{B}(y_i, \varepsilon)) \leq \nu(\overline{B}(x, 2R)) \leq C\nu(\overline{B}(x, R)),
-\]
-and dividing by $\nu(\overline{B}(x, R)) > 0$ gives $N \leq C^{m+1}$.
-
-(2) Given $\varepsilon \leq R$, choose a set $\{y_1, \ldots, y_N\} \subseteq \overline{B}(x, R)$ with pairwise distances $> 2\varepsilon$ and with $N$ as large as possible, which is possible by (1). Every
-$y \in \overline{B}(x, R)$ has $d(y, y_i) \leq 2\varepsilon$ for some $i$, since otherwise $y$ could be added. So finitely many open balls of radius $3\varepsilon$ cover $\overline{B}(x, R)$; for
-$\varepsilon > R$ the single ball $B(x, 3\varepsilon)$ does. Hence $\overline{B}(x, R)$ is totally bounded. A totally bounded metric space is separable (the centres of finite $1/j$-nets, $j \geq 1$, form a
-dense countable set), and $X = \bigcup_k\overline{B}(x_0, k)$ is a countable union of such spaces, so $X$ is separable. A closed subset of a complete space is complete, so if $X$ is complete, closed balls
-are compact by Theorem~\ref{general-topology:theorem-compact-metric}.
-
-(3) The unit vectors $e_1, e_2, \ldots$ lie in the closed unit ball of $\ell^2$ and have pairwise distances $\|e_i - e_j\| = \sqrt2$. So the closed unit ball is not totally bounded: no finitely many balls of
-radius $\frac12$ cover it, since each such ball contains at most one $e_i$. By (2), there is no doubling measure on $\ell^2$. Doubling measures live on spaces that are ``finite-dimensional'' in a metric sense.
-\end{solution}
-
 \section{Exercises}\label{radon-measures:section-exercises}
 
 \begin{exercise}\label{radon-measures:exercise-riesz-circle}
@@ -1335,4 +1305,33 @@ By invariance under the rotation by $w$, $\int z^k\,d\sigma = \int(wz)^k\,d\sigm
 same computation with $w = e^{i\alpha}$, for which $w^k \neq 1$ when $k \neq 0$, gives $\int z^k\,d\nu = 0$ for $k \neq 0$. So $\int p\,d\nu = \int p\,d\sigma$ for every trigonometric polynomial
 $p(z) = \sum_{|k| \leq N}a_kz^k$. Trigonometric polynomials are uniformly dense in $C(S^1)$ (by the Stone--Weierstrass theorem, Theorem~\ref{real-analysis:theorem-stone-weierstrass}: they form an algebra closed under conjugation, separating points and containing
 constants), so $\int f\,d\nu = \int f\,d\sigma$ for every continuous $f$, and $\nu = \sigma$ by the uniqueness in the Riesz--Markov theorem.
+\end{solution}
+
+\begin{exercise}\label{radon-measures:exercise-doubling-totally-bounded}
+Let $\nu$ be a doubling measure on $X$ with constant $C$.
+\begin{enumerate}
+\item Let $0 < \varepsilon \leq R$ and let $m \geq 0$ be an integer with $2^m\varepsilon \geq 2R$. Show that a set of points of $\overline{B}(x, R)$ with pairwise distances $> 2\varepsilon$ has at most $C^{m+1}$
+elements.
+\item Deduce that closed balls in $X$ are totally bounded, that $X$ is separable, and that if $X$ is complete, closed balls are compact.
+\item Deduce that the Hilbert space $\ell^2$ of square-summable real sequences carries no doubling measure.
+\end{enumerate}
+\end{exercise}
+
+\begin{solution}
+(1) Let $y_1, \ldots, y_N \in \overline{B}(x, R)$ with $d(y_i, y_j) > 2\varepsilon$ for $i \neq j$. The balls $\overline{B}(y_i, \varepsilon)$ are pairwise disjoint and lie in $\overline{B}(x, R + \varepsilon) \subseteq \overline{B}(x, 2R)$.
+Moreover $\overline{B}(x, R) \subseteq \overline{B}(y_i, 2R)$, so
+$\nu(\overline{B}(x, R)) \leq \nu(\overline{B}(y_i, 2R)) \leq C^m\nu(\overline{B}(y_i, 2^{-m}2R)) \leq C^m\nu(\overline{B}(y_i, \varepsilon))$. Summing over $i$,
+\[
+NC^{-m}\nu(\overline{B}(x, R)) \leq \sum_i\nu(\overline{B}(y_i, \varepsilon)) \leq \nu(\overline{B}(x, 2R)) \leq C\nu(\overline{B}(x, R)),
+\]
+and dividing by $\nu(\overline{B}(x, R)) > 0$ gives $N \leq C^{m+1}$.
+
+(2) Given $\varepsilon \leq R$, choose a set $\{y_1, \ldots, y_N\} \subseteq \overline{B}(x, R)$ with pairwise distances $> 2\varepsilon$ and with $N$ as large as possible, which is possible by (1). Every
+$y \in \overline{B}(x, R)$ has $d(y, y_i) \leq 2\varepsilon$ for some $i$, since otherwise $y$ could be added. So finitely many open balls of radius $3\varepsilon$ cover $\overline{B}(x, R)$; for
+$\varepsilon > R$ the single ball $B(x, 3\varepsilon)$ does. Hence $\overline{B}(x, R)$ is totally bounded. A totally bounded metric space is separable (the centres of finite $1/j$-nets, $j \geq 1$, form a
+dense countable set), and $X = \bigcup_k\overline{B}(x_0, k)$ is a countable union of such spaces, so $X$ is separable. A closed subset of a complete space is complete, so if $X$ is complete, closed balls
+are compact by Theorem~\ref{general-topology:theorem-compact-metric}.
+
+(3) The unit vectors $e_1, e_2, \ldots$ lie in the closed unit ball of $\ell^2$ and have pairwise distances $\|e_i - e_j\| = \sqrt2$. So the closed unit ball is not totally bounded: no finitely many balls of
+radius $\frac12$ cover it, since each such ball contains at most one $e_i$. By (2), there is no doubling measure on $\ell^2$. Doubling measures live on spaces that are ``finite-dimensional'' in a metric sense.
 \end{solution}

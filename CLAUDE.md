@@ -75,7 +75,9 @@ material, free to be reorganised, split, merged and expanded. The plan is in
   and no proof only for results quoted from the literature (give the reference).
 - **Numbered environments**: definition, theorem, proposition, lemma,
   corollary, conjecture, example, counterexample, exercise, notation, remark.
-  Exercises may be followed by `\begin{solution}`. All share one counter within
+  Exercises may be followed by `\begin{solution}`. Every chapter has exactly one
+  `\section{Exercises}` (label `<slug>:section-exercises`), as its last section, holding all
+  its exercises; a chapter made of several former chapters splits it into `\subsection`s. All share one counter within
   the section, so every numbered environment must be inside a `\section`.
 - **Labels**: chapter `\label{<slug>}`; everything else
   `\label{<slug>:<type>-<name>}` where `<type>` is the environment name,

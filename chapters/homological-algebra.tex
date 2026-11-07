@@ -544,61 +544,6 @@ $\Hom(H_1, \ZZ) = 0$ and $\Ext^1(H_0, \ZZ) = \ZZ/2\ZZ$: torsion in homology shif
 algebraic reason why $H^2(\RR\PP^2, \ZZ) \cong \ZZ/2\ZZ$ while $H_2(\RR\PP^2, \ZZ) = 0$ (Chapter~\ref{singular-homology}).
 \end{example}
 
-\section{Exercises}\label{homological-algebra:section-exercises}
-
-\begin{exercise}\label{homological-algebra:exercise-nine-lemma}
-Prove the $3 \times 3$ lemma: in a commutative $3 \times 3$ diagram of modules with exact columns, if two of the rows are short exact
-sequences, so is the third.
-\end{exercise}
-
-\begin{exercise}\label{homological-algebra:exercise-zig-zag}
-Let $0 \to A^\bullet \xrightarrow{f} B^\bullet \xrightarrow{g} C^\bullet \to 0$ be a short exact sequence of complexes of modules.
-Prove Theorem~\ref{homological-algebra:theorem-long-exact-sequence} directly: show that the recipe of
-Remark~\ref{homological-algebra:remark-zig-zag} gives a well defined homomorphism $\delta \colon H^n(C) \to H^{n+1}(A)$, and that
-the long sequence is exact at $H^n(B)$, at $H^n(C)$ and at $H^{n+1}(A)$.
-\end{exercise}
-
-\begin{solution}
-\emph{$a$ is a cocycle:} $f(d(a)) = d(f(a)) = d(d(b)) = 0$ and $f$ is injective. \emph{Independence of $b$:} another preimage
-of $c$ is $b + f(a')$ with $a' \in A^n$, since $\ker g = \operatorname{im} f$; it gives $d(b) + f(d(a'))$, hence $a + d(a')$, which has
-the same class. \emph{Independence of $c$ in its class:} for $c + d(c')$, write $c' = g(b')$ and use the preimage $b + d(b')$, which
-gives the same $d(b)$ and the same $a$. So $\delta$ is well defined, and it is additive because sums of choices are choices for
-sums.
-
-\emph{Exactness at $H^n(B)$.} $g_*f_* = (gf)_* = 0$. If $b$ is a cocycle with $g_*[b] = 0$, then $g(b) = d(c')$ with $c' = g(b')$,
-so $g(b - d(b')) = 0$ and $b - d(b') = f(a)$ for some $a$; then $f(d(a)) = d(b) = 0$, so $a$ is a cocycle and
-$[b] = [b - d(b')] = f_*[a]$.
-
-\emph{Exactness at $H^n(C)$.} If $c = g(b)$ with $b$ a cocycle, use this $b$: $d(b) = 0$, so $\delta[c] = 0$. Conversely, if
-$\delta[c] = 0$, then $a = d(a')$ and $b - f(a')$ is a cocycle, since $d(b - f(a')) = f(a) - f(d(a')) = 0$, with
-$g(b - f(a')) = c$; so $[c] \in \operatorname{im} g_*$.
-
-\emph{Exactness at $H^{n+1}(A)$.} $f_*\delta[c] = [f(a)] = [d(b)] = 0$. Conversely, if $a$ is a cocycle with $f(a) = d(b)$ for some
-$b$, then $c = g(b)$ is a cocycle, since $d(c) = g(d(b)) = g(f(a)) = 0$, and by construction $\delta[c] = [a]$.
-\end{solution}
-
-\begin{exercise}\label{homological-algebra:exercise-ext-divisible}
-Show that $\Ext^1_\ZZ(\QQ, \ZZ) \neq 0$. (Hint: use $0 \to \ZZ \to \QQ \to \QQ/\ZZ \to 0$.)
-\end{exercise}
-
-\begin{exercise}\label{homological-algebra:exercise-tor-torsion-free}
-Let $R$ be a PID. Show that an $R$-module is flat if and only if it is torsion-free.
-\end{exercise}
-
-\begin{exercise}\label{homological-algebra:exercise-derived-cone}
-Let $f \colon A^\bullet \to B^\bullet$ be a morphism of complexes. Show that $f$ is homotopic to zero if and only if the sequence
-$0 \to B \to \mathrm{Cone}(f) \to A[1] \to 0$ splits as a sequence of complexes.
-\end{exercise}
-
-\begin{exercise}\label{homological-algebra:exercise-injective-dimension}
-Show that an abelian group is injective if and only if $\Ext^1_\ZZ(\ZZ/n\ZZ, A) = 0$ for all $n \geq 1$.
-\end{exercise}
-
-\begin{solution}
-By Example~\ref{homological-algebra:example-ext-tor-cyclic}, $\Ext^1(\ZZ/n\ZZ, A) = A/nA$, which vanishes for all $n$ iff $A$ is
-divisible, iff $A$ is injective by Theorem~\ref{homological-algebra:theorem-enough-injectives}.
-\end{solution}
-
 \section{Spectral Sequences}\label{homological-algebra:section-spectral-sequences}
 A spectral sequence is a bookkeeping device for computing the cohomology of a filtered complex from the
 cohomology of its graded pieces, in a sequence of successive approximations. This chapter constructs the
@@ -872,29 +817,6 @@ $H^q(F(A^\bullet)) = R^qF(X)$. By Theorem~\ref{homological-algebra:theorem-doubl
 ${}^{II}E_2^{p,q} = H^p_v(H^q_h(G(I))) = H^p(G(H^{q,\bullet}_h(I))) = R^pG(R^qF(X))$, and it converges to
 $H^{p+q}(T) \cong R^{p+q}(GF)(X)$.
 \end{proof}
-
-\section{Exercises on Spectral Sequences}\label{homological-algebra:section-exercises-spectral-sequences}
-
-\begin{exercise}\label{homological-algebra:exercise-two-columns}
-State and prove the analogue of Proposition~\ref{homological-algebra:proposition-two-rows} for a spectral sequence concentrated in two
-columns $p \in \{0, s\}$.
-\end{exercise}
-
-\begin{exercise}\label{homological-algebra:exercise-two-out-of-three}
-Let $0 \to A^\bullet \to B^\bullet \to C^\bullet \to 0$ be a short exact sequence of bounded below complexes, viewed as a double complex with three
-columns. Using both spectral sequences of Theorem~\ref{homological-algebra:theorem-double-complex} (after shifting so that the double complex is
-first-quadrant), show that if two of $A$, $B$, $C$ are acyclic, then so is the third.
-\end{exercise}
-
-\begin{exercise}\label{homological-algebra:exercise-balance-ss}
-Use Theorem~\ref{homological-algebra:theorem-double-complex} to give a second proof of
-Theorem~\ref{homological-algebra:theorem-balance}.
-\end{exercise}
-
-\begin{exercise}\label{homological-algebra:exercise-base-change-tor}
-Let $R \to S$ be a homomorphism of commutative rings, $M$ an $S$-module and $N$ an $R$-module. Construct a spectral sequence
-$\Tor_p^S(M, \Tor_q^R(S, N)) \Rightarrow \Tor_{p+q}^R(M, N)$ (homological indexing).
-\end{exercise}
 
 \section{Derived Categories}\label{homological-algebra:section-derived-categories}
 The derived category of an abelian category is obtained from complexes by declaring quasi-isomorphisms to be
@@ -1238,7 +1160,87 @@ Proposition~\ref{homological-algebra:proposition-degeneration-strictness}, the s
 Hodge filtration.
 \end{remark}
 
-\section{Exercises on Derived Categories}\label{homological-algebra:section-exercises-derived-categories}
+\section{Exercises}\label{homological-algebra:section-exercises}
+
+\subsection{Homological Algebra}\label{homological-algebra:subsection-exercises-homological-algebra}
+
+\begin{exercise}\label{homological-algebra:exercise-nine-lemma}
+Prove the $3 \times 3$ lemma: in a commutative $3 \times 3$ diagram of modules with exact columns, if two of the rows are short exact
+sequences, so is the third.
+\end{exercise}
+
+\begin{exercise}\label{homological-algebra:exercise-zig-zag}
+Let $0 \to A^\bullet \xrightarrow{f} B^\bullet \xrightarrow{g} C^\bullet \to 0$ be a short exact sequence of complexes of modules.
+Prove Theorem~\ref{homological-algebra:theorem-long-exact-sequence} directly: show that the recipe of
+Remark~\ref{homological-algebra:remark-zig-zag} gives a well defined homomorphism $\delta \colon H^n(C) \to H^{n+1}(A)$, and that
+the long sequence is exact at $H^n(B)$, at $H^n(C)$ and at $H^{n+1}(A)$.
+\end{exercise}
+
+\begin{solution}
+\emph{$a$ is a cocycle:} $f(d(a)) = d(f(a)) = d(d(b)) = 0$ and $f$ is injective. \emph{Independence of $b$:} another preimage
+of $c$ is $b + f(a')$ with $a' \in A^n$, since $\ker g = \operatorname{im} f$; it gives $d(b) + f(d(a'))$, hence $a + d(a')$, which has
+the same class. \emph{Independence of $c$ in its class:} for $c + d(c')$, write $c' = g(b')$ and use the preimage $b + d(b')$, which
+gives the same $d(b)$ and the same $a$. So $\delta$ is well defined, and it is additive because sums of choices are choices for
+sums.
+
+\emph{Exactness at $H^n(B)$.} $g_*f_* = (gf)_* = 0$. If $b$ is a cocycle with $g_*[b] = 0$, then $g(b) = d(c')$ with $c' = g(b')$,
+so $g(b - d(b')) = 0$ and $b - d(b') = f(a)$ for some $a$; then $f(d(a)) = d(b) = 0$, so $a$ is a cocycle and
+$[b] = [b - d(b')] = f_*[a]$.
+
+\emph{Exactness at $H^n(C)$.} If $c = g(b)$ with $b$ a cocycle, use this $b$: $d(b) = 0$, so $\delta[c] = 0$. Conversely, if
+$\delta[c] = 0$, then $a = d(a')$ and $b - f(a')$ is a cocycle, since $d(b - f(a')) = f(a) - f(d(a')) = 0$, with
+$g(b - f(a')) = c$; so $[c] \in \operatorname{im} g_*$.
+
+\emph{Exactness at $H^{n+1}(A)$.} $f_*\delta[c] = [f(a)] = [d(b)] = 0$. Conversely, if $a$ is a cocycle with $f(a) = d(b)$ for some
+$b$, then $c = g(b)$ is a cocycle, since $d(c) = g(d(b)) = g(f(a)) = 0$, and by construction $\delta[c] = [a]$.
+\end{solution}
+
+\begin{exercise}\label{homological-algebra:exercise-ext-divisible}
+Show that $\Ext^1_\ZZ(\QQ, \ZZ) \neq 0$. (Hint: use $0 \to \ZZ \to \QQ \to \QQ/\ZZ \to 0$.)
+\end{exercise}
+
+\begin{exercise}\label{homological-algebra:exercise-tor-torsion-free}
+Let $R$ be a PID. Show that an $R$-module is flat if and only if it is torsion-free.
+\end{exercise}
+
+\begin{exercise}\label{homological-algebra:exercise-derived-cone}
+Let $f \colon A^\bullet \to B^\bullet$ be a morphism of complexes. Show that $f$ is homotopic to zero if and only if the sequence
+$0 \to B \to \mathrm{Cone}(f) \to A[1] \to 0$ splits as a sequence of complexes.
+\end{exercise}
+
+\begin{exercise}\label{homological-algebra:exercise-injective-dimension}
+Show that an abelian group is injective if and only if $\Ext^1_\ZZ(\ZZ/n\ZZ, A) = 0$ for all $n \geq 1$.
+\end{exercise}
+
+\begin{solution}
+By Example~\ref{homological-algebra:example-ext-tor-cyclic}, $\Ext^1(\ZZ/n\ZZ, A) = A/nA$, which vanishes for all $n$ iff $A$ is
+divisible, iff $A$ is injective by Theorem~\ref{homological-algebra:theorem-enough-injectives}.
+\end{solution}
+
+\subsection{Spectral Sequences}\label{homological-algebra:subsection-exercises-spectral-sequences}
+
+\begin{exercise}\label{homological-algebra:exercise-two-columns}
+State and prove the analogue of Proposition~\ref{homological-algebra:proposition-two-rows} for a spectral sequence concentrated in two
+columns $p \in \{0, s\}$.
+\end{exercise}
+
+\begin{exercise}\label{homological-algebra:exercise-two-out-of-three}
+Let $0 \to A^\bullet \to B^\bullet \to C^\bullet \to 0$ be a short exact sequence of bounded below complexes, viewed as a double complex with three
+columns. Using both spectral sequences of Theorem~\ref{homological-algebra:theorem-double-complex} (after shifting so that the double complex is
+first-quadrant), show that if two of $A$, $B$, $C$ are acyclic, then so is the third.
+\end{exercise}
+
+\begin{exercise}\label{homological-algebra:exercise-balance-ss}
+Use Theorem~\ref{homological-algebra:theorem-double-complex} to give a second proof of
+Theorem~\ref{homological-algebra:theorem-balance}.
+\end{exercise}
+
+\begin{exercise}\label{homological-algebra:exercise-base-change-tor}
+Let $R \to S$ be a homomorphism of commutative rings, $M$ an $S$-module and $N$ an $R$-module. Construct a spectral sequence
+$\Tor_p^S(M, \Tor_q^R(S, N)) \Rightarrow \Tor_{p+q}^R(M, N)$ (homological indexing).
+\end{exercise}
+
+\subsection{Derived Categories}\label{homological-algebra:subsection-exercises-derived-categories}
 
 \begin{exercise}\label{homological-algebra:exercise-five-lemma-triangles}
 Show that in a triangulated category, if $(u, v, w)$ is a morphism of distinguished triangles and two of $u$, $v$, $w$ are isomorphisms, so is the

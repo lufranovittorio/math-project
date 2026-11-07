@@ -310,41 +310,6 @@ sheaf of functions, and every locally free sheaf arises in this way, uniquely up
 bundles; for a complex manifold it is computed by sheaf cohomology via the exponential sequence (Chapter~\ref{complex-manifolds}).
 \end{remark}
 
-\section{Exercises}\label{sheaves:section-exercises}
-
-\begin{exercise}\label{sheaves:exercise-constant-sheaf}
-Show that the sheafification of the constant presheaf with value $A$ is the constant sheaf $A_X$ of locally constant functions, and that $A_X = \pi^{-1}A$ for
-$\pi \colon X \to \mathrm{pt}$.
-\end{exercise}
-
-\begin{solution}
-The stalks of the constant presheaf are all $A$, and a section of the sheafification is a function $U \to A$ locally equal to a constant, that is, a locally constant function.
-For the second statement, $\pi_p^{-1}A(U) = A$ for $U \neq \emptyset$.
-\end{solution}
-
-\begin{exercise}\label{sheaves:exercise-skyscraper-adjunction}
-Let $i \colon \{x\} \to X$. Show that $x_*A = i_*A$ and $\Hom(\mathcal{F}, x_*A) \cong \Hom(\mathcal{F}_x, A)$ for every sheaf $\mathcal{F}$ of abelian groups.
-\end{exercise}
-
-\begin{solution}
-The first statement is the definition. By Proposition~\ref{sheaves:proposition-images}(2) and (1),
-$\Hom(\mathcal{F}, i_*A) \cong \Hom(i^{-1}\mathcal{F}, A) = \Hom(\mathcal{F}_x, A)$, since a sheaf on a point is a single group.
-\end{solution}
-
-\begin{exercise}\label{sheaves:exercise-direct-image-stalk}
-Give an example of a continuous map $f$ and a sheaf $\mathcal{F}$ such that $(f_*\mathcal{F})_y$ is not isomorphic to the global sections of $\mathcal{F}$ on the fibre $f^{-1}(y)$.
-\end{exercise}
-
-\begin{exercise}\label{sheaves:exercise-epi-not-surjective}
-Let $X = \CC \setminus \{0\}$ with the sheaf $\mathcal{O}$ of holomorphic functions and $\mathcal{O}^\times$ of nowhere vanishing ones. Accepting that holomorphic functions have local
-logarithms of nonvanishing functions but $z$ has no global logarithm, show that $\exp \colon \mathcal{O} \to \mathcal{O}^\times$, $f \mapsto e^{2\pi i f}$, is an epimorphism of sheaves but not
-surjective on global sections, and identify its kernel.
-\end{exercise}
-
-\begin{exercise}\label{sheaves:exercise-restriction-open-adjoint}
-For $j \colon U \to X$ open, show that $j_!$ is left adjoint to $j^{-1}$ on sheaves of abelian groups, and that $j^{-1}$ is left adjoint to $j_*$.
-\end{exercise}
-
 \section{Sheaf Cohomology}\label{sheaves:section-sheaf-cohomology}
 The global sections functor $\Gamma(X, -)$ is left exact but not exact (Proposition~\ref{sheaves:proposition-abelian-category}), and
 sheaf cohomology $H^i(X, \mathcal{F})$ is its right derived functor. It can be computed by several kinds of acyclic resolutions:
@@ -377,7 +342,7 @@ The category $\mathrm{Ab}(X)$ has enough injectives, and so does the category of
 
 \begin{proof}
 For each $x$ embed $\mathcal{F}_x$ into an injective abelian group $I_x$ (Theorem~\ref{homological-algebra:theorem-enough-injectives}). The skyscraper sheaf $x_*I_x$ is injective,
-since $\Hom(\mathcal{G}, x_*I_x) \cong \Hom(\mathcal{G}_x, I_x)$ (Exercise~\ref{sheaves:exercise-skyscraper-adjunction}) is exact in $\mathcal{G}$. A product of injective objects is
+since $\Hom(\mathcal{G}, x_*I_x) \cong \Hom(\mathcal{G}_x, I_x)$ is exact in $\mathcal{G}$; this isomorphism is Proposition~\ref{sheaves:proposition-images}(2) and (1) for $i \colon \{x\} \to X$, as $x_*I_x = i_*I_x$ and $i^{-1}\mathcal{G} = \mathcal{G}_x$. A product of injective objects is
 injective, and $\mathcal{F} \to \prod_x x_*I_x$ is a monomorphism, being injective on stalks. For $\mathcal{O}_X$-modules use injective $\mathcal{O}_{X,x}$-modules instead.
 \end{proof}
 
@@ -648,7 +613,44 @@ Poincar\'e duality generalises to \emph{Verdier duality} $R\Gamma_c(X, \mathcal{
 $n$-manifold \cite[Chapter III]{ks-sheaves-manifolds}, \cite{iversen-sheaves}.
 \end{remark}
 
-\section{Exercises on Sheaf Cohomology}\label{sheaves:section-exercises-sheaf-cohomology}
+\section{Exercises}\label{sheaves:section-exercises}
+
+\subsection{Sheaves on Topological Spaces}\label{sheaves:subsection-exercises-sheaves-on-topological-spaces}
+
+\begin{exercise}\label{sheaves:exercise-constant-sheaf}
+Show that the sheafification of the constant presheaf with value $A$ is the constant sheaf $A_X$ of locally constant functions, and that $A_X = \pi^{-1}A$ for
+$\pi \colon X \to \mathrm{pt}$.
+\end{exercise}
+
+\begin{solution}
+The stalks of the constant presheaf are all $A$, and a section of the sheafification is a function $U \to A$ locally equal to a constant, that is, a locally constant function.
+For the second statement, $\pi_p^{-1}A(U) = A$ for $U \neq \emptyset$.
+\end{solution}
+
+\begin{exercise}\label{sheaves:exercise-skyscraper-adjunction}
+Let $i \colon \{x\} \to X$. Show that $x_*A = i_*A$ and $\Hom(\mathcal{F}, x_*A) \cong \Hom(\mathcal{F}_x, A)$ for every sheaf $\mathcal{F}$ of abelian groups.
+\end{exercise}
+
+\begin{solution}
+The first statement is the definition. By Proposition~\ref{sheaves:proposition-images}(2) and (1),
+$\Hom(\mathcal{F}, i_*A) \cong \Hom(i^{-1}\mathcal{F}, A) = \Hom(\mathcal{F}_x, A)$, since a sheaf on a point is a single group.
+\end{solution}
+
+\begin{exercise}\label{sheaves:exercise-direct-image-stalk}
+Give an example of a continuous map $f$ and a sheaf $\mathcal{F}$ such that $(f_*\mathcal{F})_y$ is not isomorphic to the global sections of $\mathcal{F}$ on the fibre $f^{-1}(y)$.
+\end{exercise}
+
+\begin{exercise}\label{sheaves:exercise-epi-not-surjective}
+Let $X = \CC \setminus \{0\}$ with the sheaf $\mathcal{O}$ of holomorphic functions and $\mathcal{O}^\times$ of nowhere vanishing ones. Accepting that holomorphic functions have local
+logarithms of nonvanishing functions but $z$ has no global logarithm, show that $\exp \colon \mathcal{O} \to \mathcal{O}^\times$, $f \mapsto e^{2\pi i f}$, is an epimorphism of sheaves but not
+surjective on global sections, and identify its kernel.
+\end{exercise}
+
+\begin{exercise}\label{sheaves:exercise-restriction-open-adjoint}
+For $j \colon U \to X$ open, show that $j_!$ is left adjoint to $j^{-1}$ on sheaves of abelian groups, and that $j^{-1}$ is left adjoint to $j_*$.
+\end{exercise}
+
+\subsection{Sheaf Cohomology}\label{sheaves:subsection-exercises-sheaf-cohomology}
 
 \begin{exercise}\label{sheaves:exercise-cech-circle}
 Compute $\check{H}^\bullet(\mathcal{U}, \ZZ_{S^1})$ for the cover of $S^1$ by two open arcs whose intersection has two components, and check with

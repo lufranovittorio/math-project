@@ -924,7 +924,7 @@
 00PM,homological-algebra:definition-cartan-eilenberg
 00PN,homological-algebra:lemma-cartan-eilenberg-exists
 00PO,homological-algebra:theorem-grothendieck
-00PP,homological-algebra:section-exercises-spectral-sequences
+00PP,homological-algebra:subsection-exercises-spectral-sequences
 00PQ,homological-algebra:exercise-two-columns
 00PR,homological-algebra:exercise-two-out-of-three
 00PS,homological-algebra:exercise-balance-ss
@@ -960,7 +960,7 @@
 00QM,homological-algebra:counterexample-not-strict
 00QN,homological-algebra:proposition-degeneration-strictness
 00QO,homological-algebra:remark-filtered-derived
-00QP,homological-algebra:section-exercises-derived-categories
+00QP,homological-algebra:subsection-exercises-derived-categories
 00QQ,homological-algebra:exercise-five-lemma-triangles
 00QR,homological-algebra:exercise-split-complex
 00QS,homological-algebra:exercise-ext-composition
@@ -1197,7 +1197,7 @@
 00X7,singular-homology:definition-cap
 00X8,singular-homology:proposition-cap
 00X9,singular-homology:remark-duality-preview
-00XA,singular-homology:section-exercises-singular-cohomology
+00XA,singular-homology:subsection-exercises-singular-cohomology
 00XB,singular-homology:exercise-uct-rp
 00XC,singular-homology:exercise-cup-torus
 00XD,singular-homology:exercise-hopf-invariant
@@ -1333,7 +1333,7 @@
 010Z,sheaves:section-compact-supports
 0110,sheaves:definition-compact-supports
 0111,sheaves:remark-compact-supports
-0112,sheaves:section-exercises-sheaf-cohomology
+0112,sheaves:subsection-exercises-sheaf-cohomology
 0113,sheaves:exercise-cech-circle
 0114,sheaves:exercise-skyscraper-flasque
 0115,sheaves:exercise-noetherian-vanishing
@@ -1834,7 +1834,7 @@
 01EW,complex-manifolds:section-adjunction
 01EX,complex-manifolds:proposition-adjunction
 01EY,complex-manifolds:example-adjunction
-01EZ,complex-manifolds:section-exercises-holomorphic-bundles
+01EZ,complex-manifolds:subsection-exercises-holomorphic-bundles
 01F0,complex-manifolds:exercise-sections-ok
 01F1,complex-manifolds:exercise-degree-line-bundle
 01F2,complex-manifolds:exercise-chern-connection-trivial
@@ -1853,7 +1853,7 @@
 01FF,complex-manifolds:proposition-frolicher-inequality
 01FG,complex-manifolds:example-hodge-numbers
 01FH,complex-manifolds:remark-vanishing
-01FI,complex-manifolds:section-exercises-dolbeault
+01FI,complex-manifolds:subsection-exercises-dolbeault
 01FJ,complex-manifolds:exercise-riemann-surface
 01FK,complex-manifolds:exercise-dolbeault-plane
 01FL,complex-manifolds:exercise-serre-duality-curve
@@ -1918,7 +1918,7 @@
 01H8,kahler:example-quartic
 01H9,kahler:counterexample-hopf-hodge-decomposition
 01HA,kahler:counterexample-iwasawa
-01HB,kahler:section-exercises-hodge-decomposition
+01HB,kahler:subsection-exercises-hodge-decomposition
 01HC,kahler:exercise-kunneth-hodge
 01HD,kahler:exercise-calabi-eckmann
 01HE,kahler:exercise-invariant-fubini-study
@@ -1949,7 +1949,7 @@
 01I3,kahler:section-remarks
 01I4,kahler:remark-symplectic
 01I5,kahler:counterexample-non-primitive-sign
-01I6,kahler:section-exercises-lefschetz-theorems
+01I6,kahler:subsection-exercises-lefschetz-theorems
 01I7,kahler:exercise-signatures
 01I8,kahler:exercise-h1-injective
 01I9,kahler:exercise-b2-kahler-surface
@@ -2119,7 +2119,7 @@
 01MT,schemes:proposition-differentials
 01MU,schemes:theorem-euler-sequence
 01MV,schemes:proposition-adjunction
-01MW,schemes:section-exercises-coherent-sheaves
+01MW,schemes:subsection-exercises-coherent-sheaves
 01MX,schemes:exercise-not-quasi-coherent
 01MY,schemes:exercise-o-minus-one
 01MZ,schemes:exercise-canonical-curves
@@ -2149,7 +2149,7 @@
 01NN,schemes:section-base-change-coherent-cohomology
 01NO,schemes:theorem-semicontinuity
 01NP,schemes:counterexample-jump
-01NQ,schemes:section-exercises-coherent-cohomology
+01NQ,schemes:subsection-exercises-coherent-cohomology
 01NR,schemes:exercise-punctured-plane
 01NS,schemes:exercise-plane-curve-cohomology
 01NT,schemes:exercise-euler-projective
@@ -2326,7 +2326,7 @@
 01SK,algebraic-groups:definition-cm
 01SL,algebraic-groups:theorem-endomorphism-algebra
 01SM,algebraic-groups:example-cm
-01SN,algebraic-groups:section-exercises-abelian-varieties
+01SN,algebraic-groups:subsection-exercises-abelian-varieties
 01SO,algebraic-groups:exercise-ns-product
 01SP,algebraic-groups:exercise-hodge-classes-torus
 01SQ,algebraic-groups:exercise-isogeny-dual
@@ -2376,7 +2376,7 @@
 01TY,intersection-theory:proposition-chern-character-cycle
 01TZ,intersection-theory:remark-kahler-version
 01U0,intersection-theory:remark-deligne-cohomology
-01U1,intersection-theory:section-exercises-cycle-class
+01U1,intersection-theory:subsection-exercises-cycle-class
 01U2,intersection-theory:exercise-hypersurface-class
 01U3,intersection-theory:exercise-diagonal
 01U4,intersection-theory:exercise-torsion-hodge
@@ -2447,7 +2447,7 @@
 01VX,hodge-structures:theorem-very-general
 01VY,hodge-structures:remark-mumford-example
 01VZ,hodge-structures:remark-mumford-tate-conjecture
-01W0,hodge-structures:section-exercises-mumford-tate
+01W0,hodge-structures:subsection-exercises-mumford-tate
 01W1,hodge-structures:exercise-tate
 01W2,hodge-structures:exercise-product-elliptic
 01W3,hodge-conjecture:section-introduction
@@ -2493,7 +2493,7 @@
 01X7,hodge-conjecture:theorem-noether-lefschetz
 01X8,hodge-conjecture:section-why-not
 01X9,hodge-conjecture:remark-why-not
-01XA,hodge-conjecture:section-exercises-lefschetz-11
+01XA,hodge-conjecture:subsection-exercises-lefschetz-11
 01XB,hodge-conjecture:exercise-picard-number-torus
 01XC,hodge-conjecture:exercise-hodge-classes-surface
 01XD,hodge-conjecture:exercise-cubic-threefold
@@ -2539,7 +2539,7 @@
 01YH,vhs:remark-poincare-lefschetz
 01YI,vhs:remark-green-griffiths
 01YJ,vhs:example-cubic-threefold
-01YK,vhs:section-exercises-intermediate-jacobians
+01YK,vhs:subsection-exercises-intermediate-jacobians
 01YL,vhs:exercise-dimension
 01YM,vhs:exercise-aj-points
 01YN,known-cases:section-introduction
@@ -2585,7 +2585,7 @@
 01ZR,known-cases:remark-variational
 01ZS,known-cases:section-diagnostic
 01ZT,known-cases:remark-diagnostic
-01ZU,known-cases:section-exercises-failures
+01ZU,known-cases:subsection-exercises-failures
 01ZV,known-cases:exercise-torsion-hodge
 01ZW,known-cases:exercise-kollar-quintic
 01ZX,mixed-hodge-structures:section-introduction
@@ -2683,7 +2683,7 @@
 022H,absolute-hodge:remark-mumford-tate-known
 022I,absolute-hodge:proposition-hodge-tate
 022J,absolute-hodge:remark-hodge-versus-tate
-022K,absolute-hodge:section-exercises-tate-conjecture
+022K,absolute-hodge:subsection-exercises-tate-conjecture
 022L,absolute-hodge:exercise-frobenius
 022M,absolute-hodge:exercise-elliptic-mt
 022N,absolute-hodge:exercise-supersingular
@@ -2718,7 +2718,7 @@
 023G,absolute-hodge:conjecture-bloch-beilinson
 023H,absolute-hodge:remark-bb-bloch
 023I,absolute-hodge:remark-two-halves
-023J,absolute-hodge:section-exercises-standard-conjectures
+023J,absolute-hodge:subsection-exercises-standard-conjectures
 023K,absolute-hodge:exercise-kunneth-hodge
 023L,absolute-hodge:exercise-projective-space
 023M,absolute-hodge:exercise-hypersurface
@@ -2922,7 +2922,7 @@
 0294,intersection-theory:lemma-pontryagin-complex
 0295,intersection-theory:example-surfaces
 0296,intersection-theory:counterexample-integrality
-0297,intersection-theory:section-exercises-index-theorems
+0297,intersection-theory:subsection-exercises-index-theorems
 0298,intersection-theory:exercise-quadric
 0299,intersection-theory:exercise-todd-genus
 029A,intersection-theory:exercise-hypersurface-euler
@@ -5869,7 +5869,7 @@
 04IZ,currents:theorem-allard-compactness
 04J0,currents:theorem-allard-regularity
 04J1,currents:remark-survey
-04J2,currents:section-exercises-varifolds
+04J2,currents:subsection-exercises-varifolds
 04J3,currents:exercise-segment
 04J4,currents:exercise-circle
 04J5,currents:exercise-compact-support
@@ -5964,3 +5964,17 @@
 04LM,de-rham:remark-degree-applications
 04LN,de-rham:remark-degree-comparison
 04LO,de-rham:counterexample-degree
+04LP,homological-algebra:subsection-exercises-homological-algebra
+04LQ,singular-homology:subsection-exercises-singular-homology
+04LR,sheaves:subsection-exercises-sheaves-on-topological-spaces
+04LS,currents:subsection-exercises-currents
+04LT,complex-manifolds:subsection-exercises-complex-manifolds
+04LU,kahler:subsection-exercises-kahler-manifolds
+04LV,schemes:subsection-exercises-schemes
+04LW,algebraic-groups:subsection-exercises-linear-algebraic-groups
+04LX,intersection-theory:subsection-exercises-algebraic-cycles-and-chow-groups
+04LY,hodge-structures:subsection-exercises-hodge-structures
+04LZ,hodge-conjecture:subsection-exercises-the-hodge-conjecture
+04M0,vhs:subsection-exercises-variations-of-hodge-structure
+04M1,known-cases:subsection-exercises-known-cases-and-evidence
+04M2,absolute-hodge:subsection-exercises-absolute-hodge-classes

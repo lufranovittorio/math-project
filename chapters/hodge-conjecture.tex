@@ -214,35 +214,6 @@ into the existence of singularities of certain sections, which is as hard in gen
 \end{enumerate}
 \end{remark}
 
-\section{Exercises}\label{hodge-conjecture:section-exercises}
-
-\begin{exercise}\label{hodge-conjecture:exercise-odd-weight}
-Show that a $\QQ$-Hodge structure of odd weight has no Hodge classes in any Tate twist, so that Hodge classes live only in even degrees. Explain why the K\"unneth summands
-$H^{\mathrm{odd}}(X) \otimes H^{\mathrm{odd}}(Y)$ of a product are where new Hodge classes appear.
-\end{exercise}
-
-\begin{solution}
-$V(m)$ has weight $k - 2m$, odd, so it has no component of type $(0,0)$, and $\Hom_{\mathrm{HS}}(\QQ(0), V(m)) = 0$. The tensor product of two odd-weight structures has even weight, and it can
-contain Hodge classes not coming from Hodge classes on the factors, which have none in odd degree (Example~\ref{hodge-conjecture:example-elliptic-product}).
-\end{solution}
-
-\begin{exercise}\label{hodge-conjecture:exercise-projective-product}
-Verify $\mathrm{HC}(\PP^m \times \PP^k)$ directly.
-\end{exercise}
-
-\begin{solution}
-By K\"unneth, $H^\bullet = \QQ[a, b]/(a^{m+1}, b^{k+1})$ with $a$, $b$ the pullbacks of hyperplane classes, all classes are of Tate type and spanned by the monomials $a^ib^j$, which are the classes
-of the products of linear subspaces $L \times L'$ (Example~\ref{intersection-theory:example-classes}(1) and Theorem~\ref{intersection-theory:theorem-cycle-class}(2)).
-\end{solution}
-
-\begin{exercise}\label{hodge-conjecture:exercise-finite-quotient}
-Let a finite group $G$ act on $X$ with nonsingular projective quotient $Y = X/G$. Show that $\mathrm{HC}(X, p)$ implies $\mathrm{HC}(Y, p)$.
-\end{exercise}
-
-\begin{solution}
-The quotient map $X \to Y$ is surjective and finite, of degree $|G|$, so Proposition~\ref{hodge-conjecture:proposition-dominant-maps} applies.
-\end{solution}
-
 \section{The Lefschetz (1,1) Theorem}\label{hodge-conjecture:section-lefschetz-11}
 The Lefschetz $(1,1)$-theorem is the one case of the Hodge conjecture that is completely understood, and it holds even with integral coefficients: on a
 nonsingular projective variety every integral class of type $(1,1)$ in $H^2$ is the class of a divisor (Theorem~\ref{hodge-conjecture:theorem-lefschetz-11}). Its proof
@@ -406,7 +377,38 @@ bundle with a prescribed Chern class is the vector bundle form of the conjecture
 \end{enumerate}
 \end{remark}
 
-\section{Exercises on The Lefschetz (1,1) Theorem}\label{hodge-conjecture:section-exercises-lefschetz-11}
+\section{Exercises}\label{hodge-conjecture:section-exercises}
+
+\subsection{The Hodge Conjecture}\label{hodge-conjecture:subsection-exercises-the-hodge-conjecture}
+
+\begin{exercise}\label{hodge-conjecture:exercise-odd-weight}
+Show that a $\QQ$-Hodge structure of odd weight has no Hodge classes in any Tate twist, so that Hodge classes live only in even degrees. Explain why the K\"unneth summands
+$H^{\mathrm{odd}}(X) \otimes H^{\mathrm{odd}}(Y)$ of a product are where new Hodge classes appear.
+\end{exercise}
+
+\begin{solution}
+$V(m)$ has weight $k - 2m$, odd, so it has no component of type $(0,0)$, and $\Hom_{\mathrm{HS}}(\QQ(0), V(m)) = 0$. The tensor product of two odd-weight structures has even weight, and it can
+contain Hodge classes not coming from Hodge classes on the factors, which have none in odd degree (Example~\ref{hodge-conjecture:example-elliptic-product}).
+\end{solution}
+
+\begin{exercise}\label{hodge-conjecture:exercise-projective-product}
+Verify $\mathrm{HC}(\PP^m \times \PP^k)$ directly.
+\end{exercise}
+
+\begin{solution}
+By K\"unneth, $H^\bullet = \QQ[a, b]/(a^{m+1}, b^{k+1})$ with $a$, $b$ the pullbacks of hyperplane classes, all classes are of Tate type and spanned by the monomials $a^ib^j$, which are the classes
+of the products of linear subspaces $L \times L'$ (Example~\ref{intersection-theory:example-classes}(1) and Theorem~\ref{intersection-theory:theorem-cycle-class}(2)).
+\end{solution}
+
+\begin{exercise}\label{hodge-conjecture:exercise-finite-quotient}
+Let a finite group $G$ act on $X$ with nonsingular projective quotient $Y = X/G$. Show that $\mathrm{HC}(X, p)$ implies $\mathrm{HC}(Y, p)$.
+\end{exercise}
+
+\begin{solution}
+The quotient map $X \to Y$ is surjective and finite, of degree $|G|$, so Proposition~\ref{hodge-conjecture:proposition-dominant-maps} applies.
+\end{solution}
+
+\subsection{The Lefschetz (1,1) Theorem}\label{hodge-conjecture:subsection-exercises-lefschetz-11}
 
 \begin{exercise}\label{hodge-conjecture:exercise-picard-number-torus}
 Let $T$ be a complex torus of dimension $2$ with $\rho(T) = 0$. Show that $T$ carries no nonconstant meromorphic functions and no curves.

@@ -500,64 +500,6 @@ along smooth centres, and the weak factorisation theorem says that any two birat
 conjecture to the smooth projective case (Chapter~\ref{mixed-hodge-structures}).
 \end{remark}
 
-\section{Exercises}\label{complex-manifolds:section-exercises}
-
-\begin{exercise}\label{complex-manifolds:exercise-tori}
-Show that every complex torus of dimension $1$ is biholomorphic to $\CC/(\ZZ + \tau\ZZ)$ with $\operatorname{Im}\tau > 0$, and that two such are biholomorphic if and only if the parameters are related by
-an element of $\SL_2(\ZZ)$ acting by M\"obius transformations.
-\end{exercise}
-
-\begin{exercise}\label{complex-manifolds:exercise-projective-space-charts}
-Verify that the transition maps of $\CC\PP^n$ are holomorphic and that $\CC\PP^1$ is biholomorphic to the Riemann sphere $\CC \cup \{\infty\}$, with $S^2$ as underlying smooth manifold.
-\end{exercise}
-
-\begin{exercise}\label{complex-manifolds:exercise-hopf-surface}
-The \emph{Hopf surface} is $X = (\CC^2 \setminus \{0\})/\langle z \mapsto 2z\rangle$. Show that it is a compact complex manifold diffeomorphic to $S^1 \times S^3$, and deduce that $b_1(X) = 1$; conclude that $X$
-carries no K\"ahler metric (Chapter~\ref{kahler}), since odd Betti numbers of compact K\"ahler manifolds are even.
-\end{exercise}
-
-\begin{solution}
-The action is free and properly discontinuous, so the quotient is a complex manifold, and it is compact because the annulus $1 \leq |z| \leq 2$ maps onto it. The diffeomorphism with $S^1 \times S^3$ comes from
-the polar decomposition $\CC^2 \setminus \{0\} \cong S^3 \times \RR_{>0}$, with the action becoming translation on the second factor. Then $b_1(S^1 \times S^3) = 1$ by the K\"unneth formula.
-\end{solution}
-
-\begin{exercise}\label{complex-manifolds:exercise-almost-complex-s6}
-Show that $S^2$ and $S^6$ admit almost complex structures (for $S^6$ use the octonionic cross product), and that $S^2$'s is integrable.
-\end{exercise}
-
-\begin{exercise}\label{complex-manifolds:exercise-residue-infinity}
-Compute $\int_{|z| = 2}\frac{z^5}{z^6 - 1}\,dz$ and $\int_{|z| = 2}\frac{dz}{(z - 1)^3(z^2 + 9)}$ (the circle traversed once counterclockwise) by computing a single residue at $\infty$ on $\CC\PP^1$ instead of the residues
-inside the circle.
-\end{exercise}
-
-\begin{solution}
-By Theorem~\ref{complex-manifolds:theorem-global-residue} on $\CC\PP^1$, the integral over the circle, which is $2\pi i$ times the sum of the residues inside it, equals $-2\pi i$ times the sum of the residues
-outside it, including $\infty$. For $\omega = z^5\,dz/(z^6 - 1)$ all six poles lie inside. With $w = 1/z$, $\frac{z^5}{z^6 - 1} = \frac{w}{1 - w^6}$ and $dz = -dw/w^2$, so $\omega = -\frac{dw}{w(1 - w^6)}$ has residue $-1$
-at $\infty$, and the integral is $2\pi i$. (Directly: each pole $\zeta$ is simple with residue $\zeta^5/(6\zeta^5) = \frac16$.) For the second form the poles $\pm3i$ lie outside the circle and $1$ inside. At
-$\infty$ the form is $O(w^3)\,dw$, holomorphic, so the integral is $-2\pi i(\operatorname{Res}_{3i} + \operatorname{Res}_{-3i})$, with
-$\operatorname{Res}_{\pm3i} = \frac{1}{(\pm3i - 1)^3(\pm6i)}$. Now $(3i - 1)^3 = 26 - 18i$ and $(3i - 1)^3 \cdot 6i = 108 + 156i$, so $\operatorname{Res}_{3i} = \frac{1}{108 + 156i}$ and
-$\operatorname{Res}_{-3i} = \frac{1}{108 - 156i}$ is its conjugate. Their sum is $\frac{216}{108^2 + 156^2} = \frac{216}{36000} = \frac{3}{500}$, and the integral is $-\frac{3\pi i}{250}$. (Directly: the
-residue at the triple pole $1$ is $\frac12\frac{d^2}{dz^2}(z^2 + 9)^{-1}$ at $z = 1$, which is $\frac12\bigl(-\frac{2}{100} + \frac{8}{1000}\bigr) = -\frac{3}{500}$.)
-\end{solution}
-
-\begin{exercise}\label{complex-manifolds:exercise-abel-torus}
-Let $f$ be a nonconstant meromorphic function on $X = \CC/\Lambda$, $\Lambda = \ZZ\omega_1 + \ZZ\omega_2$, viewed as a $\Lambda$-periodic meromorphic function on $\CC$. Let $a_1, \ldots, a_k$ and $b_1, \ldots, b_k$ be
-its zeros and poles in a fundamental parallelogram $P$ with vertices $a$, $a + \omega_1$, $a + \omega_1 + \omega_2$, $a + \omega_2$, listed with multiplicity, with $a$ chosen so that no zero or pole lies on
-$\partial P$. Show that $\sum_ia_i - \sum_ib_i \in \Lambda$, by computing $\frac{1}{2\pi i}\int_{\partial P}z\frac{f^{\prime}(z)}{f(z)}\,dz$ in two ways. (This is one direction of Abel's theorem for complex tori.)
-\end{exercise}
-
-\begin{solution}
-At a zero or pole $c$ of order $m$ (negative for a pole), $f^{\prime}/f = m/(z - c) + (\text{holomorphic})$, so $zf^{\prime}/f$ has residue $mc$. The residue theorem in the plane
-(Theorem~\ref{complex-analysis:theorem-residues}) gives $\frac{1}{2\pi i}\int_{\partial P}zf^{\prime}/f\,dz = \sum_ia_i - \sum_ib_i$. On the other hand, pair opposite sides: the side from $a + \omega_2$ to
-$a + \omega_1 + \omega_2$ is traversed backwards, and on it $f^{\prime}/f$ takes the same values as on the side from $a$ to $a + \omega_1$, so the two sides contribute
-\[
-\int_a^{a+\omega_1}\bigl(z - (z + \omega_2)\bigr)\frac{f^{\prime}(z)}{f(z)}\,dz = -\omega_2\int_a^{a+\omega_1}\frac{f^{\prime}(z)}{f(z)}\,dz = -2\pi i\,n_1\omega_2,
-\]
-where $\frac{1}{2\pi i}\int_a^{a+\omega_1}f^{\prime}/f\,dz = n_1$ is the winding number around $0$ of the closed curve $t \mapsto f(a + t\omega_1)$, $t \in [0, 1]$ (closed because $f$ is periodic), an
-integer. In the same way the other two sides contribute $2\pi i\,n_2\omega_1$ with $n_2 \in \ZZ$. So $\sum_ia_i - \sum_ib_i = n_2\omega_1 - n_1\omega_2 \in \Lambda$. Applying the same computation to
-$f^{\prime}/f$ instead of $zf^{\prime}/f$ gives $k$ zeros and $k$ poles again, in accordance with Corollary~\ref{complex-manifolds:corollary-zeros-poles}.
-\end{solution}
-
 \section{Holomorphic Vector Bundles}\label{complex-manifolds:section-holomorphic-bundles}
 Holomorphic line bundles are the objects that encode divisors, projective embeddings and, through their first Chern classes, the
 $(1,1)$-part of cohomology. The exponential sequence (Theorem~\ref{complex-manifolds:theorem-exponential}) computes the Picard
@@ -903,45 +845,6 @@ A smooth plane curve of degree $d$ in $\CC\PP^2$ has $K_Z \cong \mathcal{O}(d - 
 $K \cong \mathcal{O}(-2)$ and is $\CC\PP^1 \times \CC\PP^1$; a smooth quartic surface in $\CC\PP^3$ has trivial canonical bundle and is a K3 surface, one of the basic examples in Hodge theory.
 \end{example}
 
-\section{Exercises on Holomorphic Vector Bundles}\label{complex-manifolds:section-exercises-holomorphic-bundles}
-
-\begin{exercise}\label{complex-manifolds:exercise-sections-ok}
-Show that the holomorphic sections of $\mathcal{O}(k)$ on $\CC\PP^n$ are the homogeneous polynomials of degree $k$ in the homogeneous coordinates, and that there are none for $k < 0$.
-\end{exercise}
-
-\begin{solution}
-A section is given by functions $s_i$ on $U_i$ with $s_i = (x_i/x_j)^{-k}s_j$; the function $F(x) = x_i^ks_i(x/x_i)$ is independent of $i$, holomorphic on $\CC^{n+1} \setminus \{0\}$ and homogeneous of degree
-$k$. By Hartogs' theorem (Theorem~\ref{several-complex-variables:theorem-hartogs}) it extends to $\CC^{n+1}$, and a homogeneous holomorphic function of degree $k$ is a polynomial for $k \geq 0$ and zero for
-$k < 0$, by looking at its power series.
-\end{solution}
-
-\begin{exercise}\label{complex-manifolds:exercise-degree-line-bundle}
-Let $X$ be a compact Riemann surface. Show that $\deg L = \int_Xc_1(L)$ defines a homomorphism $\Pic(X) \to \ZZ$, that $\deg\mathcal{O}(D) = \sum_pa_p$ for $D = \sum a_pp$, and that a line bundle of negative
-degree has no nonzero holomorphic sections.
-\end{exercise}
-
-\begin{exercise}\label{complex-manifolds:exercise-chern-connection-trivial}
-Compute the Chern connection and its curvature for the trivial line bundle with metric $e^{-|z|^2}$ on $\CC$, and verify that the curvature is a positive $(1,1)$-form.
-\end{exercise}
-
-\begin{exercise}\label{complex-manifolds:exercise-picard-torus}
-For a complex torus $X = \CC/\Lambda$ of dimension one, show that $H^1(X, \mathcal{O}_X) \cong \CC$ and deduce that $\Pic^0(X)$ is a complex torus of dimension one.
-\end{exercise}
-
-\begin{exercise}\label{complex-manifolds:exercise-zeros-vector-field}
-Show that a nonzero holomorphic vector field on $\CC\PP^1$ has exactly two zeros, counted with multiplicity, where the multiplicity of a zero of $f\,\partial_z$ is the order of the zero of $f$. Compare with the Euler
-characteristic $\chi(S^2) = 2$ and with $T^{1,0}\CC\PP^1 \cong \mathcal{O}(2)$ (Example~\ref{complex-manifolds:example-tangent-p1}).
-\end{exercise}
-
-\begin{solution}
-By Example~\ref{complex-manifolds:example-tangent-p1}(1) the field is $f\,\partial_z$ with $f = c_0 + c_1z + c_2z^2 \neq 0$, and near $\infty$ it is $-(c_0w^2 + c_1w + c_2)\,\partial_w$. Let $m = \deg f$. On $\CC$ the zeros of $f$
-have total multiplicity $m$, by the fundamental theorem of algebra (Corollary~\ref{complex-analysis:corollary-liouville}(2)) and the factorisation of $f$ into linear factors. At $w = 0$ the coefficient
-$c_0w^2 + c_1w + c_2$ has a zero of order $2 - m$, since $c_m$ is its lowest nonzero coefficient, the coefficient of $w^{2-m}$. The total is $m + (2 - m) = 2$. For instance $\partial_z$ has a double zero at $\infty$, and
-$z\,\partial_z$ simple zeros at $0$ and $\infty$, the fixed points of the flows $z \mapsto z + t$ and $z \mapsto e^tz$. The number $2$ is the Euler characteristic of $S^2$, as predicted by the Poincar\'e--Hopf theorem
-for the real vector field $2\operatorname{Re}(f\,\partial_z)$, and also the degree of $\mathcal{O}(2)$: a nonzero section of $\mathcal{O}(2)$ is a nonzero homogeneous quadric in $x_0, x_1$, which has two zeros on
-$\CC\PP^1$ counted with multiplicity.
-\end{solution}
-
 \section{Dolbeault Cohomology}\label{complex-manifolds:section-dolbeault}
 Dolbeault cohomology is the cohomology of the $\bar\partial$-operator on forms of type $(p,q)$. By the Dolbeault theorem
 (Theorem~\ref{complex-manifolds:theorem-dolbeault}) it computes the sheaf cohomology of the holomorphic $p$-forms, and on a compact complex
@@ -1161,7 +1064,106 @@ $H^n(\CC\PP^n, \mathcal{O}(k)) \cong H^0(\CC\PP^n, \mathcal{O}(-k-n-1))^\vee$ by
 Vanishing theorems for positive bundles are the subject of Chapter~\ref{kodaira}; the algebraic computation is in Chapter~\ref{schemes}.
 \end{remark}
 
-\section{Exercises on Dolbeault Cohomology}\label{complex-manifolds:section-exercises-dolbeault}
+\section{Exercises}\label{complex-manifolds:section-exercises}
+
+\subsection{Complex Manifolds}\label{complex-manifolds:subsection-exercises-complex-manifolds}
+
+\begin{exercise}\label{complex-manifolds:exercise-tori}
+Show that every complex torus of dimension $1$ is biholomorphic to $\CC/(\ZZ + \tau\ZZ)$ with $\operatorname{Im}\tau > 0$, and that two such are biholomorphic if and only if the parameters are related by
+an element of $\SL_2(\ZZ)$ acting by M\"obius transformations.
+\end{exercise}
+
+\begin{exercise}\label{complex-manifolds:exercise-projective-space-charts}
+Verify that the transition maps of $\CC\PP^n$ are holomorphic and that $\CC\PP^1$ is biholomorphic to the Riemann sphere $\CC \cup \{\infty\}$, with $S^2$ as underlying smooth manifold.
+\end{exercise}
+
+\begin{exercise}\label{complex-manifolds:exercise-hopf-surface}
+The \emph{Hopf surface} is $X = (\CC^2 \setminus \{0\})/\langle z \mapsto 2z\rangle$. Show that it is a compact complex manifold diffeomorphic to $S^1 \times S^3$, and deduce that $b_1(X) = 1$; conclude that $X$
+carries no K\"ahler metric (Chapter~\ref{kahler}), since odd Betti numbers of compact K\"ahler manifolds are even.
+\end{exercise}
+
+\begin{solution}
+The action is free and properly discontinuous, so the quotient is a complex manifold, and it is compact because the annulus $1 \leq |z| \leq 2$ maps onto it. The diffeomorphism with $S^1 \times S^3$ comes from
+the polar decomposition $\CC^2 \setminus \{0\} \cong S^3 \times \RR_{>0}$, with the action becoming translation on the second factor. Then $b_1(S^1 \times S^3) = 1$ by the K\"unneth formula.
+\end{solution}
+
+\begin{exercise}\label{complex-manifolds:exercise-almost-complex-s6}
+Show that $S^2$ and $S^6$ admit almost complex structures (for $S^6$ use the octonionic cross product), and that $S^2$'s is integrable.
+\end{exercise}
+
+\begin{exercise}\label{complex-manifolds:exercise-residue-infinity}
+Compute $\int_{|z| = 2}\frac{z^5}{z^6 - 1}\,dz$ and $\int_{|z| = 2}\frac{dz}{(z - 1)^3(z^2 + 9)}$ (the circle traversed once counterclockwise) by computing a single residue at $\infty$ on $\CC\PP^1$ instead of the residues
+inside the circle.
+\end{exercise}
+
+\begin{solution}
+By Theorem~\ref{complex-manifolds:theorem-global-residue} on $\CC\PP^1$, the integral over the circle, which is $2\pi i$ times the sum of the residues inside it, equals $-2\pi i$ times the sum of the residues
+outside it, including $\infty$. For $\omega = z^5\,dz/(z^6 - 1)$ all six poles lie inside. With $w = 1/z$, $\frac{z^5}{z^6 - 1} = \frac{w}{1 - w^6}$ and $dz = -dw/w^2$, so $\omega = -\frac{dw}{w(1 - w^6)}$ has residue $-1$
+at $\infty$, and the integral is $2\pi i$. (Directly: each pole $\zeta$ is simple with residue $\zeta^5/(6\zeta^5) = \frac16$.) For the second form the poles $\pm3i$ lie outside the circle and $1$ inside. At
+$\infty$ the form is $O(w^3)\,dw$, holomorphic, so the integral is $-2\pi i(\operatorname{Res}_{3i} + \operatorname{Res}_{-3i})$, with
+$\operatorname{Res}_{\pm3i} = \frac{1}{(\pm3i - 1)^3(\pm6i)}$. Now $(3i - 1)^3 = 26 - 18i$ and $(3i - 1)^3 \cdot 6i = 108 + 156i$, so $\operatorname{Res}_{3i} = \frac{1}{108 + 156i}$ and
+$\operatorname{Res}_{-3i} = \frac{1}{108 - 156i}$ is its conjugate. Their sum is $\frac{216}{108^2 + 156^2} = \frac{216}{36000} = \frac{3}{500}$, and the integral is $-\frac{3\pi i}{250}$. (Directly: the
+residue at the triple pole $1$ is $\frac12\frac{d^2}{dz^2}(z^2 + 9)^{-1}$ at $z = 1$, which is $\frac12\bigl(-\frac{2}{100} + \frac{8}{1000}\bigr) = -\frac{3}{500}$.)
+\end{solution}
+
+\begin{exercise}\label{complex-manifolds:exercise-abel-torus}
+Let $f$ be a nonconstant meromorphic function on $X = \CC/\Lambda$, $\Lambda = \ZZ\omega_1 + \ZZ\omega_2$, viewed as a $\Lambda$-periodic meromorphic function on $\CC$. Let $a_1, \ldots, a_k$ and $b_1, \ldots, b_k$ be
+its zeros and poles in a fundamental parallelogram $P$ with vertices $a$, $a + \omega_1$, $a + \omega_1 + \omega_2$, $a + \omega_2$, listed with multiplicity, with $a$ chosen so that no zero or pole lies on
+$\partial P$. Show that $\sum_ia_i - \sum_ib_i \in \Lambda$, by computing $\frac{1}{2\pi i}\int_{\partial P}z\frac{f^{\prime}(z)}{f(z)}\,dz$ in two ways. (This is one direction of Abel's theorem for complex tori.)
+\end{exercise}
+
+\begin{solution}
+At a zero or pole $c$ of order $m$ (negative for a pole), $f^{\prime}/f = m/(z - c) + (\text{holomorphic})$, so $zf^{\prime}/f$ has residue $mc$. The residue theorem in the plane
+(Theorem~\ref{complex-analysis:theorem-residues}) gives $\frac{1}{2\pi i}\int_{\partial P}zf^{\prime}/f\,dz = \sum_ia_i - \sum_ib_i$. On the other hand, pair opposite sides: the side from $a + \omega_2$ to
+$a + \omega_1 + \omega_2$ is traversed backwards, and on it $f^{\prime}/f$ takes the same values as on the side from $a$ to $a + \omega_1$, so the two sides contribute
+\[
+\int_a^{a+\omega_1}\bigl(z - (z + \omega_2)\bigr)\frac{f^{\prime}(z)}{f(z)}\,dz = -\omega_2\int_a^{a+\omega_1}\frac{f^{\prime}(z)}{f(z)}\,dz = -2\pi i\,n_1\omega_2,
+\]
+where $\frac{1}{2\pi i}\int_a^{a+\omega_1}f^{\prime}/f\,dz = n_1$ is the winding number around $0$ of the closed curve $t \mapsto f(a + t\omega_1)$, $t \in [0, 1]$ (closed because $f$ is periodic), an
+integer. In the same way the other two sides contribute $2\pi i\,n_2\omega_1$ with $n_2 \in \ZZ$. So $\sum_ia_i - \sum_ib_i = n_2\omega_1 - n_1\omega_2 \in \Lambda$. Applying the same computation to
+$f^{\prime}/f$ instead of $zf^{\prime}/f$ gives $k$ zeros and $k$ poles again, in accordance with Corollary~\ref{complex-manifolds:corollary-zeros-poles}.
+\end{solution}
+
+\subsection{Holomorphic Vector Bundles}\label{complex-manifolds:subsection-exercises-holomorphic-bundles}
+
+\begin{exercise}\label{complex-manifolds:exercise-sections-ok}
+Show that the holomorphic sections of $\mathcal{O}(k)$ on $\CC\PP^n$ are the homogeneous polynomials of degree $k$ in the homogeneous coordinates, and that there are none for $k < 0$.
+\end{exercise}
+
+\begin{solution}
+A section is given by functions $s_i$ on $U_i$ with $s_i = (x_i/x_j)^{-k}s_j$; the function $F(x) = x_i^ks_i(x/x_i)$ is independent of $i$, holomorphic on $\CC^{n+1} \setminus \{0\}$ and homogeneous of degree
+$k$. By Hartogs' theorem (Theorem~\ref{several-complex-variables:theorem-hartogs}) it extends to $\CC^{n+1}$, and a homogeneous holomorphic function of degree $k$ is a polynomial for $k \geq 0$ and zero for
+$k < 0$, by looking at its power series.
+\end{solution}
+
+\begin{exercise}\label{complex-manifolds:exercise-degree-line-bundle}
+Let $X$ be a compact Riemann surface. Show that $\deg L = \int_Xc_1(L)$ defines a homomorphism $\Pic(X) \to \ZZ$, that $\deg\mathcal{O}(D) = \sum_pa_p$ for $D = \sum a_pp$, and that a line bundle of negative
+degree has no nonzero holomorphic sections.
+\end{exercise}
+
+\begin{exercise}\label{complex-manifolds:exercise-chern-connection-trivial}
+Compute the Chern connection and its curvature for the trivial line bundle with metric $e^{-|z|^2}$ on $\CC$, and verify that the curvature is a positive $(1,1)$-form.
+\end{exercise}
+
+\begin{exercise}\label{complex-manifolds:exercise-picard-torus}
+For a complex torus $X = \CC/\Lambda$ of dimension one, show that $H^1(X, \mathcal{O}_X) \cong \CC$ and deduce that $\Pic^0(X)$ is a complex torus of dimension one.
+\end{exercise}
+
+\begin{exercise}\label{complex-manifolds:exercise-zeros-vector-field}
+Show that a nonzero holomorphic vector field on $\CC\PP^1$ has exactly two zeros, counted with multiplicity, where the multiplicity of a zero of $f\,\partial_z$ is the order of the zero of $f$. Compare with the Euler
+characteristic $\chi(S^2) = 2$ and with $T^{1,0}\CC\PP^1 \cong \mathcal{O}(2)$ (Example~\ref{complex-manifolds:example-tangent-p1}).
+\end{exercise}
+
+\begin{solution}
+By Example~\ref{complex-manifolds:example-tangent-p1}(1) the field is $f\,\partial_z$ with $f = c_0 + c_1z + c_2z^2 \neq 0$, and near $\infty$ it is $-(c_0w^2 + c_1w + c_2)\,\partial_w$. Let $m = \deg f$. On $\CC$ the zeros of $f$
+have total multiplicity $m$, by the fundamental theorem of algebra (Corollary~\ref{complex-analysis:corollary-liouville}(2)) and the factorisation of $f$ into linear factors. At $w = 0$ the coefficient
+$c_0w^2 + c_1w + c_2$ has a zero of order $2 - m$, since $c_m$ is its lowest nonzero coefficient, the coefficient of $w^{2-m}$. The total is $m + (2 - m) = 2$. For instance $\partial_z$ has a double zero at $\infty$, and
+$z\,\partial_z$ simple zeros at $0$ and $\infty$, the fixed points of the flows $z \mapsto z + t$ and $z \mapsto e^tz$. The number $2$ is the Euler characteristic of $S^2$, as predicted by the Poincar\'e--Hopf theorem
+for the real vector field $2\operatorname{Re}(f\,\partial_z)$, and also the degree of $\mathcal{O}(2)$: a nonzero section of $\mathcal{O}(2)$ is a nonzero homogeneous quadric in $x_0, x_1$, which has two zeros on
+$\CC\PP^1$ counted with multiplicity.
+\end{solution}
+
+\subsection{Dolbeault Cohomology}\label{complex-manifolds:subsection-exercises-dolbeault}
 
 \begin{exercise}\label{complex-manifolds:exercise-riemann-surface}
 Let $X$ be a compact Riemann surface of genus $g$. Using Serre duality and the Fr\"olicher inequality, show that $h^{0,0} = h^{1,1} = 1$ and $h^{1,0} = h^{0,1}$, and that $h^{1,0} + h^{0,1} \geq 2g$ with equality

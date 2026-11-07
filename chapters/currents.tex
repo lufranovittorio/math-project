@@ -373,45 +373,6 @@ extended from the graph by translation in the vertical direction, and it is clos
 Harvey and Lawson developed calibrated geometries systematically: special Lagrangian, associative, coassociative and Cayley calibrations on manifolds with special holonomy \cite{joyce-special-holonomy}.
 On a K\"ahler manifold, $\omega^p/p!$ calibrates the complex submanifolds of dimension $p$ (the Wirtinger inequality, Chapter~\ref{kahler}).
 
-\section{Exercises}\label{currents:section-exercises}
-
-\begin{exercise}\label{currents:exercise-boundary-point}
-Show that a $0$-current $T$ of finite mass with compact support satisfies $T = \partial S$ for some $1$-current $S$ with compact support if and only if $T(1) = 0$. Interpret the condition for
-$T = \sum_im_i[\![p_i]\!]$.
-\end{exercise}
-
-\begin{solution}
-If $T = \partial S$, then $T(1) = T(\chi) = S(d\chi) = 0$ for a cutoff $\chi$ equal to $1$ near the supports, as $d\chi = 0$ near $\operatorname{supp}S$. Conversely, if $T(1) = 0$, Corollary~\ref{currents:corollary-cone}
-gives $\partial(0 \mathbin{\times\!\!\!\!\times} T) = T - T(1)[\![0]\!] = T$. For $T = \sum_im_i[\![p_i]\!]$ the condition is $\sum_im_i = 0$: the points can be joined in pairs, with signs, by segments.
-\end{solution}
-
-\begin{exercise}\label{currents:exercise-boundary-bound}
-For $j \geq 1$ let $T_j = \sum_{i=1}^{j}[\![\{i/j\} \times [0, 1/j]]\!]$, the sum of $j$ vertical segments of length $1/j$ oriented upwards, an integral $1$-current in $\RR^2$. Compute $\mathbf{M}(T_j)$ and
-$\mathbf{M}(\partial T_j)$. Show that $T_j \rightharpoonup T = \mathcal{H}^1\llcorner([0, 1] \times \{0\}) \wedge e_2$, and that $\partial T$ does not have finite mass, so that $T$ is not an integral current. Why does this not
-contradict Theorem~\ref{currents:theorem-federer-fleming}?
-\end{exercise}
-
-\begin{solution}
-$\mathbf{M}(T_j) = j \cdot \frac1j = 1$, and $\partial T_j = \sum_i([\![(i/j, 1/j)]\!] - [\![(i/j, 0)]\!])$ has mass $2j$. For $\omega = \omega_1dx + \omega_2dy$,
-$T_j(\omega) = \sum_{i=1}^j\int_0^{1/j}\omega_2(i/j, t)\,dt$, and each term differs from $\frac1j\omega_2(i/j, 0)$ by at most $j^{-2}\sup|\partial_2\omega_2|$. So
-$T_j(\omega) = \frac1j\sum_{i=1}^j\omega_2(i/j, 0) + O(1/j)$, a Riemann sum plus an error, which tends to $\int_0^1\omega_2(x, 0)\,dx = T(\omega)$. Now $\partial T(f) = \int_0^1\partial_2f(x, 0)\,dx$. Take
-$f_N(x, y) = \phi(x)\psi(y)\sin(Ny)$ with $\phi, \psi \in C^\infty_c(\RR)$, $0 \leq \phi, \psi \leq 1$, $\phi = 1$ on $[0, 1]$ and $\psi = 1$ near $0$: then $|f_N| \leq 1$ and $\partial T(f_N) = N$, so
-$\mathbf{M}(\partial T) = \infty$. There is no contradiction, because $\mathbf{M}(\partial T_j) = 2j$ is unbounded: in the limit the vertical segments, whose lengths tend to $0$ while their number grows, leave a
-current oriented perpendicularly to its support.
-\end{solution}
-
-\begin{exercise}\label{currents:exercise-homotopy-segment}
-Let $T = [\![0, 1]\!] \times \{0\}$ in $\RR^2$ and $F(x, t) = x + te_2$. Show that the homotopy current $F_\#([\![0, 1]\!] \times T)$ is $\pm[\![[0, 1]^2]\!]$, and check the homotopy formula of
-Proposition~\ref{currents:proposition-homotopy-formula} against the boundary of the oriented square.
-\end{exercise}
-
-\begin{solution}
-For $\omega = g\,dx^1 \wedge dx^2$, $F^*\omega = g(x + te_2)\,dx^1 \wedge (dx^2 + dt)$, whose $dt$-part is $dt \wedge \beta_t$ with $\beta_t = -g(x + te_2)\,dx^1$ (as $dx^1 \wedge dt = -dt \wedge dx^1$). So
-$KF^*\omega = -\int_0^1g(x + te_2)\,dt\,dx^1$ and $T(KF^*\omega) = -\int_0^1\int_0^1g(x, t)\,dt\,dx = -[\![[0, 1]^2]\!](\omega)$ with the standard orientation. The homotopy formula reads
-$\partial(-[\![[0, 1]^2]\!]) = F_{1\#}T - T - h(\partial T)$, where $F_{1\#}T$ is the top side oriented to the right and $h(\partial T) = h([\![(1, 0)]\!] - [\![(0, 0)]\!])$ is the difference of the right and left sides oriented
-upwards. Indeed $\partial[\![[0, 1]^2]\!]$ is the bottom side to the right, the right side up, the top side to the left and the left side down, which is $T + h(\partial T) - F_{1\#}T$.
-\end{solution}
-
 \section{Varifolds}\label{currents:section-varifolds}
 Integral currents (Chapter~\ref{currents}) solve Plateau's problem for oriented surfaces, but soap films are not oriented and are not always mass minimising: a M\"obius strip of soap is a stable
 film, and the triple junctions of soap films, where three sheets meet at angles of $120^\circ$, cannot be described by currents with integer multiplicities in a way that sees their balance, because
@@ -1128,7 +1089,48 @@ Willmore conjecture: every torus in $\RR^3$ has $\int H^2\,dA \geq 2\pi^2$ ($H$ 
 \end{enumerate}
 \end{remark}
 
-\section{Exercises on Varifolds}\label{currents:section-exercises-varifolds}
+\section{Exercises}\label{currents:section-exercises}
+
+\subsection{Currents}\label{currents:subsection-exercises-currents}
+
+\begin{exercise}\label{currents:exercise-boundary-point}
+Show that a $0$-current $T$ of finite mass with compact support satisfies $T = \partial S$ for some $1$-current $S$ with compact support if and only if $T(1) = 0$. Interpret the condition for
+$T = \sum_im_i[\![p_i]\!]$.
+\end{exercise}
+
+\begin{solution}
+If $T = \partial S$, then $T(1) = T(\chi) = S(d\chi) = 0$ for a cutoff $\chi$ equal to $1$ near the supports, as $d\chi = 0$ near $\operatorname{supp}S$. Conversely, if $T(1) = 0$, Corollary~\ref{currents:corollary-cone}
+gives $\partial(0 \mathbin{\times\!\!\!\!\times} T) = T - T(1)[\![0]\!] = T$. For $T = \sum_im_i[\![p_i]\!]$ the condition is $\sum_im_i = 0$: the points can be joined in pairs, with signs, by segments.
+\end{solution}
+
+\begin{exercise}\label{currents:exercise-boundary-bound}
+For $j \geq 1$ let $T_j = \sum_{i=1}^{j}[\![\{i/j\} \times [0, 1/j]]\!]$, the sum of $j$ vertical segments of length $1/j$ oriented upwards, an integral $1$-current in $\RR^2$. Compute $\mathbf{M}(T_j)$ and
+$\mathbf{M}(\partial T_j)$. Show that $T_j \rightharpoonup T = \mathcal{H}^1\llcorner([0, 1] \times \{0\}) \wedge e_2$, and that $\partial T$ does not have finite mass, so that $T$ is not an integral current. Why does this not
+contradict Theorem~\ref{currents:theorem-federer-fleming}?
+\end{exercise}
+
+\begin{solution}
+$\mathbf{M}(T_j) = j \cdot \frac1j = 1$, and $\partial T_j = \sum_i([\![(i/j, 1/j)]\!] - [\![(i/j, 0)]\!])$ has mass $2j$. For $\omega = \omega_1dx + \omega_2dy$,
+$T_j(\omega) = \sum_{i=1}^j\int_0^{1/j}\omega_2(i/j, t)\,dt$, and each term differs from $\frac1j\omega_2(i/j, 0)$ by at most $j^{-2}\sup|\partial_2\omega_2|$. So
+$T_j(\omega) = \frac1j\sum_{i=1}^j\omega_2(i/j, 0) + O(1/j)$, a Riemann sum plus an error, which tends to $\int_0^1\omega_2(x, 0)\,dx = T(\omega)$. Now $\partial T(f) = \int_0^1\partial_2f(x, 0)\,dx$. Take
+$f_N(x, y) = \phi(x)\psi(y)\sin(Ny)$ with $\phi, \psi \in C^\infty_c(\RR)$, $0 \leq \phi, \psi \leq 1$, $\phi = 1$ on $[0, 1]$ and $\psi = 1$ near $0$: then $|f_N| \leq 1$ and $\partial T(f_N) = N$, so
+$\mathbf{M}(\partial T) = \infty$. There is no contradiction, because $\mathbf{M}(\partial T_j) = 2j$ is unbounded: in the limit the vertical segments, whose lengths tend to $0$ while their number grows, leave a
+current oriented perpendicularly to its support.
+\end{solution}
+
+\begin{exercise}\label{currents:exercise-homotopy-segment}
+Let $T = [\![0, 1]\!] \times \{0\}$ in $\RR^2$ and $F(x, t) = x + te_2$. Show that the homotopy current $F_\#([\![0, 1]\!] \times T)$ is $\pm[\![[0, 1]^2]\!]$, and check the homotopy formula of
+Proposition~\ref{currents:proposition-homotopy-formula} against the boundary of the oriented square.
+\end{exercise}
+
+\begin{solution}
+For $\omega = g\,dx^1 \wedge dx^2$, $F^*\omega = g(x + te_2)\,dx^1 \wedge (dx^2 + dt)$, whose $dt$-part is $dt \wedge \beta_t$ with $\beta_t = -g(x + te_2)\,dx^1$ (as $dx^1 \wedge dt = -dt \wedge dx^1$). So
+$KF^*\omega = -\int_0^1g(x + te_2)\,dt\,dx^1$ and $T(KF^*\omega) = -\int_0^1\int_0^1g(x, t)\,dt\,dx = -[\![[0, 1]^2]\!](\omega)$ with the standard orientation. The homotopy formula reads
+$\partial(-[\![[0, 1]^2]\!]) = F_{1\#}T - T - h(\partial T)$, where $F_{1\#}T$ is the top side oriented to the right and $h(\partial T) = h([\![(1, 0)]\!] - [\![(0, 0)]\!])$ is the difference of the right and left sides oriented
+upwards. Indeed $\partial[\![[0, 1]^2]\!]$ is the bottom side to the right, the right side up, the top side to the left and the left side down, which is $T + h(\partial T) - F_{1\#}T$.
+\end{solution}
+
+\subsection{Varifolds}\label{currents:subsection-exercises-varifolds}
 
 \begin{exercise}\label{currents:exercise-segment}
 Let $I = \{a + tu : 0 \leq t \leq L\}$ be a segment, $u$ a unit vector. Show that $\delta v(I)(X) = \langle X(a + Lu) - X(a), u\rangle$, and find $\|\delta v(I)\|$, $\nu$ and the generalised boundary measure.

@@ -410,52 +410,6 @@ over $\CC$, and $X^\sigma(\CC)$ is in general not homeomorphic to $X(\CC)$ \cite
 classes (Chapter~\ref{absolute-hodge}).
 \end{remark}
 
-\section{Exercises}\label{schemes:section-exercises}
-
-\begin{exercise}\label{schemes:exercise-spec-z-x}
-Describe the points of $\Spec\ZZ[x]$: show that they are $(0)$, the primes $(f)$ with $f$ irreducible, and the maximal ideals $(p, f)$ with $p$ prime and
-$f$ irreducible modulo $p$.
-\end{exercise}
-
-\begin{solution}
-Let $\mathfrak{p}$ be a prime. If $\mathfrak{p} \cap \ZZ = (p)$ with $p$ prime, then $\mathfrak{p}$ corresponds to a prime of $\mathbb{F}_p[x]$, a principal ideal domain,
-namely $0$ or $(\bar f)$ with $\bar f$ irreducible. This gives $(p)$ and $(p, f)$, and the latter is maximal. If $\mathfrak{p} \cap \ZZ = 0$, then $\mathfrak{p}$
-corresponds to a prime of $\QQ[x]$ (localisation at $\ZZ \setminus 0$), which is $0$ or $(g)$ with $g$ irreducible. Then $\mathfrak{p} = g\QQ[x] \cap \ZZ[x] = (f)$,
-where $f$ is $g$ made primitive (Gauss's lemma, Lemma~\ref{rings:lemma-gauss}). The primes $(p)$ are the primes $(f)$ with $f = p$ constant.
-\end{solution}
-
-\begin{exercise}\label{schemes:exercise-dual-numbers}
-Let $X$ be a scheme over an algebraically closed field $k$ and $D = \Spec k[\varepsilon]/(\varepsilon^2)$. Show that $X(D)$ is in bijection with pairs of a closed
-point $x \in X(k)$ and a vector of $(\mathfrak{m}_x/\mathfrak{m}_x^2)^\vee$.
-\end{exercise}
-
-\begin{solution}
-The image of $D$ is a point $x$, and the morphism is a local $k$-algebra map $\varphi \colon \mathcal{O}_{X,x} \to k[\varepsilon]$. Composing with
-$k[\varepsilon] \to k$ gives $k(x) = k$. Write $\varphi(a) = a(x) + \delta(a)\varepsilon$. Then $\delta$ is a $k$-linear derivation at $x$ that kills $k$ and $\mathfrak{m}_x^2$,
-since $\varepsilon^2 = 0$. So $\delta$ is a linear form on $\mathfrak{m}_x/\mathfrak{m}_x^2$, and conversely every such form defines a local homomorphism.
-\end{solution}
-
-\begin{exercise}\label{schemes:exercise-dvr}
-Let $R$ be a discrete valuation ring with fraction field $K$ and residue field $\kappa$. Describe $\Spec R$ and the fibres of $X \to \Spec R$ for
-$X = \Spec R[x, y]/(xy - \pi)$, where $\pi$ is a uniformiser.
-\end{exercise}
-
-\begin{solution}
-$\Spec R$ has two points: the closed point $\mathfrak{m}$ and the generic point $(0)$, which is open. The generic fibre is the smooth conic $xy = \pi$ over
-$K$, isomorphic to $\Aa^1_K \setminus \{0\}$. The special fibre is $xy = 0$ over $\kappa$, two lines meeting in a point. $X$ is a domain dominating $\Spec R$,
-so the morphism is flat (Proposition~\ref{schemes:proposition-flat}).
-\end{solution}
-
-\begin{exercise}\label{schemes:exercise-proj-conic}
-Show that $\Proj k[x, y, z]/(xz - y^2) \cong \PP^1_k$ for every field $k$.
-\end{exercise}
-
-\begin{solution}
-The ring $S = k[x, y, z]/(xz - y^2)$ is isomorphic to the subring $k[s^2, st, t^2] \subseteq k[s, t]$ of polynomials of even degree, with degrees halved.
-For a graded ring $T$ and $T^{(2)} = \bigoplus_dT_{2d}$ one has $\Proj T^{(2)} \cong \Proj T$, since $D_+(f^2)$ and $D_+(f)$ have the same ring
-$T_{(f)} = T^{(2)}_{(f^2)}$ \cite[Exercise II.5.13]{hartshorne-ag}. Hence $\Proj S \cong \Proj k[s, t] = \PP^1_k$.
-\end{solution}
-
 \section{Quasi-coherent and Coherent Sheaves}\label{schemes:section-coherent-sheaves}
 Quasi-coherent sheaves are to schemes what modules are to rings. On an affine scheme $\Spec A$ they are exactly the sheaves $\widetilde M$ attached
 to $A$-modules, and in general they are glued from such. Coherent sheaves, the finitely generated ones, include vector bundles, ideal sheaves of
@@ -757,50 +711,6 @@ multiplication by a function that generates the unit ideal. So the sequence is e
 determinants gives $\omega_X|_Y \cong \omega_Y \otimes \mathcal{I}/\mathcal{I}^2$. For a hypersurface of degree $d$, $\mathcal{I} = \mathcal{O}(-d)$ and $\omega_{\PP^n} = \mathcal{O}(-n-1)$.
 \end{proof}
 
-\section{Exercises on Quasi-coherent and Coherent Sheaves}\label{schemes:section-exercises-coherent-sheaves}
-
-\begin{exercise}\label{schemes:exercise-not-quasi-coherent}
-Let $X = \Spec R$ for a discrete valuation ring $R$ with fraction field $K$, and let $\mathcal{F}$ be the sheaf with $\mathcal{F}(X) = 0$ and $\mathcal{F}(\{\eta\}) = K$ on
-the open generic point. Show that $\mathcal{F}$ is an $\mathcal{O}_X$-module that is not quasi-coherent, while $j_*K$ for $j \colon \{\eta\} \to X$ is quasi-coherent.
-\end{exercise}
-
-\begin{solution}
-If $\mathcal{F}$ were quasi-coherent, it would be $\widetilde{\Gamma(X, \mathcal{F})} = 0$ (Theorem~\ref{schemes:theorem-affine}), but $\mathcal{F}_\eta = K \neq 0$.
-On the other hand $j_*K = \widetilde K$, since $\widetilde K(\{\eta\}) = K_{(0)} = K$ and $\widetilde K(X) = K$.
-\end{solution}
-
-\begin{exercise}\label{schemes:exercise-o-minus-one}
-Show that $\mathcal{O}(-1)$ on $\PP^r_k$ is the sheaf of sections of the tautological line bundle
-$\{(x, \ell) \in \Aa^{r+1} \times \PP^r : x \in \ell\}$, and that $\mathcal{O}(1)$ has no nonzero section vanishing on a hyperplane twice.
-\end{exercise}
-
-\begin{solution}
-On $U_i$ the tautological bundle is trivialised by the section $\ell \mapsto (x_0/x_i, \ldots, x_r/x_i)$, and on $U_i \cap U_j$ these trivialisations differ by
-$x_i/x_j$. This is the cocycle of $\mathcal{O}(-1)$, whose generator on $U_i$ is $1/x_i$: $1/x_j = (x_i/x_j)(1/x_i)$. A section of $\mathcal{O}(1)$ is a linear form
-by Proposition~\ref{schemes:proposition-twisting}, and a nonzero linear form vanishes on its hyperplane to order exactly $1$.
-\end{solution}
-
-\begin{exercise}\label{schemes:exercise-canonical-curves}
-Using Proposition~\ref{schemes:proposition-adjunction}, show that a nonsingular plane cubic has trivial canonical sheaf and that a nonsingular plane
-quartic has $\omega \cong \mathcal{O}(1)$, so that $\Gamma(Y, \omega_Y)$ contains the three linear forms. (In fact it is spanned by them, and the genus is
-$3$; see Chapter~\ref{curves}.)
-\end{exercise}
-
-\begin{solution}
-$d - n - 1 = 3 - 3 = 0$ and $4 - 3 = 1$. The restriction $\Gamma(\PP^2, \mathcal{O}(1)) \to \Gamma(Y, \mathcal{O}_Y(1))$ is injective because a linear form vanishing on $Y$
-would be divisible by the quartic equation. So $\Gamma(Y, \omega_Y)$ contains a $3$-dimensional space.
-\end{solution}
-
-\begin{exercise}\label{schemes:exercise-differentials-cusp}
-Compute $\Omega_{X/k}$ for the cusp $X = \Spec k[x, y]/(y^2 - x^3)$ and show that it is not locally free.
-\end{exercise}
-
-\begin{solution}
-By Example~\ref{commutative-algebra:example-cusp}, $\Omega = (B\,dx \oplus B\,dy)/(2y\,dy - 3x^2dx)$. Its fibre at the origin has dimension $2$, while at other
-points it has dimension $1$ (where $x \neq 0$ or $y \neq 0$, the relation is nonzero modulo the maximal ideal, in characteristic $\neq 2, 3$). As $X$ is
-reduced, Proposition~\ref{schemes:proposition-fibre-dimension}(3) shows that $\Omega$ is not locally free.
-\end{solution}
-
 \section{Cohomology of Coherent Sheaves}\label{schemes:section-coherent-cohomology}
 The sheaf cohomology of Section~\ref{sheaves:section-sheaf-cohomology} applied to quasi-coherent sheaves on schemes is computable. On affine schemes it
 vanishes in positive degrees (Theorem~\ref{schemes:theorem-affine-vanishing}), so on separated schemes it is computed by \v{C}ech
@@ -1081,7 +991,99 @@ by $t \in E$ (the Poincar\'e bundle on $E \times E$), one has $h^0(\mathcal{L}_t
 $\chi(\mathcal{L}_t) = 0$ is constant (Chapter~\ref{curves}).
 \end{counterexample}
 
-\section{Exercises on Cohomology of Coherent Sheaves}\label{schemes:section-exercises-coherent-cohomology}
+\section{Exercises}\label{schemes:section-exercises}
+
+\subsection{Schemes}\label{schemes:subsection-exercises-schemes}
+
+\begin{exercise}\label{schemes:exercise-spec-z-x}
+Describe the points of $\Spec\ZZ[x]$: show that they are $(0)$, the primes $(f)$ with $f$ irreducible, and the maximal ideals $(p, f)$ with $p$ prime and
+$f$ irreducible modulo $p$.
+\end{exercise}
+
+\begin{solution}
+Let $\mathfrak{p}$ be a prime. If $\mathfrak{p} \cap \ZZ = (p)$ with $p$ prime, then $\mathfrak{p}$ corresponds to a prime of $\mathbb{F}_p[x]$, a principal ideal domain,
+namely $0$ or $(\bar f)$ with $\bar f$ irreducible. This gives $(p)$ and $(p, f)$, and the latter is maximal. If $\mathfrak{p} \cap \ZZ = 0$, then $\mathfrak{p}$
+corresponds to a prime of $\QQ[x]$ (localisation at $\ZZ \setminus 0$), which is $0$ or $(g)$ with $g$ irreducible. Then $\mathfrak{p} = g\QQ[x] \cap \ZZ[x] = (f)$,
+where $f$ is $g$ made primitive (Gauss's lemma, Lemma~\ref{rings:lemma-gauss}). The primes $(p)$ are the primes $(f)$ with $f = p$ constant.
+\end{solution}
+
+\begin{exercise}\label{schemes:exercise-dual-numbers}
+Let $X$ be a scheme over an algebraically closed field $k$ and $D = \Spec k[\varepsilon]/(\varepsilon^2)$. Show that $X(D)$ is in bijection with pairs of a closed
+point $x \in X(k)$ and a vector of $(\mathfrak{m}_x/\mathfrak{m}_x^2)^\vee$.
+\end{exercise}
+
+\begin{solution}
+The image of $D$ is a point $x$, and the morphism is a local $k$-algebra map $\varphi \colon \mathcal{O}_{X,x} \to k[\varepsilon]$. Composing with
+$k[\varepsilon] \to k$ gives $k(x) = k$. Write $\varphi(a) = a(x) + \delta(a)\varepsilon$. Then $\delta$ is a $k$-linear derivation at $x$ that kills $k$ and $\mathfrak{m}_x^2$,
+since $\varepsilon^2 = 0$. So $\delta$ is a linear form on $\mathfrak{m}_x/\mathfrak{m}_x^2$, and conversely every such form defines a local homomorphism.
+\end{solution}
+
+\begin{exercise}\label{schemes:exercise-dvr}
+Let $R$ be a discrete valuation ring with fraction field $K$ and residue field $\kappa$. Describe $\Spec R$ and the fibres of $X \to \Spec R$ for
+$X = \Spec R[x, y]/(xy - \pi)$, where $\pi$ is a uniformiser.
+\end{exercise}
+
+\begin{solution}
+$\Spec R$ has two points: the closed point $\mathfrak{m}$ and the generic point $(0)$, which is open. The generic fibre is the smooth conic $xy = \pi$ over
+$K$, isomorphic to $\Aa^1_K \setminus \{0\}$. The special fibre is $xy = 0$ over $\kappa$, two lines meeting in a point. $X$ is a domain dominating $\Spec R$,
+so the morphism is flat (Proposition~\ref{schemes:proposition-flat}).
+\end{solution}
+
+\begin{exercise}\label{schemes:exercise-proj-conic}
+Show that $\Proj k[x, y, z]/(xz - y^2) \cong \PP^1_k$ for every field $k$.
+\end{exercise}
+
+\begin{solution}
+The ring $S = k[x, y, z]/(xz - y^2)$ is isomorphic to the subring $k[s^2, st, t^2] \subseteq k[s, t]$ of polynomials of even degree, with degrees halved.
+For a graded ring $T$ and $T^{(2)} = \bigoplus_dT_{2d}$ one has $\Proj T^{(2)} \cong \Proj T$, since $D_+(f^2)$ and $D_+(f)$ have the same ring
+$T_{(f)} = T^{(2)}_{(f^2)}$ \cite[Exercise II.5.13]{hartshorne-ag}. Hence $\Proj S \cong \Proj k[s, t] = \PP^1_k$.
+\end{solution}
+
+\subsection{Quasi-coherent and Coherent Sheaves}\label{schemes:subsection-exercises-coherent-sheaves}
+
+\begin{exercise}\label{schemes:exercise-not-quasi-coherent}
+Let $X = \Spec R$ for a discrete valuation ring $R$ with fraction field $K$, and let $\mathcal{F}$ be the sheaf with $\mathcal{F}(X) = 0$ and $\mathcal{F}(\{\eta\}) = K$ on
+the open generic point. Show that $\mathcal{F}$ is an $\mathcal{O}_X$-module that is not quasi-coherent, while $j_*K$ for $j \colon \{\eta\} \to X$ is quasi-coherent.
+\end{exercise}
+
+\begin{solution}
+If $\mathcal{F}$ were quasi-coherent, it would be $\widetilde{\Gamma(X, \mathcal{F})} = 0$ (Theorem~\ref{schemes:theorem-affine}), but $\mathcal{F}_\eta = K \neq 0$.
+On the other hand $j_*K = \widetilde K$, since $\widetilde K(\{\eta\}) = K_{(0)} = K$ and $\widetilde K(X) = K$.
+\end{solution}
+
+\begin{exercise}\label{schemes:exercise-o-minus-one}
+Show that $\mathcal{O}(-1)$ on $\PP^r_k$ is the sheaf of sections of the tautological line bundle
+$\{(x, \ell) \in \Aa^{r+1} \times \PP^r : x \in \ell\}$, and that $\mathcal{O}(1)$ has no nonzero section vanishing on a hyperplane twice.
+\end{exercise}
+
+\begin{solution}
+On $U_i$ the tautological bundle is trivialised by the section $\ell \mapsto (x_0/x_i, \ldots, x_r/x_i)$, and on $U_i \cap U_j$ these trivialisations differ by
+$x_i/x_j$. This is the cocycle of $\mathcal{O}(-1)$, whose generator on $U_i$ is $1/x_i$: $1/x_j = (x_i/x_j)(1/x_i)$. A section of $\mathcal{O}(1)$ is a linear form
+by Proposition~\ref{schemes:proposition-twisting}, and a nonzero linear form vanishes on its hyperplane to order exactly $1$.
+\end{solution}
+
+\begin{exercise}\label{schemes:exercise-canonical-curves}
+Using Proposition~\ref{schemes:proposition-adjunction}, show that a nonsingular plane cubic has trivial canonical sheaf and that a nonsingular plane
+quartic has $\omega \cong \mathcal{O}(1)$, so that $\Gamma(Y, \omega_Y)$ contains the three linear forms. (In fact it is spanned by them, and the genus is
+$3$; see Chapter~\ref{curves}.)
+\end{exercise}
+
+\begin{solution}
+$d - n - 1 = 3 - 3 = 0$ and $4 - 3 = 1$. The restriction $\Gamma(\PP^2, \mathcal{O}(1)) \to \Gamma(Y, \mathcal{O}_Y(1))$ is injective because a linear form vanishing on $Y$
+would be divisible by the quartic equation. So $\Gamma(Y, \omega_Y)$ contains a $3$-dimensional space.
+\end{solution}
+
+\begin{exercise}\label{schemes:exercise-differentials-cusp}
+Compute $\Omega_{X/k}$ for the cusp $X = \Spec k[x, y]/(y^2 - x^3)$ and show that it is not locally free.
+\end{exercise}
+
+\begin{solution}
+By Example~\ref{commutative-algebra:example-cusp}, $\Omega = (B\,dx \oplus B\,dy)/(2y\,dy - 3x^2dx)$. Its fibre at the origin has dimension $2$, while at other
+points it has dimension $1$ (where $x \neq 0$ or $y \neq 0$, the relation is nonzero modulo the maximal ideal, in characteristic $\neq 2, 3$). As $X$ is
+reduced, Proposition~\ref{schemes:proposition-fibre-dimension}(3) shows that $\Omega$ is not locally free.
+\end{solution}
+
+\subsection{Cohomology of Coherent Sheaves}\label{schemes:subsection-exercises-coherent-cohomology}
 
 \begin{exercise}\label{schemes:exercise-punctured-plane}
 Compute $H^1(\Aa^2_k \setminus \{0\}, \mathcal{O})$ with the \v{C}ech complex of the cover $D(x) \cup D(y)$, and deduce again that $\Aa^2_k \setminus \{0\}$ is not affine.

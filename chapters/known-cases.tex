@@ -169,30 +169,6 @@ Chapter~\ref{absolute-hodge}). The first genuinely open cases include Weil class
 exceptional classes, and products of two K3 surfaces in degree $4$ away from Hodge isometries.
 \end{remark}
 
-\section{Exercises}\label{known-cases:section-exercises}
-
-\begin{exercise}\label{known-cases:exercise-cubic-fourfold-numbers}
-For a nonsingular cubic fourfold $X \subseteq \PP^5$, show that $H^4(X; \QQ)$ has Hodge numbers $(0, 1, 21, 1, 0)$ and that $\mathrm{HC}(X, p)$ holds for $p \neq 2$ by
-Proposition~\ref{known-cases:proposition-hypersurfaces}.
-\end{exercise}
-
-\begin{solution}
-As in Proposition~\ref{calabi-yau:proposition-quintic}, $c(TX) = (1 + h)^6/(1 + 3h)$, whose degree-$4$ part is $(15 - 3 \cdot 20 + 9 \cdot 15 - 27 \cdot 6 + 81)h^4 = 9h^4$, and
-$\int_Xh^4 = 3$, so $\chi(X) = 27$. The odd Betti numbers vanish and $b_0 = b_2 = b_6 = b_8 = 1$ (Proposition~\ref{known-cases:proposition-hypersurfaces}), so $b_4 = 27 - 4 = 23$. The Hodge
-numbers $h^{4,0} = 0$, $h^{3,1} = 1$, $h^{2,2} = 21$ follow from Griffiths' description of the primitive cohomology of hypersurfaces by residues \cite{voisin-hodge-2}. The second statement is
-Proposition~\ref{known-cases:proposition-hypersurfaces} with $n = 4$.
-\end{solution}
-
-\begin{exercise}\label{known-cases:exercise-lefschetz-ring-product}
-Let $E$ be an elliptic curve without complex multiplication. Show that $\mathrm{Hdg}^\bullet(E^r) = \mathrm{Lef}^\bullet(E^r)$ for all $r$.
-\end{exercise}
-
-\begin{solution}
-By Proposition~\ref{hodge-structures:proposition-elliptic-curves}, $\mathrm{Hg}(E) = \mathrm{SL}_2$, and the invariants of $\mathrm{SL}_2$ acting diagonally on $\Lambda^\bullet(H^{\oplus r})$ are generated, by classical
-invariant theory, by the invariants in $\Lambda^2(H^{\oplus r})$, which are the divisor classes (Exercise~\ref{algebraic-groups:exercise-hodge-classes-torus}). Apply
-Corollary~\ref{hodge-structures:corollary-hodge-ring-abelian}.
-\end{solution}
-
 \section{Variants That Fail}\label{known-cases:section-failures}
 The Hodge conjecture is surrounded by statements that are equally natural and demonstrably false. Each failure identifies a mechanism that Hodge theory does not
 control, and so a constraint on any proof. We treat four variants: the integral Hodge conjecture, false for torsion classes (Atiyah--Hirzebruch) and for non-torsion classes
@@ -344,7 +320,33 @@ push-pull, $f_*f^* = \deg f$, or through factorials such as $c_p(\mathcal{O}_Z) 
 \end{enumerate}
 \end{remark}
 
-\section{Exercises on Variants That Fail}\label{known-cases:section-exercises-failures}
+\section{Exercises}\label{known-cases:section-exercises}
+
+\subsection{Known Cases and Evidence}\label{known-cases:subsection-exercises-known-cases-and-evidence}
+
+\begin{exercise}\label{known-cases:exercise-cubic-fourfold-numbers}
+For a nonsingular cubic fourfold $X \subseteq \PP^5$, show that $H^4(X; \QQ)$ has Hodge numbers $(0, 1, 21, 1, 0)$ and that $\mathrm{HC}(X, p)$ holds for $p \neq 2$ by
+Proposition~\ref{known-cases:proposition-hypersurfaces}.
+\end{exercise}
+
+\begin{solution}
+As in Proposition~\ref{calabi-yau:proposition-quintic}, $c(TX) = (1 + h)^6/(1 + 3h)$, whose degree-$4$ part is $(15 - 3 \cdot 20 + 9 \cdot 15 - 27 \cdot 6 + 81)h^4 = 9h^4$, and
+$\int_Xh^4 = 3$, so $\chi(X) = 27$. The odd Betti numbers vanish and $b_0 = b_2 = b_6 = b_8 = 1$ (Proposition~\ref{known-cases:proposition-hypersurfaces}), so $b_4 = 27 - 4 = 23$. The Hodge
+numbers $h^{4,0} = 0$, $h^{3,1} = 1$, $h^{2,2} = 21$ follow from Griffiths' description of the primitive cohomology of hypersurfaces by residues \cite{voisin-hodge-2}. The second statement is
+Proposition~\ref{known-cases:proposition-hypersurfaces} with $n = 4$.
+\end{solution}
+
+\begin{exercise}\label{known-cases:exercise-lefschetz-ring-product}
+Let $E$ be an elliptic curve without complex multiplication. Show that $\mathrm{Hdg}^\bullet(E^r) = \mathrm{Lef}^\bullet(E^r)$ for all $r$.
+\end{exercise}
+
+\begin{solution}
+By Proposition~\ref{hodge-structures:proposition-elliptic-curves}, $\mathrm{Hg}(E) = \mathrm{SL}_2$, and the invariants of $\mathrm{SL}_2$ acting diagonally on $\Lambda^\bullet(H^{\oplus r})$ are generated, by classical
+invariant theory, by the invariants in $\Lambda^2(H^{\oplus r})$, which are the divisor classes (Exercise~\ref{algebraic-groups:exercise-hodge-classes-torus}). Apply
+Corollary~\ref{hodge-structures:corollary-hodge-ring-abelian}.
+\end{solution}
+
+\subsection{Variants That Fail}\label{known-cases:subsection-exercises-failures}
 
 \begin{exercise}\label{known-cases:exercise-torsion-hodge}
 Show that every torsion class in $H^{2p}(X; \ZZ)$ is an integral Hodge class, and that $Z^{2p}(X)$ is torsion if $\mathrm{HC}(X, p)$ holds.

@@ -180,34 +180,6 @@ By Theorem~\ref{vhs:theorem-fixed-part} it would follow from the Hodge conjectur
 (Chapter~\ref{known-cases}).
 \end{remark}
 
-\section{Exercises}\label{vhs:section-exercises}
-
-\begin{exercise}\label{vhs:exercise-constant-hodge-numbers}
-Show that in a smooth projective family of curves the genus is constant, and in a smooth family of K3 surfaces the Hodge numbers of $H^2$ are $(1, 20, 1)$ on every fibre.
-\end{exercise}
-
-\begin{solution}
-Both follow from Theorem~\ref{vhs:theorem-hodge-bundles}(1): the genus is $h^{1,0}$. For K3 surfaces it suffices that one fibre is a K3 surface with these numbers, for instance a quartic
-(Exercise~\ref{calabi-yau:exercise-k3-hodge}).
-\end{solution}
-
-\begin{exercise}\label{vhs:exercise-transversality-weight-one}
-Show that Griffiths transversality is automatic for variations of weight one: every holomorphic family of Hodge filtrations $F^1 \subseteq H_\CC$ is horizontal.
-\end{exercise}
-
-\begin{solution}
-For weight one the filtration is $0 = F^2 \subseteq F^1 \subseteq F^0 = H_\CC$, and transversality asks $\nabla F^1 \subseteq F^0 \otimes \Omega^1$, which holds trivially.
-\end{solution}
-
-\begin{exercise}\label{vhs:exercise-hodge-locus-codimension}
-In a family of K3 surfaces with a nonconstant period map, show that the Hodge locus of an integral class $\lambda \in H^2$ that is not generically of type $(1,1)$ has codimension at most $1$.
-\end{exercise}
-
-\begin{solution}
-By Proposition~\ref{vhs:proposition-hodge-locus-analytic}, the codimension is at most $\dim\mathcal{H}/\mathcal{F}^1 = h^{0,2} = 1$. Concretely, the locus is where $Q(\lambda, \omega_t) = 0$ for a local
-holomorphic generator $\omega_t$ of $F^2$, one holomorphic equation.
-\end{solution}
-
 \section{Intermediate Jacobians and Normal Functions}\label{vhs:section-intermediate-jacobians}
 Cycle classes forget much of the structure of Chow groups: a cycle whose class vanishes can still be very far from zero. Griffiths' intermediate Jacobian
 $J^p(X)$, a complex torus built from the odd-degree Hodge structure $H^{2p-1}(X)$, receives the \emph{Abel--Jacobi map} from homologically trivial cycles of
@@ -391,7 +363,37 @@ dimension $5$. The Abel--Jacobi map from the Fano surface of lines on $X$ to $J^
 $J^2(X)$ is not a product of Jacobians of curves, and deduced that $X$ is not rational, although it is unirational \cite{clemens-griffiths-1972}.
 \end{example}
 
-\section{Exercises on Intermediate Jacobians and Normal Functions}\label{vhs:section-exercises-intermediate-jacobians}
+\section{Exercises}\label{vhs:section-exercises}
+
+\subsection{Variations of Hodge Structure}\label{vhs:subsection-exercises-variations-of-hodge-structure}
+
+\begin{exercise}\label{vhs:exercise-constant-hodge-numbers}
+Show that in a smooth projective family of curves the genus is constant, and in a smooth family of K3 surfaces the Hodge numbers of $H^2$ are $(1, 20, 1)$ on every fibre.
+\end{exercise}
+
+\begin{solution}
+Both follow from Theorem~\ref{vhs:theorem-hodge-bundles}(1): the genus is $h^{1,0}$. For K3 surfaces it suffices that one fibre is a K3 surface with these numbers, for instance a quartic
+(Exercise~\ref{calabi-yau:exercise-k3-hodge}).
+\end{solution}
+
+\begin{exercise}\label{vhs:exercise-transversality-weight-one}
+Show that Griffiths transversality is automatic for variations of weight one: every holomorphic family of Hodge filtrations $F^1 \subseteq H_\CC$ is horizontal.
+\end{exercise}
+
+\begin{solution}
+For weight one the filtration is $0 = F^2 \subseteq F^1 \subseteq F^0 = H_\CC$, and transversality asks $\nabla F^1 \subseteq F^0 \otimes \Omega^1$, which holds trivially.
+\end{solution}
+
+\begin{exercise}\label{vhs:exercise-hodge-locus-codimension}
+In a family of K3 surfaces with a nonconstant period map, show that the Hodge locus of an integral class $\lambda \in H^2$ that is not generically of type $(1,1)$ has codimension at most $1$.
+\end{exercise}
+
+\begin{solution}
+By Proposition~\ref{vhs:proposition-hodge-locus-analytic}, the codimension is at most $\dim\mathcal{H}/\mathcal{F}^1 = h^{0,2} = 1$. Concretely, the locus is where $Q(\lambda, \omega_t) = 0$ for a local
+holomorphic generator $\omega_t$ of $F^2$, one holomorphic equation.
+\end{solution}
+
+\subsection{Intermediate Jacobians and Normal Functions}\label{vhs:subsection-exercises-intermediate-jacobians}
 
 \begin{exercise}\label{vhs:exercise-dimension}
 Compute $\dim J^p(X)$ for $X = \PP^n$, for an abelian variety of dimension $g$, and for a quintic threefold with $p = 2$.

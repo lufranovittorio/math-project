@@ -400,33 +400,6 @@ In particular $\operatorname{tr}_gB$ does not depend on the basis, being a contr
 $\operatorname{tr}_gg = \sum_{i,j}g^{ij}g_{ij} = n$. This is how the Ricci tensor and the scalar curvature of a Riemannian manifold are obtained from its curvature tensor
 (Chapter~\ref{riemannian-geometry}), and how the Laplacian $\Delta f = \operatorname{tr}_g\operatorname{Hess}f$ is obtained from the Hessian.
 
-\begin{exercise}\label{multilinear-algebra:exercise-tensor-symmetric}
-Assume $\operatorname{char}k \neq 2$. Show that every tensor of type $(0,2)$ is uniquely the sum of a symmetric and an alternating one, and that the symmetric ones form a subspace of dimension
-$n(n+1)/2$ and the alternating ones a subspace of dimension $n(n-1)/2$. Show that the symmetric ones are preserved by the transformation law, that is, the notion of symmetry does not depend on
-the basis.
-\end{exercise}
-
-\begin{solution}
-Write $B = \frac12(B + B^t) + \frac12(B - B^t)$, where $B^t(v, w) = B(w, v)$; the first summand is symmetric and the second alternating, because $(B - B^t)(v, v) = 0$. If $B$ is both symmetric and
-alternating, then $0 = B(v + w, v + w) = B(v, w) + B(w, v) = 2B(v, w)$, so $B = 0$; this gives uniqueness. In components, symmetric means $B_{ij} = B_{ji}$, so a symmetric tensor is determined by
-its components $B_{ij}$ with $i \leq j$, which are arbitrary: dimension $n + \binom n2 = n(n+1)/2$. Alternating means $B_{ij} = -B_{ji}$ and $B_{ii} = 0$, so the components with $i < j$
-are free: dimension $\binom n2 = n(n-1)/2$; the two dimensions add up to $n^2$. Symmetry is defined by the condition $B(v, w) = B(w, v)$ for all $v, w$, which does not mention a basis; equivalently,
-if $B^T = B$ then $(P^TBP)^T = P^TB^TP = P^TBP$.
-\end{solution}
-
-\begin{exercise}\label{multilinear-algebra:exercise-contraction-composition}
-Let $A, B \in \End(V) = T^1_1(V)$, so that $A \otimes B \in T^2_2(V)$. Show that $C^2_1(A \otimes B) = A \circ B$ and that $C^1_1C^2_1(A \otimes B) = \operatorname{tr}(AB)$, while
-$C^1_1C^1_1(A \otimes B) = \operatorname{tr}A\operatorname{tr}B$. Deduce that $\operatorname{tr}(AB) = \operatorname{tr}(BA)$.
-\end{exercise}
-
-\begin{solution}
-By linearity we may take $A = v \otimes \varphi$ and $B = w \otimes \psi$, so $A \otimes B = v \otimes w \otimes \varphi \otimes \psi$, $A(x) = \varphi(x)v$ and $B(x) = \psi(x)w$. Then
-$C^2_1(A \otimes B) = \varphi(w)\,v \otimes \psi$, the endomorphism $x \mapsto \varphi(w)\psi(x)v$; and $(A \circ B)(x) = A(\psi(x)w) = \psi(x)\varphi(w)v$, the same. Applying $C^1_1$, the trace
-(Proposition~\ref{multilinear-algebra:proposition-contraction}(2)), gives $\operatorname{tr}(AB)$, which equals $\varphi(w)\psi(v)$. On the other hand $C^1_1(A \otimes B) = \varphi(v)\,w \otimes \psi$
-and then $C^1_1$ gives $\varphi(v)\psi(w) = \operatorname{tr}A\operatorname{tr}B$. Finally $\operatorname{tr}(BA)$ is computed by the same formula with the roles exchanged, $\psi(v)\varphi(w)$,
-which is the same number as $\operatorname{tr}(AB) = \varphi(w)\psi(v)$; both sides being bilinear in $(A, B)$, the identity holds for all $A$, $B$.
-\end{solution}
-
 \section{Alternating forms}\label{multilinear-algebra:section-alternating-forms}
 
 In this section $V$ has finite dimension $n$.
@@ -845,4 +818,31 @@ $A_{12} = A_{34} = 0$, $A_{13} = X_{11}$, $A_{24} = X_{22}$, $A_{14} = X_{12}$, 
 $(-1)^{1} = -1$. For the block diagonal matrix, of sizes $2m_1$ and $2m_2$, $\alpha_A = \alpha_{A_1} + \alpha_{A_2}$ with $\alpha_{A_1}$, $\alpha_{A_2}$ commuting $2$-forms in disjoint sets of
 variables. In $(\alpha_{A_1} + \alpha_{A_2})^{m_1 + m_2}$ only the term $\binom{m_1 + m_2}{m_1}\alpha_{A_1}^{m_1}\alpha_{A_2}^{m_2}$ survives, since a power of $\alpha_{A_i}$ above $m_i$ vanishes, and it equals
 $\frac{(m_1 + m_2)!}{m_1!m_2!}\,m_1!\mathrm{Pf}(A_1)\,m_2!\mathrm{Pf}(A_2)\,e_1^* \wedge \cdots \wedge e_{2m}^*$.
+\end{solution}
+
+\begin{exercise}\label{multilinear-algebra:exercise-tensor-symmetric}
+Assume $\operatorname{char}k \neq 2$. Show that every tensor of type $(0,2)$ is uniquely the sum of a symmetric and an alternating one, and that the symmetric ones form a subspace of dimension
+$n(n+1)/2$ and the alternating ones a subspace of dimension $n(n-1)/2$. Show that the symmetric ones are preserved by the transformation law, that is, the notion of symmetry does not depend on
+the basis.
+\end{exercise}
+
+\begin{solution}
+Write $B = \frac12(B + B^t) + \frac12(B - B^t)$, where $B^t(v, w) = B(w, v)$; the first summand is symmetric and the second alternating, because $(B - B^t)(v, v) = 0$. If $B$ is both symmetric and
+alternating, then $0 = B(v + w, v + w) = B(v, w) + B(w, v) = 2B(v, w)$, so $B = 0$; this gives uniqueness. In components, symmetric means $B_{ij} = B_{ji}$, so a symmetric tensor is determined by
+its components $B_{ij}$ with $i \leq j$, which are arbitrary: dimension $n + \binom n2 = n(n+1)/2$. Alternating means $B_{ij} = -B_{ji}$ and $B_{ii} = 0$, so the components with $i < j$
+are free: dimension $\binom n2 = n(n-1)/2$; the two dimensions add up to $n^2$. Symmetry is defined by the condition $B(v, w) = B(w, v)$ for all $v, w$, which does not mention a basis; equivalently,
+if $B^T = B$ then $(P^TBP)^T = P^TB^TP = P^TBP$.
+\end{solution}
+
+\begin{exercise}\label{multilinear-algebra:exercise-contraction-composition}
+Let $A, B \in \End(V) = T^1_1(V)$, so that $A \otimes B \in T^2_2(V)$. Show that $C^2_1(A \otimes B) = A \circ B$ and that $C^1_1C^2_1(A \otimes B) = \operatorname{tr}(AB)$, while
+$C^1_1C^1_1(A \otimes B) = \operatorname{tr}A\operatorname{tr}B$. Deduce that $\operatorname{tr}(AB) = \operatorname{tr}(BA)$.
+\end{exercise}
+
+\begin{solution}
+By linearity we may take $A = v \otimes \varphi$ and $B = w \otimes \psi$, so $A \otimes B = v \otimes w \otimes \varphi \otimes \psi$, $A(x) = \varphi(x)v$ and $B(x) = \psi(x)w$. Then
+$C^2_1(A \otimes B) = \varphi(w)\,v \otimes \psi$, the endomorphism $x \mapsto \varphi(w)\psi(x)v$; and $(A \circ B)(x) = A(\psi(x)w) = \psi(x)\varphi(w)v$, the same. Applying $C^1_1$, the trace
+(Proposition~\ref{multilinear-algebra:proposition-contraction}(2)), gives $\operatorname{tr}(AB)$, which equals $\varphi(w)\psi(v)$. On the other hand $C^1_1(A \otimes B) = \varphi(v)\,w \otimes \psi$
+and then $C^1_1$ gives $\varphi(v)\psi(w) = \operatorname{tr}A\operatorname{tr}B$. Finally $\operatorname{tr}(BA)$ is computed by the same formula with the roles exchanged, $\psi(v)\varphi(w)$,
+which is the same number as $\operatorname{tr}(AB) = \varphi(w)\psi(v)$; both sides being bilinear in $(A, B)$, the identity holds for all $A$, $B$.
 \end{solution}

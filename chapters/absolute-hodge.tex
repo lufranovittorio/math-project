@@ -308,58 +308,6 @@ under a mild condition on the variation of Hodge structure \cite{voisin-2007}. S
 abelian varieties Corollary~\ref{absolute-hodge:corollary-abelian-loci} reflects the fact that special subvarieties of Shimura varieties are defined over $\bar{\QQ}$.
 \end{remark}
 
-\section{Exercises}\label{absolute-hodge:section-exercises}
-
-\begin{exercise}\label{absolute-hodge:exercise-picard}
-Let $X$ be a nonsingular projective surface and $\sigma \in \mathrm{Aut}(\CC)$. Show that $\sigma_*$ maps $\mathrm{Hdg}^1(X)$, viewed through Lemma~\ref{absolute-hodge:lemma-hodge-cycles}, isomorphically onto
-$\mathrm{Hdg}^1(X^\sigma)$, and that $\mathrm{Hdg}^2(X) = H^4(X; \QQ)$ also consists of absolute Hodge classes. Conclude that the absolute Hodge conjecture holds for surfaces.
-\end{exercise}
-
-\begin{solution}
-By the Lefschetz $(1,1)$-theorem, $\mathrm{Hdg}^1(X)$ is spanned by divisor classes, which are absolute Hodge (Proposition~\ref{absolute-hodge:proposition-algebraic}), and $\sigma_*\mathrm{cl}(D) = \mathrm{cl}(D^\sigma)$.
-The same applies to $\sigma^{-1}$ on $X^\sigma$, so the map is bijective. $H^4(X; \QQ)$ is spanned by the class of a point, which is algebraic. $\mathrm{Hdg}^0 = H^0$ is spanned by the class of $X$. So all Hodge
-classes on $X$ are algebraic, hence absolute Hodge.
-\end{solution}
-
-\begin{exercise}\label{absolute-hodge:exercise-two-pi-i}
-On $\PP^1$ with coordinate $z$, the line bundle $\mathcal{O}(1)$ has transition function $z$ on $U_0 \cap U_1$, and its de Rham Chern class is represented in \v{C}ech--de Rham cohomology by the closed
-form $dz/z$ on $U_0 \cap U_1$. Using a partition of unity, show that the corresponding smooth $2$-form $\eta$ satisfies $\int_{\PP^1}\eta = \pm 2\pi i$. Deduce that the de Rham class of a point is $\pm 2\pi i$ times the
-Betti class, so that it lies in $H^2_B(\PP^1)(1)$.
-\end{exercise}
-
-\begin{solution}
-Let $\rho_0$ be a smooth function on $\PP^1$ equal to $1$ for $|z| \leq 1$ and to $0$ for $|z| \geq 2$, and $\rho_1 = 1 - \rho_0$. The \v{C}ech cocycle $dz/z$ is the difference of the $1$-forms $\rho_0\,dz/z$ on $U_1$ and
-$-\rho_1\,dz/z$ on $U_0$ (each extended by zero), and the corresponding global $2$-form is $\eta = d(\rho_0\,dz/z)$, which equals $-d(\rho_1\,dz/z)$ where both are defined, since $d(dz/z) = 0$. It vanishes for $|z| \leq 1$
-and for $|z| \geq 2$. By Stokes' theorem on the annulus $\frac12 \leq |z| \leq 3$, $\int\eta = \int_{|z|=3}\rho_0\,dz/z - \int_{|z|=1/2}\rho_0\,dz/z = 0 - 2\pi i$. The sign depends on the conventions for the
-\v{C}ech--de Rham isomorphism. As $\int_{\PP^1}$ of the Betti class of a point is $1$, the de Rham class is $\pm 2\pi i$ times the Betti class.
-\end{solution}
-
-\begin{exercise}\label{absolute-hodge:exercise-correspondence}
-Let $X$ and $Y$ be nonsingular projective varieties and $\gamma \in \mathrm{Hdg}^q(X \times Y)$ an absolute Hodge class such that $\gamma_* \colon H^{2p}(X; \QQ) \to H^{2p+2q-2\dim X}(Y; \QQ)$ is surjective.
-Show that if the absolute Hodge conjecture holds for $X$ in codimension $p$, then it holds for $Y$ in codimension $p + q - \dim X$.
-\end{exercise}
-
-\begin{solution}
-$\gamma_*$ is a surjective morphism of polarisable Hodge structures (up to a Tate twist), so by semisimplicity (Theorem~\ref{hodge-structures:theorem-semisimple}) every Hodge class on $Y$ in that degree is
-$\gamma_*$ of a Hodge class on $X$, as in the proof of Proposition~\ref{mixed-hodge-structures:proposition-localisation}. By hypothesis that class is absolute Hodge, and $\gamma_*$ preserves absolute Hodge classes
-(Proposition~\ref{absolute-hodge:proposition-operations}(4)).
-\end{solution}
-
-\begin{exercise}\label{absolute-hodge:exercise-product-abelian}
-Let $C$ be a nonsingular projective curve and $J$ its Jacobian. Using the Abel--Jacobi map $C^g \to J$ and Theorem~\ref{absolute-hodge:theorem-deligne}, show that every Hodge class on $C^m$, for every
-$m \geq 1$, is absolute Hodge.
-\end{exercise}
-
-\begin{solution}
-Fix a base point and let $u \colon C \to J$ be the Abel--Jacobi map; $u^* \colon H^1(J; \QQ) \to H^1(C; \QQ)$ is an isomorphism of Hodge structures. By the K\"unneth formula, $H^\bullet(C^m)$ is the direct sum of the
-sub-Hodge structures $H^{a_1}(C) \otimes \cdots \otimes H^{a_m}(C)$, $a_i \in \{0, 1, 2\}$, and a Hodge class on $C^m$ is a sum of Hodge classes in these summands, which are absolute Hodge if the summands are,
-by Proposition~\ref{absolute-hodge:proposition-operations}(3). Fix a summand, let $S = \{i : a_i = 1\}$ and $T = \{i : a_i = 2\}$. Since $H^0(C)$ is spanned by $1$ and $H^2(C)$ by the class of a point, a Hodge class in
-the summand has the form $\mathrm{pr}_S^*(\gamma) \cup \prod_{i \in T}\mathrm{pr}_i^*[\mathrm{pt}]$ with $\gamma$ a Hodge class in the summand $H^1(C)^{\otimes S}$ of $H^{|S|}(C^S)$. The pullback $(u^S)^*$ maps the
-corresponding K\"unneth summand $H^1(J)^{\otimes S}$ of $H^{|S|}(J^S)$ isomorphically onto $H^1(C)^{\otimes S}$, as a morphism of Hodge structures, so $\gamma = (u^S)^*\delta$ with $\delta$ a Hodge class on the abelian
-variety $J^S$. By Theorem~\ref{absolute-hodge:theorem-deligne} $\delta$ is absolute Hodge, and so is $\gamma$ by Proposition~\ref{absolute-hodge:proposition-operations}(1). The classes $\mathrm{pr}_i^*[\mathrm{pt}]$ are
-algebraic, and cup products and pullbacks preserve absolute Hodge classes.
-\end{solution}
-
 \section{The Tate Conjecture}\label{absolute-hodge:section-tate-conjecture}
 The Tate conjecture is the arithmetic analogue of the Hodge conjecture. The Hodge decomposition is replaced by the action of a Galois group on $\ell$-adic cohomology, and Hodge classes by
 \emph{Tate classes}, the classes fixed by an open subgroup of the Galois group. Classes of algebraic cycles defined over the base field are Tate classes, and Tate conjectured the converse for
@@ -581,41 +529,6 @@ $\mathrm{Hodge} \subseteq \mathrm{Tate}$ for abelian varieties (Corollary~\ref{a
 is the group-theoretic form of the same statement. For abelian varieties Faltings' theorem proves the Tate conjecture for divisors, and the Lefschetz $(1,1)$-theorem the Hodge conjecture for
 divisors; in codimension $\geq 2$ both are open.
 \end{remark}
-
-\section{Exercises on The Tate Conjecture}\label{absolute-hodge:section-exercises-tate-conjecture}
-
-\begin{exercise}\label{absolute-hodge:exercise-frobenius}
-Let $k = \mathbb{F}_q$ and let $F$ be the geometric Frobenius, acting on $H^{2p}(\bar X, \QQ_\ell)$. Assuming that $F$ acts semisimply, show that $\dim T^p_\ell(\bar X)$ is the number of eigenvalues of $F$ on
-$H^{2p}(\bar X, \QQ_\ell)$, counted with multiplicity, of the form $\zeta q^p$ with $\zeta$ a root of unity.
-\end{exercise}
-
-\begin{solution}
-$G_{\mathbb{F}_{q^m}}$ is topologically generated by $F^m$, and the geometric Frobenius acts on $\QQ_\ell(1)$ by $q^{-1}$. So a class in $H^{2p}(\bar X, \QQ_\ell(p)) = H^{2p}(\bar X, \QQ_\ell) \otimes \QQ_\ell(p)$ is fixed by
-$G_{\mathbb{F}_{q^m}}$ if and only if, as a class in $H^{2p}(\bar X, \QQ_\ell)$, it satisfies $F^mv = q^{pm}v$. Since $F$ is semisimple, the union over $m$ of the eigenspaces of $F^m$ for $q^{pm}$ is the sum of the
-eigenspaces of $F$ for the eigenvalues $\lambda$ with $\lambda^m = q^{pm}$ for some $m$, that is, $\lambda = \zeta q^p$. The union is an increasing union of subspaces, so it is the largest of them.
-\end{solution}
-
-\begin{exercise}\label{absolute-hodge:exercise-elliptic-mt}
-Let $E$ be an elliptic curve over a number field $k \subseteq \CC$ with complex multiplication by an imaginary quadratic field $K$, all of whose endomorphisms are defined over $k$. Show that $G_\ell^0$ is contained in the
-torus $(\mathrm{Res}_{K/\QQ}\mathbb{G}_m)_{\QQ_\ell}$, and deduce that $G_\ell^0 \subseteq \mathrm{MT}(H^1(E_\CC))_{\QQ_\ell}$ directly, without Theorem~\ref{absolute-hodge:theorem-deligne-inclusion}.
-\end{exercise}
-
-\begin{solution}
-The action of $K = \End(E) \otimes \QQ$ on $V_\ell E$ commutes with $G_k$, since the endomorphisms are defined over $k$. $V_\ell E$ is free of rank one over $K \otimes \QQ_\ell$, so the commutant of $K \otimes \QQ_\ell$
-in $\End(V_\ell E)$ is $K \otimes \QQ_\ell$ itself. Hence $\rho_\ell(G_k) \subseteq (K \otimes \QQ_\ell)^\times = (\mathrm{Res}_{K/\QQ}\mathbb{G}_m)(\QQ_\ell)$, and the same holds for the Zariski closure. By
-Proposition~\ref{hodge-structures:proposition-elliptic-curves}, this torus is $\mathrm{MT}(H^1(E_\CC))$ (the same argument applies to the dual $H^1$).
-\end{solution}
-
-\begin{exercise}\label{absolute-hodge:exercise-supersingular}
-Let $E$ be a supersingular elliptic curve over $\mathbb{F}_p$, and $k = \mathbb{F}_{p^2}$ a field over which all endomorphisms of $E$ are defined, so that $\End(E_k) \otimes \QQ$ is a quaternion algebra of rank $4$. Using
-Theorem~\ref{absolute-hodge:theorem-isogeny}, show that $\rho(E \times E) = 6$ over $k$, and that all of $H^2(\overline{E \times E}, \QQ_\ell(1))$ consists of Tate classes over $k$. Why is this impossible over $\CC$?
-\end{exercise}
-
-\begin{solution}
-By Example~\ref{absolute-hodge:example-products-curves}, the N\'eron--Severi group of $E \times E$ has rank $2 + \operatorname{rank}\Hom(E, E) = 2 + 4 = 6 = b_2(E \times E)$. By Corollary~\ref{absolute-hodge:corollary-divisors-abelian} the
-Tate classes are spanned by divisor classes, and conversely divisor classes over $k$ are Tate; since the divisor classes span a $6$-dimensional space, every class in $H^2$ is a Tate class. Over $\CC$ the rank of
-$\End(E)$ is at most $2$ (Proposition~\ref{algebraic-groups:proposition-elliptic-endomorphisms}), so $\rho(E \times E) \leq 4 < 6$; equivalently $h^{2,0}(E \times E) = 1$ prevents all of $H^2$ from being of type $(1,1)$.
-\end{solution}
 
 \section{The Standard Conjectures and Motives}\label{absolute-hodge:section-standard-conjectures}
 In the 1960s Grothendieck proposed a small set of conjectures about algebraic cycles, the \emph{standard conjectures}, designed to prove the Weil conjectures and to build a category of
@@ -955,7 +868,96 @@ classes of Chapter~\ref{absolute-hodge}, the motivated cycles of Andr\'e and the
 (Section~\ref{hodge-conjecture:section-lefschetz-11}) remains the only general method for producing an algebraic cycle from a cohomology class.
 \end{remark}
 
-\section{Exercises on The Standard Conjectures and Motives}\label{absolute-hodge:section-exercises-standard-conjectures}
+\section{Exercises}\label{absolute-hodge:section-exercises}
+
+\subsection{Absolute Hodge Classes}\label{absolute-hodge:subsection-exercises-absolute-hodge-classes}
+
+\begin{exercise}\label{absolute-hodge:exercise-picard}
+Let $X$ be a nonsingular projective surface and $\sigma \in \mathrm{Aut}(\CC)$. Show that $\sigma_*$ maps $\mathrm{Hdg}^1(X)$, viewed through Lemma~\ref{absolute-hodge:lemma-hodge-cycles}, isomorphically onto
+$\mathrm{Hdg}^1(X^\sigma)$, and that $\mathrm{Hdg}^2(X) = H^4(X; \QQ)$ also consists of absolute Hodge classes. Conclude that the absolute Hodge conjecture holds for surfaces.
+\end{exercise}
+
+\begin{solution}
+By the Lefschetz $(1,1)$-theorem, $\mathrm{Hdg}^1(X)$ is spanned by divisor classes, which are absolute Hodge (Proposition~\ref{absolute-hodge:proposition-algebraic}), and $\sigma_*\mathrm{cl}(D) = \mathrm{cl}(D^\sigma)$.
+The same applies to $\sigma^{-1}$ on $X^\sigma$, so the map is bijective. $H^4(X; \QQ)$ is spanned by the class of a point, which is algebraic. $\mathrm{Hdg}^0 = H^0$ is spanned by the class of $X$. So all Hodge
+classes on $X$ are algebraic, hence absolute Hodge.
+\end{solution}
+
+\begin{exercise}\label{absolute-hodge:exercise-two-pi-i}
+On $\PP^1$ with coordinate $z$, the line bundle $\mathcal{O}(1)$ has transition function $z$ on $U_0 \cap U_1$, and its de Rham Chern class is represented in \v{C}ech--de Rham cohomology by the closed
+form $dz/z$ on $U_0 \cap U_1$. Using a partition of unity, show that the corresponding smooth $2$-form $\eta$ satisfies $\int_{\PP^1}\eta = \pm 2\pi i$. Deduce that the de Rham class of a point is $\pm 2\pi i$ times the
+Betti class, so that it lies in $H^2_B(\PP^1)(1)$.
+\end{exercise}
+
+\begin{solution}
+Let $\rho_0$ be a smooth function on $\PP^1$ equal to $1$ for $|z| \leq 1$ and to $0$ for $|z| \geq 2$, and $\rho_1 = 1 - \rho_0$. The \v{C}ech cocycle $dz/z$ is the difference of the $1$-forms $\rho_0\,dz/z$ on $U_1$ and
+$-\rho_1\,dz/z$ on $U_0$ (each extended by zero), and the corresponding global $2$-form is $\eta = d(\rho_0\,dz/z)$, which equals $-d(\rho_1\,dz/z)$ where both are defined, since $d(dz/z) = 0$. It vanishes for $|z| \leq 1$
+and for $|z| \geq 2$. By Stokes' theorem on the annulus $\frac12 \leq |z| \leq 3$, $\int\eta = \int_{|z|=3}\rho_0\,dz/z - \int_{|z|=1/2}\rho_0\,dz/z = 0 - 2\pi i$. The sign depends on the conventions for the
+\v{C}ech--de Rham isomorphism. As $\int_{\PP^1}$ of the Betti class of a point is $1$, the de Rham class is $\pm 2\pi i$ times the Betti class.
+\end{solution}
+
+\begin{exercise}\label{absolute-hodge:exercise-correspondence}
+Let $X$ and $Y$ be nonsingular projective varieties and $\gamma \in \mathrm{Hdg}^q(X \times Y)$ an absolute Hodge class such that $\gamma_* \colon H^{2p}(X; \QQ) \to H^{2p+2q-2\dim X}(Y; \QQ)$ is surjective.
+Show that if the absolute Hodge conjecture holds for $X$ in codimension $p$, then it holds for $Y$ in codimension $p + q - \dim X$.
+\end{exercise}
+
+\begin{solution}
+$\gamma_*$ is a surjective morphism of polarisable Hodge structures (up to a Tate twist), so by semisimplicity (Theorem~\ref{hodge-structures:theorem-semisimple}) every Hodge class on $Y$ in that degree is
+$\gamma_*$ of a Hodge class on $X$, as in the proof of Proposition~\ref{mixed-hodge-structures:proposition-localisation}. By hypothesis that class is absolute Hodge, and $\gamma_*$ preserves absolute Hodge classes
+(Proposition~\ref{absolute-hodge:proposition-operations}(4)).
+\end{solution}
+
+\begin{exercise}\label{absolute-hodge:exercise-product-abelian}
+Let $C$ be a nonsingular projective curve and $J$ its Jacobian. Using the Abel--Jacobi map $C^g \to J$ and Theorem~\ref{absolute-hodge:theorem-deligne}, show that every Hodge class on $C^m$, for every
+$m \geq 1$, is absolute Hodge.
+\end{exercise}
+
+\begin{solution}
+Fix a base point and let $u \colon C \to J$ be the Abel--Jacobi map; $u^* \colon H^1(J; \QQ) \to H^1(C; \QQ)$ is an isomorphism of Hodge structures. By the K\"unneth formula, $H^\bullet(C^m)$ is the direct sum of the
+sub-Hodge structures $H^{a_1}(C) \otimes \cdots \otimes H^{a_m}(C)$, $a_i \in \{0, 1, 2\}$, and a Hodge class on $C^m$ is a sum of Hodge classes in these summands, which are absolute Hodge if the summands are,
+by Proposition~\ref{absolute-hodge:proposition-operations}(3). Fix a summand, let $S = \{i : a_i = 1\}$ and $T = \{i : a_i = 2\}$. Since $H^0(C)$ is spanned by $1$ and $H^2(C)$ by the class of a point, a Hodge class in
+the summand has the form $\mathrm{pr}_S^*(\gamma) \cup \prod_{i \in T}\mathrm{pr}_i^*[\mathrm{pt}]$ with $\gamma$ a Hodge class in the summand $H^1(C)^{\otimes S}$ of $H^{|S|}(C^S)$. The pullback $(u^S)^*$ maps the
+corresponding K\"unneth summand $H^1(J)^{\otimes S}$ of $H^{|S|}(J^S)$ isomorphically onto $H^1(C)^{\otimes S}$, as a morphism of Hodge structures, so $\gamma = (u^S)^*\delta$ with $\delta$ a Hodge class on the abelian
+variety $J^S$. By Theorem~\ref{absolute-hodge:theorem-deligne} $\delta$ is absolute Hodge, and so is $\gamma$ by Proposition~\ref{absolute-hodge:proposition-operations}(1). The classes $\mathrm{pr}_i^*[\mathrm{pt}]$ are
+algebraic, and cup products and pullbacks preserve absolute Hodge classes.
+\end{solution}
+
+\subsection{The Tate Conjecture}\label{absolute-hodge:subsection-exercises-tate-conjecture}
+
+\begin{exercise}\label{absolute-hodge:exercise-frobenius}
+Let $k = \mathbb{F}_q$ and let $F$ be the geometric Frobenius, acting on $H^{2p}(\bar X, \QQ_\ell)$. Assuming that $F$ acts semisimply, show that $\dim T^p_\ell(\bar X)$ is the number of eigenvalues of $F$ on
+$H^{2p}(\bar X, \QQ_\ell)$, counted with multiplicity, of the form $\zeta q^p$ with $\zeta$ a root of unity.
+\end{exercise}
+
+\begin{solution}
+$G_{\mathbb{F}_{q^m}}$ is topologically generated by $F^m$, and the geometric Frobenius acts on $\QQ_\ell(1)$ by $q^{-1}$. So a class in $H^{2p}(\bar X, \QQ_\ell(p)) = H^{2p}(\bar X, \QQ_\ell) \otimes \QQ_\ell(p)$ is fixed by
+$G_{\mathbb{F}_{q^m}}$ if and only if, as a class in $H^{2p}(\bar X, \QQ_\ell)$, it satisfies $F^mv = q^{pm}v$. Since $F$ is semisimple, the union over $m$ of the eigenspaces of $F^m$ for $q^{pm}$ is the sum of the
+eigenspaces of $F$ for the eigenvalues $\lambda$ with $\lambda^m = q^{pm}$ for some $m$, that is, $\lambda = \zeta q^p$. The union is an increasing union of subspaces, so it is the largest of them.
+\end{solution}
+
+\begin{exercise}\label{absolute-hodge:exercise-elliptic-mt}
+Let $E$ be an elliptic curve over a number field $k \subseteq \CC$ with complex multiplication by an imaginary quadratic field $K$, all of whose endomorphisms are defined over $k$. Show that $G_\ell^0$ is contained in the
+torus $(\mathrm{Res}_{K/\QQ}\mathbb{G}_m)_{\QQ_\ell}$, and deduce that $G_\ell^0 \subseteq \mathrm{MT}(H^1(E_\CC))_{\QQ_\ell}$ directly, without Theorem~\ref{absolute-hodge:theorem-deligne-inclusion}.
+\end{exercise}
+
+\begin{solution}
+The action of $K = \End(E) \otimes \QQ$ on $V_\ell E$ commutes with $G_k$, since the endomorphisms are defined over $k$. $V_\ell E$ is free of rank one over $K \otimes \QQ_\ell$, so the commutant of $K \otimes \QQ_\ell$
+in $\End(V_\ell E)$ is $K \otimes \QQ_\ell$ itself. Hence $\rho_\ell(G_k) \subseteq (K \otimes \QQ_\ell)^\times = (\mathrm{Res}_{K/\QQ}\mathbb{G}_m)(\QQ_\ell)$, and the same holds for the Zariski closure. By
+Proposition~\ref{hodge-structures:proposition-elliptic-curves}, this torus is $\mathrm{MT}(H^1(E_\CC))$ (the same argument applies to the dual $H^1$).
+\end{solution}
+
+\begin{exercise}\label{absolute-hodge:exercise-supersingular}
+Let $E$ be a supersingular elliptic curve over $\mathbb{F}_p$, and $k = \mathbb{F}_{p^2}$ a field over which all endomorphisms of $E$ are defined, so that $\End(E_k) \otimes \QQ$ is a quaternion algebra of rank $4$. Using
+Theorem~\ref{absolute-hodge:theorem-isogeny}, show that $\rho(E \times E) = 6$ over $k$, and that all of $H^2(\overline{E \times E}, \QQ_\ell(1))$ consists of Tate classes over $k$. Why is this impossible over $\CC$?
+\end{exercise}
+
+\begin{solution}
+By Example~\ref{absolute-hodge:example-products-curves}, the N\'eron--Severi group of $E \times E$ has rank $2 + \operatorname{rank}\Hom(E, E) = 2 + 4 = 6 = b_2(E \times E)$. By Corollary~\ref{absolute-hodge:corollary-divisors-abelian} the
+Tate classes are spanned by divisor classes, and conversely divisor classes over $k$ are Tate; since the divisor classes span a $6$-dimensional space, every class in $H^2$ is a Tate class. Over $\CC$ the rank of
+$\End(E)$ is at most $2$ (Proposition~\ref{algebraic-groups:proposition-elliptic-endomorphisms}), so $\rho(E \times E) \leq 4 < 6$; equivalently $h^{2,0}(E \times E) = 1$ prevents all of $H^2$ from being of type $(1,1)$.
+\end{solution}
+
+\subsection{The Standard Conjectures and Motives}\label{absolute-hodge:subsection-exercises-standard-conjectures}
 
 \begin{exercise}\label{absolute-hodge:exercise-kunneth-hodge}
 Let $X$ be a nonsingular complex projective variety. Show that the K\"unneth components $\pi_i$ of the class of the diagonal are Hodge classes on $X \times X$, and deduce $C(X)$ from the Hodge conjecture

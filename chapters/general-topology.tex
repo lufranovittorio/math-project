@@ -1155,24 +1155,6 @@ Let $D$ be a countable dense subset and send $t \in T$ to $D_t = \{d \in D : d_t
 $D_t$. So $t \mapsto D_t$ is an injection $T \to \mathcal{P}(D)$, and $|T| \leq 2^{|D|} \leq 2^{\aleph_0}$.
 \end{proof}
 
-\begin{exercise}\label{general-topology:exercise-sorgenfrey-lindelof}
-Show that the Sorgenfrey line $S$ is Lindel\"of, but the Sorgenfrey plane $S \times S$ is not. (Together with Lemma~\ref{general-topology:lemma-regular-lindelof-normal} this gives a second proof that $S$ is
-normal, and shows again that $S \times S$ is not metrisable.)
-\end{exercise}
-
-\begin{solution}
-Let $\mathcal{U}$ be an open cover of $S$; replacing each member by the half-open intervals it contains, we may assume that it consists of half-open intervals $[a, b)$ (a countable subcover of
-the new cover gives one of the old). Let $W$ be the union of the open intervals $(a, b)$ with $[a, b) \in \mathcal{U}$. As a subspace of the
-Euclidean line, $W$ is second countable, hence Lindel\"of (Propositions~\ref{general-topology:proposition-countability} and~\ref{general-topology:proposition-separability}(2)), so countably many of the
-intervals $(a, b)$ cover $W$. Every point $x \in S \setminus W$ is the left endpoint of some $[x, b_x) \in \mathcal{U}$, and $(x, b_x) \subseteq W$. For $x < y$ in $S \setminus W$ the intervals $(x, b_x)$ and
-$(y, b_y)$ are disjoint, since otherwise $y \in (x, b_x) \subseteq W$. Disjoint nonempty open intervals contain distinct rationals, so $S \setminus W$ is countable, and countably many further members of
-$\mathcal{U}$ cover it.
-
-In $S \times S$, the open cover consisting of $(S \times S) \setminus L$ and the sets $[x, x + 1) \times [-x, -x + 1)$, $x \in \RR$, has no countable subcover, since each of these sets meets the uncountable antidiagonal
-$L$ of Example~\ref{general-topology:example-sorgenfrey-plane} in at most one point. A metrisable space is normal; for the non-metrisability of $S \times S$ one can also use that it is separable but not Lindel\"of,
-which contradicts Proposition~\ref{general-topology:proposition-separability}(1).
-\end{solution}
-
 \section{Local compactness and proper maps}\label{general-topology:section-local-compactness}
 
 \begin{definition}\label{general-topology:definition-locally-compact}
@@ -1582,25 +1564,6 @@ $\sin(0) = 0$, and $\pi/(2n) \to 0$. Here the theorem is used in the direction `
 \end{enumerate}
 \end{example}
 
-\begin{exercise}\label{general-topology:exercise-compact-open-hausdorff}
-Show that if $Y$ is Hausdorff, then so is $C(X, Y)$ with the compact-open topology.
-\end{exercise}
-
-\begin{solution}
-Let $f \neq g$, and choose $x$ with $f(x) \neq g(x)$ and disjoint open sets $U \ni f(x)$ and $U^{\prime} \ni g(x)$. Then $V(\{x\}, U)$ and $V(\{x\}, U^{\prime})$ are disjoint open neighbourhoods of
-$f$ and $g$: a map in both would send $x$ into $U \cap U^{\prime} = \emptyset$.
-\end{solution}
-
-\begin{exercise}\label{general-topology:exercise-composition}
-Let $X$ be any space and $Y$ a locally compact Hausdorff space. Show that composition $C(Y, W) \times C(X, Y) \to C(X, W)$, $(g, f) \mapsto g \circ f$, is continuous.
-\end{exercise}
-
-\begin{solution}
-Let $g \circ f \in V(K, U)$, with $K \subseteq X$ compact and $U \subseteq W$ open. Then $f(K)$ is compact and contained in the open set $g^{-1}(U)$. By Lemma~\ref{general-topology:lemma-lch-shrinking}
-there is an open $A$ with compact closure such that $f(K) \subseteq A \subseteq \overline{A} \subseteq g^{-1}(U)$. Then $V(\overline{A}, U) \times V(K, A)$ is an open neighbourhood of $(g, f)$, and for
-$(g^{\prime}, f^{\prime})$ in it, $g^{\prime}(f^{\prime}(K)) \subseteq g^{\prime}(A) \subseteq U$. So composition maps this neighbourhood into $V(K, U)$, and the preimages of subbasic open sets are open.
-\end{solution}
-
 \section{Nets and filters}\label{general-topology:section-nets}
 
 In metric spaces sequences describe everything: closures, continuity and compactness. In general spaces they do not
@@ -1948,19 +1911,6 @@ through a third point if the segment between them passes through the removed poi
 only for $m = n$, by the invariance of dimension proved with homology (Chapter~\ref{singular-homology}). Every compact metric space is a continuous image of $C$ (the Alexandroff--Hausdorff theorem \cite{kechris-1995}),
 which is one reason for the importance of the Cantor set.
 
-\begin{exercise}\label{general-topology:exercise-cantor-products}
-Show that $\Sigma \times \Sigma$ and $\Sigma^{\NN_{>0}}$ are homeomorphic to $\Sigma$, so that $C \times C \cong C^\NN \cong C$. Show also that $C$ is homeomorphic to the set of $x \in [0, 1]$ whose decimal
-expansion uses only the digits $3$ and $7$ (with a suitable meaning of ``expansion'').
-\end{exercise}
-
-\begin{solution}
-The proof of Proposition~\ref{general-topology:proposition-cantor-surjections}(2) gives $\Sigma \cong \Sigma^{\NN_{>0}}$, and with the bijection $\NN_{>0} \to \{1, 2\} \times \NN_{>0}$, $2n - 1 \mapsto (1, n)$, $2n \mapsto (2, n)$,
-it gives $\Sigma \cong \Sigma \times \Sigma$: a sequence is split into its odd and even terms. For the decimal set, let $d(a) = \sum_n(3 + 4a_n)10^{-n}$. As in the proof of
-Proposition~\ref{general-topology:proposition-cantor-set}(1), $d$ is continuous, and it is injective: if $n$ is the first index with $a_n = 0$, $b_n = 1$, then
-$d(b) - d(a) \geq 4 \cdot 10^{-n} - \sum_{m > n}4 \cdot 10^{-m} = 4 \cdot 10^{-n}(1 - \frac19) > 0$. So $d$ is a homeomorphism from $\Sigma$ onto its image, which is the set of numbers $\sum_nd_n10^{-n}$ with
-$d_n \in \{3, 7\}$, and $c \circ d^{-1}$ is a homeomorphism of it with $C$.
-\end{solution}
-
 \section{Exercises}\label{general-topology:section-exercises}
 
 \begin{exercise}\label{general-topology:exercise-hausdorff-diagonal}
@@ -2122,4 +2072,54 @@ $A \sqcup B \to X$, which is the inclusion on each piece, is a continuous biject
 
 (3) In the first case the two formulas are defined on the closed sets $(-\infty, 1]$ and $[1, \infty)$ and agree at $1$, where both give $1$. In the second case $\RR = (-\infty, 1) \cup [1, \infty)$, an open set and
 a closed set, and $f$ jumps from values near $1$ to $2$ at $x = 1$; one cannot replace $(-\infty, 1)$ by $(-\infty, 1]$, because the two formulas disagree at $1$.
+\end{solution}
+
+\begin{exercise}\label{general-topology:exercise-sorgenfrey-lindelof}
+Show that the Sorgenfrey line $S$ is Lindel\"of, but the Sorgenfrey plane $S \times S$ is not. (Together with Lemma~\ref{general-topology:lemma-regular-lindelof-normal} this gives a second proof that $S$ is
+normal, and shows again that $S \times S$ is not metrisable.)
+\end{exercise}
+
+\begin{solution}
+Let $\mathcal{U}$ be an open cover of $S$; replacing each member by the half-open intervals it contains, we may assume that it consists of half-open intervals $[a, b)$ (a countable subcover of
+the new cover gives one of the old). Let $W$ be the union of the open intervals $(a, b)$ with $[a, b) \in \mathcal{U}$. As a subspace of the
+Euclidean line, $W$ is second countable, hence Lindel\"of (Propositions~\ref{general-topology:proposition-countability} and~\ref{general-topology:proposition-separability}(2)), so countably many of the
+intervals $(a, b)$ cover $W$. Every point $x \in S \setminus W$ is the left endpoint of some $[x, b_x) \in \mathcal{U}$, and $(x, b_x) \subseteq W$. For $x < y$ in $S \setminus W$ the intervals $(x, b_x)$ and
+$(y, b_y)$ are disjoint, since otherwise $y \in (x, b_x) \subseteq W$. Disjoint nonempty open intervals contain distinct rationals, so $S \setminus W$ is countable, and countably many further members of
+$\mathcal{U}$ cover it.
+
+In $S \times S$, the open cover consisting of $(S \times S) \setminus L$ and the sets $[x, x + 1) \times [-x, -x + 1)$, $x \in \RR$, has no countable subcover, since each of these sets meets the uncountable antidiagonal
+$L$ of Example~\ref{general-topology:example-sorgenfrey-plane} in at most one point. A metrisable space is normal; for the non-metrisability of $S \times S$ one can also use that it is separable but not Lindel\"of,
+which contradicts Proposition~\ref{general-topology:proposition-separability}(1).
+\end{solution}
+
+\begin{exercise}\label{general-topology:exercise-compact-open-hausdorff}
+Show that if $Y$ is Hausdorff, then so is $C(X, Y)$ with the compact-open topology.
+\end{exercise}
+
+\begin{solution}
+Let $f \neq g$, and choose $x$ with $f(x) \neq g(x)$ and disjoint open sets $U \ni f(x)$ and $U^{\prime} \ni g(x)$. Then $V(\{x\}, U)$ and $V(\{x\}, U^{\prime})$ are disjoint open neighbourhoods of
+$f$ and $g$: a map in both would send $x$ into $U \cap U^{\prime} = \emptyset$.
+\end{solution}
+
+\begin{exercise}\label{general-topology:exercise-composition}
+Let $X$ be any space and $Y$ a locally compact Hausdorff space. Show that composition $C(Y, W) \times C(X, Y) \to C(X, W)$, $(g, f) \mapsto g \circ f$, is continuous.
+\end{exercise}
+
+\begin{solution}
+Let $g \circ f \in V(K, U)$, with $K \subseteq X$ compact and $U \subseteq W$ open. Then $f(K)$ is compact and contained in the open set $g^{-1}(U)$. By Lemma~\ref{general-topology:lemma-lch-shrinking}
+there is an open $A$ with compact closure such that $f(K) \subseteq A \subseteq \overline{A} \subseteq g^{-1}(U)$. Then $V(\overline{A}, U) \times V(K, A)$ is an open neighbourhood of $(g, f)$, and for
+$(g^{\prime}, f^{\prime})$ in it, $g^{\prime}(f^{\prime}(K)) \subseteq g^{\prime}(A) \subseteq U$. So composition maps this neighbourhood into $V(K, U)$, and the preimages of subbasic open sets are open.
+\end{solution}
+
+\begin{exercise}\label{general-topology:exercise-cantor-products}
+Show that $\Sigma \times \Sigma$ and $\Sigma^{\NN_{>0}}$ are homeomorphic to $\Sigma$, so that $C \times C \cong C^\NN \cong C$. Show also that $C$ is homeomorphic to the set of $x \in [0, 1]$ whose decimal
+expansion uses only the digits $3$ and $7$ (with a suitable meaning of ``expansion'').
+\end{exercise}
+
+\begin{solution}
+The proof of Proposition~\ref{general-topology:proposition-cantor-surjections}(2) gives $\Sigma \cong \Sigma^{\NN_{>0}}$, and with the bijection $\NN_{>0} \to \{1, 2\} \times \NN_{>0}$, $2n - 1 \mapsto (1, n)$, $2n \mapsto (2, n)$,
+it gives $\Sigma \cong \Sigma \times \Sigma$: a sequence is split into its odd and even terms. For the decimal set, let $d(a) = \sum_n(3 + 4a_n)10^{-n}$. As in the proof of
+Proposition~\ref{general-topology:proposition-cantor-set}(1), $d$ is continuous, and it is injective: if $n$ is the first index with $a_n = 0$, $b_n = 1$, then
+$d(b) - d(a) \geq 4 \cdot 10^{-n} - \sum_{m > n}4 \cdot 10^{-m} = 4 \cdot 10^{-n}(1 - \frac19) > 0$. So $d$ is a homeomorphism from $\Sigma$ onto its image, which is the set of numbers $\sum_nd_n10^{-n}$ with
+$d_n \in \{3, 7\}$, and $c \circ d^{-1}$ is a homeomorphism of it with $C$.
 \end{solution}
