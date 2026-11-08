@@ -1,17 +1,599 @@
 \chapter{Operator Algebras}\label{operator-algebras}
-\chapterstatus{planned}
+\chapterstatus{draft}
 
-Algebras of bounded operators on Hilbert spaces: the spectral theorem in full generality, $C^*$-algebras
-and von Neumann algebras.
+The bounded operators on a Hilbert space form an algebra with an involution $T \mapsto T^*$ and a norm, linked by $\|T^*T\| = \|T\|^2$. Abstracting these properties leads to $C^*$-algebras; the commutative ones are
+exactly the algebras $C(X)$ of continuous functions on compact spaces, so a general $C^*$-algebra may be thought of as the algebra of functions on a ``noncommutative space''. This point of view gives the spectral
+theorem in its natural generality and leads to von Neumann algebras, operator $K$-theory and noncommutative geometry.
+\begin{itemize}
+\item Section~\ref{operator-algebras:section-banach-algebras}: Banach algebras, the spectrum, characters and maximal ideals, the Gelfand transform, Wiener's lemma.
+\item Section~\ref{operator-algebras:section-cstar}: $C^*$-algebras, the commutative Gelfand--Naimark theorem, continuous functional calculus, positivity, states and the GNS construction, the Gelfand--Naimark theorem.
+\item Section~\ref{operator-algebras:section-spectral-theorem}: the spectral theorem for normal operators, the Borel functional calculus, unbounded self-adjoint operators.
+\item Section~\ref{operator-algebras:section-von-neumann}: operator topologies, the bicommutant theorem, projections, factors and their types.
+\item Section~\ref{operator-algebras:section-noncommutative}: $K$-theory of $C^*$-algebras, the noncommutative torus and spectral triples.
+\end{itemize}
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{functional-analysis} (Functional Analysis) and Chapter~\ref{measure-theory} (Measure and Integration).
+\noindent\textbf{Prerequisites.} Chapter~\ref{general-topology} (General Topology), Chapter~\ref{measure-theory} (Measure and Integration), Chapter~\ref{radon-measures} (Radon Measures), Chapter~\ref{complex-analysis} (Complex
+Analysis) and Chapter~\ref{functional-analysis} (Functional Analysis).
 
-\noindent\textbf{Planned contents.}
+\section{Banach algebras}\label{operator-algebras:section-banach-algebras}
+
+\begin{definition}\label{operator-algebras:definition-banach-algebra}
+A \emph{Banach algebra} is a complex algebra $A$, with multiplication $(a, b) \mapsto ab$, equipped with a complete norm such that $\|ab\| \leq \|a\|\|b\|$. It is \emph{unital} if it has a unit $1$ with $\|1\| = 1$, and
+\emph{commutative} if $ab = ba$. An element $a$ of a unital algebra is \emph{invertible} if $ab = ba = 1$ for some $b = a^{-1}$; the invertible elements form the group $A^\times$. The \emph{spectrum} of $a$ is
+$\sigma(a) = \sigma_A(a) = \{\lambda \in \CC : a - \lambda1 \notin A^\times\}$, and its \emph{spectral radius} is $r(a) = \sup\{|\lambda| : \lambda \in \sigma(a)\}$.
+\end{definition}
+
+\begin{notation}\label{operator-algebras:notation-banach-algebra}
+The product is written by juxtaposition; $\lambda$ stands for $\lambda1$, so $a - \lambda = a - \lambda1$. The subscript in $\sigma_A(a)$ is omitted when the algebra is clear. For a Banach space $X$, $B(X)$ is the
+algebra of bounded operators with the operator norm, and for a Hilbert space $H$ we write $B(H)$.
+\end{notation}
+
+\begin{example}\label{operator-algebras:example-banach-algebras}
 \begin{enumerate}
-\item Banach algebras and the Gelfand transform.
-\item $C^*$-algebras: the commutative Gelfand--Naimark theorem, continuous functional calculus, positivity, the GNS construction.
-\item The spectral theorem for bounded and unbounded self-adjoint operators.
-\item Von Neumann algebras: the bicommutant theorem, projections, factors and their types (introduction).
-\item Noncommutative geometry (survey): spectral triples, the noncommutative torus, cyclic cohomology.
-\item Exercises with solutions.
+\item $B(X)$ for a Banach space $X \neq 0$, in particular the matrix algebra $M_n(\CC) = B(\CC^n)$ with the operator norm.
+\item $C(K)$, the continuous functions on a compact Hausdorff space $K$ with the supremum norm; commutative and unital. $C_0(X)$ for $X$ locally compact is commutative without unit if $X$ is not compact.
+\item The \emph{disc algebra} $A(\mathbb{D})$ of continuous functions on the closed unit disc that are holomorphic inside, with the supremum norm (a closed subalgebra of $C(\overline{\mathbb{D}})$, by Weierstrass' theorem).
+\item $\ell^1(\ZZ)$ with convolution $(a * b)(n) = \sum_ka(k)b(n - k)$, with unit $\delta_0$; and $L^1(\RR)$ with convolution, commutative without unit (Riemann--Lebesgue: $\widehat{f * g} = \hat f\hat g$ cannot be identically $1$).
 \end{enumerate}
+\end{example}
+
+\begin{theorem}\label{operator-algebras:theorem-spectrum-banach-algebra}
+Let $A$ be a unital Banach algebra.
+\begin{enumerate}
+\item If $\|a\| < 1$ then $1 - a \in A^\times$, with $(1 - a)^{-1} = \sum_{n \geq 0}a^n$. Hence $A^\times$ is open and inversion is continuous on it.
+\item For every $a$, $\sigma(a)$ is a nonempty compact subset of $\{|\lambda| \leq \|a\|\}$, and $r(a) = \lim_n\|a^n\|^{1/n} = \inf_n\|a^n\|^{1/n}$.
+\item (Gelfand--Mazur) If every nonzero element of $A$ is invertible, then $A = \CC1$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+The proofs of Lemma~\ref{functional-analysis:lemma-neumann} and Theorem~\ref{functional-analysis:theorem-spectrum} use only that $B(X)$ is a unital Banach algebra, and hold verbatim in $A$: the Neumann series, openness of
+$A^\times$, holomorphy of $\lambda \mapsto \Phi((a - \lambda)^{-1})$ for $\Phi \in A^*$, Liouville's theorem for nonemptiness, and the Laurent expansion of the resolvent at infinity for the spectral radius formula. For (3),
+take $\lambda \in \sigma(a)$; then $a - \lambda$ is not invertible, so $a = \lambda1$.
+\end{proof}
+
+\begin{counterexample}\label{operator-algebras:counterexample-real-division}
+Over $\RR$, Gelfand--Mazur fails: the quaternions $\mathbb{H}$ with the Euclidean norm are a real Banach division algebra different from $\RR$ (and $\CC$ is another). Complex scalars are essential for the nonemptiness of the
+spectrum: the rotation $\bigl(\begin{smallmatrix}0 & -1\\ 1 & 0\end{smallmatrix}\bigr)$ has no real eigenvalue.
+\end{counterexample}
+
+\begin{example}\label{operator-algebras:example-spectrum-subalgebra}
+The spectrum depends on the algebra. Let $z$ be the coordinate function. In $C(\mathbb{T})$, $\mathbb{T}$ the unit circle, $\sigma(z) = \mathbb{T}$: $z - \lambda$ has the continuous inverse $1/(z - \lambda)$ iff $|\lambda| \neq 1$. In
+the disc algebra, $\sigma(z) = \overline{\mathbb{D}}$: for $|\lambda| \leq 1$, $z - \lambda$ vanishes at $\lambda \in \overline{\mathbb{D}}$, so it has no inverse. Restricting functions in $A(\mathbb{D})$ to the circle is an isometric
+embedding into $C(\mathbb{T})$ (maximum modulus principle), so $A(\mathbb{D})$ is a closed subalgebra of $C(\mathbb{T})$ in which $\sigma(z)$ is strictly bigger. In general $\sigma_A(b) \subseteq \sigma_B(b)$ for a closed unital
+subalgebra $B \subseteq A$, since an inverse in $B$ is an inverse in $A$; Theorem~\ref{operator-algebras:theorem-spectral-permanence} shows that equality holds for $C^*$-algebras.
+\end{example}
+
+\begin{proposition}[Spectral mapping for polynomials]\label{operator-algebras:proposition-spectral-mapping-polynomial}
+For a polynomial $p$ and $a \in A$, $\sigma(p(a)) = p(\sigma(a))$.
+\end{proposition}
+
+\begin{proof}
+For $\mu \in \CC$ factor $p(z) - \mu = c\prod_i(z - \lambda_i)$ (if $p$ is constant the claim is clear). The factors $a - \lambda_i$ commute, so $p(a) - \mu$ is invertible iff each $a - \lambda_i$ is. So $\mu \in \sigma(p(a))$ iff some
+root $\lambda_i$ of $p - \mu$ lies in $\sigma(a)$, that is, iff $\mu = p(\lambda)$ for some $\lambda \in \sigma(a)$.
+\end{proof}
+
+\begin{lemma}[Jacobson]\label{operator-algebras:lemma-jacobson}
+For $a, b \in A$, $\sigma(ab) \cup \{0\} = \sigma(ba) \cup \{0\}$.
+\end{lemma}
+
+\begin{proof}
+For $\lambda \neq 0$, dividing by $\lambda$ it suffices to show that $1 - ab$ invertible implies $1 - ba$ invertible. If $c = (1 - ab)^{-1}$, then $(1 - ba)(1 + bca) = 1 - ba + bca - babca = 1 - ba + b(1 - ab)ca = 1$, and similarly
+$(1 + bca)(1 - ba) = 1$.
+\end{proof}
+
+\begin{definition}\label{operator-algebras:definition-character}
+Let $A$ be a commutative unital Banach algebra. A \emph{character} of $A$ is a nonzero algebra homomorphism $\varphi \colon A \to \CC$. The set of characters is the \emph{maximal ideal space} or \emph{spectrum} $\Delta(A)$, with the
+weak-$*$ topology (pointwise convergence on $A$). The \emph{Gelfand transform} of $a$ is the function $\hat a \colon \Delta(A) \to \CC$, $\hat a(\varphi) = \varphi(a)$.
+\end{definition}
+
+\begin{theorem}[Gelfand]\label{operator-algebras:theorem-gelfand}
+Let $A$ be a commutative unital Banach algebra.
+\begin{enumerate}
+\item Every character $\varphi$ satisfies $\varphi(1) = 1$ and $|\varphi(a)| \leq \|a\|$, and $\varphi \mapsto \ker\varphi$ is a bijection from $\Delta(A)$ onto the set of maximal ideals of $A$.
+\item $\Delta(A)$ is a nonempty compact Hausdorff space.
+\item $a \mapsto \hat a$ is an algebra homomorphism $A \to C(\Delta(A))$ with $\hat a(\Delta(A)) = \sigma(a)$ and $\|\hat a\|_\infty = r(a) \leq \|a\|$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) $\varphi(1)^2 = \varphi(1)$ and $\varphi \neq 0$ give $\varphi(1) = 1$; then $a - \varphi(a) \in \ker\varphi$ is not invertible, so $\varphi(a) \in \sigma(a)$ and $|\varphi(a)| \leq \|a\|$. The kernel is an ideal of codimension $1$,
+hence maximal. Conversely, let $M$ be a maximal ideal. It contains no invertible element, and every $b$ with $\|1 - b\| < 1$ is invertible
+(Theorem~\ref{operator-algebras:theorem-spectrum-banach-algebra}(1)); so $\|1 - m\| \geq 1$ for $m \in M$, the closure $\overline{M}$ is a proper ideal, and $M = \overline{M}$ is closed by maximality. Then $A/M$ is a Banach algebra (with the quotient norm, normalised so that
+$\|1\| = 1$ by the same estimate) in which every nonzero element is invertible, as $M$ is maximal; by Gelfand--Mazur $A/M = \CC$, and the quotient map is a character with kernel $M$. A character is determined by its
+kernel, since $\varphi(a)$ is the unique $\lambda$ with $a - \lambda \in \ker\varphi$.
+(2) $\Delta(A)$ is a weak-$*$ closed subset of the unit ball of $A^*$ (the conditions $\varphi(ab) = \varphi(a)\varphi(b)$, $\varphi(1) = 1$ are closed), hence compact by the Banach--Alaoglu theorem
+(Theorem~\ref{functional-analysis:theorem-alaoglu}); it is Hausdorff as the weak-$*$ topology is. It is nonempty because $\{0\}$ lies in a maximal ideal (Zorn's lemma; a chain of proper ideals has proper union, as none
+contains $1$).
+(3) $\hat a$ is continuous by definition of the topology, and $a \mapsto \hat a$ is a homomorphism. If $\lambda \in \sigma(a)$, then $(a - \lambda)A$ is a proper ideal ($A$ is commutative), contained in a maximal ideal
+$\ker\varphi$, and $\varphi(a) = \lambda$. With (1), $\hat a(\Delta(A)) = \sigma(a)$, and $\|\hat a\|_\infty = r(a)$.
+\end{proof}
+
+\begin{example}\label{operator-algebras:example-gelfand-spaces}
+\begin{enumerate}
+\item For $C(K)$, every character is evaluation at a point, and $\Delta(C(K)) = K$. Indeed, if $\varphi$ is not $\delta_x$ for any $x$, then for each $x$ there is $f_x \in \ker\varphi$ with $f_x(x) \neq 0$ (otherwise
+$\ker\varphi \subseteq \ker\delta_x$, and the kernels are equal by maximality). By compactness finitely many $f_{x_i}$ have no common zero; then $g = \sum_if_{x_i}\overline{f_{x_i}} \in \ker\varphi$ is positive, hence invertible,
+a contradiction. The map $x \mapsto \delta_x$ is a continuous bijection from $K$ onto $\Delta$, hence a homeomorphism.
+\item For $\ell^1(\ZZ)$, a character is determined by $z = \varphi(\delta_1)$, with $|z| \leq \|\delta_1\| = 1$ and $|z^{-1}| = |\varphi(\delta_{-1})| \leq 1$; conversely every $z \in \mathbb{T}$ gives the character
+$a \mapsto \sum_na(n)z^n$. So $\Delta(\ell^1(\ZZ)) = \mathbb{T}$ and the Gelfand transform is the Fourier series $\hat a(z) = \sum a(n)z^n$.
+\item For $A(\mathbb{D})$, $\Delta = \overline{\mathbb{D}}$: a character is determined by $\lambda = \varphi(z)$, which lies in $\sigma(z) = \overline{\mathbb{D}}$, because polynomials are dense (Fej\'er means of the boundary values
+converge uniformly, and their Poisson extensions are polynomials converging uniformly on the disc).
+\end{enumerate}
+\end{example}
+
+\begin{corollary}[Wiener's lemma]\label{operator-algebras:corollary-wiener}
+If $f(t) = \sum_na(n)e^{2\pi int}$ with $\sum_n|a(n)| < \infty$ has no zeros on $\RR$, then $1/f = \sum_nb(n)e^{2\pi int}$ with $\sum_n|b(n)| < \infty$.
+\end{corollary}
+
+\begin{proof}
+$f = \hat a$ for $a \in \ell^1(\ZZ)$ (Example~\ref{operator-algebras:example-gelfand-spaces}(2)). Since $\hat a$ has no zeros, $0 \notin \hat a(\Delta) = \sigma(a)$, so $a$ is invertible in $\ell^1(\ZZ)$, and $b = a^{-1}$ has
+$\hat a\hat b = \hat\delta_0 = 1$.
+\end{proof}
+
+Wiener's direct proof was a delicate estimate; Gelfand's proof made the theory of Banach algebras famous. The same argument, with $L^1(\RR) \oplus \CC$, gives Wiener's Tauberian theorem, which implies the prime number
+theorem.
+
+\begin{remark}\label{operator-algebras:remark-holomorphic-calculus}
+For $f$ holomorphic near $\sigma(a)$ one defines $f(a) = \frac{1}{2\pi i}\oint_\gamma f(\lambda)(\lambda - a)^{-1}d\lambda$, with $\gamma$ surrounding $\sigma(a)$ inside the domain of $f$. This \emph{holomorphic functional calculus}
+extends the polynomial one, is multiplicative, and satisfies $\sigma(f(a)) = f(\sigma(a))$. If $\sigma(a)$ is disconnected, the function equal to $1$ near one piece and $0$ near the others gives an idempotent commuting with
+$a$ (the \emph{Riesz projection}) \cite{murphy-cstar}.
+\end{remark}
+
+\section{$C^*$-algebras}\label{operator-algebras:section-cstar}
+
+\begin{definition}\label{operator-algebras:definition-cstar}
+An \emph{involution} on a complex algebra $A$ is a map $a \mapsto a^*$ with $(a + b)^* = a^* + b^*$, $(\lambda a)^* = \bar\lambda a^*$, $(ab)^* = b^*a^*$ and $a^{**} = a$. A \emph{$C^*$-algebra} is a Banach algebra with an
+involution satisfying the \emph{$C^*$-identity}
+\[
+\|a^*a\| = \|a\|^2.
+\]
+An element is \emph{self-adjoint} if $a = a^*$, \emph{normal} if $aa^* = a^*a$, \emph{unitary} if $a^*a = aa^* = 1$, a \emph{projection} if $p = p^* = p^2$. A \emph{$*$-homomorphism} is an algebra homomorphism with
+$\pi(a^*) = \pi(a)^*$.
+\end{definition}
+
+\begin{notation}\label{operator-algebras:notation-cstar}
+$A_{sa}$ is the set of self-adjoint elements. For a subset $S$ of a $C^*$-algebra, $C^*(S)$ is the smallest $C^*$-subalgebra containing $S$ (the closure of the $*$-polynomials in $S$). Every element is $a = h + ik$
+with $h = \frac12(a + a^*)$, $k = \frac{1}{2i}(a - a^*)$ self-adjoint.
+\end{notation}
+
+\begin{example}\label{operator-algebras:example-cstar}
+\begin{enumerate}
+\item $B(H)$ with the adjoint: $\|T^*T\| \geq \sup_{\|x\| = 1}\langle T^*Tx, x\rangle = \|T\|^2$, and $\|T^*T\| \leq \|T^*\|\|T\| = \|T\|^2$. Every norm-closed $*$-subalgebra of $B(H)$ is a $C^*$-algebra, for instance the
+compact operators $K(H)$ (non-unital if $\dim H = \infty$) and $M_n(\CC)$.
+\item $C_0(X)$ with $f^* = \bar f$: $\|\bar ff\|_\infty = \|f\|_\infty^2$.
+\item For a discrete group $G$, the \emph{reduced group $C^*$-algebra} $C_r^*(G)$ is the closure in $B(\ell^2(G))$ of the span of the left translations $\lambda_g$; for $G = \ZZ$ it is $C(\mathbb{T})$ by Fourier series.
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{operator-algebras:counterexample-l1-not-cstar}
+$\ell^1(\ZZ)$ with $a^*(n) = \overline{a(-n)}$ is a Banach algebra with isometric involution, but not a $C^*$-algebra: for $a = \delta_{-1} + \delta_0 - \delta_1$,
+$\hat a(e^{i\theta}) = 1 - 2i\sin\theta$, so $\|\hat a\|_\infty = \sqrt5 < 3 = \|a\|_1$, whereas in a commutative $C^*$-algebra the Gelfand transform is isometric (Theorem~\ref{operator-algebras:theorem-commutative-gelfand-naimark}).
+\end{counterexample}
+
+\begin{proposition}\label{operator-algebras:proposition-cstar-basic}
+Let $A$ be a unital $C^*$-algebra.
+\begin{enumerate}
+\item $\|a^*\| = \|a\|$, $1^* = 1$, and $\|a\| = r(a)$ for $a$ normal; so $\|a\|^2 = r(a^*a)$ for all $a$: the norm is determined by the algebraic structure.
+\item If $a$ is self-adjoint, $\sigma(a) \subseteq \RR$; if $u$ is unitary, $\sigma(u) \subseteq \mathbb{T}$.
+\item A $*$-homomorphism $\pi \colon A \to B$ of unital $C^*$-algebras with $\pi(1) = 1$ satisfies $\|\pi(a)\| \leq \|a\|$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) $\|a\|^2 = \|a^*a\| \leq \|a^*\|\|a\|$ gives $\|a\| \leq \|a^*\|$, and symmetry gives equality. $1^*$ is a unit, so $1^* = 1$. For $h$ self-adjoint, $\|h^2\| = \|h^*h\| = \|h\|^2$, so $\|h^{2^k}\| = \|h\|^{2^k}$ and
+$r(h) = \|h\|$ by the spectral radius formula. For normal $a$, $\|a^{2^k}\|^2 = \|(a^{2^k})^*a^{2^k}\| = \|(a^*a)^{2^k}\| = \|a^*a\|^{2^k} = \|a\|^{2^{k+1}}$, so again $r(a) = \|a\|$. For any $a$, $\|a\|^2 = \|a^*a\| = r(a^*a)$.
+(2) Let $\lambda = \alpha + i\beta \in \sigma(h)$, $h$ self-adjoint. For real $t$, $\alpha + i(\beta + t) \in \sigma(h + it)$, so by (1) and the $C^*$-identity,
+$\alpha^2 + (\beta + t)^2 \leq \|h + it\|^2 = \|(h - it)(h + it)\| = \|h^2 + t^2\| \leq \|h\|^2 + t^2$. Hence $\alpha^2 + \beta^2 + 2\beta t \leq \|h\|^2$ for all $t$, and $\beta = 0$. For $u$ unitary, $\|u\|^2 = \|u^*u\| = 1$ and
+$\|u^{-1}\| = \|u^*\| = 1$, so $\sigma(u)$ and $\sigma(u^{-1}) = \sigma(u)^{-1}$ lie in the closed unit disc.
+(3) $\pi$ maps invertibles to invertibles, so $\sigma(\pi(b)) \subseteq \sigma(b)$ and $r(\pi(b)) \leq r(b)$. By (1), $\|\pi(a)\|^2 = r(\pi(a^*a)) \leq r(a^*a) = \|a\|^2$.
+\end{proof}
+
+\begin{theorem}[Gelfand--Naimark, commutative case]\label{operator-algebras:theorem-commutative-gelfand-naimark}
+For a commutative unital $C^*$-algebra $A$, the Gelfand transform $A \to C(\Delta(A))$ is an isometric $*$-isomorphism.
+\end{theorem}
+
+\begin{proof}
+For $h$ self-adjoint and $\varphi \in \Delta(A)$, $\varphi(h) \in \sigma(h) \subseteq \RR$; writing $a = h + ik$ gives $\varphi(a^*) = \overline{\varphi(a)}$, so $\widehat{a^*} = \overline{\hat a}$. Every element is normal, so
+$\|\hat a\|_\infty = r(a) = \|a\|$ by Theorem~\ref{operator-algebras:theorem-gelfand} and Proposition~\ref{operator-algebras:proposition-cstar-basic}. The image is therefore a closed $*$-subalgebra of $C(\Delta(A))$, containing the
+constants and separating points (distinct characters differ on some $a$); by the Stone--Weierstrass theorem (Theorem~\ref{real-analysis:theorem-stone-weierstrass}) it is everything.
+\end{proof}
+
+So $X \mapsto C(X)$ is an equivalence between compact Hausdorff spaces with continuous maps and commutative unital $C^*$-algebras with unital $*$-homomorphisms (in the opposite direction). This dictionary --- points
+are characters, closed subsets are quotients, homeomorphisms are automorphisms --- is the origin of the slogan that $C^*$-algebras are noncommutative topological spaces.
+
+\begin{theorem}[Spectral permanence]\label{operator-algebras:theorem-spectral-permanence}
+If $B$ is a $C^*$-subalgebra of the unital $C^*$-algebra $A$ containing $1$, then $\sigma_B(b) = \sigma_A(b)$ for $b \in B$.
+\end{theorem}
+
+\begin{proof}
+It suffices to show that $b \in B$ invertible in $A$ is invertible in $B$. Then $c = b^*b$ is self-adjoint and invertible in $A$. Let $C = C^*(1, c) \subseteq B$, commutative; $\sigma_C(c) \subseteq \RR$ is compact, and
+$C \cong C(\sigma_C(c))$ with $c \mapsto$ the identity function (a character of $C$ is determined by its value on $c$, which lies in $\sigma_C(c)$, and all values occur). If $0 \in \sigma_C(c)$, choose $g_n \in C(\sigma_C(c))$
+with $0 \leq g_n \leq 1$, $g_n(0) = 1$, $g_n = 0$ outside $(-\frac1n, \frac1n)$; then $\|g_n(c)\| = 1$ and $\|cg_n(c)\| \leq \frac1n$, but $g_n(c) = c^{-1}(cg_n(c))$ in $A$ has norm $\leq \|c^{-1}\|/n$, a contradiction. So $c$ is
+invertible in $C \subseteq B$, and $b^{-1} = c^{-1}b^* \in B$.
+\end{proof}
+
+\begin{theorem}[Continuous functional calculus]\label{operator-algebras:theorem-functional-calculus}
+Let $a$ be a normal element of a unital $C^*$-algebra $A$. There is a unique unital $*$-homomorphism $C(\sigma(a)) \to A$, $f \mapsto f(a)$, sending the identity function $z$ to $a$. It is isometric, with image $C^*(1, a)$,
+and $\sigma(f(a)) = f(\sigma(a))$, $(g \circ f)(a) = g(f(a))$.
+\end{theorem}
+
+\begin{proof}
+$C^*(1, a)$ is commutative since $a$ is normal. A character $\varphi$ of it is determined by $\varphi(a)$ (as $\varphi(a^*) = \overline{\varphi(a)}$), so $\varphi \mapsto \varphi(a)$ is a continuous injection of $\Delta(C^*(1, a))$
+onto $\sigma_{C^*(1,a)}(a) = \sigma(a)$ (Theorems~\ref{operator-algebras:theorem-gelfand} and~\ref{operator-algebras:theorem-spectral-permanence}), hence a homeomorphism. Composing the inverse of the Gelfand isomorphism with
+it gives the homomorphism; uniqueness holds because polynomials in $z$, $\bar z$ are dense in $C(\sigma(a))$. Spectral mapping: $\sigma(f(a)) = \sigma_{C(\sigma(a))}(f) = f(\sigma(a))$ by permanence. For composition, both sides
+are continuous in $g$ for the uniform norm and agree for polynomials in $z$, $\bar z$.
+\end{proof}
+
+\begin{definition}\label{operator-algebras:definition-positive}
+An element $a$ of a unital $C^*$-algebra is \emph{positive}, $a \geq 0$, if $a$ is self-adjoint and $\sigma(a) \subseteq [0, \infty)$. We write $a \leq b$ if $b - a \geq 0$, and $A_+$ for the set of positive elements.
+\end{definition}
+
+\begin{lemma}\label{operator-algebras:lemma-positive-cone}
+\begin{enumerate}
+\item A self-adjoint $a$ is positive iff $\|t - a\| \leq t$ for some (equivalently every) $t \geq \|a\|$. Hence $A_+$ is a closed convex cone, and $A_+ \cap (-A_+) = 0$.
+\item Every $a \geq 0$ has a unique positive square root $a^{1/2}$, and every self-adjoint $a$ is $a_+ - a_-$ with $a_\pm \geq 0$, $a_+a_- = 0$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) By the functional calculus, $\|t - a\| = \sup_{\lambda \in \sigma(a)}|t - \lambda|$, and for $\sigma(a) \subseteq [-\|a\|, \|a\|]$ and $t \geq \|a\|$ this is $\leq t$ iff $\sigma(a) \subseteq [0, 2t]$, iff $\sigma(a) \subseteq [0, \infty)$.
+Closedness is clear from this criterion. If $a, b \geq 0$, with $s = \|a\|$, $t = \|b\|$: $\|(s + t) - (a + b)\| \leq \|s - a\| + \|t - b\| \leq s + t$, and $s + t \geq \|a + b\|$, so $a + b \geq 0$. If $a$ and $-a$ are
+positive, $\sigma(a) = \{0\}$ and $\|a\| = r(a) = 0$. (2) Take $a^{1/2} = f(a)$ with $f(\lambda) = \sqrt\lambda$ on $\sigma(a)$, and $a_\pm = g_\pm(a)$ with $g_\pm(\lambda) = \max(\pm\lambda, 0)$. If $b \geq 0$ and $b^2 = a$, then $b$
+commutes with $a$, hence with $C^*(1, a)$; in the commutative algebra $C^*(1, a, b) \cong C(X)$, $b$ and $a^{1/2}$ are nonnegative functions with the same square, so they are equal.
+\end{proof}
+
+\begin{theorem}[Kaplansky, Fukamiya]\label{operator-algebras:theorem-astara-positive}
+For every $a$ in a unital $C^*$-algebra, $a^*a \geq 0$. Hence $a \geq 0$ iff $a = b^*b$ for some $b$, and $c \geq 0$ implies $b^*cb \geq 0$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: if $x^*x \leq 0$ then $x = 0$.} Write $x = h + ik$; then $x^*x + xx^* = 2h^2 + 2k^2 \geq 0$ (squares of self-adjoint elements are positive by spectral mapping). So $xx^* = (2h^2 + 2k^2) + (-x^*x)$ is positive by
+Lemma~\ref{operator-algebras:lemma-positive-cone}. By Jacobson's lemma (Lemma~\ref{operator-algebras:lemma-jacobson}), $\sigma(x^*x) \subseteq \sigma(xx^*) \cup \{0\} \subseteq [0, \infty)$, so $x^*x \geq 0$ and $\leq 0$, hence $x^*x = 0$
+and $\|x\|^2 = \|x^*x\| = 0$.
+\emph{Step 2.} $a^*a$ is self-adjoint; write $a^*a = u - v$ with $u, v \geq 0$, $uv = 0$ (Lemma~\ref{operator-algebras:lemma-positive-cone}). For $x = av$, $x^*x = va^*av = v(u - v)v = -v^3 \leq 0$. By Step 1, $av = 0$,
+so $v^3 = 0$, hence $v = 0$ (as $\|v\|^3 = \|v^3\|$ for $v$ self-adjoint) and $a^*a = u \geq 0$.
+\emph{Consequences.} If $a \geq 0$, $a = (a^{1/2})^*a^{1/2}$. If $c \geq 0$, $b^*cb = (c^{1/2}b)^*(c^{1/2}b) \geq 0$.
+\end{proof}
+
+\begin{definition}\label{operator-algebras:definition-state}
+A linear functional $\varphi$ on a unital $C^*$-algebra $A$ is \emph{positive} if $\varphi(a) \geq 0$ for $a \geq 0$, and a \emph{state} if moreover $\varphi(1) = 1$. The set of states is $S(A)$.
+\end{definition}
+
+\begin{example}\label{operator-algebras:example-states}
+For a unit vector $\xi \in H$, $T \mapsto \langle T\xi, \xi\rangle$ is a state on $B(H)$ (a \emph{vector state}); in quantum mechanics it is the expectation of the observable $T$ in the pure state $\xi$. For a density matrix
+$\rho \geq 0$ with $\operatorname{tr}\rho = 1$, $T \mapsto \operatorname{tr}(\rho T)$ is a state on $M_n(\CC)$. On $C(K)$ the states are the integrals against Borel probability measures, by the Riesz--Markov theorem
+(Theorem~\ref{radon-measures:theorem-riesz-markov}).
+\end{example}
+
+\begin{lemma}\label{operator-algebras:lemma-states}
+\begin{enumerate}
+\item A positive functional $\varphi$ satisfies $\varphi(b^*a) = \overline{\varphi(a^*b)}$, $|\varphi(b^*a)|^2 \leq \varphi(a^*a)\varphi(b^*b)$ and $\|\varphi\| = \varphi(1)$.
+\item Conversely, a bounded functional with $\|\varphi\| = \varphi(1) = 1$ is a state.
+\item For every $a$ there is a state $\varphi$ with $\varphi(a^*a) = \|a\|^2$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) $(a, b) \mapsto \varphi(b^*a)$ is a positive semidefinite sesquilinear form by Theorem~\ref{operator-algebras:theorem-astara-positive}, so it is Hermitian and satisfies Cauchy--Schwarz. For $\|a\| \leq 1$,
+$|\varphi(a)|^2 = |\varphi(1^*a)|^2 \leq \varphi(a^*a)\varphi(1) \leq \varphi(1)^2$, since $a^*a \leq \|a^*a\| \leq 1$ (Lemma~\ref{operator-algebras:lemma-positive-cone}). (2) First $\varphi$ is real on self-adjoint $h$: if
+$\varphi(h) = \alpha + i\beta$, then for real $t$, $\alpha^2 + (\beta + t)^2 = |\varphi(h + it)|^2 \leq \|h + it\|^2 = \|h^2 + t^2\| \leq \|h\|^2 + t^2$, which forces $\beta = 0$. If $0 \leq a \leq 1$, then $\|1 - a\| \leq 1$, so
+$\varphi(1 - a) \leq 1$ and $\varphi(a) \geq 0$; scaling gives positivity. (3) By the functional calculus on $C^*(1, a^*a) \cong C(\sigma(a^*a))$, evaluation at $\|a^*a\| \in \sigma(a^*a)$ is a functional of norm $1$ with value $1$ at $1$;
+extend it by the Hahn--Banach theorem (Theorem~\ref{functional-analysis:theorem-hahn-banach}) without increasing the norm, and apply (2).
+\end{proof}
+
+\begin{theorem}[GNS construction]\label{operator-algebras:theorem-gns}
+Let $\varphi$ be a state on the unital $C^*$-algebra $A$. There are a Hilbert space $H_\varphi$, a unital $*$-homomorphism $\pi_\varphi \colon A \to B(H_\varphi)$ and a unit vector $\xi_\varphi$ with $\pi_\varphi(A)\xi_\varphi$ dense
+(a \emph{cyclic vector}), such that $\varphi(a) = \langle\pi_\varphi(a)\xi_\varphi, \xi_\varphi\rangle$. The triple is unique up to unitary equivalence.
+\end{theorem}
+
+\begin{proof}
+On $A$ put $\langle a, b\rangle = \varphi(b^*a)$, positive semidefinite by Lemma~\ref{operator-algebras:lemma-states}. Its null space $N = \{a : \varphi(a^*a) = 0\}$ is a left ideal: by Cauchy--Schwarz, $a \in N$ iff $\varphi(b^*a) = 0$
+for all $b$, and then $\varphi(b^*ca) = \varphi((c^*b)^*a) = 0$. Let $H_\varphi$ be the completion of $A/N$, and $\pi_\varphi(a)[b] = [ab]$. Boundedness: $\|a\|^2 - a^*a \geq 0$, so by
+Theorem~\ref{operator-algebras:theorem-astara-positive}, $b^*(\|a\|^2 - a^*a)b \geq 0$, and $\|[ab]\|^2 = \varphi(b^*a^*ab) \leq \|a\|^2\varphi(b^*b) = \|a\|^2\|[b]\|^2$. So $\pi_\varphi(a)$ extends to $H_\varphi$, $\pi_\varphi$ is a unital
+homomorphism, and $\langle\pi_\varphi(a)[b], [c]\rangle = \varphi(c^*ab) = \langle[b], \pi_\varphi(a^*)[c]\rangle$ makes it a $*$-homomorphism. Put $\xi_\varphi = [1]$. Uniqueness: if $(H, \pi, \xi)$ is another such triple,
+$\pi_\varphi(a)\xi_\varphi \mapsto \pi(a)\xi$ preserves inner products, as both give $\varphi(b^*a)$, so it extends to a unitary intertwining the representations.
+\end{proof}
+
+\begin{theorem}[Gelfand--Naimark]\label{operator-algebras:theorem-gelfand-naimark}
+Every unital $C^*$-algebra is isometrically $*$-isomorphic to a norm-closed $*$-subalgebra of $B(H)$ for some Hilbert space $H$; if $A$ is separable, $H$ can be taken separable.
+\end{theorem}
+
+\begin{proof}
+Let $\pi = \bigoplus_{\varphi \in S(A)}\pi_\varphi$ on $\bigoplus_\varphi H_\varphi$. It is a $*$-homomorphism with $\|\pi(a)\| \leq \|a\|$ (Proposition~\ref{operator-algebras:proposition-cstar-basic}). For $a \in A$ choose $\varphi$ with
+$\varphi(a^*a) = \|a\|^2$ (Lemma~\ref{operator-algebras:lemma-states}); then $\|\pi_\varphi(a)\xi_\varphi\|^2 = \varphi(a^*a) = \|a\|^2$, so $\|\pi(a)\| = \|a\|$ and $\pi$ is isometric, with closed image. For separable $A$, take
+the states $\varphi_n$ attached to a dense sequence $a_n$; the same estimate holds on the dense set, hence everywhere.
+\end{proof}
+
+\begin{remark}\label{operator-algebras:remark-gelfand-naimark}
+Gelfand and Naimark proved this in 1943 \cite{gelfand-naimark-1943}, assuming also $1 + a^*a$ invertible, which Theorem~\ref{operator-algebras:theorem-astara-positive} shows to be automatic. Non-unital algebras such as $K(H)$ or
+$C_0(X)$ are handled by adjoining a unit: $\tilde A = A \oplus \CC$ has a unique $C^*$-norm, and $\tilde{C_0(X)} = C(X^+)$ for the one-point compactification $X^+$. The extreme points of $S(A)$ are the \emph{pure states},
+whose GNS representations are exactly the irreducible ones.
+\end{remark}
+
+\section{The spectral theorem}\label{operator-algebras:section-spectral-theorem}
+
+\begin{theorem}[Spectral theorem, multiplication form]\label{operator-algebras:theorem-spectral}
+Let $T$ be a normal operator on a separable Hilbert space $H \neq 0$. There are a finite measure space $(\Omega, \mu)$, a bounded measurable function $g \colon \Omega \to \sigma(T)$ and a unitary $U \colon H \to L^2(\Omega, \mu)$
+with $UTU^{-1} = M_g$, multiplication by $g$.
+\end{theorem}
+
+\begin{proof}
+\emph{Cyclic case.} Suppose $v$ is a unit vector with $\{f(T)v : f \in C(\sigma(T))\}$ dense, $f(T)$ given by Theorem~\ref{operator-algebras:theorem-functional-calculus}. The functional $f \mapsto \langle f(T)v, v\rangle$ is a state on
+$C(\sigma(T))$, so by Riesz--Markov there is a Borel probability measure $\mu$ on $\sigma(T)$ with $\langle f(T)v, v\rangle = \int f\,d\mu$. Then $\|f(T)v\|^2 = \langle(\bar ff)(T)v, v\rangle = \int|f|^2d\mu$, so $f(T)v \mapsto f$ extends to
+an isometry from $H$ onto the closure of $C(\sigma(T))$ in $L^2(\mu)$, which is $L^2(\mu)$ (Lemma~\ref{radon-measures:lemma-radon-approximation}). Call it $U$; then $UTf(T)v = U(zf)(T)v = zf$, so $UTU^{-1} = M_z$, with $g = z$.
+\emph{General case.} By Zorn's lemma (or, as $H$ is separable, by induction on a dense sequence) $H$ is an orthogonal direct sum of countably many cyclic subspaces $H_n = \overline{C(\sigma(T))v_n}$: the orthogonal complement of
+an invariant subspace for $T$ and $T^*$ is invariant. Choose $\|v_n\| = 2^{-n}$, apply the cyclic case to each $H_n$ (with measure of mass $4^{-n}$), and let $\Omega$ be the disjoint union of copies of $\sigma(T)$, with $g$ the
+identity on each copy.
+\end{proof}
+
+\begin{definition}\label{operator-algebras:definition-borel-calculus}
+With $T$, $U$, $g$ as in Theorem~\ref{operator-algebras:theorem-spectral}, for a bounded Borel function $f$ on $\sigma(T)$ let $f(T) = U^{-1}M_{f \circ g}U$. The \emph{spectral projections} are $E(B) = \mathbf{1}_B(T)$ for Borel
+$B \subseteq \sigma(T)$, and $B \mapsto E(B)$ is the \emph{spectral measure} of $T$.
+\end{definition}
+
+\begin{proposition}\label{operator-algebras:proposition-borel-calculus}
+\begin{enumerate}
+\item $f \mapsto f(T)$ is a $*$-homomorphism from bounded Borel functions to $B(H)$ extending the continuous calculus, with $\|f(T)\| \leq \sup|f|$; if $f_n \to f$ pointwise with $\sup_n\|f_n\|_\infty < \infty$, then
+$\langle f_n(T)x, y\rangle \to \langle f(T)x, y\rangle$ for all $x$, $y$.
+\item $E$ is \emph{projection-valued}: each $E(B)$ is a projection, $E(\sigma(T)) = 1$, $E(B \cap C) = E(B)E(C)$, and $E(\bigcup B_n)x = \sum E(B_n)x$ for disjoint $B_n$. For $x, y \in H$, $B \mapsto \langle E(B)x, y\rangle$ is a complex
+measure $\mu_{x,y}$, and $\langle f(T)x, y\rangle = \int f\,d\mu_{x,y}$; in short $f(T) = \int f(\lambda)\,dE(\lambda)$, in particular $T = \int\lambda\,dE(\lambda)$.
+\item If $S \in B(H)$ commutes with $T$ and $T^*$, it commutes with every $f(T)$. In particular $f(T)$ does not depend on the choice of $U$ and $g$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) The algebraic properties hold for multiplication operators, and $(f \circ g) = f(T)$ for continuous $f$ is checked on polynomials in $z$, $\bar z$, then by density. The convergence is dominated convergence in
+$\int(f_n \circ g)\,Ux\,\overline{Uy}\,d\mu$. (2) follows from (1) applied to indicators. (3) The bounded Borel $f$ with $Sf(T) = f(T)S$ contain the continuous functions (by density of polynomials in $z$, $\bar z$) and are
+closed under bounded pointwise limits by (1). So the Borel sets $B$ with $S\mathbf{1}_B(T) = \mathbf{1}_B(T)S$ contain the open sets (indicators of open sets are increasing limits of continuous functions) and form a
+Dynkin system, closed under complements and countable disjoint unions; by Dynkin's lemma (Lemma~\ref{measure-theory:lemma-dynkin}) they are all Borel sets. Hence the claim holds for simple functions and their uniform
+limits, which are all bounded Borel functions. Two calculi $f \mapsto f(T)$ and $f \mapsto f(T)^{\prime}$ both satisfying (1) agree on continuous functions, hence, by the same monotone class argument, on all bounded Borel $f$.
+\end{proof}
+
+\begin{corollary}\label{operator-algebras:corollary-unitary-group-connected}
+Every unitary $u \in B(H)$ is $e^{iA}$ for a self-adjoint $A$ with $\|A\| \leq \pi$. Hence the unitary group of $B(H)$ is path-connected.
+\end{corollary}
+
+\begin{proof}
+Let $\log$ be the bounded Borel branch on $\mathbb{T}$ with imaginary part in $(-\pi, \pi]$, and $A = -i\log(u)$, self-adjoint with $\|A\| \leq \pi$; then $e^{iA} = u$ by Proposition~\ref{operator-algebras:proposition-borel-calculus}(1).
+The path $t \mapsto e^{itA}$, $t \in [0, 1]$, joins $1$ to $u$ in norm.
+\end{proof}
+
+Contrast this with $C^*$-algebras such as $C(\mathbb{T})$, whose unitary group (continuous maps $\mathbb{T} \to \mathbb{T}$) has components indexed by the winding number: the Borel calculus exists in $B(H)$ but not in
+general $C^*$-algebras, and this difference is measured by $K$-theory.
+
+\begin{definition}\label{operator-algebras:definition-unbounded}
+An \emph{unbounded operator} on $H$ is a linear map $T \colon D(T) \to H$ defined on a dense subspace $D(T)$. Its \emph{adjoint} $T^*$ has domain the $y$ for which $x \mapsto \langle Tx, y\rangle$ is bounded on $D(T)$, and
+$\langle Tx, y\rangle = \langle x, T^*y\rangle$. $T$ is \emph{symmetric} if $\langle Tx, y\rangle = \langle x, Ty\rangle$ on $D(T)$ (so $T \subseteq T^*$), and \emph{self-adjoint} if $T = T^*$, domains included.
+\end{definition}
+
+\begin{counterexample}\label{operator-algebras:counterexample-symmetric-not-self-adjoint}
+Let $T = -i\frac{d}{dx}$ on $D(T) = C_c^\infty((0, 1)) \subseteq L^2(0, 1)$. Integration by parts shows that $T$ is symmetric, and that every smooth $\psi$ on $[0, 1]$ lies in $D(T^*)$ with $T^*\psi = -i\psi^{\prime}$. So
+$e^{kx} \in D(T^*)$ is an eigenvector of $T^*$ with eigenvalue $-ik$, for every $k \in \CC$: $T^*$ has non-real eigenvalues, and no self-adjoint operator can have them. The symmetric operator $T$ has many self-adjoint
+extensions: for each $\theta$, $-i\frac{d}{dx}$ on the absolutely continuous $f$ with $f^{\prime} \in L^2$ and $f(1) = e^{i\theta}f(0)$, with eigenvectors $e^{i(\theta + 2\pi n)x}$. In quantum mechanics the choice of
+extension is a physical choice of boundary condition. Von Neumann classified the self-adjoint extensions by the \emph{deficiency indices} $\dim\ker(T^* \mp i)$, here both equal to $1$ \cite{reed-simon-1}.
+\end{counterexample}
+
+\begin{theorem}[Spectral theorem for unbounded operators]\label{operator-algebras:theorem-spectral-unbounded}
+A self-adjoint operator $T$ on a separable Hilbert space is unitarily equivalent to multiplication by a real measurable function $g$ on $L^2(\Omega, \mu)$, $\mu$ finite, with domain $\{f : gf \in L^2\}$. Hence there is a
+Borel functional calculus, and $t \mapsto e^{itT}$ is a strongly continuous one-parameter group of unitaries. Conversely (Stone), every strongly continuous one-parameter unitary group is $e^{itT}$ for a unique self-adjoint
+$T$.
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+The \emph{Cayley transform} $U = (T - i)(T + i)^{-1}$ is a unitary operator (self-adjointness gives that $T \pm i$ are bijections $D(T) \to H$ and $\|(T + i)x\|^2 = \|Tx\|^2 + \|x\|^2 = \|(T - i)x\|^2$), with $1$ not an
+eigenvalue. Apply Theorem~\ref{operator-algebras:theorem-spectral} to $U$ and set $g = i\frac{1 + h}{1 - h}$, where $U \cong M_h$. The omitted verifications are the domain computations, and for Stone's theorem the construction of
+$T$ as the derivative at $0$ of the group on a dense domain \cite[Chapter VIII]{reed-simon-1}.
+\end{proof}
+
+\begin{remark}\label{operator-algebras:remark-quantum}
+In quantum mechanics, observables are self-adjoint operators, the possible values of an observable $T$ are the points of $\sigma(T)$, and in the state $\xi$ the probability that the value lies in $B$ is
+$\langle E(B)\xi, \xi\rangle$. The time evolution is $e^{-itH}$, $H$ the Hamiltonian, by Stone's theorem. For $H = -\Delta + V$ on $L^2(\RR^n)$, Kato's theorem gives self-adjointness for a large class of potentials $V$, such as
+the Coulomb potential of the hydrogen atom. These questions belong to Chapter~\ref{quantum-mechanics}.
+\end{remark}
+
+\section{Von Neumann algebras}\label{operator-algebras:section-von-neumann}
+
+\begin{definition}\label{operator-algebras:definition-operator-topologies}
+On $B(H)$, the \emph{strong operator topology} is the topology of pointwise convergence, $T_\alpha \to T$ iff $T_\alpha x \to Tx$ for all $x$; the \emph{weak operator topology} is that of $\langle T_\alpha x, y\rangle \to \langle Tx, y\rangle$
+for all $x$, $y$. The \emph{commutant} of $S \subseteq B(H)$ is $S^{\prime} = \{T : TS = ST \text{ for all } S \in S\}$, and $S^{\prime\prime} = (S^{\prime})^{\prime}$ is the \emph{bicommutant}. A \emph{von Neumann algebra} is a
+$*$-subalgebra $M \subseteq B(H)$ with $M = M^{\prime\prime}$.
+\end{definition}
+
+\begin{notation}\label{operator-algebras:notation-von-neumann}
+SOT and WOT abbreviate the strong and weak operator topologies. The commutant of a self-adjoint set is a von Neumann algebra (it is a $*$-algebra, and $S^{\prime\prime\prime} = S^{\prime}$). $Z(M) = M \cap M^{\prime}$ is the
+\emph{center} of $M$. $P(M)$ is the set of projections in $M$.
+\end{notation}
+
+Norm convergence implies strong, and strong implies weak. On the unit ball of $B(\ell^2)$ the shifts show that the topologies differ: $L^n \to 0$ strongly but $\|L^n\| = 1$; $S^n \to 0$ weakly, but not strongly, as
+$\|S^nx\| = \|x\|$.
+
+\begin{theorem}[Von Neumann's bicommutant theorem]\label{operator-algebras:theorem-bicommutant}
+Let $A \subseteq B(H)$ be a $*$-subalgebra containing $1$. Then $A^{\prime\prime}$ is the SOT closure and the WOT closure of $A$. In particular $A$ is a von Neumann algebra iff it is SOT closed, iff it is WOT closed.
+\end{theorem}
+
+\begin{proof}
+A commutant is WOT closed, so $\overline{A}^{SOT} \subseteq \overline{A}^{WOT} \subseteq A^{\prime\prime}$. Conversely let $T \in A^{\prime\prime}$; we show that every basic SOT neighbourhood
+$\{S : \|(S - T)x_i\| < \varepsilon, i = 1, \ldots, n\}$ meets $A$. \emph{Case $n = 1$.} Let $P$ be the projection onto $K = \overline{Ax_1}$, which contains $x_1 = 1x_1$. $K$ is invariant under $A$, and as $A$ is self-adjoint so is
+$K^\perp$; hence $P \in A^{\prime}$, so $TP = PT$ and $Tx_1 = TPx_1 = PTx_1 \in K$: there is $a \in A$ with $\|ax_1 - Tx_1\| < \varepsilon$. \emph{General $n$.} On $H^n = H \oplus \cdots \oplus H$ consider
+$A^{(n)} = \{a \oplus \cdots \oplus a\}$. Its commutant consists of the $n \times n$ matrices with entries in $A^{\prime}$, which commute with $T^{(n)} = T \oplus \cdots \oplus T$; so $T^{(n)} \in (A^{(n)})^{\prime\prime}$, and the case
+$n = 1$ applied to $(x_1, \ldots, x_n)$ gives $a \in A$ with $\sum\|(a - T)x_i\|^2 < \varepsilon^2$.
+\end{proof}
+
+\begin{example}\label{operator-algebras:example-von-neumann}
+\begin{enumerate}
+\item $B(H)$, whose commutant is $\CC1$, and $M_n(\CC) \otimes 1$ on $\CC^n \otimes \CC^k$, whose commutant is $1 \otimes M_k(\CC)$.
+\item For a finite measure space, $L^\infty(\Omega, \mu)$ acting on $L^2(\Omega, \mu)$ by multiplication is a \emph{maximal abelian} von Neumann algebra: $L^\infty{}^{\prime} = L^\infty$. Indeed, if $T$ commutes with all $M_f$, let
+$g = T1 \in L^2$; then $Tf = TM_f1 = M_fT1 = fg$ for $f \in L^\infty$. If $|g| > \|T\| + \varepsilon$ on a set $E$ of positive measure, $f = \mathbf{1}_E$ gives $\|fg\|_2 > (\|T\| + \varepsilon)\|f\|_2$, impossible; so $g \in L^\infty$
+and $T = M_g$ by density of $L^\infty$ in $L^2$. By Theorem~\ref{operator-algebras:theorem-spectral}, every abelian von Neumann algebra generated by one normal operator is of this form.
+\item For a discrete group $G$, the \emph{group von Neumann algebra} $L(G)$ is the bicommutant of the left translations $\lambda_g$ on $\ell^2(G)$.
+\end{enumerate}
+\end{example}
+
+\begin{proposition}\label{operator-algebras:proposition-projections-generate}
+A von Neumann algebra $M$ is the norm-closed linear span of its projections; more precisely, if $a \in M$ is self-adjoint, its spectral projections lie in $M$, and $a$ is a norm limit of linear combinations of them.
+\end{proposition}
+
+\begin{proof}
+If $S \in M^{\prime}$, then $S$ commutes with $a = a^*$, hence with every $\mathbf{1}_B(a)$ by Proposition~\ref{operator-algebras:proposition-borel-calculus}(3) (stated for separable $H$; on any $H$, decompose into the cyclic subspaces of
+$a$, which are separable and invariant under $a$, and apply the proofs on each). So $\mathbf{1}_B(a) \in M^{\prime\prime} = M$. For a simple Borel function $s$ with $|s(\lambda) - \lambda| \leq \varepsilon$ on $\sigma(a)$, $s(a)$ is a combination of spectral projections with
+$\|s(a) - a\| \leq \varepsilon$. Every element is $h + ik$ with $h$, $k$ self-adjoint.
+\end{proof}
+
+So von Neumann algebras have many projections, unlike $C^*$-algebras: $C(X)$ for connected $X$ has only $0$ and $1$. The structure of $M$ is governed by its projections.
+
+\begin{definition}\label{operator-algebras:definition-murray-von-neumann}
+Projections $p$, $q$ in $M$ are \emph{equivalent}, $p \sim q$, if $p = v^*v$ and $q = vv^*$ for some $v \in M$ (a \emph{partial isometry} from $pH$ onto $qH$). We write $p \precsim q$ if $p \sim q^{\prime} \leq q$. A projection
+$p$ is \emph{finite} if $p \sim q \leq p$ implies $q = p$, and $M$ is finite if $1$ is. $M$ is a \emph{factor} if $Z(M) = \CC1$.
+\end{definition}
+
+\begin{example}\label{operator-algebras:example-equivalence-bh}
+In $B(H)$, $p \sim q$ iff $\dim pH = \dim qH$: a partial isometry $v$ with $v^*v = p$, $vv^* = q$ maps $pH$ isometrically onto $qH$; conversely a unitary $pH \to qH$, extended by $0$ on $(pH)^\perp$, is such a $v$. The finite
+projections are those of finite rank: the unilateral shift $S$ gives $1 = S^*S \sim SS^* < 1$ on $\ell^2$. So $B(H)$ is finite iff $\dim H < \infty$.
+\end{example}
+
+\begin{theorem}[Murray--von Neumann]\label{operator-algebras:theorem-types}
+In a factor $M$, any two projections are comparable: $p \precsim q$ or $q \precsim p$. There is a \emph{dimension function} $d \colon P(M) \to [0, \infty]$, unique up to scaling, with $d(p) = d(q)$ iff $p \sim q$ and
+$d(p + q) = d(p) + d(q)$ for orthogonal $p$, $q$. After normalisation its range is one of
+\begin{enumerate}
+\item $\{0, 1, \ldots, n\}$ (type $\mathrm{I}_n$, $M \cong M_n(\CC)$) or $\{0, 1, \ldots, \infty\}$ (type $\mathrm{I}_\infty$, $M \cong B(H)$, $H$ separable infinite-dimensional);
+\item $[0, 1]$ (type $\mathrm{II}_1$) or $[0, \infty]$ (type $\mathrm{II}_\infty$);
+\item $\{0, \infty\}$ (type $\mathrm{III}$).
+\end{enumerate}
+\end{theorem}
+
+This is due to Murray and von Neumann \cite{murray-von-neumann-1936}. In a type $\mathrm{II}_1$ factor projections have ``continuous dimension'', and $d$ extends to a faithful normal trace $\tau$ with $\tau(xy) = \tau(yx)$. The
+existence of factors of type $\mathrm{II}$ is not obvious; here is the basic construction.
+
+\begin{proposition}\label{operator-algebras:proposition-group-trace}
+For a discrete group $G$, $\tau(x) = \langle x\delta_e, \delta_e\rangle$ is a faithful positive trace on $L(G)$: $\tau(xy) = \tau(yx)$, $\tau(x^*x) \geq 0$, with equality only for $x = 0$, and $\tau(1) = 1$. If every nontrivial conjugacy
+class of $G$ is infinite (\emph{ICC}), $L(G)$ is a factor, of type $\mathrm{II}_1$ when $G$ is infinite.
+\end{proposition}
+
+\begin{proof}
+For $x = \lambda_g$, $y = \lambda_h$, $\tau(xy) = [gh = e] = [hg = e] = \tau(yx)$, so $\tau(xy) = \tau(yx)$ on the span $\mathcal{L}$ of the $\lambda_g$, which is WOT dense in $L(G)$ by the bicommutant theorem. Multiplication by
+a fixed operator, on either side, is WOT continuous, and so is $\tau$. For $y \in \mathcal{L}$, $x \mapsto \tau(xy) - \tau(yx)$ is WOT continuous and vanishes on $\mathcal{L}$, hence on $L(G)$; then for $x \in L(G)$ the same
+argument in $y$ gives $\tau(xy) = \tau(yx)$ on $L(G)$. $\tau(x^*x) = \|x\delta_e\|^2$. If $x\delta_e = 0$, then $x\delta_g = x\rho_{g^{-1}}\delta_e = \rho_{g^{-1}}x\delta_e = 0$ for every $g$, where $\rho$ are the right
+translations, which commute with $L(G)$; so $x = 0$. For the factor property: $x \in Z(L(G))$ has $x\delta_e = \sum_gc_g\delta_g \in \ell^2$, and commuting with $\lambda_h$ gives $c_{hgh^{-1}} = c_g$, so $c$ is constant on conjugacy
+classes; square summability forces $c_g = 0$ off $\{e\}$ for ICC groups, so $x = c_e$. $L(G)$ is infinite-dimensional for infinite $G$, as the vectors $\lambda_g\delta_e = \delta_g$ are independent. A trace is constant on equivalence classes of projections ($\tau(v^*v) = \tau(vv^*)$). In $B(H)$ with $H$
+infinite-dimensional, $1 = p + q$ with $p \sim q \sim 1$ (Example~\ref{operator-algebras:example-equivalence-bh}), so a faithful trace would satisfy $\tau(1) = 2\tau(1)$, which is impossible; so $L(G)$ is not of type
+$\mathrm{I}$, and by Theorem~\ref{operator-algebras:theorem-types} and the existence of the finite trace it is of type $\mathrm{II}_1$.
+\end{proof}
+
+\begin{remark}\label{operator-algebras:remark-factors}
+The free group $F_2$ and the group $S_\infty$ of finitely supported permutations are ICC, giving the $\mathrm{II}_1$ factors $L(F_2)$ and $R = L(S_\infty)$, the \emph{hyperfinite} factor, also the closure of
+$M_2(\CC) \otimes M_2(\CC) \otimes \cdots$. Murray and von Neumann showed $L(F_2) \not\cong R$; whether $L(F_2) \cong L(F_3)$ is open. Tomita--Takesaki theory associates to a state a modular flow, and Connes classified
+type $\mathrm{III}$ factors into $\mathrm{III}_\lambda$, $0 \leq \lambda \leq 1$, and proved that injective factors are hyperfinite. Jones showed that the index $[M : N]$ of a subfactor of a $\mathrm{II}_1$ factor takes values in
+$\{4\cos^2\frac\pi n : n \geq 3\} \cup [4, \infty]$ \cite{jones-1983}, a discovery that led to the Jones polynomial of knots (Chapter~\ref{low-dimensional-topology}).
+\end{remark}
+
+\section{$K$-theory and noncommutative geometry}\label{operator-algebras:section-noncommutative}
+
+\begin{definition}\label{operator-algebras:definition-k-zero-cstar}
+Let $A$ be a unital $C^*$-algebra and $M_\infty(A) = \bigcup_nM_n(A)$ (with $M_n(A) \subseteq M_{n+1}(A)$ by adding a zero row and column; $M_n(A)$ is a $C^*$-algebra, as a subalgebra of $B(H^n)$ for $A \subseteq B(H)$).
+Projections $p, q \in M_\infty(A)$ are \emph{equivalent} if $p = v^*v$, $q = vv^*$ for some rectangular $v$ over $A$; direct sum $p \oplus q = \operatorname{diag}(p, q)$ makes the classes a commutative monoid $V(A)$, and
+$K_0(A)$ is its Grothendieck group. $K_1(A)$ is the group of homotopy classes of unitaries in $M_\infty(A)$ (with $u \mapsto \operatorname{diag}(u, 1)$).
+\end{definition}
+
+\begin{example}\label{operator-algebras:example-k-cstar}
+\begin{enumerate}
+\item $K_0(\CC) = \ZZ$ and $K_0(M_n(\CC)) = \ZZ$, via the rank (Example~\ref{operator-algebras:example-equivalence-bh}); $K_1(\CC) = 0$ since $U(n)$ is connected (Corollary~\ref{operator-algebras:corollary-unitary-group-connected}).
+\item $K_0(B(H)) = 0$ for $H$ separable infinite-dimensional (an \emph{Eilenberg swindle}): a projection $p \in M_n(B(H)) = B(H^n)$ satisfies $p \oplus 1 \sim 1$, because both have range of dimension $\dim H$
+(Example~\ref{operator-algebras:example-equivalence-bh}); so $[p] + [1] = [1]$ and $[p] = 0$.
+\item For a compact Hausdorff space $X$, $K_0(C(X)) \cong K^0(X)$, the topological $K$-theory of vector bundles: a projection in $M_n(C(X))$ is a continuous family of projections, whose images form a vector bundle (Swan's
+theorem; Chapter~\ref{k-theory}). $K_1(C(\mathbb{T})) = \ZZ$, by the winding number.
+\end{enumerate}
+\end{example}
+
+Operator $K$-theory satisfies Bott periodicity, $K_0(A) \cong K_1(SA)$, $K_1(A) \cong K_0(SA)$ for the suspension, and a six-term exact sequence for ideals \cite{rordam-k-theory}. The index of a Fredholm operator is the
+boundary map $K_1(B(H)/K(H)) \to K_0(K(H)) = \ZZ$ of the extension $0 \to K(H) \to B(H) \to B(H)/K(H) \to 0$.
+
+\begin{definition}\label{operator-algebras:definition-noncommutative-torus}
+For $\theta \in \RR$, the \emph{noncommutative torus} $A_\theta$ is the $C^*$-subalgebra of $B(L^2(\mathbb{T}))$, $\mathbb{T} = \RR/\ZZ$, generated by the unitaries $(Uf)(t) = e^{2\pi it}f(t)$ and $(Vf)(t) = f(t - \theta)$.
+\end{definition}
+
+\begin{proposition}\label{operator-algebras:proposition-rotation-relation}
+$U$ and $V$ are unitary and $UV = e^{2\pi i\theta}VU$. For $\theta \in \ZZ$, $A_\theta \cong C(\mathbb{T})$ is commutative.
+\end{proposition}
+
+\begin{proof}
+Both are unitary, being a multiplication by a function of modulus $1$ and a translation. $VUf(t) = (Uf)(t - \theta) = e^{2\pi i(t - \theta)}f(t - \theta)$ and $UVf(t) = e^{2\pi it}f(t - \theta)$, so $UV = e^{2\pi i\theta}VU$. For
+$\theta \in \ZZ$, $V = 1$ and $A_\theta = C^*(U) \cong C(\sigma(U)) = C(\mathbb{T})$ (Theorem~\ref{operator-algebras:theorem-functional-calculus}).
+\end{proof}
+
+\begin{remark}\label{operator-algebras:remark-noncommutative-torus}
+For irrational $\theta$, $A_\theta$ is simple (no nontrivial closed ideals), has a unique trace $\tau$, and is the universal $C^*$-algebra generated by unitaries with $UV = e^{2\pi i\theta}VU$; for rational $\theta$ the
+universal algebra has an intrinsic description as sections of a matrix bundle over a torus. Pimsner and Voiculescu computed $K_0(A_\theta) \cong \ZZ^2$, and Rieffel constructed projections with $\tau(p) = \theta$; so
+$\tau(K_0(A_\theta)) = \ZZ + \theta\ZZ$, which shows $A_\theta \cong A_{\theta^{\prime}}$ only if $\theta^{\prime} = \pm\theta \bmod \ZZ$ \cite{davidson-cstar}. The quotient of the circle by an irrational rotation is a bad space
+topologically --- every orbit is dense --- and $A_\theta$ is its good noncommutative replacement: the crossed product $C(\mathbb{T}) \rtimes_\theta \ZZ$.
+\end{remark}
+
+\begin{remark}\label{operator-algebras:remark-spectral-triples}
+Connes' \emph{noncommutative geometry} encodes a Riemannian spin manifold $M$ by the \emph{spectral triple} $(C^\infty(M), L^2(S), D)$ of Chapter~\ref{spin-geometry}: the algebra acts on spinors, and the Dirac operator $D$ recovers
+the metric through Connes' distance formula $d(x, y) = \sup\{|f(x) - f(y)| : \|[D, f]\| \leq 1\}$, since $\|[D, f]\| = \sup|\nabla f|$. A \emph{spectral triple} in general is a $*$-algebra $\mathcal{A}$ represented on $H$ with an
+unbounded self-adjoint $D$ having compact resolvent and bounded commutators $[D, a]$. Cyclic cohomology replaces de Rham cohomology, the Chern character pairs it with $K$-theory, and the index theorem becomes a
+statement about spectral triples \cite{connes-ncg}.
+\end{remark}
+
+\section{Exercises}\label{operator-algebras:section-exercises}
+
+\begin{exercise}\label{operator-algebras:exercise-spectrum-ell-one}
+Compute $\sigma(\delta_1 + \delta_{-1})$ in $\ell^1(\ZZ)$ and the spectral radius of $\delta_1$.
+\end{exercise}
+
+\begin{solution}
+By Theorem~\ref{operator-algebras:theorem-gelfand} and Example~\ref{operator-algebras:example-gelfand-spaces}(2), $\sigma(a) = \hat a(\mathbb{T})$. For $a = \delta_1 + \delta_{-1}$, $\hat a(z) = z + z^{-1} = 2\cos\theta$, so $\sigma(a) = [-2, 2]$.
+For $\delta_1$, $\hat\delta_1(z) = z$, $\sigma = \mathbb{T}$ and $r = 1 = \|\delta_1^n\|^{1/n}$.
+\end{solution}
+
+\begin{exercise}\label{operator-algebras:exercise-nilpotent-not-cstar}
+Show that in a $C^*$-algebra a nilpotent normal element is $0$, and that $\bigl(\begin{smallmatrix}0 & 1\\ 0 & 0\end{smallmatrix}\bigr)$ has norm $1$ but spectral radius $0$.
+\end{exercise}
+
+\begin{solution}
+For normal $a$, $\|a\| = r(a)$ (Proposition~\ref{operator-algebras:proposition-cstar-basic}), and $a^n = 0$ gives $\sigma(a) = \{0\}$ by spectral mapping, so $a = 0$. The matrix $N$ has $N^2 = 0$, so $r(N) = 0$, while $N^*N = \operatorname{diag}(0, 1)$ has
+norm $1$; $N$ is not normal.
+\end{solution}
+
+\begin{exercise}\label{operator-algebras:exercise-unitary-exponential}
+Let $u$ be unitary in a unital $C^*$-algebra with $\sigma(u) \neq \mathbb{T}$. Show that $u = e^{ih}$ with $h$ self-adjoint, so $u$ is connected to $1$ in the unitary group. Show that the unitary $z \in C(\mathbb{T})$ is not of this form.
+\end{exercise}
+
+\begin{solution}
+If $e^{i\alpha} \notin \sigma(u)$, a continuous branch $\log$ exists on $\mathbb{T} \setminus \{e^{i\alpha}\}$, hence on $\sigma(u)$; put $h = -i\log(u)$ by the continuous functional calculus. If $z = e^{ih}$ with $h \in C(\mathbb{T}, \RR)$, then $h$ is a
+continuous logarithm of $z$ divided by $i$, so $z$ would have winding number $0$; but it has winding number $1$.
+\end{solution}
+
+\begin{exercise}\label{operator-algebras:exercise-commutant-matrices}
+Show that the commutant of $M_n(\CC) \otimes 1$ in $M_n(\CC) \otimes M_k(\CC) = M_{nk}(\CC)$ is $1 \otimes M_k(\CC)$.
+\end{exercise}
+
+\begin{solution}
+Write $T = \sum_{i,j}E_{ij} \otimes T_{ij}$ with $T_{ij} \in M_k$. Commuting with $E_{ab} \otimes 1$: $(E_{ab} \otimes 1)T = \sum_jE_{aj} \otimes T_{bj}$ and $T(E_{ab} \otimes 1) = \sum_iE_{ib} \otimes T_{ia}$. Comparing coefficients of
+$E_{aj}$ and $E_{ib}$ gives $T_{bj} = 0$ for $j \neq b$ (taking $j \neq b$, $a$ arbitrary) and $T_{bb} = T_{aa}$. So $T = 1 \otimes T_{11}$.
+\end{solution}
+
+\begin{exercise}\label{operator-algebras:exercise-positive-functional-continuous}
+Show that a positive functional on a unital $C^*$-algebra is automatically bounded, without using Lemma~\ref{operator-algebras:lemma-states}: if $\varphi \geq 0$ and $h$ is self-adjoint, $|\varphi(h)| \leq \|h\|\varphi(1)$.
+\end{exercise}
+
+\begin{solution}
+$\|h\| - h \geq 0$ and $\|h\| + h \geq 0$ by spectral mapping, so $-\|h\|\varphi(1) \leq \varphi(h) \leq \|h\|\varphi(1)$. For general $a = h + ik$, $|\varphi(a)| \leq 2\|a\|\varphi(1)$, as $\|h\|, \|k\| \leq \|a\|$.
+\end{solution}
+
+\begin{exercise}\label{operator-algebras:exercise-shift-topologies}
+Let $S$ be the right shift on $\ell^2$. Show that $S^n \to 0$ in the weak operator topology but not in the strong one, and that $(S^*)^n \to 0$ strongly but not in norm.
+\end{exercise}
+
+\begin{solution}
+$\langle S^nx, y\rangle = \sum_kx_ky_{k+n}$, bounded by $\|x\|(\sum_{j > n}|y_j|^2)^{1/2} \to 0$. But $\|S^nx\| = \|x\|$. $(S^*)^nx = (x_{n+1}, x_{n+2}, \ldots)$ has norm $(\sum_{j > n}|x_j|^2)^{1/2} \to 0$, while $\|(S^*)^n\| = 1$ (test on
+$e_{n+1}$).
+\end{solution}
+
+\begin{exercise}\label{operator-algebras:exercise-spectral-projection}
+Let $T = M_x$ on $L^2([0, 1])$. Describe the spectral projections $E([0, c])$ and show that $T$ has no eigenvectors although $E$ is a nonzero projection-valued measure.
+\end{exercise}
+
+\begin{solution}
+In the multiplication form with $g = x$, $E([0, c]) = M_{\mathbf{1}_{[0,c]}}$, the projection onto functions supported in $[0, c]$. An eigenvector would satisfy $(x - \lambda)f = 0$ almost everywhere, forcing $f = 0$; correspondingly
+$E(\{\lambda\}) = M_{\mathbf{1}_{\{\lambda\}}} = 0$ for every $\lambda$, while $E([0, c]) \neq 0$ for $c > 0$.
+\end{solution}

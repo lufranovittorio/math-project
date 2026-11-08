@@ -151,8 +151,11 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
   (Fefferman duality, John–Nirenberg), wavelets (Haar, Daubechies), Fatou's theorem, Kolmogorov's
   weak (1,1), uncertainty principles (Heisenberg, Hardy), Wiener's Tauberian theorem, spherical
   harmonics / SO(3) and SU(2) worked in full, Heisenberg group and Stone–von Neumann.
-- `operator-algebras` (planned): C*-algebras, Gelfand–Naimark, GNS, von Neumann algebras, the
-  bicommutant theorem, factors, K-theory of C*-algebras (survey).
+- `operator-algebras` (draft 2026-11-08): to deepen: Kaplansky density, normal states and the
+  predual, double commutant for non-unital algebras, polar decomposition, Fredholm operators and the
+  index as a K-theory boundary map (proved), proofs of the type classification, Tomita–Takesaki,
+  crossed products, AF algebras and Bratteli diagrams, Elliott classification, nuclearity and
+  amenability, KK-theory and Baum–Connes (survey), Pimsner–Voiculescu.
 
 ### VII. Probability and Statistics
 - `probability` (planned): as in its outline; move Borel–Cantelli and independence here from
