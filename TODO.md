@@ -175,9 +175,9 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
   with an elementary proof, more Mordell curves, Kummer's regular primes (after cyclotomic fields).
 - `cryptography` (planned, new): arithmetic algorithms, primality (Miller–Rabin, AKS with proof),
   factoring, discrete logarithms, RSA/Diffie–Hellman, lattice cryptography, Shor (survey).
-- `algebraic-number-theory` (planned): number fields, class groups and units, cyclotomic fields,
-  Kummer theory, quadratic fields and binary quadratic forms (link with number-theory), Dedekind
-  zeta functions and the class number formula.
+- `algebraic-number-theory` (draft 2026-11-08): to deepen: Kummer theory, quadratic fields and
+  binary quadratic forms (ideal classes = form classes), Hermite's theorem, proof of the class number
+  formula, Z[zeta_n] for all n, Kummer's lemma and FLT for regular primes with proof, Stickelberger.
 - `local-fields` (planned): local fields, ramification groups, local and global class field
   theory, Hilbert class fields, Kronecker–Weber, Chebotarev, adeles and ideles, Tate's thesis;
   Iwasawa theory and p-adic Hodge theory (surveys).
