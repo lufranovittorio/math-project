@@ -78,6 +78,15 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
 - `probabilistic-method` (planned): first and second moment, Lovász local lemma, martingale
   concentration, random graphs (thresholds), entropy methods.
 
+### III bis. Classical and Discrete Geometry (new part, 2026-11-08)
+- `classical-geometry` (planned, new): axiomatics, Euclidean isometries and Platonic solids,
+  triangle geometry (Euler line, Feuerbach, Ceva, Menelaus, Ptolemy, Morley), inversion, affine
+  and projective geometry (Desargues, Pappus, Pascal, cross-ratio), spherical and hyperbolic
+  geometry, constructions.
+- `discrete-geometry` (planned, new): Carathéodory/Radon/Helly, polytopes and Euler's formula,
+  regular polytopes, Cauchy rigidity, Hilbert's third problem, Brunn–Minkowski and the
+  isoperimetric inequality, Ehrhart, Szemerédi–Trotter, packings and tilings.
+
 ### IV. Topology
 - `general-topology` (complete, 2125): uniform spaces, nets and filters, paracompactness and
   partitions of unity, metrisation theorems, Stone–Čech, Baire and its applications, dimension theory.
@@ -91,7 +100,14 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
 - `cohomology-operations` (complete, 235, thin): Steenrod squares and reduced powers, Adem
   relations, Hopf invariant, the Steenrod algebra; consider merging into `singular-homology`.
 - `low-dimensional-topology` (planned, new): surfaces, mapping class groups, knots and their
-  invariants, braids, 3-manifolds, survey of 4-manifolds.
+  invariants, braids, 3-manifolds, survey of 4-manifolds. Knot theory enlarged (user,
+  2026-11-08): HOMFLY-PT, Vassiliev invariants, concordance, hyperbolic knots, Khovanov and knot
+  Floer homology, quantum invariants (surveys).
+- `geometric-group-theory` (planned, new): Cayley graphs, quasi-isometries, Švarc–Milnor, Bass–Serre,
+  growth (Gromov, Grigorchuk), hyperbolic groups, ends, amenability and Banach–Tarski.
+- `singular-homology`: add *persistent homology* (topological data analysis) as a section.
+- `poincare-duality`: the *Jordan curve theorem* is not in the book yet (prove it there, with
+  Jordan–Brouwer).
 - `sheaves` (complete, 686): rebuild; presheaves, sheafification, étalé spaces, Čech and derived
   functor cohomology, comparison theorems, soft and fine sheaves, de Rham and Dolbeault
   resolutions, Leray spectral sequence, base change.
@@ -119,6 +135,11 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
   Krein–Milman, Dunford–Pettis, interpolation (Riesz–Thorin, Marcinkiewicz), locally convex spaces.
 - `several-complex-variables` (complete, 314, thin): Hartogs, domains of holomorphy, pseudoconvexity,
   the dbar problem (Hörmander), Cartan's theorems A and B (survey), Weierstrass preparation.
+- `functional-analysis`: *integral equations* (Fredholm alternative, Volterra equations).
+- `real-analysis`: *summability* (Cesàro, Abel, Tauberian theorems of Hardy–Littlewood), check
+  against analytic-number-theory.
+- `geometric-measure-theory`: *fractals* (iterated function systems, self-similar sets, the
+  Moran equation, box and Hausdorff dimension of the Cantor set and the Sierpiński gasket).
 - `distributions` (complete, 496): Schwartz space, tempered distributions, Fourier transform,
   Paley–Wiener, Sobolev embedding (or in sobolev-spaces), fundamental solutions, Malgrange–Ehrenpreis.
 - `harmonic-analysis` (planned): Fourier analysis on locally compact abelian groups, Pontryagin
@@ -152,11 +173,14 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
 - `diophantine-equations` (draft 2026-11-07): to deepen: Skolem's p-adic method, Thue's theorem
   with proof, number of representations by three squares, Legendre's theorem on ax²+by²+cz²
   with an elementary proof, more Mordell curves, Kummer's regular primes (after cyclotomic fields).
+- `cryptography` (planned, new): arithmetic algorithms, primality (Miller–Rabin, AKS with proof),
+  factoring, discrete logarithms, RSA/Diffie–Hellman, lattice cryptography, Shor (survey).
 - `algebraic-number-theory` (planned): number fields, class groups and units, cyclotomic fields,
   Kummer theory, quadratic fields and binary quadratic forms (link with number-theory), Dedekind
   zeta functions and the class number formula.
 - `local-fields` (planned): local fields, ramification groups, local and global class field
-  theory, Hilbert class fields, Kronecker–Weber, Chebotarev, adeles and ideles, Tate's thesis.
+  theory, Hilbert class fields, Kronecker–Weber, Chebotarev, adeles and ideles, Tate's thesis;
+  Iwasawa theory and p-adic Hodge theory (surveys).
 - Arithmetic of curves stays in Part *Algebraic and Arithmetic Geometry* (modular forms, elliptic curves).
 
 ### IX. Differential Equations and Dynamical Systems
@@ -186,7 +210,15 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
 - `k-theory` (planned): vector bundles to K-groups, Bott periodicity, Adams operations, Hopf invariant one.
 - `currents` (draft, 1207): finish.
 - `symplectic-geometry` (complete): still to do: toric manifolds and Delzant's theorem,
-  Lagrangian neighbourhood theorem with proof, generating functions.
+  Lagrangian neighbourhood theorem with proof, generating functions; *contact geometry* (contact
+  structures, Darboux, Reeb flows, Weinstein conjecture survey); Gromov's non-squeezing theorem,
+  J-holomorphic curves and Floer homology (Arnold conjecture, survey).
+- Classical differential geometry of *curves and surfaces in R³* (Frenet–Serret, curvature and
+  torsion, first and second fundamental forms, Gauss–Bonnet for surfaces, minimal surfaces) is
+  not in the book as such: add as the first sections of `riemannian-geometry` (or check whether
+  it is scattered there and gather it).
+- `characteristic-classes` / `k-theory`: cobordism, Pontryagin–Thom, signature theorem, exotic
+  spheres (now in the k-theory plan).
 - `elliptic-operators`: still cited, not proved: invariance of H^s under diffeomorphisms for
   non-integer s (Proposition sobolev-sections, Warner). Possible: parametrix and
   pseudodifferential operators (survey).
@@ -200,7 +232,8 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
 - `complex-manifolds`, `kahler`, `kodaira` (complete): Chern connection, Kähler identities.
 - `deformations` (draft): finish.
 - `calabi-yau` (complete, 249, thin): Calabi conjecture (Yau's proof sketch), mirror symmetry
-  (survey); consider merging into `kahler`.
+  (survey); consider merging into `kahler`. *SYZ* (user, 2026-11-08): special Lagrangian
+  fibrations and the Strominger–Yau–Zaslow conjecture go into the new chapter `mirror-symmetry`.
 
 ### XIII. Algebraic and Arithmetic Geometry
 - `varieties`, `schemes` (complete): rebuild to Stacks depth: morphisms (finite, proper, flat,
@@ -210,7 +243,11 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
   points, Jacobians; étale: sites, étale fundamental group, comparison theorems, Weil conjectures).
 - `algebraic-groups`, `intersection-theory` (complete): Chow rings, Grassmannians and Schubert
   calculus, enumerative geometry (27 lines, 2875 lines on the quintic, survey).
-- `algebraic-surfaces` (planned, new).
+- `algebraic-surfaces` (planned, new); plus toric varieties and the minimal model programme (survey).
+- `moduli-spaces` (planned, new): moduli functors, Hilbert and Quot schemes, GIT, M_g and
+  Deligne–Mumford, vector bundles on curves, stacks (survey).
+- `schemes`: derived categories of coherent sheaves, Fourier–Mukai, Bondal–Orlov (or in
+  `mirror-symmetry`); tropical geometry (survey) somewhere in this part.
 - `modular-forms` (planned): modular group, Eisenstein series, q-expansions, Hecke operators,
   L-functions, theta functions and quadratic forms, modular curves.
 - `elliptic-curves-arithmetic` (planned): Mordell–Weil, heights, torsion (Nagell–Lutz, Mazur
@@ -227,8 +264,31 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
   inequalities via Witten deformation in `quantum-mechanics`; supermanifolds, Berezinian, Getzler's
   proof of the index theorem in `spin-geometry`.
 - `classical-mechanics`, `quantum-mechanics`, `general-relativity` (planned, new).
+- `mirror-symmetry` (planned, new, 2026-11-08): Batyrev, Gromov–Witten invariants and quantum
+  cohomology, the quintic prediction, SYZ (special Lagrangian fibrations, T-duality, Gross–Siebert),
+  homological mirror symmetry, TQFT (survey).
 - Later candidates (only if they become real regions): statistical mechanics (Ising model, phase
   transitions), quantum field theory (survey), gauge theory (Yang–Mills, instantons).
+
+## Coverage audit (user, 2026-11-08: "a lot of math I forget, don't make me tell you")
+
+Check the book against the whole of mathematics on my own initiative, using the MSC 2020 top-level
+classes as a checklist, and add missing regions to the plan without being asked. Audit of
+2026-11-08 (done: new chapters above; still to place):
+- 03 logic: *universal algebra* (Birkhoff's HSP theorem), *Boolean algebras and Stone duality*,
+  lattices (06) → sections in `model-theory` or `categories`; homotopy type theory (survey).
+- 18 categories: ∞-categories and higher category theory (survey).
+- 16/17 algebra: quivers and Gabriel's theorem, quantum groups, Hopf algebras, vertex algebras and
+  monstrous moonshine (survey) → `representation-theory`; profinite groups → `groups`.
+- 37 dynamics: holomorphic and hyperbolic dynamics now in `ergodic-theory` (consider renaming it
+  "Dynamical Systems and Ergodic Theory").
+- 60/62: random matrices, large deviations, learning theory now planned; mathematical finance is in
+  `martingales`.
+- 74/76 continuum and fluid mechanics: survey in `sobolev-spaces` (Navier–Stokes listed);
+  statistical mechanics (Ising, phase transitions) and gauge theory remain later candidates.
+- 92/93 biology and control: now in the ODE and calculus-of-variations plans.
+- 01 history: a timeline in the introduction (optional).
+Re-run this audit whenever a part is finished.
 
 ## Phase 0: infrastructure (first)
 
