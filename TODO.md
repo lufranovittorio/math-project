@@ -145,9 +145,12 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
   Moran equation, box and Hausdorff dimension of the Cantor set and the Sierpiński gasket).
 - `distributions` (complete, 496): Schwartz space, tempered distributions, Fourier transform,
   Paley–Wiener, Sobolev embedding (or in sobolev-spaces), fundamental solutions, Malgrange–Ehrenpreis.
-- `harmonic-analysis` (planned): Fourier analysis on locally compact abelian groups, Pontryagin
-  duality, Calderón–Zygmund theory, Hilbert transform, Littlewood–Paley, H^1 and BMO, wavelets,
-  Peter–Weyl and harmonic analysis on compact groups.
+- `harmonic-analysis` (draft 2026-11-08): to deepen: full proofs of Pontryagin duality and
+  Plancherel on LCA groups (needs Gelfand theory in functional-analysis or operator-algebras),
+  Calderón–Zygmund theorem and Mikhlin with complete proofs, general Littlewood–Paley, H^1 and BMO
+  (Fefferman duality, John–Nirenberg), wavelets (Haar, Daubechies), Fatou's theorem, Kolmogorov's
+  weak (1,1), uncertainty principles (Heisenberg, Hardy), Wiener's Tauberian theorem, spherical
+  harmonics / SO(3) and SU(2) worked in full, Heisenberg group and Stone–von Neumann.
 - `operator-algebras` (planned): C*-algebras, Gelfand–Naimark, GNS, von Neumann algebras, the
   bicommutant theorem, factors, K-theory of C*-algebras (survey).
 

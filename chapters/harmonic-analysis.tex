@@ -1,18 +1,843 @@
 \chapter{Harmonic Analysis}\label{harmonic-analysis}
-\chapterstatus{planned}
+\chapterstatus{draft}
 
-Fourier series and integrals in depth: convergence, the $L^p$ theory, singular integrals, and harmonic
-analysis on locally compact abelian groups.
+Harmonic analysis studies functions by decomposing them into simple oscillations: exponentials $e^{2\pi int}$ on the circle, $e^{2\pi ix\xi}$ on the line, characters on an abelian group, matrix
+coefficients of representations on a compact group. The basic facts --- the $L^2$ theory of Fourier series (Chapter~\ref{functional-analysis}), the Fourier transform on Schwartz functions and Plancherel's theorem
+(Chapter~\ref{distributions}), the maximal function (Chapter~\ref{lebesgue-differentiation}) --- are already available. This chapter develops the finer theory.
+\begin{itemize}
+\item Section~\ref{harmonic-analysis:section-fourier-series}: approximate identities, Fej\'er's theorem, the Poisson kernel and the Dirichlet problem, Jordan's convergence theorem, the Gibbs phenomenon, smoothness and decay,
+Bernstein's theorem.
+\item Section~\ref{harmonic-analysis:section-interpolation}: weak $L^p$ spaces, the theorems of Riesz--Thorin and Marcinkiewicz, the Hausdorff--Young and Young inequalities.
+\item Section~\ref{harmonic-analysis:section-conjugate}: the conjugate function, M.\ Riesz's theorem, convergence of Fourier series in $L^p$, the Calder\'on--Zygmund decomposition and singular integrals.
+\item Section~\ref{harmonic-analysis:section-multipliers}: Fourier multipliers, Bernstein's inequality, Littlewood--Paley theory.
+\item Section~\ref{harmonic-analysis:section-compact-groups}: unitary representations of compact groups, Schur orthogonality and the Peter--Weyl theorem.
+\item Section~\ref{harmonic-analysis:section-lca}: locally compact abelian groups, characters, the dual group, Pontryagin duality.
+\item Section~\ref{harmonic-analysis:section-noncompact}: a glimpse of non-compact groups, $\mathrm{SL}_2(\RR)$.
+\end{itemize}
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{measure-theory} (Measure and Integration), Chapter~\ref{functional-analysis} (Functional Analysis) and Chapter~\ref{distributions} (Distributions and Sobolev Spaces).
+\noindent\textbf{Prerequisites.} Chapter~\ref{measure-theory} (Measure and Integration), Chapter~\ref{lebesgue-differentiation} (Differentiation and Absolute Continuity), Chapter~\ref{signed-measures} (Signed and
+Complex Measures), Chapter~\ref{radon-measures} (Radon Measures), Chapter~\ref{complex-analysis} (Complex Analysis), Chapter~\ref{functional-analysis} (Functional Analysis), Chapter~\ref{distributions}
+(Distributions and Sobolev Spaces) and Chapter~\ref{representation-theory} (Representations of Groups and Lie Algebras).
 
-\noindent\textbf{Planned contents.}
+\section{Fourier series}\label{harmonic-analysis:section-fourier-series}
+
+\begin{notation}\label{harmonic-analysis:notation-circle}
+$\mathbb{T} = \RR/\ZZ$ is the circle (the $S^1$ of Chapter~\ref{functional-analysis}), with the Lebesgue measure $dt$ of total mass $1$; functions on $\mathbb{T}$ are functions on $\RR$ of period $1$, and integrals over
+$\mathbb{T}$ are integrals over any interval of length $1$. We write $e_n(t) = e^{2\pi int}$, $\hat f(n) = \int_\mathbb{T}f(t)e^{-2\pi int}\,dt$ for $f \in L^1(\mathbb{T})$, $S_Nf = \sum_{|n| \leq N}\hat f(n)e_n$ for the partial sums of
+the Fourier series, $D_N = \sum_{|n| \leq N}e_n$ for the Dirichlet kernel (Lemma~\ref{functional-analysis:lemma-dirichlet-kernel}) and $\tau_sf(t) = f(t - s)$ for translates. A \emph{trigonometric polynomial} is a finite sum
+$\sum c_ne_n$. Norms $\|\ \|_p$ are those of $L^p(\mathbb{T})$ unless said otherwise.
+\end{notation}
+
+\subsection{Convolution and approximate identities}\label{harmonic-analysis:subsection-convolution}
+
+\begin{definition}\label{harmonic-analysis:definition-convolution-circle}
+For $f, g \in L^1(\mathbb{T})$ the \emph{convolution} is $(f * g)(x) = \int_\mathbb{T}f(x - t)g(t)\,dt$.
+\end{definition}
+
+\begin{proposition}\label{harmonic-analysis:proposition-convolution-circle}
+Let $f \in L^1(\mathbb{T})$ and $g \in L^p(\mathbb{T})$, $1 \leq p \leq \infty$. Then $f * g$ is defined almost everywhere, $f * g = g * f$, $\|f * g\|_p \leq \|f\|_1\|g\|_p$, and $\widehat{f * g}(n) = \hat f(n)\hat g(n)$.
+In particular $S_Nf = D_N * f$.
+\end{proposition}
+
+\begin{proof}
+The substitution $t \mapsto x - t$ gives commutativity. The norm inequality is Minkowski's integral inequality (Theorem~\ref{signed-measures:theorem-minkowski-integral}) applied to $|f(t)||g(x - t)|$, as in
+Remark~\ref{signed-measures:remark-young}, for $p < \infty$, and is clear for $p = \infty$; it shows in particular that the defining integral converges absolutely for almost every $x$. Since $g \in L^1$, Fubini's theorem gives
+$\widehat{f * g}(n) = \int\int f(x - t)e^{-2\pi in(x-t)}g(t)e^{-2\pi int}\,dt\,dx = \hat f(n)\hat g(n)$. Finally $D_N * f = \sum_{|n| \leq N}\int e^{2\pi in(x-t)}f(t)\,dt = S_Nf(x)$.
+\end{proof}
+
+\begin{lemma}\label{harmonic-analysis:lemma-translation-continuous}
+For $1 \leq p < \infty$ and $f \in L^p(\mathbb{T})$, $\|\tau_sf - f\|_p \to 0$ as $s \to 0$. For $f \in C(\mathbb{T})$, $\|\tau_sf - f\|_\infty \to 0$.
+\end{lemma}
+
+\begin{proof}
+A continuous function on $\mathbb{T}$ is uniformly continuous, which is the second claim, and it implies the first for continuous $f$. Continuous functions are dense in $L^p(\mathbb{T})$
+(Lemma~\ref{radon-measures:lemma-radon-approximation}(1)). If $\|f - g\|_p < \varepsilon$ with $g$ continuous, then $\|\tau_sf - f\|_p \leq 2\varepsilon + \|\tau_sg - g\|_p$, since $\tau_s$ preserves norms.
+\end{proof}
+
+\begin{definition}\label{harmonic-analysis:definition-approximate-identity}
+An \emph{approximate identity} on $\mathbb{T}$ is a sequence $(K_n)$ in $L^1(\mathbb{T})$ with
 \begin{enumerate}
-\item Fourier series: Dirichlet and Fej\'er kernels, pointwise convergence, Gibbs phenomenon, Parseval.
-\item The Hardy--Littlewood maximal function; interpolation (Riesz--Thorin, Marcinkiewicz).
-\item The Hilbert transform and Calder\'on--Zygmund singular integrals.
-\item Littlewood--Paley theory and multipliers.
-\item Locally compact abelian groups, Pontryagin duality, Plancherel; the Peter--Weyl theorem for compact groups.
-\item Representations of non-compact groups (survey): unitary representations of $\mathrm{SL}_2(\RR)$, the Plancherel theorem for $\mathrm{SL}_2(\RR)$, automorphic forms as functions on $\Gamma\backslash G$.
-\item Exercises with solutions.
+\item $\int_\mathbb{T}K_n = 1$ for all $n$;
+\item $\sup_n\|K_n\|_1 < \infty$;
+\item $\int_{\delta \leq |t| \leq 1/2}|K_n(t)|\,dt \to 0$ as $n \to \infty$, for every $0 < \delta < \frac12$.
 \end{enumerate}
+The same words are used for a family $(K_r)$ indexed by a real parameter $r \to r_0$.
+\end{definition}
+
+The kernels concentrate their mass near $0$; if they are positive, (2) follows from (1).
+
+\begin{theorem}\label{harmonic-analysis:theorem-approximate-identity}
+Let $(K_n)$ be an approximate identity. For $f \in L^p(\mathbb{T})$, $1 \leq p < \infty$, $K_n * f \to f$ in $L^p$; for $f \in C(\mathbb{T})$, $K_n * f \to f$ uniformly.
+\end{theorem}
+
+\begin{proof}
+By (1), $K_n * f(x) - f(x) = \int K_n(t)(f(x - t) - f(x))\,dt$. By Minkowski's integral inequality (Theorem~\ref{signed-measures:theorem-minkowski-integral}),
+\[
+\|K_n * f - f\|_p \leq \int_{-1/2}^{1/2}|K_n(t)|\,\|\tau_tf - f\|_p\,dt \leq A\sup_{|t| < \delta}\|\tau_tf - f\|_p + 2\|f\|_p\int_{\delta \leq |t| \leq 1/2}|K_n|,
+\]
+with $A = \sup_n\|K_n\|_1$. Given $\varepsilon$, choose $\delta$ with the first term $< \varepsilon$ (Lemma~\ref{harmonic-analysis:lemma-translation-continuous}); the second tends to $0$ by (3). For continuous $f$ the same computation
+works with the supremum norm.
+\end{proof}
+
+\begin{definition}\label{harmonic-analysis:definition-fejer}
+The \emph{Fej\'er means} of $f \in L^1(\mathbb{T})$ are $\sigma_Nf = \frac{1}{N + 1}(S_0f + \cdots + S_Nf) = F_N * f$, where the \emph{Fej\'er kernel} is
+\[
+F_N = \frac{1}{N + 1}\sum_{k=0}^ND_k = \sum_{|n| \leq N}\Bigl(1 - \frac{|n|}{N + 1}\Bigr)e_n.
+\]
+\end{definition}
+
+\begin{proposition}\label{harmonic-analysis:proposition-fejer-kernel}
+$F_N(t) = \frac{1}{N + 1}\Bigl(\frac{\sin((N + 1)\pi t)}{\sin\pi t}\Bigr)^2$ for $t \notin \ZZ$. In particular $F_N \geq 0$, and $(F_N)$ is an approximate identity.
+\end{proposition}
+
+\begin{proof}
+By Lemma~\ref{functional-analysis:lemma-dirichlet-kernel}, $D_k(t) = \sin((2k + 1)\pi t)/\sin\pi t$. From $2\sin x\sin((2k + 1)x) = \cos 2kx - \cos(2k + 2)x$, the sum over $k = 0, \ldots, N$ telescopes to
+$1 - \cos(2(N + 1)x) = 2\sin^2((N + 1)x)$, so $\sum_{k \leq N}\sin((2k + 1)\pi t) = \sin^2((N + 1)\pi t)/\sin\pi t$, which gives the formula. So $F_N \geq 0$ and $\int F_N = \hat F_N(0) = 1$, which gives (1) and (2).
+For $\delta \leq |t| \leq \frac12$, $F_N(t) \leq \frac{1}{(N + 1)\sin^2\pi\delta}$, which gives (3).
+\end{proof}
+
+\begin{theorem}[Fej\'er]\label{harmonic-analysis:theorem-fejer}
+For $f \in C(\mathbb{T})$, $\sigma_Nf \to f$ uniformly; for $f \in L^p(\mathbb{T})$, $1 \leq p < \infty$, $\sigma_Nf \to f$ in $L^p$. Consequently the trigonometric polynomials are dense in $C(\mathbb{T})$ and in $L^p(\mathbb{T})$, and if
+$f \in L^1(\mathbb{T})$ has $\sum_n|\hat f(n)| < \infty$, then $f$ agrees almost everywhere with the continuous function $\sum_n\hat f(n)e_n$.
+\end{theorem}
+
+\begin{proof}
+The first statements are Theorem~\ref{harmonic-analysis:theorem-approximate-identity} with Proposition~\ref{harmonic-analysis:proposition-fejer-kernel}, and $\sigma_Nf$ is a trigonometric polynomial. If $\sum|\hat f(n)| < \infty$, the series
+$g = \sum\hat f(n)e_n$ converges uniformly, so $\sigma_Nf \to g$ uniformly (Ces\`aro means of a convergent sequence converge to the same limit); but $\sigma_Nf \to f$ in $L^1$, so $f = g$ almost everywhere.
+\end{proof}
+
+This was Exercise~\ref{functional-analysis:exercise-fejer}; it gives once more the injectivity of $f \mapsto \hat f$ on $L^1(\mathbb{T})$ (Proposition~\ref{functional-analysis:proposition-riemann-lebesgue}). The contrast with the partial sums is
+instructive: $S_Nf = D_N * f$, but $(D_N)$ is not an approximate identity, since $\|D_N\|_1 \to \infty$, and there are continuous functions whose Fourier series diverge at a point
+(Theorem~\ref{functional-analysis:theorem-divergent-fourier}). Averaging cures the divergence.
+
+\subsection{The Poisson kernel and the Dirichlet problem}\label{harmonic-analysis:subsection-poisson}
+
+\begin{definition}\label{harmonic-analysis:definition-poisson-kernel}
+For $0 \leq r < 1$ the \emph{Poisson kernel} is
+\[
+P_r(t) = \sum_{n \in \ZZ}r^{|n|}e^{2\pi int} = \frac{1 - r^2}{1 - 2r\cos 2\pi t + r^2}.
+\]
+\end{definition}
+
+The two expressions agree: with $z = re^{2\pi it}$, the series is $\sum_{n \geq 0}z^n + \sum_{n \geq 1}\bar z^n = \operatorname{Re}\frac{1 + z}{1 - z} = \frac{1 - |z|^2}{|1 - z|^2}$.
+
+\begin{theorem}[The Dirichlet problem on the disc]\label{harmonic-analysis:theorem-dirichlet-problem}
+$(P_r)_{r \to 1}$ is a positive approximate identity. For $f \in C(\mathbb{T})$, the function $u$ on the closed unit disc defined by $u(re^{2\pi it}) = (P_r * f)(t)$ for $r < 1$ and $u(e^{2\pi it}) = f(t)$ is continuous, and harmonic
+in the open disc. For $f \in L^p(\mathbb{T})$, $1 \leq p < \infty$, $P_r * f \to f$ in $L^p$ as $r \to 1$.
+\end{theorem}
+
+\begin{proof}
+$P_r > 0$ and $\int P_r = 1$. For $\delta \leq |t| \leq \frac12$, $1 - 2r\cos 2\pi t + r^2 = (1 - r)^2 + 2r(1 - \cos 2\pi t) \geq 2r(1 - \cos 2\pi\delta)$, so $P_r(t) \leq \frac{1 - r^2}{2r(1 - \cos 2\pi\delta)} \to 0$. So
+Theorem~\ref{harmonic-analysis:theorem-approximate-identity} applies (to every sequence $r_k \to 1$). With $z = re^{2\pi it}$,
+$u(z) = \hat f(0) + \sum_{n \geq 1}\hat f(n)z^n + \sum_{n \geq 1}\hat f(-n)\bar z^n$, the series converging absolutely and locally uniformly in $|z| < 1$ since $|\hat f(n)| \leq \|f\|_1$. So $u = F + \overline{G}$ with $F$, $G$
+holomorphic, and $u$ is harmonic by Corollary~\ref{complex-analysis:corollary-smooth-harmonic}. Continuity at the boundary: $|u(re^{2\pi it}) - f(t_0)| \leq \|P_r * f - f\|_\infty + |f(t) - f(t_0)|$, which is small when $r$ is close
+to $1$ and $t$ close to $t_0$.
+\end{proof}
+
+\begin{remark}\label{harmonic-analysis:remark-poisson}
+The solution is unique, by the maximum principle for harmonic functions. In complex form, $u(z) = \int_\mathbb{T}\frac{1 - |z|^2}{|e^{2\pi it} - z|^2}f(t)\,dt$, and for $f$ real, $u = \operatorname{Re}F$ with
+$F(z) = \int_\mathbb{T}\frac{e^{2\pi it} + z}{e^{2\pi it} - z}f(t)\,dt$ (the \emph{Herglotz} or \emph{Schwarz} integral). The imaginary part of $F$ is the harmonic conjugate of $u$, whose boundary values are the conjugate function of
+Section~\ref{harmonic-analysis:section-conjugate}. Fatou's theorem says that for $f \in L^1$, $P_r * f(t) \to f(t)$ for almost every $t$, and even nontangentially \cite{katznelson-harmonic}.
+\end{remark}
+
+\subsection{Pointwise convergence}\label{harmonic-analysis:subsection-pointwise}
+
+Continuity is not enough for convergence of the Fourier series at a point. Bounded variation is. We need two elementary lemmas.
+
+\begin{lemma}[Second mean value inequality]\label{harmonic-analysis:lemma-second-mean-value}
+Let $g \colon [a, b] \to [0, \infty)$ be increasing and $\varphi \in L^1[a, b]$, and put $\Phi(s) = \int_s^b\varphi$. Then $\bigl|\int_a^bg\varphi\bigr| \leq g(b)\sup_{a \leq s \leq b}|\Phi(s)|$.
+\end{lemma}
+
+\begin{proof}
+\emph{Step functions.} Let $s = \sum_{i=1}^mc_i\mathbf{1}_{I_i}$, where $I_1, \ldots, I_m$ are consecutive intervals partitioning $[a, b]$, with left endpoints $t_1 < \cdots < t_m$, and $0 \leq c_1 \leq \cdots \leq c_m$. With $c_0 = 0$,
+$s = \sum_i(c_i - c_{i-1})\mathbf{1}_{[t_i, b]}$ almost everywhere, so $\bigl|\int s\varphi\bigr| = \bigl|\sum_i(c_i - c_{i-1})\Phi(t_i)\bigr| \leq c_m\sup|\Phi|$.
+\emph{Approximation.} Let $g_k = \frac1k\lfloor kg\rfloor$. It is increasing with finitely many values, so of the previous form (its level sets are intervals), $0 \leq g_k \leq g \leq g(b)$ and $|g - g_k| \leq \frac1k$. So
+$\bigl|\int g_k\varphi\bigr| \leq g(b)\sup|\Phi|$, and $\int g_k\varphi \to \int g\varphi$.
+\end{proof}
+
+\begin{lemma}\label{harmonic-analysis:lemma-sine-integral}
+The \emph{sine integral} $\operatorname{Si}(x) = \int_0^x\frac{\sin u}{u}\,du$ satisfies $0 \leq \operatorname{Si}(x) \leq \operatorname{Si}(\pi)$ for $x \geq 0$. Hence $\bigl|\int_a^b\frac{\sin u}{u}du\bigr| \leq 2\operatorname{Si}(\pi)$ for
+$0 \leq a < b$, and the Dirichlet kernels satisfy $\sup_{N,\,0 < s < \delta \leq 1/2}\bigl|\int_s^\delta D_N\bigr| < \infty$.
+\end{lemma}
+
+\begin{proof}
+The integrals $a_k = \int_{k\pi}^{(k+1)\pi}\frac{\sin u}{u}du$ alternate in sign and $|a_k|$ decreases, since $|\sin|$ has period $\pi$ and $\frac1u$ decreases. So $\operatorname{Si}$ increases on $[0, \pi]$ and the partial
+sums of $\sum a_k$ lie between $0$ and $a_0 = \operatorname{Si}(\pi)$; between consecutive multiples of $\pi$, $\operatorname{Si}$ is monotone, which gives the bounds. For the last claim, with $M = 2N + 1$,
+$D_N(t) = \frac{\sin M\pi t}{\pi t} + \sin(M\pi t)\,\rho(t)$, where $\rho(t) = \frac{1}{\sin\pi t} - \frac{1}{\pi t}$ extends continuously to $[0, \frac12]$ (with $\rho(0) = 0$) and so is bounded by some $c$. Hence
+$\bigl|\int_s^\delta D_N\bigr| \leq \frac1\pi\bigl|\int_{M\pi s}^{M\pi\delta}\frac{\sin u}{u}du\bigr| + \frac c2 \leq \frac{2\operatorname{Si}(\pi)}{\pi} + \frac c2$.
+\end{proof}
+
+\begin{theorem}[Dirichlet--Jordan]\label{harmonic-analysis:theorem-jordan}
+Let $f \in L^1(\mathbb{T})$ be of bounded variation on $[0, 1]$. Then for every $x$, $S_Nf(x) \to \frac12\bigl(f(x+) + f(x-)\bigr)$. In particular the Fourier series of a piecewise continuously differentiable function
+converges to $f$ at every point of continuity and to the mean of the one-sided limits at the jumps.
+\end{theorem}
+
+\begin{proof}
+\emph{Reduction.} Since $D_N$ is even with $\int_0^{1/2}D_N = \frac12$,
+\[
+S_Nf(x) - \tfrac12\bigl(f(x+) + f(x-)\bigr) = \int_0^{1/2}h(t)D_N(t)\,dt, \qquad h(t) = f(x + t) + f(x - t) - f(x+) - f(x-).
+\]
+$h$ is of bounded variation on $(0, \frac12]$ with $h(0+) = 0$. Its variation function $V(t)$ on $(0, t]$ is increasing, and $V(0+) = 0$, since every partition of $(0, \frac12]$ lies in some $[t_0, \frac12]$ with $t_0 > 0$, so
+the variation on $[t, \frac12]$ tends to $V(\frac12)$. So $h = V - (V - h)$ is a difference of nonnegative increasing functions vanishing at $0+$ (note $V \geq |h|$) (Section~\ref{lebesgue-differentiation:subsection-bv}). It suffices to show
+$\int_0^{1/2}gD_N \to 0$ for every increasing $g \geq 0$ on $(0, \frac12]$ with $g(0+) = 0$.
+\emph{Near $0$.} Let $\varepsilon > 0$ and $\delta$ with $g(\delta) < \varepsilon$. By Lemma~\ref{harmonic-analysis:lemma-second-mean-value} on $[s, \delta]$ and Lemma~\ref{harmonic-analysis:lemma-sine-integral},
+$\bigl|\int_s^\delta gD_N\bigr| \leq C\varepsilon$ for all $s > 0$ and $N$, with $C$ independent of $N$; let $s \to 0$.
+\emph{Away from $0$.} Writing $\sin((2N + 1)\pi t) = \sin(2\pi Nt)\cos\pi t + \cos(2\pi Nt)\sin\pi t$,
+$\int_\delta^{1/2}gD_N = \int_\delta^{1/2}g(t)\cot(\pi t)\sin(2\pi Nt)\,dt + \int_\delta^{1/2}g(t)\cos(2\pi Nt)\,dt$. Both are combinations of Fourier coefficients at $\pm N$ of integrable functions on $\mathbb{T}$, so they tend
+to $0$ by the Riemann--Lebesgue lemma (Proposition~\ref{functional-analysis:proposition-riemann-lebesgue}). Hence $\limsup_N\bigl|\int_0^{1/2}gD_N\bigr| \leq C\varepsilon$.
+\end{proof}
+
+\begin{example}[The Gibbs phenomenon]\label{harmonic-analysis:example-gibbs}
+Let $s(t) = \frac12 - t$ for $0 < t < 1$, extended with period $1$ (a \emph{sawtooth}), with a jump of size $1$ at the integers: $s(0+) = \frac12$, $s(0-) = -\frac12$. Integrating by parts, $\hat s(0) = 0$ and
+$\hat s(n) = \frac{1}{2\pi in}$ for $n \neq 0$, so
+\[
+S_Ns(t) = \sum_{n=1}^N\frac{\sin 2\pi nt}{\pi n}.
+\]
+By Theorem~\ref{harmonic-analysis:theorem-jordan}, $S_Ns(t) \to s(t)$ for $t \notin \ZZ$ and $S_Ns(0) = 0$. But at $t = \frac{1}{2N}$,
+\[
+S_Ns\Bigl(\frac{1}{2N}\Bigr) = \sum_{n=1}^N\frac1N\cdot\frac{\sin(\pi n/N)}{\pi n/N} \to \int_0^1\frac{\sin\pi u}{\pi u}du = \frac{\operatorname{Si}(\pi)}{\pi} = 0.58949\ldots,
+\]
+a Riemann sum of a continuous function. So the partial sums overshoot the limit value $\frac12$ by about $0.0895$, roughly $9\%$ of the jump, at points that approach the jump: the convergence is not uniform near a
+discontinuity, and the overshoot does not shrink. Subtracting multiples of translated sawtooths shows that the same happens at every jump of a piecewise smooth function
+(Exercise~\ref{harmonic-analysis:exercise-gibbs-general}). Gibbs explained the phenomenon in 1899, after Michelson's harmonic analyser had displayed it; Wilbraham had found it in 1848.
+\end{example}
+
+\begin{counterexample}\label{harmonic-analysis:counterexample-continuity-not-enough}
+The hypothesis of bounded variation cannot be replaced by continuity: by Theorem~\ref{functional-analysis:theorem-divergent-fourier} there are continuous functions whose Fourier series diverge at $0$. Kolmogorov even found
+$f \in L^1(\mathbb{T})$ whose Fourier series diverges almost everywhere \cite{kolmogorov-1923} (later everywhere), while for $f \in L^p$, $p > 1$, the series converges almost everywhere (Carleson for $p = 2$
+\cite{carleson-1966}, Hunt for $p > 1$).
+\end{counterexample}
+
+\subsection{Smoothness and decay}\label{harmonic-analysis:subsection-smoothness}
+
+\begin{proposition}\label{harmonic-analysis:proposition-smoothness-decay}
+\begin{enumerate}
+\item If $f \in C^k(\mathbb{T})$, then $\widehat{f^{(k)}}(n) = (2\pi in)^k\hat f(n)$, so $|n|^k\hat f(n) \to 0$.
+\item If $f$ is continuous and piecewise continuously differentiable, then $\sum_n|\hat f(n)| < \infty$, and the Fourier series converges to $f$ uniformly.
+\item If $|\hat f(n)| \leq C(1 + |n|)^{-k-2}$, then $f$ agrees almost everywhere with a function in $C^k(\mathbb{T})$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) Integration by parts, without boundary terms by periodicity, and Riemann--Lebesgue. (2) The same integration by parts on each piece, the boundary terms cancelling by continuity, gives
+$\widehat{f^{\prime}}(n) = 2\pi in\hat f(n)$. By Cauchy--Schwarz and Parseval (Example~\ref{functional-analysis:example-fourier}),
+$\sum_{n \neq 0}|\hat f(n)| \leq \bigl(\sum_n|\widehat{f^{\prime}}(n)|^2\bigr)^{1/2}\bigl(\sum_{n \neq 0}(2\pi n)^{-2}\bigr)^{1/2} < \infty$, and Theorem~\ref{harmonic-analysis:theorem-fejer} identifies the uniformly convergent sum with $f$.
+(3) The series $\sum\hat f(n)(2\pi in)^je_n$, $j \leq k$, converge uniformly, so $\sum\hat f(n)e_n$ can be differentiated $k$ times termwise; by Theorem~\ref{harmonic-analysis:theorem-fejer} it equals $f$ almost everywhere.
+\end{proof}
+
+So smoothness of $f$ is decay of $\hat f$, up to a loss of a little more than one derivative. The sawtooth of Example~\ref{harmonic-analysis:example-gibbs} shows that decay like $1/|n|$ is compatible with discontinuities.
+A sharper result is due to Bernstein.
+
+\begin{theorem}[Bernstein]\label{harmonic-analysis:theorem-bernstein}
+If $f$ is H\"older continuous of exponent $\alpha > \frac12$, that is $|f(x) - f(y)| \leq C|x - y|^\alpha$, then $\sum_n|\hat f(n)| < \infty$.
+\end{theorem}
+
+\begin{proof}
+For $h > 0$ let $g_h(x) = f(x + h) - f(x - h)$; then $\hat g_h(n) = 2i\sin(2\pi nh)\hat f(n)$ and $|g_h| \leq C(2h)^\alpha$. By Parseval, $\sum_n4\sin^2(2\pi nh)|\hat f(n)|^2 = \|g_h\|_2^2 \leq C^2(2h)^{2\alpha}$.
+For $j \geq 0$ take $h = 2^{-j-3}$. For $2^j \leq |n| < 2^{j+1}$, $2\pi|n|h \in [\frac\pi4, \frac\pi2)$, so $\sin^2(2\pi nh) \geq \frac12$ and $\sum_{2^j \leq |n| < 2^{j+1}}|\hat f(n)|^2 \leq \frac{C^2}{2}2^{-2\alpha(j+2)}$. By
+Cauchy--Schwarz, as the block has $2^{j+1}$ terms,
+\[
+\sum_{2^j \leq |n| < 2^{j+1}}|\hat f(n)| \leq 2^{(j+1)/2}\cdot\frac{C}{\sqrt2}2^{-\alpha(j+2)} \leq C\,2^{j(1/2 - \alpha)},
+\]
+which is summable over $j$ because $\alpha > \frac12$.
+\end{proof}
+
+\begin{remark}\label{harmonic-analysis:remark-bernstein-sharp}
+The exponent $\frac12$ is sharp: the Hardy--Littlewood series $\sum_{n \geq 1}\frac{e^{in\log n}}{n}e^{2\pi int}$ converges uniformly to a function in the H\"older class of exponent $\frac12$, but $\sum\frac1n = \infty$
+\cite{zygmund-trigonometric}. The functions with absolutely convergent Fourier series form an algebra $A(\mathbb{T})$ under pointwise multiplication (the coefficients convolve), and \emph{Wiener's lemma} says that if $f \in A(\mathbb{T})$
+has no zeros then $1/f \in A(\mathbb{T})$; Gelfand's proof via Banach algebras is one of the first triumphs of that theory \cite{katznelson-harmonic}. Fourier series also give the cleanest proofs of Weyl's equidistribution
+theorem (Chapter~\ref{continued-fractions}).
+\end{remark}
+
+\section{Interpolation of operators}\label{harmonic-analysis:section-interpolation}
+
+Many operators of analysis are easy to bound on $L^1$, $L^2$ or $L^\infty$, and the question is what happens in between. Throughout, $(X, \mu)$ and $(Y, \nu)$ are $\sigma$-finite measure spaces, and $p^{\prime}$ is the
+conjugate exponent of $p$.
+
+\begin{definition}\label{harmonic-analysis:definition-weak-lp}
+For a measurable $f$ on $X$, the \emph{distribution function} is $\lambda_f(t) = \mu(\{|f| > t\})$, $t > 0$. For $0 < p < \infty$, \emph{weak $L^p$} is the space $L^{p,\infty}(X)$ of $f$ with
+\[
+\|f\|_{p,\infty} = \sup_{t > 0}t\,\lambda_f(t)^{1/p} < \infty.
+\]
+An operator $T$ from a space of functions on $X$ to measurable functions on $Y$ is \emph{sublinear} if $|T(f + g)| \leq |Tf| + |Tg|$ and $|T(cf)| = |c||Tf|$. It is of \emph{strong type} $(p, q)$ if
+$\|Tf\|_q \leq A\|f\|_p$, and of \emph{weak type} $(p, q)$, $q < \infty$, if $\|Tf\|_{q,\infty} \leq A\|f\|_p$, that is $\nu(\{|Tf| > t\}) \leq (A\|f\|_p/t)^q$. Weak type $(p, \infty)$ means strong type $(p, \infty)$.
+\end{definition}
+
+\begin{notation}\label{harmonic-analysis:notation-interpolation}
+$\|\ \|_p$ is the norm of $L^p$, $\|\ \|_{p,\infty}$ the quasi-norm of weak $L^p$ (it satisfies the triangle inequality only up to a factor $2$). For $0 < \theta < 1$ and exponents $p_0$, $p_1$, $p_\theta$ is defined by
+$\frac{1}{p_\theta} = \frac{1 - \theta}{p_0} + \frac{\theta}{p_1}$, with $\frac1\infty = 0$.
+\end{notation}
+
+By Chebyshev's inequality, $t\lambda_f(t)^{1/p} \leq \|f\|_p$, so $L^p \subseteq L^{p,\infty}$ and strong type implies weak type.
+
+\begin{example}\label{harmonic-analysis:example-weak-lp}
+On $\RR^n$, $f(x) = |x|^{-n/p}$ has $\lambda_f(t) = \lambda(B(0, t^{-p/n})) = c_nt^{-p}$, so $f \in L^{p,\infty}$ but $f \notin L^p$, as $\int|f|^p = \int|x|^{-n} = \infty$. The Hardy--Littlewood maximal operator is of weak
+type $(1, 1)$ (Theorem~\ref{lebesgue-differentiation:theorem-maximal-inequality}) but not of strong type $(1, 1)$: $M\mathbf{1}_{[0,1]}(x) \geq \frac{1}{2|x|}$ for $|x| \geq 1$, which is not integrable.
+\end{example}
+
+\begin{lemma}[Three lines lemma]\label{harmonic-analysis:lemma-three-lines}
+Let $F$ be bounded and continuous on the strip $\{0 \leq \operatorname{Re}z \leq 1\}$ and holomorphic in its interior, with $|F| \leq M_0$ on $\operatorname{Re}z = 0$ and $|F| \leq M_1$ on $\operatorname{Re}z = 1$. Then
+$|F(z)| \leq M_0^{1-\theta}M_1^\theta$ for $\operatorname{Re}z = \theta$.
+\end{lemma}
+
+\begin{proof}
+Replacing $M_j$ by $M_j + \eta$ and letting $\eta \to 0$ at the end, we may assume $M_0, M_1 > 0$. For $\varepsilon > 0$ let $G(z) = F(z)M_0^{z-1}M_1^{-z}e^{\varepsilon(z^2 - 1)}$. For $z = x + iy$ in the strip,
+$|M_0^{z-1}M_1^{-z}| = M_0^{x-1}M_1^{-x}$ and $|e^{\varepsilon(z^2 - 1)}| = e^{\varepsilon(x^2 - y^2 - 1)} \leq e^{-\varepsilon y^2}$, so $|G| \leq 1$ on the boundary lines and $G \to 0$ as $|y| \to \infty$. By the maximum
+modulus principle (Theorem~\ref{complex-analysis:theorem-maximum-modulus}) on the rectangles $[0, 1] \times [-R, R]$ with $R$ large, $|G| \leq 1$ on the strip. Letting $\varepsilon \to 0$ gives
+$|F(z)| \leq M_0^{1-x}M_1^x$.
+\end{proof}
+
+\begin{theorem}[Riesz--Thorin]\label{harmonic-analysis:theorem-riesz-thorin}
+Let $1 \leq p_0, p_1, q_0, q_1 \leq \infty$, and let $T$ be a linear map from the simple functions on $X$ with support of finite measure to measurable functions on $Y$ such that
+$\|Tf\|_{q_0} \leq M_0\|f\|_{p_0}$ and $\|Tf\|_{q_1} \leq M_1\|f\|_{p_1}$. Then for $0 < \theta < 1$,
+\[
+\|Tf\|_{q_\theta} \leq M_0^{1-\theta}M_1^\theta\|f\|_{p_\theta}.
+\]
+If $p_\theta < \infty$, $T$ extends uniquely to a bounded operator $L^{p_\theta}(X) \to L^{q_\theta}(Y)$ with the same bound.
+\end{theorem}
+
+\begin{proof}
+Write $p = p_\theta$, $q = q_\theta$. Fix a simple $f$ with $\|f\|_p = 1$; then $Tf \in L^{q_0} \cap L^{q_1} \subseteq L^q$ (Proposition~\ref{measure-theory:proposition-lp-interpolation}). By duality
+(Theorem~\ref{signed-measures:theorem-lp-duality} and density of simple functions) $\|Tf\|_q = \sup|\int Tf\cdot g\,d\nu|$ over simple $g$ with $\|g\|_{q^{\prime}} = 1$. Write $f = \sum_ja_je^{i\alpha_j}\mathbf{1}_{A_j}$ and
+$g = \sum_kb_ke^{i\beta_k}\mathbf{1}_{B_k}$ with $a_j, b_k > 0$ and disjoint sets of finite measure. Define, for $z$ in the strip,
+\[
+\alpha(z) = p\Bigl(\frac{1 - z}{p_0} + \frac{z}{p_1}\Bigr), \quad \beta(z) = q^{\prime}\Bigl(\frac{1 - z}{q_0^{\prime}} + \frac{z}{q_1^{\prime}}\Bigr), \quad f_z = \sum_ja_j^{\alpha(z)}e^{i\alpha_j}\mathbf{1}_{A_j}, \quad
+g_z = \sum_kb_k^{\beta(z)}e^{i\beta_k}\mathbf{1}_{B_k},
+\]
+with the convention $f_z = f$ if $p = \infty$ and $g_z = g$ if $q^{\prime} = \infty$. Then
+\[
+F(z) = \int T(f_z)g_z\,d\nu = \sum_{j,k}a_j^{\alpha(z)}b_k^{\beta(z)}e^{i(\alpha_j + \beta_k)}\int T(\mathbf{1}_{A_j})\mathbf{1}_{B_k}\,d\nu
+\]
+is entire and bounded on the strip, and $F(\theta) = \int Tf\cdot g$, since $\alpha(\theta) = \beta(\theta) = 1$. On $\operatorname{Re}z = 0$, $|f_z| = |f|^{p/p_0}$ and $|g_z| = |g|^{q^{\prime}/q_0^{\prime}}$, so
+$\|f_z\|_{p_0} = 1 = \|g_z\|_{q_0^{\prime}}$ (also when $p_0$ or $q_0^{\prime}$ is infinite) and $|F(z)| \leq \|T(f_z)\|_{q_0}\|g_z\|_{q_0^{\prime}} \leq M_0$ by H\"older's inequality. Likewise $|F| \leq M_1$ on $\operatorname{Re}z = 1$.
+The three lines lemma gives $|\int Tf\cdot g| \leq M_0^{1-\theta}M_1^\theta$. Taking the supremum over $g$ proves the inequality; the extension follows from the density of simple functions in $L^p$ for $p < \infty$.
+\end{proof}
+
+\begin{corollary}[Hausdorff--Young]\label{harmonic-analysis:corollary-hausdorff-young}
+Let $1 \leq p \leq 2$.
+\begin{enumerate}
+\item For $f \in L^p(\mathbb{T})$, $\bigl(\sum_n|\hat f(n)|^{p^{\prime}}\bigr)^{1/p^{\prime}} \leq \|f\|_p$.
+\item The Fourier transform extends from $\mathcal{S}(\RR^n)$ to a bounded operator $L^p(\RR^n) \to L^{p^{\prime}}(\RR^n)$ with $\|\hat f\|_{p^{\prime}} \leq \|f\|_p$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(1) The map $f \mapsto \hat f$ into functions on $\ZZ$ with counting measure has norm $\leq 1$ from $L^1$ to $\ell^\infty$ and from $L^2$ to $\ell^2$ (Parseval). Interpolate with $\frac1p = \frac{1 - \theta}{1} + \frac\theta2$, so that
+$\frac{1}{q_\theta} = \frac\theta2 = 1 - \frac1p$. (2) The same, with $\|\hat f\|_\infty \leq \|f\|_1$ and Plancherel's theorem (Theorem~\ref{distributions:theorem-fourier-schwartz}(3)), for simple functions; the
+extension agrees with the $L^2$ Fourier transform on $L^p \cap L^2$.
+\end{proof}
+
+\begin{corollary}[Young's inequality]\label{harmonic-analysis:corollary-young}
+Let $1 \leq p, q, r \leq \infty$ with $1 + \frac1r = \frac1p + \frac1q$. For $f \in L^p(\RR^n)$ and $g \in L^q(\RR^n)$, $f * g$ is defined almost everywhere and $\|f * g\|_r \leq \|f\|_p\|g\|_q$. The same holds on $\mathbb{T}$.
+\end{corollary}
+
+\begin{proof}
+Fix $g \in L^q$. The map $f \mapsto f * g$ is bounded $L^1 \to L^q$ with norm $\leq \|g\|_q$ (Proposition~\ref{harmonic-analysis:proposition-convolution-circle} and Remark~\ref{signed-measures:remark-young}) and $L^{q^{\prime}} \to L^\infty$ with
+norm $\leq \|g\|_q$ (H\"older). With $\frac1p = (1 - \theta) + \frac{\theta}{q^{\prime}} = 1 - \frac\theta q$ and $\frac1r = \frac{1 - \theta}{q}$, Riesz--Thorin gives the bound for simple $f$, and
+$\frac1p + \frac1q - 1 = \frac{1 - \theta}{q} = \frac1r$. Applying the result to $|f|$ and $|g|$ shows that the integral converges absolutely almost everywhere; the cases $p = 1$ or $q = 1$ (where $\theta$ is $0$ or $1$) are
+the endpoint bounds.
+\end{proof}
+
+\begin{counterexample}\label{harmonic-analysis:counterexample-hausdorff-young}
+There is no Hausdorff--Young inequality for $p > 2$: there are continuous functions $f$ on $\mathbb{T}$ with $\sum_n|\hat f(n)|^{q} = \infty$ for every $q < 2$ (de Leeuw, Kahane, Katznelson), so no bound
+$\|\hat f\|_{\ell^{p^{\prime}}} \leq C\|f\|_p$ with $p^{\prime} < 2$ can hold \cite{katznelson-harmonic}. Riesz--Thorin also fails for sublinear operators without further hypotheses, which is why the next theorem
+is useful.
+\end{counterexample}
+
+\begin{theorem}[Marcinkiewicz]\label{harmonic-analysis:theorem-marcinkiewicz}
+Let $1 \leq p_0 < p_1 \leq \infty$ and let $T$ be a sublinear operator defined on $L^{p_0}(X) + L^{p_1}(X)$, of weak type $(p_0, p_0)$ with constant $A_0$ and of weak type $(p_1, p_1)$ with constant $A_1$. Then for
+$p_0 < p < p_1$, $T$ is of strong type $(p, p)$:
+\[
+\|Tf\|_p \leq C\|f\|_p, \qquad C^p = p\Bigl(\frac{(2A_0)^{p_0}}{p - p_0} + \frac{(2A_1)^{p_1}}{p_1 - p}\Bigr) \text{ if } p_1 < \infty, \qquad C^p = \frac{p\,(2A_0)^{p_0}(2A_1)^{p - p_0}}{p - p_0} \text{ if } p_1 = \infty.
+\]
+\end{theorem}
+
+\begin{proof}
+Let $f \in L^p$, $t > 0$ and $\gamma > 0$, and split $f = f_0 + f_1$ with $f_0 = f\mathbf{1}_{\{|f| > \gamma t\}}$ and $f_1 = f\mathbf{1}_{\{|f| \leq \gamma t\}}$. Then $f_0 \in L^{p_0}$ and $f_1 \in L^{p_1}$, since
+$|f_0|^{p_0} \leq |f|^p(\gamma t)^{p_0 - p}$ and $|f_1|^{p_1} \leq |f|^p(\gamma t)^{p_1 - p}$. By sublinearity $\{|Tf| > t\} \subseteq \{|Tf_0| > t/2\} \cup \{|Tf_1| > t/2\}$. By the layer cake formula
+(Proposition~\ref{measure-theory:proposition-layer-cake}) applied to $|Tf|^p$, $\|Tf\|_p^p = p\int_0^\infty t^{p-1}\nu(\{|Tf| > t\})\,dt$.
+\emph{Case $p_1 < \infty$, $\gamma = 1$.} The weak type bounds give
+\[
+\|Tf\|_p^p \leq p\int_0^\infty t^{p-1}\Bigl(\frac{2A_0}{t}\Bigr)^{p_0}\int_{\{|f| > t\}}|f|^{p_0}\,d\mu\,dt + p\int_0^\infty t^{p-1}\Bigl(\frac{2A_1}{t}\Bigr)^{p_1}\int_{\{|f| \leq t\}}|f|^{p_1}\,d\mu\,dt.
+\]
+By Tonelli, the first term is $p(2A_0)^{p_0}\int|f|^{p_0}\int_0^{|f|}t^{p-1-p_0}dt\,d\mu = \frac{p(2A_0)^{p_0}}{p - p_0}\|f\|_p^p$, and the second is
+$p(2A_1)^{p_1}\int|f|^{p_1}\int_{|f|}^\infty t^{p-1-p_1}dt\,d\mu = \frac{p(2A_1)^{p_1}}{p_1 - p}\|f\|_p^p$.
+\emph{Case $p_1 = \infty$, $\gamma = (2A_1)^{-1}$.} Now $\|Tf_1\|_\infty \leq A_1\gamma t = t/2$, so $\{|Tf| > t\} \subseteq \{|Tf_0| > t/2\}$, and as before
+$\|Tf\|_p^p \leq p(2A_0)^{p_0}\int|f|^{p_0}\int_0^{|f|/\gamma}t^{p-1-p_0}dt\,d\mu = \frac{p(2A_0)^{p_0}}{p - p_0}\gamma^{p_0 - p}\|f\|_p^p$.
+\end{proof}
+
+Applied to the maximal operator, which is of weak type $(1, 1)$ and strong type $(\infty, \infty)$, this reproves Corollary~\ref{lebesgue-differentiation:corollary-maximal-lp}, and in fact that proof was this argument in
+disguise. The general Marcinkiewicz theorem allows $T$ to change the exponent, $(p_0, q_0)$ and $(p_1, q_1)$ with $p_j \leq q_j$ \cite{grafakos-classical}.
+
+\section{The conjugate function and singular integrals}\label{harmonic-analysis:section-conjugate}
+
+\begin{definition}\label{harmonic-analysis:definition-conjugate}
+For $f \in L^2(\mathbb{T})$ the \emph{conjugate function} is $\tilde f = \sum_n(-i\operatorname{sgn}n)\hat f(n)e_n$ (with $\operatorname{sgn}0 = 0$), and the \emph{Riesz projection} is $Pf = \sum_{n \geq 0}\hat f(n)e_n$.
+\end{definition}
+
+So $\cos 2\pi nt$ has conjugate $\sin 2\pi nt$ (Exercise~\ref{harmonic-analysis:exercise-conjugate-trigonometric}), $\|\tilde f\|_2 \leq \|f\|_2$, $f + i\tilde f = 2Pf - \hat f(0)$, and $\tilde f$ is real when $f$ is real, since then
+$\hat f(-n) = \overline{\hat f(n)}$. By Remark~\ref{harmonic-analysis:remark-poisson}, $\tilde f$ is the boundary value of the harmonic conjugate of the Poisson integral of $f$: $f + i\tilde f$ is the boundary value of a holomorphic
+function on the disc.
+
+\begin{theorem}[M.\ Riesz]\label{harmonic-analysis:theorem-riesz-conjugate}
+For $1 < p < \infty$ there is $C_p$ with $\|\tilde f\|_p \leq C_p\|f\|_p$ for $f \in L^2 \cap L^p(\mathbb{T})$; so $f \mapsto \tilde f$ and $P$ extend to bounded operators on $L^p(\mathbb{T})$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: $p = 2k$, trigonometric polynomials.} Let $f$ be a real trigonometric polynomial with $\hat f(0) = 0$. Then $F = f + i\tilde f = 2\sum_{n > 0}\hat f(n)e_n$, so $F^{2k}$ has only positive frequencies and
+$\int_\mathbb{T}F^{2k} = 0$. Taking real parts, as $f$ and $\tilde f$ are real, $\sum_{m=0}^k\binom{2k}{2m}(-1)^m\int f^{2k-2m}\tilde f^{2m} = 0$. Isolating $m = k$ and using H\"older's inequality with exponents
+$\frac{2k}{2k - 2m}$ and $\frac{2k}{2m}$,
+\[
+\|\tilde f\|_{2k}^{2k} \leq \sum_{m<k}\binom{2k}{2m}\|f\|_{2k}^{2k-2m}\|\tilde f\|_{2k}^{2m}.
+\]
+If $R = \|\tilde f\|_{2k}/\|f\|_{2k} > 1$, this gives $R^{2k} \leq R^{2k-2}\sum_m\binom{2k}{2m} \leq 4^kR^{2k-2}$, so $R \leq 2^k$ in all cases. For a real trigonometric polynomial with $\hat f(0) \neq 0$, apply this to
+$f - \hat f(0)$, whose norm is at most $2\|f\|_{2k}$; for a complex one, to its real and imaginary parts. So $\|\tilde f\|_{2k} \leq 2^{k+2}\|f\|_{2k}$.
+\emph{Step 2: $p = 2k$, all $f$.} For $f \in L^{2k}$ the Fej\'er means $\sigma_Nf$ converge to $f$ in $L^{2k}$, hence in $L^2$ (Theorem~\ref{harmonic-analysis:theorem-fejer}); so $\widetilde{\sigma_Nf} \to \tilde f$ in $L^2$, and by Step 1
+it is a Cauchy sequence in $L^{2k}$; its $L^{2k}$-limit is $\tilde f$, and the bound passes to the limit.
+\emph{Step 3: $2 \leq p < \infty$.} If $2k \leq p \leq 2k + 2$, Riesz--Thorin (Theorem~\ref{harmonic-analysis:theorem-riesz-thorin}) between $(2k, 2k)$ and $(2k + 2, 2k + 2)$ applies to simple functions, which lie in $L^2$; density gives
+the bound on $L^p$.
+\emph{Step 4: $1 < p < 2$, by duality.} For $f, g \in L^2$, Parseval gives $\int\tilde f\bar g = -\int f\overline{\tilde g}$, because $\overline{-i\operatorname{sgn}n} = i\operatorname{sgn}n$. For $f \in L^2 \cap L^p$ and trigonometric
+polynomials $g$ with $\|g\|_{p^{\prime}} \leq 1$, $|\int\tilde f\bar g| \leq C_{p^{\prime}}\|f\|_p$; trigonometric polynomials are dense in $L^{p^{\prime}}$, so by Theorem~\ref{signed-measures:theorem-lp-duality}
+$\|\tilde f\|_p \leq C_{p^{\prime}}\|f\|_p$. Finally $Pf = \frac12(f + i\tilde f + \hat f(0))$.
+\end{proof}
+
+\begin{corollary}\label{harmonic-analysis:corollary-lp-convergence}
+For $1 < p < \infty$ and $f \in L^p(\mathbb{T})$, $S_Nf \to f$ in $L^p$.
+\end{corollary}
+
+\begin{proof}
+Removing the frequencies $\geq N + 1$ from those $\geq -N$ gives $S_Nf = e_{-N}P(e_Nf) - e_{N+1}P(e_{-N-1}f)$, so $\|S_Nf\|_p \leq 2\|P\|\,\|f\|_p$ for all $N$. For a trigonometric polynomial $g$, $S_Ng = g$ for large
+$N$. Given $\varepsilon$, choose $g$ with $\|f - g\|_p < \varepsilon$ (Theorem~\ref{harmonic-analysis:theorem-fejer}); then $\|S_Nf - f\|_p \leq \|S_N(f - g)\| + \|S_Ng - g\| + \|g - f\| \leq (2\|P\| + 1)\varepsilon$ for large $N$.
+\end{proof}
+
+\begin{counterexample}\label{harmonic-analysis:counterexample-conjugate-endpoints}
+Riesz's theorem fails for $p = \infty$ and $p = 1$. Let $f = \mathbf{1}_{(0,1/2)} - \mathbf{1}_{(1/2,1)}$. Then $\hat f(n) = \frac{2}{\pi in}$ for odd $n$ and $0$ for even $n$, so $\hat{\tilde f}(n) = -\frac{2}{\pi|n|}$ for odd $n$.
+If $\tilde f$ were bounded by $M$, then $|P_r * \tilde f(0)| \leq M$, since $P_r \geq 0$ and $\int P_r = 1$; but $P_r * \tilde f(0) = \sum_nr^{|n|}\hat{\tilde f}(n) = -\frac4\pi\sum_{n \text{ odd},\,n > 0}\frac{r^n}{n} \to -\infty$ as $r \to 1$.
+(In fact $\tilde f(t) = \frac2\pi\log|\tan\pi t|$.) By the duality of Step 4, a bound on $L^1$ would give a bound on $L^\infty$, so conjugation is not bounded on $L^1$ either; likewise $\|S_N\|_{L^1 \to L^1}$ and
+$\|S_N\|_{C \to C}$ are the Lebesgue constants, which tend to infinity (Lemma~\ref{functional-analysis:lemma-dirichlet-kernel}).
+\end{counterexample}
+
+\begin{remark}\label{harmonic-analysis:remark-kolmogorov}
+At $p = 1$ a weaker statement survives: conjugation is of weak type $(1, 1)$ (Kolmogorov), and if $f$ and $\tilde f$ are both integrable then $f + i\tilde f$ lies in the Hardy space $H^1$ \cite{katznelson-harmonic}. On the line, the
+analogue of conjugation is the \emph{Hilbert transform}
+\[
+Hf(x) = \lim_{\varepsilon \to 0}\frac1\pi\int_{|y| > \varepsilon}\frac{f(x - y)}{y}\,dy, \qquad \widehat{Hf}(\xi) = -i\operatorname{sgn}(\xi)\hat f(\xi),
+\]
+bounded on $L^p(\RR)$ for $1 < p < \infty$ by the same proof, with the upper half-plane replacing the disc. Calder\'on and Zygmund extended the theory to $\RR^n$, where the model operators are the \emph{Riesz transforms}
+$\widehat{R_jf}(\xi) = -i\frac{\xi_j}{|\xi|}\hat f(\xi)$, with kernels $c_n\frac{x_j}{|x|^{n+1}}$. Their basic tool is the following decomposition.
+\end{remark}
+
+\begin{theorem}[Calder\'on--Zygmund decomposition]\label{harmonic-analysis:theorem-calderon-zygmund-decomposition}
+Let $f \in L^1(\RR^n)$ and $\alpha > 0$. There is a countable family of disjoint dyadic cubes $Q_j$ such that
+\begin{enumerate}
+\item $\alpha < \frac{1}{|Q_j|}\int_{Q_j}|f| \leq 2^n\alpha$ for every $j$;
+\item $\sum_j|Q_j| \leq \frac1\alpha\|f\|_1$;
+\item $|f| \leq \alpha$ almost everywhere outside $\bigcup_jQ_j$.
+\end{enumerate}
+Consequently $f = g + b$ with $\|g\|_\infty \leq 2^n\alpha$, $\|g\|_1 \leq \|f\|_1$, and $b = \sum_jb_j$, where $b_j$ is supported in $Q_j$, $\int b_j = 0$ and $\|b_j\|_1 \leq 2\int_{Q_j}|f|$.
+\end{theorem}
+
+\begin{proof}
+A \emph{dyadic cube} is $2^{-k}(m + [0, 1)^n)$ with $k \in \ZZ$, $m \in \ZZ^n$; two dyadic cubes are disjoint or nested, and each is the union of $2^n$ \emph{children} of half the side. Choose $k_0$ with
+$2^{-nk_0} \geq \|f\|_1/\alpha$; then every dyadic cube of side $2^{-k_0}$ has average of $|f|$ at most $\alpha$. Let $\{Q_j\}$ be the dyadic cubes of side $\leq 2^{-k_0}$ with average $> \alpha$ that are maximal for inclusion
+among such cubes; every cube with average $> \alpha$ and side $\leq 2^{-k_0}$ lies in one of them, since its ancestors of side $\geq 2^{-k_0}$ are finitely many. They are disjoint by maximality. The parent $\hat Q_j$ of $Q_j$ has average
+$\leq \alpha$, so $\int_{Q_j}|f| \leq \int_{\hat Q_j}|f| \leq 2^n|Q_j|\alpha$, which is (1). Then $\sum|Q_j| < \frac1\alpha\sum\int_{Q_j}|f| \leq \frac1\alpha\|f\|_1$. If $x \notin \bigcup Q_j$, every dyadic cube $Q \ni x$ of side
+$\leq 2^{-k_0}$ has average $\leq \alpha$; as $Q \subseteq B(x, \sqrt n\,\ell(Q))$ with $|B(x, \sqrt n\,\ell(Q))| = c|Q|$, the Lebesgue differentiation theorem (Theorem~\ref{lebesgue-differentiation:theorem-lebesgue-differentiation})
+gives $\frac{1}{|Q|}\int_Q|f| \to |f(x)|$ along such cubes for almost every $x$, which is (3). Finally let $g = f$ outside $\bigcup Q_j$ and $g = \frac{1}{|Q_j|}\int_{Q_j}f$ on $Q_j$, and $b_j = (f - g)\mathbf{1}_{Q_j}$.
+\end{proof}
+
+\begin{theorem}[Calder\'on--Zygmund]\label{harmonic-analysis:theorem-calderon-zygmund}
+Let $T$ be bounded on $L^2(\RR^n)$ and suppose that for $f \in L^2$ with compact support, $Tf(x) = \int K(x, y)f(y)\,dy$ for $x \notin \operatorname{supp}f$, where $K$ satisfies the \emph{H\"ormander condition}
+$\int_{|x - y^{\prime}| > 2|y - y^{\prime}|}|K(x, y) - K(x, y^{\prime})|\,dx \leq A$ for all $y \neq y^{\prime}$. Then $T$ is of weak type $(1, 1)$ and bounded on $L^p$ for $1 < p \leq 2$; if the adjoint satisfies the same condition, $T$ is bounded on $L^p$
+for $1 < p < \infty$. This applies to the Hilbert and Riesz transforms.
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+Given $f \in L^1 \cap L^2$ and $\alpha > 0$, decompose $f = g + b$ at height $\alpha$. \emph{Good part:} by Chebyshev and the $L^2$ bound, $|\{|Tg| > \alpha/2\}| \leq \frac{4}{\alpha^2}\|T\|^2\|g\|_2^2 \leq
+\frac{4\cdot 2^n\|T\|^2}{\alpha}\|f\|_1$, since $\|g\|_2^2 \leq \|g\|_\infty\|g\|_1$. \emph{Bad part:} let $Q_j^*$ be the cube with the same centre $y_j$ and $2\sqrt n$ times the side; the union has measure
+$\leq C\|f\|_1/\alpha$. Off $Q_j^*$, $\int b_j = 0$ gives $Tb_j(x) = \int(K(x, y) - K(x, y_j))b_j(y)\,dy$, and the H\"ormander condition gives $\int_{\RR^n \setminus Q_j^*}|Tb_j| \leq A\|b_j\|_1$; summing and using Chebyshev,
+$|\{x \notin \bigcup Q_j^* : |Tb(x)| > \alpha/2\}| \leq \frac{4A}{\alpha}\|f\|_1$. Marcinkiewicz's theorem gives $1 < p \leq 2$, duality the rest. The omitted verifications concern the convergence of $\sum Tb_j$
+\cite{stein-singular-integrals}.
+\end{proof}
+
+\section{Fourier multipliers}\label{harmonic-analysis:section-multipliers}
+
+\begin{definition}\label{harmonic-analysis:definition-multiplier}
+For $m \in L^\infty(\RR^n)$, the \emph{multiplier operator} with \emph{symbol} $m$ is $T_mf = \mathcal{F}^{-1}(m\hat f)$ for $f \in L^2(\RR^n)$. For $1 \leq p < \infty$, $m$ is an \emph{$L^p$ multiplier}, $m \in M_p$, if
+$\|T_mf\|_p \leq C\|f\|_p$ for $f \in \mathcal{S}(\RR^n)$; the least $C$ is $\|m\|_{M_p}$.
+\end{definition}
+
+\begin{notation}\label{harmonic-analysis:notation-multiplier}
+$\mathcal{F}$ is the Fourier transform of Chapter~\ref{distributions}, $\hat f(\xi) = \int f(x)e^{-2\pi ix\cdot\xi}dx$, extended to $L^2$ by Plancherel. For $m \in M_p$, $T_m$ also denotes the bounded extension to $L^p$.
+\end{notation}
+
+\begin{proposition}\label{harmonic-analysis:proposition-multipliers}
+\begin{enumerate}
+\item $M_2 = L^\infty$, with $\|m\|_{M_2} = \|m\|_\infty$.
+\item $T_m$ commutes with translations. The norm $\|m\|_{M_p}$ is invariant under translations $m(\cdot - a)$, dilations $m(\cdot/\lambda)$ and reflection $m(-\cdot)$ of the symbol.
+\item For $1 < p < \infty$, $M_p = M_{p^{\prime}}$ with equal norms, and $M_p \subseteq M_q$ with $\|m\|_{M_q} \leq \|m\|_{M_p}$ for $1 < p \leq q \leq 2$. In particular $\|m\|_\infty \leq \|m\|_{M_p}$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) $\|T_mf\|_2 = \|m\hat f\|_2 \leq \|m\|_\infty\|f\|_2$ by Plancherel. Conversely, for $\varepsilon > 0$ the set $E = \{|m| > \|m\|_\infty - \varepsilon\}$ has positive measure; take $f$ with $\hat f = \mathbf{1}_{E \cap B(0,R)}$, $R$
+large; then $\|T_mf\|_2 \geq (\|m\|_\infty - \varepsilon)\|f\|_2$. (2) Translating $f$ multiplies $\hat f$ by a character, which commutes with $m$. Translating the symbol conjugates $T_m$ by multiplication with $e^{2\pi ia\cdot x}$, an
+isometry of $L^p$; dilating the symbol conjugates $T_m$ by a dilation of $\RR^n$, which multiplies all $L^p$ norms by the same factor; reflection conjugates by $f \mapsto f(-\cdot)$. (3) For $f, g \in \mathcal{S}$,
+$\int T_mf\cdot g = \int m(\xi)\hat f(\xi)\hat g(-\xi)\,d\xi = \int f\cdot T_{m(-\cdot)}g$; taking the supremum over $g$ with $\|g\|_p \leq 1$ gives $\|T_mf\|_{p^{\prime}} \leq \|m(-\cdot)\|_{M_p}\|f\|_{p^{\prime}}$ by duality
+(Theorem~\ref{signed-measures:theorem-lp-duality}), and (2) gives equality of norms. For $p \leq q \leq 2$, $q$ lies between $p$ and $p^{\prime}$, and Riesz--Thorin interpolates between them.
+\end{proof}
+
+\begin{example}\label{harmonic-analysis:example-multipliers}
+\begin{enumerate}
+\item The Fourier transform of a finite measure $\mu$ is in $M_p$ for all $p$, with $T_mf = \mu * f$ and norm $\leq \|\mu\|$; for $p = 1$ these are all the multipliers \cite{grafakos-classical}. So $M_1$ consists of continuous
+functions, and $\mathbf{1}_{[a,b]} \notin M_1$.
+\item The symbol $-i\operatorname{sgn}\xi$ of the Hilbert transform is in $M_p(\RR)$ for $1 < p < \infty$ (Remark~\ref{harmonic-analysis:remark-kolmogorov}). Since $\mathbf{1}_{(a,\infty)}(\xi) = \frac12(1 + \operatorname{sgn}(\xi - a))$ almost
+everywhere, Proposition~\ref{harmonic-analysis:proposition-multipliers}(2) shows that the indicator of every interval is in $M_p(\RR)$, $1 < p < \infty$, with norm independent of the interval. So the partial Fourier integrals
+$\int_{-R}^R\hat f(\xi)e^{2\pi ix\xi}d\xi$ converge to $f$ in $L^p(\RR)$, as for Fourier series (Corollary~\ref{harmonic-analysis:corollary-lp-convergence}).
+\item In $\RR^n$ the same argument gives the indicator of a rectangle. For the ball, C.\ Fefferman proved that $\mathbf{1}_{B(0,1)} \notin M_p(\RR^n)$ for $n \geq 2$ and $p \neq 2$, using Besicovitch's sets of measure zero
+containing a segment in every direction \cite{fefferman-1971-ball}: spherical partial sums of Fourier integrals need not converge in $L^p$.
+\end{enumerate}
+\end{example}
+
+\begin{theorem}[Mikhlin]\label{harmonic-analysis:theorem-mikhlin}
+If $m \in C^k(\RR^n \setminus 0)$ with $k > \frac n2$ and $|\partial^\alpha m(\xi)| \leq B|\xi|^{-|\alpha|}$ for $|\alpha| \leq k$, then $m \in M_p$ for $1 < p < \infty$.
+\end{theorem}
+
+The proof shows that the kernel of $T_m$ satisfies the H\"ormander condition and applies Theorem~\ref{harmonic-analysis:theorem-calderon-zygmund} \cite{grafakos-classical}. The hypothesis holds for every function homogeneous of
+degree $0$ and smooth on the sphere, such as $\xi_j\xi_k/|\xi|^2$; this gives the estimate $\|\partial_j\partial_ku\|_p \leq C_p\|\Delta u\|_p$ for $u \in \mathcal{S}(\RR^n)$, the $L^p$ form of the elliptic estimates of
+Chapter~\ref{distributions}.
+
+\begin{proposition}[Bernstein's inequality]\label{harmonic-analysis:proposition-bernstein-inequality}
+There is $C_n$ such that if $f \in L^p(\RR^n)$, $1 \leq p \leq \infty$, and $\hat f$ (as a tempered distribution) is supported in the ball $\overline{B}(0, R)$, then $\|\partial_jf\|_p \leq C_nR\|f\|_p$.
+\end{proposition}
+
+\begin{proof}
+Fix $\varphi \in \mathcal{S}(\RR^n)$ with $\hat\varphi = 1$ on $\overline{B}(0, 1)$, and let $\varphi_R(x) = R^n\varphi(Rx)$, so that $\hat\varphi_R(\xi) = \hat\varphi(\xi/R) = 1$ on $\overline{B}(0, R)$. Then $\hat f = \hat\varphi_R\hat f$, so
+$f = \varphi_R * f$ and $\partial_jf = (\partial_j\varphi_R) * f$. By Young's inequality with $L^1$, $\|\partial_jf\|_p \leq \|\partial_j\varphi_R\|_1\|f\|_p = R\|\partial_j\varphi\|_1\|f\|_p$.
+\end{proof}
+
+Bernstein's inequality says that a function with frequencies at most $R$ varies on scale $1/R$. Littlewood--Paley theory decomposes a general function into such pieces.
+
+\begin{definition}\label{harmonic-analysis:definition-littlewood-paley}
+Fix $\psi \in C_c^\infty(\RR^n)$, supported in $\{\frac12 \leq |\xi| \leq 2\}$, with $\sum_{j \in \ZZ}\psi(2^{-j}\xi) = 1$ for $\xi \neq 0$. The \emph{Littlewood--Paley pieces} of $f$ are $\Delta_jf = T_{\psi(2^{-j}\cdot)}f$, and the
+\emph{square function} is $Sf = \bigl(\sum_j|\Delta_jf|^2\bigr)^{1/2}$.
+\end{definition}
+
+Such $\psi$ exist: take $\chi \in C_c^\infty$ radial and radially decreasing, equal to $1$ on $|\xi| \leq \frac12$ and $0$ for $|\xi| \geq 1$, and $\psi(\xi) = \chi(\xi/2) - \chi(\xi)$; the sum telescopes, and $0 \leq \psi \leq 1$.
+
+\begin{theorem}[Littlewood--Paley]\label{harmonic-analysis:theorem-littlewood-paley}
+$\frac13\|f\|_2^2 \leq \|Sf\|_2^2 \leq \|f\|_2^2$ for $f \in L^2(\RR^n)$, and for $1 < p < \infty$ there are $c_p, C_p > 0$ with $c_p\|f\|_p \leq \|Sf\|_p \leq C_p\|f\|_p$.
+\end{theorem}
+
+\begin{proof}[Proof for $p = 2$]
+By Plancherel and Tonelli, $\|Sf\|_2^2 = \sum_j\|\Delta_jf\|_2^2 = \int\sum_j|\psi(2^{-j}\xi)|^2|\hat f(\xi)|^2d\xi$. For each $\xi \neq 0$ at most three terms $\psi(2^{-j}\xi)$ are nonzero; with $0 \leq \psi \leq 1$ (true for
+the construction above) and sum $1$, $\frac13 \leq \sum_j\psi(2^{-j}\xi)^2 \leq 1$ by Cauchy--Schwarz. For $p \neq 2$, the upper bound applies Theorem~\ref{harmonic-analysis:theorem-calderon-zygmund} to the operator
+$f \mapsto (\Delta_jf)_j$ with values in $\ell^2$, and the lower bound follows by duality \cite{grafakos-classical}.
+\end{proof}
+
+\begin{remark}\label{harmonic-analysis:remark-littlewood-paley}
+Littlewood--Paley theory says that the size of $f$ in $L^p$ is determined by the sizes of its dyadic frequency pieces, even though the phases of the pieces are lost. It characterises Sobolev spaces,
+$\|f\|_{W^{s,p}} \approx \|(\sum_j4^{js}|\Delta_jf|^2)^{1/2}\|_p$ for $1 < p < \infty$, leads to the Besov and Triebel--Lizorkin spaces, and gives the paraproduct decomposition of products used for nonlinear partial
+differential equations. Its origin is the theorem of Littlewood and Paley for Fourier series, where the pieces are the dyadic blocks $\sum_{2^j \leq |n| < 2^{j+1}}\hat f(n)e_n$.
+\end{remark}
+
+\section{Compact groups and the Peter--Weyl theorem}\label{harmonic-analysis:section-compact-groups}
+
+Fourier series expand functions on the group $\mathbb{T}$ in its characters. On a compact non-abelian group the characters are replaced by the matrix coefficients of irreducible representations.
+
+\begin{definition}\label{harmonic-analysis:definition-unitary-representation}
+Let $G$ be a topological group. A \emph{unitary representation} of $G$ on a complex Hilbert space $H$ is a homomorphism $\pi$ from $G$ to the unitary group of $H$ that is \emph{strongly continuous}: $g \mapsto \pi(g)v$ is
+continuous for every $v \in H$. A closed subspace $V \subseteq H$ is \emph{invariant} if $\pi(g)V \subseteq V$ for all $g$; $\pi$ is \emph{irreducible} if $H \neq 0$ and the only invariant closed subspaces are $0$ and $H$. Two
+representations are \emph{equivalent} if a unitary $U \colon H \to H^{\prime}$ satisfies $U\pi(g) = \pi^{\prime}(g)U$. The \emph{matrix coefficients} of $\pi$ are the functions $g \mapsto \langle\pi(g)v, w\rangle$, $v, w \in H$.
+\end{definition}
+
+\begin{notation}\label{harmonic-analysis:notation-compact-group}
+In this section $G$ is a compact Hausdorff group with a countable basis, and $dg$ is its Haar probability measure, which is left and right invariant and invariant under $g \mapsto g^{-1}$
+(Corollary~\ref{radon-measures:corollary-unimodular}). $L_y$ and $R_y$ are the translations of Notation~\ref{radon-measures:notation-translates}: $L_yf(x) = f(y^{-1}x)$, $R_yf(x) = f(xy)$. Convolution is
+$\varphi * f(x) = \int_G\varphi(xy^{-1})f(y)\,dy$. $\widehat G$ denotes a set of representatives of the equivalence classes of irreducible unitary representations, $d_\pi$ the dimension of $\pi$.
+\end{notation}
+
+\begin{example}\label{harmonic-analysis:example-regular-representation}
+The \emph{right regular representation} $R$ of $G$ on $L^2(G)$ is unitary, by right invariance of $dg$. Strong continuity: for $f \in C(G)$, $\|R_yf - f\|_\infty \to 0$ as $y \to e$
+(Lemma~\ref{radon-measures:lemma-uniform-continuity}), and $C(G)$ is dense in $L^2(G)$ (Lemma~\ref{radon-measures:lemma-radon-approximation}), so the argument of Lemma~\ref{harmonic-analysis:lemma-translation-continuous} applies. For
+$G = \mathbb{T}$, $R$ is the direct sum of the one-dimensional representations $\CC e_n$.
+\end{example}
+
+\begin{lemma}\label{harmonic-analysis:lemma-complete-reducibility}
+Every finite-dimensional unitary representation is an orthogonal direct sum of irreducible ones. Every irreducible finite-dimensional unitary representation of an abelian group is one-dimensional.
+\end{lemma}
+
+\begin{proof}
+If $V$ is invariant, so is $V^\perp$: $\langle\pi(g)w, v\rangle = \langle w, \pi(g^{-1})v\rangle = 0$ for $w \in V^\perp$, $v \in V$. Induct on the dimension. If $G$ is abelian and $\pi$ irreducible of finite dimension, each
+$\pi(g)$ commutes with $\pi$, so it is a scalar by Schur's lemma (Lemma~\ref{representation-theory:lemma-schur}); every line is then invariant, and $\dim\pi = 1$.
+\end{proof}
+
+\begin{theorem}[Schur orthogonality]\label{harmonic-analysis:theorem-schur-orthogonality}
+Let $\pi$, $\sigma$ be irreducible finite-dimensional unitary representations, with orthonormal bases $(e_i)$, $(f_k)$ and coefficients $\pi_{ij}(g) = \langle\pi(g)e_j, e_i\rangle$, $\sigma_{kl}(g) = \langle\sigma(g)f_l, f_k\rangle$.
+\begin{enumerate}
+\item If $\pi$ and $\sigma$ are not equivalent, $\int_G\pi_{ij}(g)\overline{\sigma_{kl}(g)}\,dg = 0$.
+\item $\int_G\pi_{ij}(g)\overline{\pi_{kl}(g)}\,dg = \frac{1}{d_\pi}\delta_{ik}\delta_{jl}$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+For a linear map $A \colon V_\sigma \to V_\pi$ let $\tilde A = \int_G\pi(g)A\sigma(g)^{-1}\,dg$ (entrywise integral of a continuous matrix function). By invariance of $dg$, $\pi(h)\tilde A\sigma(h)^{-1} = \tilde A$, so $\tilde A$
+intertwines. By Schur's lemma, $\tilde A = 0$ in case (1), and $\tilde A = cI$ in case (2) with $c = \operatorname{tr}A/d_\pi$, as $\operatorname{tr}\tilde A = \operatorname{tr}A$. Take $A = E_{jl}$, the map sending $f_l$ to $e_j$ and the
+other basis vectors to $0$. Since $\sigma(g)^{-1} = \sigma(g)^*$, $\langle\pi(g)E_{jl}\sigma(g)^{-1}f_k, e_i\rangle = \langle\sigma(g)^{-1}f_k, f_l\rangle\langle\pi(g)e_j, e_i\rangle = \pi_{ij}(g)\overline{\sigma_{kl}(g)}$. Integrating,
+$\int\pi_{ij}\overline{\sigma_{kl}} = \langle\tilde Af_k, e_i\rangle$, which is $0$ in case (1), and $\frac{\delta_{jl}}{d_\pi}\delta_{ik}$ in case (2).
+\end{proof}
+
+\begin{lemma}\label{harmonic-analysis:lemma-convolution-compact}
+Let $\varphi \in C(G)$ with $\varphi(y^{-1}) = \overline{\varphi(y)}$, and $T_\varphi f = \varphi * f$ on $L^2(G)$. Then $T_\varphi$ is a compact self-adjoint operator, its image consists of continuous functions, $\|T_\varphi f\|_\infty \leq
+\|\varphi\|_2\|f\|_2$, and $T_\varphi R_y = R_yT_\varphi$ for all $y \in G$.
+\end{lemma}
+
+\begin{proof}
+By Cauchy--Schwarz and invariance, $|T_\varphi f(x)| \leq (\int|\varphi(xy^{-1})|^2dy)^{1/2}\|f\|_2 = \|\varphi\|_2\|f\|_2$. Given $\varepsilon$, Lemma~\ref{radon-measures:lemma-uniform-continuity} gives a neighbourhood $V$ of $e$ with
+$|\varphi(zw) - \varphi(w)| < \varepsilon$ for $z \in V$ and all $w$, so $|T_\varphi f(zx) - T_\varphi f(x)| \leq \varepsilon\|f\|_1 \leq \varepsilon\|f\|_2$. Hence $T_\varphi$ maps the unit ball of $L^2$ to a bounded equicontinuous subset of
+$C(G)$, which has compact closure in $C(G)$ by the Arzel\`a--Ascoli theorem (Theorem~\ref{real-analysis:theorem-arzela-ascoli}), hence in $L^2$, since $\|\ \|_2 \leq \|\ \|_\infty$. The kernel $\varphi(xy^{-1})$ satisfies
+$\overline{\varphi(yx^{-1})} = \varphi(xy^{-1})$, which makes $T_\varphi$ self-adjoint. Finally $T_\varphi(R_yf)(x) = \int\varphi(xw^{-1})f(wy)\,dw = \int\varphi(xyw^{-1})f(w)\,dw = (T_\varphi f)(xy)$, substituting $w \mapsto wy^{-1}$.
+\end{proof}
+
+\begin{theorem}[Peter--Weyl]\label{harmonic-analysis:theorem-peter-weyl}
+Let $\mathcal{M}(G)$ be the span of the matrix coefficients of the finite-dimensional unitary representations of $G$.
+\begin{enumerate}
+\item $\mathcal{M}(G)$ is dense in $C(G)$ for the supremum norm.
+\item The functions $\sqrt{d_\pi}\,\pi_{ij}$, $\pi \in \widehat G$ finite-dimensional, $1 \leq i, j \leq d_\pi$, form an orthonormal basis of $L^2(G)$.
+\item For $g \neq e$ there is a finite-dimensional irreducible unitary $\pi$ with $\pi(g) \neq 1$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: eigenspaces.} Let $\varphi$ be as in Lemma~\ref{harmonic-analysis:lemma-convolution-compact}. By the spectral theorem (Theorem~\ref{functional-analysis:theorem-spectral-compact}), $L^2(G)$ is the orthogonal sum of
+$\ker T_\varphi$ and finite-dimensional eigenspaces $E_\lambda$, $\lambda \neq 0$. Each $E_\lambda$ consists of continuous functions ($f = \lambda^{-1}T_\varphi f$) and is invariant under $R$, so $R$ restricts to a finite-dimensional
+unitary representation on $E_\lambda$. For $f \in E_\lambda$, evaluation at $e$ is a linear functional on $E_\lambda$, so $h(e) = \langle h, w\rangle$ for some $w \in E_\lambda$, and $f(y) = (R_yf)(e) = \langle R_yf, w\rangle$ is a matrix
+coefficient. So $E_\lambda \subseteq \mathcal{M}(G)$.
+\emph{Step 2: density.} Let $f \in C(G)$ and $\varepsilon > 0$. Take $V$ as in Lemma~\ref{radon-measures:lemma-uniform-continuity} for $f$ and $\varepsilon$, a symmetric open neighbourhood $W \subseteq V$ of $e$, a continuous
+$\psi \colon G \to [0, 1]$ with $\psi(e) = 1$ vanishing outside $W$ (Urysohn's lemma, Theorem~\ref{general-topology:theorem-urysohn}), and $\varphi = c(\psi(y) + \psi(y^{-1}))$ with $c$ chosen so that $\int\varphi = 1$ (possible by
+Lemma~\ref{radon-measures:lemma-haar-positive}). Then $\varphi$ is real, symmetric, and $\varphi * f(x) - f(x) = \int\varphi(xy^{-1})(f(y) - f(x))\,dy$; where the integrand is nonzero, $y = zx$ with $z = yx^{-1} \in W^{-1} = W$, so
+$|f(y) - f(x)| < \varepsilon$ and $\|\varphi * f - f\|_\infty \leq \varepsilon$. Write $f = f_0 + \sum_\lambda f_\lambda$ in $L^2$ with $f_0 \in \ker T_\varphi$, $f_\lambda \in E_\lambda$, and let $h_N$ be a finite partial sum of the
+$f_\lambda$ with $\|f - f_0 - h_N\|_2 < \varepsilon/(1 + \|\varphi\|_2)$. Then $T_\varphi h_N \in \mathcal{M}(G)$ and $\|T_\varphi h_N - T_\varphi f\|_\infty = \|T_\varphi(h_N - f + f_0)\|_\infty < \varepsilon$, so
+$\|T_\varphi h_N - f\|_\infty < 2\varepsilon$.
+\emph{Step 3: orthonormal basis.} By Lemma~\ref{harmonic-analysis:lemma-complete-reducibility}, $\mathcal{M}(G)$ is spanned by coefficients of irreducible representations, and equivalent representations have the same coefficients;
+so $\mathcal{M}(G)$ is spanned by the $\pi_{ij}$, $\pi \in \widehat G$. These are orthogonal with norm $d_\pi^{-1/2}$ by Theorem~\ref{harmonic-analysis:theorem-schur-orthogonality}, and their span is dense in $C(G)$, hence in
+$L^2(G)$.
+\emph{Step 4.} By Urysohn there is $f \in C(G)$ with $f(e) = 1$, $f(g) = 0$. If $\pi(g) = 1$ for every finite-dimensional irreducible $\pi$, every element of $\mathcal{M}(G)$ takes the same value at $g$ and $e$, contradicting (1).
+\end{proof}
+
+\begin{corollary}\label{harmonic-analysis:corollary-peter-weyl}
+\begin{enumerate}
+\item Every irreducible unitary representation of $G$ is finite-dimensional, and every unitary representation is a Hilbert direct sum of irreducible ones.
+\item If $G$ is abelian, the continuous homomorphisms $\chi \colon G \to \{|z| = 1\}$ form an orthonormal basis of $L^2(G)$, so $f = \sum_\chi\langle f, \chi\rangle\chi$ in $L^2$ and $\|f\|_2^2 = \sum_\chi|\langle f, \chi\rangle|^2$.
+\item If $G$ is finite, $|G| = \sum_{\pi \in \widehat G}d_\pi^2$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(2) By Lemma~\ref{harmonic-analysis:lemma-complete-reducibility} the irreducible finite-dimensional unitary representations are characters, whose only matrix coefficient is the character itself; apply the theorem.
+(3) Count dimensions in (2) of the theorem: $\dim L^2(G) = |G|$.
+(1), \emph{sketch}: if $\pi$ is a unitary representation on $H$ and $v \in H$ a unit vector, the operator $A = \int_G\pi(g)P_v\pi(g)^{-1}dg$, where $P_v$ is the orthogonal projection onto $\CC v$, is positive, nonzero, compact
+and commutes with $\pi$, so an eigenspace for a nonzero eigenvalue is a finite-dimensional invariant subspace; Zorn's lemma then decomposes $H$. The omitted verification is the compactness of $A$, a norm limit of finite
+rank operators \cite{folland-abstract}.
+\end{proof}
+
+\begin{remark}\label{harmonic-analysis:remark-peter-weyl}
+For $G = \mathbb{T}$ the theorem is the completeness of $(e_n)$, for finite groups it is the decomposition of the regular representation of Chapter~\ref{representation-theory}. For $G = \mathrm{SU}(2)$ the irreducible
+representations are the spaces $V_n$ of homogeneous polynomials of degree $n$ in two variables, of dimension $n + 1$, and the character of $V_n$ at $\operatorname{diag}(e^{i\theta}, e^{-i\theta})$ is
+$\frac{\sin(n + 1)\theta}{\sin\theta}$, a Dirichlet kernel. For $\mathrm{SO}(3)$ acting on $S^2$, $L^2(S^2)$ decomposes into the spaces of spherical harmonics of degree $k$, of dimension $2k + 1$
+(Theorem~\ref{special-functions:theorem-harmonic-decomposition}). Part (3) of the theorem implies that a compact Lie group has a faithful finite-dimensional representation, so it is a closed subgroup of some $\mathrm{U}(n)$; this
+is used in Chapter~\ref{lie-groups}. The theorem is due to Peter and Weyl \cite{peter-weyl-1927}.
+\end{remark}
+
+\section{Locally compact abelian groups}\label{harmonic-analysis:section-lca}
+
+\begin{definition}\label{harmonic-analysis:definition-dual-group}
+Let $G$ be a locally compact abelian group, written additively, with Haar measure $dx$, and let $\mathbb{S} = \{z \in \CC : |z| = 1\}$. A \emph{character} of $G$ is a continuous homomorphism $\chi \colon G \to \mathbb{S}$.
+The characters form a group $\widehat G$ under pointwise multiplication, the \emph{dual group}, with the topology of uniform convergence on compact sets. The \emph{Fourier transform} of $f \in L^1(G)$ is
+$\hat f(\chi) = \int_Gf(x)\overline{\chi(x)}\,dx$.
+\end{definition}
+
+\begin{notation}\label{harmonic-analysis:notation-dual-group}
+We write $\langle x, \chi\rangle = \chi(x)$. Convolution is $f * g(x) = \int_Gf(x - y)g(y)\,dy$. The group operation of $G$ is written $+$, that of $\widehat G$ multiplicatively.
+\end{notation}
+
+\begin{proposition}\label{harmonic-analysis:proposition-characters-r}
+\begin{enumerate}
+\item The characters of $\RR$ are $x \mapsto e^{2\pi ix\xi}$, $\xi \in \RR$, and $\widehat{\RR} \cong \RR$; similarly $\widehat{\RR^n} \cong \RR^n$ via $x \mapsto e^{2\pi ix\cdot\xi}$.
+\item The characters of $\mathbb{T} = \RR/\ZZ$ are the $e_n$, $n \in \ZZ$, so $\widehat{\mathbb{T}} \cong \ZZ$; the characters of $\ZZ$ are $n \mapsto z^n$, $z \in \mathbb{S}$, so $\widehat{\ZZ} \cong \mathbb{T}$; and $\widehat{\ZZ/m} \cong \ZZ/m$.
+\end{enumerate}
+With these identifications, the Fourier transforms of $L^1(\RR^n)$, $L^1(\mathbb{T})$ and $\ell^1(\ZZ)$ are the usual Fourier transform, Fourier coefficients and Fourier series.
+\end{proposition}
+
+\begin{proof}
+(1) Let $\chi$ be a character of $\RR$. As $\chi(0) = 1$, there is $\delta > 0$ with $c = \int_0^\delta\chi(t)\,dt \neq 0$. Then $c\chi(x) = \int_0^\delta\chi(x + t)\,dt = \int_x^{x+\delta}\chi$ is continuously differentiable in $x$,
+so $\chi$ is, and differentiating $\chi(x + y) = \chi(x)\chi(y)$ in $y$ at $0$ gives $\chi^{\prime} = a\chi$ with $a = \chi^{\prime}(0)$. Hence $(\chi e^{-ax})^{\prime} = 0$, $\chi(x) = e^{ax}$, and $|\chi| = 1$ forces $a = 2\pi i\xi$ with $\xi$ real.
+The map $\xi \mapsto e^{2\pi i\cdot\xi}$ is an isomorphism, and a homeomorphism for the topology of uniform convergence on compact sets, since $\sup_{|x| \leq K}|e^{2\pi ix\xi} - e^{2\pi ix\eta}|$ is small exactly when $\xi - \eta$ is small.
+For $\RR^n$ restrict to the coordinate axes. (2) Characters of $\mathbb{T}$ are characters of $\RR$ trivial on $\ZZ$, that is $e^{2\pi i\xi} = 1$, $\xi \in \ZZ$. A character of $\ZZ$ is determined by $z = \chi(1)$. For $\ZZ/m$, $z$ must
+be an $m$-th root of unity.
+\end{proof}
+
+\begin{proposition}\label{harmonic-analysis:proposition-dual-compact-discrete}
+\begin{enumerate}
+\item If $G$ is compact, $\widehat G$ is discrete, and distinct characters are orthogonal in $L^2(G)$.
+\item If $G$ is discrete, $\widehat G$ is compact.
+\item For $f, g \in L^1(G)$, $|\hat f(\chi)| \leq \|f\|_1$ and $\widehat{f * g} = \hat f\hat g$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) Normalise the Haar measure to mass $1$. For $\chi \neq 1$ pick $y$ with $\chi(y) \neq 1$; invariance gives $\int\chi = \int\chi(x + y)dx = \chi(y)\int\chi$, so $\int\chi = 0$, and $\langle\chi, \chi^{\prime}\rangle = \int\chi\overline{\chi^{\prime}} = 0$
+for $\chi \neq \chi^{\prime}$. If $\sup_G|\chi - 1| < 1$, then $|\int\chi - 1| < 1$, so $\int\chi \neq 0$ and $\chi = 1$: the open neighbourhood $\{\chi : \sup_G|\chi - 1| < 1\}$ of $1$ (the topology is uniform convergence, $G$
+being compact) contains only $1$. (2) For discrete $G$, compact sets are finite, so the topology is that of pointwise convergence, and $\widehat G$ is a closed subset of the product $\mathbb{S}^G$ (the homomorphism conditions are
+closed), compact by Tychonoff's theorem (Theorem~\ref{general-topology:theorem-tychonoff}). (3) As in Proposition~\ref{harmonic-analysis:proposition-convolution-circle}, using $\overline{\chi(x)} = \overline{\chi(x - y)}\,\overline{\chi(y)}$.
+\end{proof}
+
+The main theorems of the general theory extend what we know for $\RR^n$, $\mathbb{T}$ and $\ZZ$.
+
+\begin{theorem}\label{harmonic-analysis:theorem-pontryagin}
+Let $G$ be a locally compact abelian group.
+\begin{enumerate}
+\item (Riemann--Lebesgue) $\widehat G$ is a locally compact abelian group, and $\hat f \in C_0(\widehat G)$ for $f \in L^1(G)$.
+\item (Plancherel) The Haar measure of $\widehat G$ can be normalised so that $\|\hat f\|_2 = \|f\|_2$ for $f \in L^1 \cap L^2(G)$, and $f \mapsto \hat f$ extends to a unitary isomorphism $L^2(G) \to L^2(\widehat G)$.
+\item (Inversion) If $f \in L^1(G)$ and $\hat f \in L^1(\widehat G)$, then $f(x) = \int_{\widehat G}\hat f(\chi)\chi(x)\,d\chi$ almost everywhere.
+\item (Pontryagin duality) The map $G \to \widehat{\widehat G}$, $x \mapsto (\chi \mapsto \chi(x))$, is an isomorphism of topological groups.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+The Banach algebra $L^1(G)$ under convolution is commutative, and its maximal ideals correspond to characters $\chi$, via $f \mapsto \hat f(\chi)$; Gelfand theory makes $\widehat G$ locally compact and gives (1). Bochner's theorem
+represents continuous positive-definite functions on $G$ as Fourier transforms of positive measures on $\widehat G$; applied to $f * f^*$ it gives the inversion theorem and Plancherel. Duality follows by applying the theory to
+$\widehat G$ and showing that characters separate points of $G$, the abelian analogue of Theorem~\ref{harmonic-analysis:theorem-peter-weyl}(3). The omitted verifications fill a chapter of \cite{folland-abstract}; see also
+\cite{rudin-fourier-groups}.
+\end{proof}
+
+\begin{example}\label{harmonic-analysis:example-pontryagin}
+\begin{enumerate}
+\item For $\RR^n$, $\mathbb{T}$, $\ZZ$, $\ZZ/m$ the theorem reduces to Plancherel's theorem (Chapter~\ref{distributions}), Parseval's identity, and the finite Fourier transform (Theorem~\ref{representation-theory:theorem-finite-fourier}). Duality is
+visible in Proposition~\ref{harmonic-analysis:proposition-characters-r}: $\widehat{\widehat{\mathbb{T}}} = \widehat{\ZZ} = \mathbb{T}$.
+\item The field $\mathbb{Q}_p$ of $p$-adic numbers is self-dual, via $x \mapsto e^{2\pi i\{xy\}_p}$ where $\{\ \}_p$ is the $p$-adic fractional part; and the adeles $\mathbb{A}_\mathbb{Q}$ are self-dual, with $\mathbb{Q}$
+a discrete subgroup equal to its own annihilator and $\mathbb{A}_\mathbb{Q}/\mathbb{Q}$ compact. The resulting adelic Poisson summation formula $\sum_{q \in \mathbb{Q}}f(q) = \sum_{q \in \mathbb{Q}}\hat f(q)$ is the heart of
+Tate's thesis, which derives the functional equation of $\zeta$ and of Hecke $L$-functions from it (the adeles appear in Chapter~\ref{local-fields}).
+\item In general, for a closed subgroup $H$ with annihilator $H^\perp = \{\chi : \chi|_H = 1\}$, one has $\widehat{G/H} \cong H^\perp$ and $\widehat H \cong \widehat G/H^\perp$, and the Poisson summation formula
+$\int_Hf(x + h)\,dh = \int_{H^\perp}\hat f(\chi)\chi(x)\,d\chi$ holds for nice $f$; for $\ZZ \subseteq \RR$ it is Proposition~\ref{distributions:proposition-poisson}.
+\end{enumerate}
+\end{example}
+
+\section{Non-compact groups}\label{harmonic-analysis:section-noncompact}
+
+For non-compact, non-abelian groups the irreducible unitary representations are infinite-dimensional, and harmonic analysis on them is a vast subject. We prove the first step for $\mathrm{SL}_2(\RR)$ and describe
+the rest.
+
+\begin{proposition}\label{harmonic-analysis:proposition-sl2-no-finite}
+Every finite-dimensional unitary representation of $\mathrm{SL}_2(\RR)$ is trivial.
+\end{proposition}
+
+\begin{proof}
+\emph{Generation.} Let $n(t) = \begin{pmatrix} 1 & t \\ 0 & 1 \end{pmatrix}$, $\bar n(t) = \begin{pmatrix} 1 & 0 \\ t & 1 \end{pmatrix}$. For $\begin{pmatrix} a & b \\ c & d \end{pmatrix} \in \mathrm{SL}_2(\RR)$ with $c \neq 0$, a direct
+computation using $ad - bc = 1$ gives $\begin{pmatrix} a & b \\ c & d \end{pmatrix} = n(\frac{a - 1}{c})\bar n(c)n(\frac{d - 1}{c})$; if $c = 0$, multiplying on the left by $\bar n(1)$ makes $c \neq 0$. So $\mathrm{SL}_2(\RR)$ is
+generated by the $n(t)$ and $\bar n(t)$.
+\emph{The unipotent subgroups act trivially.} Let $\pi$ be a unitary representation on $\CC^d$. The unitaries $\pi(n(t))$ commute, so they are simultaneously diagonalisable in an orthonormal basis, and each diagonal entry
+is a character of $\RR$: $\pi(n(t)) \sim \operatorname{diag}(e^{2\pi i\lambda_1t}, \ldots, e^{2\pi i\lambda_dt})$ by Proposition~\ref{harmonic-analysis:proposition-characters-r}. With $a(s) = \operatorname{diag}(s, s^{-1})$,
+$a(s)n(t)a(s)^{-1} = n(s^2t)$, so the representations $t \mapsto \pi(n(t))$ and $t \mapsto \pi(n(s^2t))$ of $\RR$ are equivalent, and contain the same characters with the same multiplicities (the eigenspaces of the commuting family are
+determined by the representation): the multisets $\{\lambda_j\}$ and $\{s^2\lambda_j\}$ agree for every $s > 0$. Taking $s^2 = 2$ and the largest $|\lambda_j|$ forces all $\lambda_j = 0$. So $\pi(n(t)) = 1$, and likewise $\pi(\bar n(t)) = 1$. By generation, $\pi$ is trivial.
+\end{proof}
+
+\begin{remark}\label{harmonic-analysis:remark-sl2}
+The same argument shows that a connected simple non-compact Lie group has no nontrivial finite-dimensional unitary representations. The irreducible unitary representations of $\mathrm{SL}_2(\RR)$ were classified by
+Bargmann \cite{bargmann-1947}: besides the trivial one, the \emph{principal series} (acting on functions on $\RR$ by $f \mapsto |cx + d|^{-1-it}f(\frac{ax + b}{cx + d})$, up to a sign character), the \emph{complementary series}, the
+\emph{discrete series} $D_k^\pm$, $k \geq 2$ (on holomorphic functions on the upper half-plane with norm $\int|f|^2y^{k}\frac{dx\,dy}{y^2}$), and the limits of discrete series. Harish-Chandra's \emph{Plancherel theorem}
+decomposes $L^2(\mathrm{SL}_2(\RR))$ into the principal and discrete series, the discrete series occurring discretely. For a discrete subgroup $\Gamma$ such as $\mathrm{SL}_2(\ZZ)$, the space $L^2(\Gamma\backslash\mathrm{SL}_2(\RR))$
+contains the theory of modular forms: a cusp form of weight $k$ generates a copy of $D_k$, and Maass forms generate principal or complementary series. This is the starting point of the theory of automorphic
+representations \cite{lang-sl2}, \cite{knapp-semisimple}.
+\end{remark}
+
+\section{Exercises}\label{harmonic-analysis:section-exercises}
+
+\begin{exercise}\label{harmonic-analysis:exercise-zeta-four}
+Let $B_2(t) = t^2 - t + \frac16$ on $[0, 1)$, extended with period $1$. Show that $\hat B_2(0) = 0$ and $\hat B_2(n) = \frac{1}{2\pi^2n^2}$ for $n \neq 0$, and deduce from Parseval's identity that $\sum_{n \geq 1}\frac{1}{n^4} = \frac{\pi^4}{90}$.
+\end{exercise}
+
+\begin{solution}
+$\int_0^1(t^2 - t + \frac16)dt = \frac13 - \frac12 + \frac16 = 0$. For $n \neq 0$, integrating by parts, $\int_0^1te^{-2\pi int}dt = -\frac{1}{2\pi in}$ and $\int_0^1t^2e^{-2\pi int}dt = -\frac{1}{2\pi in} + \frac{2}{2\pi in}\int_0^1te^{-2\pi int}dt = -\frac{1}{2\pi in} + \frac{1}{2\pi^2n^2}$,
+so $\hat B_2(n) = \frac{1}{2\pi^2n^2}$. Parseval gives $\int_0^1B_2^2 = 2\sum_{n \geq 1}\frac{1}{4\pi^4n^4}$. Since $B_2^2 = t^4 - 2t^3 + \frac43t^2 - \frac13t + \frac1{36}$,
+$\int_0^1B_2^2 = \frac15 - \frac12 + \frac49 - \frac16 + \frac1{36} = \frac{1}{180}$. So $\sum_{n \geq 1}n^{-4} = \frac{2\pi^4}{180} = \frac{\pi^4}{90}$.
+\end{solution}
+
+\begin{exercise}\label{harmonic-analysis:exercise-wirtinger}
+Show that if $f \in C^1(\mathbb{T})$ and $\int_\mathbb{T}f = 0$, then $\int_\mathbb{T}|f|^2 \leq \frac{1}{4\pi^2}\int_\mathbb{T}|f^{\prime}|^2$ (\emph{Wirtinger's inequality}), with equality exactly for $f = ae_1 + be_{-1}$.
+\end{exercise}
+
+\begin{solution}
+By Proposition~\ref{harmonic-analysis:proposition-smoothness-decay}(1) and Parseval, $\int|f^{\prime}|^2 = \sum_n4\pi^2n^2|\hat f(n)|^2 \geq 4\pi^2\sum_{n \neq 0}|\hat f(n)|^2 = 4\pi^2\int|f|^2$, as $\hat f(0) = 0$; equality holds iff
+$\hat f(n) = 0$ for $|n| \geq 2$. Hurwitz used this to prove the isoperimetric inequality for curves: for a closed curve of length $1$ parametrised by arc length, $x + iy = f$, the enclosed area is
+$\frac12\int(xy^{\prime} - yx^{\prime}) \leq \frac{1}{4\pi}\int|f^{\prime}|^2 = \frac{1}{4\pi}$, with equality only for circles.
+\end{solution}
+
+\begin{exercise}\label{harmonic-analysis:exercise-gibbs-general}
+Let $f$ be piecewise continuously differentiable on $\mathbb{T}$, continuous except for a jump $J = f(0+) - f(0-)$ at $0$. Show that $\limsup_{N}\sup_{0 < t < \delta}S_Nf(t) - f(0+) \geq J(\frac{\operatorname{Si}(\pi)}{\pi} - \frac12)$ for every
+$\delta > 0$ if $J > 0$.
+\end{exercise}
+
+\begin{solution}
+Let $s$ be the sawtooth of Example~\ref{harmonic-analysis:example-gibbs} and $g = f - Js$. Then $g$ is continuous (the jumps cancel) and piecewise continuously differentiable, so $S_Ng \to g$ uniformly by
+Proposition~\ref{harmonic-analysis:proposition-smoothness-decay}(2). At $t_N = \frac{1}{2N}$, $S_Nf(t_N) = S_Ng(t_N) + JS_Ns(t_N) \to g(0) + J\frac{\operatorname{Si}(\pi)}{\pi}$, while $f(0+) = g(0) + \frac J2$. The difference
+tends to $J(\frac{\operatorname{Si}(\pi)}{\pi} - \frac12) \approx 0.0895J$, and $t_N < \delta$ for large $N$.
+\end{solution}
+
+\begin{exercise}\label{harmonic-analysis:exercise-conjugate-trigonometric}
+Show that for $n \geq 1$ the conjugate function of $\cos 2\pi nt$ is $\sin 2\pi nt$ and that of $\sin 2\pi nt$ is $-\cos 2\pi nt$. Deduce that $\tilde{\tilde f} = -f + \hat f(0)$ for $f \in L^2(\mathbb{T})$.
+\end{exercise}
+
+\begin{solution}
+$\cos 2\pi nt = \frac12(e_n + e_{-n})$ has conjugate $\frac12(-ie_n + ie_{-n}) = \sin 2\pi nt$, and $\sin 2\pi nt = \frac{1}{2i}(e_n - e_{-n})$ has conjugate $\frac{1}{2i}(-ie_n - ie_{-n}) = -\cos 2\pi nt$. In general,
+conjugating twice multiplies $\hat f(n)$ by $(-i\operatorname{sgn}n)^2 = -1$ for $n \neq 0$ and kills $\hat f(0)$.
+\end{solution}
+
+\begin{exercise}\label{harmonic-analysis:exercise-poisson-harmonic}
+Compute the solution of the Dirichlet problem on the unit disc with boundary values $f(t) = \cos^2 2\pi t$.
+\end{exercise}
+
+\begin{solution}
+$f = \frac12 + \frac14(e_2 + e_{-2})$, so $u(re^{2\pi it}) = \frac12 + \frac14r^2(e^{4\pi it} + e^{-4\pi it}) = \frac12 + \frac12r^2\cos 4\pi t$; in Cartesian coordinates, $u(x, y) = \frac12 + \frac12(x^2 - y^2)$, which is
+harmonic and equals $\frac12 + \frac12\cos 4\pi t = \cos^22\pi t$ on the circle.
+\end{solution}
+
+\begin{exercise}\label{harmonic-analysis:exercise-weak-not-strong}
+Show that the operator $Tf(x) = \frac1x\int_0^xf$ on $(0, \infty)$ is of weak type $(1, 1)$ but not of strong type $(1, 1)$, and of strong type $(\infty, \infty)$; deduce \emph{Hardy's inequality}
+$\|Tf\|_p \leq C_p\|f\|_p$ for $1 < p < \infty$.
+\end{exercise}
+
+\begin{solution}
+$|Tf(x)| \leq \|f\|_1/x$, so $\{|Tf| > t\} \subseteq (0, \|f\|_1/t)$, of measure $\|f\|_1/t$: weak type $(1, 1)$. For $f = \mathbf{1}_{(0,1)}$, $Tf(x) = 1/x$ for $x > 1$, not integrable. Clearly $\|Tf\|_\infty \leq \|f\|_\infty$.
+$T$ is linear, so Marcinkiewicz's theorem (Theorem~\ref{harmonic-analysis:theorem-marcinkiewicz}) gives the strong type $(p, p)$. (The best constant is $C_p = \frac{p}{p - 1}$.)
+\end{solution}
+
+\begin{exercise}\label{harmonic-analysis:exercise-circle-endomorphisms}
+Show that the continuous homomorphisms $\mathbb{T} \to \mathbb{T}$ are $t \mapsto nt$, $n \in \ZZ$, and that the only automorphisms of the topological group $\mathbb{T}$ are $t \mapsto \pm t$.
+\end{exercise}
+
+\begin{solution}
+Composing with the isomorphism $\mathbb{T} \to \mathbb{S}$, $t \mapsto e^{2\pi it}$, a continuous homomorphism $\mathbb{T} \to \mathbb{T}$ is a character of $\mathbb{T}$, hence $e_n$ for some $n$
+(Proposition~\ref{harmonic-analysis:proposition-characters-r}), which corresponds to $t \mapsto nt$. It is bijective iff $n = \pm 1$.
+\end{solution}
+
+\begin{exercise}\label{harmonic-analysis:exercise-dual-finite}
+Let $G$ be a finite abelian group. Show that $\widehat G \cong G$ and that $G \to \widehat{\widehat G}$ is an isomorphism.
+\end{exercise}
+
+\begin{solution}
+$G$ is a product of cyclic groups (Theorem~\ref{groups:theorem-structure-abelian}), $\widehat{G_1 \times G_2} \cong \widehat G_1 \times \widehat G_2$ (a character of the product is the product of its restrictions),
+and $\widehat{\ZZ/m} \cong \ZZ/m$ by Proposition~\ref{harmonic-analysis:proposition-characters-r}. So $|\widehat{\widehat G}| = |G|$, and $G \to \widehat{\widehat G}$ is injective because characters separate points: if $x \neq 0$, write
+$G$ as a product of cyclic groups; some coordinate of $x$ is nonzero, and a character of that factor that is nontrivial on it gives a character with $\chi(x) \neq 1$.
+\end{solution}
+
+\begin{exercise}\label{harmonic-analysis:exercise-characters-orthogonal}
+Let $G$ be a compact group and $\chi_\pi(g) = \operatorname{tr}\pi(g)$ the character of a finite-dimensional unitary representation $\pi$. Show that $\int_G|\chi_\pi|^2dg = 1$ if $\pi$ is irreducible, that
+$\int_G\chi_\pi\overline{\chi_\sigma} = 0$ for inequivalent irreducible $\pi$, $\sigma$, and deduce that a finite-dimensional unitary representation is irreducible if and only if $\int_G|\chi_\pi|^2 = 1$.
+\end{exercise}
+
+\begin{solution}
+$\chi_\pi = \sum_i\pi_{ii}$, so by Theorem~\ref{harmonic-analysis:theorem-schur-orthogonality}, $\int\chi_\pi\overline{\chi_\sigma} = \sum_{i,k}\int\pi_{ii}\overline{\sigma_{kk}}$ is $0$ if $\pi \not\cong \sigma$, and
+$\sum_{i,k}\frac{\delta_{ik}}{d_\pi} = 1$ if $\pi = \sigma$. A general $\pi$ is $\bigoplus_\sigma\sigma^{m_\sigma}$ (Lemma~\ref{harmonic-analysis:lemma-complete-reducibility}), so $\chi_\pi = \sum m_\sigma\chi_\sigma$ and
+$\int|\chi_\pi|^2 = \sum m_\sigma^2$, which is $1$ exactly when $\pi$ is irreducible.
+\end{solution}
