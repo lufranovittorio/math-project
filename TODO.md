@@ -178,8 +178,9 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
 - `algebraic-number-theory` (draft 2026-11-08): to deepen: Kummer theory, quadratic fields and
   binary quadratic forms (ideal classes = form classes), Hermite's theorem, proof of the class number
   formula, Z[zeta_n] for all n, Kummer's lemma and FLT for regular primes with proof, Stickelberger.
-- `local-fields` (planned): local fields, ramification groups, local and global class field
-  theory, Hilbert class fields, Kronecker–Weber, Chebotarev, adeles and ideles, Tate's thesis;
+- `local-fields` (draft 2026-11-08): to deepen: Hensel's lemma in factorisation form with proof (removes
+  the sketch in the extension theorem), ramification groups and the different, proofs of local
+  class field theory (Galois cohomology, Lubin–Tate), Kronecker–Weber proof, Chebotarev, Tate's thesis;
   Iwasawa theory and p-adic Hodge theory (surveys).
 - Arithmetic of curves stays in Part *Algebraic and Arithmetic Geometry* (modular forms, elliptic curves).
 

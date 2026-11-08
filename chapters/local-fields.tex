@@ -1,30 +1,335 @@
 \chapter{Local Fields and Class Field Theory}\label{local-fields}
-\chapterstatus{planned}
+\chapterstatus{draft}
 
+The $p$-adic numbers of Chapter~\ref{p-adic-numbers} are the first example of a \emph{local field}: a field complete with respect to a discrete valuation with finite residue field. Their finite
+extensions are local fields too, and they arise as completions of number fields at prime ideals; questions about a number field $K$ near a prime $\mathfrak{p}$ become questions about the local field
+$K_\mathfrak{p}$, where Hensel's lemma makes them much easier. This chapter develops the structure of extensions of local fields (ramification index and residue degree, unramified and totally ramified
+extensions, Krasner's lemma) and the relation with the decomposition of primes in Chapter~\ref{algebraic-number-theory}. It then states the main theorems of \emph{class field theory}, which describe
+all abelian extensions of local and global fields in terms of their arithmetic, with the examples that motivate them: cyclotomic fields, Hilbert class fields and the primes of the form $x^2 + ny^2$.
 
-\section{Local Fields}\label{local-fields:section-local-fields}
-Complete discretely valued fields and their extensions.
+\noindent\textbf{Prerequisites.} Chapter~\ref{p-adic-numbers} (p-adic Numbers), Chapter~\ref{algebraic-number-theory} (Algebraic Number Theory) and Chapter~\ref{homological-algebra} (Homological Algebra).
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{p-adic-numbers} (p-adic Numbers) and Chapter~\ref{algebraic-number-theory} (Algebraic Number Theory).
+\section{Local fields}\label{local-fields:section-local-fields}
 
-\noindent\textbf{Planned contents.}
+\begin{definition}\label{local-fields:definition-local-field}
+A \emph{discrete valuation} on a field $K$ is a surjective map $v \colon K \to \ZZ \cup \{\infty\}$ with $v(x) = \infty$ if and only if $x = 0$, $v(xy) = v(x) + v(y)$ and
+$v(x + y) \geq \min(v(x), v(y))$. Its \emph{valuation ring} is $\mathcal{O} = \{v \geq 0\}$, with maximal ideal $\mathfrak{p} = \{v > 0\}$ and \emph{residue field} $k = \mathcal{O}/\mathfrak{p}$; a
+\emph{uniformiser} is an element $\pi$ with $v(\pi) = 1$. A (non-archimedean) \emph{local field} is a field $K$ with a discrete valuation, complete for the absolute value $|x| = q^{-v(x)}$, whose residue field is
+finite with $q$ elements.
+\end{definition}
+
+\begin{notation}\label{local-fields:notation-local}
+For a local field $K$ we write $\mathcal{O}_K$, $\mathfrak{p}_K$, $k_K$, $\pi_K$, $v_K$ and $q_K$ (or drop the index), and $|\cdot|$ for the normalised absolute value $q^{-v}$. $\mathcal{O}$ is a DVR
+(Definition~\ref{commutative-algebra:definition-regular}), every nonzero element of $K$ is $u\pi^m$ with $u \in \mathcal{O}^\times$ and $m = v(x)$, and $\mathfrak{p}^m = \pi^m\mathcal{O}$. A bar denotes reduction
+modulo $\mathfrak{p}$.
+\end{notation}
+
+\begin{example}\label{local-fields:example-local-fields}
 \begin{enumerate}
-\item Discrete valuation rings and complete discretely valued fields; extensions of valuations.
-\item Unramified, tamely and totally ramified extensions; Eisenstein polynomials; Krasner's lemma.
-\item Completions of number fields; the local-global description of decomposition.
-\item Higher ramification groups and the different (overview).
-\item Exercises with solutions.
+\item $\QQ_p$ with $v = v_p$, $\mathcal{O} = \ZZ_p$, $\pi = p$, $k = \mathbb{F}_p$ (Chapter~\ref{p-adic-numbers}).
+\item The field $\mathbb{F}_q((t))$ of Laurent series $\sum_{i \geq m}a_it^i$, with $v$ the order of vanishing, $\mathcal{O} = \mathbb{F}_q[[t]]$, $\pi = t$, $k = \mathbb{F}_q$. It has characteristic $p$; it is the
+completion of the function field $\mathbb{F}_q(t)$ at the place $t = 0$.
+\item Finite extensions of $\QQ_p$ (Theorem~\ref{local-fields:theorem-extension-valuation}). It is a theorem that every local field of characteristic $0$ is one of these, and every local field of
+characteristic $p$ is isomorphic to some $\mathbb{F}_q((t))$ \cite[Chapter II, Proposition 5.2]{neukirch-ant}.
 \end{enumerate}
+\end{example}
 
-\section{Class Field Theory}\label{local-fields:section-class-field-theory}
-The description of abelian extensions of local and global fields.
-
-\noindent\textbf{Prerequisites.} Section~\ref{local-fields:section-local-fields}, Section~\ref{algebraic-number-theory:section-cyclotomic-fields} (Cyclotomic Fields) and Chapter~\ref{homological-algebra} (Homological Algebra).
-
-\noindent\textbf{Planned contents.}
+\begin{proposition}\label{local-fields:proposition-local-structure}
+Let $K$ be a local field and $R \subseteq \mathcal{O}$ a set of representatives of $k$ containing $0$.
 \begin{enumerate}
-\item Statements of local and global class field theory: the reciprocity maps, the existence theorem, ray class fields, the Hilbert class field.
-\item Examples: $\QQ$ and Kronecker--Weber, imaginary quadratic fields and complex multiplication (overview), primes of the form $x^2 + ny^2$.
-\item Proofs via Galois cohomology (overview, with references).
-\item Exercises with solutions.
+\item Every $x \in K^\times$ has a unique expansion $x = \sum_{i \geq m}a_i\pi^i$ with $a_i \in R$, $a_m \neq 0$, $m = v(x)$.
+\item $\mathcal{O}$ is compact, $K$ is locally compact and totally disconnected, and $\mathcal{O} \cong \varprojlim\mathcal{O}/\mathfrak{p}^n$.
+\item \emph{(Hensel's lemma.)} If $f \in \mathcal{O}[x]$ and $a \in \mathcal{O}$ satisfy $|f(a)| < |f^{\prime}(a)|^2$, then $f$ has a unique root $\alpha \in \mathcal{O}$ with $|\alpha - a| < |f^{\prime}(a)|$.
+\item $\mathcal{O}^\times \cong \mu_{q-1} \times (1 + \mathfrak{p})$, where $\mu_{q-1}$ is the group of $(q - 1)$-th roots of unity, which $x \mapsto \bar x$ maps isomorphically onto $k^\times$; and
+$K^\times \cong \pi^{\ZZ} \times \mu_{q-1} \times (1 + \mathfrak{p})$.
 \end{enumerate}
+\end{proposition}
+
+\begin{proof}[Sketch of proof]
+(1)--(3) are proved exactly as for $\QQ_p$ (Theorems~\ref{p-adic-numbers:theorem-expansions}, \ref{p-adic-numbers:theorem-topology}, \ref{p-adic-numbers:theorem-inverse-limit}
+and~\ref{p-adic-numbers:theorem-hensel}), with $p$ replaced by $\pi$ and the digits $0, \dots, p - 1$ by $R$; the verifications only use the ultrametric inequality, completeness and the finiteness of
+$k$. (4) The polynomial $x^{q-1} - 1$ splits into distinct linear factors over $k$ (Theorem~\ref{fields:theorem-finite-fields}), with simple roots, so by (3) each root lifts uniquely to a root in $\mathcal{O}$;
+the lifts form $\mu_{q-1}$ and map onto $k^\times$. Every unit is $\omega(u) \cdot u/\omega(u)$ with $\omega(u) \in \mu_{q-1}$ the lift of $\bar u$ and $u/\omega(u) \in 1 + \mathfrak{p}$, uniquely.
+\end{proof}
+
+\subsection{Extensions}\label{local-fields:subsection-extensions}
+
+\begin{theorem}\label{local-fields:theorem-extension-valuation}
+Let $K$ be a local field and $L/K$ a finite extension of degree $n$. Then $|x|_L = |N_{L/K}(x)|^{1/n}$ is the unique absolute value on $L$ extending $|\cdot|$ on $K$. With it, $L$ is a local field, its
+valuation ring $\mathcal{O}_L$ is the integral closure of $\mathcal{O}_K$ in $L$, and $\sigma(x)$ has the same absolute value as $x$ for every $K$-embedding $\sigma$ of $L$ into an extension.
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+\emph{Uniqueness.} Two absolute values extending $|\cdot|$ are norms on the finite-dimensional $K$-vector space $L$; since $K$ is complete and locally compact, all norms on $K^n$ are equivalent (the unit
+sphere of the max-norm is compact, and a norm is continuous on it and bounded below), so the two absolute values define the same topology and are equal by
+Proposition~\ref{p-adic-numbers:proposition-equivalent}, as they agree on $K$.
+
+\emph{Existence.} Multiplicativity of $|N(x)|^{1/n}$ is clear. The ultrametric inequality reduces to: $|N(x)| \leq 1$ implies $|N(1 + x)| \leq 1$. This follows from the statement that $x$ is integral over
+$\mathcal{O}_K$ if and only if $N_{L/K}(x) \in \mathcal{O}_K$, which in turn rests on Hensel's lemma in its factorisation form: an irreducible polynomial over $K$ whose constant and leading coefficients are
+integral has all coefficients integral \cite[Chapter II, Theorem 4.8]{neukirch-ant}. The same statement identifies $\mathcal{O}_L$ with the integral closure. The value group is a nontrivial subgroup of
+$q^{\frac1n\ZZ}$, hence discrete; completeness follows from the equivalence with the max-norm; the residue field is a finite extension of $k$, of degree at most $n$, because lifts to $\mathcal{O}_L$ of elements of $k_L$ linearly independent over $k$ are linearly independent over $K$ (in a relation
+$\sum a_i\omega_i = 0$ with $\max|a_i| = 1$, reduction gives a nontrivial relation among the residues), hence finite.
+\emph{Conjugates.} $|\sigma(\cdot)|$ is again an absolute value extending $|\cdot|$ on $K(x)$, so it equals $|\cdot|$ by uniqueness.
+\end{proof}
+
+\begin{definition}\label{local-fields:definition-e-f}
+For a finite extension $L/K$ of local fields, the \emph{ramification index} $e = e(L/K)$ is defined by $\pi_K\mathcal{O}_L = \mathfrak{p}_L^e$, that is, $e = v_L(\pi_K)$, and the \emph{residue degree} is
+$f = f(L/K) = [k_L : k_K]$. $L/K$ is \emph{unramified} if $e = 1$ and \emph{totally ramified} if $f = 1$.
+\end{definition}
+
+\begin{theorem}\label{local-fields:theorem-ef}
+Let $L/K$ be an extension of local fields of degree $n$. Let $\omega_1, \dots, \omega_f \in \mathcal{O}_L$ lift a basis of $k_L$ over $k_K$ (here $f$ is a priori at most $n$). Then the elements
+$\omega_i\pi_L^j$, $1 \leq i \leq f$, $0 \leq j < e$, form a basis of $\mathcal{O}_L$ over $\mathcal{O}_K$. In particular $n = ef$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: a norm estimate.} For $a_1, \dots, a_f \in K$, $|\sum_ia_i\omega_i| = \max_i|a_i|$: dividing by an $a_{i_0}$ of maximal absolute value, the sum becomes an element of $\mathcal{O}_L$ whose reduction is a
+nontrivial combination of the $\bar\omega_i$, hence nonzero. So $v_L(\sum_ia_i\omega_i) = e\min_iv_K(a_i)$, a multiple of $e$.
+
+\emph{Step 2: independence.} If $\sum_{i,j}a_{ij}\omega_i\pi_L^j = 0$ with not all $a_{ij} = 0$, then the terms $s_j = \sum_ia_{ij}\omega_i\pi_L^j$ that are nonzero have valuations $\equiv j \pmod e$, pairwise
+distinct, so the valuation of the sum is their minimum, which is finite, a contradiction. Moreover $|\sum a_{ij}\omega_i\pi_L^j| = \max_{i,j}|a_{ij}||\pi_L|^j \geq |\pi_K|\max|a_{ij}|$.
+
+\emph{Step 3: spanning.} Let $M$ be the $\mathcal{O}_K$-span of the $\omega_i\pi_L^j$. The quotients $\mathfrak{p}_L^j/\mathfrak{p}_L^{j+1}$, $0 \leq j < e$, are spanned over $k_K$ by the images of the
+$\omega_i\pi_L^j$, so $\mathcal{O}_L = M + \mathfrak{p}_L^e = M + \pi_K\mathcal{O}_L$, and by induction $\mathcal{O}_L = M + \pi_K^N\mathcal{O}_L$ for all $N$. Given $x \in \mathcal{O}_L$, choose $m_N \in M$ with
+$x - m_N \in \pi_K^N\mathcal{O}_L$. By the estimate of Step 2 the coefficients of $m_N$ form Cauchy sequences in $\mathcal{O}_K$; their limits give $m \in M$ with $x = m$.
+
+\emph{Step 4.} The basis has $ef$ elements and is also a $K$-basis of $L$ (every element of $L$ is an element of $\mathcal{O}_L$ divided by a power of $\pi_K$), so $n = ef$.
+\end{proof}
+
+\begin{theorem}[Unramified extensions]\label{local-fields:theorem-unramified}
+Let $K$ be a local field with $q$ elements in its residue field. For every $f \geq 1$ there is, inside a fixed algebraic closure, exactly one unramified extension $K_f$ of degree $f$, namely
+$K_f = K(\zeta)$ with $\zeta$ a primitive $(q^f - 1)$-th root of unity. It is Galois, and reduction gives an isomorphism $\mathrm{Gal}(K_f/K) \cong \mathrm{Gal}(\mathbb{F}_{q^f}/\mathbb{F}_q)$; so
+$\mathrm{Gal}(K_f/K)$ is cyclic, generated by the \emph{Frobenius} $\zeta \mapsto \zeta^q$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: an unramified extension of degree $f$.} Let $\bar g \in k[x]$ be monic irreducible of degree $f$ (it exists, since $\mathbb{F}_{q^f} = \mathbb{F}_q(\bar\eta)$ for a generator $\bar\eta$), lift it to a
+monic $g \in \mathcal{O}_K[x]$, irreducible since its reduction is, and let $L = K(\eta)$ with $g(\eta) = 0$. Then $\eta \in \mathcal{O}_L$ (it is integral) and $\bar\eta$ is a root of $\bar g$, so
+$k_L \supseteq \mathbb{F}_{q^f}$ and $f(L/K) \geq f = [L : K]$. By Theorem~\ref{local-fields:theorem-ef}, $e = 1$ and $k_L = \mathbb{F}_{q^f}$.
+
+\emph{Step 2: every unramified $L$ of degree $f$ is $K(\zeta)$.} Its residue field is $\mathbb{F}_{q^f}$, in which $x^{q^f - 1} - 1$ has $q^f - 1$ simple roots; by Hensel's lemma
+(Proposition~\ref{local-fields:proposition-local-structure}(3)) they lift to roots in $\mathcal{O}_L$, so $L \supseteq K(\zeta)$. Conversely $K(\zeta)$ has residue field containing $\bar\zeta$, of order $q^f - 1$
+(distinct roots of $x^{q^f-1} - 1$ have distinct reductions, the reduced polynomial being separable), hence containing $\mathbb{F}_{q^f}$; so $[K(\zeta) : K] \geq f(K(\zeta)/K) \geq f = [L : K]$, and $L = K(\zeta)$.
+This shows uniqueness and, with Step 1, existence.
+
+\emph{Step 3: Galois group.} $K_f$ is the splitting field of $x^{q^f - 1} - 1$, hence Galois of degree $f$. An automorphism is determined by its effect on $\zeta$, and reduction is injective on the roots of
+unity of order $q^f - 1$, so $\mathrm{Gal}(K_f/K) \to \mathrm{Gal}(\mathbb{F}_{q^f}/\mathbb{F}_q)$ is injective; both groups have order $f$.
+\end{proof}
+
+\begin{proposition}[Eisenstein extensions]\label{local-fields:proposition-eisenstein}
+Let $f = x^n + a_{n-1}x^{n-1} + \dots + a_0 \in \mathcal{O}_K[x]$ be Eisenstein ($v_K(a_i) \geq 1$, $v_K(a_0) = 1$). Then $f$ is irreducible, and for a root $\alpha$ the extension $K(\alpha)/K$ is totally ramified of
+degree $n$, with uniformiser $\alpha$. Conversely, if $L/K$ is totally ramified, then $L = K(\pi_L)$ and the minimal polynomial of $\pi_L$ is Eisenstein.
+\end{proposition}
+
+\begin{proof}
+\emph{Eisenstein implies totally ramified.} Let $L = K(\alpha)$, $e = e(L/K) \leq [L : K] \leq n$, and $w = v_L$, so $w(a) = e\,v_K(a)$ on $K$. As $\alpha$ is integral, $w(\alpha) \geq 0$; and
+$\alpha^n = -\sum a_i\alpha^i \in \mathfrak{p}_L$, so $w(\alpha) > 0$. For $i \geq 1$, $w(a_i\alpha^i) > e = w(a_0)$, so $nw(\alpha) = w(\alpha^n) = w(a_0) = e$ by the ultrametric inequality (the term $a_0$ is strictly
+the smallest). With $w(\alpha) \geq 1$ and $e \leq n$ this forces $w(\alpha) = 1$ and $e = n = [L : K]$; so $f$ is irreducible.
+
+\emph{Conversely.} If $e = n$ and $f = 1$, Theorem~\ref{local-fields:theorem-ef} (with $\omega_1 = 1$) shows that $1, \pi_L, \dots, \pi_L^{n-1}$ is a basis, so $L = K(\pi_L)$. Its conjugates have the same absolute
+value $|\pi_L| < 1$ (Theorem~\ref{local-fields:theorem-extension-valuation}), so the coefficients of its minimal polynomial, symmetric functions of them, have absolute value $< 1$, and
+$|a_0| = |N(\pi_L)| = |\pi_L|^n = |\pi_K|$.
+\end{proof}
+
+\begin{example}\label{local-fields:example-cyclotomic-local}
+For $n \geq 1$, $\Phi_{p^n}(x) = \Phi_p(x^{p^{n-1}})$ satisfies $\Phi_{p^n}(x + 1) \equiv x^{\varphi(p^n)} \pmod p$ (as $(x + 1)^{p^k} \equiv x^{p^k} + 1$) and $\Phi_{p^n}(1) = p$; so it is Eisenstein, and
+$\QQ_p(\zeta_{p^n})$ is totally ramified of degree $\varphi(p^n) = p^{n-1}(p - 1)$ with uniformiser $\zeta_{p^n} - 1$ and Galois group $(\ZZ/p^n)^\times$. On the other hand $\QQ_p(\zeta_m)$ for $p \nmid m$ is
+unramified, of degree the order of $p$ modulo $m$, by Theorem~\ref{local-fields:theorem-unramified}. Every extension $L/K$ contains a largest unramified subextension $L_0$, with $[L_0 : K] = f$ and $L/L_0$
+totally ramified \cite[Chapter II, \S 7]{neukirch-ant}.
+\end{example}
+
+\begin{lemma}[Krasner]\label{local-fields:lemma-krasner}
+Let $\alpha$ be separable over $K$ with conjugates $\alpha = \alpha_1, \alpha_2, \dots, \alpha_d$ in an algebraic closure, and let $\beta$ satisfy $|\beta - \alpha| < |\alpha - \alpha_i|$ for all $i \geq 2$. Then
+$K(\alpha) \subseteq K(\beta)$.
+\end{lemma}
+
+\begin{proof}
+Otherwise, in a Galois extension containing $\alpha$ and $\beta$ there is an automorphism $\sigma$ fixing $K(\beta)$ with $\sigma\alpha = \alpha_i \neq \alpha$. By uniqueness of the extended absolute value
+(Theorem~\ref{local-fields:theorem-extension-valuation}), $|\beta - \sigma\alpha| = |\sigma(\beta - \alpha)| = |\beta - \alpha|$. Then
+$|\alpha - \alpha_i| \leq \max(|\alpha - \beta|, |\beta - \sigma\alpha|) = |\beta - \alpha| < |\alpha - \alpha_i|$, a contradiction.
+\end{proof}
+
+\begin{corollary}\label{local-fields:corollary-krasner-polynomials}
+Let $f \in K[x]$ be monic, separable and irreducible of degree $d$. Every monic $g \in K[x]$ of degree $d$ whose coefficients are close enough to those of $f$ is irreducible, and a root of $g$ generates
+the same field as a suitable root of $f$. Consequently every finite extension of $\QQ_p$ is generated by a root of a polynomial with rational coefficients, so it is $\QQ_p \cdot F$ for a number field $F$.
+\end{corollary}
+
+\begin{proof}[Sketch of proof]
+The roots of a monic polynomial depend continuously on its coefficients: if $g$ is close to $f$, then $|f(\beta)| = |f(\beta) - g(\beta)|$ is small for every root $\beta$ of $g$, so $\prod_i|\beta - \alpha_i|$ is small and
+$\beta$ is close to some root $\alpha$ of $f$, closer than $\min_{i \neq j}|\alpha_i - \alpha_j|$. Krasner's lemma gives $K(\alpha) \subseteq K(\beta)$, and $[K(\beta) : K] \leq d = [K(\alpha) : K]$ gives equality and
+the irreducibility of $g$. For the last statement, approximate the minimal polynomial of a generator by one with coefficients in $\QQ$, which is dense in $\QQ_p$.
+\end{proof}
+
+\subsection{Completions of number fields}\label{local-fields:subsection-completions}
+
+Let $K$ be a number field and $\mathfrak{p}$ a nonzero prime of $\mathcal{O}_K$ above $p$. Since $(\mathcal{O}_K)_\mathfrak{p}$ is a DVR, $v_\mathfrak{p}(x)$, the exponent of $\mathfrak{p}$ in $x\mathcal{O}_K$, is a discrete
+valuation on $K$; the completion $K_\mathfrak{p}$ is a local field with residue field $\mathcal{O}_K/\mathfrak{p}$.
+
+\begin{theorem}\label{local-fields:theorem-completions}
+\begin{enumerate}
+\item $K_\mathfrak{p}$ is a finite extension of $\QQ_p$ with $e(K_\mathfrak{p}/\QQ_p) = e_\mathfrak{p}$ and $f(K_\mathfrak{p}/\QQ_p) = f_\mathfrak{p}$, the invariants of
+Definition~\ref{algebraic-number-theory:definition-ramification}; so $[K_\mathfrak{p} : \QQ_p] = e_\mathfrak{p}f_\mathfrak{p}$.
+\item The natural map $K \otimes_\QQ\QQ_p \to \prod_{\mathfrak{p} \mid p}K_\mathfrak{p}$ is an isomorphism; equivalently, if $K = \QQ(\theta)$ with minimal polynomial $F$, the factorisation $F = \prod F_\mathfrak{p}$ into
+irreducibles over $\QQ_p$ corresponds to the primes above $p$, with $\deg F_\mathfrak{p} = e_\mathfrak{p}f_\mathfrak{p}$.
+\item If $K/\QQ$ is Galois, the decomposition group $D_\mathfrak{p}$ (Definition~\ref{algebraic-number-theory:definition-decomposition-group}) is identified with $\mathrm{Gal}(K_\mathfrak{p}/\QQ_p)$, and the inertia group
+with the subgroup fixing the maximal unramified subextension.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+(1) $K_\mathfrak{p}$ is generated over $\QQ_p$ by $K$, hence by $\theta$, so it is finite. Completion changes neither the residue field nor the value group, so $f(K_\mathfrak{p}/\QQ_p) = f_\mathfrak{p}$ and
+$v_\mathfrak{p}(p) = e_\mathfrak{p}$ gives $e(K_\mathfrak{p}/\QQ_p) = e_\mathfrak{p}$; then Theorem~\ref{local-fields:theorem-ef}. (2) The map is surjective because $K$ is dense in $\prod_\mathfrak{p}K_\mathfrak{p}$ (weak
+approximation, proved from the Chinese remainder theorem as in Lemma~\ref{p-adic-numbers:lemma-approximation}), and both sides have dimension $n = \sum e_\mathfrak{p}f_\mathfrak{p}$ over $\QQ_p$
+(Theorem~\ref{algebraic-number-theory:theorem-sum-ef}). $K \otimes \QQ_p = \QQ_p[x]/(F) = \prod\QQ_p[x]/(F_i)$, and each factor is one of the $K_\mathfrak{p}$. (3) Each $\sigma \in D_\mathfrak{p}$ is continuous for
+$v_\mathfrak{p}$ and extends to $K_\mathfrak{p}$; this gives an injection $D_\mathfrak{p} \to \mathrm{Gal}(K_\mathfrak{p}/\QQ_p)$ between groups of order $e_\mathfrak{p}f_\mathfrak{p}$. See \cite[Chapter II, \S 8--9]{neukirch-ant}.
+\end{proof}
+
+\begin{example}\label{local-fields:example-completions}
+In $\QQ(i)$: $5 = (2 + i)(2 - i)$ splits, and correspondingly $x^2 + 1$ has two roots in $\QQ_5$ (Hensel, from $2^2 \equiv -1 \pmod 5$), so $\QQ(i) \otimes \QQ_5 \cong \QQ_5 \times \QQ_5$; $3$ is inert and
+$\QQ(i)_{(3)} = \QQ_3(i)$ is the unramified quadratic extension of $\QQ_3$; $2$ ramifies and $\QQ_2(i) = \QQ_2(i - 1)$, with $i - 1$ a root of the Eisenstein polynomial $x^2 + 2x + 2$.
+\end{example}
+
+\begin{remark}\label{local-fields:remark-ramification-groups}
+The inertia group carries a finer filtration by the \emph{higher ramification groups} $G_i = \{\sigma : v_L(\sigma x - x) \geq i + 1 \text{ for } x \in \mathcal{O}_L\}$; $G_0/G_1$ is cyclic of order prime to
+$p$ (tame ramification) and $G_1$ is a $p$-group (wild ramification). The \emph{different} $\mathfrak{D}_{L/K}$, the inverse of the dual of $\mathcal{O}_L$ under the trace form, has
+$v_L(\mathfrak{D}) = \sum_{i \geq 0}(|G_i| - 1)$, and its norm is the discriminant; this refines Dedekind's theorem that the ramified primes divide the discriminant \cite[Chapter III, \S 2]{neukirch-ant},
+\cite{serre-local-fields}.
+\end{remark}
+
+\section{Class field theory}\label{local-fields:section-class-field-theory}
+
+Class field theory describes the abelian extensions of a local or global field $K$, that is, the Galois extensions with abelian group, through objects built from $K$ itself: the multiplicative group
+$K^\times$ for local fields, and the idele class group for number fields. Its proofs (by Galois cohomology, or by analytic methods for the global part) are long; here we state the theorems and work out
+the examples that make them concrete. Complete proofs are in \cite{neukirch-ant} and \cite{cassels-frohlich}.
+
+\subsection{Local class field theory}\label{local-fields:subsection-local-cft}
+
+\begin{theorem}[Local reciprocity]\label{local-fields:theorem-local-cft}
+Let $K$ be a local field. There is a unique homomorphism $\mathrm{rec}_K \colon K^\times \to \mathrm{Gal}(K^{\mathrm{ab}}/K)$ to the Galois group of the maximal abelian extension such that:
+\begin{enumerate}
+\item for every uniformiser $\pi$ and finite unramified extension $L/K$, $\mathrm{rec}_K(\pi)|_L$ is the Frobenius of Theorem~\ref{local-fields:theorem-unramified};
+\item for every finite abelian extension $L/K$, $\mathrm{rec}_K$ induces an isomorphism $K^\times/N_{L/K}(L^\times) \cong \mathrm{Gal}(L/K)$.
+\end{enumerate}
+Moreover $L \mapsto N_{L/K}(L^\times)$ is an inclusion-reversing bijection between finite abelian extensions and open subgroups of finite index of $K^\times$ (the \emph{existence theorem})
+\cite[Chapter V, \S 1]{neukirch-ant}.
+\end{theorem}
+
+\begin{example}\label{local-fields:example-local-cft-qp}
+For $K = \QQ_p$: $\QQ_p^\times = p^\ZZ \times \ZZ_p^\times$, and $\QQ_p^{\mathrm{ab}}$ is the compositum of the unramified extensions $\QQ_p(\zeta_m)$, $p \nmid m$, and of the totally ramified
+$\QQ_p(\zeta_{p^n})$ (\emph{local Kronecker--Weber theorem}). The reciprocity map sends $p$ to the Frobenius on the first and to the identity on the second, and $u \in \ZZ_p^\times$ to the identity on the
+first and to $\zeta_{p^n} \mapsto \zeta_{p^n}^{u^{-1}}$ on the second. For the quadratic extensions, $\mathrm{rec}(b)$ acts on $\QQ_p(\sqrt a)$ by the sign $(a, b)_p$: the Hilbert symbol of
+Chapter~\ref{p-adic-numbers} is the local reciprocity map for quadratic extensions, which is why $(a, b)_p = 1$ exactly when $b$ is a norm from $\QQ_p(\sqrt a)$
+(Proposition~\ref{p-adic-numbers:proposition-hilbert-norm}).
+\end{example}
+
+\subsection{Adeles and ideles}\label{local-fields:subsection-adeles}
+
+\begin{definition}\label{local-fields:definition-adeles}
+The \emph{adele ring} $\mathbb{A}_K$ of a number field $K$ is the restricted product of the completions $K_v$ over all places $v$ (the primes $\mathfrak{p}$ and the archimedean places, the real and complex
+embeddings up to conjugation): the elements $(x_v)$ with $x_v \in \mathcal{O}_{K_v}$ for all but finitely many $v$, topologised so that $\prod_{v \mid \infty}K_v \times \prod_{\mathfrak{p}}\mathcal{O}_{K_\mathfrak{p}}$
+is open with the product topology. The \emph{idele group} $\mathbb{I}_K = \mathbb{A}_K^\times$ is the restricted product of the $K_v^\times$ with respect to the $\mathcal{O}_{K_\mathfrak{p}}^\times$. $K$ embeds
+diagonally in both, and $C_K = \mathbb{I}_K/K^\times$ is the \emph{idele class group}.
+\end{definition}
+
+\begin{proposition}\label{local-fields:proposition-adeles-q}
+$\QQ$ is a discrete subgroup of $\mathbb{A}_\QQ$, and $\mathbb{A}_\QQ = \QQ + \bigl([0, 1) \times \prod_p\ZZ_p\bigr)$ with $\QQ \cap \bigl([0, 1) \times \prod_p\ZZ_p\bigr) = \{0\}$; hence $\mathbb{A}_\QQ/\QQ$ is compact. Also
+$\mathbb{I}_\QQ = \QQ^\times \times \bigl(\RR_{>0} \times \prod_p\ZZ_p^\times\bigr)$.
+\end{proposition}
+
+\begin{proof}
+\emph{Decomposition.} Let $x = (x_\infty, x_2, x_3, \dots) \in \mathbb{A}_\QQ$. For the finitely many $p$ with $x_p \notin \ZZ_p$, the $p$-adic expansion gives $r_p \in \ZZ[\frac1p]$ with $x_p - r_p \in \ZZ_p$
+(the polar part). Then $r = \sum r_p \in \QQ$ satisfies $x_p - r \in \ZZ_p$ for all $p$, since $r_\ell \in \ZZ_p$ for $\ell \neq p$. Subtracting the integer $\lfloor x_\infty - r\rfloor$ as well, $x - r^{\prime}$ has
+real component in $[0, 1)$ and $p$-adic components in $\ZZ_p$. \emph{Uniqueness and discreteness.} A rational number in $\ZZ_p$ for all $p$ is an integer, and an integer in $[0, 1)$ is $0$; the open set
+$(-\frac12, \frac12) \times \prod\ZZ_p$ meets $\QQ$ only in $0$. \emph{Compactness.} $\mathbb{A}_\QQ/\QQ$ is the image of the compact set $[0, 1] \times \prod_p\ZZ_p$ (Tychonoff). \emph{Ideles.} An idele $(x_v)$ has
+$x_p \in \ZZ_p^\times$ for almost all $p$; with $r = \pm\prod_pp^{v_p(x_p)}$, the sign that of $x_\infty$, $x/r$ has unit components at all $p$ and positive real component, and $r$ is unique.
+\end{proof}
+
+So $C_\QQ \cong \RR_{>0} \times \hat{\ZZ}^\times$, where $\hat{\ZZ}^\times = \prod_p\ZZ_p^\times = \varprojlim(\ZZ/m)^\times$; the second factor is the Galois group of $\QQ(\zeta_m, m \geq 1)$ over $\QQ$, which is the content
+of the Kronecker--Weber theorem (Theorem~\ref{algebraic-number-theory:theorem-kronecker-weber}) in the language of global class field theory.
+
+\subsection{Global class field theory}\label{local-fields:subsection-global-cft}
+
+\begin{theorem}[Artin reciprocity and the existence theorem]\label{local-fields:theorem-global-cft}
+Let $K$ be a number field. There is a continuous surjective homomorphism $\mathrm{rec}_K \colon C_K \to \mathrm{Gal}(K^{\mathrm{ab}}/K)$ whose restriction to each $K_v^\times$ is the local reciprocity map of
+$K_v$ (composed with the inclusion of decomposition groups). For every finite abelian $L/K$ it induces $C_K/N_{L/K}C_L \cong \mathrm{Gal}(L/K)$, and $L \mapsto N_{L/K}C_L$ is a bijection between finite abelian
+extensions and open subgroups of finite index of $C_K$. For an unramified prime $\mathfrak{p}$, the idele $(1, \dots, \pi_\mathfrak{p}, \dots, 1)$ maps to the Frobenius $\mathrm{Frob}_\mathfrak{p}$
+\cite[Chapter VI, \S\S 5--6]{neukirch-ant}.
+\end{theorem}
+
+In terms of ideals: for a modulus $\mathfrak{m}$, the \emph{ray class group} $\mathrm{Cl}_\mathfrak{m}$ is the group of fractional ideals prime to $\mathfrak{m}$ modulo principal ideals $(\alpha)$ with
+$\alpha \equiv 1 \pmod{\mathfrak{m}}$ (and positive at the real places dividing $\mathfrak{m}$); for every finite abelian $L/K$ there is $\mathfrak{m}$ such that the \emph{Artin map}
+$\mathfrak{p} \mapsto \mathrm{Frob}_\mathfrak{p}$ factors through a surjection $\mathrm{Cl}_\mathfrak{m} \to \mathrm{Gal}(L/K)$. For $K = \QQ$, $L = \QQ(\zeta_m)$ and $\mathfrak{m} = m\infty$, this is the isomorphism
+$(\ZZ/m)^\times \cong \mathrm{Gal}(\QQ(\zeta_m)/\QQ)$, $q \mapsto \sigma_q$, proved for prime $m$ in Theorem~\ref{algebraic-number-theory:theorem-cyclotomic-integers}(3).
+
+\begin{theorem}[Hilbert class field]\label{local-fields:theorem-hilbert-class-field}
+Every number field $K$ has a maximal unramified (at all places, including the real ones) abelian extension $H$, the \emph{Hilbert class field}. The Artin map gives $\mathrm{Cl}_K \cong \mathrm{Gal}(H/K)$, so
+$[H : K] = h_K$, and a prime $\mathfrak{p}$ of $K$ splits completely in $H$ if and only if it is principal \cite[Chapter VI, \S 6]{neukirch-ant}.
+\end{theorem}
+
+\begin{example}\label{local-fields:example-x2-5y2}
+Let $K = \QQ(\sqrt{-5})$, with $h_K = 2$ (Example~\ref{algebraic-number-theory:example-class-numbers}). The field $L = K(i) = \QQ(i, \sqrt5)$ is an unramified quadratic extension of $K$: only $2$ and $5$
+could ramify; $5$ is unramified in $\QQ(i)$, so its ramification index in $L$ is at most $[L : \QQ(i)] = 2$, which it already has in $K$, so nothing new ramifies above $5$; likewise above $2$, using $\QQ(\sqrt5)$;
+and $K$ has no real places. By Theorem~\ref{local-fields:theorem-hilbert-class-field}, $L = H$. Now for a prime $p \neq 2, 5$:
+\[
+\begin{aligned}
+p = x^2 + 5y^2 &\iff p\mathcal{O}_K = \mathfrak{p}\bar{\mathfrak{p}} \text{ with } \mathfrak{p} = (x + y\sqrt{-5}) \text{ principal}\\
+&\iff p \text{ splits completely in } H\\
+&\iff \Bigl(\frac{-1}{p}\Bigr) = \Bigl(\frac{5}{p}\Bigr) = 1 \iff p \equiv 1, 9 \pmod{20}.
+\end{aligned}
+\]
+For instance $29 = 3^2 + 5 \cdot 2^2$ and $41 = 6^2 + 5 \cdot 1^2$, while $3 \cdot 7 = 21 = 1 + 5 \cdot 2^2$ although neither $3$ nor $7$ is of the form: they lie in the non-principal class. This is the
+answer to the question raised in Chapter~\ref{number-theory} \cite{cox-primes}.
+\end{example}
+
+\begin{remark}\label{local-fields:remark-cft-proofs}
+The local theory is proved with Galois cohomology: for a finite Galois extension $L/K$ of local fields, $H^2(\mathrm{Gal}(L/K), L^\times)$ is cyclic of order $[L : K]$ with a canonical generator (the
+\emph{fundamental class}), and cup product with it gives Tate's isomorphism $\hat H^{-2}(G, \ZZ) = G^{\mathrm{ab}} \cong \hat H^0(G, L^\times) = K^\times/NL^\times$, whose inverse is $\mathrm{rec}_K$; the Brauer
+group $\mathrm{Br}(K) \cong \QQ/\ZZ$ appears here. The global theory adds the cohomology of idele class groups and the analytic or algebraic proof of the second inequality
+$[C_K : N_{L/K}C_L] \leq [L : K]$ \cite{cassels-frohlich}. Tate's thesis recasts Hecke's analytic continuation of $L$-functions as harmonic analysis on $\mathbb{A}_K$ and $\mathbb{I}_K$, with the Poisson
+summation formula for $\mathbb{A}_K/K$ (Proposition~\ref{local-fields:proposition-adeles-q} is the case $K = \QQ$ of its compactness); the non-abelian generalisation of class field theory is the Langlands
+programme.
+\end{remark}
+
+\section{Exercises}\label{local-fields:section-exercises}
+
+\begin{exercise}\label{local-fields:exercise-quadratic-extensions}
+Let $p$ be odd. Show that $\QQ_p$ has exactly three quadratic extensions, that one of them is unramified, and that the other two are totally ramified.
+\end{exercise}
+
+\begin{solution}
+Quadratic extensions are $\QQ_p(\sqrt a)$ with $a$ running through the nontrivial classes of $\QQ_p^\times/\QQ_p^{\times2}$, whose representatives are $\varepsilon$, $p$, $\varepsilon p$ with $\varepsilon$ a
+non-residue (Corollary~\ref{p-adic-numbers:corollary-square-classes}). $\QQ_p(\sqrt\varepsilon)$ has residue field $\mathbb{F}_p(\sqrt{\bar\varepsilon}) = \mathbb{F}_{p^2}$, so it is unramified (it is
+$\QQ_p(\zeta_{p^2 - 1})$ by Theorem~\ref{local-fields:theorem-unramified}). $x^2 - p$ and $x^2 - \varepsilon p$ are Eisenstein, so the other two are totally ramified
+(Proposition~\ref{local-fields:proposition-eisenstein}).
+\end{solution}
+
+\begin{exercise}\label{local-fields:exercise-q2-extensions}
+Determine $e$ and $f$ for $\QQ_2(\sqrt{-3})$, $\QQ_2(\sqrt{-1})$ and $\QQ_2(\sqrt 2)$.
+\end{exercise}
+
+\begin{solution}
+$\QQ_2(\sqrt{-3}) = \QQ_2(\zeta_3)$ is unramified of degree $2$, as $2$ has order $2$ modulo $3$ (Example~\ref{local-fields:example-cyclotomic-local}): $e = 1$, $f = 2$. $\QQ_2(i) = \QQ_2(i - 1)$ with $i - 1$ a
+root of the Eisenstein polynomial $x^2 + 2x + 2$: $e = 2$, $f = 1$. $x^2 - 2$ is Eisenstein: $e = 2$, $f = 1$.
+\end{solution}
+
+\begin{exercise}\label{local-fields:exercise-x2-6y2}
+Assuming that the Hilbert class field of $K = \QQ(\sqrt{-6})$ is $K(\sqrt{-3}) = \QQ(\sqrt{-6}, \sqrt 2)$, show that a prime $p > 3$ is of the form $x^2 + 6y^2$ if and only if $p \equiv 1, 7 \pmod{24}$.
+Check that $K(\sqrt{-3})/K$ is unramified.
+\end{exercise}
+
+\begin{solution}
+$h_K = 2$ (Exercise~\ref{algebraic-number-theory:exercise-sqrt-minus-six}). \emph{Unramified:} only $2$ and $3$ ramify in $H = \QQ(\sqrt{-6}, \sqrt2)$ over $\QQ$; $3$ is unramified in $\QQ(\sqrt2)$ and $2$ in
+$\QQ(\sqrt{-3})$, so as in Example~\ref{local-fields:example-x2-5y2} their ramification indices in $H$ are $2$, already attained in $K$. \emph{Splitting:} $p = x^2 + 6y^2$ iff $p$ splits completely in $H$ iff
+$p$ splits in $\QQ(\sqrt{-6})$, $\QQ(\sqrt 2)$ and $\QQ(\sqrt{-3})$; it suffices that it splits in the last two, which means $(\frac2p) = 1$ and $(\frac{-3}{p}) = 1$, that is, $p \equiv \pm1 \pmod 8$ and
+$p \equiv 1 \pmod 3$, that is, $p \equiv 1, 7 \pmod{24}$. Examples: $7 = 1 + 6$, $31 = 25 + 6$, $73 = 49 + 24$.
+\end{solution}
+
+\begin{exercise}\label{local-fields:exercise-roots-of-unity-qp}
+Show that the roots of unity in $\QQ_p$ are exactly $\mu_{p-1}$ for $p$ odd and $\{\pm1\}$ for $p = 2$, using Example~\ref{local-fields:example-cyclotomic-local}.
+\end{exercise}
+
+\begin{solution}
+Roots of unity of order prime to $p$ in $\QQ_p$: if $\zeta_m \in \QQ_p$ with $p \nmid m$, then $\QQ_p(\zeta_m) = \QQ_p$ has degree $1$, the order of $p$ modulo $m$, so $m \mid p - 1$. Roots of $p$-power
+order: $\QQ_p(\zeta_{p^n})$ has degree $\varphi(p^n)$, which is $1$ only for $p^n = 2$. A root of unity of order $m = p^am^{\prime}$ generates roots of orders $p^a$ and $m^{\prime}$. So the group is $\mu_{p-1}$ for odd
+$p$, and $\mu_2$ for $p = 2$ (where $p - 1 = 1$).
+\end{solution}
