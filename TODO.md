@@ -146,10 +146,12 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
   `continued-fractions` (new sections: Lindemann–Weierstrass, Gelfond–Schneider, Baker's theorem
   (statement), Schanuel's conjecture, Roth and Schmidt's subspace theorem, irrationality of ζ(3)
   (Apéry/Beukers)); the chapter can be renamed "Diophantine Approximation and Transcendence".
-- `additive-number-theory` (planned, new): sums of squares, Waring, circle method, sieves,
-  Vinogradov, additive combinatorics, partitions.
-- `diophantine-equations` (planned): as in its outline; Thue's theorem, Skolem's method, Catalan
-  (Mihăilescu, statement), the abc conjecture.
+- `additive-number-theory` (draft 2026-11-07): to deepen: the circle method for Waring
+  (Hardy–Littlewood asymptotic, Vinogradov's three primes), Brun's sieve, Selberg's sieve,
+  Freiman/Plünnecke, partitions (Hardy–Ramanujan).
+- `diophantine-equations` (draft 2026-11-07): to deepen: Skolem's p-adic method, Thue's theorem
+  with proof, number of representations by three squares, Legendre's theorem on ax²+by²+cz²
+  with an elementary proof, more Mordell curves, Kummer's regular primes (after cyclotomic fields).
 - `algebraic-number-theory` (planned): number fields, class groups and units, cyclotomic fields,
   Kummer theory, quadratic fields and binary quadratic forms (link with number-theory), Dedekind
   zeta functions and the class number formula.
@@ -353,8 +355,7 @@ together in one place.
      ~~`prime-numbers`~~ (done), ~~`continued-fractions`~~ (done),
      ~~`geometry-of-numbers`~~ (done), ~~`analytic-number-theory`~~ (done),
      ~~`p-adic-numbers`~~ (done 2026-11-06),
-     `diophantine-equations` (uses all of the part: three squares via
-     Hasse–Minkowski, Skolem, Thue).
+     ~~`diophantine-equations`~~ (draft 2026-11-07).
    - Part *Algebraic Number Theory*: `algebraic-number-theory` (number fields,
      Dedekind domains, decomposition of primes), `class-groups-and-units`
      (new: Minkowski bound, class number, Dirichlet's unit theorem, class
@@ -536,6 +537,12 @@ spectral-sequences 300 (then everything below about 800 lines).
   parts).
 
 ## Done
+
+- [x] 2026-11-07: **Drafts** of `additive-number-theory` (circle-method identity, Schnirelmann,
+  Legendre sieve, Cauchy–Davenport, Ruzsa) and `diophantine-equations` (Frobenius/Sylvester,
+  Pythagorean triples and conics, descent for x⁴±y⁴=z², congruent numbers and y²=x³−n²x,
+  Davenport–Cassels and three squares, Gauss's triangular numbers, Markov tree, Mordell
+  y²=x³+7 and y²=x³−2, FLT for 3 and 4, Sophie Germain, Mason–Stothers, abc, Hilbert's tenth).
 
 - [x] 2026-11-07: **Elliptic regularity fully proved**: `distributions` gets Peetre's inequality,
   multiplication on H^s (with the sharp sup|φ| bound), interpolation, difference quotients,

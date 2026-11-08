@@ -1,17 +1,710 @@
 \chapter{Diophantine Equations}\label{diophantine-equations}
-\chapterstatus{planned}
+\chapterstatus{draft}
 
-Integer and rational solutions of polynomial equations, by elementary, geometric, analytic and $p$-adic methods.
+A \emph{Diophantine equation} is a polynomial equation with integer coefficients of which one seeks the integer, or the rational, solutions. The subject has no general method; Hilbert's tenth problem,
+discussed at the end of the chapter, shows that there cannot be one. What it has instead is a stock of ideas, each of which settles whole families of equations: congruences and $p$-adic numbers show that an
+equation has no solutions; Bézout's identity and geometry (lines through a known point) produce all of them; Fermat's \emph{infinite descent} turns a solution into a smaller one; and factorisation in rings
+larger than $\ZZ$, such as the Gaussian and Eisenstein integers, turns a sum into a product. This chapter presents these ideas on the classical examples: linear equations and the coin problem, Pythagorean
+triples and conics, the equations $x^4 \pm y^4 = z^2$ and congruent numbers, sums of three squares, Markov's equation, Mordell's equation, and Fermat's last theorem for the exponents $3$ and $4$ together with
+Sophie Germain's theorem and the polynomial analogue. Pell's equation was treated in Chapter~\ref{continued-fractions}, the Hasse--Minkowski theorem in Chapter~\ref{p-adic-numbers}, and Waring's problem in
+Chapter~\ref{additive-number-theory}.
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{number-theory} (Elementary Number Theory), Chapter~\ref{continued-fractions} (Continued Fractions and Diophantine Approximation), Chapter~\ref{geometry-of-numbers} (Geometry of Numbers), Chapter~\ref{analytic-number-theory} (Analytic Number Theory) and Chapter~\ref{p-adic-numbers} (p-adic Numbers).
+\noindent\textbf{Prerequisites.} Chapter~\ref{number-theory} (Elementary Number Theory), Chapter~\ref{continued-fractions} (Continued Fractions and Diophantine Approximation), Chapter~\ref{additive-number-theory} (Additive Number Theory) and Chapter~\ref{p-adic-numbers} (p-adic Numbers).
 
-\noindent\textbf{Planned contents.}
+\section{Linear equations and the coin problem}\label{diophantine-equations:section-linear}
+
+\begin{notation}\label{diophantine-equations:notation-diophantine}
+In this chapter $\gcd(a, b)$ is the greatest common divisor of integers not both zero, taken positive, and $a \mid b$ means that $a$ divides $b$. An \emph{integer solution} of an equation
+$f(x_1, \dots, x_n) = 0$ with $f \in \ZZ[x_1, \dots, x_n]$ is a point of $\ZZ^n$ where $f$ vanishes, a \emph{rational solution} a point of $\QQ^n$. A solution is \emph{trivial} when it is the obvious one an
+equation of the given shape always has (for instance $x = y = z = 0$ for a homogeneous equation), and \emph{primitive} when its coordinates have greatest common divisor $1$.
+\end{notation}
+
+The simplest Diophantine equations are linear, and Bézout's theorem (Theorem~\ref{number-systems:theorem-bezout}) solves them completely.
+
+\begin{proposition}\label{diophantine-equations:proposition-linear}
+Let $a, b, c \in \ZZ$ with $a, b$ not both zero, and $d = \gcd(a, b)$. The equation $ax + by = c$ has an integer solution if and only if $d \mid c$. If $(x_0, y_0)$ is one solution, all solutions are
+\[
+x = x_0 + \frac bd k, \qquad y = y_0 - \frac ad k, \qquad k \in \ZZ.
+\]
+\end{proposition}
+
+\begin{proof}
+\emph{Necessity.} $d$ divides $ax + by$ for all integers $x$, $y$.
+
+\emph{Sufficiency.} By Bézout there are $u$, $v$ with $au + bv = d$; if $c = de$, then $(ue, ve)$ is a solution.
+
+\emph{All solutions.} The displayed pairs are solutions, since $a\frac bd k - b\frac ad k = 0$. Conversely, if $(x, y)$ is a solution, then $a(x - x_0) = -b(y - y_0)$, so
+$\frac ad(x - x_0) = -\frac bd(y - y_0)$. Say $b \neq 0$. As $\gcd(\frac ad, \frac bd) = 1$, Euclid's lemma (Lemma~\ref{number-systems:lemma-euclid}) gives $\frac bd \mid x - x_0$, say $x - x_0 = \frac bd k$,
+and then $y - y_0 = -\frac ad k$. If $b = 0$, then $a \neq 0$, $x = x_0$ is forced and $d = |a|$, so $y$ is arbitrary, which is the formula again.
+\end{proof}
+
+\begin{example}\label{diophantine-equations:example-linear}
+$\gcd(12, 42) = 6$, so $12x + 42y = 15$ has no solution (it would make $15$ divisible by $6$), while $12x + 42y = 30$ has the solution $(-1, 1)$ and hence the solutions $(-1 + 7k, 1 - 2k)$. With more unknowns
+the same holds: $a_1x_1 + \dots + a_nx_n = c$ is solvable if and only if $\gcd(a_1, \dots, a_n) \mid c$, by induction on $n$, since $a_1x_1 + a_2x_2$ runs through the multiples of $\gcd(a_1, a_2)$.
+\end{example}
+
+A different question arises when the unknowns must be \emph{nonnegative}: which amounts can be paid exactly with coins of values $a$ and $b$? Not all, since the amounts $1, \dots, \min(a, b) - 1$ cannot; but all
+large amounts can, and the answer to "how large" is a theorem of Sylvester.
+
+\begin{theorem}[Sylvester]\label{diophantine-equations:theorem-frobenius}
+Let $a, b \geq 1$ be coprime integers, and call $n \in \ZZ$ \emph{representable} if $n = ax + by$ with integers $x, y \geq 0$. Then:
 \begin{enumerate}
-\item Linear equations and the Frobenius coin problem; Pythagorean triples and rational points on conics.
-\item Fermat's method of infinite descent: $x^4 + y^4 = z^2$, congruent numbers (Fermat's right triangle theorem).
-\item Sums of squares revisited: Legendre's three-square theorem (via Hasse--Minkowski and the Davenport--Cassels lemma), the number of representations, Waring's problem (Hilbert's theorem, statement) and the values $g(k)$.
-\item Markov's equation $x^2 + y^2 + z^2 = 3xyz$ and the Markov tree; Mordell's equation $y^2 = x^3 + k$ in examples; Catalan's equation (Mih\u{a}ilescu, statement); Skolem's $p$-adic method; Thue equations.
-\item Fermat's last theorem: the cases $n = 3, 4$, Sophie Germain, Kummer's regular primes (pointer to cyclotomic fields), Wiles (statement); the $abc$ conjecture.
-\item Hilbert's tenth problem (Matiyasevich, statement) and the limits of the subject.
-\item Exercises with solutions.
+\item every $n > ab - a - b$ is representable, and $ab - a - b$ is not;
+\item of the integers $0, 1, \dots, ab - a - b$, exactly half, namely $\frac{(a - 1)(b - 1)}{2}$, are not representable.
 \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: a normal form.} Every integer $n$ can be written uniquely as $n = ax + by$ with $x, y \in \ZZ$ and $0 \leq x \leq b - 1$: by Proposition~\ref{diophantine-equations:proposition-linear} the
+solutions of $ax + by = n$ are $(x_0 + bk, y_0 - ak)$, and exactly one $k$ puts $x_0 + bk$ in $[0, b - 1]$. If $n = ax^{\prime} + by^{\prime}$ with $x^{\prime}, y^{\prime} \geq 0$, then replacing $x^{\prime}$ by its
+remainder modulo $b$ increases $y^{\prime}$; so \emph{$n$ is representable if and only if $y \geq 0$ in its normal form}.
+
+\emph{Step 2: the bound.} The normal form of $N = ab - a - b$ is $a(b - 1) + b(-1)$, with $y = -1$, so $N$ is not representable. If $n > N$ has normal form $(x, y)$, then
+$by = n - ax \geq n - a(b - 1) > N - a(b - 1) = -b$, so $y > -1$ and $n$ is representable.
+
+\emph{Step 3: the count.} If $n$ has normal form $(x, y)$, then $N - n = a(b - 1 - x) + b(-1 - y)$ is the normal form of $N - n$, as $0 \leq b - 1 - x \leq b - 1$. Exactly one of $y$ and $-1 - y$ is $\geq 0$, so
+exactly one of $n$, $N - n$ is representable. So $n \mapsto N - n$ is an involution of $\{0, \dots, N\}$ exchanging representable and non-representable integers (in particular it has no fixed point), and the
+$N + 1 = (a - 1)(b - 1)$ integers split into two equal halves.
+\end{proof}
+
+\begin{example}\label{diophantine-equations:example-frobenius}
+With stamps of $3$ and $5$ cents one can pay every amount from $8$ cents on, but not $7 = 15 - 3 - 5$; the non-payable amounts are $1, 2, 4, 7$, four of them, as $\frac{2 \cdot 4}{2} = 4$. The largest
+non-representable integer for a set of coprime generators is called its \emph{Frobenius number}. For three or more generators no formula like $ab - a - b$ is known; for $\{6, 9, 20\}$ it is $43$
+(Exercise~\ref{diophantine-equations:exercise-frobenius-three}).
+\end{example}
+
+\begin{counterexample}\label{diophantine-equations:counterexample-frobenius}
+The coprimality hypothesis is necessary: if $\gcd(a, b) = d > 1$, no integer prime to $d$ is of the form $ax + by$, so there are arbitrarily large non-representable integers.
+\end{counterexample}
+
+\section{Pythagorean triples and conics}\label{diophantine-equations:section-conics}
+
+\begin{definition}\label{diophantine-equations:definition-pythagorean}
+A \emph{Pythagorean triple} is a triple $(x, y, z)$ of positive integers with $x^2 + y^2 = z^2$; it is \emph{primitive} if $\gcd(x, y, z) = 1$.
+\end{definition}
+
+Every triple is a multiple of a primitive one, and in a primitive triple $x$, $y$, $z$ are pairwise coprime (a prime dividing two of them divides the square of the third). Exactly one of $x$, $y$ is even: not
+both, by coprimality, and not neither, since then $z^2 \equiv 2 \pmod 4$, while squares are $0$ or $1$ modulo $4$. The basic tool is the following lemma, used repeatedly in this chapter.
+
+\begin{lemma}\label{diophantine-equations:lemma-coprime-powers}
+Let $R$ be a unique factorisation domain, $k \geq 2$, and $u_1, \dots, u_r \in R$ nonzero and pairwise coprime (no prime divides two of them). If $u_1 \cdots u_r = w^k$, then each $u_i = \varepsilon_iw_i^k$ with
+$\varepsilon_i$ a unit and $w_i \in R$. The same holds if $u_1 \cdots u_r = \varepsilon w^k$ with $\varepsilon$ a unit. For $R = \ZZ$ and positive $u_i$, each $u_i$ is a $k$-th power.
+\end{lemma}
+
+\begin{proof}
+For a prime $\pi$ of $R$, the exponent of $\pi$ in $\varepsilon w^k$ is a multiple of $k$; it is the exponent of $\pi$ in the unique $u_i$ that $\pi$ divides. So in the factorisation of $u_i$ every exponent is a multiple
+of $k$, and $u_i = \varepsilon_i\prod\pi^{k e_\pi}$. In $\ZZ$ the units are $\pm1$, and a positive $u_i$ has $\varepsilon_i = 1$ when the primes are taken positive.
+\end{proof}
+
+\begin{theorem}\label{diophantine-equations:theorem-pythagorean}
+The primitive Pythagorean triples with $y$ even are exactly
+\[
+x = m^2 - n^2, \qquad y = 2mn, \qquad z = m^2 + n^2,
+\]
+with $m > n > 0$ coprime integers of opposite parity; distinct pairs $(m, n)$ give distinct triples.
+\end{theorem}
+
+\begin{proof}
+\emph{These are triples.} $(m^2 - n^2)^2 + (2mn)^2 = (m^2 + n^2)^2$. A prime dividing $x$ and $z$ divides $2m^2$ and $2n^2$; it is odd since $z$ is odd, so it divides $m$ and $n$, which is excluded.
+
+\emph{All triples arise.} Let $(x, y, z)$ be primitive with $y$ even, so $x$, $z$ odd. Then $y^2 = (z - x)(z + x)$, and $\frac{z - x}{2}$, $\frac{z + x}{2}$ are positive integers whose sum $z$ and
+difference $x$ are coprime, so they are coprime. Their product is $(y/2)^2$, so by Lemma~\ref{diophantine-equations:lemma-coprime-powers} $\frac{z + x}{2} = m^2$ and $\frac{z - x}{2} = n^2$ with $m, n > 0$.
+Then $z = m^2 + n^2$, $x = m^2 - n^2$ (so $m > n$), $y = 2mn$; $m$, $n$ are coprime because $m^2$, $n^2$ are, and of opposite parity because $z$ is odd.
+
+\emph{Injectivity.} $m^2 = \frac{z + x}{2}$ and $n^2 = \frac{z - x}{2}$ are determined by the triple.
+\end{proof}
+
+\begin{example}\label{diophantine-equations:example-pythagorean}
+$(m, n) = (2, 1), (3, 2), (4, 1), (4, 3), (5, 2)$ give $(3, 4, 5)$, $(5, 12, 13)$, $(15, 8, 17)$, $(7, 24, 25)$, $(21, 20, 29)$. The pair $(3, 1)$ is excluded (same parity): it gives $(8, 6, 10)$, which is not
+primitive. Since $p = m^2 + n^2$ for a prime $p \equiv 1 \pmod 4$ (Theorem~\ref{number-theory:theorem-fermat-two-squares}), every such prime is the hypotenuse of a primitive right triangle, which agrees with
+the factorisation $z = (m + ni)(m - ni)$ in $\ZZ[i]$ (Section~\ref{number-theory:section-gaussian}).
+\end{example}
+
+The same result has a geometric proof which applies to every conic. A primitive triple gives the rational point $(x/z, y/z)$ on the unit circle $X^2 + Y^2 = 1$, and conversely. The circle has the rational
+point $(-1, 0)$; a line through it with rational slope $t$ meets the circle in a second point, which is rational because it is the other root of a quadratic equation with rational coefficients of which one root
+is rational.
+
+\begin{proposition}\label{diophantine-equations:proposition-circle}
+The rational points of $X^2 + Y^2 = 1$ are $(-1, 0)$ and the points
+\[
+\Bigl(\frac{1 - t^2}{1 + t^2}, \frac{2t}{1 + t^2}\Bigr), \qquad t \in \QQ,
+\]
+and distinct $t$ give distinct points.
+\end{proposition}
+
+\begin{proof}
+The line $Y = t(X + 1)$ meets the circle where $X^2 + t^2(X + 1)^2 = 1$, that is, $(X + 1)\bigl((1 + t^2)X - (1 - t^2)\bigr) = 0$. Besides $X = -1$ the root is $X = \frac{1 - t^2}{1 + t^2}$, and then
+$Y = t(X + 1) = \frac{2t}{1 + t^2}$. Conversely, a rational point $(X, Y) \neq (-1, 0)$ has $X \neq -1$ (the only point with $X = -1$ is $(-1, 0)$) and lies on the line through $(-1, 0)$ of slope
+$t = Y/(X + 1) \in \QQ$, so it is the point with parameter $t$. Distinct slopes give distinct lines through $(-1, 0)$, which meet the circle in distinct second points.
+\end{proof}
+
+Writing $t = n/m$ in lowest terms gives $(X, Y) = \bigl(\frac{m^2 - n^2}{m^2 + n^2}, \frac{2mn}{m^2 + n^2}\bigr)$, which is Theorem~\ref{diophantine-equations:theorem-pythagorean} up to the bookkeeping of
+common factors. The argument works for any conic with one known rational point.
+
+\begin{proposition}\label{diophantine-equations:proposition-conic}
+Let $f \in \QQ[X, Y]$ have degree $2$ and be irreducible over $\CC$, let $C = \{f = 0\}$, and let $P \in C(\QQ) = C \cap \QQ^2$. Then every line through $P$ defined over $\QQ$ meets $C$ in at most one further
+point, which is rational, and every point of $C(\QQ) \setminus \{P\}$ arises from exactly one such line. In particular, if $C(\QQ)$ is nonempty, it is infinite.
+\end{proposition}
+
+\begin{proof}
+Write $P = (p, q)$ and parametrise a line through $P$ with rational direction $(u, v) \neq (0, 0)$ as $(p + su, q + sv)$. Then $g(s) = f(p + su, q + sv)$ is a polynomial in $s$ of degree at most $2$ with
+rational coefficients and $g(0) = 0$, say $g(s) = s(\alpha + \beta s)$. It is not identically zero: otherwise the line would lie in $C$, and the linear polynomial defining it would divide $f$ over $\CC$,
+contradicting irreducibility. If $\beta \neq 0$, the second intersection is $s = -\alpha/\beta \in \QQ$, a rational point (equal to $P$ when $\alpha = 0$, the tangent line). If $\beta = 0$, the line meets $C$
+only at $P$; this happens for the directions $(u, v)$ with $f_2(u, v) = 0$, where $f_2$ is the degree-$2$ part of $f$, and there are at most two of them up to scaling. Conversely, a rational point $Q \neq P$ of $C$
+lies on the rational line $PQ$, and on no other line through $P$. Since there are infinitely many rational directions and at most three of them (two asymptotic, one tangent) give no point other than $P$,
+$C(\QQ)$ is infinite.
+\end{proof}
+
+So a conic either has no rational point or has as many as the projective line. Which conics have a rational point is decided by the Hasse--Minkowski theorem
+(Theorem~\ref{p-adic-numbers:theorem-hasse-minkowski}): after completing squares one is reduced to a diagonal form $aX^2 + bY^2 + cZ^2 = 0$, which has a nontrivial rational solution if and only if it has one in
+$\RR$ and in every $\QQ_p$.
+
+\begin{example}\label{diophantine-equations:example-conics}
+\begin{enumerate}
+\item $X^2 + Y^2 = 3$ has no rational point. If $(a/c)^2 + (b/c)^2 = 3$ with $\gcd(a, b, c) = 1$, then $a^2 + b^2 = 3c^2$; squares are $0$ or $1$ modulo $3$, so $3 \mid a$ and $3 \mid b$, then $9 \mid 3c^2$ and
+$3 \mid c$, a contradiction. This is a $3$-adic obstruction: the form $X^2 + Y^2 - 3Z^2$ is anisotropic over $\QQ_3$.
+\item $X^2 + Y^2 = 2$ has the point $(1, 1)$, hence infinitely many: lines through $(1, 1)$ with slope $t$ give $\bigl(\frac{t^2 - 2t - 1}{t^2 + 1}, \frac{-t^2 - 2t + 1}{t^2 + 1}\bigr)$, for instance
+$(\frac15, -\frac75)$ at $t = 3$.
+\item $X^2 - 2Y^2 = 1$ has the rational points obtained from $(1, 0)$; its \emph{integer} points are the solutions of Pell's equation, which form an infinite cyclic group up to sign
+(Theorem~\ref{continued-fractions:theorem-pell}). Integer points on conics are a much subtler question than rational points.
+\end{enumerate}
+\end{example}
+
+\section{Infinite descent}\label{diophantine-equations:section-descent}
+
+Fermat's method of \emph{infinite descent} proves that an equation has no solutions in positive integers by producing, from any solution, another one which is smaller in some positive integer measure; since
+positive integers cannot decrease forever, there is no solution. Equivalently, one takes a solution with the measure minimal and derives a contradiction.
+
+\begin{theorem}[Fermat]\label{diophantine-equations:theorem-four-plus}
+The equation $x^4 + y^4 = z^2$ has no solution in positive integers.
+\end{theorem}
+
+\begin{proof}
+Suppose there is one, and take one with $z$ minimal.
+
+\emph{Step 1: reduction to a primitive triple.} If a prime $p$ divides $x$ and $y$, then $p^4 \mid z^2$, so $p^2 \mid z$ and $(x/p, y/p, z/p^2)$ is a smaller solution. Hence $\gcd(x, y) = 1$, and
+$(x^2, y^2, z)$ is a primitive Pythagorean triple. Exchanging $x$ and $y$, assume $y$ even. By Theorem~\ref{diophantine-equations:theorem-pythagorean},
+\[
+x^2 = m^2 - n^2, \qquad y^2 = 2mn, \qquad z = m^2 + n^2,
+\]
+with $m > n > 0$ coprime of opposite parity.
+
+\emph{Step 2: a second triple.} From $x^2 + n^2 = m^2$ with $x$ odd: if $m$ were even and $n$ odd, then $x^2 = m^2 - n^2 \equiv -1 \pmod 4$, impossible. So $n$ is even, and $(x, n, m)$ is a primitive triple
+with $n$ even: $x = r^2 - s^2$, $n = 2rs$, $m = r^2 + s^2$ with $r > s > 0$ coprime.
+
+\emph{Step 3: three squares.} Now $(y/2)^2 = \frac{2mn}{4} = mrs$, and $m$, $r$, $s$ are pairwise coprime ($r$, $s$ are coprime, and a prime dividing $r$ and $m = r^2 + s^2$ divides $s$). By
+Lemma~\ref{diophantine-equations:lemma-coprime-powers}, $m = c^2$, $r = a^2$, $s = b^2$ with positive integers $a$, $b$, $c$.
+
+\emph{Step 4: descent.} Then $a^4 + b^4 = r^2 + s^2 = m = c^2$, a new solution, with $c \leq c^2 = m \leq m^2 < m^2 + n^2 = z$. This contradicts the minimality of $z$.
+\end{proof}
+
+\begin{corollary}\label{diophantine-equations:corollary-flt-four}
+For every $n$ divisible by $4$, the equation $x^n + y^n = z^n$ has no solution in positive integers.
+\end{corollary}
+
+\begin{proof}
+If $n = 4k$, a solution gives $(x^k)^4 + (y^k)^4 = (z^{2k})^2$, contradicting Theorem~\ref{diophantine-equations:theorem-four-plus}.
+\end{proof}
+
+\begin{theorem}\label{diophantine-equations:theorem-four-minus}
+The equation $x^4 - y^4 = z^2$ has no solution in positive integers.
+\end{theorem}
+
+\begin{proof}
+Take a solution with $x$ minimal. As in Step 1 above, $\gcd(x, y) = 1$, and $z^2 + (y^2)^2 = (x^2)^2$ is a primitive Pythagorean triple; in particular $x$ is odd.
+
+\emph{Case $y$ odd.} Then $z$ is the even leg: $y^2 = m^2 - n^2$, $z = 2mn$, $x^2 = m^2 + n^2$ with $m > n > 0$ coprime. Hence $m^4 - n^4 = (m^2 - n^2)(m^2 + n^2) = (xy)^2$, a solution with
+$m < \sqrt{m^2 + n^2} = x$.
+
+\emph{Case $y$ even.} Then $y^2 = 2mn$, $z = m^2 - n^2$, $x^2 = m^2 + n^2$ with $m > n > 0$ coprime of opposite parity. Now $(m, n, x)$ is a primitive triple, so $\{m, n\} = \{r^2 - s^2, 2rs\}$ and
+$x = r^2 + s^2$ with $r > s > 0$ coprime of opposite parity. Then $(y/2)^2 = \frac{mn}{2} = rs(r - s)(r + s)$. The four factors are positive and pairwise coprime: $r$, $s$ are coprime; $r \pm s$ are odd and
+$\gcd(r - s, r + s)$ divides $2r$ and $2s$, hence is $1$; and a prime dividing $r$ and $r \pm s$ divides $s$. By Lemma~\ref{diophantine-equations:lemma-coprime-powers}, $r = a^2$, $s = b^2$, $r + s = c^2$,
+$r - s = d^2$, and $a^4 - b^4 = r^2 - s^2 = (cd)^2$, a solution with $a \leq a^2 = r < r^2 + s^2 = x$.
+
+In both cases $x$ was not minimal, a contradiction.
+\end{proof}
+
+\begin{definition}\label{diophantine-equations:definition-congruent}
+A positive rational number $n$ is a \emph{congruent number} if it is the area of a right triangle with rational sides, that is, if there are $a, b, c \in \QQ_{> 0}$ with $a^2 + b^2 = c^2$ and $\frac12ab = n$.
+\end{definition}
+
+Scaling the triangle by $\lambda \in \QQ^\times$ multiplies the area by $\lambda^2$, so whether $n$ is congruent depends only on its class modulo squares, and one may restrict to squarefree integers $n$.
+
+\begin{example}\label{diophantine-equations:example-congruent}
+$6$ is congruent ($3, 4, 5$), and so is $5$, with sides $\frac32, \frac{20}{3}, \frac{41}{6}$: indeed $\frac94 + \frac{400}{9} = \frac{1681}{36} = (\frac{41}{6})^2$ and $\frac12 \cdot \frac32 \cdot \frac{20}{3} = 5$.
+$7$ is congruent, with sides $\frac{24}{5}, \frac{35}{12}, \frac{337}{60}$. Every primitive triple $(m^2 - n^2, 2mn, m^2 + n^2)$ shows that $mn(m^2 - n^2)$ is congruent; $(2, 1)$ gives $6$, and $(5, 4)$
+gives $180 = 5 \cdot 6^2$, which is how $5$ is found.
+\end{example}
+
+\begin{theorem}[Fermat's right triangle theorem]\label{diophantine-equations:theorem-right-triangle}
+No right triangle with rational sides has an area which is the square of a rational number. Equivalently, $1$ is not a congruent number.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: reduction.} Suppose a rational right triangle has square area. Scaling by a common denominator and then dividing by the greatest common divisor of the sides (both change the area by a square
+factor) gives a primitive Pythagorean triple whose area is a square.
+
+\emph{Step 2: four squares.} By Theorem~\ref{diophantine-equations:theorem-pythagorean} the legs are $m^2 - n^2$ and $2mn$, and the area is $mn(m - n)(m + n)$, with $m > n > 0$ coprime of opposite parity. As in
+the proof of Theorem~\ref{diophantine-equations:theorem-four-minus}, the four factors are positive and pairwise coprime, so they are squares: $m = p^2$, $n = q^2$, $m + n = u^2$, $m - n = v^2$.
+
+\emph{Step 3: conclusion.} Then $p^4 - q^4 = m^2 - n^2 = (uv)^2$ with $p, q, uv > 0$, contradicting Theorem~\ref{diophantine-equations:theorem-four-minus}.
+\end{proof}
+
+Congruent numbers are the first place where elliptic curves enter elementary number theory.
+
+\begin{proposition}\label{diophantine-equations:proposition-congruent-curve}
+A positive rational $n$ is congruent if and only if the curve $E_n : y^2 = x^3 - n^2x$ has a rational point with $y \neq 0$. The maps
+\[
+(a, b, c) \mapsto \Bigl(\frac{c^2}{4}, \frac{c(a^2 - b^2)}{8}\Bigr), \qquad (x, y) \mapsto \Bigl(\Bigl|\frac{x^2 - n^2}{y}\Bigr|, \Bigl|\frac{2nx}{y}\Bigr|, \Bigl|\frac{x^2 + n^2}{y}\Bigr|\Bigr)
+\]
+go between triangles and such points.
+\end{proposition}
+
+\begin{proof}
+\emph{From triangles to points.} Let $a^2 + b^2 = c^2$ and $ab = 2n$, and put $x = c^2/4$. Then $x \pm n = \frac{c^2 \pm 2ab}{4} = \bigl(\frac{a \pm b}{2}\bigr)^2$, so
+$x^3 - n^2x = x(x - n)(x + n) = \bigl(\frac{c(a - b)(a + b)}{8}\bigr)^2$. The value $y = \frac{c(a^2 - b^2)}{8}$ is nonzero, since $a = b$ would give $c = a\sqrt2$, which is irrational.
+
+\emph{From points to triangles.} Let $y^2 = x^3 - n^2x$ with $y \neq 0$, and $a = \frac{x^2 - n^2}{y}$, $b = \frac{2nx}{y}$, $c = \frac{x^2 + n^2}{y}$. Then
+$a^2 + b^2 = \frac{(x^2 - n^2)^2 + 4n^2x^2}{y^2} = \frac{(x^2 + n^2)^2}{y^2} = c^2$ and $\frac12ab = \frac{nx(x^2 - n^2)}{y^2} = n\frac{x^3 - n^2x}{y^2} = n$. The sides are nonzero ($x^2 - n^2 \neq 0$ and
+$x \neq 0$, as $y \neq 0$), and replacing them by their absolute values gives a triangle of area $n$.
+\end{proof}
+
+\begin{corollary}\label{diophantine-equations:corollary-y2-x3-x}
+The only rational points of $y^2 = x^3 - x$ are $(0, 0)$ and $(\pm1, 0)$.
+\end{corollary}
+
+\begin{proof}
+A rational point with $y \neq 0$ would make $1$ congruent, against Theorem~\ref{diophantine-equations:theorem-right-triangle}; the points with $y = 0$ are the roots of $x^3 - x$.
+\end{proof}
+
+\begin{remark}\label{diophantine-equations:remark-tunnell}
+Deciding which $n$ are congruent is an open problem in general. The rational points of $E_n$ form a finitely generated abelian group (the Mordell--Weil theorem), and $n$ is congruent if and only if this group
+is infinite. Tunnell gave in 1983 a simple criterion, counting representations of $n$ by certain ternary quadratic forms, which is necessary for $n$ to be congruent and is sufficient if the Birch and
+Swinnerton-Dyer conjecture holds for $E_n$ \cite[Chapter IV]{koblitz-elliptic}. These topics belong to Chapter~\ref{elliptic-curves-arithmetic}.
+\end{remark}
+
+\section{Sums of three squares}\label{diophantine-equations:section-three-squares}
+
+Lagrange's theorem (Theorem~\ref{number-theory:theorem-four-squares}) writes every positive integer as a sum of four squares, and Chapter~\ref{number-theory} described the sums of two squares. Sums of three
+squares are harder. Chapter~\ref{p-adic-numbers} decided, by the Hasse--Minkowski theorem, which integers are sums of three \emph{rational} squares
+(Theorem~\ref{p-adic-numbers:theorem-three-squares-rational}); a lemma of Davenport and Cassels turns rational representations into integer ones.
+
+\begin{lemma}[Davenport--Cassels]\label{diophantine-equations:lemma-davenport-cassels}
+Let $f(x) = \sum_{i, j = 1}^{n} a_{ij}x_ix_j$ be a positive definite quadratic form with $a_{ij} = a_{ji} \in \ZZ$, and write $B(x, y) = \sum a_{ij}x_iy_j$, so that $f(x) = B(x, x)$. Assume that for every
+$x \in \QQ^n$ there is $y \in \ZZ^n$ with $f(x - y) < 1$. If an integer $m$ is represented by $f$ over $\QQ$, it is represented by $f$ over $\ZZ$.
+\end{lemma}
+
+\begin{proof}
+\emph{Step 1: a minimal denominator.} Among the $x \in \QQ^n$ with $f(x) = m$ choose one whose common denominator is smallest: $x = z/t$ with $z \in \ZZ^n$ and $t \geq 1$ minimal. We show $t = 1$. Suppose
+$t > 1$, choose $y \in \ZZ^n$ with $f(x - y) < 1$ and put $w = x - y$. Then $w \neq 0$, since $x \notin \ZZ^n$, so $0 < f(w) < 1$ by positive definiteness.
+
+\emph{Step 2: a new denominator.} Put $a = f(y) - m \in \ZZ$ and $b = 2(mt - B(z, y)) \in \ZZ$. Then
+\[
+tf(w) = t\bigl(f(x) - 2B(x, y) + f(y)\bigr) = tm - 2B(z, y) + tf(y) = at + b.
+\]
+So $t^{\prime} = at + b = tf(w)$ is an integer with $0 < t^{\prime} < t$.
+
+\emph{Step 3: a smaller denominator.} The point $x^{\prime} = y + \frac{a}{f(w)}w$ satisfies $f(x^{\prime}) = m$: the polynomial $\lambda \mapsto f(y + \lambda w) - m = f(w)\lambda^2 + 2B(y, w)\lambda + a$ has
+the root $\lambda = 1$, and the product of its roots is $a/f(w)$, so $\lambda = a/f(w)$ is also a root. And
+\[
+x^{\prime} = y + \frac{at}{t^{\prime}}\Bigl(\frac zt - y\Bigr) = \frac{az + (t^{\prime} - at)y}{t^{\prime}} = \frac{az + by}{t^{\prime}},
+\]
+which has denominator dividing $t^{\prime} < t$. This contradicts the minimality of $t$.
+\end{proof}
+
+\begin{theorem}[Legendre, Gauss]\label{diophantine-equations:theorem-three-squares}
+A positive integer $n$ is a sum of three squares of integers if and only if it is not of the form $4^a(8b + 7)$ with $a, b \geq 0$.
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{p-adic-numbers:theorem-three-squares-rational}, $n$ is a sum of three rational squares if and only if it is not of the form $4^a(8b + 7)$. The form $f = x_1^2 + x_2^2 + x_3^2$ is positive definite
+with integer coefficients, and for $x \in \QQ^3$, rounding each coordinate to a nearest integer gives $y \in \ZZ^3$ with $f(x - y) \leq 3 \cdot \frac14 < 1$. By
+Lemma~\ref{diophantine-equations:lemma-davenport-cassels}, rational and integer representations coincide.
+\end{proof}
+
+\begin{corollary}[Gauss]\label{diophantine-equations:corollary-triangular}
+Every nonnegative integer is a sum of three triangular numbers $\frac{k(k + 1)}{2}$, $k \geq 0$.
+\end{corollary}
+
+\begin{proof}
+$8n + 3$ is not of the form $4^a(8b + 7)$ (it is odd and $\equiv 3 \pmod 8$), so $8n + 3 = x^2 + y^2 + z^2$. Squares are $0$, $1$ or $4$ modulo $8$, and a sum of three of them is $\equiv 3 \pmod 8$ only as
+$1 + 1 + 1$; so $x$, $y$, $z$ are odd, $x = 2k + 1$ and so on with $k, l, m \geq 0$ (replace $x$ by $-x$ if needed). Then $8n + 3 = 4k(k + 1) + 4l(l + 1) + 4m(m + 1) + 3$, and dividing by $8$ gives
+$n = \frac{k(k + 1)}{2} + \frac{l(l + 1)}{2} + \frac{m(m + 1)}{2}$.
+\end{proof}
+
+\begin{example}\label{diophantine-equations:example-three-squares}
+$7$, $15$, $23$, $28 = 4 \cdot 7$, $31$ are not sums of three squares, while $6 = 4 + 1 + 1$, $14 = 9 + 4 + 1$, $29 = 25 + 4$. Gauss recorded the corollary in his diary as "EYPHKA! num $= \Delta + \Delta + \Delta$";
+for instance $10 = 6 + 3 + 1$ and $20 = 10 + 10 + 0$. The problem of writing $n$ as a sum of a bounded number of $k$-th powers is Waring's problem
+(Example~\ref{additive-number-theory:example-waring}).
+\end{example}
+
+\begin{counterexample}\label{diophantine-equations:counterexample-davenport-cassels}
+The rounding hypothesis of Lemma~\ref{diophantine-equations:lemma-davenport-cassels} is needed. For $f = x_1^2 + 14x_2^2$,
+\[
+2 = \Bigl(\frac23\Bigr)^2 + 14\Bigl(\frac13\Bigr)^2,
+\]
+since $4 + 14 = 18 = 2 \cdot 9$; but $2 = x_1^2 + 14x_2^2$ has no integer solution. Here $x = (\frac23, \frac13)$ has $f(x - y) \geq \frac19 + \frac{14}{9} > 1$ for every $y \in \ZZ^2$.
+\end{counterexample}
+
+\section{Markov's equation}\label{diophantine-equations:section-markov}
+
+The equation
+\begin{equation}\label{diophantine-equations:equation-markov}
+x^2 + y^2 + z^2 = 3xyz
+\end{equation}
+arose in Markov's work on the worst approximable quadratic irrationals. Its positive solutions are \emph{Markov triples}, and their entries \emph{Markov numbers}. The key observation is \emph{Vieta jumping}:
+for fixed $x$, $y$, the equation is quadratic in $z$, $z^2 - 3xyz + x^2 + y^2 = 0$, so with a root $z$ comes the root
+\[
+z^{\prime} = 3xy - z = \frac{x^2 + y^2}{z},
+\]
+which is again a positive integer. The \emph{move} $(x, y, z) \mapsto (x, y, 3xy - z)$, and its analogues in the other coordinates, send Markov triples to Markov triples.
+
+\begin{theorem}[Markov]\label{diophantine-equations:theorem-markov}
+Every Markov triple is obtained from $(1, 1, 1)$ by a finite sequence of moves and permutations of the coordinates.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: triples with repeated entries.} Let $(x, y, z)$ be a Markov triple, ordered $x \leq y \leq z$. If $y = z$, then $x^2 + 2y^2 = 3xy^2$, so $y^2 \mid x^2$, hence $y \leq x$, so $x = y = z$ and
+$3x^2 = 3x^3$, $x = 1$. If $x = y$, then $2x^2 + z^2 = 3x^2z$, so $x^2 \mid z^2$, $z = kx$, and $2 + k^2 = 3kx$, so $k \mid 2$: $k = 1$ gives $(1, 1, 1)$ and $k = 2$ gives $(1, 1, 2)$.
+
+\emph{Step 2: descent.} Suppose $x < y < z$. Let $g(t) = t^2 - 3xyt + x^2 + y^2$, whose roots are $z$ and $z^{\prime} = 3xy - z$. Then
+$g(y) = 2y^2 + x^2 - 3xy^2 < 3y^2 - 3xy^2 \leq 0$, as $x < y$ and $x \geq 1$. So $y$ lies strictly between the roots: $z^{\prime} < y < z$. The move in the last coordinate gives the triple $(x, y, z^{\prime})$,
+whose largest entry $y$ is smaller than $z$.
+
+\emph{Step 3: conclusion.} Repeating Step 2, the largest entry decreases strictly, so after finitely many moves and reorderings one reaches a triple with a repeated entry, which by Step 1 is $(1, 1, 1)$ or
+$(1, 1, 2)$; and $(1, 1, 2)$ is the move of $(1, 1, 1)$ in the last coordinate. Reversing the moves (each move is an involution) gives the claim.
+\end{proof}
+
+\begin{example}\label{diophantine-equations:example-markov}
+Starting from $(1, 1, 2)$, each triple $(x, y, z)$ with $z$ largest has two "children" obtained by moving $x$ or $y$, which gives a binary tree, the \emph{Markov tree}:
+\[
+\begin{aligned}
+&(1, 1, 2) \to (1, 2, 5) \to (1, 5, 13),\ (2, 5, 29), \\
+&(1, 5, 13) \to (1, 13, 34),\ (5, 13, 194), \qquad (2, 5, 29) \to (2, 29, 169),\ (5, 29, 433).
+\end{aligned}
+\]
+The Markov numbers begin $1, 2, 5, 13, 29, 34, 89, 169, 194, 233, 433, \dots$; the branch $(1, F_{2k - 1}, F_{2k + 1})$ consists of odd-indexed Fibonacci numbers, and the branch $(2, P_{2k - 1}, P_{2k + 1})$ of
+odd-indexed Pell numbers.
+\end{example}
+
+\begin{remark}\label{diophantine-equations:remark-markov}
+Markov proved that the irrationals $\alpha$ for which $|\alpha - p/q| < \frac{1}{c\,q^2}$ has infinitely many solutions for every $c$ smaller than a given $c_\alpha$ exhaust, below $3$, the values
+$c = \sqrt{9m^2 - 4}/m$ for $m$ a Markov number: $\sqrt5$, $\sqrt8$, $\sqrt{221}/5$, \dots, accumulating at $3$; the first is Hurwitz's constant from Chapter~\ref{continued-fractions}. Frobenius conjectured
+in 1913 that a Markov number is the largest entry of only one Markov triple up to order; this \emph{uniqueness conjecture} is still open \cite{aigner-markov}.
+\end{remark}
+
+\section{Mordell's equation and other classical equations}\label{diophantine-equations:section-mordell}
+
+\emph{Mordell's equation} is $y^2 = x^3 + k$ with $k \in \ZZ \setminus \{0\}$. For each $k$ it has only finitely many integer solutions \cite{mordell-diophantine}, but there is no uniform elementary method;
+two typical cases follow, one solved by congruences and one by factorisation in a ring of quadratic integers.
+
+\begin{proposition}[Lebesgue]\label{diophantine-equations:proposition-mordell-seven}
+The equation $y^2 = x^3 + 7$ has no integer solution.
+\end{proposition}
+
+\begin{proof}
+\emph{$x$ is odd.} If $x$ is even, $y^2 \equiv 7 \pmod 8$, while odd squares are $\equiv 1 \pmod 8$.
+
+\emph{A prime $q \equiv 3 \pmod 4$.} Write $y^2 + 1 = x^3 + 8 = (x + 2)(x^2 - 2x + 4)$. As $x$ is odd, $x^2 - 2x + 4 = (x - 1)^2 + 3 \equiv 3 \pmod 4$, and it is positive, so it has a prime factor
+$q \equiv 3 \pmod 4$. Then $y^2 \equiv -1 \pmod q$, which is impossible by Corollary~\ref{number-theory:corollary-minus-one}.
+\end{proof}
+
+\begin{proposition}[Fermat, Euler]\label{diophantine-equations:proposition-mordell-two}
+The only integer solutions of $y^2 = x^3 - 2$ are $(x, y) = (3, \pm5)$.
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1: the ring $\ZZ[\sqrt{-2}]$.} It is Euclidean for the norm $N(a + b\sqrt{-2}) = a^2 + 2b^2$: given $\alpha, \beta \neq 0$, write $\alpha/\beta = u + v\sqrt{-2}$ with $u, v \in \QQ$, choose integers $m$,
+$n$ with $|u - m|, |v - n| \leq \frac12$, and put $\kappa = m + n\sqrt{-2}$; then $N(\alpha/\beta - \kappa) \leq \frac14 + \frac24 < 1$, so $N(\alpha - \kappa\beta) < N(\beta)$. Hence it is a UFD
+(Theorem~\ref{rings:theorem-euclidean-pid-ufd}), and its units, the elements of norm $1$, are $\pm1$, both cubes.
+
+\emph{Step 2: coprime factors.} Let $y^2 + 2 = x^3$. Then $y$ is odd: if $y$ were even, $x$ would be even, and $8 \mid x^3$ while $y^2 + 2 \equiv 2 \pmod 4$. Factor
+$x^3 = (y + \sqrt{-2})(y - \sqrt{-2})$. A prime $\delta$ dividing both factors divides their difference $2\sqrt{-2} = -(\sqrt{-2})^3$, so $\delta$ is associate to the prime $\sqrt{-2}$ (of norm $2$), and then
+$2 = N(\sqrt{-2})$ divides $N(y + \sqrt{-2}) = y^2 + 2$, which is odd. So the factors are coprime.
+
+\emph{Step 3: a cube.} By Lemma~\ref{diophantine-equations:lemma-coprime-powers}, $y + \sqrt{-2}$ is a unit times a cube, hence a cube, as $\pm1 = (\pm1)^3$: $y + \sqrt{-2} = (a + b\sqrt{-2})^3$ with
+$a, b \in \ZZ$, so
+\[
+y + \sqrt{-2} = (a^3 - 6ab^2) + (3a^2b - 2b^3)\sqrt{-2}.
+\]
+Comparing coefficients of $\sqrt{-2}$: $b(3a^2 - 2b^2) = 1$, so $b = \pm1$ and $3a^2 - 2 = b$; this forces $b = 1$, $a = \pm1$. Then $y = a^3 - 6a = \mp5$ and $x^3 = 25 + 2 = 27$, $x = 3$.
+\end{proof}
+
+\begin{remark}\label{diophantine-equations:remark-mordell}
+The same method applied to $y^2 = x^3 - k$ needs unique factorisation in $\ZZ[\sqrt{-k}]$, which often fails (for $k = 5$, Remark~\ref{number-systems:remark-unique-factorisation-fails}); the repair, by ideals
+and the finiteness of the class number, is the subject of Chapter~\ref{algebraic-number-theory}. Equations of the form $F(x, y) = m$ with $F$ an irreducible binary form of degree at least $3$ (\emph{Thue
+equations}, such as $x^3 - 2y^3 = 1$) have only finitely many integer solutions; Thue deduced this in 1909 from his improvement of Liouville's approximation theorem, and Baker made it effective
+\cite{baker-transcendental}. Mordell's equation reduces to finitely many Thue equations, which gives its finiteness.
+\end{remark}
+
+\begin{theorem}[Mih\u{a}ilescu]\label{diophantine-equations:theorem-catalan}
+The only solution of $x^m - y^n = 1$ in integers $x, y, m, n \geq 2$ is $3^2 - 2^3 = 1$ \cite{mihailescu-2004}.
+\end{theorem}
+
+Catalan conjectured this in 1844. The special case of powers of $2$ and $3$ is elementary (Exercise~\ref{diophantine-equations:exercise-powers-two-three}).
+
+\section{Fermat's last theorem}\label{diophantine-equations:section-flt}
+
+\begin{theorem}[Wiles, Taylor--Wiles]\label{diophantine-equations:theorem-flt}
+For $n \geq 3$, the equation $x^n + y^n = z^n$ has no solution in positive integers \cite{wiles-1995}, \cite{taylor-wiles-1995}.
+\end{theorem}
+
+Fermat stated this in a margin around 1637; the proof came in 1994, through the modularity of semistable elliptic curves (Chapter~\ref{elliptic-curves-arithmetic} and Chapter~\ref{modular-forms}). Since
+every $n \geq 3$ is divisible by $4$ or by an odd prime, and a solution for $n = dk$ gives one for $d$, it is enough to treat $n = 4$, done in Corollary~\ref{diophantine-equations:corollary-flt-four}, and odd
+primes $n = p$. This section proves the case $p = 3$ and Sophie Germain's theorem, and the analogue for polynomials.
+
+\subsection{The exponent three}\label{diophantine-equations:subsection-three}
+
+We work in the Eisenstein integers $\ZZ[\omega]$, $\omega = e^{2\pi i/3}$, a UFD with units $\pm1, \pm\omega, \pm\omega^2$ (Proposition~\ref{number-theory:proposition-eisenstein}). Let $\lambda = 1 - \omega$, a
+prime of norm $3$ with $3 = -\omega^2\lambda^2$.
+
+\begin{lemma}\label{diophantine-equations:lemma-eisenstein-cubes}
+\begin{enumerate}
+\item Every element of $\ZZ[\omega]$ is congruent to $0$, $1$ or $-1$ modulo $\lambda$.
+\item If $\alpha \equiv \pm1 \pmod \lambda$, then $\alpha^3 \equiv \pm1 \pmod{\lambda^4}$, with the same sign.
+\item A rational integer is divisible by $\lambda$ if and only if it is divisible by $3$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) $\omega \equiv 1 \pmod \lambda$, so $a + b\omega \equiv a + b \pmod \lambda$; and $\lambda \mid 3$, so an integer is congruent modulo $\lambda$ to its remainder modulo $3$.
+
+(3) If $\lambda \mid k \in \ZZ$, then $3 = N(\lambda)$ divides $N(k) = k^2$, so $3 \mid k$; the converse holds as $\lambda \mid 3$.
+
+(2) It suffices to treat $\alpha = 1 + \beta\lambda$ (replace $\alpha$ by $-\alpha$). Then
+$\alpha^3 - 1 = (\alpha - 1)(\alpha - \omega)(\alpha - \omega^2)$, and $\alpha - \omega = \beta\lambda + \lambda$, $\alpha - \omega^2 = \beta\lambda + (1 - \omega^2) = \beta\lambda - \omega^2\lambda$, using
+$1 - \omega^2 = (1 - \omega)(1 + \omega) = -\omega^2\lambda$. So $\alpha^3 - 1 = \lambda^3\beta(\beta + 1)(\beta - \omega^2)$. As $\omega^2 \equiv 1 \pmod \lambda$, the three factors are congruent to
+$\beta$, $\beta + 1$, $\beta - 1$, and by (1) one of them is divisible by $\lambda$. Hence $\lambda^4 \mid \alpha^3 - 1$.
+\end{proof}
+
+\begin{theorem}[Euler, Gauss]\label{diophantine-equations:theorem-flt-three}
+The equation $x^3 + y^3 = z^3$ has no solution in nonzero integers.
+\end{theorem}
+
+\begin{proof}
+Suppose $x^3 + y^3 = z^3$ with $xyz \neq 0$; dividing by common factors, $x$, $y$, $z$ are pairwise coprime. Writing the equation as $x^3 + y^3 + (-z)^3 = 0$, it is symmetric in the three unknowns up to sign.
+
+\emph{Step 1: $3 \nmid xyz$ is impossible.} Cubes of integers prime to $3$ are $\pm1 \pmod 9$ (check $1, 2, 4, 5, 7, 8$), so $x^3 + y^3 + (-z)^3 \equiv \pm1 \pm 1 \pm 1 \not\equiv 0 \pmod 9$.
+
+\emph{Step 2: reformulation.} So $3$ divides exactly one of the unknowns; by the symmetry, say $3 \mid z$, $z = 3^kw$ with $k \geq 1$, $3 \nmid w$. Then $z^3 = (-\omega^2\lambda^2)^{3k}w^3 = \varepsilon\lambda^{6k}w^3$
+with $\varepsilon$ a unit. By Lemma~\ref{diophantine-equations:lemma-eisenstein-cubes}(3), $\lambda \nmid xyw$, and $x$, $y$ are coprime in $\ZZ[\omega]$ (a Bézout relation $ux + vy = 1$ in $\ZZ$ persists). So it
+suffices to prove:
+
+\emph{Claim.} There are no $\alpha, \beta, \gamma \in \ZZ[\omega]$, unit $\varepsilon$ and integer $n \geq 1$ with $\alpha^3 + \beta^3 = \varepsilon\lambda^{3n}\gamma^3$, $\alpha$, $\beta$ coprime, and
+$\lambda \nmid \alpha\beta\gamma$.
+
+Take a counterexample with $n$ minimal.
+
+\emph{Step 3: $n \geq 2$.} By Lemma~\ref{diophantine-equations:lemma-eisenstein-cubes}, $\alpha^3 \equiv a$ and $\beta^3 \equiv b \pmod{\lambda^4}$ with $a, b \in \{\pm1\}$. Since $\lambda \mid \alpha^3 + \beta^3$,
+$\lambda \mid a + b \in \{0, \pm2\}$; as $\lambda \nmid 2$ (its norm $3$ does not divide $4$), $a + b = 0$, so $\lambda^4 \mid \alpha^3 + \beta^3$ and $3n \geq 4$.
+
+\emph{Step 4: factorisation.} $\alpha^3 + \beta^3 = (\alpha + \beta)(\alpha + \omega\beta)(\alpha + \omega^2\beta)$. The differences of the factors are $\lambda\beta$ times units, and
+$\omega(\alpha + \beta) - (\alpha + \omega\beta) = -\lambda\alpha$; so each factor is divisible by $\lambda$ (one is, since $\lambda$ divides the product, and then all are), and a common prime factor of two
+of them divides $\lambda\alpha$ and $\lambda\beta$, hence is $\lambda$, and $\lambda^2$ does not divide both (else $\lambda^2 \mid \lambda\beta$). So two factors are exactly divisible by $\lambda$ and the third by
+$\lambda^{3n - 2}$. Replacing $\beta$ by $\omega\beta$ or $\omega^2\beta$, which changes nothing in the hypotheses, assume the third factor is $\alpha + \beta$. The three quotients
+$\frac{\alpha + \beta}{\lambda^{3n - 2}}$, $\frac{\alpha + \omega\beta}{\lambda}$, $\frac{\alpha + \omega^2\beta}{\lambda}$ are pairwise coprime, prime to $\lambda$, and their product is a unit times $\gamma^3$, so
+by Lemma~\ref{diophantine-equations:lemma-coprime-powers}
+\[
+\alpha + \beta = \varepsilon_1\lambda^{3n - 2}\theta^3, \quad \alpha + \omega\beta = \varepsilon_2\lambda\psi^3, \quad \alpha + \omega^2\beta = \varepsilon_3\lambda\varphi^3,
+\]
+with units $\varepsilon_i$ and $\theta$, $\psi$, $\varphi$ pairwise coprime and prime to $\lambda$.
+
+\emph{Step 5: a smaller solution.} Since $1 + \omega + \omega^2 = 0$, $(\alpha + \beta) + \omega(\alpha + \omega\beta) + \omega^2(\alpha + \omega^2\beta) = 0$. Dividing by $\omega\varepsilon_2\lambda$:
+\[
+\psi^3 + \varepsilon_4\varphi^3 = \varepsilon_5\lambda^{3(n - 1)}\theta^3
+\]
+for units $\varepsilon_4$, $\varepsilon_5$. As $n \geq 2$, $\lambda^3$ divides the left side, and $\psi^3, \varphi^3 \equiv \pm1 \pmod{\lambda^4}$, so $\pm1 \pm \varepsilon_4 \equiv 0 \pmod{\lambda^2}$. Among the
+units only $\varepsilon_4 = \pm1$ allow this: $1 \pm \omega$ and $1 \pm \omega^2$ are units or $\lambda$ times units. Replacing $\varphi$ by $-\varphi$ if $\varepsilon_4 = -1$, we get
+$\psi^3 + \varphi^3 = \varepsilon_5\lambda^{3(n - 1)}\theta^3$, a counterexample with $n - 1 \geq 1$, contradicting minimality.
+\end{proof}
+
+\subsection{Sophie Germain's theorem}\label{diophantine-equations:subsection-germain}
+
+For a general odd prime $p$ one distinguishes the \emph{first case}, $p \nmid xyz$, from the second. Sophie Germain found a simple criterion for the first case.
+
+\begin{theorem}[Sophie Germain]\label{diophantine-equations:theorem-germain}
+Let $p$ be an odd prime such that $q = 2p + 1$ is also prime. Then $x^p + y^p = z^p$ has no solution in integers with $p \nmid xyz$.
+\end{theorem}
+
+\begin{proof}
+Suppose there is one. As $p$ is odd, we may write it as $x^p + y^p + z^p = 0$ (replace $z$ by $-z$), with $x$, $y$, $z$ pairwise coprime and $p \nmid xyz$.
+
+\emph{Step 1: $p$-th roots.} We have $-x^p = (y + z)Q$ with $Q = \frac{y^p + z^p}{y + z} = \sum_{i=0}^{p-1}(-1)^iy^{p-1-i}z^i \equiv py^{p-1} \pmod{y + z}$. A prime $r$ dividing $y + z$ and $Q$ divides
+$py^{p-1}$; it does not divide $y$ (it would divide $z$), so $r = p$, and then $p \mid y + z \mid x^p$, against $p \nmid x$. So $y + z$ and $Q$ are coprime, and since their product is a $p$-th power with $p$
+odd, $y + z = a^p$ and $Q = \alpha^p$ for integers $a$, $\alpha$ (Lemma~\ref{diophantine-equations:lemma-coprime-powers}, signs absorbed into the odd powers). By symmetry also $z + x = b^p$ and $x + y = c^p$.
+
+\emph{Step 2: $p$-th powers modulo $q$.} For $u \not\equiv 0 \pmod q$, $(u^p)^2 = u^{q - 1} \equiv 1$, so $u^p \equiv \pm1 \pmod q$. If $q$ divided none of $x$, $y$, $z$, then $x^p + y^p + z^p$ would be
+$\equiv \pm1 \pm1 \pm1 \in \{\pm1, \pm3\} \pmod q$, which is nonzero as $q \geq 7$. So $q$ divides one of them, say $q \mid x$ (the argument is symmetric).
+
+\emph{Step 3: $q \mid a$.} Now $2x = b^p + c^p - a^p \equiv 0 \pmod q$, so by Step 2 again one of $a$, $b$, $c$ is divisible by $q$. If $q \mid b$, then $q \mid z + x$, so $q \mid z$, contradicting
+$\gcd(x, z) = 1$; similarly $q \nmid c$. So $q \mid a$, that is, $y \equiv -z \pmod q$.
+
+\emph{Step 4: contradiction.} Then $\alpha^p = Q \equiv py^{p-1} \pmod q$. Also $y \equiv x + y = c^p \pmod q$, with $q \nmid y$ (else $q \mid x, y$), so $y \equiv \pm1$ and $y^{p - 1} \equiv 1 \pmod q$, as
+$p - 1$ is even. Hence $\alpha^p \equiv p \pmod q$, and $q \nmid \alpha$, so $p \equiv \pm1 \pmod q$. But $0 < p - 1 < p + 1 < q$, so $q$ divides neither $p - 1$ nor $p + 1$, a contradiction.
+\end{proof}
+
+\begin{example}\label{diophantine-equations:example-germain}
+The \emph{Sophie Germain primes} $p$, those with $2p + 1$ prime, begin $2, 3, 5, 11, 23, 29, 41, 53, 83, 89, \dots$; it is not known whether there are infinitely many. Germain's theorem settles the first case for
+all of them, and the same argument with auxiliary primes of the form $q = 2kp + 1$ applies to many more exponents.
+\end{example}
+
+\begin{remark}\label{diophantine-equations:remark-kummer}
+Kummer factored $x^p + y^p = \prod_{j=0}^{p-1}(x + \zeta^jy)$ in $\ZZ[\zeta]$, $\zeta = e^{2\pi i/p}$, as in Step 4 above. Unique factorisation fails in general (first for $p = 23$), but Kummer showed that the
+argument goes through when $p$ does not divide the class number of $\QQ(\zeta)$ (\emph{regular primes}, such as all $p < 37$); this is developed in Chapter~\ref{algebraic-number-theory}.
+\end{remark}
+
+\subsection{Polynomials and the abc conjecture}\label{diophantine-equations:subsection-abc}
+
+For polynomials there is a short and complete proof of Fermat's last theorem, through an inequality whose integer analogue is the $abc$ conjecture. Let $k$ be a field of characteristic $0$. For a nonzero
+polynomial $f \in k[t]$, let $n_0(f)$ be the number of distinct roots of $f$ in an algebraic closure; equivalently, the degree of the product of the distinct monic irreducible factors of $f$, the \emph{radical}
+$\operatorname{rad}(f)$. The derivative $f^{\prime}$ is the formal one.
+
+\begin{theorem}[Mason--Stothers]\label{diophantine-equations:theorem-mason-stothers}
+Let $a, b, c \in k[t]$ be pairwise coprime, not all constant, with $a + b = c$. Then
+\[
+\max(\deg a, \deg b, \deg c) \leq n_0(abc) - 1.
+\]
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: the Wronskian.} Let $W = ab^{\prime} - a^{\prime}b$. From $c = a + b$ and $c^{\prime} = a^{\prime} + b^{\prime}$ one gets $W = ac^{\prime} - a^{\prime}c = cb^{\prime} - c^{\prime}b$. Moreover $W \neq 0$:
+if $ab^{\prime} = a^{\prime}b$, then $a \mid a^{\prime}b$, so $a \mid a^{\prime}$ by coprimality, so $a^{\prime} = 0$ by degree, and $a$ is constant since the characteristic is $0$; likewise $b$ is constant, and
+so is $c$, a contradiction.
+
+\emph{Step 2: divisibility.} If $\pi^m$ divides $a$ for an irreducible $\pi$, then $\pi^{m-1}$ divides $a^{\prime}$, so $\pi^{m - 1}$ divides $W = ab^{\prime} - a^{\prime}b$. Using the three expressions of $W$,
+the same holds for the prime powers dividing $b$ and $c$. As $a$, $b$, $c$ are pairwise coprime, $\frac{abc}{\operatorname{rad}(abc)}$ divides $W$.
+
+\emph{Step 3: degrees.} Hence $\deg a + \deg b + \deg c - n_0(abc) \leq \deg W \leq \deg a + \deg b - 1$, so $\deg c \leq n_0(abc) - 1$. The hypotheses are symmetric under permuting $a$, $b$, $-c$, which gives the
+same bound for $\deg a$ and $\deg b$.
+\end{proof}
+
+\begin{corollary}\label{diophantine-equations:corollary-flt-polynomials}
+For $n \geq 3$ there are no coprime polynomials $x, y, z \in k[t]$, not all constant, with $x^n + y^n = z^n$.
+\end{corollary}
+
+\begin{proof}
+A common factor of two of them would divide the third, so they are pairwise coprime, and so are $x^n$, $y^n$, $z^n$. Let $d = \max(\deg x, \deg y, \deg z) \geq 1$. Since
+$n_0(x^ny^nz^n) = n_0(xyz) \leq \deg x + \deg y + \deg z \leq 3d$, the theorem gives $nd \leq 3d - 1$, so $n < 3$.
+\end{proof}
+
+For integers, the radical $\operatorname{rad}(m)$ is the product of the distinct primes dividing $m$, and the analogy suggests the following.
+
+\begin{conjecture}[$abc$ conjecture, Masser--Oesterl\'e]\label{diophantine-equations:conjecture-abc}
+For every $\epsilon > 0$ there is a constant $K_\epsilon$ such that for all coprime positive integers $a$, $b$, $c$ with $a + b = c$,
+\[
+c \leq K_\epsilon\operatorname{rad}(abc)^{1 + \epsilon}.
+\]
+\end{conjecture}
+
+\begin{remark}\label{diophantine-equations:remark-abc}
+The exponent $1 + \epsilon$ cannot be replaced by $1$: for $a = 1$, $c = 3^{2^k}$, $b = c - 1$ with $k \geq 1$, induction on $k$ gives $2^{k + 2} \mid b$ (as $3^{2^{k+1}} - 1 = (3^{2^k} - 1)(3^{2^k} + 1)$), so $\operatorname{rad}(abc) \leq 3b/2^{k + 1} < 3c/2^{k + 1}$, and
+$c/\operatorname{rad}(abc)$ is unbounded. The conjecture would imply that $x^n + y^n = z^n$ has no solutions for $n$ large (apply it to $x^n + y^n = z^n$: $z^n \leq K_\epsilon(xyz)^{1 + \epsilon} < K_\epsilon z^{3(1 + \epsilon)}$),
+as well as many other finiteness results \cite{granville-tucker-abc}. A proof announced by Mochizuki in 2012 is not accepted by most experts.
+\end{remark}
+
+\section{Hilbert's tenth problem}\label{diophantine-equations:section-hilbert-tenth}
+
+Hilbert's tenth problem (1900) asked for a procedure deciding, for any polynomial equation with integer coefficients, whether it has an integer solution. The answer is negative, and the reason is that
+Diophantine equations are as expressive as computer programs.
+
+\begin{definition}\label{diophantine-equations:definition-diophantine-set}
+A set $S \subseteq \NN^k$ is \emph{Diophantine} if there is a polynomial $P \in \ZZ[a_1, \dots, a_k, x_1, \dots, x_m]$ such that
+\[
+(a_1, \dots, a_k) \in S \iff \exists x_1, \dots, x_m \in \NN : P(a_1, \dots, a_k, x_1, \dots, x_m) = 0.
+\]
+\end{definition}
+
+\begin{example}\label{diophantine-equations:example-diophantine-sets}
+\begin{enumerate}
+\item The composite numbers: $a = (x_1 + 2)(x_2 + 2)$.
+\item The relation $a_1 \leq a_2$: $a_2 = a_1 + x_1$. Divisibility $a_1 \mid a_2$: $a_2 = a_1x_1$.
+\item Unknowns ranging over $\ZZ$ instead of $\NN$ give the same notion: $x \in \ZZ$ can be written $x_1 - x_2$ with $x_i \in \NN$, and conversely $x \in \NN$ if and only if $x = y_1^2 + y_2^2 + y_3^2 + y_4^2$
+with $y_i \in \ZZ$ (Theorem~\ref{number-theory:theorem-four-squares}).
+\end{enumerate}
+\end{example}
+
+\begin{proposition}\label{diophantine-equations:proposition-diophantine-closure}
+Unions and intersections of two Diophantine subsets of $\NN^k$ are Diophantine.
+\end{proposition}
+
+\begin{proof}
+If $S$ is defined by $P(a, x) = 0$ and $T$ by $Q(a, y) = 0$, with disjoint sets of unknowns $x$ and $y$, then $S \cup T$ is defined by $P(a, x)Q(a, y) = 0$ and $S \cap T$ by $P(a, x)^2 + Q(a, y)^2 = 0$.
+\end{proof}
+
+\begin{theorem}[Matiyasevich, Robinson, Davis, Putnam]\label{diophantine-equations:theorem-mrdp}
+A subset of $\NN^k$ is Diophantine if and only if it is recursively enumerable, that is, it is the set of outputs of some algorithm \cite{matiyasevich-hilbert}.
+\end{theorem}
+
+\begin{corollary}\label{diophantine-equations:corollary-hilbert-tenth}
+There is no algorithm which decides, for every polynomial $P \in \ZZ[x_1, \dots, x_m]$, whether $P = 0$ has a solution in integers.
+\end{corollary}
+
+\begin{proof}
+There are recursively enumerable sets $S \subseteq \NN$ whose membership is undecidable (the set of programs that halt, suitably encoded) \cite{matiyasevich-hilbert}. By the theorem $S$ is defined by some
+$P(a, x)$ with unknowns in $\NN$. Substituting for each $x_i$ a sum of four squares of new unknowns (Example~\ref{diophantine-equations:example-diophantine-sets}(3)) gives, for each $a$, a polynomial
+equation with unknowns in $\ZZ$ which is solvable if and only if $a \in S$; an algorithm for Hilbert's problem would therefore decide membership in $S$.
+\end{proof}
+
+\begin{remark}\label{diophantine-equations:remark-hilbert-tenth}
+Two striking consequences \cite{matiyasevich-hilbert}: there is a polynomial with integer coefficients whose positive values, as its variables range over $\NN$, are exactly the prime numbers (Jones, Sato, Wada
+and Wiens wrote one of degree $25$ in $26$ variables); and there is a single polynomial $P(a, x_1, \dots, x_m)$, a "universal Diophantine equation", from which every Diophantine set is obtained by fixing one
+parameter. The analogue of Hilbert's tenth problem over $\QQ$ is open. Computability itself is the subject of Chapter~\ref{computability-and-complexity}.
+\end{remark}
+
+\section{Exercises}\label{diophantine-equations:section-exercises}
+
+\begin{exercise}\label{diophantine-equations:exercise-frobenius-three}
+Show that $43$ is not of the form $6x + 9y + 20z$ with $x, y, z \in \NN$, but that every integer $n \geq 44$ is.
+\end{exercise}
+
+\begin{solution}
+$43$ is not a multiple of $3$, so $z \neq 0$; $43 - 20 = 23$ and $43 - 40 = 3$ are not of the form $6x + 9y$ (the first is not a multiple of $3$, the second is too small). For $n \geq 44$: $44 = 6 \cdot 4 + 20$,
+$45 = 9 \cdot 5$, $46 = 6 + 2 \cdot 20$, $47 = 3 \cdot 9 + 20$, $48 = 6 \cdot 8$, $49 = 9 + 2 \cdot 20$; these are six consecutive integers, and adding multiples of $6$ reaches every larger integer.
+\end{solution}
+
+\begin{exercise}\label{diophantine-equations:exercise-sixty}
+Show that $60$ divides $xyz$ for every Pythagorean triple $(x, y, z)$.
+\end{exercise}
+
+\begin{solution}
+It suffices to treat primitive triples $(m^2 - n^2, 2mn, m^2 + n^2)$. \emph{Divisibility by $4$}: one of $m$, $n$ is even, so $4 \mid 2mn$. \emph{By $3$}: if $3 \nmid mn$, then $m^2 \equiv n^2 \equiv 1 \pmod 3$
+and $3 \mid m^2 - n^2$. \emph{By $5$}: if $5 \nmid mn$, then $m^2, n^2 \equiv \pm1 \pmod 5$, so $5$ divides $m^2 - n^2$ or $m^2 + n^2$.
+\end{solution}
+
+\begin{exercise}\label{diophantine-equations:exercise-markov-coprime}
+Show that the entries of a Markov triple are pairwise coprime; in particular at most one of them is even.
+\end{exercise}
+
+\begin{solution}
+If a prime $p$ divides two entries of a solution of \eqref{diophantine-equations:equation-markov}, it divides the square of the third, hence all three. This property is preserved by moves: if $p$ divides $x$, $y$,
+$z$, it divides $3xy - z$. Conversely a move is an involution, so if $p$ divided all entries of some triple, it would divide all entries of $(1, 1, 1)$, by Theorem~\ref{diophantine-equations:theorem-markov}.
+For parity: two even entries would have the common factor $2$.
+\end{solution}
+
+\begin{exercise}\label{diophantine-equations:exercise-powers-two-three}
+Find all solutions in positive integers of $3^a - 2^b = 1$ and of $2^b - 3^a = 1$.
+\end{exercise}
+
+\begin{solution}
+\emph{$3^a - 2^b = 1$.} If $b = 1$, $a = 1$. If $b \geq 2$, then $3^a \equiv 1 \pmod 4$, so $a = 2c$ is even and $2^b = (3^c - 1)(3^c + 1)$; both factors are powers of $2$ differing by $2$, so they are $2$ and
+$4$, $c = 1$, $(a, b) = (2, 3)$. \emph{$2^b - 3^a = 1$.} Modulo $3$, $2^b \equiv 1$, so $b = 2c$ is even and $3^a = (2^c - 1)(2^c + 1)$; the factors are coprime powers of $3$ (their difference is $2$), so
+$2^c - 1 = 1$, $c = 1$, $(a, b) = (1, 2)$. So the solutions are $3 - 2 = 1$, $9 - 8 = 1$ and $4 - 3 = 1$.
+\end{solution}
+
+\begin{exercise}\label{diophantine-equations:exercise-two-squares-conic}
+Show that $x^2 + y^2 = 2z^2$ has infinitely many primitive solutions, and that $x^2 + y^2 = 3z^2$ has none other than $(0, 0, 0)$.
+\end{exercise}
+
+\begin{solution}
+The rational points of $X^2 + Y^2 = 2$ found in Example~\ref{diophantine-equations:example-conics}(2) are infinitely many, and clearing denominators gives infinitely many primitive solutions, such as
+$(1, 1, 1)$, $(1, 7, 5)$, $(7, 17, 13)$. For $3$: a nontrivial solution would give a rational point of $X^2 + Y^2 = 3$, which does not exist by Example~\ref{diophantine-equations:example-conics}(1).
+\end{solution}
+
+\begin{exercise}\label{diophantine-equations:exercise-not-square-diophantine}
+Show that the set of positive integers that are not perfect squares is Diophantine.
+\end{exercise}
+
+\begin{solution}
+$a$ is not a square if and only if $x^2 < a < (x + 1)^2$ for some $x \in \NN$, that is, if and only if there are $x, y, z \in \NN$ with $a = x^2 + 1 + y$ and $(x + 1)^2 = a + 1 + z$. By
+Proposition~\ref{diophantine-equations:proposition-diophantine-closure} the conjunction of the two equations is the single equation $(a - x^2 - 1 - y)^2 + (x^2 + 2x - a - z)^2 = 0$.
+\end{solution}

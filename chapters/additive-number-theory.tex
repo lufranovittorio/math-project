@@ -1,28 +1,300 @@
 \chapter{Additive Number Theory and Sieves}\label{additive-number-theory}
-\chapterstatus{planned}
+\chapterstatus{draft}
 
-Additive number theory asks which integers are sums of elements of a given set --- squares, $k$-th
-powers, primes --- and in how many ways. Its two great tools are the circle method, which turns a
-counting problem into an integral over the circle, and sieve methods, which count integers free of
-small prime factors. The chapter ends with additive combinatorics, where the sets are arbitrary.
+\section{Introduction}\label{additive-number-theory:section-introduction}
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{number-theory} (Elementary Number Theory), Chapter~\ref{prime-numbers} (Prime Numbers), Chapter~\ref{analytic-number-theory} (Analytic Number Theory), Chapter~\ref{harmonic-analysis} (Harmonic Analysis) and Chapter~\ref{combinatorics} (Combinatorics).
-
-\noindent\textbf{Planned contents.}
+Additive number theory asks which integers are sums of elements of a given set (squares, $k$-th powers, primes) and in how many ways. Lagrange's theorem that every positive integer is a sum of
+four squares (Theorem~\ref{number-theory:theorem-four-squares}) and Jacobi's formula for the number of representations as a sum of two squares (Theorem~\ref{number-theory:theorem-jacobi-two-squares}) are the
+first results of this kind, and the Gauss circle problem, the average of that number, is treated in Chapter~\ref{geometry-of-numbers}. This chapter presents the general tools.
 \begin{enumerate}
-\item Sums of squares: the numbers $r_2(n)$ and $r_4(n)$ (Jacobi), Gauss's circle problem and its error term.
-\item Waring's problem: Hilbert's theorem via Linnik's or Hilbert's method; the numbers $g(k)$ and $G(k)$.
-\item The Hardy--Littlewood circle method: major and minor arcs, Weyl sums and Weyl's inequality, the
-singular series and the singular integral; Waring's problem for large $s$.
-\item Vinogradov's three primes theorem; the binary Goldbach problem and what is known.
-\item Elementary sieves: the sieve of Eratosthenes--Legendre, Brun's sieve and Brun's theorem on twin
-primes, the Selberg sieve, the large sieve inequality.
-\item The Bombieri--Vinogradov theorem (statement), Chen's theorem (statement), bounded gaps between
-primes (Zhang, Maynard; survey).
-\item Schnirelmann density and Schnirelmann's theorem; Mann's theorem.
-\item Additive combinatorics: the Cauchy--Davenport theorem, sumsets, the Pl\"unnecke--Ruzsa
-inequalities, Freiman's theorem (statement), Roth's theorem on three-term progressions,
-Szemer\'edi's and the Green--Tao theorems (survey).
-\item Partitions: the Hardy--Ramanujan asymptotic formula (via the circle method) and Ramanujan's congruences.
-\item Exercises with solutions.
+\item The \emph{circle method} of Hardy, Littlewood and Ramanujan turns a counting problem into an integral over the circle of a power of an exponential sum
+(Section~\ref{additive-number-theory:section-circle-method}); we prove the basic identity and describe what it gives: Waring's problem, Vinogradov's three primes theorem, the partition function.
+\item \emph{Schnirelmann density} gives a soft but robust way to show that a set is an additive basis (Section~\ref{additive-number-theory:section-schnirelmann}).
+\item \emph{Sieves} count integers free of small prime factors; we prove Legendre's sieve, explain Brun's and Selberg's improvements and survey the modern results on gaps between primes
+(Section~\ref{additive-number-theory:section-sieves}).
+\item \emph{Additive combinatorics} studies sumsets $A + B$ of arbitrary sets; we prove the Cauchy--Davenport theorem and Ruzsa's triangle inequality and survey the theorems of Freiman, Roth,
+Szemer\'edi and Green--Tao (Section~\ref{additive-number-theory:section-combinatorics}).
 \end{enumerate}
+References: \cite{vaughan-hardy-littlewood}, \cite{iwaniec-kowalski}, \cite{tao-vu-additive}, \cite{hardy-wright}.
+
+\noindent\textbf{Prerequisites.} Chapter~\ref{number-theory} (Elementary Number Theory), Chapter~\ref{prime-numbers} (Prime Numbers), Chapter~\ref{analytic-number-theory} (Analytic Number Theory) and
+Chapter~\ref{combinatorics} (Combinatorics).
+
+\begin{notation}\label{additive-number-theory:notation-sumsets}
+For sets $A$, $B$ of integers (or of elements of an abelian group, written additively) the \emph{sumset} is $A + B = \{a + b : a \in A, b \in B\}$, and $hA = A + \cdots + A$ ($h$ summands). We write
+$e(x) = e^{2\pi ix}$ for real $x$, $\|x\|$ for the distance from $x$ to the nearest integer, and $|S|$ for the number of elements of a finite set $S$.
+\end{notation}
+
+\section{The circle method}\label{additive-number-theory:section-circle-method}
+
+The method rests on one identity: the integral of $e(m\alpha)$ over $[0, 1]$ detects whether the integer $m$ is zero.
+
+\begin{proposition}\label{additive-number-theory:proposition-circle-identity}
+Let $A$ be a finite set of nonnegative integers, $s \geq 1$, and $f(\alpha) = \sum_{a \in A}e(a\alpha)$. The number $r_s(n)$ of $(a_1, \ldots, a_s) \in A^s$ with $a_1 + \cdots + a_s = n$ is
+\[
+r_s(n) = \int_0^1f(\alpha)^se(-n\alpha)\,d\alpha .
+\]
+\end{proposition}
+
+\begin{proof}
+For an integer $m$, $\int_0^1e(m\alpha)\,d\alpha$ is $1$ if $m = 0$ and $\frac{e(m) - 1}{2\pi im} = 0$ otherwise. Expanding $f(\alpha)^s = \sum_{a_1, \ldots, a_s \in A}e((a_1 + \cdots + a_s)\alpha)$ and integrating term by term
+against $e(-n\alpha)$ counts the tuples with $a_1 + \cdots + a_s - n = 0$.
+\end{proof}
+
+\begin{example}\label{additive-number-theory:example-circle-identity}
+For $A = \{0, 1, \ldots, N\}$ and $s = 2$, $f(\alpha) = \frac{e((N + 1)\alpha) - 1}{e(\alpha) - 1}$, and $r_2(n) = N + 1 - |n - N|$ for $0 \leq n \leq 2N$. The identity holds, but it is not how one computes $r_2(n)$
+here. Its power comes from cases where the sum $f$ cannot be summed in closed form but can be \emph{estimated}: then the integral is split according to the size of $f$.
+\end{example}
+
+\begin{remark}\label{additive-number-theory:remark-major-minor}
+\emph{Major and minor arcs.} Take $A = \{m^k : 1 \leq m \leq N\}$ with $N = \lfloor n^{1/k}\rfloor$, so $r_s(n)$ is the number of representations of $n$ as a sum of $s$ positive $k$-th powers. The sum
+$f(\alpha) = \sum_{m \leq N}e(m^k\alpha)$ is large, of size comparable to $N$, only when $\alpha$ is close to a rational number $a/q$ with small denominator: at $\alpha = a/q$ the terms repeat with period $q$, and
+$f(a/q) \approx \frac Nq\sum_{x \bmod q}e(ax^k/q)$. The \emph{major arcs} are short intervals around such $a/q$; there $f$ is approximated by a product of a complete exponential sum modulo $q$ and an integral.
+Their contribution to $r_s(n)$ is the product of the \emph{singular series} $\mathfrak{S}(n) = \sum_q\sum_{(a, q) = 1}\bigl(q^{-1}\sum_{x \bmod q}e(ax^k/q)\bigr)^se(-an/q)$, which records the congruence conditions modulo all $q$,
+and the \emph{singular integral}, which is $\Gamma(1 + 1/k)^s\Gamma(s/k)^{-1}n^{s/k - 1}$ and records the real solutions. The \emph{minor arcs}, the rest of the circle, are shown to contribute less, using
+Weyl's inequality: $f(\alpha) = o(N)$ unless $\alpha$ is close to a rational with small denominator. This is the quantitative form of Weyl's equidistribution theorem
+(Theorem~\ref{continued-fractions:theorem-weyl-polynomial}). The result, for $s$ large in terms of $k$, is the asymptotic formula
+\[
+r_s(n) \sim \mathfrak{S}(n)\frac{\Gamma(1 + 1/k)^s}{\Gamma(s/k)}n^{s/k - 1}, \qquad \mathfrak{S}(n) \geq c > 0,
+\]
+first proved by Hardy and Littlewood for $s \geq 2^{k-1}(k - 2) + 5$ \cite{vaughan-hardy-littlewood}.
+\end{remark}
+
+\begin{theorem}[Hilbert--Waring]\label{additive-number-theory:theorem-hilbert-waring}
+For every $k \geq 1$ there is $s$ such that every positive integer is a sum of $s$ nonnegative $k$-th powers. The least such $s$ is denoted $g(k)$.
+\end{theorem}
+
+Hilbert proved this in 1909 by an algebraic identity; the circle method gives a second proof and much more \cite{vaughan-hardy-littlewood}, \cite{nathanson-additive}.
+
+\begin{example}\label{additive-number-theory:example-waring}
+\begin{enumerate}
+\item $g(2) = 4$: every integer is a sum of four squares (Theorem~\ref{number-theory:theorem-four-squares}), and $7$ is not a sum of three, since a sum of three squares is never $\equiv 7 \pmod 8$ (the squares
+modulo $8$ are $0, 1, 4$).
+\item $g(k) \geq 2^k + \lfloor(3/2)^k\rfloor - 2$. Let $q = \lfloor(3/2)^k\rfloor$ and $n = 2^kq - 1 < 3^k$. A representation of $n$ uses only the $k$-th powers $0$, $1$ and $2^k$; at most $q - 1$ copies of $2^k$ fit, and the
+cheapest representation is $(q - 1)2^k + (2^k - 1)\cdot1$, with $2^k + q - 2$ terms. Equality holds whenever $2^k\{(3/2)^k\} + \lfloor(3/2)^k\rfloor \leq 2^k$, a condition that fails for at most finitely many $k$ (Mahler) and is not known to fail for any \cite{vaughan-hardy-littlewood}; for instance $g(3) = 9$, as $23 = 2 \cdot 8 + 7 \cdot 1$ needs nine cubes.
+\item The more natural number is $G(k)$, the least $s$ such that every \emph{sufficiently large} integer is a sum of $s$ $k$-th powers. Counting shows $G(k) \geq k + 1$: there are only about $N^{s/k}$ sums
+of $s$ $k$-th powers up to $N$, up to a constant depending on $s$, which is $o(N)$ if $s < k$, and a congruence argument adds one. One knows $G(2) = 4$ and $G(4) = 16$, while $4 \leq G(3) \leq 7$.
+\end{enumerate}
+\end{example}
+
+\begin{remark}\label{additive-number-theory:remark-goldbach}
+\emph{Primes.} With $A$ the set of primes up to $n$, Proposition~\ref{additive-number-theory:proposition-circle-identity} expresses the number of representations of $n$ as a sum of $s$ primes. For $s = 3$,
+Vinogradov (1937) bounded the minor arcs by his estimate for exponential sums over primes and proved that every sufficiently large odd integer is a sum of three primes; the singular series is
+positive for odd $n$ and vanishes for even $n$ \cite{vaughan-hardy-littlewood}, \cite{iwaniec-kowalski}. For $s = 2$ (the binary Goldbach conjecture, every even integer $\geq 4$ is a sum of two primes) the
+minor arcs cannot be controlled, because $\int_0^1|f|^2$ is already as large as the expected main term. The best results come from sieves (Remark~\ref{additive-number-theory:remark-gaps}).
+\end{remark}
+
+\begin{remark}\label{additive-number-theory:remark-partitions}
+\emph{Partitions.} The circle method was born in Hardy and Ramanujan's study of the partition function $p(n)$, whose generating function $\sum_np(n)x^n = \prod_{m \geq 1}(1 - x^m)^{-1}$ is studied in
+Chapter~\ref{generating-functions}. Here the integral is over a circle $|x| = r < 1$ in Cauchy's formula, and the function is large near the roots of unity, the major arcs. The contribution of
+$x = 1$ gives
+\[
+p(n) \sim \frac{1}{4n\sqrt3}e^{\pi\sqrt{2n/3}},
+\]
+and summing the contributions of all roots of unity gives an exact convergent series (Rademacher) \cite{hardy-ramanujan-1917}. Ramanujan also observed the congruences $p(5n + 4) \equiv 0 \pmod 5$,
+$p(7n + 5) \equiv 0 \pmod 7$ and $p(11n + 6) \equiv 0 \pmod{11}$ \cite{hardy-wright}.
+\end{remark}
+
+\section{Schnirelmann density}\label{additive-number-theory:section-schnirelmann}
+
+How can one show that every integer is a sum of a bounded number of primes, without counting representations precisely? Schnirelmann's idea (1930) was to measure the size of a set by a density
+that behaves well under addition.
+
+\begin{definition}\label{additive-number-theory:definition-schnirelmann}
+For $A \subseteq \NN = \{0, 1, 2, \ldots\}$ let $A(n) = |A \cap \{1, \ldots, n\}|$. The \emph{Schnirelmann density} of $A$ is $\sigma(A) = \inf_{n \geq 1}A(n)/n$. A set $A$ with $0 \in A$ is a \emph{basis of order $h$} if
+$hA = \NN$.
+\end{definition}
+
+\begin{example}\label{additive-number-theory:example-schnirelmann}
+\begin{enumerate}
+\item $\sigma(A) = 1$ if and only if $A \supseteq \{1, 2, 3, \ldots\}$, and $\sigma(A) = 0$ whenever $1 \notin A$, since then $A(1) = 0$. So the Schnirelmann density is very sensitive to small elements,
+unlike the asymptotic density $\lim A(n)/n$.
+\item The odd numbers have $\sigma = \frac12$; the squares (with $0$) have $\sigma = 0$, since $A(n) \leq \sqrt n$, but they form a basis of order $4$ by Lagrange's theorem.
+\end{enumerate}
+\end{example}
+
+\begin{theorem}[Schnirelmann]\label{additive-number-theory:theorem-schnirelmann}
+Let $A, B \subseteq \NN$ contain $0$. Then $\sigma(A + B) \geq \sigma(A) + \sigma(B) - \sigma(A)\sigma(B)$.
+\end{theorem}
+
+\begin{proof}
+Let $\alpha = \sigma(A)$, $\beta = \sigma(B)$ and $n \geq 1$. Let $1 \leq a_1 < \cdots < a_r \leq n$ be the elements of $A$ in $[1, n]$, so $r = A(n)$, and put $a_0 = 0$, $a_{r+1} = n + 1$. Since $0 \in B$, every
+$a_i$ lies in $A + B$. In each gap, of length $g_i = a_{i+1} - a_i - 1$ between consecutive elements, the numbers $a_i + b$ with $b \in B$, $1 \leq b \leq g_i$, lie in $A + B$, are distinct, and fall in the gap; there
+are $B(g_i) \geq \beta g_i$ of them. Hence
+\[
+(A + B)(n) \geq r + \beta\sum_{i=0}^rg_i = r + \beta(n - r) = (1 - \beta)r + \beta n \geq (1 - \beta)\alpha n + \beta n,
+\]
+as $\sum_ig_i = n - r$ and $r \geq \alpha n$. Dividing by $n$ and taking the infimum gives the claim.
+\end{proof}
+
+\begin{corollary}\label{additive-number-theory:corollary-schnirelmann-basis}
+If $0 \in A$ and $\sigma(A) > 0$, then $A$ is a basis of some finite order.
+\end{corollary}
+
+\begin{proof}
+Write the inequality as $1 - \sigma(A + B) \leq (1 - \sigma(A))(1 - \sigma(B))$. By induction $1 - \sigma(hA) \leq (1 - \sigma(A))^h$, which is $\leq \frac12$ for $h$ large; so $\sigma(hA) \geq \frac12$. If $C \subseteq \NN$ contains $0$
+and $\sigma(C) \geq \frac12$, then $2C = \NN$: for $n \geq 1$, the sets $\{c \in C : 1 \leq c \leq n - 1\}$ and $\{n - c : c \in C, 1 \leq c \leq n - 1\}$ are subsets of $\{1, \ldots, n - 1\}$ with at least
+$C(n - 1)$ elements each. If $n \in C$, then $n = n + 0$. Otherwise $C(n - 1) = C(n) \geq \frac n2 > \frac{n - 1}{2}$, so the two subsets have more than $n - 1$ elements together and meet, giving $n = c + c^{\prime}$. Hence $2hA = \NN$.
+\end{proof}
+
+\begin{remark}\label{additive-number-theory:remark-schnirelmann-primes}
+The primes have Schnirelmann density $0$. Schnirelmann applied the corollary to the set $A = \{0, 1\} \cup \{p + q : p, q \text{ prime}\}$: a sieve upper bound for the number of representations $n = p + q$,
+combined with the Cauchy--Schwarz inequality, shows that $A$ has positive density, so every integer $n \geq 2$ is a sum of a bounded number of primes \cite{nathanson-additive}. Mann proved the sharp form of
+Theorem~\ref{additive-number-theory:theorem-schnirelmann}, $\sigma(A + B) \geq \min(1, \sigma(A) + \sigma(B))$ \cite{mann-1942}.
+\end{remark}
+
+\section{Sieves}\label{additive-number-theory:section-sieves}
+
+A sieve counts the elements of a set that are not divisible by any prime from a given set. The sieve of Eratosthenes finds the primes up to $x$ by removing the multiples of the primes up to $\sqrt x$;
+Legendre turned it into a formula by inclusion--exclusion.
+
+\begin{notation}\label{additive-number-theory:notation-sieve}
+For $z \geq 2$ let $P(z) = \prod_{p < z}p$, and for $x \geq 1$ let $\Phi(x, z)$ be the number of integers $1 \leq n \leq x$ with no prime factor $< z$. The M\"obius function is $\mu$
+(Proposition~\ref{number-theory:proposition-mobius}).
+\end{notation}
+
+\begin{proposition}[Legendre]\label{additive-number-theory:proposition-legendre-sieve}
+$\Phi(x, z) = \sum_{d \mid P(z)}\mu(d)\lfloor x/d\rfloor = x\prod_{p < z}(1 - \frac1p) + E$ with $|E| \leq 2^{\pi(z)}$. If $\sqrt x < z \leq x$, then $\Phi(x, z) = 1 + \#\{p \text{ prime} : z \leq p \leq x\}$.
+\end{proposition}
+
+\begin{proof}
+Since $\sum_{d \mid m}\mu(d)$ is $1$ for $m = 1$ and $0$ for $m > 1$, the indicator of $\gcd(n, P(z)) = 1$ is $\sum_{d \mid \gcd(n, P(z))}\mu(d)$. Summing over $n \leq x$ and exchanging the sums,
+$\Phi(x, z) = \sum_{d \mid P(z)}\mu(d)\#\{n \leq x : d \mid n\} = \sum_{d \mid P(z)}\mu(d)\lfloor x/d\rfloor$. Writing $\lfloor x/d\rfloor = x/d - \{x/d\}$ gives the main term
+$x\sum_{d \mid P(z)}\mu(d)/d = x\prod_{p < z}(1 - 1/p)$ and an error of absolute value at most the number $2^{\pi(z)}$ of divisors of $P(z)$. The integers $n \leq x$ with no prime factor $< z$ are $1$ and the primes in
+$[z, x]$ together with composites all of whose prime factors are $\geq z$; for $z > \sqrt x$ such composites exceed $z^2 > x$, which gives the last formula.
+\end{proof}
+
+\begin{corollary}\label{additive-number-theory:corollary-legendre-bound}
+$\pi(x) = O(x/\log\log x)$.
+\end{corollary}
+
+\begin{proof}
+For every $z$, $\pi(x) \leq \pi(z) + \Phi(x, z) \leq z + x\prod_{p < z}(1 - 1/p) + 2^z$. By Mertens' third theorem (Theorem~\ref{prime-numbers:theorem-mertens-third}) the product is $O(1/\log z)$. Take
+$z = \log x$: then $2^z = x^{\log 2}$, and $\pi(x) = O(\log x + x/\log\log x + x^{0.7}) = O(x/\log\log x)$.
+\end{proof}
+
+The result is far weaker than Chebyshev's bound $\pi(x) = O(x/\log x)$ (Theorem~\ref{prime-numbers:theorem-chebyshev}). The weakness is the error term: inclusion--exclusion over all $2^{\pi(z)}$ divisors of
+$P(z)$ accumulates too many rounding errors, so $z$ must be tiny. The modern sieves truncate or reweight the sum.
+
+\begin{remark}\label{additive-number-theory:remark-brun-selberg}
+\emph{Brun's sieve} (1915--1920) truncates inclusion--exclusion, using that the partial sums $\sum_{j \leq 2t}(-1)^j\binom mj$ are $\geq 0$ and those up to odd indices are $\leq 0$; this gives upper and lower
+bounds with errors under control for $z = x^{c/\log\log x}$ and even $z = x^c$. Brun deduced that the number of twin primes $p, p + 2 \leq x$ is $O(x/\log^2x)$, so that
+$\sum_{p,\,p+2 \text{ prime}}\frac1p$ converges (\emph{Brun's theorem}), in contrast with $\sum_p\frac1p = \infty$ (Theorem~\ref{prime-numbers:theorem-mertens-second}). \emph{Selberg's sieve} (1947) replaces $\mu(d)$
+by real weights $\lambda_d$ with $\lambda_1 = 1$, using that $\bigl(\sum_{d \mid \gcd(n, P(z))}\lambda_d\bigr)^2 \geq 0$ is $1$ when $\gcd(n, P(z)) = 1$; minimising the resulting quadratic form gives sharp upper bounds, for
+instance $\pi(x + y) - \pi(x) \leq (2 + o(1))y/\log y$ (the \emph{Brun--Titchmarsh} inequality). The \emph{large sieve} bounds how often a set can avoid many residue classes modulo many primes at once
+\cite{iwaniec-kowalski}, \cite{montgomery-vaughan}.
+\end{remark}
+
+\begin{remark}\label{additive-number-theory:remark-gaps}
+\emph{What is known about Goldbach and twin primes.} Sieves cannot by themselves detect primes (the \emph{parity problem}), but they come close. Chen proved in 1973 that every sufficiently large even
+integer is $p + P_2$, with $P_2$ a prime or a product of two primes, and that there are infinitely many primes $p$ with $p + 2 = P_2$ \cite{chen-1973}. The \emph{Bombieri--Vinogradov theorem}, which says that
+primes are well distributed in arithmetic progressions on average over moduli up to $x^{1/2 - \varepsilon}$, plays the role of the generalised Riemann hypothesis in many applications
+\cite{iwaniec-kowalski}. Zhang proved in 2013 that $\liminf_n(p_{n+1} - p_n) < 7 \cdot 10^7$ \cite{zhang-2014}, and Maynard, with a multidimensional Selberg sieve, that for every $m$ there are infinitely many
+intervals of bounded length containing $m$ primes \cite{maynard-2015}; the bound for $m = 2$ now stands at $246$.
+\end{remark}
+
+\section{Additive combinatorics}\label{additive-number-theory:section-combinatorics}
+
+Here the sets are arbitrary, and the question is how the size and structure of $A + B$ relate to those of $A$ and $B$. A sumset is small only for structured sets, and the theory makes this precise.
+
+\begin{proposition}\label{additive-number-theory:proposition-sumset-integers}
+For finite nonempty $A, B \subseteq \ZZ$, $|A + B| \geq |A| + |B| - 1$, with equality if $A$ and $B$ are arithmetic progressions with the same difference.
+\end{proposition}
+
+\begin{proof}
+Let $a_1 < \cdots < a_r$ and $b_1 < \cdots < b_s$. The $r + s - 1$ sums $a_1 + b_1 < a_2 + b_1 < \cdots < a_r + b_1 < a_r + b_2 < \cdots < a_r + b_s$ are distinct. If $a_i = a + id$ and $b_j = b + jd$, then
+$A + B = \{a + b + kd : 2 \leq k \leq r + s\}$ has $r + s - 1$ elements.
+\end{proof}
+
+In $\ZZ/n\ZZ$ the analogue fails when $n$ is composite: a proper subgroup $H$ has $H + H = H$. For $n = p$ prime there are no proper subgroups other than $0$, and the bound survives, capped by $p$.
+
+\begin{theorem}[Cauchy--Davenport]\label{additive-number-theory:theorem-cauchy-davenport}
+Let $p$ be a prime and $A, B \subseteq \ZZ/p\ZZ$ nonempty. Then $|A + B| \geq \min(p, |A| + |B| - 1)$.
+\end{theorem}
+
+\begin{proof}
+We induct on $|B|$; for $|B| = 1$, $A + B$ is a translate of $A$. Let $|B| \geq 2$.
+
+\emph{Step 1: the $e$-transform.} For $e \in \ZZ/p\ZZ$ put $A^{\prime} = A \cup (B + e)$ and $B^{\prime} = B \cap (A - e)$. Then $A^{\prime} + B^{\prime} \subseteq A + B$: if $x \in A$ and $y \in B^{\prime} \subseteq B$ this is clear, and if
+$x = b + e$ and $y = a - e \in B^{\prime}$ then $x + y = a + b$. Moreover $|A^{\prime}| + |B^{\prime}| = |A| + |B| - |A \cap (B + e)| + |B \cap (A - e)| = |A| + |B|$, since translation by $e$ maps $B \cap (A - e)$ onto
+$(B + e) \cap A$.
+
+\emph{Step 2: choice of $e$.} If $e = a - b$ with $a \in A$, $b \in B$, then $b \in B^{\prime}$, so $B^{\prime} \neq \emptyset$. Suppose that $B^{\prime} = B$ for all such $e$, that is, $B + a - b \subseteq A$ for all $a \in A$, $b \in B$.
+Choose $b \neq b^{\prime}$ in $B$ and put $d = b^{\prime} - b \neq 0$. Then $A + d \subseteq A$, so $A$ is a union of cosets of the subgroup generated by $d$, which is $\ZZ/p\ZZ$ as $p$ is prime. So $A = \ZZ/p\ZZ$
+and $|A + B| = p$.
+
+\emph{Step 3: induction.} Otherwise choose $e$ with $\emptyset \neq B^{\prime} \subsetneq B$. By induction and Step 1,
+$|A + B| \geq |A^{\prime} + B^{\prime}| \geq \min(p, |A^{\prime}| + |B^{\prime}| - 1) = \min(p, |A| + |B| - 1)$.
+\end{proof}
+
+\begin{example}\label{additive-number-theory:example-cauchy-davenport}
+\begin{enumerate}
+\item The bound is attained by arithmetic progressions with a common difference, as in $\ZZ$.
+\item Every element of $\ZZ/p\ZZ$ is a sum of two squares: the set $Q$ of squares has $(p + 1)/2$ elements, so $|Q + Q| \geq \min(p, p) = p$. (This also follows from counting, but the sumset argument
+generalises: every element of $\mathbb{F}_p$ is a sum of $k$ $k$-th powers when the $k$-th powers are numerous enough.)
+\item For $n = 6$, $A = B = \{0, 2, 4\}$ gives $|A + B| = 3 < \min(6, 5)$: primality is needed.
+\end{enumerate}
+\end{example}
+
+\begin{proposition}[Ruzsa's triangle inequality]\label{additive-number-theory:proposition-ruzsa}
+For finite nonempty subsets $A, B, C$ of an abelian group, $|A|\,|B - C| \leq |A - B|\,|A - C|$.
+\end{proposition}
+
+\begin{proof}
+For each $x \in B - C$ choose a representation $x = b(x) - c(x)$. The map $A \times (B - C) \to (A - B) \times (A - C)$, $(a, x) \mapsto (a - b(x), a - c(x))$, is injective: from the image one recovers
+$x = (a - c(x)) - (a - b(x))$, hence $b(x)$ and $c(x)$, and then $a$.
+\end{proof}
+
+With $d(A, B) = \log\frac{|A - B|}{\sqrt{|A||B|}}$ the inequality reads $d(B, C) \leq d(A, B) + d(A, C)$, which explains the name. Such inequalities control iterated sumsets: if $|A + A| \leq K|A|$, then
+$|mA - nA| \leq K^{m+n}|A|$ for all $m$, $n$ (the \emph{Pl\"unnecke--Ruzsa inequality} \cite{tao-vu-additive}).
+
+\begin{remark}\label{additive-number-theory:remark-additive-structure}
+\emph{Structure and randomness.} \emph{Freiman's theorem} says that a finite $A \subseteq \ZZ$ with $|A + A| \leq K|A|$ is contained in a generalised arithmetic progression of dimension and size bounded in terms of $K$
+and $|A|$ \cite{tao-vu-additive}. \emph{Roth's theorem} (1953) says that a subset of $\{1, \ldots, N\}$ without three-term arithmetic progressions has $o(N)$ elements; Roth's proof is a density increment with the
+circle method. \emph{Szemer\'edi's theorem} (1975) extends this to progressions of every length $k$, and the \emph{Green--Tao theorem} shows that the primes, a set of density zero, contain arbitrarily long
+arithmetic progressions \cite{green-tao}, \cite{tao-vu-additive}.
+\end{remark}
+
+\section{Exercises}\label{additive-number-theory:section-exercises}
+
+\begin{exercise}\label{additive-number-theory:exercise-sumset-equality}
+Let $A \subseteq \ZZ$ be finite with $|A| = r \geq 2$. Show that $|A + A| = 2r - 1$ if and only if $A$ is an arithmetic progression.
+\end{exercise}
+
+\begin{solution}
+If $A$ is a progression, Proposition~\ref{additive-number-theory:proposition-sumset-integers} gives equality. Conversely let $a_1 < \cdots < a_r$ and suppose $|A + A| = 2r - 1$. The chain
+$2a_1 < a_1 + a_2 < a_2 + a_2 < a_2 + a_3 < \cdots < a_r + a_r$ has $2r - 1$ elements, so it is all of $A + A$. For $1 \leq i < r - 1$, $a_i + a_{i+2}$ lies strictly between $a_i + a_{i+1}$ and
+$a_{i+1} + a_{i+2}$, and the only element of the chain there is $2a_{i+1}$. So $a_i + a_{i+2} = 2a_{i+1}$ for all $i$, and $A$ is a progression.
+\end{solution}
+
+\begin{exercise}\label{additive-number-theory:exercise-schnirelmann-order}
+Let $A$ be a set containing $0$ and $1$ with $\sigma(A) = \alpha > 0$. Show that $A$ is a basis of order at most $2\lceil\log 2/(-\log(1 - \alpha))\rceil$ (for $\alpha < 1$).
+\end{exercise}
+
+\begin{solution}
+By the proof of Corollary~\ref{additive-number-theory:corollary-schnirelmann-basis}, $\sigma(hA) \geq 1 - (1 - \alpha)^h$, which is $\geq \frac12$ as soon as $h\log(1 - \alpha) \leq -\log 2$, that is,
+$h \geq \log 2/(-\log(1 - \alpha))$; then $2hA = \NN$.
+\end{solution}
+
+\begin{exercise}\label{additive-number-theory:exercise-legendre-twin}
+Adapt Legendre's sieve to show that the number of $n \leq x$ such that neither $n$ nor $n + 2$ has a prime factor $< z$ (with $z \geq 3$) is $x\prod_{3 \leq p < z}(1 - \frac2p)\cdot\frac12 + O(3^{\pi(z)})$.
+\end{exercise}
+
+\begin{solution}
+The condition is $\gcd(n(n + 2), P(z)) = 1$. For odd $p$ the condition $p \nmid n(n + 2)$ excludes two residue classes modulo $p$, and for $p = 2$ one class (the odd $n$ survive). By the Chinese remainder
+theorem (Theorem~\ref{number-theory:theorem-crt}), for $d \mid P(z)$ the number of $n \leq x$ with $d \mid n(n + 2)$ is $\omega(d)x/d + O(\omega(d))$, where $\omega$ is multiplicative with $\omega(2) = 1$ and
+$\omega(p) = 2$. Inclusion--exclusion as in Proposition~\ref{additive-number-theory:proposition-legendre-sieve} gives $x\sum_{d \mid P(z)}\mu(d)\omega(d)/d = x\prod_{p < z}(1 - \omega(p)/p)$, with error at most
+$\sum_{d \mid P(z)}\omega(d) \leq 3^{\pi(z)}$.
+\end{solution}
+
+\begin{exercise}\label{additive-number-theory:exercise-cauchy-davenport-sharp}
+Let $p$ be prime and $1 \leq r, s \leq p$ with $r + s - 1 \leq p$. Find $A, B \subseteq \ZZ/p\ZZ$ with $|A| = r$, $|B| = s$ and $|A + B| = r + s - 1$, and show that for $A = B$ the set of nonzero squares, $|A + A| = p$ or
+$p - 1$ for $p \geq 7$. What happens for $p = 5$?
+\end{exercise}
+
+\begin{solution}
+Take $A = \{0, \ldots, r - 1\}$ and $B = \{0, \ldots, s - 1\}$; then $A + B = \{0, \ldots, r + s - 2\}$. For the nonzero squares $A$, $|A| = (p - 1)/2$, so $|A + A| \geq p - 2$ by
+Theorem~\ref{additive-number-theory:theorem-cauchy-davenport}. The set $A + A$ is stable under multiplication by nonzero squares, so $(A + A) \setminus \{0\}$ is a union of cosets of the squares in $\mathbb{F}_p^\times$: it is $A$,
+the non-squares, or all of $\mathbb{F}_p^\times$. Since it has at least $p - 3 > (p - 1)/2$ nonzero elements for $p \geq 7$, it is all of $\mathbb{F}_p^\times$, and $|A + A|$ is $p$ or $p - 1$ according as $0 \in A + A$,
+that is, as $-1$ is a square. For $p = 5$, $A = \{1, 4\}$ and $A + A = \{0, 2, 3\}$: the nonzero sums are exactly the non-squares, and the Cauchy--Davenport bound $p - 2 = 3$ is attained.
+\end{solution}
