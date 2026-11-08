@@ -1,16 +1,913 @@
 \chapter{Topological K-Theory}\label{k-theory}
-\chapterstatus{planned}
+\chapterstatus{draft}
 
-The group completion of the semiring of vector bundles, and its periodicity.
+Vector bundles over a space $X$ can be added (direct sum) and multiplied (tensor product), but not subtracted. K-theory formally adds the missing differences: $K(X)$ is the group of formal
+differences $[E] - [F]$ of vector bundles, with the tensor product as multiplication. This loses some information, since two bundles become equal in $K(X)$ as soon as they become isomorphic
+after adding the same trivial bundle. What one gains is a cohomology theory, computable by exact sequences, with a striking periodicity discovered by Bott: $K$ of the double suspension of $X$ is $K$ of
+$X$. On spheres, the theory is concentrated in even dimensions, where it is the integers.
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{vector-bundles} (Vector Bundles), Chapter~\ref{characteristic-classes} (Characteristic Classes) and Section~\ref{singular-homology:section-singular-cohomology} (Singular Cohomology).
+This chapter constructs topological K-theory from the Grothendieck group of a monoid, computes $K(S^2)$ by hand through clutching functions, states Bott periodicity with the six-term exact sequence, and
+compares K-theory with rational cohomology through the Chern character. Two classical applications follow. Bott's integrality theorem shows that only $S^2$, $S^4$ and $S^6$ can carry almost complex
+structures among the even spheres. Adams operations solve the Hopf invariant one problem, which Chapter~\ref{cohomology-operations} reduced to dimensions that are powers of $2$. Two neighbouring
+theories end the chapter: the algebraic K-groups $K_0$, $K_1$, $K_2$ of rings, and the cobordism groups of manifolds, with the signature theorem and Milnor's exotic spheres.
 
-\noindent\textbf{Planned contents.}
+\noindent\textbf{Prerequisites.} Chapter~\ref{vector-bundles} (Vector Bundles), Chapter~\ref{characteristic-classes} (Characteristic Classes), Chapter~\ref{homotopy} (Homotopy Theory),
+Section~\ref{singular-homology:section-singular-cohomology} (Singular Cohomology), Chapter~\ref{poincare-duality} (Poincar\'e Duality) and Chapter~\ref{cohomology-operations} (Cohomology Operations);
+for the algebraic part, Chapter~\ref{homological-algebra} (Homological Algebra) and Chapter~\ref{algebraic-number-theory} (Algebraic Number Theory).
+
+\section{The Grothendieck group of a monoid}\label{k-theory:section-grothendieck-group}
+
+The integers are built from the natural numbers by adding formal differences. The same construction works for every commutative monoid, and it is the first step of K-theory.
+
+\begin{definition}\label{k-theory:definition-grothendieck-group}
+Let $(M, +, 0)$ be a commutative monoid. A \emph{Grothendieck group} of $M$ is an abelian group $K(M)$ with a monoid homomorphism $\iota \colon M \to K(M)$ such that every monoid homomorphism
+$\varphi \colon M \to A$ to an abelian group factors uniquely as $\varphi = \bar{\varphi} \circ \iota$ with $\bar{\varphi} \colon K(M) \to A$ a group homomorphism.
+\end{definition}
+
+\begin{notation}\label{k-theory:notation-grothendieck-group}
+Monoids and groups in this section are written additively, with operation $+$ and neutral element $0$. For $m \in M$ we write $[m] = \iota(m)$ and call it the \emph{class} of $m$. When $M$ is also a
+commutative semiring, with a second operation written as juxtaposition $mn$ (or $m \otimes n$ for bundles and modules) and unit $1$, the group $K(M)$ is given the ring structure of
+Proposition~\ref{k-theory:proposition-grothendieck-group}(3), again written multiplicatively.
+\end{notation}
+
+\begin{proposition}\label{k-theory:proposition-grothendieck-group}
+Let $M$ be a commutative monoid.
 \begin{enumerate}
-\item $K^0(X)$, reduced $K$-theory, $K^{-n}$ and the long exact sequence.
-\item Bott periodicity.
-\item The Chern character; Adams operations and the Hopf invariant one problem.
-\item Algebraic K-theory: $K_0$ of rings, $K_1$ and the Whitehead group, Milnor $K_2$ and Matsumoto's theorem (statement), Quillen's higher K-groups (survey).
-\item Cobordism: Thom's theorem on unoriented and oriented cobordism, the Pontryagin--Thom construction, Hirzebruch's signature theorem, Milnor's exotic $7$-spheres (survey).
-\item Exercises with solutions.
+\item A Grothendieck group exists and is unique up to a unique isomorphism compatible with $\iota$. Explicitly, $K(M) = (M \times M)/{\sim}$, where $(a, b) \sim (c, d)$ if and only if
+$a + d + e = b + c + e$ for some $e \in M$, with componentwise addition and $\iota(m) = (m, 0)$; the class of $(a, b)$ is $[a] - [b]$.
+\item Every element of $K(M)$ is of the form $[a] - [b]$, and $[a] = [b]$ if and only if $a + e = b + e$ for some $e \in M$.
+\item If $M$ is a commutative semiring, then $K(M)$ is a commutative ring, with $([a] - [b])([c] - [d]) = [ac + bd] - [ad + bc]$, and $\iota$ is a semiring homomorphism.
 \end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) \emph{The relation.} Reflexivity and symmetry are clear. For transitivity let $(a, b) \sim (c, d)$ and $(c, d) \sim (f, g)$, that is $a + d + e = b + c + e$ and $c + g + e^{\prime} = d + f + e^{\prime}$.
+Adding the two equations gives $a + g + (c + d + e + e^{\prime}) = b + f + (c + d + e + e^{\prime})$, which is $(a, b) \sim (f, g)$. The relation is compatible with addition, so $M \times M/{\sim}$ is a
+commutative monoid, and $(a, b) + (b, a) = (a + b, a + b) \sim (0, 0)$, so it is a group, with $-(a, b) = (b, a)$. The map $\iota(m) = (m, 0)$ is a monoid homomorphism, and $(a, b) = \iota(a) - \iota(b)$.
+\emph{The universal property.} Given $\varphi$, the only possible choice is $\bar{\varphi}([a] - [b]) = \varphi(a) - \varphi(b)$. It is well defined: if $a + d + e = b + c + e$, then
+$\varphi(a) + \varphi(d) + \varphi(e) = \varphi(b) + \varphi(c) + \varphi(e)$, and $\varphi(e)$ cancels in the group $A$. Uniqueness up to unique isomorphism is the usual argument for universal
+properties: two Grothendieck groups have mutually inverse comparison maps, because the composites satisfy the uniqueness clause together with the identity.
+(2) The first statement was shown in (1); $[a] = [b]$ means $(a, 0) \sim (b, 0)$, that is $a + e = b + e$ for some $e$.
+(3) The formula is what bilinearity forces. It is well defined: for fixed $(c, d)$ the map $(a, b) \mapsto (ac + bd, ad + bc)$ sends $a + d^{\prime} + e = b + c^{\prime} + e$ to an equivalent pair,
+as one sees by multiplying that equation by $c$ and by $d$ and adding; symmetrically in the second variable. Associativity, commutativity, distributivity and the unit $[1]$ follow from those of $M$.
+\end{proof}
+
+\begin{example}\label{k-theory:example-grothendieck-groups}
+\begin{enumerate}
+\item $K(\NN) = \ZZ$, with $\iota$ the inclusion: this is the usual construction of the integers, and since $\NN$ is cancellative, $\iota$ is injective.
+\item $K(\NN_{> 0}, \cdot) = \QQ_{> 0}$, written multiplicatively: the positive rationals are the formal quotients of positive integers.
+\item Let $M = \NN \cup \{\infty\}$ with $n + \infty = \infty$. Then $[n] + [\infty] = [\infty]$ gives $[n] = 0$ for every $n$, so $K(M) = 0$. An absorbing element kills everything.
+\item Let $M$ be the monoid of isomorphism classes of finite-dimensional vector spaces over a field under $\oplus$. The dimension is an isomorphism $M \cong \NN$, so $K(M) = \ZZ$.
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{k-theory:counterexample-not-injective}
+The map $\iota$ need not be injective: by Proposition~\ref{k-theory:proposition-grothendieck-group}(2) it is injective exactly when $M$ is cancellative. In the monoid $\{0, 1, 2\}$ with
+$a + b = \min(a + b, 2)$ one has $1 + 1 = 2 + 1$, so $[1] + [1] = [2] + [1]$ and $[1] = [2]$; in fact $K = 0$ there, by the argument of
+Example~\ref{k-theory:example-grothendieck-groups}(3) applied to the absorbing element $2$. For vector bundles the failure of cancellation is the phenomenon of stably trivial bundles
+(Counterexample~\ref{k-theory:counterexample-stably-trivial}).
+\end{counterexample}
+
+\section{Vector bundles over compact spaces}\label{k-theory:section-bundles}
+
+K-theory is a theory of topological spaces, so we need vector bundles in the topological category; we work over compact Hausdorff spaces, where every bundle is a direct summand of a trivial one.
+
+\begin{definition}\label{k-theory:definition-topological-bundle}
+Let $X$ be a topological space. A \emph{(topological, complex) vector bundle} over $X$ is a continuous map $\pi \colon E \to X$ with complex vector space structures on the fibres $E_x = \pi^{-1}(x)$, such that
+every point has an open neighbourhood $U$ and a homeomorphism $\pi^{-1}(U) \cong U \times \CC^n$ over $U$, linear on fibres. The dimension $n$ of the fibres is locally constant; we allow it to differ on
+different components. Morphisms, isomorphisms and trivial bundles are defined as in Definition~\ref{vector-bundles:definition-vector-bundle}, with continuous maps in place of smooth ones. We write
+$\mathrm{Vect}(X)$ for the set of isomorphism classes, $\mathrm{Vect}^n(X)$ for those of rank $n$, and $\CC^n$ (or simply $n$) for the trivial bundle $X \times \CC^n$.
+\end{definition}
+
+\begin{remark}\label{k-theory:remark-operations-topological}
+The constructions of Section~\ref{vector-bundles:section-operations} only use local trivialisations and continuity of linear algebra, so they apply verbatim: there are direct sums
+$E \oplus F$, tensor products $E \otimes F$, duals, exterior powers $\Lambda^kE$, bundles $\Hom(E, F)$ and pullbacks $f^*E$, natural in all variables
+(Propositions~\ref{vector-bundles:proposition-operations} and~\ref{vector-bundles:proposition-pullback-fibre-product}), and bundles are described by cocycles of transition functions
+(Proposition~\ref{vector-bundles:proposition-cocycles}). On a paracompact space, partitions of unity (Theorem~\ref{general-topology:theorem-partitions-of-unity}) give Hermitian metrics and
+orthogonal complements of subbundles, exactly as in Proposition~\ref{vector-bundles:proposition-metrics}. Compact Hausdorff spaces are paracompact.
+\end{remark}
+
+\begin{lemma}\label{k-theory:lemma-direct-summand}
+Let $X$ be compact Hausdorff and $E \to X$ a vector bundle. There is a bundle $E^{\prime}$ with $E \oplus E^{\prime} \cong \CC^N$ for some $N$.
+\end{lemma}
+
+\begin{proof}
+\emph{Step 0: constant rank.} The rank is locally constant, so by compactness it takes finitely many values, and $X$ is the disjoint union of the finitely many open and closed sets $X_r$ where it equals $r$.
+It suffices to treat each $X_r$ (and then to pad the trivial bundles to a common rank), so assume the rank is $n$ everywhere.
+\emph{Step 1: an embedding into a trivial bundle.} Cover $X$ by finitely many open sets $U_1, \ldots, U_m$ with trivialisations $h_i \colon E|_{U_i} \to U_i \times \CC^{n}$. Let
+$(\varphi_i)$ be a partition of unity subordinate to $(U_i)$. Define $g \colon E \to X \times \CC^{nm}$ by $g(v) = (\pi(v), \varphi_1(\pi v)p_2h_1(v), \ldots, \varphi_m(\pi v)p_2h_m(v))$, where $p_2$ is the
+projection to $\CC^n$ and the $i$-th entry is $0$ outside $U_i$. It is continuous and linear on fibres, and injective on each fibre: some $\varphi_i(x) > 0$, and $h_i$ is injective on $E_x$.
+\emph{Step 2: the complement.} The image $g(E)$ is a subbundle of $X \times \CC^{nm}$ (locally, $g$ is a continuous family of injective linear maps, and a family of injective matrices is locally
+completed to a family of invertible ones). Its orthogonal complement $E^{\prime}$ for the standard Hermitian product is a subbundle (Remark~\ref{k-theory:remark-operations-topological}), and
+$E \oplus E^{\prime} \cong g(E) \oplus g(E)^\perp = X \times \CC^{nm}$.
+\end{proof}
+
+\begin{counterexample}\label{k-theory:counterexample-noncompact}
+Compactness is needed. Over $X = \NN$ (discrete), the bundle with fibre $\CC^k$ over the point $k$ is not a summand of a trivial bundle, whose ranks are bounded. Over connected noncompact spaces,
+such as $\CC\PP^\infty$, the tautological line bundle is not a summand of a trivial bundle either: its Chern classes $c_1^k \neq 0$ for all $k$ (Remark~\ref{characteristic-classes:remark-classifying-spaces}),
+while the inverse of the total Chern class of a summand of a trivial bundle of rank $N$ is the total Chern class of the complement, which vanishes above degree $2N$; and $c(L)^{-1} = \sum_k(-c_1)^k$ does not.
+\end{counterexample}
+
+The second basic fact is homotopy invariance: homotopic maps pull bundles back to isomorphic bundles. We prove it in three steps.
+
+\begin{lemma}\label{k-theory:lemma-glue-trivial}
+Let $E$ be a vector bundle over $X \times [a, b]$ and $a < c < b$. If $E$ is trivial over $X \times [a, c]$ and over $X \times [c, b]$, then it is trivial.
+\end{lemma}
+
+\begin{proof}
+Let $h_1 \colon E|_{X \times [a, c]} \to X \times [a, c] \times \CC^n$ and $h_2 \colon E|_{X \times [c, b]} \to X \times [c, b] \times \CC^n$ be trivialisations. Over $X \times \{c\}$ the map
+$h_1h_2^{-1}$ is $(x, c, v) \mapsto (x, c, g(x)v)$ for a continuous $g \colon X \to \GL_n(\CC)$. Replace $h_2$ by $h_2^{\prime} = (\id \times g) \circ h_2$, that is
+$h_2^{\prime}(w) = (x, t, g(x)v)$ if $h_2(w) = (x, t, v)$. Then $h_1$ and $h_2^{\prime}$ agree over $X \times \{c\}$, so they glue to a continuous bijection $E \to X \times [a, b] \times \CC^n$, linear on
+fibres, whose inverse is continuous because it is so on the two closed pieces.
+\end{proof}
+
+\begin{lemma}\label{k-theory:lemma-locally-trivial-cylinder}
+Let $E$ be a vector bundle over $X \times [0, 1]$. Every $x \in X$ has an open neighbourhood $U$ such that $E$ is trivial over $U \times [0, 1]$.
+\end{lemma}
+
+\begin{proof}
+For each $t \in [0, 1]$ there are open sets $U_t \ni x$ and $J_t \ni t$ with $E$ trivial over $U_t \times J_t$. By compactness of $[0, 1]$ finitely many $J_t$ cover it; let $U$ be the intersection of the
+corresponding $U_t$, and choose $0 = t_0 < t_1 < \cdots < t_k = 1$ so that each $[t_{i-1}, t_i]$ lies in one of these $J_t$. Then $E$ is trivial over each $U \times [t_{i-1}, t_i]$, hence over
+$U \times [0, 1]$ by Lemma~\ref{k-theory:lemma-glue-trivial} and induction on $k$.
+\end{proof}
+
+\begin{theorem}[Homotopy invariance]\label{k-theory:theorem-homotopy-invariance}
+Let $X$ be compact Hausdorff and $E$ a vector bundle over $X \times [0, 1]$. Then $E|_{X \times \{0\}} \cong E|_{X \times \{1\}}$ as bundles over $X$. Consequently, if $f_0, f_1 \colon X \to Y$ are homotopic, then
+$f_0^*F \cong f_1^*F$ for every bundle $F$ over $Y$, and every bundle over a contractible compact Hausdorff space is trivial.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: a good cover.} By Lemma~\ref{k-theory:lemma-locally-trivial-cylinder} and compactness there are open sets $U_1, \ldots, U_m$ covering $X$ with $E$ trivial over each $U_i \times [0, 1]$; let
+$(\varphi_i)$ be a subordinate partition of unity. Put $\psi_0 = 0$, $\psi_i = \varphi_1 + \cdots + \varphi_i$, so $\psi_m = 1$; let $X_i \subseteq X \times [0, 1]$ be the graph of $\psi_i$ and
+$E_i = E|_{X_i}$, a bundle over $X_i \cong X$.
+\emph{Step 2: one step at a time.} Fix a trivialisation $E|_{U_i \times [0, 1]} \cong U_i \times [0, 1] \times \CC^n$ and define $k_i \colon E_i \to E_{i-1}$ as the identity over points with
+$x \notin \operatorname{supp}\varphi_i$ (there $\psi_i(x) = \psi_{i-1}(x)$, so $X_i$ and $X_{i-1}$ coincide) and, over $U_i$, by $(x, \psi_i(x), v) \mapsto (x, \psi_{i-1}(x), v)$ in the trivialisation. The two
+definitions agree on $U_i \setminus \operatorname{supp}\varphi_i$, and they cover $X$, so $k_i$ is an isomorphism of bundles over $X$ (identifying $X_i$ and $X_{i-1}$ with $X$ by projection).
+\emph{Step 3: compose.} $k_1 \circ \cdots \circ k_m \colon E_m = E|_{X \times \{1\}} \to E_0 = E|_{X \times \{0\}}$ is the required isomorphism.
+For the consequences, apply this to $H^*F$, where $H \colon X \times [0, 1] \to Y$ is a homotopy. If $X$ is contractible, the identity is homotopic to a constant map $c$, and $c^*E$ is trivial.
+\end{proof}
+
+\begin{definition}\label{k-theory:definition-k-group}
+Let $X$ be compact Hausdorff. $\mathrm{Vect}(X)$ is a commutative semiring under $\oplus$ and $\otimes$, with zero the rank $0$ bundle and unit $\CC^1$. Its Grothendieck group is the
+\emph{K-theory} of $X$, written $K(X)$ or $K^0(X)$; by Proposition~\ref{k-theory:proposition-grothendieck-group} it is a commutative ring. A continuous map $f \colon X \to Y$ induces the ring homomorphism
+$f^* \colon K(Y) \to K(X)$, $[E] - [F] \mapsto [f^*E] - [f^*F]$.
+\end{definition}
+
+\begin{notation}\label{k-theory:notation-k-theory}
+We write $[E]$, or simply $E$, for the class of a bundle in $K(X)$, and $n$ for the class of $\CC^n$. Addition in $K(X)$ comes from $\oplus$ and multiplication from $\otimes$; we write the product as
+juxtaposition, $EF = [E \otimes F]$, and $E^k$ for the $k$-th tensor power. Two bundles are \emph{stably isomorphic} if $E \oplus \CC^n \cong F \oplus \CC^n$ for some $n$.
+\end{notation}
+
+\begin{proposition}\label{k-theory:proposition-k-elements}
+Let $X$ be compact Hausdorff.
+\begin{enumerate}
+\item Every element of $K(X)$ is of the form $[E] - n$.
+\item $[E] = [F]$ in $K(X)$ if and only if $E$ and $F$ are stably isomorphic.
+\item $K$ is a contravariant functor from compact Hausdorff spaces to commutative rings, and $f^* = g^*$ when $f \simeq g$; so homotopy equivalent spaces have isomorphic K-rings.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) Given $[E] - [F]$, choose $F^{\prime}$ with $F \oplus F^{\prime} \cong \CC^n$ (Lemma~\ref{k-theory:lemma-direct-summand}); then $[E] - [F] = [E \oplus F^{\prime}] - [F \oplus F^{\prime}] = [E \oplus F^{\prime}] - n$.
+(2) By Proposition~\ref{k-theory:proposition-grothendieck-group}(2), $[E] = [F]$ means $E \oplus G \cong F \oplus G$ for some $G$; adding $G^{\prime}$ with $G \oplus G^{\prime} \cong \CC^n$ gives a stable isomorphism.
+(3) Pullback preserves $\oplus$, $\otimes$ and trivial bundles and is functorial up to canonical isomorphism, so $f^*$ is a ring homomorphism by the universal property; the last statement is
+Theorem~\ref{k-theory:theorem-homotopy-invariance}.
+\end{proof}
+
+\begin{definition}\label{k-theory:definition-reduced}
+Let $X$ be compact Hausdorff with a base point $x_0$. The \emph{rank} at $x_0$ is the ring homomorphism $K(X) \to K(x_0) = \ZZ$, and its kernel is the \emph{reduced K-theory} $\tilde{K}(X)$, an ideal of $K(X)$.
+The inclusion of $x_0$ and the constant map $X \to x_0$ split the rank, so $K(X) = \ZZ \oplus \tilde{K}(X)$.
+\end{definition}
+
+\begin{proposition}\label{k-theory:proposition-reduced-stable}
+Let $X$ be compact Hausdorff and connected. Call $E$ and $F$ \emph{stably equivalent} if $E \oplus \CC^m \cong F \oplus \CC^n$ for some $m$, $n$. The stable equivalence classes form a group under $\oplus$, and
+$E \mapsto [E] - \rank E$ is an isomorphism from this group to $\tilde{K}(X)$.
+\end{proposition}
+
+\begin{proof}
+Stable equivalence is an equivalence relation compatible with $\oplus$; the class of $\CC^0$ is neutral, and $E \oplus E^{\prime} \cong \CC^N$ (Lemma~\ref{k-theory:lemma-direct-summand}) shows that $E^{\prime}$ is an
+inverse. The map is additive and lands in $\tilde{K}(X)$. It is surjective by Proposition~\ref{k-theory:proposition-k-elements}(1): an element $[E] - n$ of rank $0$ has $n = \rank E$. It is injective: if
+$[E] - \rank E = [F] - \rank F$, then $[E \oplus \CC^{\rank F}] = [F \oplus \CC^{\rank E}]$, and by Proposition~\ref{k-theory:proposition-k-elements}(2) the two bundles are stably isomorphic, so $E$ and $F$
+are stably equivalent.
+\end{proof}
+
+\begin{example}\label{k-theory:example-k-point}
+$K(\mathrm{pt}) = \ZZ$ by Example~\ref{k-theory:example-grothendieck-groups}(4), and $\tilde{K}(\mathrm{pt}) = 0$. More generally, if $X$ is contractible, then $K(X) = \ZZ$ by
+Proposition~\ref{k-theory:proposition-k-elements}(3). For a finite discrete space with $k$ points, $K(X) = \ZZ^k$, the ranks at the points.
+\end{example}
+
+\begin{counterexample}\label{k-theory:counterexample-stably-trivial}
+The map $\mathrm{Vect}(X) \to K(X)$ is not injective in general. The same construction with real bundles gives the real K-theory $KO(X)$, and there the tangent bundle $TS^2$ is stably trivial,
+$TS^2 \oplus \RR \cong \RR^3$ (Example~\ref{vector-bundles:example-stably-trivial}), so $[TS^2] = 2$ in $KO(S^2)$, although $TS^2$ is not trivial: its Euler class integrates to $\chi(S^2) = 2$
+(Theorem~\ref{characteristic-classes:theorem-euler}). K-theory forgets the difference between $TS^2$ and $\RR^2$ by design: in exchange it becomes computable.
+\end{counterexample}
+
+\section{Clutching and the K-theory of the sphere}\label{k-theory:section-clutching}
+
+Bundles over a sphere are trivial over each hemisphere, so they are described by the way the two trivial pieces are glued along the equator.
+
+\begin{definition}\label{k-theory:definition-clutching}
+Write $S^k = D_+ \cup D_-$ as the union of its closed upper and lower hemispheres, with $D_+ \cap D_- = S^{k-1}$. For a continuous $f \colon S^{k-1} \to \GL_n(\CC)$ (a \emph{clutching function}), let
+\[
+E_f = \big((D_+ \times \CC^n) \sqcup (D_- \times \CC^n)\big)/{\sim}, \qquad (x, v)_- \sim (x, f(x)v)_+ \quad (x \in S^{k-1}),
+\]
+where the subscript indicates the piece. $E_f$ is a vector bundle of rank $n$ over $S^k$, trivial over each hemisphere.
+\end{definition}
+
+\begin{lemma}\label{k-theory:lemma-gl-connected}
+$\GL_n(\CC)$ is path-connected, and every topological group $G$ that is path-connected has $[S^1, G] = \pi_1(G, 1)$, the set of free homotopy classes of loops being the fundamental group.
+\end{lemma}
+
+\begin{proof}
+Let $A, B \in \GL_n(\CC)$. The polynomial $p(z) = \det(zA + (1 - z)B)$ satisfies $p(0) = \det B \neq 0$, so it has finitely many zeros in $\CC$, and a path from $0$ to $1$ in $\CC$ avoiding them gives a path
+from $B$ to $A$ in $\GL_n(\CC)$. For the second statement: a free loop $\gamma$ is freely homotopic to the based loop $\gamma(1)^{-1}\gamma$ (move $\gamma(1)$ to $1$ along a path), so
+$\pi_1(G, 1) \to [S^1, G]$ is surjective; and two based loops that are freely homotopic are conjugate in $\pi_1(G, 1)$ by the class of the track of the base point, hence equal because
+$\pi_1(G, 1)$ is abelian (Exercise~\ref{homotopy:exercise-topological-group}).
+\end{proof}
+
+\begin{proposition}\label{k-theory:proposition-clutching}
+For $k \geq 1$, the map $[S^{k-1}, \GL_n(\CC)] \to \mathrm{Vect}^n(S^k)$, $[f] \mapsto E_f$, from free homotopy classes of clutching functions, is a bijection.
+\end{proposition}
+
+\begin{proof}
+\emph{Well defined.} A homotopy $F \colon S^{k-1} \times [0, 1] \to \GL_n(\CC)$ defines by the same recipe a bundle over $S^k \times [0, 1]$ restricting to $E_{F_0}$ and $E_{F_1}$ at the ends; these are isomorphic by
+Theorem~\ref{k-theory:theorem-homotopy-invariance}.
+\emph{Surjective.} Let $E$ have rank $n$. The hemispheres are contractible, so $E|_{D_\pm}$ have trivialisations $h_\pm$ (Theorem~\ref{k-theory:theorem-homotopy-invariance}). On $S^{k-1}$ the map
+$h_+h_-^{-1}$ is $(x, v) \mapsto (x, f(x)v)$ for some $f \colon S^{k-1} \to \GL_n(\CC)$, and $h_\pm$ glue to an isomorphism $E \cong E_f$.
+\emph{Injective.} Let $\varphi \colon E_f \to E_g$ be an isomorphism. In the trivialisations over the hemispheres, $\varphi$ is given by maps $\alpha_\pm \colon D_\pm \to \GL_n(\CC)$, and compatibility with the
+identifications reads $g(x)\alpha_-(x) = \alpha_+(x)f(x)$ on $S^{k-1}$, so $g = \alpha_+f\alpha_-^{-1}$. Each hemisphere contracts radially to its centre $c_\pm$, so $\alpha_\pm|_{S^{k-1}}$ is homotopic to the
+constant $\alpha_\pm(c_\pm)$, and $g \simeq Af B$ with constant matrices $A$, $B$. Paths from $A$ and $B$ to the identity (Lemma~\ref{k-theory:lemma-gl-connected}) give $g \simeq f$.
+\end{proof}
+
+\begin{corollary}\label{k-theory:corollary-circle}
+Every complex vector bundle over $S^1$ is trivial, and $\tilde{K}(S^1) = 0$.
+\end{corollary}
+
+\begin{proof}
+$S^0$ has two points, and any two maps $S^0 \to \GL_n(\CC)$ are homotopic because $\GL_n(\CC)$ is path-connected. So $\mathrm{Vect}^n(S^1)$ has one element, and
+Proposition~\ref{k-theory:proposition-reduced-stable} gives $\tilde{K}(S^1) = 0$.
+\end{proof}
+
+\begin{remark}\label{k-theory:remark-real-circle}
+Over $\RR$ the analogue fails: $\GL_n(\RR)$ has two components, and $\mathrm{Vect}^n_\RR(S^1)$ has two elements, the trivial bundle and the sum of the M\"obius bundle with $\RR^{n-1}$
+(Counterexample~\ref{vector-bundles:counterexample-mobius}). This is why $KO$ and $K$ differ already on the circle.
+\end{remark}
+
+To compute $\mathrm{Vect}(S^2)$ we need loops in $\GL_n(\CC)$.
+
+\begin{proposition}\label{k-theory:proposition-pi-one-gl}
+The determinant induces a bijection $\det_* \colon [S^1, \GL_n(\CC)] \to [S^1, \CC^\times] = \ZZ$, the second identification being the degree (winding number) of Lemma~\ref{vector-bundles:lemma-winding-number}.
+The loop $z \mapsto \mathrm{diag}(z, 1, \ldots, 1)$ represents $1$.
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1: reduction to $\mathrm{U}(n)$.} Gram--Schmidt orthonormalisation of the columns writes every $A \in \GL_n(\CC)$ uniquely as $A = QR$ with $Q \in \mathrm{U}(n)$ and $R$ upper triangular with positive
+diagonal, continuously in $A$; and $(A, t) \mapsto Q((1 - t)R + t\cdot 1)$ is a deformation retraction of $\GL_n(\CC)$ onto $\mathrm{U}(n)$. Likewise $\CC^\times$ retracts onto $\mathrm{U}(1) = S^1$, compatibly
+with the determinant up to the positive factor $\det R$. So it suffices to show that $\det_* \colon \pi_1(\mathrm{U}(n)) \to \pi_1(\mathrm{U}(1))$ is bijective (Lemma~\ref{k-theory:lemma-gl-connected}).
+\emph{Step 2: the fibration.} The map $p \colon \mathrm{U}(n) \to S^{2n-1}$, $Q \mapsto Qe_n$, has fibre $\mathrm{U}(n-1)$ (embedded in the upper left corner). It is locally trivial: over the open set where
+$\langle v, e_n\rangle \neq 0$ the vectors $v, e_1, \ldots, e_{n-1}$ are linearly independent, Gram--Schmidt applied to them in this order gives an orthonormal basis $v, u_1, \ldots, u_{n-1}$ depending continuously
+on $v$, and the unitary matrix $s(v)$ with columns $u_1, \ldots, u_{n-1}, v$ is a continuous section, so $(v, B) \mapsto s(v)B$ trivialises $p$ there; the translates of this open set by $\mathrm{U}(n)$ cover the sphere. A locally trivial bundle has the homotopy lifting property for cubes \cite[Proposition 4.48]{hatcher-at}, so the long exact sequence of
+Theorem~\ref{homotopy:theorem-long-exact-sequences} gives
+$\pi_2(S^{2n-1}) \to \pi_1(\mathrm{U}(n-1)) \to \pi_1(\mathrm{U}(n)) \to \pi_1(S^{2n-1})$.
+\emph{Step 3: induction.} For $n \geq 2$ the sphere $S^{2n-1}$ has dimension at least $3$, so its $\pi_1$ and $\pi_2$ vanish (Remark~\ref{homotopy:remark-higher-computations}), and the inclusion induces
+$\pi_1(\mathrm{U}(n-1)) \cong \pi_1(\mathrm{U}(n))$. By induction, $\pi_1(\mathrm{U}(1)) \to \pi_1(\mathrm{U}(n))$, $z \mapsto \mathrm{diag}(z, 1, \ldots, 1)$, is an isomorphism, and composing with $\det$ gives the
+identity of $\pi_1(\mathrm{U}(1)) = \ZZ$ (Theorem~\ref{homotopy:theorem-circle}). So $\det_*$ is its inverse.
+\end{proof}
+
+\begin{definition}\label{k-theory:definition-degree}
+For a bundle $E \cong E_f$ over $S^2$, the \emph{degree} $d(E) \in \ZZ$ is the winding number of $\det \circ f \colon S^1 \to \CC^\times$. It is well defined by
+Propositions~\ref{k-theory:proposition-clutching} and~\ref{k-theory:proposition-pi-one-gl}.
+\end{definition}
+
+\begin{lemma}\label{k-theory:lemma-clutching-operations}
+For clutching functions $f$, $g$ over $S^{k-1}$ one has $E_f \oplus E_g \cong E_{f \oplus g}$ and $E_f \otimes E_g \cong E_{f \otimes g}$, where $f \oplus g$ is the block diagonal matrix and $f \otimes g$ the Kronecker
+product. In particular, on $S^2$: $d(E \oplus F) = d(E) + d(F)$, and $d(L \otimes L^{\prime}) = d(L) + d(L^{\prime})$ for line bundles.
+\end{lemma}
+
+\begin{proof}
+The trivialisations over the hemispheres of $E_f$ and $E_g$ give trivialisations of the sum and of the tensor product, whose transition functions on the equator are $f \oplus g$ and $f \otimes g$. The
+degree statements follow from $\det(f \oplus g) = \det f \det g$, from $f \otimes g = fg$ for $1 \times 1$ matrices, and from additivity of winding numbers under products of loops in $\CC^\times$.
+\end{proof}
+
+\begin{theorem}\label{k-theory:theorem-k-sphere}
+Let $H$ be the tautological line bundle over $S^2 = \CC\PP^1$.
+\begin{enumerate}
+\item Every complex vector bundle $E$ of rank $n \geq 1$ over $S^2$ is isomorphic to $L \oplus \CC^{n-1}$, where $L$ is a line bundle, and $E$ is determined up to isomorphism by $n$ and $d(E)$.
+\item $d(H) = -1$, and the line bundles over $S^2$ are the powers $H^{k}$ ($k \in \ZZ$, with $H^{-1} = H^*$), with $d(H^k) = -k$.
+\item $K(S^2) \cong \ZZ[H]/(H - 1)^2$; so $K(S^2)$ is free abelian with basis $1$, $H$, and $\tilde{K}(S^2) \cong \ZZ$ is generated by $H - 1$, whose square is $0$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) By Propositions~\ref{k-theory:proposition-clutching} and~\ref{k-theory:proposition-pi-one-gl}, $E$ is determined by $n$ and $d(E)$, and $E \cong E_f$ with $f(z) = \mathrm{diag}(z^{d}, 1, \ldots, 1)$,
+$d = d(E)$, which is $L \oplus \CC^{n-1}$ with $L = E_{z^d}$ (Lemma~\ref{k-theory:lemma-clutching-operations}).
+(2) Take $D_+ = \{[z : 1] : |z| \leq 1\}$ and $D_- = \{[1 : w] : |w| \leq 1\}$, meeting in the circle $\{[z : 1] : |z| = 1\}$, identified with $S^1$ by $z$. The sections $e_+([z : 1]) = (z, 1)$ and
+$e_-([1 : w]) = (1, w)$ trivialise $H$ over $D_+$ and $D_-$. On the circle $e_- = (1, z^{-1}) = z^{-1}e_+$, so the point $\lambda e_-$, with coordinate $\lambda$ over $D_-$, has coordinate $z^{-1}\lambda$ over
+$D_+$: $H \cong E_f$ with $f(z) = z^{-1}$ and $d(H) = -1$. By Lemma~\ref{k-theory:lemma-clutching-operations}, $d(H^k) = -k$ for $k \geq 0$, and $d(H^*) = 1$ since $H \otimes H^* \cong \CC$. By (1) the line bundles
+are classified by the degree, so they are the $H^k$.
+(3) The pair $(\rank, d)$ is additive under $\oplus$ by Lemma~\ref{k-theory:lemma-clutching-operations}, so it extends to a homomorphism $\Phi \colon K(S^2) \to \ZZ^2$. It is surjective, as
+$\Phi(1) = (1, 0)$ and $\Phi(H) = (1, -1)$. It is injective: by Proposition~\ref{k-theory:proposition-k-elements} an element of the kernel is $[E] - n$ with $\rank E = n$ and $d(E) = 0$, so
+$E \cong \CC^n$ by (1). Hence $K(S^2) \cong \ZZ^2$ with basis $1$, $H$. The ring homomorphism $\ZZ[H] \to K(S^2)$ is surjective, and it kills $(H - 1)^2 = H^2 - 2H + 1$, because
+$\Phi(H^2) - 2\Phi(H) + \Phi(1) = (1, -2) - (2, -2) + (1, 0) = 0$. As $\ZZ[H]/(H - 1)^2$ is free with basis $1$, $H$, the induced map is an isomorphism.
+\end{proof}
+
+\begin{remark}\label{k-theory:remark-degree-chern}
+The degree is the first Chern number: $d(E) = \int_{S^2}c_1(E)$, since $c_1$ is additive, classifies line bundles (Theorem~\ref{vector-bundles:theorem-line-bundles}) and takes the value $-1$ on the
+tautological bundle (Theorem~\ref{characteristic-classes:theorem-chern-axioms}). The relation $(H - 1)^2 = 0$ says that $H \otimes H \oplus \CC \cong H \oplus H$: both have rank $2$ and degree $-2$. Note also
+$H^{-1} = H^* = 2 - H$ in $K(S^2)$, as $H(2 - H) = 1 - (H - 1)^2 = 1$.
+\end{remark}
+
+\section{The cohomology theory and Bott periodicity}\label{k-theory:section-cohomology-theory}
+
+Reduced K-theory behaves like a reduced cohomology theory on compact Hausdorff spaces with base points. We write $X/A$ for the quotient with $A$ collapsed to the base point, $X \vee Y$ for the wedge,
+$X \wedge Y = (X \times Y)/(X \vee Y)$ for the smash product, $\Sigma X = S^1 \wedge X$ for the reduced suspension and $X_+ = X \sqcup \{\mathrm{pt}\}$.
+
+\begin{proposition}\label{k-theory:proposition-exact-pair}
+Let $X$ be compact Hausdorff and $A \subseteq X$ a closed subspace containing the base point, with inclusion $i$ and quotient map $q \colon X \to X/A$. Then
+$\tilde{K}(X/A) \xrightarrow{q^*} \tilde{K}(X) \xrightarrow{i^*} \tilde{K}(A)$ is exact. If $A$ is contractible, $q^*$ is an isomorphism.
+\end{proposition}
+
+\begin{proof}[Sketch of proof]
+The composite $i^*q^*$ is induced by the constant map $A \to A/A$, so it is $0$. Let $[E] - n \in \ker i^*$. Then $E|_A$ is stably trivial, and after adding a bundle to $E$ and a trivial bundle to both terms we may
+assume that $E|_A$ is trivial, with a trivialisation $h \colon E|_A \cong A \times \CC^m$. Collapsing $E|_A$ by $h$ gives a space $E/h$ over $X/A$, which is a vector bundle: away from the base point this is clear,
+and near it one extends the $m$ sections of $E|_A$ given by $h$ to a neighbourhood of $A$ (Tietze, Theorem~\ref{general-topology:theorem-tietze}, applied in local trivialisations and patched with a partition of unity),
+where they remain linearly independent by continuity of the determinant. Then $E \cong q^*(E/h)$, so $[E] - n = q^*([E/h] - n)$. If $A$ is contractible, every bundle on $X$ is trivial on $A$, and two trivialisations
+differ by a map $A \to \GL_m(\CC)$, which is null-homotopic; so $E \mapsto E/h$ is well defined on isomorphism classes and inverts $q^*$. The omitted verifications are in \cite[Chapter 2]{hatcher-vbkt}.
+\end{proof}
+
+\begin{definition}\label{k-theory:definition-negative-k}
+For $n \geq 0$ and $X$ compact Hausdorff with base point, put $\tilde{K}^{-n}(X) = \tilde{K}(\Sigma^nX)$, and for a closed pair $(X, A)$ put $\tilde{K}^{-n}(X, A) = \tilde{K}^{-n}(X/A)$ (with
+$X/\emptyset = X_+$). Unreduced groups are $K^{-n}(X) = \tilde{K}^{-n}(X_+)$; for $n = 0$ this is $K(X)$.
+\end{definition}
+
+\begin{theorem}\label{k-theory:theorem-long-exact-sequence}
+For a closed pair $(X, A)$ of compact Hausdorff spaces there is a long exact sequence
+\[
+\begin{aligned}
+&\cdots \to \tilde{K}^{-n-1}(A) \to \tilde{K}^{-n}(X, A) \to \tilde{K}^{-n}(X) \to \tilde{K}^{-n}(A) \to \cdots \\
+&\qquad \to \tilde{K}^{-1}(A) \to \tilde{K}^0(X, A) \to \tilde{K}^0(X) \to \tilde{K}^0(A),
+\end{aligned}
+\]
+natural in the pair. For based compact Hausdorff $X$, $Y$ one has $\tilde{K}^{-n}(X \vee Y) = \tilde{K}^{-n}(X) \oplus \tilde{K}^{-n}(Y)$ and
+$\tilde{K}^{-n}(X \times Y) \cong \tilde{K}^{-n}(X \wedge Y) \oplus \tilde{K}^{-n}(X) \oplus \tilde{K}^{-n}(Y)$.
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+Apply Proposition~\ref{k-theory:proposition-exact-pair} to the sequence of inclusions $A \subseteq X \subseteq X \cup CA \subseteq (X \cup CA) \cup CX \subseteq \cdots$, where $C$ denotes the cone.
+Collapsing the contractible cones identifies the successive quotients with $X/A$, $\Sigma A$, $\Sigma X$, $\Sigma(X/A)$, and so on, which strings the three-term exact sequences into a long one. For the wedge,
+the inclusions and retractions of $X$ and $Y$ split the sequence of the pair $(X \vee Y, X)$. For the product, the pair $(X \times Y, X \vee Y)$ has quotient $X \wedge Y$, and the projections $X \times Y \to X$,
+$X \times Y \to Y$ split the long exact sequence into short split exact sequences. The verifications that the identifications are compatible with the maps are in \cite[Chapter 2]{hatcher-vbkt}.
+\end{proof}
+
+\begin{definition}\label{k-theory:definition-external-product}
+The \emph{external product} $K(X) \otimes K(Y) \to K(X \times Y)$ is $a * b = p_1^*(a)p_2^*(b)$. On reduced groups it maps $\tilde{K}(X) \otimes \tilde{K}(Y)$ into the summand
+$\tilde{K}(X \wedge Y)$ of $\tilde{K}(X \times Y)$ (Theorem~\ref{k-theory:theorem-long-exact-sequence}), since $a * b$ restricts to $0$ on $X \vee Y$.
+\end{definition}
+
+\begin{theorem}[Bott periodicity]\label{k-theory:theorem-bott}
+For every compact Hausdorff space $X$ the external product $K(X) \otimes K(S^2) \to K(X \times S^2)$ is an isomorphism of rings. Equivalently, for based $X$, the map
+$\beta \colon \tilde{K}(X) \to \tilde{K}(\Sigma^2X) = \tilde{K}(S^2 \wedge X)$, $\beta(a) = (H - 1) * a$, is an isomorphism, so $\tilde{K}^{-n-2}(X) \cong \tilde{K}^{-n}(X)$.
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+This is the proof of Atiyah and Bott \cite{atiyah-bott-1964}, presented in \cite[Chapter 2]{hatcher-vbkt}. Every bundle over $X \times S^2$ is obtained by clutching trivial bundles over $X \times D_\pm$ (more precisely
+pullbacks of a bundle $E$ over $X$) with a clutching function $f \colon X \times S^1 \to \GL(E)$. \emph{Step 1}: by Fourier approximation (Fej\'er's theorem, uniformly in $x$), $f$ is homotopic through clutching
+functions to a Laurent polynomial $\sum_{|k| \leq N}a_k(x)z^k$, and after multiplying by $z^N$ (tensoring with a power of $H$) to a polynomial. \emph{Step 2}: a polynomial clutching function of degree $N$ on $E$ is
+equivalent, after adding a trivial clutching function on $NE$, to a linear one $a(x)z + b(x)$ on $(N + 1)E$. \emph{Step 3}: a linear clutching function splits $E$ into the sum of the subbundles where the
+eigenvalues of $a^{-1}b$ lie inside or outside the unit circle, and on these pieces it is homotopic to $z$ or to $1$. The verifications that these reductions are well defined on homotopy classes give an inverse
+to the external product. The equivalence of the two forms of the statement uses Theorem~\ref{k-theory:theorem-long-exact-sequence}.
+\end{proof}
+
+Bott proved the periodicity theorem in 1957 in the form $\pi_{k+2}(\mathrm{U}) \cong \pi_k(\mathrm{U})$ for the infinite unitary group, using Morse theory on loop spaces \cite{bott-1959}.
+
+\begin{corollary}\label{k-theory:corollary-spheres}
+$\tilde{K}(S^{2n}) \cong \ZZ$, generated by $(H - 1)^{*n}$, the $n$-fold external product, and $\tilde{K}(S^{2n+1}) = 0$. All products in $\tilde{K}(S^m)$ vanish.
+\end{corollary}
+
+\begin{proof}
+$\Sigma^2S^m = S^{m+2}$, so by Theorem~\ref{k-theory:theorem-bott} and induction this reduces to $\tilde{K}(S^1) = 0$ (Corollary~\ref{k-theory:corollary-circle}) and $\tilde{K}(S^2) = \ZZ(H - 1)$
+(Theorem~\ref{k-theory:theorem-k-sphere}). For the last statement, the product of two elements of $\tilde{K}(X)$ is the pullback of their external product under the diagonal, which factors as
+$X \to X \times X \to X \wedge X$; for $X = S^m$ the map $S^m \to S^m \wedge S^m = S^{2m}$ is null-homotopic, because $\pi_m(S^{2m}) = 0$ (Remark~\ref{homotopy:remark-higher-computations}).
+\end{proof}
+
+\begin{definition}\label{k-theory:definition-odd-k}
+By periodicity we set $K^1(X) = K^{-1}(X)$ and, generally, $K^n = K^{n \bmod 2}$, so K-theory is $\ZZ/2$-graded: $K^*(X) = K^0(X) \oplus K^1(X)$.
+\end{definition}
+
+\begin{corollary}[Six-term exact sequence]\label{k-theory:corollary-six-term}
+For a closed pair $(X, A)$ of compact Hausdorff spaces there is an exact hexagon
+\[
+\begin{aligned}
+&K^0(X, A) \to K^0(X) \to K^0(A) \xrightarrow{\ \delta\ } K^1(X, A) \\
+&\qquad \to K^1(X) \to K^1(A) \xrightarrow{\ \delta\ } K^0(X, A),
+\end{aligned}
+\]
+in which the last arrow closes the cycle.
+\end{corollary}
+
+\begin{proof}
+Apply Theorem~\ref{k-theory:theorem-long-exact-sequence} to the pair $(X_+, A_+)$ and identify $\tilde{K}^{-2}$ with $\tilde{K}^0$ by Theorem~\ref{k-theory:theorem-bott}; naturality of $\beta$ makes the identifications
+compatible with the maps of the sequence.
+\end{proof}
+
+\begin{example}\label{k-theory:example-k-projective}
+$K(\CC\PP^n) \cong \ZZ[H]/(H - 1)^{n+1}$ and $K^1(\CC\PP^n) = 0$. \emph{Additively}: $\CC\PP^n/\CC\PP^{n-1} = S^{2n}$, and by induction the six-term sequence of $(\CC\PP^n, \CC\PP^{n-1})$ reduces to
+$0 \to \tilde{K}(S^{2n}) \to K(\CC\PP^n) \to K(\CC\PP^{n-1}) \to 0$, using $K^1(\CC\PP^{n-1}) = 0$ and $\tilde{K}^1(S^{2n}) = \tilde{K}(S^{2n+1}) = 0$; so $K(\CC\PP^n)$ is free of rank $n + 1$ and $K^1(\CC\PP^n) = 0$.
+\emph{Multiplicatively}: $\CC\PP^n$ is covered by the $n + 1$ contractible open sets $U_i = \{x_i \neq 0\}$, the element $H - 1$ restricts to $0$ on each, and a product of $n + 1$ elements each vanishing on one of the
+sets of a cover vanishes; one then checks that $1, H, \ldots, H^n$ is a basis \cite[Chapter 2]{hatcher-vbkt}. For $n = 1$ this is Theorem~\ref{k-theory:theorem-k-sphere}.
+\end{example}
+
+\begin{remark}\label{k-theory:remark-real-k-theory}
+Real K-theory $KO$ is built in the same way from real bundles. It satisfies Bott's real periodicity $\widetilde{KO}(\Sigma^8X) \cong \widetilde{KO}(X)$, and the groups $\widetilde{KO}(S^n)$ for $n \equiv 0, 1, \ldots, 7$
+modulo $8$ are $\ZZ, \ZZ/2, \ZZ/2, 0, \ZZ, 0, 0, 0$ \cite{bott-1959}. Atiyah, Bott and Shapiro related this table to the classification of modules over Clifford algebras, which is the bridge to
+Chapter~\ref{spin-geometry}. K-theory also extends to a generalised cohomology theory on all CW complexes, represented by $\ZZ \times \mathrm{BU}$, and there is a spectral sequence of Atiyah and Hirzebruch
+from $H^*(X; \ZZ)$ to $K^*(X)$ \cite{atiyah-k-theory}.
+\end{remark}
+
+\section{The Chern character and integrality}\label{k-theory:section-chern-character}
+
+The Chern character of Definition~\ref{characteristic-classes:definition-chern-character} is additive and multiplicative
+(Proposition~\ref{characteristic-classes:proposition-chern-character}), so it defines a ring homomorphism $\mathrm{ch} \colon K(X) \to H^{\mathrm{even}}(X; \QQ)$ on spaces where Chern classes are defined.
+We take $X$ to be a finite CW complex.
+
+\begin{proposition}\label{k-theory:proposition-chern-spheres}
+For $n \geq 1$, $\mathrm{ch}$ maps $\tilde{K}(S^{2n})$ isomorphically onto the integral lattice $H^{2n}(S^{2n}; \ZZ) \subseteq H^{2n}(S^{2n}; \QQ)$.
+\end{proposition}
+
+\begin{proof}
+For $n = 1$: $\mathrm{ch}(H - 1) = e^{c_1(H)} - 1 = c_1(H)$, since $c_1(H)^2 \in H^4(S^2) = 0$, and $c_1(H)$ is the negative generator of $H^2(S^2; \ZZ)$ (Theorem~\ref{characteristic-classes:theorem-chern-axioms}).
+In general $\mathrm{ch}(a * b) = \mathrm{ch}(a) \times \mathrm{ch}(b)$ (cross product), because $\mathrm{ch}$ is natural and multiplicative; so $\mathrm{ch}((H - 1)^{*n}) = (-1)^n h \times \cdots \times h$ for the generator
+$h$ of $H^2(S^2; \ZZ)$, and the $n$-fold cross product of generators generates $H^{2n}(S^2 \wedge \cdots \wedge S^2; \ZZ) = H^{2n}(S^{2n}; \ZZ)$ by the K\"unneth formula. Since $(H - 1)^{*n}$ generates
+$\tilde{K}(S^{2n})$ (Corollary~\ref{k-theory:corollary-spheres}), the claim follows.
+\end{proof}
+
+\begin{theorem}\label{k-theory:theorem-chern-iso}
+For a finite CW complex $X$, the Chern character induces isomorphisms $K^0(X) \otimes \QQ \cong H^{\mathrm{even}}(X; \QQ)$ and $K^1(X) \otimes \QQ \cong H^{\mathrm{odd}}(X; \QQ)$, the second through
+$K^1(X) = \tilde{K}(\Sigma(X_+))$ and the suspension isomorphism.
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+Both sides are $\ZZ/2$-graded cohomology theories on finite CW complexes with long exact sequences (tensoring with $\QQ$ preserves exactness), and $\mathrm{ch}$ is a natural transformation compatible with the
+boundary maps; this compatibility, which follows from naturality and the behaviour of $\mathrm{ch}$ under suspension, is the verification we omit. On spheres it is an isomorphism by
+Proposition~\ref{k-theory:proposition-chern-spheres} and Corollary~\ref{k-theory:corollary-spheres}. Induction on the number of cells, using the pair $(X, X^{\prime})$ where $X$ is obtained from $X^{\prime}$
+by attaching one cell, so that $X/X^{\prime}$ is a sphere, and the five lemma, gives the theorem \cite{atiyah-k-theory}.
+\end{proof}
+
+So $K$-theory and rational cohomology have the same rank; torsion and the integral lattice are where they differ, and the integrality of Proposition~\ref{k-theory:proposition-chern-spheres} already has
+consequences. We need one identity between symmetric functions.
+
+\begin{lemma}\label{k-theory:lemma-newton}
+Let $x_1, \ldots, x_r$ be variables, $e_k$ their elementary symmetric polynomials and $p_k = \sum_ix_i^k$ their power sums. If $n \geq 1$ and we work modulo the ideal generated by $e_1, \ldots, e_{n-1}$, then
+$p_n \equiv (-1)^{n-1}ne_n$.
+\end{lemma}
+
+\begin{proof}
+In the power series ring $\QQ[x_1, \ldots, x_r][[t]]$ we have $\prod_i(1 + x_it) = \sum_ke_kt^k$, and taking logarithms,
+$\sum_i\log(1 + x_it) = \sum_{k \geq 1}(-1)^{k-1}p_kt^k/k$. Modulo the ideal, the left side of the first identity is $1 + e_nt^n + O(t^{n+1})$, whose logarithm is $e_nt^n + O(t^{n+1})$. Comparing coefficients of
+$t^n$ gives $(-1)^{n-1}p_n/n \equiv e_n$ (in $\QQ[x_1, \ldots, x_r]$ modulo the ideal generated by $e_1, \ldots, e_{n-1}$, which is all we use).
+\end{proof}
+
+\begin{theorem}[Bott integrality]\label{k-theory:theorem-bott-integrality}
+For every complex vector bundle $E$ over $S^{2n}$, $n \geq 1$, the Chern number $\int_{S^{2n}}c_n(E)$ is divisible by $(n - 1)!$. Every multiple of $(n - 1)!$ occurs.
+\end{theorem}
+
+\begin{proof}
+The classes $c_1(E), \ldots, c_{n-1}(E)$ lie in $H^{2i}(S^{2n}) = 0$. By the splitting principle (Theorem~\ref{characteristic-classes:theorem-splitting}) and Lemma~\ref{k-theory:lemma-newton} applied to the Chern
+roots, $\mathrm{ch}_n(E) = p_n/n! = (-1)^{n-1}c_n(E)/(n - 1)!$. By Proposition~\ref{k-theory:proposition-chern-spheres}, $\mathrm{ch}([E] - \rank E) = \mathrm{ch}_n(E)$ is an integral class, so
+$c_n(E) \in (n - 1)!\,H^{2n}(S^{2n}; \ZZ)$. Conversely, every element of $\tilde{K}(S^{2n})$ is $[E] - \rank E$ for a bundle $E$ (Proposition~\ref{k-theory:proposition-reduced-stable}), and $\mathrm{ch}$ is onto the
+lattice, so every integral value of $\mathrm{ch}_n$, hence every multiple of $(n - 1)!$ for $c_n$, occurs.
+\end{proof}
+
+\begin{corollary}\label{k-theory:corollary-almost-complex-spheres}
+If $S^{2n}$ admits an almost complex structure, that is, if $TS^{2n}$ is the underlying real bundle of a complex vector bundle, then $n \leq 3$.
+\end{corollary}
+
+\begin{proof}
+For a complex structure on $TS^{2n}$, $c_n = e(TS^{2n})$ (Theorem~\ref{characteristic-classes:theorem-euler}), with $\int c_n = \chi(S^{2n}) = 2$. By Theorem~\ref{k-theory:theorem-bott-integrality},
+$(n - 1)!$ divides $2$, so $n \leq 3$.
+\end{proof}
+
+\begin{remark}\label{k-theory:remark-almost-complex-spheres}
+$S^2 = \CC\PP^1$ is a complex manifold. $S^4$ has no almost complex structure by a separate argument with $p_1$ (Exercise~\ref{characteristic-classes:exercise-no-almost-complex}). $S^6$ has one, induced by
+the multiplication of the imaginary octonions, and whether it carries an integrable complex structure is a famous open problem. Borel and Serre proved that $S^2$ and $S^6$ are the only spheres with almost
+complex structures \cite{borel-serre-1953}.
+\end{remark}
+
+\section{Adams operations and the Hopf invariant}\label{k-theory:section-adams-operations}
+
+Exterior powers of bundles give operations on K-theory. Adams combined them into ring homomorphisms $\psi^k$, which on a sum of line bundles raise each one to the $k$-th power.
+
+\begin{definition}\label{k-theory:definition-lambda}
+For a bundle $E$ let $\lambda_t(E) = \sum_{i \geq 0}[\Lambda^iE]t^i \in K(X)[t]$. Since $\Lambda^k(E \oplus F) \cong \bigoplus_{i+j=k}\Lambda^iE \otimes \Lambda^jF$, one has $\lambda_t(E \oplus F) = \lambda_t(E)\lambda_t(F)$, so
+$\lambda_t$ extends to a homomorphism from the additive group $K(X)$ to the multiplicative group $1 + tK(X)[[t]]$; its coefficients define the \emph{$\lambda$-operations} $\lambda^i \colon K(X) \to K(X)$.
+\end{definition}
+
+\begin{definition}\label{k-theory:definition-adams-operations}
+Let $Q_k$ be the polynomial with integer coefficients expressing the power sum $p_k$ in terms of the elementary symmetric polynomials, $p_k = Q_k(e_1, \ldots, e_k)$ (it exists by the theorem on symmetric
+polynomials). The \emph{Adams operation} $\psi^k \colon K(X) \to K(X)$, for $k \geq 1$, is $\psi^k(x) = Q_k(\lambda^1x, \ldots, \lambda^kx)$. For example $Q_2 = e_1^2 - 2e_2$, so $\psi^2(E) = E^2 - 2\Lambda^2E$.
+\end{definition}
+
+\begin{theorem}[Splitting principle in K-theory]\label{k-theory:theorem-k-splitting}
+For every bundle $E$ over a compact Hausdorff space $X$ there is a compact Hausdorff space $F(E)$ and a map $p \colon F(E) \to X$ such that $p^* \colon K^*(X) \to K^*(F(E))$ is injective and $p^*E$ is a sum of line bundles.
+\end{theorem}
+
+This is \cite[Chapter 2]{hatcher-vbkt} or \cite{atiyah-k-theory}: $F(E)$ is the flag bundle, obtained by iterating projective bundles, and injectivity comes from the computation $K^*(P(E))$ as a free
+$K^*(X)$-module on $1, H, \ldots, H^{n-1}$, a generalisation of Theorem~\ref{k-theory:theorem-bott} and of Example~\ref{k-theory:example-k-projective}. It parallels the cohomological splitting principle of
+Theorem~\ref{characteristic-classes:theorem-splitting}.
+
+\begin{theorem}\label{k-theory:theorem-adams-operations}
+The operations $\psi^k$ satisfy, for all compact Hausdorff $X$:
+\begin{enumerate}
+\item $f^*\psi^k = \psi^kf^*$ for maps $f$;
+\item $\psi^k(x + y) = \psi^k(x) + \psi^k(y)$ and $\psi^k(xy) = \psi^k(x)\psi^k(y)$;
+\item $\psi^k(L) = L^k$ for a line bundle $L$, and $\psi^k\psi^l = \psi^{kl}$;
+\item for a prime $p$, $\psi^p(x) \equiv x^p \pmod{pK(X)}$;
+\item $\psi^k$ acts on $\tilde{K}(S^{2n})$ as multiplication by $k^n$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) holds because pullback commutes with exterior powers. For line bundles $\lambda_t(L) = 1 + Lt$, so $\psi^k(L) = Q_k(L, 0, \ldots, 0) = L^k$; and if $E = L_1 \oplus \cdots \oplus L_n$, then
+$\lambda_t(E) = \prod_i(1 + L_it)$, so $\lambda^i(E)$ is the $i$-th elementary symmetric polynomial in the $L_j$ and $\psi^k(E) = \sum_jL_j^k$. For (2) and (3) it suffices, by additivity of $\lambda_t$, to treat
+bundles $E$, $F$, and by Theorem~\ref{k-theory:theorem-k-splitting} (applied twice, pulling back to a space where both split, with (1) and injectivity) sums of line bundles: then
+$\psi^k(E \oplus F) = \sum L_j^k + \sum L_j^{\prime k}$, $\psi^k(E \otimes F) = \sum_{i,j}(L_iL^{\prime}_j)^k = \psi^k(E)\psi^k(F)$ and $\psi^k\psi^l(E) = \sum_j(L_j^l)^k = \psi^{kl}(E)$. Additivity on differences
+follows. (4) In the polynomial ring $\ZZ[x_1, \ldots, x_r]$ ($r \geq p$), the symmetric polynomial $\sum_ix_i^p - (\sum_ix_i)^p$ has all coefficients divisible by $p$ (multinomial coefficients), so it is $p$ times a symmetric
+polynomial with integer coefficients, which is a polynomial with integer coefficients in the $e_i$. Hence $Q_p(e_1, \ldots, e_p) - e_1^p = pR(e_1, \ldots, e_p)$ with $R$ integral, and for a bundle
+$\psi^p(E) - E^p = pR(\lambda^1E, \ldots, \lambda^pE) \in pK(X)$. For $x = E - F$, use additivity of $\psi^p$ and $(E - F)^p \equiv E^p + (-F)^p \equiv E^p - F^p$ modulo $p$ (for $p = 2$, $F^2 \equiv -F^2$).
+(5) For $n = 1$, $\tilde{K}(S^2)$ is generated by $H - 1$ and $\psi^k(H - 1) = H^k - 1 = (1 + (H - 1))^k - 1 = k(H - 1)$, since $(H - 1)^2 = 0$. For general $n$, $\psi^k$ commutes with external products (by (1) and
+(2)), and $(H - 1)^{*n}$ generates $\tilde{K}(S^{2n})$, so $\psi^k$ multiplies it by $k^n$.
+\end{proof}
+
+\begin{lemma}\label{k-theory:lemma-two-adic}
+Let $m \geq 1$. Then $2^m$ divides $3^m - 1$ if and only if $m \in \{1, 2, 4\}$.
+\end{lemma}
+
+\begin{proof}
+Write $m = 2^rs$ with $s$ odd, and let $v(N)$ be the exponent of $2$ in $N$. For odd $s$, $3^s \equiv 3 \pmod 8$, so $v(3^s - 1) = 1$ and $v(3^s + 1) = 2$. If $r = 0$, then $v(3^m - 1) = 1 \geq m$
+forces $m = 1$. If $r \geq 1$,
+\[
+3^m - 1 = (3^s - 1)(3^s + 1)(3^{2s} + 1)(3^{4s} + 1)\cdots(3^{2^{r-1}s} + 1),
+\]
+and each factor $3^{2^js} + 1$ with $j \geq 1$ is $\equiv 2 \pmod 4$, since $3^{2^js} \equiv 1 \pmod 4$. So $v(3^m - 1) = 1 + 2 + (r - 1) = r + 2$, and $r + 2 \geq 2^rs$ forces $s = 1$ and $r \in \{1, 2\}$, that is
+$m \in \{2, 4\}$. Conversely $2 \mid 2$, $4 \mid 8$ and $16 \mid 80$.
+\end{proof}
+
+\begin{theorem}[Adams]\label{k-theory:theorem-hopf-invariant-one}
+Let $n \geq 2$ and $f \colon S^{2n-1} \to S^n$ with odd Hopf invariant $h(f)$ (Corollary~\ref{cohomology-operations:corollary-hopf-invariant}). Then $n \in \{2, 4, 8\}$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: $n$ is even.} If $n$ is odd, graded commutativity gives $a^2 = -a^2$ in $H^{2n}(X_f; \ZZ) \cong \ZZ$, so $a^2 = 0$ and $h(f) = 0$. Write $n = 2m$.
+\emph{Step 2: K-theory of $X = X_f = S^{2m} \cup_f D^{4m}$.} The six-term sequence of $(X, S^{2m})$, with $X/S^{2m} = S^{4m}$ and $\tilde{K}^1(S^{2m}) = \tilde{K}^1(S^{4m}) = 0$ (Corollary~\ref{k-theory:corollary-spheres}),
+gives a short exact sequence $0 \to \tilde{K}(S^{4m}) \to \tilde{K}(X) \to \tilde{K}(S^{2m}) \to 0$. Let $b$ be the image of a generator of $\tilde{K}(S^{4m})$ and $a$ a lift of a generator of $\tilde{K}(S^{2m})$; then
+$\tilde{K}(X)$ is free with basis $a$, $b$. Products of elements of $\tilde{K}(S^{2m})$ vanish (Corollary~\ref{k-theory:corollary-spheres}), so $a^2$ restricts to $0$ and $a^2 = \lambda b$ for some $\lambda \in \ZZ$;
+and $b^2 = 0$, $ab = 0$ similarly, as $b$ is pulled back from $S^{4m}$.
+\emph{Step 3: $\lambda = \pm h(f)$.} By naturality and Proposition~\ref{k-theory:proposition-chern-spheres}, $\mathrm{ch}(b) = \beta$ is a generator of $H^{4m}(X; \ZZ)$, and $\mathrm{ch}(a) = \alpha + r\beta$ with $\alpha$ a
+generator of $H^{2m}(X; \ZZ)$ and $r \in \QQ$. Then $\lambda\beta = \mathrm{ch}(a^2) = (\alpha + r\beta)^2 = \alpha^2 = \pm h(f)\beta$, so $\lambda$ is odd.
+\emph{Step 4: Adams operations.} By Theorem~\ref{k-theory:theorem-adams-operations}(1) and (5), $\psi^k(b) = k^{2m}b$ and $\psi^k(a) = k^ma + \mu_kb$ for integers $\mu_k$. By (4),
+$\psi^2(a) = 2^ma + \mu_2b \equiv a^2 = \lambda b$ modulo $2\tilde{K}(X)$, so $\mu_2$ is odd. Now $\psi^2\psi^3 = \psi^6 = \psi^3\psi^2$, and $\psi^2(3^ma + \mu_3b) = 3^m(2^ma + \mu_2b) + 2^{2m}\mu_3b$ and $\psi^3(2^ma + \mu_2b) = 2^m(3^ma + \mu_3b) + 3^{2m}\mu_2b$. Equating the coefficients of $b$,
+$3^m\mu_2 + 2^{2m}\mu_3 = 2^m\mu_3 + 3^{2m}\mu_2$, that is $2^m(2^m - 1)\mu_3 = 3^m(3^m - 1)\mu_2$. As $\mu_2$ and $3^m$ are odd, $2^m$ divides $3^m - 1$, so $m \in \{1, 2, 4\}$ by
+Lemma~\ref{k-theory:lemma-two-adic}, and $n = 2m \in \{2, 4, 8\}$.
+\end{proof}
+
+\begin{remark}\label{k-theory:remark-hopf-consequences}
+This proof is due to Adams and Atiyah \cite{adams-atiyah-1966}; Adams's original proof used secondary cohomology operations \cite{adams-1960}. Corollary~\ref{cohomology-operations:corollary-hopf-invariant}
+showed with Steenrod squares only that $n$ is a power of $2$. The maps of Hopf invariant one in dimensions $2$, $4$, $8$ come from the complex numbers, quaternions and octonions, and the consequences for
+division algebras and $H$-space structures on spheres are listed in Remark~\ref{cohomology-operations:remark-adams}. Adams also used K-theory and the operations $\psi^k$ on real projective spaces to find the
+maximal number of linearly independent vector fields on $S^{n-1}$: writing $n = 2^{4a+b}u$ with $u$ odd and $0 \leq b \leq 3$, it is $2^b + 8a - 1$ \cite{adams-1962}. For $n = 2, 4, 8$ this gives $1, 3, 7$,
+consistent with Theorem~\ref{vector-bundles:theorem-parallelizable-spheres}.
+\end{remark}
+
+\section{Algebraic K-theory}\label{k-theory:section-algebraic-k-theory}
+
+Replacing vector bundles by finitely generated projective modules gives K-groups of rings. By a theorem of Serre and Swan the two constructions agree for rings of continuous functions.
+
+\begin{definition}\label{k-theory:definition-k-zero}
+Let $R$ be a ring. $K_0(R)$ is the Grothendieck group of the monoid of isomorphism classes of finitely generated projective left $R$-modules under $\oplus$. A ring homomorphism $R \to S$ induces
+$K_0(R) \to K_0(S)$, $[P] \mapsto [S \otimes_RP]$. If $R$ is commutative, $\otimes_R$ makes $K_0(R)$ a commutative ring.
+\end{definition}
+
+\begin{notation}\label{k-theory:notation-algebraic}
+We write $[P]$ for the class of $P$ and $n$ for $[R^n]$; addition in $K_0(R)$ comes from $\oplus$ and, for commutative $R$, multiplication from $\otimes_R$. For $K_1$ and $K_2$ below the groups are written
+multiplicatively, as quotients of matrix groups.
+\end{notation}
+
+\begin{proposition}\label{k-theory:proposition-k-zero-elements}
+Every element of $K_0(R)$ is $[P] - n$, and $[P] = [Q]$ if and only if $P \oplus R^n \cong Q \oplus R^n$ for some $n$.
+\end{proposition}
+
+\begin{proof}
+Projective modules are direct summands of free modules (Proposition~\ref{homological-algebra:proposition-projective-modules}), and a finitely generated one is a summand of a finitely generated free module: if
+$P \oplus P^{\prime} \cong R^n$ then $P^{\prime}$ is finitely generated projective. The argument of Proposition~\ref{k-theory:proposition-k-elements} applies word for word.
+\end{proof}
+
+\begin{example}\label{k-theory:example-k-zero}
+\begin{enumerate}
+\item If $R$ is a field, or more generally a principal ideal domain, finitely generated projective modules are free (they are torsion-free, Theorem~\ref{rings:theorem-structure-pid}), and the rank gives
+$K_0(R) \cong \ZZ$.
+\item If $R$ is a local ring, finitely generated projective modules are free (Exercise~\ref{commutative-algebra:exercise-nakayama-projective}), so again $K_0(R) \cong \ZZ$.
+\item $K_0(R \times S) \cong K_0(R) \times K_0(S)$, since a module over $R \times S$ is a pair of modules. For example $K_0(\ZZ/6\ZZ) \cong \ZZ^2$ by the Chinese remainder theorem.
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{k-theory:counterexample-eilenberg-swindle}
+Finite generation is essential. If all projective modules were allowed, then for every projective $P$, with $P \oplus Q \cong F$ free, the module $F^\infty = F \oplus F \oplus \cdots$ satisfies
+$P \oplus F^\infty \cong P \oplus (Q \oplus P) \oplus (Q \oplus P) \oplus \cdots \cong (P \oplus Q) \oplus (P \oplus Q) \oplus \cdots \cong F^\infty$, so $[P] = 0$ for all $P$: the group would be trivial
+(the \emph{Eilenberg swindle}). For the same reason $K_0(R) = 0$ when $R = \End_k(V)$ for an infinite-dimensional vector space $V$: there $R \cong R \oplus R$ as left modules, so $[R] = 2[R]$ and $[R] = 0$.
+\end{counterexample}
+
+\begin{theorem}[Serre--Swan]\label{k-theory:theorem-serre-swan}
+Let $X$ be compact Hausdorff and $C(X)$ the ring of continuous complex functions. The functor $E \mapsto \Gamma(E)$ (continuous sections) is an equivalence from vector bundles over $X$ to finitely generated
+projective $C(X)$-modules, compatible with $\oplus$ and $\otimes$. Hence $K(X) \cong K_0(C(X))$.
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+$\Gamma(X \times \CC^n) = C(X)^n$, and $\Gamma$ preserves direct sums; since $E$ is a summand of a trivial bundle (Lemma~\ref{k-theory:lemma-direct-summand}), $\Gamma(E)$ is a summand of $C(X)^N$, hence finitely generated
+projective. Morphisms: a module map $\Gamma(E) \to \Gamma(F)$ is $C(X)$-linear, hence given pointwise (a section vanishing at $x$ is a combination of sections times functions vanishing at $x$), so it comes from a
+unique bundle map. Essential surjectivity: a finitely generated projective module is the image of an idempotent matrix $p \in M_N(C(X))$, and the image of $p$ is a subbundle of $X \times \CC^N$, because the rank
+of $p(x) = \operatorname{tr}p(x)$ is locally constant and $p(x)$ restricted to the image of $p(x_0)$ is an isomorphism onto the image of $p(x)$ for $x$ near $x_0$; its sections are $pC(X)^N$. See
+\cite{swan-1962}.
+\end{proof}
+
+For a Dedekind domain the group $K_0$ sees the class group.
+
+\begin{theorem}[Steinitz]\label{k-theory:theorem-steinitz}
+Let $\mathcal{O}$ be a Dedekind domain, such as the ring of integers of a number field (Theorem~\ref{algebraic-number-theory:theorem-dedekind}). Every finitely generated projective $\mathcal{O}$-module of rank
+$n \geq 1$ is isomorphic to $\mathcal{O}^{n-1} \oplus I$ for a nonzero ideal $I$, whose class in the class group $\mathrm{Cl}(\mathcal{O})$ (Definition~\ref{algebraic-number-theory:definition-class-group}) is
+uniquely determined. Hence $K_0(\mathcal{O}) \cong \ZZ \oplus \mathrm{Cl}(\mathcal{O})$, by $[P] \mapsto (\rank P, \text{class of } I)$.
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+\emph{Ideals are projective}: a nonzero ideal $I$ is invertible (Theorem~\ref{algebraic-number-theory:theorem-fractional-ideals}), so $1 = \sum_ix_iy_i$ with $x_i \in I$, $y_i \in I^{-1}$, and
+$a \mapsto (ay_i)_i$, $(c_i) \mapsto \sum c_ix_i$ exhibit $I$ as a summand of $\mathcal{O}^k$. \emph{Decomposition}: a finitely generated projective module $P$ of rank $n$ embeds in $K^n$, $K$ the fraction field; projecting to
+the last coordinate gives a surjection onto a fractional ideal, which splits, so $P \cong P^{\prime} \oplus I_n$ and by induction $P \cong I_1 \oplus \cdots \oplus I_n$. \emph{Combining}: $I \oplus J \cong \mathcal{O} \oplus IJ$
+for nonzero ideals, which one proves after replacing $I$ and $J$ by coprime ideals in their classes, using the exact sequence $0 \to I \cap J \to I \oplus J \to I + J = \mathcal{O} \to 0$ and $I \cap J = IJ$.
+\emph{Invariance}: the class of $I_1\cdots I_n$ is the class of the top exterior power $\Lambda^nP$, an invariant of $P$. See \cite[Chapter 1]{milnor-algebraic-k-theory}.
+\end{proof}
+
+\begin{example}\label{k-theory:example-k-zero-sqrt-five}
+In $\mathcal{O} = \ZZ[\sqrt{-5}]$ the ideal $\mathfrak{p} = (2, 1 + \sqrt{-5})$ is not principal, while $\mathfrak{p}^2 = (2)$ (Example~\ref{algebraic-number-theory:example-sqrt-minus-five}). So $\mathfrak{p}$ is a
+projective module of rank $1$ that is not free, but $\mathfrak{p} \oplus \mathfrak{p} \cong \mathcal{O} \oplus \mathfrak{p}^2 \cong \mathcal{O}^2$ is free. Here $K_0(\mathcal{O}) \cong \ZZ \oplus \ZZ/2$, and $[\mathfrak{p}] - 1$ is the
+element of order $2$.
+\end{example}
+
+\begin{definition}\label{k-theory:definition-k-one}
+Let $R$ be a ring and $\GL(R) = \bigcup_n\GL_n(R)$, with $\GL_n(R) \subseteq \GL_{n+1}(R)$ by $A \mapsto \mathrm{diag}(A, 1)$. For $i \neq j$ and $r \in R$, the \emph{elementary matrix} $e_{ij}(r)$ is the identity
+plus $r$ in position $(i, j)$; the subgroup $E(R)$ they generate is the group of elementary matrices. Put $K_1(R) = \GL(R)/E(R)$.
+\end{definition}
+
+\begin{lemma}[Whitehead]\label{k-theory:lemma-whitehead}
+$E(R)$ is the commutator subgroup of $\GL(R)$. Hence $E(R)$ is normal and $K_1(R) = \GL(R)^{\mathrm{ab}}$ is abelian.
+\end{lemma}
+
+\begin{proof}
+\emph{$E(R)$ is perfect.} For distinct $i$, $j$, $k$ a direct computation gives $[e_{ij}(r), e_{jk}(s)] = e_{ik}(rs)$, so every generator is a commutator of elementary matrices (take $s = 1$ and an auxiliary index $k$,
+which exists in $\GL_n$ for $n \geq 3$). \emph{Commutators are elementary.} For $A, B \in \GL_n(R)$, in $\GL_{2n}(R)$,
+\[
+\begin{pmatrix} ABA^{-1}B^{-1} & 0 \\ 0 & 1 \end{pmatrix} = \begin{pmatrix} AB & 0 \\ 0 & (AB)^{-1} \end{pmatrix}\begin{pmatrix} A^{-1} & 0 \\ 0 & A \end{pmatrix}\begin{pmatrix} B^{-1} & 0 \\ 0 & B \end{pmatrix},
+\]
+and every block matrix $\mathrm{diag}(C, C^{-1})$ is a product of block elementary matrices,
+\[
+\begin{pmatrix} C & 0 \\ 0 & C^{-1} \end{pmatrix} = \begin{pmatrix} 1 & C \\ 0 & 1 \end{pmatrix}\begin{pmatrix} 1 & 0 \\ -C^{-1} & 1 \end{pmatrix}\begin{pmatrix} 1 & C \\ 0 & 1 \end{pmatrix}\begin{pmatrix} 1 & -1 \\ 0 & 1 \end{pmatrix}\begin{pmatrix} 1 & 0 \\ 1 & 1 \end{pmatrix}\begin{pmatrix} 1 & -1 \\ 0 & 1 \end{pmatrix},
+\]
+and a block matrix $\begin{pmatrix} 1 & X \\ 0 & 1 \end{pmatrix}$ is the product of the $e_{i, n+j}(x_{ij})$. So commutators lie in $E(R)$. Together, $E(R) = [E(R), E(R)] \subseteq [\GL(R), \GL(R)] \subseteq E(R)$.
+\end{proof}
+
+\begin{proposition}\label{k-theory:proposition-k-one-euclidean}
+Let $R$ be commutative. The determinant induces a split surjection $K_1(R) \to R^\times$, with kernel $SK_1(R) = \SL(R)/E(R)$. If $R$ is a field or a Euclidean domain, then $SK_1(R) = 0$ and $K_1(R) \cong R^\times$.
+\end{proposition}
+
+\begin{proof}
+Elementary matrices have determinant $1$, so $\det$ factors through $K_1(R)$, and $u \mapsto \mathrm{diag}(u, 1, \ldots)$ splits it. Let $R$ be Euclidean and $A \in \SL_n(R)$. \emph{Clearing the first column}: adding
+multiples of one row to another (left multiplication by elementary matrices) performs the Euclidean algorithm on the entries of the first column, until only one entry $d$ is nonzero; moving it to the top
+uses the elementary product $w = e_{12}(1)e_{21}(-1)e_{12}(1) = \begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix}$ (in the relevant rows), which permutes rows up to sign. Since $A$ is invertible, $d$ divides the
+greatest common divisor $1$ of the column, so $d$ is a unit, and column operations clear the first row. By induction $A$ becomes diagonal, $\mathrm{diag}(u_1, \ldots, u_n)$ with $\prod u_i = 1$. \emph{Diagonal matrices}:
+$\mathrm{diag}(u, u^{-1}) = w(u)w(-1)$ with $w(u) = e_{12}(u)e_{21}(-u^{-1})e_{12}(u) = \begin{pmatrix} 0 & u \\ -u^{-1} & 0 \end{pmatrix}$, and
+$\mathrm{diag}(u_1, \ldots, u_n) = \mathrm{diag}(u_1, u_1^{-1}, 1, \ldots)\,\mathrm{diag}(1, u_1u_2, u_3, \ldots)$, so by induction it lies in $E(R)$.
+\end{proof}
+
+\begin{example}\label{k-theory:example-k-one}
+$K_1(\ZZ) = \{\pm 1\}$, $K_1(F) = F^\times$ for a field and $K_1(F[x]) = F^\times$. For the ring of integers of a number field, $SK_1(\mathcal{O}_K) = 0$ as well: this is a theorem of Bass, Milnor and Serre, connected
+with the congruence subgroup problem \cite{milnor-algebraic-k-theory}. There are also commutative rings with $SK_1 \neq 0$ \cite{milnor-algebraic-k-theory}.
+\end{example}
+
+\begin{remark}\label{k-theory:remark-whitehead-group}
+For a group $\pi$, the \emph{Whitehead group} is $\mathrm{Wh}(\pi) = K_1(\ZZ[\pi])/\langle\pm g : g \in \pi\rangle$. It contains the \emph{Whitehead torsion} of a homotopy equivalence between finite CW complexes with
+fundamental group $\pi$, the obstruction to its being a simple homotopy equivalence. The $s$-cobordism theorem of Barden, Mazur and Stallings says that an $h$-cobordism $W$ between closed manifolds of
+dimension at least $5$ is a product $M \times [0, 1]$ exactly when its torsion in $\mathrm{Wh}(\pi_1M)$ vanishes \cite{milnor-1966}. For trivial $\pi$, $\mathrm{Wh} = 0$ and one recovers Smale's $h$-cobordism theorem, the key to the
+high-dimensional Poincar\'e conjecture (Remark~\ref{poincare-duality:remark-poincare-conjecture}).
+\end{remark}
+
+The next group, $K_2$, measures the relations among elementary matrices beyond the obvious ones. For fields it has a presentation by symbols.
+
+\begin{definition}\label{k-theory:definition-milnor-k-two}
+Let $F$ be a field. The \emph{Milnor $K_2$} of $F$ is the abelian group $K_2^M(F)$ generated by symbols $\{a, b\}$, $a, b \in F^\times$, subject to bimultiplicativity
+$\{aa^{\prime}, b\} = \{a, b\}\{a^{\prime}, b\}$, $\{a, bb^{\prime}\} = \{a, b\}\{a, b^{\prime}\}$, and the \emph{Steinberg relation} $\{a, 1 - a\} = 1$ for $a \neq 0, 1$. Equivalently,
+$K_2^M(F) = (F^\times \otimes_\ZZ F^\times)/\langle a \otimes (1 - a)\rangle$, written multiplicatively.
+\end{definition}
+
+\begin{proposition}\label{k-theory:proposition-symbols}
+In $K_2^M(F)$: $\{a, -a\} = 1$ and $\{a, b\}\{b, a\} = 1$ for all $a, b \in F^\times$; and $\{a, a\} = \{a, -1\}$.
+\end{proposition}
+
+\begin{proof}
+For $a = 1$ the first claim is $\{1, -1\} = 1$, true by bimultiplicativity. For $a \neq 1$, $-a = (1 - a)/(1 - a^{-1})$, so $\{a, -a\} = \{a, 1 - a\}\{a, 1 - a^{-1}\}^{-1} = \{a^{-1}, 1 - a^{-1}\} = 1$,
+using $\{a, x\}^{-1} = \{a^{-1}, x\}$ and the Steinberg relation twice. Then $1 = \{ab, -ab\} = \{a, -a\}\{a, b\}\{b, a\}\{b, -b\} = \{a, b\}\{b, a\}$. Finally $1 = \{a, -a\} = \{a, -1\}\{a, a\}$ and
+$\{a, -1\}^2 = \{a, 1\} = 1$, so $\{a, a\} = \{a, -1\}^{-1} = \{a, -1\}$.
+\end{proof}
+
+\begin{example}\label{k-theory:example-k-two-finite}
+$K_2^M(\mathbb{F}_q) = 1$. Let $g$ generate the cyclic group $\mathbb{F}_q^\times$; every symbol is a power of $\{g, g\}$, which has order dividing $2$ by Proposition~\ref{k-theory:proposition-symbols}. If $q$ is even,
+$q - 1$ is odd and $\{g, g\}^{q-1} = \{g^{q-1}, g\} = 1$, so $\{g, g\} = 1$. If $q$ is odd, there is a non-square $x$ with $1 - x$ also a non-square: otherwise $x \mapsto 1 - x$ would map the $(q - 1)/2$
+non-squares injectively into the $(q - 3)/2$ squares different from $0$ and $1$. Writing $x = g^i$, $1 - x = g^j$ with $i$, $j$ odd, $1 = \{x, 1 - x\} = \{g, g\}^{ij} = \{g, g\}$.
+\end{example}
+
+\begin{remark}\label{k-theory:remark-higher-k-theory}
+Milnor defined $K_2(R)$ for every ring as the centre of the Steinberg group, the group generated by symbols $x_{ij}(r)$ subject to the obvious relations of elementary matrices, and Matsumoto proved that
+$K_2(F) \cong K_2^M(F)$ for fields \cite{milnor-algebraic-k-theory}. Tate computed $K_2(\QQ) \cong \ZZ/2 \oplus \bigoplus_{p \text{ odd}}\mathbb{F}_p^\times$, the maps being the sign symbol and the tame
+symbols at the primes, a reformulation of quadratic reciprocity \cite{milnor-algebraic-k-theory}. Merkurjev and Suslin identified $K_2^M(F)/n$ with the $n$-torsion of the Brauer group when $F$ contains
+the $n$-th roots of unity, and Voevodsky's proof of the Milnor and Bloch--Kato conjectures relates all Milnor K-groups modulo $n$ to Galois cohomology \cite{weibel-k-book}. Quillen defined higher K-groups
+$K_n(R) = \pi_n(\mathrm{BGL}(R)^+)$ for all $n$, and computed those of finite fields: $K_{2i-1}(\mathbb{F}_q) \cong \ZZ/(q^i - 1)$ and $K_{2i}(\mathbb{F}_q) = 0$ for $i \geq 1$ \cite{quillen-1972}. The K-groups
+of $\ZZ$ are connected with values of the Riemann zeta function and with the Vandiver conjecture \cite{weibel-k-book}.
+\end{remark}
+
+\section{Cobordism}\label{k-theory:section-cobordism}
+
+Two closed manifolds are cobordant if together they bound a compact manifold. This coarse equivalence relation turns out to be computable, and its invariants are characteristic numbers.
+
+\begin{definition}\label{k-theory:definition-cobordism}
+Closed smooth $n$-manifolds $M$ and $N$ are \emph{cobordant} if there is a compact smooth $(n + 1)$-manifold $W$ with $\partial W \cong M \sqcup N$. The set $\Omega_n^{\mathrm{O}}$ of cobordism classes is a group under
+disjoint union, and $\Omega_*^{\mathrm{O}} = \bigoplus_n\Omega_n^{\mathrm{O}}$ is a ring under the cartesian product. For oriented manifolds one requires $W$ oriented and $\partial W \cong M \sqcup \bar{N}$ as oriented
+manifolds, where $\bar{N}$ is $N$ with the opposite orientation; this gives the \emph{oriented cobordism ring} $\Omega_*^{\mathrm{SO}}$.
+\end{definition}
+
+\begin{notation}\label{k-theory:notation-cobordism}
+The group operation in $\Omega_n$ is written $+$ (disjoint union), the class of $M$ is $[M]$, and the product is $[M][N] = [M \times N]$. The neutral element is the class of the empty manifold, so
+$[M] = 0$ means that $M$ is a boundary. In $\Omega^{\mathrm{SO}}_n$ the inverse is $-[M] = [\bar{M}]$.
+\end{notation}
+
+Cobordism is an equivalence relation: reflexive because $M \times [0, 1]$ has boundary $M \sqcup M$ (oriented: $M \sqcup \bar{M}$), and transitive by gluing along a common boundary component, using collars to smooth
+the result. In $\Omega^{\mathrm{O}}_n$ every element has order $2$, by the same cylinder, so $\Omega^{\mathrm{O}}_*$ is an algebra over $\mathbb{F}_2$.
+
+\begin{definition}\label{k-theory:definition-characteristic-numbers}
+For a closed $n$-manifold $M$ and a monomial $w_1^{r_1}\cdots w_n^{r_n}$ of degree $n$ (that is, $\sum ir_i = n$), the \emph{Stiefel--Whitney number} is
+$\langle w_1(TM)^{r_1}\cdots w_n(TM)^{r_n}, [M]\rangle \in \mathbb{F}_2$, with the mod $2$ fundamental class. For $M$ closed oriented of dimension $4k$ and $\sum ir_i = k$, the \emph{Pontryagin number} is
+$\langle p_1(TM)^{r_1}\cdots p_k(TM)^{r_k}, [M]\rangle \in \ZZ$.
+\end{definition}
+
+\begin{theorem}[Pontryagin]\label{k-theory:theorem-pontryagin}
+If $M = \partial W$ for a compact manifold $W$, all Stiefel--Whitney numbers of $M$ vanish. If $M$ is oriented and $M = \partial W$ as oriented manifolds, all Pontryagin numbers of $M$ vanish. Hence characteristic numbers are
+cobordism invariants.
+\end{theorem}
+
+\begin{proof}
+Let $i \colon M \to W$ be the inclusion. An inward normal vector field gives $TW|_M \cong TM \oplus \RR$, so $w(TM) = i^*w(TW)$ by the Whitney formula
+(Theorem~\ref{characteristic-classes:theorem-stiefel-whitney-thom}), and similarly for Pontryagin classes rationally (Definition~\ref{characteristic-classes:definition-pontryagin}). By Lefschetz duality
+(Theorem~\ref{poincare-duality:theorem-lefschetz-duality}) $W$ has a fundamental class $[W] \in H_{n+1}(W, M)$, whose image under the boundary map is $[M]$ \cite[Theorem 3.43]{hatcher-at}. For a monomial $w_I$,
+\[
+\langle w_I(TM), [M]\rangle = \langle i^*w_I(TW), \partial[W]\rangle = \langle w_I(TW), i_*\partial[W]\rangle = 0,
+\]
+because $i_*\partial = 0$ in the long exact sequence of the pair $(W, M)$. The oriented case is the same with rational coefficients, using that Pontryagin numbers are integers computed rationally.
+\end{proof}
+
+\begin{corollary}\label{k-theory:corollary-euler-even}
+A closed manifold that bounds has even Euler characteristic. In particular $\RR\PP^{2k}$ and $\CC\PP^{2k}$ are not boundaries.
+\end{corollary}
+
+\begin{proof}
+$\langle w_n(TM), [M]\rangle \equiv \chi(M) \pmod 2$ (Corollary~\ref{characteristic-classes:corollary-top-stiefel-whitney}), and this Stiefel--Whitney number vanishes for a boundary. The Euler characteristics of
+$\RR\PP^{2k}$ and $\CC\PP^{2k}$ are $1$ and $2k + 1$.
+\end{proof}
+
+\begin{example}\label{k-theory:example-low-cobordism}
+$\Omega^{\mathrm{O}}_0 = \mathbb{F}_2$ (a finite set of points bounds if and only if it has an even number of points), $\Omega^{\mathrm{O}}_1 = 0$ (a circle bounds a disc), and $\Omega^{\mathrm{O}}_2 = \mathbb{F}_2$, generated by
+$\RR\PP^2$: orientable closed surfaces bound handlebodies, a connected sum $M \# N$ is cobordant to $M \sqcup N$ (the cobordism is $(M \sqcup N) \times [0, 1]$ with a $1$-handle attached), and by the classification of
+surfaces every non-orientable closed surface is a connected sum of copies of $\RR\PP^2$; so the class of a surface is $\chi \bmod 2$ times $[\RR\PP^2]$, and $[\RR\PP^2] \neq 0$ by
+Corollary~\ref{k-theory:corollary-euler-even}.
+\end{example}
+
+\begin{theorem}[Thom]\label{k-theory:theorem-thom}
+\begin{enumerate}
+\item (Pontryagin--Thom) $\Omega^{\mathrm{O}}_n \cong \pi_{n+k}(\mathrm{MO}(k))$ and $\Omega^{\mathrm{SO}}_n \cong \pi_{n+k}(\mathrm{MSO}(k))$ for $k > n + 1$, where $\mathrm{MO}(k)$ and $\mathrm{MSO}(k)$ are the Thom spaces of the
+universal bundles: a manifold embedded in $S^{n+k}$ gives a map to the Thom space by collapsing the complement of a tubular neighbourhood, and transversality gives the inverse.
+\item Two closed manifolds are cobordant if and only if they have the same Stiefel--Whitney numbers, and $\Omega^{\mathrm{O}}_* \cong \mathbb{F}_2[x_i : i \neq 2^j - 1]$ with $x_i$ in degree $i$.
+\item $\Omega^{\mathrm{SO}}_* \otimes \QQ \cong \QQ[[\CC\PP^2], [\CC\PP^4], \ldots]$, and an oriented manifold is rationally null-cobordant if and only if all its Pontryagin numbers vanish.
+\end{enumerate}
+\end{theorem}
+
+This is \cite{thom-1954}; see also \cite{stong-cobordism} and \cite[Chapters 17--18]{milnor-stasheff}. Complex cobordism and its role for algebraic cycles are described in Remarks~\ref{cohomology-operations:remark-cobordism}
+and~\ref{cohomology-operations:remark-atiyah-hirzebruch}.
+
+\begin{proposition}[Thom]\label{k-theory:proposition-signature-cobordism}
+If a closed oriented $4k$-manifold $M$ is an oriented boundary, its signature (Definition~\ref{poincare-duality:definition-intersection-form}) is $0$. Hence the signature is a homomorphism
+$\sigma \colon \Omega^{\mathrm{SO}}_{4k} \to \ZZ$.
+\end{proposition}
+
+\begin{proof}[Sketch of proof]
+Let $M = \partial W$, use real coefficients, let $V = H^{2k}(M)$ with the nondegenerate symmetric form $B(x, y) = \langle x \smile y, [M]\rangle$ (Corollary~\ref{poincare-duality:corollary-cup-pairing}), and let
+$L = i^*H^{2k}(W) \subseteq V$. \emph{$L$ is isotropic}: $B(i^*x, i^*y) = \langle x \smile y, i_*\partial[W]\rangle = 0$ as in the proof of Theorem~\ref{k-theory:theorem-pontryagin}. \emph{$\dim L = \frac12\dim V$}: in the exact
+sequence $H^{2k}(W) \to V \xrightarrow{\delta} H^{2k+1}(W, M)$, Lefschetz duality identifies $H^{2k+1}(W, M)$ with the dual of $H^{2k}(W)$ and $\delta$ with the adjoint of $i^*$ up to sign (the omitted verification, a
+naturality property of cap products), so $\operatorname{rank}\delta = \dim L$ and $\dim V = \dim\ker\delta + \operatorname{rank}\delta = 2\dim L$. \emph{Conclusion}: write $V = V_+ \oplus V_-$ with $B$ positive definite on $V_+$ and negative definite on $V_-$, of dimensions $n_\pm$. An isotropic $L$ meets $V_+$ and $V_-$ only in $0$, so $\dim L \leq n_-$ and
+$\dim L \leq n_+$; as $2\dim L = n_+ + n_-$, we get $n_+ = n_-$ and $\sigma(M) = n_+ - n_- = 0$. Additivity under disjoint union and
+$\sigma(\bar{M}) = -\sigma(M)$ give the homomorphism.
+\end{proof}
+
+\begin{example}\label{k-theory:example-signature-theorem}
+Hirzebruch's signature theorem (Remark~\ref{characteristic-classes:remark-signature}) says $\sigma(M) = \langle L_k(p_1, \ldots, p_k), [M]\rangle$ with $L_1 = \frac13p_1$ and $L_2 = \frac1{45}(7p_2 - p_1^2)$. Both sides
+are homomorphisms on $\Omega^{\mathrm{SO}}_* \otimes \QQ$ (Proposition~\ref{k-theory:proposition-signature-cobordism} and Theorem~\ref{k-theory:theorem-pontryagin}), so by Theorem~\ref{k-theory:theorem-thom}(3) it suffices to
+check them on products of complex projective spaces, which is how Hirzebruch proved it \cite{hirzebruch-topological}. For $\CC\PP^2$, $p_1 = 3h^2$, so $L_1 = h^2$ and $\sigma(\CC\PP^2) = 1$, as the intersection form on
+$H^2(\CC\PP^2) = \ZZ h$ is $(1)$. In particular $\CC\PP^2$ is not an oriented boundary. For a closed $8$-manifold the formula forces $45\sigma + p_1^2 = 7p_2 \equiv 0 \pmod 7$.
+\end{example}
+
+\begin{remark}\label{k-theory:remark-exotic-spheres}
+Milnor's exotic spheres come out of this congruence \cite{milnor-1956}. Let $M_k$ be the total space of the $S^3$-bundle over $S^4$ whose associated $\RR^4$-bundle has Euler number $1$ and first Pontryagin number
+$2k$, with $k$ odd. A Morse function with two critical points shows that $M_k$ is homeomorphic to $S^7$. If $M_k$ were diffeomorphic to $S^7$, gluing an $8$-disc to the disc bundle $W_k$ with $\partial W_k = M_k$
+would give a closed smooth $8$-manifold $N$ with $\sigma(N) = 1$ and $p_1^2[N] = 4k^2$, and the congruence $45 + 4k^2 \equiv 0 \pmod 7$ fails unless $k^2 \equiv 1 \pmod 7$. So $M_3$, for instance, is a smooth
+manifold homeomorphic but not diffeomorphic to $S^7$. Kervaire and Milnor showed that the oriented diffeomorphism classes of homotopy $7$-spheres form a group of order $28$ under connected sum, and computed such groups in
+all dimensions at least $5$ in terms of the stable homotopy groups of spheres \cite{kervaire-milnor-1963}.
+\end{remark}
+
+\section{Exercises}\label{k-theory:section-exercises}
+
+\begin{exercise}\label{k-theory:exercise-disjoint-union}
+Show that $K(X \sqcup Y) \cong K(X) \times K(Y)$ for compact Hausdorff $X$, $Y$, and deduce Example~\ref{k-theory:example-k-point} for finite discrete spaces.
+\end{exercise}
+
+\begin{solution}
+A bundle on $X \sqcup Y$ is the same as a pair of bundles on $X$ and $Y$, compatibly with $\oplus$ and $\otimes$, so $\mathrm{Vect}(X \sqcup Y) \cong \mathrm{Vect}(X) \times \mathrm{Vect}(Y)$ as semirings. The
+Grothendieck group of a product of monoids is the product of the Grothendieck groups (check the universal property, or the explicit construction). A finite discrete space is a disjoint union of points, and
+$K(\mathrm{pt}) = \ZZ$.
+\end{solution}
+
+\begin{exercise}\label{k-theory:exercise-torus}
+Show that $\tilde{K}(S^1 \vee S^1) = 0$ and $\tilde{K}(S^1 \times S^1) \cong \ZZ$, and that $K^1(S^1 \times S^1) \cong \ZZ^2$.
+\end{exercise}
+
+\begin{solution}
+By Theorem~\ref{k-theory:theorem-long-exact-sequence}, $\tilde{K}(S^1 \vee S^1) = \tilde{K}(S^1)^2 = 0$, and
+$\tilde{K}(S^1 \times S^1) \cong \tilde{K}(S^1 \wedge S^1) \oplus \tilde{K}(S^1)^2 = \tilde{K}(S^2) = \ZZ$ (Corollary~\ref{k-theory:corollary-circle}, Theorem~\ref{k-theory:theorem-k-sphere}). Similarly
+$\tilde{K}^{-1}(S^1 \times S^1) \cong \tilde{K}(S^3) \oplus \tilde{K}(S^2)^2 = \ZZ^2$ by Corollary~\ref{k-theory:corollary-spheres}, and $K^1 = \tilde{K}^{-1}$ because $K^{-1}(\mathrm{pt}) = \tilde{K}(S^1) = 0$.
+\end{solution}
+
+\begin{exercise}\label{k-theory:exercise-psi-two}
+Verify directly that $\psi^2(E) = E^2 - 2\Lambda^2E$ satisfies $\psi^2(L_1 \oplus L_2) = L_1^2 + L_2^2$ for line bundles, and compute $\psi^2(H)$ and $\psi^2(2H)$ in $K(S^2)$ in the basis $1$, $H$.
+\end{exercise}
+
+\begin{solution}
+$(L_1 + L_2)^2 = L_1^2 + 2L_1L_2 + L_2^2$ and $\Lambda^2(L_1 \oplus L_2) = L_1 \otimes L_2$, so the difference is $L_1^2 + L_2^2$. In $K(S^2)$, $(H - 1)^2 = 0$ gives $H^2 = 2H - 1$, so $\psi^2(H) = H^2 = 2H - 1$, and
+$\psi^2(2H) = 2\psi^2(H) = 4H - 2$. Check: $\psi^2(H - 1) = 2(H - 1)$, as Theorem~\ref{k-theory:theorem-adams-operations}(5) predicts.
+\end{solution}
+
+\begin{exercise}\label{k-theory:exercise-integrality-eight}
+Show that there is no complex vector bundle $E$ over $S^8$ with $\int_{S^8}c_4(E) = 2$, and that there is one with $\int_{S^8}c_4(E) = 6$.
+\end{exercise}
+
+\begin{solution}
+By Theorem~\ref{k-theory:theorem-bott-integrality} with $n = 4$, $\int c_4(E)$ is a multiple of $3! = 6$, and every multiple occurs.
+\end{solution}
+
+\begin{exercise}\label{k-theory:exercise-k-zero-examples}
+Compute $K_0(\ZZ/4\ZZ)$ and $K_0(\ZZ/12\ZZ)$.
+\end{exercise}
+
+\begin{solution}
+$\ZZ/4\ZZ$ is local, with maximal ideal $2\ZZ/4\ZZ$, so $K_0(\ZZ/4\ZZ) = \ZZ$ by Example~\ref{k-theory:example-k-zero}(2). By the Chinese remainder theorem $\ZZ/12\ZZ \cong \ZZ/4\ZZ \times \ZZ/3\ZZ$, so
+$K_0(\ZZ/12\ZZ) \cong \ZZ^2$ by Example~\ref{k-theory:example-k-zero}(3).
+\end{solution}
+
+\begin{exercise}\label{k-theory:exercise-k-one-gaussian}
+Show that $K_1(\ZZ[i]) \cong \{\pm 1, \pm i\}$.
+\end{exercise}
+
+\begin{solution}
+$\ZZ[i]$ is Euclidean for the norm $a^2 + b^2$ (Theorem~\ref{rings:theorem-euclidean-pid-ufd} and its examples), so $K_1(\ZZ[i]) \cong \ZZ[i]^\times$ by Proposition~\ref{k-theory:proposition-k-one-euclidean}.
+The units are the elements of norm $1$, namely $\pm 1$, $\pm i$.
+\end{solution}
+
+\begin{exercise}\label{k-theory:exercise-sign-symbol}
+For $a, b \in \RR^\times$ let $(a, b) = -1$ if $a < 0$ and $b < 0$, and $(a, b) = 1$ otherwise. Show that this defines a homomorphism $K_2^M(\RR) \to \{\pm 1\}$, and deduce that $\{-1, -1\} \neq 1$ in $K_2^M(\RR)$.
+\end{exercise}
+
+\begin{solution}
+$(a, b)$ depends only on the signs, and is bimultiplicative because the sign is multiplicative: for fixed $b < 0$, $a \mapsto (a, b)$ is the sign of $a$, and for $b > 0$ it is trivial. Steinberg relation: if $a < 0$
+then $1 - a > 0$, and if $1 - a < 0$ then $a > 0$; in both cases $(a, 1 - a) = 1$. So $(\,,\,)$ factors through $K_2^M(\RR)$, and $(-1, -1) = -1$ shows $\{-1, -1\} \neq 1$.
+\end{solution}
+
+\begin{exercise}\label{k-theory:exercise-klein-bottle}
+Show that the Klein bottle is the boundary of a compact $3$-manifold, and that $\RR\PP^2 \sqcup \RR\PP^2$ is one as well, while $\RR\PP^2 \sqcup T^2$ is not.
+\end{exercise}
+
+\begin{solution}
+Let $r$ be a reflection of the disc $D^2$, and $W$ the mapping torus $D^2 \times [0, 1]/(x, 0) \sim (r(x), 1)$, a compact $3$-manifold. Its boundary is the mapping torus of $r|_{S^1}$, a reflection of the circle, which is the
+Klein bottle. $\RR\PP^2 \sqcup \RR\PP^2$ is the boundary of $\RR\PP^2 \times [0, 1]$. Finally $\chi(\RR\PP^2 \sqcup T^2) = 1 + 0$ is odd, so it does not bound (Corollary~\ref{k-theory:corollary-euler-even}).
+\end{solution}
+
+\begin{exercise}\label{k-theory:exercise-projective-signature}
+Show that $\CC\PP^{2k}$ is not an oriented boundary for any $k \geq 1$, and that the class of $\CC\PP^{2k+1}$ in $\Omega^{\mathrm{SO}}_{4k+2}$ has finite order.
+\end{exercise}
+
+\begin{solution}
+$H^{2k}(\CC\PP^{2k}; \ZZ) = \ZZ h^k$ with $\langle h^{2k}, [\CC\PP^{2k}]\rangle = 1$, so the intersection form on the middle cohomology is $(1)$ and $\sigma(\CC\PP^{2k}) = 1 \neq 0$; by
+Proposition~\ref{k-theory:proposition-signature-cobordism} it is not an oriented boundary. By Theorem~\ref{k-theory:theorem-thom}(3), $\Omega^{\mathrm{SO}}_* \otimes \QQ$ is a polynomial ring on generators $[\CC\PP^{2i}]$ of dimension $4i$, so it vanishes in dimensions $4k + 2$, and
+$[\CC\PP^{2k+1}]$ is a torsion class.
+\end{solution}

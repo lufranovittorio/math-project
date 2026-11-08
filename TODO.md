@@ -209,7 +209,9 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
   maximal tori, Weyl group, classification of compact Lie groups, homogeneous spaces.
 - `riemannian-geometry` (complete, 4405): extract more lemmas (Hopf–Rinow done); comparison
   geometry, Bishop–Gromov, Cheeger–Gromoll splitting, sphere theorem (survey), Ricci flow (survey).
-- `k-theory` (planned): vector bundles to K-groups, Bott periodicity, Adams operations, Hopf invariant one.
+- `k-theory` (draft 2026-11-08): to deepen: full proof of Bott periodicity (Atiyah-Bott), K-theory
+  splitting principle and K(CP^n) with proofs, KO and Clifford modules, Atiyah-Hirzebruch spectral
+  sequence, vector fields on spheres, Quillen K-theory and K_2 of Q in detail, Pontryagin-Thom proof.
 - `currents` (draft, 1207): finish.
 - `symplectic-geometry` (complete): still to do: toric manifolds and Delzant's theorem,
   Lagrangian neighbourhood theorem with proof, generating functions; *contact geometry* (contact
@@ -220,7 +222,7 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
   not in the book as such: add as the first sections of `riemannian-geometry` (or check whether
   it is scattered there and gather it).
 - `characteristic-classes` / `k-theory`: cobordism, Pontryagin–Thom, signature theorem, exotic
-  spheres (now in the k-theory plan).
+  spheres (drafted in k-theory 2026-11-08).
 - `elliptic-operators`: still cited, not proved: invariance of H^s under diffeomorphisms for
   non-integer s (Proposition sobolev-sections, Warner). Possible: parametrix and
   pseudodifferential operators (survey).
