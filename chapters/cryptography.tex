@@ -1,18 +1,302 @@
 \chapter{Computational Number Theory and Cryptography}\label{cryptography}
-\chapterstatus{planned}
+\chapterstatus{draft}
 
-Algorithms for the basic problems of arithmetic (primality, factoring, discrete logarithms) and their use in public-key cryptography, together with the complexity assumptions on which its security rests.
+Some arithmetic problems are easy to compute and others, as far as anyone knows, are hard. Testing whether a number with a thousand digits is prime takes a fraction of a second; factoring a product of
+two primes of five hundred digits each is beyond all present computers. Raising to a power modulo $p$ is fast; recovering the exponent, the \emph{discrete logarithm}, seems to be slow. Public-key
+cryptography is built on this asymmetry. This chapter measures the cost of the basic algorithms (Euclid, exponentiation, multiplication), proves the correctness and error bounds of the primality tests
+of Fermat, Miller--Rabin and Lucas, presents the classical factoring and discrete logarithm algorithms, and describes the Diffie--Hellman, RSA and ElGamal systems with some attacks that show which
+hypotheses matter. The RSA system itself was introduced in Chapter~\ref{number-theory} (Proposition~\ref{number-theory:proposition-rsa}).
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{number-theory} (Elementary Number Theory), Chapter~\ref{fields} (Fields and Galois Theory), Chapter~\ref{computability-and-complexity} (Computability and
-Complexity), Chapter~\ref{prime-numbers} (Prime Numbers) and Chapter~\ref{geometry-of-numbers} (Geometry of Numbers).
+\noindent\textbf{Prerequisites.} Chapter~\ref{number-theory} (Elementary Number Theory), Chapter~\ref{groups} (Groups), Chapter~\ref{fields} (Fields and Galois Theory),
+Chapter~\ref{computability-and-complexity} (Computability and Complexity), Chapter~\ref{prime-numbers} (Prime Numbers) and Chapter~\ref{geometry-of-numbers} (Geometry of Numbers).
 
-\noindent\textbf{Planned contents.}
-\begin{enumerate}
-\item Arithmetic algorithms and their cost: Euclid and binary gcd, modular exponentiation, the Chinese remainder theorem, fast multiplication (Karatsuba, FFT), square roots modulo $p$ (Tonelli--Shanks).
-\item Primality: Fermat and Carmichael numbers, Solovay--Strassen, Miller--Rabin with its error bound, Lucas tests, the AKS theorem with proof.
-\item Factoring: trial division, Pollard's $\rho$ and $p - 1$, Fermat and Dixon, the quadratic sieve, the number field sieve (survey), Lenstra's elliptic curve method (survey).
-\item Discrete logarithms: baby-step giant-step, Pollard $\rho$, Pohlig--Hellman, index calculus.
-\item Public-key cryptography: Diffie--Hellman, RSA, ElGamal, digital signatures; security notions and reductions; elliptic curve cryptography (survey).
-\item Lattice-based cryptography: LLL attacks (Coppersmith), learning with errors (survey); Shor's quantum algorithm (survey).
-\item Exercises with solutions.
-\end{enumerate}
+\section{The cost of arithmetic}\label{cryptography:section-algorithms}
+
+\begin{notation}\label{cryptography:notation-cost}
+The \emph{size} of a positive integer $n$ is its number of binary digits, about $\log_2n$. An algorithm on integers of size at most $k$ is \emph{polynomial time} if it uses $O(k^c)$ bit operations for a constant
+$c$. We write $\log$ for the natural logarithm, $\gcd$ for the greatest common divisor and $U_n = (\ZZ/n\ZZ)^\times$ for the group of units modulo $n$, of order $\varphi(n)$; congruences and products modulo $n$ are
+written in the usual multiplicative notation.
+\end{notation}
+
+Schoolbook addition of two $k$-bit numbers costs $O(k)$ bit operations and schoolbook multiplication or division with remainder $O(k^2)$.
+
+\begin{theorem}[Lamé]\label{cryptography:theorem-lame}
+If the Euclidean algorithm applied to $a > b \geq 1$ uses $k$ divisions, then $b \geq F_{k+1}$ and $a \geq F_{k+2}$, where $F_m$ are the Fibonacci numbers. Consequently $k \leq \log_\varphi b + 1$ with
+$\varphi = \frac{1 + \sqrt5}{2}$, and $\gcd(a, b)$, together with $u$, $v$ with $au + bv = \gcd(a, b)$, is computed in polynomial time.
+\end{theorem}
+
+\begin{proof}
+Write $r_0 = a$, $r_1 = b$ and $r_{i-1} = q_ir_i + r_{i+1}$ for $i = 1, \dots, k$, with $r_1 > r_2 > \dots > r_k > r_{k+1} = 0$ and $q_i \geq 1$. Then $r_k \geq 1 = F_2$, $r_{k-1} > r_k$ gives $r_{k-1} \geq 2 = F_3$,
+and $r_{i-1} \geq r_i + r_{i+1}$ gives by descending induction $r_i \geq F_{k+2-i}$; in particular $b = r_1 \geq F_{k+1}$ and $a \geq F_{k+2}$. By induction $F_m \geq \varphi^{m-2}$ (as $\varphi^2 = \varphi + 1$), so
+$b \geq \varphi^{k-1}$. Each step costs $O(\log^2a)$, and keeping track of the coefficients (extended Euclid) multiplies the cost by a constant.
+\end{proof}
+
+\begin{example}\label{cryptography:example-lame}
+Consecutive Fibonacci numbers are the worst case: $\gcd(F_{k+2}, F_{k+1})$ takes exactly $k$ steps, all quotients being $1$, for instance $(13, 8) \to (8, 5) \to (5, 3) \to (3, 2) \to (2, 1) \to (1, 0)$.
+\end{example}
+
+\begin{proposition}\label{cryptography:proposition-exponentiation}
+For $a \in \ZZ/n$ and $e \geq 1$, $a^e$ can be computed with at most $2\log_2e$ multiplications in $\ZZ/n$, hence in $O(\log e\log^2n)$ bit operations.
+\end{proposition}
+
+\begin{proof}
+Compute the squares $a, a^2, a^4, \dots, a^{2^m}$ with $2^m \leq e < 2^{m+1}$ ($m$ squarings) and multiply those corresponding to the binary digits $1$ of $e$ (at most $m$ multiplications).
+\end{proof}
+
+\begin{proposition}[Karatsuba]\label{cryptography:proposition-karatsuba}
+Two $k$-bit integers can be multiplied with $O(k^{\log_23}) = O(k^{1.585})$ bit operations.
+\end{proposition}
+
+\begin{proof}
+For $k = 2m$ write $x = x_1 2^m + x_0$ and $y = y_12^m + y_0$ with $x_i, y_i < 2^m$. Then
+\[
+xy = x_1y_1 2^{2m} + \bigl((x_1 + x_0)(y_1 + y_0) - x_1y_1 - x_0y_0\bigr)2^m + x_0y_0,
+\]
+which needs three products of numbers of about $m$ bits and $O(k)$ additions and shifts. So the cost $T(k)$ satisfies $T(2m) \leq 3T(m + 1) + ck$. For $k = 2^j$ (padding with zeros) unwinding gives
+$T(2^j) \leq 3^jT(1) + c^{\prime}\sum_{i<j}3^i2^{j-i} = O(3^j) = O(k^{\log_23})$.
+\end{proof}
+
+Using the fast Fourier transform, Schönhage and Strassen multiplied in $O(k\log k\log\log k)$ \cite{crandall-pomerance}, and Harvey and van der Hoeven reached $O(k\log k)$
+\cite{harvey-van-der-hoeven-2021}.
+
+\section{Primality}\label{cryptography:section-primality}
+
+Fermat's little theorem says that $a^{n-1} \equiv 1 \pmod n$ for prime $n$ and $\gcd(a, n) = 1$ (Corollary~\ref{groups:corollary-euler-fermat}). Its converse fails for the Carmichael numbers
+(Example~\ref{groups:example-euler-fermat}), which pass this test for every base.
+
+\begin{proposition}[Korselt]\label{cryptography:proposition-korselt}
+A composite $n$ satisfies $a^{n-1} \equiv 1 \pmod n$ for all $a$ coprime to $n$ (it is a \emph{Carmichael number}) if and only if $n$ is squarefree and $p - 1 \mid n - 1$ for every prime $p \mid n$. A Carmichael number
+is odd and has at least three prime factors.
+\end{proposition}
+
+\begin{proof}
+\emph{If.} For $p \mid n$ and $\gcd(a, n) = 1$, $a^{n-1} = (a^{p-1})^{(n-1)/(p-1)} \equiv 1 \pmod p$, and the distinct primes dividing $n$ multiply to $n$ (Theorem~\ref{number-theory:theorem-crt}).
+
+\emph{Only if.} If $p^2 \mid n$, then $a = 1 + n/p$ satisfies $a^j \equiv 1 + jn/p \pmod n$ (as $n \mid (n/p)^2$), so $a$ has order $p$ in $U_n$; then $p \mid n - 1$, impossible as $p \mid n$. So $n$ is squarefree. For
+$p \mid n$, let $g$ be a primitive root modulo $p$ (Theorem~\ref{number-theory:theorem-primitive-root-prime}) and, by the Chinese remainder theorem, $a \equiv g \pmod p$, $a \equiv 1 \pmod{n/p}$; then
+$g^{n-1} \equiv a^{n-1} \equiv 1 \pmod p$, so $p - 1 \mid n - 1$.
+
+\emph{Shape.} If $n$ were even, an odd prime $p \mid n$ would give $p - 1$ even dividing the odd $n - 1$. If $n = pq$ with $p < q$, then $q - 1 \mid n - 1 = p(q - 1) + (p - 1)$ gives $q - 1 \mid p - 1 < q - 1$, absurd.
+\end{proof}
+
+The Carmichael numbers begin $561 = 3 \cdot 11 \cdot 17$, $1105$, $1729$, and there are infinitely many of them (Alford, Granville and Pomerance, 1994 \cite{alford-granville-pomerance}). The Miller--Rabin
+test repairs the Fermat test by looking at square roots of $1$: modulo a prime, the only square roots of $1$ are $\pm1$.
+
+\begin{definition}\label{cryptography:definition-strong-liar}
+Let $n$ be odd and $n - 1 = 2^st$ with $t$ odd. An integer $a$ coprime to $n$ is a \emph{strong liar} for $n$ if $a^t \equiv 1 \pmod n$ or $a^{2^it} \equiv -1 \pmod n$ for some $0 \leq i < s$. For prime $n$ every
+$a$ is a strong liar: the sequence $a^t, a^{2t}, \dots, a^{2^st} = a^{n-1} = 1$ ends at $1$, and the term before the first $1$, if any, is a square root of $1$ different from $1$, hence $-1$.
+\end{definition}
+
+\begin{lemma}\label{cryptography:lemma-square-roots}
+Let $n$ be odd and divisible by two distinct primes, let $m = 2^st$ be even ($s \geq 1$, $t$ odd), and let $L_m$ be the set of $a \in U_n$ with $a^t \equiv 1$ or $a^{2^it} \equiv -1$ for some $0 \leq i < s$. Then $L_m$ is contained in
+a proper subgroup of $U_n$; in particular $|L_m| \leq \varphi(n)/2$.
+\end{lemma}
+
+\begin{proof}
+Let $j$ be the largest integer $< s$ such that $b^{2^jt} \equiv -1$ for some $b \in U_n$; it exists, since $(-1)^t = -1$. Let $B = \{x \in U_n : x^{2^jt} \equiv \pm1\}$, a subgroup. \emph{$L_m \subseteq B$:} if
+$a^t \equiv 1$, then $a^{2^jt} \equiv 1$; if $a^{2^it} \equiv -1$, then $i \leq j$ by maximality and $a^{2^jt} = (a^{2^it})^{2^{j-i}} \equiv \pm1$. \emph{$B \neq U_n$:} write $n = n_1n_2$ with $n_1$, $n_2 > 1$ coprime
+(possible as $n$ has two distinct prime factors), and by the Chinese remainder theorem choose $w \equiv b \pmod{n_1}$, $w \equiv 1 \pmod{n_2}$. Then $w^{2^jt} \equiv -1 \pmod{n_1}$ and $\equiv 1 \pmod{n_2}$, so
+$w^{2^jt} \not\equiv \pm1 \pmod n$. A proper subgroup has index at least $2$.
+\end{proof}
+
+\begin{theorem}[Miller--Rabin]\label{cryptography:theorem-miller-rabin}
+If $n > 2$ is an odd composite number, at most $\varphi(n)/2$ elements of $U_n$ are strong liars for $n$. Hence the test "choose $a$ at random in $[1, n - 1]$ and check whether it is a strong liar", repeated $r$
+times independently, declares a composite number prime with probability at most $2^{-r}$.
+\end{theorem}
+
+\begin{proof}
+If $n$ has two distinct prime factors, apply Lemma~\ref{cryptography:lemma-square-roots} with $m = n - 1$. If $n = p^k$ with $k \geq 2$, every strong liar is a Fermat liar, $a^{n-1} \equiv 1$, and the Fermat
+liars form a subgroup of the cyclic group $U_{p^k}$ (Theorem~\ref{number-theory:theorem-primitive-root-prime-power}) of order $\gcd(n - 1, p^{k-1}(p - 1)) = \gcd(n - 1, p - 1) < \varphi(n)$, as $p \nmid n - 1$; so it is a
+proper subgroup. A random $a$ not coprime to $n$ reveals compositeness through $\gcd(a, n)$.
+\end{proof}
+
+A finer count gives the bound $\varphi(n)/4$ \cite{crandall-pomerance}. Each round costs one exponentiation, so the test runs in polynomial time. If the generalised Riemann hypothesis holds, every odd
+composite $n$ has a non-liar $a < 2\log^2n$ (Bach), which would make the test deterministic \cite{crandall-pomerance}.
+
+\begin{theorem}[Lucas, Lehmer]\label{cryptography:theorem-lucas}
+An integer $n \geq 2$ is prime if and only if there is $a$ with $a^{n-1} \equiv 1 \pmod n$ and $a^{(n-1)/q} \not\equiv 1 \pmod n$ for every prime $q \mid n - 1$.
+\end{theorem}
+
+\begin{proof}
+If $n$ is prime, take a primitive root. Conversely, the conditions say that the order of $a$ in $U_n$ divides $n - 1$ but no $(n - 1)/q$, so it equals $n - 1$. Then $\varphi(n) \geq n - 1$, which forces $n$ prime.
+\end{proof}
+
+Given the factorisation of $n - 1$ and the base $a$, the conditions are checked quickly; applying the same to the prime factors of $n - 1$ recursively gives a certificate of primality of polynomial size
+(Pratt, 1975), so PRIMES lies in $\mathrm{NP}$. Much more is true.
+
+\begin{lemma}\label{cryptography:lemma-aks}
+Let $n \geq 2$ and $\gcd(a, n) = 1$. Then $n$ is prime if and only if $(x + a)^n \equiv x^n + a$ in $(\ZZ/n)[x]$.
+\end{lemma}
+
+\begin{proof}
+The coefficient of $x^i$ in $(x + a)^n - x^n - a$ is $\binom nia^{n-i}$ for $0 < i < n$, and $a^n - a$ for $i = 0$. If $n$ is prime, $n \mid \binom ni$ for $0 < i < n$ and $a^n \equiv a$. If $n$ is composite, let
+$q$ be a prime factor with $q^k \,\|\, n$. Then $\binom nq = \frac{n(n-1)\cdots(n - q + 1)}{q!}$ has $q$-adic valuation $k - 1$ (the factors $n - 1, \dots, n - q + 1$ are prime to $q$), so $q^k \nmid \binom nq$, and as
+$a$ is prime to $q$, the coefficient of $x^q$ is not $0$ modulo $n$.
+\end{proof}
+
+\begin{theorem}[Agrawal, Kayal, Saxena]\label{cryptography:theorem-aks}
+Primality can be decided in deterministic polynomial time \cite{agrawal-kayal-saxena}.
+\end{theorem}
+
+The algorithm checks the congruence of Lemma~\ref{cryptography:lemma-aks} modulo $x^r - 1$ for a small $r$ (of size $O(\log^5n)$) and for $a$ up to about $\sqrt r\log n$; the proof that this suffices uses only
+finite fields and cyclotomic polynomials (Chapter~\ref{fields}).
+
+\section{Factoring}\label{cryptography:section-factoring}
+
+Trial division by all $d \leq \sqrt n$ finds a factor in $O(\sqrt n)$ divisions, exponential in the size of $n$. All faster methods exploit structure.
+
+\begin{lemma}[Congruence of squares]\label{cryptography:lemma-squares}
+If $x^2 \equiv y^2 \pmod n$ and $x \not\equiv \pm y \pmod n$, then $\gcd(x - y, n)$ is a nontrivial factor of $n$. If $n$ is odd with at least two distinct prime factors, and $y$ is coprime to $n$, at least half of
+the solutions $x$ of $x^2 \equiv y^2$ satisfy $x \not\equiv \pm y$.
+\end{lemma}
+
+\begin{proof}
+$n$ divides $(x - y)(x + y)$ but neither factor, so it shares a nontrivial factor with each. For the second statement, let $n = \prod_{i=1}^kp_i^{e_i}$ with $k \geq 2$. Modulo each $p_i^{e_i}$ the
+congruence $x^2 \equiv y^2$ has exactly the two solutions $x \equiv \pm y$, since $U_{p_i^{e_i}}$ is cyclic of even order (Theorem~\ref{number-theory:theorem-primitive-root-prime-power}) and so has exactly two
+square roots of $1$. By the Chinese remainder theorem there are $2^k$ solutions modulo $n$, of which only two are $\pm y$, and $2/2^k \leq \frac12$.
+\end{proof}
+
+\begin{example}\label{cryptography:example-fermat-factoring}
+\emph{Fermat's method} looks for $n = x^2 - y^2 = (x - y)(x + y)$ by trying $x = \lceil\sqrt n\rceil, \lceil\sqrt n\rceil + 1, \dots$ until $x^2 - n$ is a square; it is fast when $n$ has two factors close to $\sqrt n$. For
+$n = 8051$, $x = 90$ gives $8100 - 8051 = 49 = 7^2$, so $8051 = 83 \cdot 97$. \emph{Dixon's method} and the \emph{quadratic sieve} produce congruences of squares systematically: they collect many $x$ for which
+$x^2 \bmod n$ factors over a set of small primes, and find a subset whose product is a square by linear algebra over $\mathbb{F}_2$ on the exponent vectors.
+\end{example}
+
+\begin{proposition}[Pollard's $p - 1$ method]\label{cryptography:proposition-pollard}
+Let $p$ be a prime factor of $n$ such that every prime power dividing $p - 1$ is at most $B$, and let $M = \operatorname{lcm}(1, 2, \dots, B)$. For $a$ coprime to $n$, $p$ divides $\gcd(a^M - 1, n)$.
+\end{proposition}
+
+\begin{proof}
+$p - 1 \mid M$, so $a^M \equiv 1 \pmod p$ by Fermat's theorem.
+\end{proof}
+
+The gcd is a proper factor unless $a^M \equiv 1$ modulo every prime factor of $n$; computing $a^M$ costs $O(B\log B)$ multiplications. The method fails when every prime factor $p$ has $p - 1$ with a large prime
+factor; Lenstra's \emph{elliptic curve method} replaces the group $U_p$, of fixed order $p - 1$, by the group of points of a random elliptic curve modulo $p$, whose order varies in $[p + 1 - 2\sqrt p, p + 1 + 2\sqrt p]$
+(Chapter~\ref{elliptic-curves-arithmetic}).
+
+\begin{lemma}[Birthday bound]\label{cryptography:lemma-birthday}
+If $k$ elements are drawn independently and uniformly from a set with $N$ elements, the probability that they are pairwise distinct is at most $e^{-k(k-1)/2N}$.
+\end{lemma}
+
+\begin{proof}
+The probability is $\prod_{i=1}^{k-1}(1 - \frac iN) \leq \prod e^{-i/N} = e^{-k(k-1)/2N}$, using $1 - x \leq e^{-x}$.
+\end{proof}
+
+\begin{remark}\label{cryptography:remark-pollard-rho}
+\emph{Pollard's $\rho$ method} iterates $x \mapsto x^2 + c \pmod n$. Modulo an unknown prime factor $p$ the sequence behaves heuristically like a random sequence, so by the birthday bound it repeats after
+about $\sqrt p$ steps; Floyd's trick compares $x_i$ with $x_{2i}$ and computes $\gcd(x_{2i} - x_i, n)$, which reveals $p$ at the first repetition modulo $p$. The expected cost $O(\sqrt p) = O(n^{1/4})$ is a
+heuristic, not a theorem. The best known methods are subexponential: with $L_n[\alpha, c] = \exp\bigl((c + o(1))(\log n)^\alpha(\log\log n)^{1-\alpha}\bigr)$, the quadratic sieve runs heuristically in $L_n[\frac12, 1]$
+and the number field sieve in $L_n[\frac13, (64/9)^{1/3}]$ \cite{crandall-pomerance}.
+\end{remark}
+
+\section{Discrete logarithms}\label{cryptography:section-discrete-log}
+
+\begin{definition}\label{cryptography:definition-discrete-log}
+Let $G$ be a finite cyclic group, written multiplicatively, with generator $g$ of order $N$. The \emph{discrete logarithm} of $h \in G$ is the unique $x \in \ZZ/N$ with $g^x = h$.
+\end{definition}
+
+\begin{proposition}[Baby-step giant-step]\label{cryptography:proposition-bsgs}
+Discrete logarithms in $G$ can be computed with $O(\sqrt N)$ group operations and $O(\sqrt N)$ storage.
+\end{proposition}
+
+\begin{proof}
+Let $m = \lceil\sqrt N\rceil$. Every $x \in [0, N)$ is $x = im + j$ with $0 \leq i, j < m$. Store the \emph{baby steps} $g^j$, $0 \leq j < m$, and compute the \emph{giant steps} $hg^{-im}$, $i = 0, 1, \dots$; the first
+coincidence $hg^{-im} = g^j$ gives $x = im + j$. Sorting or hashing the table makes each lookup cheap.
+\end{proof}
+
+\begin{proposition}[Pohlig--Hellman]\label{cryptography:proposition-pohlig-hellman}
+If $N = \prod q_i^{e_i}$, a discrete logarithm in $G$ can be computed from $\sum_ie_i$ discrete logarithms in subgroups of prime orders $q_i$, plus a polynomial amount of work. So discrete logarithms are
+easy when $N$ has only small prime factors.
+\end{proposition}
+
+\begin{proof}
+\emph{Reduction to prime powers.} $x \bmod q^e$ is the discrete logarithm of $h^{N/q^e}$ to the base $g^{N/q^e}$, which has order $q^e$; the Chinese remainder theorem recovers $x \bmod N$ from the residues.
+
+\emph{Reduction to prime order.} In a group of order $q^e$ generated by $\gamma$, write $x = x_0 + x_1q + \dots + x_{e-1}q^{e-1}$ with digits $0 \leq x_k < q$. Then $h^{q^{e-1}} = (\gamma^{q^{e-1}})^{x_0}$ determines
+$x_0$ as a logarithm in the subgroup of order $q$ generated by $\gamma^{q^{e-1}}$; replacing $h$ by $h\gamma^{-x_0}$ and raising to $q^{e-2}$ determines $x_1$, and so on.
+\end{proof}
+
+For $G = \mathbb{F}_p^\times$ the \emph{index calculus} method, analogous to the quadratic sieve, is subexponential; for the groups of points of suitable elliptic curves no subexponential method is known,
+which is why elliptic curve cryptography uses much shorter keys.
+
+\section{Public-key cryptography}\label{cryptography:section-public-key}
+
+\begin{definition}\label{cryptography:definition-diffie-hellman}
+In the \emph{Diffie--Hellman key exchange} \cite{diffie-hellman-1976}, a cyclic group $G = \langle g\rangle$ of order $N$ is public. Alice chooses a secret $a \in \ZZ/N$ and publishes $g^a$; Bob chooses a secret $b$ and
+publishes $g^b$. Both compute the shared key $g^{ab} = (g^b)^a = (g^a)^b$. In \emph{ElGamal encryption}, Alice's public key is $h = g^a$; to send $m \in G$, Bob picks a random $k$ and sends $(g^k, mh^k)$, and
+Alice recovers $m = mh^k \cdot (g^k)^{-a}$.
+\end{definition}
+
+An eavesdropper sees $g$, $g^a$, $g^b$ and must compute $g^{ab}$ (the \emph{computational Diffie--Hellman problem}), which is no harder than computing discrete logarithms; by
+Proposition~\ref{cryptography:proposition-pohlig-hellman}, $N$ must have a large prime factor.
+
+For RSA (Proposition~\ref{number-theory:proposition-rsa}, \cite{rivest-shamir-adleman}), with public key $(n, e)$ and secret $d$, finding $d$ is as hard as factoring $n$: knowing $\varphi(n)$ gives $p$ and $q$
+(Exercise~\ref{number-theory:exercise-rsa-factoring}), and even knowing $d$ suffices.
+
+\begin{proposition}\label{cryptography:proposition-rsa-factoring}
+Given $n = pq$ (distinct odd primes) and $e$, $d$ with $ed \equiv 1 \pmod{\varphi(n)}$, a randomised algorithm factors $n$ in expected polynomial time.
+\end{proposition}
+
+\begin{proof}
+Let $m = ed - 1 = 2^st$ with $t$ odd; $\varphi(n) \mid m$, so $a^m \equiv 1$ for all $a \in U_n$. Choose $a$ at random; if $\gcd(a, n) > 1$ we are done. If $a \notin L_m$ (notation of
+Lemma~\ref{cryptography:lemma-square-roots}), the sequence $a^t, a^{2t}, \dots, a^{2^st} = 1$ does not start with $1$, and the term $x$ before its first $1$ satisfies $x^2 \equiv 1$, $x \not\equiv \pm1$; then
+$\gcd(x - 1, n)$ is a factor by Lemma~\ref{cryptography:lemma-squares}. By Lemma~\ref{cryptography:lemma-square-roots} this happens with probability at least $\frac12$ for each $a$.
+\end{proof}
+
+\begin{example}[Håstad's broadcast attack]\label{cryptography:example-hastad}
+Suppose the same message $m$ is sent with exponent $e = 3$ to three users with pairwise coprime moduli $n_1$, $n_2$, $n_3$, as $c_i \equiv m^3 \pmod{n_i}$. The Chinese remainder theorem gives
+$C \equiv m^3 \pmod{n_1n_2n_3}$ with $0 \leq C < n_1n_2n_3$; since $m < n_i$ for each $i$, $m^3 < n_1n_2n_3$, so $C = m^3$ as integers and $m = \sqrt[3]{C}$ is found without factoring. This is why messages are
+padded with random bits before encryption; Coppersmith's method, based on the LLL algorithm (Section~\ref{geometry-of-numbers:subsection-lll}), extends such attacks to small roots of polynomial congruences.
+\end{example}
+
+\begin{remark}\label{cryptography:remark-signatures-quantum}
+\emph{Signatures}: with RSA, the owner of $d$ signs a (hashed) message $m$ as $s = m^d \bmod n$, and anyone verifies $s^e \equiv m$. \emph{Quantum computers}: Shor's algorithm factors integers and computes
+discrete logarithms in polynomial time on a quantum computer, by finding periods of $x \mapsto a^x \bmod n$ with the quantum Fourier transform \cite{shor-1997}. This motivates \emph{post-quantum} systems,
+such as those based on the \emph{learning with errors} problem, whose hardness is related to worst-case problems on lattices \cite{regev-2009}.
+\end{remark}
+
+\section{Exercises}\label{cryptography:section-exercises}
+
+\begin{exercise}\label{cryptography:exercise-carmichael}
+Show with Korselt's criterion that $1105 = 5 \cdot 13 \cdot 17$ and $1729 = 7 \cdot 13 \cdot 19$ are Carmichael numbers.
+\end{exercise}
+
+\begin{solution}
+$1104 = 2^4 \cdot 3 \cdot 23$ is divisible by $4$, $12$ and $16$; $1728 = 2^6 \cdot 3^3$ is divisible by $6$, $12$ and $18$. Both numbers are squarefree, so Proposition~\ref{cryptography:proposition-korselt} applies.
+\end{solution}
+
+\begin{exercise}\label{cryptography:exercise-strong-liar-561}
+Show that $2$ is not a strong liar for $561$, although $2^{560} \equiv 1 \pmod{561}$.
+\end{exercise}
+
+\begin{solution}
+$560 = 2^4 \cdot 35$. Modulo $3$, $11$, $17$: $2^{35} \equiv 2, 10, 8$ (as $2^2 \equiv 1 \pmod 3$, $2^5 \equiv -1 \pmod{11}$, $2^8 \equiv 1 \pmod{17}$ and $2^3 = 8$). So $2^{35} \equiv 263 \pmod{561}$, which is not $\pm1$.
+Squaring: $2^{70} \equiv 1, 1, 13$, $2^{140} \equiv 1, 1, 16$, $2^{280} \equiv 1, 1, 1$ modulo $3, 11, 17$. So $2^{140} \equiv 67 \pmod{561}$ is a square root of $1$ different from $\pm1$, and $\gcd(67 - 1, 561) = 33$ is a factor.
+\end{solution}
+
+\begin{exercise}\label{cryptography:exercise-pollard}
+Show, without computing $2^{60} \bmod 1403$, that Pollard's $p - 1$ method with $B = 5$ and $a = 2$ factors $1403 = 23 \cdot 61$.
+\end{exercise}
+
+\begin{solution}
+$M = \operatorname{lcm}(1, \dots, 5) = 60$. As $60 = 61 - 1$, $2^{60} \equiv 1 \pmod{61}$. Modulo $23$, the order of $2$ is $11$ ($2^{11} = 2048 = 89 \cdot 23 + 1$), and $11 \nmid 60$, so $2^{60} \not\equiv 1 \pmod{23}$. Hence
+$\gcd(2^{60} - 1, 1403) = 61$.
+\end{solution}
+
+\begin{exercise}\label{cryptography:exercise-bsgs}
+Solve $2^x \equiv 13 \pmod{23}$ by baby-step giant-step, using that $2$ has order $11$ modulo $23$.
+\end{exercise}
+
+\begin{solution}
+$m = 4$. Baby steps $2^j$, $j = 0, \dots, 3$: $1, 2, 4, 8$. Giant steps use $2^{-4} \equiv 13$ (as $16 \cdot 13 = 208 = 9 \cdot 23 + 1$): $13$, $13 \cdot 13 = 169 \equiv 8$. The coincidence $13 \cdot 2^{-4} \equiv 8 = 2^3$
+gives $x = 4 + 3 = 7$; indeed $2^7 = 128 = 5 \cdot 23 + 13$.
+\end{solution}
+
+\begin{exercise}\label{cryptography:exercise-common-modulus}
+Two users share an RSA modulus $n$ with coprime public exponents $e_1$, $e_2$, and the same message $m$ is sent to both. Show how an eavesdropper recovers $m$.
+\end{exercise}
+
+\begin{solution}
+With Bézout, $ue_1 + ve_2 = 1$ (one of $u$, $v$ negative; invert the corresponding ciphertext modulo $n$, which is possible unless it reveals a factor of $n$). Then
+$c_1^uc_2^v \equiv m^{ue_1 + ve_2} = m \pmod n$.
+\end{solution}

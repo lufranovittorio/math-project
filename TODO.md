@@ -173,8 +173,9 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
 - `diophantine-equations` (draft 2026-11-07): to deepen: Skolem's p-adic method, Thue's theorem
   with proof, number of representations by three squares, Legendre's theorem on ax²+by²+cz²
   with an elementary proof, more Mordell curves, Kummer's regular primes (after cyclotomic fields).
-- `cryptography` (planned, new): arithmetic algorithms, primality (Miller–Rabin, AKS with proof),
-  factoring, discrete logarithms, RSA/Diffie–Hellman, lattice cryptography, Shor (survey).
+- `cryptography` (draft 2026-11-08): to deepen: AKS with full proof, Solovay–Strassen and Jacobi
+  symbols, the quadratic sieve in detail, index calculus, elliptic curve cryptography (after
+  elliptic-curves-arithmetic), LWE and lattice cryptography, security definitions.
 - `algebraic-number-theory` (draft 2026-11-08): to deepen: Kummer theory, quadratic fields and
   binary quadratic forms (ideal classes = form classes), Hermite's theorem, proof of the class number
   formula, Z[zeta_n] for all n, Kummer's lemma and FLT for regular primes with proof, Stickelberger.
