@@ -1,31 +1,1031 @@
 \chapter{Special Functions}\label{special-functions}
-\chapterstatus{planned}
+\chapterstatus{draft}
 
 The functions of classical analysis that are not elementary but appear everywhere --- in number theory,
 probability, mathematical physics and geometry --- share a common theory: they are solutions of linear
 differential equations with few singular points, they have integral representations, and their
 asymptotics can be computed by a handful of methods. This chapter treats them together.
+\begin{itemize}
+\item Section~\ref{special-functions:section-gamma}: the Gamma and Beta functions, Euler's limit formula and the Weierstrass product, the cotangent and sine expansions, the reflection and
+duplication formulas, and the Bohr--Mollerup theorem.
+\item Section~\ref{special-functions:section-asymptotics}: asymptotic expansions, Watson's lemma, Laplace's method and Stirling's formula, stationary phase, Bernoulli polynomials and Euler--Maclaurin summation.
+\item Section~\ref{special-functions:section-orthogonal-polynomials}: orthogonal polynomials, the three-term recurrence, zeros, Gauss quadrature, the classical families and Chebyshev's extremal property.
+\item Section~\ref{special-functions:section-fuchsian}: linear differential equations in the complex domain, monodromy, regular singular points and the Frobenius method.
+\item Section~\ref{special-functions:section-hypergeometric}: the hypergeometric function, its equation, Euler's integral, Gauss's summation theorem and the Chu--Vandermonde identity.
+\item Section~\ref{special-functions:section-bessel}: Bessel functions and spherical harmonics.
+\item Section~\ref{special-functions:section-elliptic}: elliptic integrals, the arithmetic--geometric mean, and Weierstrass's $\wp$-function.
+\item Section~\ref{special-functions:section-theta}: Jacobi's theta function, Poisson summation and the transformation formula.
+\end{itemize}
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{real-analysis} (Real Analysis) and Chapter~\ref{complex-analysis} (Complex Analysis).
+\noindent\textbf{Prerequisites.} Chapter~\ref{real-analysis} (Real Analysis), Chapter~\ref{linear-algebra} (Linear Algebra), Chapter~\ref{generating-functions} (Generating Functions),
+Chapter~\ref{measure-theory} (Measure Theory) and Chapter~\ref{complex-analysis} (Complex Analysis).
 
-\noindent\textbf{Planned contents.}
+\section{The Gamma function}\label{special-functions:section-gamma}
+
+Euler's Gamma function interpolates the factorials. We develop its basic properties: meromorphic continuation, Euler's limit formula and the Weierstrass product, absence of zeros, the
+reflection and duplication formulas, and the characterisation by logarithmic convexity. Along the way we prove the partial fraction expansion of the cotangent and the product formula for the sine,
+which also give the values $\zeta(2k)$ in Chapter~\ref{analytic-number-theory}. Integrals depending holomorphically on a parameter are handled by the following lemma.
+
+\begin{lemma}\label{special-functions:lemma-holomorphic-integrals}
+Let $I \subseteq \RR$ be an interval, $U \subseteq \CC$ open, and $F \colon I \times U \to \CC$ continuous and holomorphic in $s$ for each fixed $x \in I$. Suppose that for every compact $K \subseteq U$
+there is an integrable function $G_K$ on $I$ with $|F(x, s)| \leq G_K(x)$ for $x \in I$, $s \in K$. Then $\Phi(s) = \int_IF(x, s)\,dx$ is holomorphic on $U$, and
+$\Phi^{\prime}(s) = \int_I\partial_sF(x, s)\,dx$.
+\end{lemma}
+
+\begin{proof}
+\emph{Continuity.} If $s_k \to s$ in $U$, the points lie in a compact disc $K \subseteq U$ for large $k$, $F(x, s_k) \to F(x, s)$ for each $x$, and $|F(x, s_k)| \leq G_K(x)$; so
+$\Phi(s_k) \to \Phi(s)$ by dominated convergence (Theorem~\ref{measure-theory:theorem-dominated-convergence}).
+\emph{Holomorphy.} Let $T \subseteq U$ be a closed triangle. The function $(x, w) \mapsto F(x, w)$ on $I \times \partial T$ is continuous and bounded by $G_T(x)$, so by Fubini's theorem
+(Theorem~\ref{measure-theory:theorem-fubini}) $\int_{\partial T}\Phi(w)\,dw = \int_I\int_{\partial T}F(x, w)\,dw\,dx = 0$, the inner integral vanishing by Goursat's theorem
+(Theorem~\ref{complex-analysis:theorem-goursat}). By Morera's theorem (Corollary~\ref{complex-analysis:corollary-liouville}(3)), $\Phi$ is holomorphic.
+\emph{Derivative.} Let $\overline{D}(s, r) \subseteq U$. By the Cauchy integral formula for derivatives (Theorem~\ref{complex-analysis:theorem-cauchy-formula}), applied to $\Phi$ and to each
+$F(x, \cdot)$, and Fubini's theorem again on $I \times \partial D(s, r)$,
+$\Phi^{\prime}(s) = \frac{1}{2\pi i}\int_{\partial D}\frac{\Phi(w)}{(w - s)^2}dw = \int_I\frac{1}{2\pi i}\int_{\partial D}\frac{F(x, w)}{(w - s)^2}dw\,dx = \int_I\partial_sF(x, s)\,dx$.
+\end{proof}
+
+\begin{definition}\label{special-functions:definition-gamma}
+The \emph{Gamma function} is
+\[
+\Gamma(s) = \int_0^\infty t^{s-1}e^{-t}\,dt, \qquad \sigma > 0,
+\]
+where $t^{s-1} = e^{(s-1)\log t}$.
+\end{definition}
+
+\begin{proposition}\label{special-functions:proposition-gamma-basic}
 \begin{enumerate}
-\item The Gamma and Beta functions, Stirling's formula, the duplication and reflection formulas, the
-Bohr--Mollerup theorem (the Gamma function is at present developed in Chapter~\ref{analytic-number-theory},
-from where it is to be moved here).
-\item Asymptotic methods: asymptotic series, Watson's lemma, Laplace's method, stationary phase, the
-saddle point method; Euler--Maclaurin summation and Bernoulli numbers.
-\item Orthogonal polynomials: Legendre, Hermite, Laguerre, Chebyshev, Jacobi; three-term recurrence,
-Rodrigues formulas, generating functions, zeros, Gauss quadrature.
-\item Linear differential equations in the complex domain: regular singular points, the Frobenius
-method, Fuchsian equations and monodromy.
-\item The hypergeometric function: Gauss's equation, Euler's integral, Kummer's solutions, the Gauss
-summation theorem, confluent hypergeometric functions.
-\item Bessel functions: the Bessel equation, generating function, integral representations,
-asymptotics, zeros; spherical harmonics and the Laplacian on the sphere.
-\item Elliptic integrals and the arithmetic--geometric mean; elliptic functions: Weierstrass's
-$\wp$-function, its differential equation, the addition theorem, Eisenstein series.
-\item Theta functions: Jacobi's triple product, the heat equation, the transformation formula, Jacobi's
-elliptic functions; sums of two and four squares from theta functions.
-\item Exercises with solutions.
+\item The integral converges absolutely for $\sigma > 0$ and defines a holomorphic function there, with $\Gamma(\sigma) > 0$ for real $\sigma > 0$ and $\Gamma(\bar s) = \overline{\Gamma(s)}$.
+\item $\Gamma(s + 1) = s\Gamma(s)$ for $\sigma > 0$, $\Gamma(1) = 1$, and $\Gamma(n + 1) = n!$ for integers $n \geq 0$.
+\item $\Gamma$ extends to a meromorphic function on $\CC$, holomorphic except for simple poles at $s = 0, -1, -2, \ldots$, with $\operatorname{Res}_{s = -n}\Gamma = \frac{(-1)^n}{n!}$, and
+$\Gamma(s + 1) = s\Gamma(s)$ holds on all of $\CC$.
 \end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) If $a \leq \sigma \leq b$ with $0 < a$, then $|t^{s-1}e^{-t}| = t^{\sigma - 1}e^{-t} \leq (t^{a-1} + t^{b-1})e^{-t}$, which is integrable on $(0, \infty)$ (near $0$ because $a > 0$, near $\infty$
+because of $e^{-t}$). So Lemma~\ref{special-functions:lemma-holomorphic-integrals} applies with $I = (0, \infty)$. For real $s$ the integrand is positive, and conjugating the integrand gives
+$\Gamma(\bar s) = \overline{\Gamma(s)}$.
+(2) Integrate by parts on $[\varepsilon, R]$: $\int_\varepsilon^Rt^se^{-t}dt = [-t^se^{-t}]_\varepsilon^R + s\int_\varepsilon^Rt^{s-1}e^{-t}dt$, and let $\varepsilon \to 0$, $R \to \infty$. Also
+$\Gamma(1) = \int_0^\infty e^{-t}dt = 1$, and induction gives $\Gamma(n + 1) = n!$.
+(3) For an integer $n \geq 1$ put $\Gamma_n(s) = \frac{\Gamma(s + n)}{s(s + 1)\cdots(s + n - 1)}$ on $\sigma > -n$, $s \notin \{0, -1, \ldots, -n + 1\}$. It is meromorphic there and, by (2),
+equals $\Gamma$ on $\sigma > 0$ and $\Gamma_{n+1}$ on $\sigma > -n$. So these functions glue to a meromorphic function on $\CC$. Near $s = -n$, $\Gamma_{n+1}$ is $\Gamma(s + n + 1)$, holomorphic and
+equal to $1$ at $s = -n$, divided by $s(s + 1)\cdots(s + n)$, which has a simple zero at $-n$; so the pole is simple with residue
+$\frac{1}{(-n)(-n + 1)\cdots(-1)} = \frac{(-1)^n}{n!}$. The functional equation persists by the identity theorem (Theorem~\ref{complex-analysis:theorem-identity}).
+\end{proof}
+
+The Gamma function is related to many integrals through the following formula, which uses a change of variables in a double integral.
+
+\begin{proposition}[Euler's Beta integral]\label{special-functions:proposition-beta}
+For $\operatorname{Re}a, \operatorname{Re}b > 0$, let $B(a, b) = \int_0^1u^{a-1}(1 - u)^{b-1}\,du$. Then
+\[
+\Gamma(a)\Gamma(b) = \Gamma(a + b)B(a, b), \qquad \text{so} \quad B(a, b) = \frac{\Gamma(a)\Gamma(b)}{\Gamma(a + b)}
+\]
+whenever $\Gamma(a + b) \neq 0$: for real $a, b > 0$ by Proposition~\ref{special-functions:proposition-gamma-basic}(1), and always by Theorem~\ref{special-functions:theorem-weierstrass-gamma} below.
+\end{proposition}
+
+\begin{proof}
+By Fubini's theorem (Theorem~\ref{measure-theory:theorem-fubini}), the integrand being absolutely integrable,
+$\Gamma(a)\Gamma(b) = \int_0^\infty\int_0^\infty x^{a-1}y^{b-1}e^{-x-y}\,dx\,dy$. The map $(r, u) \mapsto (x, y) = (ru, r(1 - u))$ is a diffeomorphism from $(0, \infty) \times (0, 1)$ onto
+$(0, \infty)^2$, with inverse $r = x + y$, $u = x/(x + y)$, and Jacobian determinant $\bigl|\det\begin{pmatrix}u & r \\ 1 - u & -r\end{pmatrix}\bigr| = r$. By the change of variables formula
+(Theorem~\ref{measure-theory:theorem-change-of-variables}),
+\[
+\Gamma(a)\Gamma(b) = \int_0^\infty\int_0^1r^{a+b-1}u^{a-1}(1 - u)^{b-1}e^{-r}\,du\,dr = \Gamma(a + b)B(a, b). \qedhere
+\]
+\end{proof}
+
+\begin{example}\label{special-functions:example-gamma-half}
+With $a = b = \frac12$ and the substitution $u = \sin^2\phi$, $du = 2\sin\phi\cos\phi\,d\phi$,
+\[
+\Gamma(\tfrac12)^2 = \Gamma(1)B(\tfrac12, \tfrac12) = \int_0^1\frac{du}{\sqrt{u(1 - u)}} = \int_0^{\pi/2}2\,d\phi = \pi, \qquad \text{so} \quad \Gamma(\tfrac12) = \sqrt{\pi}
+\]
+(as $\Gamma(\frac12) > 0$). Substituting $t = x^2$ in the definition gives $\Gamma(\frac12) = \int_0^\infty e^{-x^2}\cdot 2\,dx$, that is, the Gaussian integral $\int_{-\infty}^\infty e^{-x^2}dx = \sqrt{\pi}$. Then
+$\Gamma(\frac32) = \frac12\sqrt{\pi}$, $\Gamma(\frac52) = \frac34\sqrt{\pi}$, and the volume of the unit ball in $\RR^n$ is $\omega_n = \pi^{n/2}/\Gamma(\frac n2 + 1)$
+(Exercise~\ref{measure-theory:exercise-ball-volume}): $\omega_3 = \pi^{3/2}/\Gamma(\frac52) = \frac43\pi$.
+\end{example}
+
+\begin{theorem}[Euler's limit formula]\label{special-functions:theorem-euler-limit}
+For $\sigma > 0$,
+\[
+\Gamma(s) = \lim_{n \to \infty}\frac{n!\,n^s}{s(s + 1)\cdots(s + n)}.
+\]
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: a truncated integral.} Let $\Gamma_n(s) = \int_0^nt^{s-1}(1 - t/n)^n\,dt$. Substituting $t = nu$ gives $\Gamma_n(s) = n^sB(s, n + 1)$. For $m \geq 1$, integration by parts gives
+$\int_0^1u^{a-1}(1 - u)^m\,du = \frac ma\int_0^1u^a(1 - u)^{m-1}\,du$ when $\operatorname{Re}a > 0$ (the boundary terms vanish), that is $B(a, m + 1) = \frac maB(a + 1, m)$. Applying this $n$ times,
+\[
+\Gamma_n(s) = n^s\frac{n!}{s(s + 1)\cdots(s + n - 1)}\int_0^1u^{s+n-1}\,du = \frac{n!\,n^s}{s(s + 1)\cdots(s + n)}.
+\]
+\emph{Step 2: the limit.} Since $\log(1 - v) \leq -v$ for $0 \leq v < 1$, $0 \leq (1 - t/n)^n\mathbf{1}_{t < n} \leq e^{-t}$, and $(1 - t/n)^n \to e^{-t}$ for each $t$
+(Proposition~\ref{real-analysis:proposition-notable-limits}). By dominated convergence, with dominating function $t^{\sigma - 1}e^{-t}$, $\Gamma_n(s) \to \Gamma(s)$.
+\end{proof}
+
+To pass from the limit formula to a product we need infinite products of holomorphic functions.
+
+\begin{lemma}[Infinite products]\label{special-functions:lemma-infinite-products}
+Let $U \subseteq \CC$ be open and $u_k$ holomorphic functions on $U$ such that $\sum_k\sup_K|u_k| < \infty$ for every compact $K \subseteq U$. Then the partial products $P_N = \prod_{k \leq N}(1 + u_k)$
+converge uniformly on compact subsets of $U$ to a holomorphic function $P$. A point $s$ is a zero of $P$ exactly when $1 + u_k(s) = 0$ for some $k$, and its order is the sum of the orders of these
+zeros. Off the zeros, $P^{\prime}/P = \sum_ku_k^{\prime}/(1 + u_k)$, uniformly on compact subsets.
+\end{lemma}
+
+\begin{proof}
+\emph{Step 1: a logarithm.} For $|u| < 1$ let $\log(1 + u) = \sum_{j \geq 1}(-1)^{j+1}u^j/j$. Its derivative is $\sum_{j \geq 0}(-u)^j = (1 + u)^{-1}$, so
+$\frac{d}{du}\bigl((1 + u)e^{-\log(1 + u)}\bigr) = 0$, and $\exp(\log(1 + u)) = 1 + u$ because both sides agree at $u = 0$. For $|u| \leq \frac12$, and $|\log(1 + u)| \leq \sum_j|u|^j = \frac{|u|}{1 - |u|} \leq 2|u|$.
+\emph{Step 2: convergence.} Fix a compact $K$. There is $k_0$ with $|u_k| \leq \frac12$ on $K$ for $k > k_0$. The series $\sum_{k > k_0}\log(1 + u_k)$ converges uniformly on $K$ by Step 1 and the hypothesis
+(Weierstrass M-test), to a continuous function $S$, so $\prod_{k_0 < k \leq N}(1 + u_k) = \exp(\sum_{k_0 < k \leq N}\log(1 + u_k)) \to e^S$ uniformly on $K$, and $e^S$ has no zeros. Multiplying by the
+finitely many factors $k \leq k_0$ gives the uniform convergence of $P_N$ on $K$, and the zeros of $P$ in $K$ are those of these finitely many factors, with orders adding up. $P$ is holomorphic by
+Weierstrass' theorem (Corollary~\ref{complex-analysis:corollary-liouville}(4)).
+\emph{Step 3: logarithmic derivative.} $P_N^{\prime}/P_N = \sum_{k \leq N}u_k^{\prime}/(1 + u_k)$ by the product rule, and $P_N \to P$, $P_N^{\prime} \to P^{\prime}$ uniformly on compact subsets
+(Weierstrass' theorem); on a compact set where $P \neq 0$, $|P|$ is bounded below, so $P_N^{\prime}/P_N \to P^{\prime}/P$ uniformly there.
+\end{proof}
+
+\begin{lemma}\label{special-functions:lemma-euler-constant}
+The limit $\gamma = \lim_{n \to \infty}(H_n - \log n)$, where $H_n = 1 + \frac12 + \cdots + \frac1n$, exists, and $0 < \gamma < 1$. It is \emph{Euler's constant}, $\gamma = 0.5772156649\ldots$
+\end{lemma}
+
+\begin{proof}
+Let $a_n = H_n - \log n$ and $d_k = a_k - a_{k+1} = \int_k^{k+1}\frac{dx}{x} - \frac{1}{k + 1}$. Since $\frac{1}{k+1} < \frac1x < \frac1k$ on $(k, k + 1)$, we have
+$0 < d_k < \frac1k - \frac{1}{k + 1}$. So $(a_n)$ is decreasing, and $a_n = a_1 - \sum_{k<n}d_k > 1 - \sum_{k<n}\bigl(\frac1k - \frac{1}{k+1}\bigr) = \frac1n > 0$. Hence $a_n$ converges, and
+$\gamma = 1 - \sum_{k \geq 1}d_k$ with $0 < \sum_kd_k < \sum_k\bigl(\frac1k - \frac{1}{k+1}\bigr) = 1$, so $0 < \gamma < 1$.
+\end{proof}
+
+\begin{theorem}[Weierstrass product]\label{special-functions:theorem-weierstrass-gamma}
+The function $1/\Gamma$ extends to an entire function, and for all $s \in \CC$
+\[
+\frac{1}{\Gamma(s)} = se^{\gamma s}\prod_{k \geq 1}\Bigl(1 + \frac sk\Bigr)e^{-s/k},
+\]
+the product converging uniformly on compact sets. Its zeros are the points $0, -1, -2, \ldots$, all simple. In particular $\Gamma$ has no zeros, and Euler's limit formula
+(Theorem~\ref{special-functions:theorem-euler-limit}) holds for all $s \notin \{0, -1, -2, \ldots\}$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: the product converges.} For $|w| \leq 1$, $(1 + w)e^{-w} = 1 + \sum_{j \geq 2}c_jw^j$ with $c_j = \frac{(-1)^j}{j!} + \frac{(-1)^{j-1}}{(j - 1)!} = (-1)^j\frac{1 - j}{j!}$, so
+$|(1 + w)e^{-w} - 1| \leq |w|^2\sum_{j \geq 2}\frac{j - 1}{j!} = |w|^2$ (the last sum is $\sum_{j \geq 1}\frac{1}{(j - 1)!} - \sum_{j \geq 1}\frac1{j!} = e - (e - 1) = 1$, the term $j = 1$ being $0$). With
+$w = s/k$, the factors $1 + u_k(s) = (1 + s/k)e^{-s/k}$ satisfy $|u_k(s)| \leq R^2/k^2$ for $|s| \leq R \leq k$. By Lemma~\ref{special-functions:lemma-infinite-products}, $E(s) = se^{\gamma s}\prod_k(1 + s/k)e^{-s/k}$
+is an entire function, with simple zeros exactly at $0, -1, -2, \ldots$
+\emph{Step 2: $E = 1/\Gamma$.} For $\sigma > 0$, with $H_n = \sum_{k \leq n}\frac1k$,
+\[
+\frac{s(s + 1)\cdots(s + n)}{n!\,n^s} = s\prod_{k=1}^n\Bigl(1 + \frac sk\Bigr)e^{-s\log n} = se^{s(H_n - \log n)}\prod_{k=1}^n\Bigl(1 + \frac sk\Bigr)e^{-s/k},
+\]
+which tends to $E(s)$, because $H_n - \log n \to \gamma$ (Lemma~\ref{special-functions:lemma-euler-constant}). By Theorem~\ref{special-functions:theorem-euler-limit} the left side
+tends to $1/\Gamma(s)$; so $\Gamma(s)E(s) = 1$ for $\sigma > 0$. Both sides are meromorphic on the connected set $\CC$, so $\Gamma E = 1$ everywhere by the identity theorem. Hence $1/\Gamma = E$ is
+entire, and $\Gamma$ never vanishes. Finally, the computation of Step 2 shows that $\frac{s(s + 1)\cdots(s + n)}{n!\,n^s} \to E(s)$ for every $s \in \CC$; for $s \notin \{0, -1, \ldots\}$ the limit
+$E(s) = 1/\Gamma(s)$ is nonzero, and taking reciprocals gives Euler's limit formula at $s$.
+\end{proof}
+
+\subsection{The cotangent, the sine, and the reflection formula}\label{special-functions:subsection-cotangent}
+
+\begin{theorem}[Euler]\label{special-functions:theorem-cotangent}
+For $z \in \CC \setminus \ZZ$,
+\[
+\pi\cot\pi z = \frac1z + \sum_{n \geq 1}\frac{2z}{z^2 - n^2} = \lim_{N \to \infty}\sum_{n = -N}^N\frac{1}{z - n},
+\]
+the series converging absolutely and uniformly on compact subsets of $\CC \setminus \ZZ$.
+\end{theorem}
+
+\begin{proof}
+We follow Herglotz's argument \cite{aigner-ziegler}.
+\emph{Step 1: the series.} For $|z| \leq R$ and $n \geq 2R$, $|\frac{2z}{z^2 - n^2}| \leq \frac{2R}{n^2 - R^2} \leq \frac{8R}{3n^2}$, so the series converges absolutely and locally uniformly on
+$\CC \setminus \ZZ$; call its sum $S(z)$. Since $\frac{1}{z - n} + \frac{1}{z + n} = \frac{2z}{z^2 - n^2}$, $S(z) = \lim_NS_N(z)$ with $S_N(z) = \sum_{|n| \leq N}\frac{1}{z - n}$. Near an integer $m$,
+$S(z) - \frac{1}{z - m}$ is a locally uniform limit of functions holomorphic near $m$; so $S$ has a simple pole with residue $1$ at each integer.
+\emph{Step 2: the difference is entire.} $\pi\cot\pi z = \pi\cos\pi z/\sin\pi z$ also has simple poles with residue $\frac{\pi\cos\pi m}{\pi\cos\pi m} = 1$ at each integer $m$, and no other poles. So
+$h(z) = \pi\cot\pi z - S(z)$ has removable singularities at the integers (Proposition~\ref{complex-analysis:proposition-singularities}) and is entire. Both functions are odd, so $h$ is odd and
+$h(0) = 0$; both are real on $\RR \setminus \ZZ$, so $h$ is real on $\RR$.
+\emph{Step 3: periodicity.} $S_N(z + 1) - S_N(z) = \frac{1}{z + 1 + N} - \frac{1}{z - N} \to 0$, so $S$ has period $1$, as $\cot\pi z$ does; hence $h(z + 1) = h(z)$.
+\emph{Step 4: a duplication identity.} For $f = \pi\cot\pi z$: with $a = \pi z/2$, $\cot a + \cot(a + \frac\pi2) = \cot a - \tan a = \frac{\cos^2a - \sin^2a}{\sin a\cos a} = 2\cot 2a$, so
+$f(\frac z2) + f(\frac{z + 1}2) = 2f(z)$. For $S$: $S_N(\frac z2) + S_N(\frac{z + 1}2) = \sum_{|n| \leq N}\bigl(\frac{2}{z - 2n} + \frac{2}{z - (2n - 1)}\bigr) = 2S_{2N}(z) + \frac{2}{z + 2N + 1}$, since the
+numbers $2n$ and $2n - 1$ with $|n| \leq N$ are exactly the integers from $-2N - 1$ to $2N$. Letting $N \to \infty$, $S(\frac z2) + S(\frac{z + 1}2) = 2S(z)$. Hence $h(\frac z2) + h(\frac{z + 1}2) = 2h(z)$
+for $z \notin \ZZ$, and by continuity for all $z$.
+\emph{Step 5: Herglotz's trick.} The continuous periodic real function $h|_\RR$ attains its maximum $M$ at some $x_0 \in [0, 1]$. Then $h(\frac{x_0}2) + h(\frac{x_0 + 1}2) = 2M$ with both terms $\leq M$, so
+$h(\frac{x_0}2) = M$. Repeating, $h(x_0/2^k) = M$ for all $k$, and by continuity $M = h(0) = 0$. Applying this to $-h$, the minimum is $0$ too, so $h = 0$ on $\RR$, and $h = 0$ on $\CC$ by the identity
+theorem.
+\end{proof}
+
+\begin{corollary}[Euler's product for the sine]\label{special-functions:corollary-sine-product}
+For all $z \in \CC$,
+\[
+\sin\pi z = \pi z\prod_{n \geq 1}\Bigl(1 - \frac{z^2}{n^2}\Bigr).
+\]
+\end{corollary}
+
+\begin{proof}
+By Lemma~\ref{special-functions:lemma-infinite-products} with $u_n = -z^2/n^2$, the right side is an entire function $P$ with simple zeros exactly at the integers, and off the integers
+$\frac{P^{\prime}}{P} = \frac1z + \sum_n\frac{-2z/n^2}{1 - z^2/n^2} = \frac1z + \sum_n\frac{2z}{z^2 - n^2} = \pi\cot\pi z = \frac{(\sin\pi z)^{\prime}}{\sin\pi z}$ by Theorem~\ref{special-functions:theorem-cotangent}.
+So $(\sin\pi z/P)^{\prime} = \frac{\sin\pi z}{P}\bigl(\frac{(\sin\pi z)^{\prime}}{\sin\pi z} - \frac{P^{\prime}}{P}\bigr) = 0$ on the connected open set $\CC \setminus \ZZ$, and $\sin\pi z = cP(z)$. Letting $z \to 0$,
+$c = \lim\frac{\sin\pi z}{\pi z} = 1$.
+\end{proof}
+
+\begin{example}\label{special-functions:example-wallis}
+At $z = \frac12$: $1 = \frac\pi2\prod_n\bigl(1 - \frac{1}{4n^2}\bigr)$, that is, \emph{Wallis' product} $\frac\pi2 = \prod_{n \geq 1}\frac{(2n)^2}{(2n - 1)(2n + 1)} = \frac21\cdot\frac23\cdot\frac43\cdot\frac45\cdot\frac65\cdot\frac67\cdots$
+Comparing the coefficients of $z^3$ in $\sin\pi z = \pi z - \frac{\pi^3z^3}{6} + \cdots$ and in the product, $-\frac{\pi^3}{6} = -\pi\sum_n\frac1{n^2}$, which is Euler's original (heuristic) derivation of
+$\zeta(2) = \frac{\pi^2}{6}$; here it is a proof.
+\end{example}
+
+\begin{theorem}[Reflection formula]\label{special-functions:theorem-reflection}
+For $s \in \CC \setminus \ZZ$,
+\[
+\Gamma(s)\Gamma(1 - s) = \frac{\pi}{\sin\pi s}.
+\]
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{special-functions:theorem-weierstrass-gamma}, the factors $e^{\pm\gamma s}$ and $e^{\mp s/k}$ cancel in
+$\frac{1}{\Gamma(s)\Gamma(-s)} = se^{\gamma s}\prod_k\bigl(1 + \frac sk\bigr)e^{-s/k}\cdot(-s)e^{-\gamma s}\prod_k\bigl(1 - \frac sk\bigr)e^{s/k} = -s^2\prod_k\Bigl(1 - \frac{s^2}{k^2}\Bigr) = -\frac{s\sin\pi s}{\pi}$
+by Corollary~\ref{special-functions:corollary-sine-product}. Since $\Gamma(1 - s) = -s\Gamma(-s)$, $\Gamma(s)\Gamma(1 - s) = -s\Gamma(s)\Gamma(-s) = \frac{\pi}{\sin\pi s}$.
+\end{proof}
+
+\begin{example}\label{special-functions:example-reflection}
+At $s = \frac12$ the formula gives $\Gamma(\frac12)^2 = \pi$ again. On the line $s = \frac12 + it$, since $\Gamma(\frac12 - it) = \overline{\Gamma(\frac12 + it)}$ and
+$\sin(\frac\pi2 + i\pi t) = \cos(i\pi t) = \cosh\pi t$,
+\[
+\bigl|\Gamma(\tfrac12 + it)\bigr|^2 = \frac{\pi}{\cosh\pi t}:
+\]
+the Gamma function decays exponentially on vertical lines. This decay, of size $e^{-\pi|t|/2}$ on every vertical line by Stirling's formula (Remark~\ref{special-functions:remark-stirling-gamma}), is what
+makes the contour integrals of Chapter~\ref{analytic-number-theory} converge.
+\end{example}
+
+\begin{proposition}[Legendre's duplication formula]\label{special-functions:proposition-duplication}
+For $2s \notin \{0, -1, -2, \ldots\}$, $\Gamma(s)\Gamma(s + \frac12) = 2^{1 - 2s}\sqrt{\pi}\,\Gamma(2s)$.
+\end{proposition}
+
+\begin{proof}
+Let $s > 0$ be real. In $B(s, s) = \int_0^1(u(1 - u))^{s-1}du = 2\int_0^{1/2}(u(1 - u))^{s-1}du$ substitute $v = 4u(1 - u)$, which increases from $0$ to $1$ on $[0, \frac12]$, with
+$dv = 4(1 - 2u)\,du$ and $1 - 2u = \sqrt{1 - v}$:
+\[
+B(s, s) = 2\int_0^1\Bigl(\frac v4\Bigr)^{s-1}\frac{dv}{4\sqrt{1 - v}} = 2^{1 - 2s}B(s, \tfrac12).
+\]
+By Proposition~\ref{special-functions:proposition-beta}, $\frac{\Gamma(s)^2}{\Gamma(2s)} = 2^{1-2s}\frac{\Gamma(s)\Gamma(\frac12)}{\Gamma(s + \frac12)}$, which is the claim for real $s > 0$, as
+$\Gamma(\frac12) = \sqrt{\pi}$. Both sides are meromorphic on $\CC$, so the identity theorem extends it.
+\end{proof}
+
+\begin{remark}\label{special-functions:remark-stirling-gamma}
+Stirling's formula for $n!$ (Theorem~\ref{real-analysis:theorem-stirling}) extends to the complex Gamma function: for every $\delta > 0$,
+$\log\Gamma(s) = (s - \frac12)\log s - s + \frac12\log 2\pi + O_\delta(|s|^{-1})$ uniformly for $|\arg s| \leq \pi - \delta$, $|s| \geq 1$, with the principal branches of the logarithms
+\cite{iwaniec-kowalski}, \cite{titchmarsh-zeta}. In particular $|\Gamma(\sigma + it)| \sim \sqrt{2\pi}|t|^{\sigma - 1/2}e^{-\pi|t|/2}$ as $|t| \to \infty$ with $\sigma$ fixed, in agreement with
+Example~\ref{special-functions:example-reflection}. For real $s \to \infty$ the leading term is proved in Corollary~\ref{special-functions:corollary-stirling-gamma} by Laplace's method.
+\end{remark}
+
+\subsection{Logarithmic convexity}\label{special-functions:subsection-log-convexity}
+
+The functional equation $f(x + 1) = xf(x)$ with $f(1) = 1$ does not determine $\Gamma$: one may multiply by any function of period $1$ equal to $1$ at the integers, such as $1 + \sin^2\pi x$. Bohr and
+Mollerup found a natural extra condition.
+
+\begin{definition}\label{special-functions:definition-log-convex}
+A function $f \colon (0, \infty) \to (0, \infty)$ is \emph{logarithmically convex} if $\log f$ is convex.
+\end{definition}
+
+\begin{theorem}[Bohr--Mollerup]\label{special-functions:theorem-bohr-mollerup}
+$\Gamma$ is the only logarithmically convex function $f \colon (0, \infty) \to (0, \infty)$ with $f(x + 1) = xf(x)$ and $f(1) = 1$.
+\end{theorem}
+
+\begin{proof}
+\emph{$\Gamma$ is logarithmically convex.} For $x, y > 0$ and $0 < \lambda < 1$, H\"older's inequality (Proposition~\ref{measure-theory:proposition-holder}) with exponents $1/\lambda$ and $1/(1 - \lambda)$ gives
+$\Gamma(\lambda x + (1 - \lambda)y) = \int_0^\infty(t^{x-1}e^{-t})^\lambda(t^{y-1}e^{-t})^{1-\lambda}dt \leq \Gamma(x)^\lambda\Gamma(y)^{1-\lambda}$.
+\emph{Uniqueness.} Let $f$ be as in the statement and $\varphi = \log f$; then $\varphi(n + 1) = \log n!$. Let $0 < x \leq 1$ and $n \geq 2$. For a convex function, slopes of chords increase, so comparing the chords on
+$[n - 1, n]$, $[n, n + x]$ and $[n, n + 1]$,
+\[
+\log(n - 1) = \varphi(n) - \varphi(n - 1) \leq \frac{\varphi(n + x) - \varphi(n)}{x} \leq \varphi(n + 1) - \varphi(n) = \log n.
+\]
+By the functional equation $\varphi(n + x) = \varphi(x) + \log\bigl(x(x + 1)\cdots(x + n - 1)\bigr)$, so
+\[
+0 \leq \varphi(x) - \log\frac{(n - 1)!\,(n - 1)^x}{x(x + 1)\cdots(x + n - 1)} \leq x\log\frac{n}{n - 1}.
+\]
+Letting $n \to \infty$, $\varphi(x)$ is the limit of a quantity that does not depend on $f$. So $f$ is determined on $(0, 1]$, and by the functional equation everywhere; as $\Gamma$ has the properties, $f = \Gamma$.
+\end{proof}
+
+\begin{remark}\label{special-functions:remark-bohr-mollerup}
+The proof recovers Euler's limit formula (Theorem~\ref{special-functions:theorem-euler-limit}) for real $s$, and the method gives short proofs of the duplication formula: $2^{x-1}\Gamma(\frac x2)\Gamma(\frac{x+1}2)/\sqrt{\pi}$ is
+logarithmically convex, satisfies the functional equation and equals $1$ at $x = 1$, so it is $\Gamma(x)$ (Exercise~\ref{special-functions:exercise-duplication-bohr-mollerup}). Without logarithmic convexity uniqueness fails: for $\varepsilon > 0$,
+$f_\varepsilon(x) = \Gamma(x)(1 + \varepsilon\sin^2\pi x)$ satisfies the functional equation and $f_\varepsilon(1) = 1$. It is not logarithmically convex: at the points $x = n + \frac12$ the second derivative of
+$\log(1 + \varepsilon\sin^2\pi x)$ equals $-\frac{2\pi^2\varepsilon}{1 + \varepsilon}$, while $(\log\Gamma)^{\prime\prime}(x) = \sum_{k \geq 0}(x + k)^{-2}$ (Exercise~\ref{special-functions:exercise-digamma}) tends to $0$, so
+$(\log f_\varepsilon)^{\prime\prime} < 0$ at $n + \frac12$ for large $n$.
+\end{remark}
+
+\section{Asymptotic methods}\label{special-functions:section-asymptotics}
+
+Most special functions are given by integrals or series whose behaviour for large values of a parameter is what one needs in applications. This section develops the basic methods.
+
+\begin{definition}\label{special-functions:definition-asymptotic}
+Let $f$ be defined for large $x$ (real, or complex in a sector). A formal series $\sum_{k \geq 0}a_kx^{-k}$ is an \emph{asymptotic expansion} of $f$ as $x \to \infty$, written $f(x) \sim \sum_ka_kx^{-k}$, if for every
+$N \geq 0$,
+\[
+f(x) - \sum_{k=0}^{N-1}a_kx^{-k} = O(x^{-N}) \qquad (x \to \infty).
+\]
+More generally one allows $f \sim \phi(x)\sum_ka_kx^{-k-\alpha}$ for a fixed function $\phi$ and exponent $\alpha$. For functions, $f \sim g$ means $f/g \to 1$.
+\end{definition}
+
+\begin{notation}\label{special-functions:notation-asymptotic}
+$f = O(g)$ means $|f| \leq C|g|$ for large $x$; $f = o(g)$ means $f/g \to 0$; $f \sim g$ means $f/g \to 1$. The symbol $\sim$ between a function and a series refers to
+Definition~\ref{special-functions:definition-asymptotic}.
+\end{notation}
+
+The coefficients of an asymptotic expansion are unique, $a_N = \lim_xx^N(f(x) - \sum_{k<N}a_kx^{-k})$, but the series need not converge, and when it converges its sum need not be $f$.
+
+\begin{example}\label{special-functions:example-stieltjes}
+Let $f(x) = \int_0^\infty\frac{e^{-xt}}{1 + t}\,dt$ for $x > 0$. Expanding $\frac{1}{1 + t} = \sum_{k<N}(-t)^k + \frac{(-t)^N}{1 + t}$ and integrating, with $\int_0^\infty t^ke^{-xt}dt = k!/x^{k+1}$,
+\[
+f(x) = \sum_{k=0}^{N-1}\frac{(-1)^kk!}{x^{k+1}} + R_N(x), \qquad |R_N(x)| \leq \int_0^\infty t^Ne^{-xt}dt = \frac{N!}{x^{N+1}}.
+\]
+So $f(x) \sim \sum_k(-1)^kk!\,x^{-k-1}$, a series that diverges for every $x$. Still, for $x = 10$ the terms decrease until $k \approx 10$, and truncating there gives $f(10)$ with an error below $10!/10^{11} \approx 4 \cdot 10^{-5}$.
+\end{example}
+
+\begin{counterexample}\label{special-functions:counterexample-asymptotic-not-unique}
+Different functions can have the same asymptotic expansion: $e^{-x} \sim 0$, since $x^Ne^{-x} \to 0$ for every $N$. So $f$ and $f + e^{-x}$ have the same expansion; an asymptotic expansion determines a function only
+up to terms smaller than every power.
+\end{counterexample}
+
+\begin{theorem}[Watson's lemma]\label{special-functions:theorem-watson}
+Let $\varphi$ be locally integrable on $[0, \infty)$ with $|\varphi(t)| \leq Ce^{bt}$ for $t \geq 1$, and suppose that near $0$, $\varphi(t) = \sum_{k<N}a_kt^{k+\alpha-1} + O(t^{N+\alpha-1})$ for every $N$, where $\alpha > 0$.
+Then, as $x \to \infty$,
+\[
+\int_0^\infty e^{-xt}\varphi(t)\,dt \sim \sum_{k \geq 0}a_k\frac{\Gamma(k + \alpha)}{x^{k+\alpha}}.
+\]
+\end{theorem}
+
+\begin{proof}
+Fix $N$, and $\delta \in (0, 1]$ with $|\varphi(t) - \sum_{k<N}a_kt^{k+\alpha-1}| \leq Kt^{N+\alpha-1}$ on $(0, \delta]$. Split the integral at $\delta$. The part over $[\delta, \infty)$ is $O(e^{-x\delta/2})$ for $x \geq 2b + 2$, because
+$|e^{-xt}\varphi(t)| \leq e^{-x\delta/2}e^{-(x/2)t}|\varphi(t)|$ there and $\int_\delta^\infty e^{-(x/2)t}|\varphi(t)|dt$ stays bounded. On $(0, \delta]$ replace $\varphi$ by the polynomial part: the error is at most
+$K\int_0^\infty t^{N+\alpha-1}e^{-xt}dt = K\Gamma(N + \alpha)x^{-N-\alpha}$, and $\int_0^\delta t^{k+\alpha-1}e^{-xt}dt = \Gamma(k + \alpha)x^{-k-\alpha} - \int_\delta^\infty t^{k+\alpha-1}e^{-xt}dt$, where the last integral is exponentially small. All
+exponentially small terms are $O(x^{-N-\alpha})$.
+\end{proof}
+
+\begin{theorem}[Laplace's method]\label{special-functions:theorem-laplace}
+Let $-\infty \leq a < c < b \leq \infty$, $h$ a real function on $(a, b)$, twice continuously differentiable near $c$, with $h^{\prime}(c) = 0$, $h^{\prime\prime}(c) < 0$, and $\sup_{|t - c| \geq \delta}h(t) < h(c)$ for every
+$\delta > 0$. Let $g$ be bounded and continuous at $c$, with $g(c) \neq 0$, and assume $\int_a^be^{\lambda_0h(t)}\,dt < \infty$ for some $\lambda_0$. Then, as $\lambda \to \infty$,
+\[
+\int_a^bg(t)e^{\lambda h(t)}\,dt \sim g(c)e^{\lambda h(c)}\sqrt{\frac{2\pi}{\lambda|h^{\prime\prime}(c)|}}.
+\]
+\end{theorem}
+
+\begin{proof}
+We may assume $h(c) = 0$. Choose $\delta > 0$ with $h^{\prime\prime} \leq \frac12h^{\prime\prime}(c) = -\kappa < 0$ on $[c - \delta, c + \delta]$, and let $\eta = -\sup_{|t-c| \geq \delta}h > 0$.
+\emph{Tails.} For $|t - c| \geq \delta$ and $\lambda \geq \lambda_0$, $e^{\lambda h(t)} = e^{(\lambda - \lambda_0)h(t)}e^{\lambda_0h(t)} \leq e^{-(\lambda - \lambda_0)\eta}e^{\lambda_0h(t)}$, so the tails contribute
+$O(e^{-\lambda\eta})$, which is $o(\lambda^{-1/2})$.
+\emph{Centre.} Substitute $t = c + v/\sqrt{\lambda}$:
+\[
+\sqrt{\lambda}\int_{c-\delta}^{c+\delta}g(t)e^{\lambda h(t)}dt = \int_{|v| \leq \delta\sqrt{\lambda}}g(c + v/\sqrt{\lambda})e^{\lambda h(c + v/\sqrt{\lambda})}dv.
+\]
+By Taylor's theorem $\lambda h(c + v/\sqrt{\lambda}) = \frac12h^{\prime\prime}(\xi)v^2$ for some $\xi$ between $c$ and $t$, which is at most $-\kappa v^2/2$ on the range of integration and tends to $\frac12h^{\prime\prime}(c)v^2$. The integrand
+is dominated by $\sup|g|\,e^{-\kappa v^2/2}$, so by dominated convergence the integral tends to $g(c)\int_\RR e^{-|h^{\prime\prime}(c)|v^2/2}dv = g(c)\sqrt{2\pi/|h^{\prime\prime}(c)|}$, the Gaussian integral of
+Example~\ref{special-functions:example-gamma-half}.
+\end{proof}
+
+\begin{corollary}[Stirling's formula for $\Gamma$]\label{special-functions:corollary-stirling-gamma}
+As $x \to \infty$ through real values, $\Gamma(x + 1) \sim \sqrt{2\pi x}\,x^xe^{-x}$.
+\end{corollary}
+
+\begin{proof}
+Substituting $t = xu$, $\Gamma(x + 1) = \int_0^\infty t^xe^{-t}dt = x^{x+1}\int_0^\infty e^{x(\log u - u)}du$. The function $h(u) = \log u - u$ has its maximum $-1$ at $u = 1$, with $h^{\prime\prime}(1) = -1$, it is bounded away
+from $-1$ outside every neighbourhood of $1$, and $\int_0^\infty e^{h(u)}du = 1$. Theorem~\ref{special-functions:theorem-laplace} with $g = 1$ gives $\int_0^\infty e^{xh(u)}du \sim e^{-x}\sqrt{2\pi/x}$.
+\end{proof}
+
+For integers this is Theorem~\ref{real-analysis:theorem-stirling}. The method of Laplace has two relatives. When the exponent is purely imaginary, $\int g(t)e^{i\lambda h(t)}dt$, the main contributions come from the
+stationary points $h^{\prime}(c) = 0$, by cancellation elsewhere, and each nondegenerate one contributes $g(c)e^{i\lambda h(c) \pm i\pi/4}\sqrt{2\pi/(\lambda|h^{\prime\prime}(c)|)}$ (\emph{stationary phase}). When $g$ and $h$
+are holomorphic, one deforms the contour through a saddle point of $h$ along the direction of steepest descent of $\operatorname{Re}h$, where $\operatorname{Im}h$ is constant, which reduces to Laplace's method
+(\emph{saddle point method}) \cite{olver-asymptotics}.
+
+\begin{remark}\label{special-functions:remark-stationary-phase}
+\emph{Stationary phase.} If $h$ is smooth on $[a, b]$ with a single stationary point $c \in (a, b)$, $h^{\prime\prime}(c) \neq 0$, and $g$ is smooth with compact support in $(a, b)$, then
+$\int_a^bg(t)e^{i\lambda h(t)}dt = g(c)e^{i\lambda h(c) + i\frac\pi4\operatorname{sgn}h^{\prime\prime}(c)}\sqrt{\frac{2\pi}{\lambda|h^{\prime\prime}(c)|}} + O(\lambda^{-1})$. Away from $c$ one integrates by parts, writing
+$e^{i\lambda h} = (i\lambda h^{\prime})^{-1}\frac{d}{dt}e^{i\lambda h}$, which gains a factor $\lambda^{-1}$ each time; near $c$ one changes variables to make $h$ exactly quadratic and uses the Fresnel integral
+$\int_\RR e^{i\lambda v^2/2}dv = e^{i\pi/4}\sqrt{2\pi/\lambda}$ \cite{olver-asymptotics}. It gives the asymptotics of Bessel functions (Remark~\ref{special-functions:remark-bessel-asymptotics}).
+\end{remark}
+
+The other basic tool compares sums with integrals.
+
+\begin{definition}\label{special-functions:definition-bernoulli-polynomials}
+The \emph{Bernoulli polynomials} $B_n(x)$ are defined by $\frac{te^{xt}}{e^t - 1} = \sum_{n \geq 0}B_n(x)\frac{t^n}{n!}$. So $B_n(0) = B_n$ are the Bernoulli numbers of
+Definition~\ref{generating-functions:definition-bernoulli}, $B_0(x) = 1$, $B_1(x) = x - \frac12$, $B_2(x) = x^2 - x + \frac16$. The \emph{periodic Bernoulli functions} are $P_n(x) = B_n(x - \lfloor x\rfloor)$.
+\end{definition}
+
+\begin{lemma}\label{special-functions:lemma-bernoulli-polynomials}
+$B_n^{\prime}(x) = nB_{n-1}(x)$ for $n \geq 1$; $B_n(1) = B_n(0)$ for $n \geq 2$; and $B_n = 0$ for odd $n \geq 3$. Hence $P_n$ is continuous for $n \geq 2$, and $P_n^{\prime} = nP_{n-1}$ off the integers for $n \geq 1$.
+\end{lemma}
+
+\begin{proof}
+Differentiating the generating function in $x$ gives $\sum B_n^{\prime}(x)t^n/n! = t\sum B_n(x)t^n/n!$, which is the first claim. Next $\frac{te^t}{e^t - 1} - \frac{t}{e^t - 1} = t$, so $B_n(1) - B_n(0)$ is $0$ for $n \neq 1$. Finally
+$\frac{t}{e^t - 1} + \frac t2 = \frac t2\frac{e^t + 1}{e^t - 1}$ is even in $t$, so the odd coefficients other than $B_1$ vanish.
+\end{proof}
+
+\begin{theorem}[Euler--Maclaurin summation]\label{special-functions:theorem-euler-maclaurin}
+Let $a < b$ be integers, $m \geq 1$ and $f \in C^m[a, b]$. Then
+\[
+\sum_{a < n \leq b}f(n) = \int_a^bf(x)\,dx + \sum_{k=1}^m\frac{(-1)^kB_k}{k!}\bigl(f^{(k-1)}(b) - f^{(k-1)}(a)\bigr) - \frac{(-1)^m}{m!}\int_a^bP_m(x)f^{(m)}(x)\,dx.
+\]
+\end{theorem}
+
+\begin{proof}
+\emph{The case $m = 1$.} On $[n, n + 1]$, $P_1(x) = x - n - \frac12$, and integration by parts gives $\int_n^{n+1}P_1f^{\prime} = \frac12(f(n) + f(n + 1)) - \int_n^{n+1}f$. Summing over $a \leq n < b$,
+$\int_a^bP_1f^{\prime} = \sum_{a<n\leq b}f(n) - \frac12(f(b) - f(a)) - \int_a^bf$, which is the formula, as $-B_1 = \frac12$.
+\emph{Induction.} By Lemma~\ref{special-functions:lemma-bernoulli-polynomials}, $P_{m+1}$ is continuous with derivative $(m + 1)P_m$ and $P_{m+1}(n) = B_{m+1}$ at integers, so
+$\int_a^bP_mf^{(m)} = \frac{B_{m+1}}{m + 1}\bigl(f^{(m)}(b) - f^{(m)}(a)\bigr) - \frac{1}{m + 1}\int_a^bP_{m+1}f^{(m+1)}$. Multiplying by $-(-1)^m/m!$ turns the remainder for $m$ into the term $k = m + 1$ plus the
+remainder for $m + 1$.
+\end{proof}
+
+\begin{example}\label{special-functions:example-harmonic-expansion}
+For $f(x) = 1/x$ on $[1, N]$ with $m = 2$, adding $f(1) = 1$ and using $-B_1 = \frac12$, $\frac{B_2}{2} = \frac{1}{12}$,
+\[
+H_N = \log N + \frac12 + \frac{1}{2N} + \frac1{12}\Bigl(1 - \frac{1}{N^2}\Bigr) - \int_1^N\frac{P_2(x)}{x^3}dx.
+\] Letting $N \to \infty$ identifies $\gamma = \frac12 + \frac1{12} - \int_1^\infty P_2x^{-3}dx$, and
+\[
+H_N = \log N + \gamma + \frac{1}{2N} - \frac{1}{12N^2} + \int_N^\infty\frac{P_2(x)}{x^3}dx = \log N + \gamma + \frac{1}{2N} - \frac{1}{12N^2} + O(N^{-4}),
+\]
+the last step by integrating by parts twice, using $P_2 = \frac13P_3^{\prime}$, $P_3 = \frac14P_4^{\prime}$ and $B_3 = 0$. Continuing gives $H_N \sim \log N + \gamma + \frac{1}{2N} - \sum_{k \geq 1}\frac{B_{2k}}{2kN^{2k}}$, divergent like the series of Example~\ref{special-functions:example-stieltjes}.
+In the same way $\log n! = (n + \frac12)\log n - n + \frac12\log 2\pi + \sum_{k=1}^{K}\frac{B_{2k}}{2k(2k - 1)n^{2k-1}} + O(n^{-2K-1})$, the \emph{Stirling series}.
+\end{example}
+
+\section{Orthogonal polynomials}\label{special-functions:section-orthogonal-polynomials}
+
+\begin{definition}\label{special-functions:definition-orthogonal-polynomials}
+Let $(a, b)$ be an interval ($a$, $b$ possibly infinite) and $w \geq 0$ a \emph{weight}: a measurable function, positive on a set of positive measure, with $\int_a^b|x|^nw(x)\,dx < \infty$ for all $n$. The inner product
+$\langle f, g\rangle = \int_a^bf(x)g(x)w(x)\,dx$ is positive definite on real polynomials. The \emph{monic orthogonal polynomials} $p_0, p_1, \ldots$ are obtained by Gram--Schmidt
+(Theorem~\ref{linear-algebra:theorem-gram-schmidt}) from $1, x, x^2, \ldots$ without normalising: $p_n$ is monic of degree $n$ and orthogonal to all polynomials of degree $< n$.
+\end{definition}
+
+\begin{notation}\label{special-functions:notation-orthogonal}
+$\langle\ ,\ \rangle$ and $\|\ \|$ are the inner product and norm of Definition~\ref{special-functions:definition-orthogonal-polynomials}; $\mathcal{P}_n$ is the space of real polynomials of degree at most $n$. The classical
+families below are normalised differently (not monic), following tradition.
+\end{notation}
+
+\begin{theorem}[Three-term recurrence]\label{special-functions:theorem-three-term}
+There are real numbers $\alpha_n$ and $\beta_n > 0$ with $p_{n+1}(x) = (x - \alpha_n)p_n(x) - \beta_np_{n-1}(x)$ for $n \geq 1$, namely $\alpha_n = \langle xp_n, p_n\rangle/\|p_n\|^2$ and $\beta_n = \|p_n\|^2/\|p_{n-1}\|^2$;
+also $p_1 = x - \alpha_0$.
+\end{theorem}
+
+\begin{proof}
+$xp_n - p_{n+1}$ has degree at most $n$, so it is $\sum_{k \leq n}c_kp_k$ with $c_k\|p_k\|^2 = \langle xp_n, p_k\rangle = \langle p_n, xp_k\rangle$, using that multiplication by $x$ is symmetric. For $k \leq n - 2$, $xp_k$ has
+degree $< n$, so $c_k = 0$. For $k = n$ this gives $\alpha_n$; for $k = n - 1$, $xp_{n-1} = p_n + (\text{lower degree})$, so $\langle p_n, xp_{n-1}\rangle = \|p_n\|^2$ and $c_{n-1} = \beta_n$.
+\end{proof}
+
+\begin{theorem}\label{special-functions:theorem-zeros}
+$p_n$ has $n$ distinct real zeros, all in $(a, b)$.
+\end{theorem}
+
+\begin{proof}
+Let $x_1 < \cdots < x_m$ be the points of $(a, b)$ where $p_n$ changes sign, and $q = \prod_i(x - x_i)$. Then $p_nq$ does not change sign on $(a, b)$ and is not identically zero, so $\langle p_n, q\rangle \neq 0$. As $p_n$ is
+orthogonal to $\mathcal{P}_{n-1}$, $\deg q = m \geq n$; and $m \leq n$ since $p_n$ has at most $n$ zeros. So $p_n$ has $n$ sign changes, hence $n$ simple zeros, in $(a, b)$.
+\end{proof}
+
+\begin{theorem}[Gauss quadrature]\label{special-functions:theorem-gauss-quadrature}
+Let $x_1, \ldots, x_n$ be the zeros of $p_n$. There are unique weights $\lambda_1, \ldots, \lambda_n$ such that $\int_a^bq(x)w(x)\,dx = \sum_i\lambda_iq(x_i)$ for all $q \in \mathcal{P}_{2n-1}$. The weights are positive, and
+no choice of $n$ nodes and weights is exact on $\mathcal{P}_{2n}$.
+\end{theorem}
+
+\begin{proof}
+Let $\ell_i$ be the Lagrange polynomials of degree $n - 1$ with $\ell_i(x_j) = \delta_{ij}$, and $\lambda_i = \int\ell_iw$; then the rule is exact on $\mathcal{P}_{n-1}$, and these are the only weights with this property (apply the
+rule to $\ell_j$). For $q \in \mathcal{P}_{2n-1}$ divide: $q = sp_n + r$ with $s, r \in \mathcal{P}_{n-1}$. Then $\int qw = \langle s, p_n\rangle + \int rw = \int rw = \sum_i\lambda_ir(x_i) = \sum_i\lambda_iq(x_i)$, since
+$p_n(x_i) = 0$. Applied to $q = \ell_j^2 \in \mathcal{P}_{2n-2}$ this gives $\lambda_j = \int\ell_j^2w > 0$. For any nodes $y_1, \ldots, y_n$, the polynomial $\prod(x - y_i)^2 \in \mathcal{P}_{2n}$ has positive integral and vanishes at
+the nodes.
+\end{proof}
+
+\begin{example}\label{special-functions:example-classical-polynomials}
+The classical families, each orthogonal for the weight shown:
+\begin{enumerate}
+\item \emph{Legendre} polynomials, on $(-1, 1)$ with $w = 1$: $P_n(x) = \frac{1}{2^nn!}\frac{d^n}{dx^n}(x^2 - 1)^n$ (Rodrigues' formula), $P_0 = 1$, $P_1 = x$, $P_2 = \frac12(3x^2 - 1)$, with
+$(n + 1)P_{n+1} = (2n + 1)xP_n - nP_{n-1}$, $\int_{-1}^1P_n^2 = \frac{2}{2n + 1}$, $P_n(1) = 1$, and generating function $\sum_nP_n(x)t^n = (1 - 2xt + t^2)^{-1/2}$. They were found by Legendre in the expansion of the
+Newtonian potential $1/|x - y|$; they reappear in Functional Analysis as an orthonormal basis of $L^2(-1, 1)$ after normalisation.
+\item \emph{Chebyshev} polynomials, on $(-1, 1)$ with $w = (1 - x^2)^{-1/2}$: $T_n(\cos\theta) = \cos n\theta$, $T_{n+1} = 2xT_n - T_{n-1}$, zeros $\cos\frac{(2k - 1)\pi}{2n}$.
+\item \emph{Hermite} polynomials, on $\RR$ with $w = e^{-x^2}$: $H_n(x) = (-1)^ne^{x^2}\frac{d^n}{dx^n}e^{-x^2}$, $H_{n+1} = 2xH_n - 2nH_{n-1}$, $\int H_n^2e^{-x^2} = 2^nn!\sqrt{\pi}$, $\sum_nH_n(x)\frac{t^n}{n!} = e^{2xt - t^2}$.
+\item \emph{Laguerre} polynomials, on $(0, \infty)$ with $w = e^{-x}$: $L_n(x) = \frac{e^x}{n!}\frac{d^n}{dx^n}(e^{-x}x^n)$, $\sum_nL_n(x)t^n = \frac{1}{1 - t}e^{-xt/(1-t)}$.
+\item \emph{Jacobi} polynomials $P_n^{(\alpha, \beta)}$, on $(-1, 1)$ with $w = (1 - x)^\alpha(1 + x)^\beta$, $\alpha, \beta > -1$, contain the Legendre ($\alpha = \beta = 0$) and Chebyshev ($\alpha = \beta = -\frac12$) cases \cite{szego-orthogonal}.
+\end{enumerate}
+\end{example}
+
+\begin{proposition}\label{special-functions:proposition-legendre-hermite}
+\begin{enumerate}
+\item The polynomials $P_n$ given by Rodrigues' formula are orthogonal on $(-1, 1)$ with $w = 1$, $P_n(1) = 1$, and $\int_{-1}^1P_n^2 = \frac{2}{2n + 1}$.
+\item The Hermite polynomials satisfy $\sum_nH_n(x)t^n/n! = e^{2xt - t^2}$ and $\int_\RR H_mH_ne^{-x^2}dx = \delta_{mn}2^nn!\sqrt{\pi}$.
+\item $T_n(x) = \cos(n\arccos x)$ is a polynomial of degree $n$ with leading coefficient $2^{n-1}$ ($n \geq 1$), and $\int_{-1}^1T_mT_n(1 - x^2)^{-1/2}dx = 0$ for $m \neq n$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) $u = (x^2 - 1)^n$ and its first $n - 1$ derivatives vanish at $\pm 1$. For $q$ of degree $< n$, integrating by parts $n$ times gives $\int_{-1}^1q\,u^{(n)} = (-1)^n\int_{-1}^1q^{(n)}u = 0$. By Leibniz' rule applied to
+$u = (x - 1)^n(x + 1)^n$, $u^{(n)}(1) = n!\,2^n$, so $P_n(1) = 1$. For the norm, $P_n$ has leading coefficient $\frac{(2n)!}{2^n(n!)^2}$, so $\int P_n^2 = \frac{(2n)!}{2^n(n!)^2}\int x^nP_n = \frac{(2n)!}{2^{2n}(n!)^3}(-1)^nn!\int_{-1}^1(x^2 - 1)^n$,
+and, substituting $x^2 = u$ and using Proposition~\ref{special-functions:proposition-beta}, $\int_{-1}^1(1 - x^2)^ndx = B(\frac12, n + 1) = \frac{\Gamma(\frac12)\,n!}{\Gamma(n + \frac32)}$. From $\Gamma(\frac12) = \sqrt\pi$
+and the functional equation, $\Gamma(n + \frac32) = \frac{(2n + 2)!}{4^{n+1}(n + 1)!}\sqrt\pi$, so $\int_{-1}^1(1 - x^2)^ndx = \frac{2^{2n+1}(n!)^2}{(2n + 1)!}$, and the product is $\frac{2}{2n + 1}$.
+(2) $e^{2xt - t^2} = e^{x^2}e^{-(x - t)^2}$, whose $n$-th $t$-derivative at $t = 0$ is $e^{x^2}(-1)^n\frac{d^n}{dx^n}e^{-x^2} = H_n(x)$. Multiplying two generating functions,
+$\int e^{2xt - t^2}e^{2xs - s^2}e^{-x^2}dx = e^{2st}\int e^{-(x - s - t)^2}dx = \sqrt{\pi}e^{2st}$, and comparing coefficients of $t^ms^n$ gives the orthogonality relations.
+(3) $\cos(n + 1)\theta + \cos(n - 1)\theta = 2\cos\theta\cos n\theta$ gives $T_{n+1} = 2xT_n - T_{n-1}$, with $T_0 = 1$, $T_1 = x$, and induction gives the degree and leading coefficient. With $x = \cos\theta$,
+$\int_{-1}^1T_mT_n(1 - x^2)^{-1/2}dx = \int_0^\pi\cos m\theta\cos n\theta\,d\theta = 0$ for $m \neq n$.
+\end{proof}
+
+\begin{proposition}[Chebyshev]\label{special-functions:proposition-chebyshev-minimal}
+Among monic real polynomials of degree $n \geq 1$, $2^{1-n}T_n$ has the smallest maximum of $|q|$ on $[-1, 1]$, namely $2^{1-n}$.
+\end{proposition}
+
+\begin{proof}
+$2^{1-n}T_n$ is monic with $\max|2^{1-n}T_n| = 2^{1-n}$, attained with alternating signs at the $n + 1$ points $\cos(k\pi/n)$, $k = 0, \ldots, n$. If $q$ is monic with $\max|q| < 2^{1-n}$, then $r = 2^{1-n}T_n - q$
+has degree $< n$ and alternates in sign at these $n + 1$ points, so it has $n$ zeros, hence $r = 0$, a contradiction.
+\end{proof}
+
+This is why Chebyshev nodes are good interpolation nodes: the interpolation error of a smooth function at the nodes $x_i$ is $\frac{f^{(n)}(\xi)}{n!}\prod(x - x_i)$, and $\prod(x - x_i)$ is smallest for the zeros of $T_n$.
+
+\begin{counterexample}\label{special-functions:counterexample-runge}
+Equally spaced nodes are bad: interpolating $f(x) = \frac{1}{1 + 25x^2}$ at $n$ equally spaced points of $[-1, 1]$, the maximal error tends to infinity as $n \to \infty$ (\emph{Runge's phenomenon}), because $f$ has poles at
+$\pm i/5$, close to the interval. At Chebyshev nodes the interpolants converge uniformly for every function that is analytic near $[-1, 1]$ \cite{trefethen-approximation}.
+\end{counterexample}
+
+\section{Linear differential equations in the complex domain}\label{special-functions:section-fuchsian}
+
+Most special functions solve second-order linear differential equations with holomorphic coefficients. We study such equations near ordinary and singular points.
+
+\begin{theorem}\label{special-functions:theorem-holomorphic-solutions}
+Let $A(z)$ be an $n \times n$ matrix of holomorphic functions on the disc $|z| < R$ and $w_0 \in \CC^n$. The system $w^{\prime} = A(z)w$ has a unique holomorphic solution on $|z| < R$ with $w(0) = w_0$.
+\end{theorem}
+
+\begin{proof}
+\emph{Formal solution.} Write $A(z) = \sum_jA_jz^j$ and $w = \sum_kw_kz^k$. The equation is equivalent to $(k + 1)w_{k+1} = \sum_{j=0}^kA_jw_{k-j}$, which determines the $w_k$ uniquely from $w_0$; so a holomorphic
+solution is unique if it exists.
+\emph{Majorant.} Fix $r < R$ and $M$ with $\|A_j\| \leq Mr^{-j}$ (the Cauchy estimates of Theorem~\ref{complex-analysis:theorem-cauchy-formula}, applied entrywise). Let $c(z) = |w_0|(1 - z/r)^{-Mr} = \sum_kc_kz^k$, which solves
+$c^{\prime} = M(1 - z/r)^{-1}c$, that is, $(k + 1)c_{k+1} = \sum_jMr^{-j}c_{k-j}$, with $c_k \geq 0$. By induction $|w_k| \leq c_k$: indeed
+$(k + 1)|w_{k+1}| \leq \sum_jMr^{-j}|w_{k-j}| \leq \sum_jMr^{-j}c_{k-j} = (k + 1)c_{k+1}$. The series for $c$ has radius $r$, so $\sum_kw_kz^k$ converges on $|z| < r$, and on $|z| < R$ since $r < R$ was arbitrary.
+\end{proof}
+
+A linear equation $w^{(n)} + a_{n-1}(z)w^{(n-1)} + \cdots + a_0(z)w = 0$ is the system for $(w, w^{\prime}, \ldots, w^{(n-1)})$, so it has an $n$-dimensional space of holomorphic solutions on every disc where the coefficients are
+holomorphic. On a domain $U$ that is not simply connected, solutions can be continued along paths, but continuation around a loop may not return to the same solution.
+
+\begin{definition}\label{special-functions:definition-monodromy}
+Let the coefficients be holomorphic on a domain $U$, $z_0 \in U$, and $V$ the space of solutions near $z_0$. Analytic continuation along a loop $\gamma$ at $z_0$ defines a linear map $M_\gamma \colon V \to V$, depending only on the
+homotopy class of $\gamma$; the resulting homomorphism $\pi_1(U, z_0) \to \GL(V)$ (up to the convention on composition) is the \emph{monodromy representation} of the equation.
+\end{definition}
+
+That $M_\gamma$ depends only on the homotopy class is the monodromy theorem: continuation along a homotopy is possible because of Theorem~\ref{special-functions:theorem-holomorphic-solutions} applied on small discs, and the
+result varies locally constantly, as in the proof of homotopy lifting for coverings (Proposition~\ref{homotopy:proposition-homotopy-lifting}).
+
+\begin{example}\label{special-functions:example-monodromy}
+On $U = \CC \setminus \{0\}$, $zw^{\prime} = \alpha w$ has the solution $z^\alpha = e^{\alpha\log z}$, and continuation once around $0$ multiplies it by $e^{2\pi i\alpha}$. The equation $(zw^{\prime})^{\prime} = 0$, that is
+$w^{\prime\prime} + \frac1zw^{\prime} = 0$, has solutions $1$ and $\log z$, and the monodromy is $\log z \mapsto \log z + 2\pi i$, the unipotent matrix $\begin{pmatrix} 1 & 2\pi i \\ 0 & 1 \end{pmatrix}$.
+\end{example}
+
+\begin{definition}\label{special-functions:definition-regular-singular}
+For $w^{\prime\prime} + p(z)w^{\prime} + q(z)w = 0$ with $p$, $q$ meromorphic at $0$, the point $0$ is a \emph{regular singular point} if $zp(z)$ and $z^2q(z)$ are holomorphic at $0$, with values $p_0$, $q_0$ there. The
+\emph{indicial polynomial} is $F(\rho) = \rho(\rho - 1) + p_0\rho + q_0$, and its roots $\rho_1$, $\rho_2$ are the \emph{exponents} at $0$. The point $\infty$ is regular singular if $0$ is so after the substitution $z = 1/u$.
+An equation whose singular points in $\CC \cup \{\infty\}$ are all regular is \emph{Fuchsian}.
+\end{definition}
+
+\begin{theorem}[Frobenius]\label{special-functions:theorem-frobenius}
+Let $0$ be a regular singular point, with $zp$ and $z^2q$ holomorphic on $|z| < R$, and exponents numbered so that $\operatorname{Re}\rho_1 \geq \operatorname{Re}\rho_2$.
+\begin{enumerate}
+\item There is a solution $w_1 = z^{\rho_1}\sum_{k \geq 0}c_kz^k$ with $c_0 = 1$, the series converging for $|z| < R$.
+\item If $\rho_1 - \rho_2 \notin \ZZ$, there is a second solution $w_2 = z^{\rho_2}\sum_kd_kz^k$, $d_0 = 1$, of the same kind.
+\item If $\rho_1 - \rho_2 \in \ZZ_{\geq 0}$, there is a second solution $w_2 = cw_1\log z + z^{\rho_2}\sum_kd_kz^k$ for a constant $c$, which is nonzero if $\rho_1 = \rho_2$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+Write $zp = \sum p_jz^j$ and $z^2q = \sum q_jz^j$, and multiply the equation by $z^2$. Substituting $w = z^\rho\sum c_kz^k$ gives $F(\rho + k)c_k = -\sum_{j=1}^{k}\bigl((\rho + k - j)p_j + q_j\bigr)c_{k-j}$. For
+$\rho = \rho_1$, $F(\rho_1 + k) = k(k + \rho_1 - \rho_2) \neq 0$ for $k \geq 1$, because $\operatorname{Re}(\rho_1 - \rho_2) \geq 0$; so the $c_k$ are determined. Since $|F(\rho_1 + k)| \geq k(k - |\rho_1 - \rho_2|)$ grows like $k^2$
+while the right side involves $k$ linearly, a majorant argument as in Theorem~\ref{special-functions:theorem-holomorphic-solutions} shows convergence on $|z| < R$. The same works for $\rho_2$ when $F(\rho_2 + k) \neq 0$ for all
+$k \geq 1$, that is, when $\rho_1 - \rho_2 \notin \ZZ_{>0}$; in case (3), reduction of order, $w_2 = w_1\int w_1^{-2}e^{-\int p}$, produces the logarithm. The omitted verifications are the majorant estimates
+\cite{whittaker-watson}.
+\end{proof}
+
+\begin{example}\label{special-functions:example-frobenius}
+\begin{enumerate}
+\item The Euler equation $z^2w^{\prime\prime} + p_0zw^{\prime} + q_0w = 0$ has the solutions $z^{\rho_1}$, $z^{\rho_2}$, and $z^\rho$, $z^\rho\log z$ when $\rho_1 = \rho_2 = \rho$.
+\item Bessel's equation $z^2w^{\prime\prime} + zw^{\prime} + (z^2 - \nu^2)w = 0$ has exponents $\pm\nu$ at $0$, and the Frobenius series for $\rho = \nu$ is the Bessel function of Definition~\ref{special-functions:definition-bessel}.
+\item Legendre's equation $(1 - z^2)w^{\prime\prime} - 2zw^{\prime} + \lambda w = 0$ has regular singular points at $\pm 1$ and $\infty$, with exponents $0, 0$ at $\pm 1$. A solution holomorphic at both $1$ and $-1$ exists only if
+$\lambda = n(n + 1)$, and then it is the Legendre polynomial $P_n$; this is why Legendre polynomials appear when one separates variables in the Laplace equation in spherical coordinates.
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{special-functions:counterexample-irregular}
+At an irregular singular point the theorem fails. The equation $z^2w^{\prime} + w = z$ has the formal solution $\sum_{k \geq 0}(-1)^kk!\,z^{k+1}$, with radius of convergence $0$; an actual solution near $0$ is
+$w(z) = \int_0^\infty\frac{e^{-t/z}}{1 + t}dt$ for $z > 0$, which has this series as its asymptotic expansion (Example~\ref{special-functions:example-stieltjes} with $x = 1/z$). And $z^2w^{\prime} = w$ has the solution $e^{-1/z}$,
+with an essential singularity: no solution of the form $z^\rho\sum c_kz^k$.
+\end{counterexample}
+
+\begin{remark}\label{special-functions:remark-riemann-p}
+For a second-order Fuchsian equation with singular points $z_1, \ldots, z_m$ (including $\infty$), the sum of all the exponents is $m - 2$ (\emph{Fuchs' relation}). With three singular points, which a M\"obius transformation
+moves to $0, 1, \infty$, Riemann showed that the equation is determined by its six exponents, and after the substitution $w \mapsto z^\lambda(1 - z)^\mu w$ it becomes the hypergeometric equation of the next section
+\cite{whittaker-watson}. Hilbert's 21st problem asks, conversely, for a Fuchsian system with prescribed singular points and monodromy; this is the Riemann--Hilbert correspondence.
+\end{remark}
+
+\section{The hypergeometric function}\label{special-functions:section-hypergeometric}
+
+\begin{definition}\label{special-functions:definition-hypergeometric}
+The \emph{Pochhammer symbol} is $(a)_0 = 1$, $(a)_n = a(a + 1)\cdots(a + n - 1)$, so $(a)_n = \Gamma(a + n)/\Gamma(a)$ when $a \notin \ZZ_{\leq 0}$. For $c \notin \ZZ_{\leq 0}$, the \emph{hypergeometric function} is
+\[
+F(a, b; c; z) = {}_2F_1(a, b; c; z) = \sum_{n \geq 0}\frac{(a)_n(b)_n}{(c)_n\,n!}z^n, \qquad |z| < 1.
+\]
+\end{definition}
+
+The ratio of consecutive coefficients is $\frac{(a + n)(b + n)}{(c + n)(n + 1)} \to 1$, so the radius of convergence is $1$ unless $a$ or $b$ is a nonpositive integer, in which case $F$ is a polynomial.
+
+\begin{example}\label{special-functions:example-hypergeometric}
+\begin{enumerate}
+\item $F(a, b; b; z) = \sum\frac{(a)_n}{n!}z^n = (1 - z)^{-a}$, the binomial series.
+\item $zF(1, 1; 2; -z) = \sum\frac{(-1)^nz^{n+1}}{n + 1} = \log(1 + z)$, and $zF(\frac12, \frac12; \frac32; z^2) = \arcsin z$.
+\item $P_n(x) = F(-n, n + 1; 1; \frac{1 - x}{2})$ for the Legendre polynomials (Exercise~\ref{special-functions:exercise-legendre-hypergeometric}).
+\item $K(k) = \frac\pi2F(\frac12, \frac12; 1; k^2)$ for the complete elliptic integral of Definition~\ref{special-functions:definition-elliptic-integrals}, by expanding $(1 - k^2\sin^2\theta)^{-1/2}$ and integrating termwise.
+\end{enumerate}
+\end{example}
+
+\begin{proposition}\label{special-functions:proposition-hypergeometric-equation}
+$F(a, b; c; z)$ satisfies the \emph{hypergeometric equation}
+\[
+z(1 - z)w^{\prime\prime} + \bigl(c - (a + b + 1)z\bigr)w^{\prime} - abw = 0,
+\]
+a Fuchsian equation with singular points $0, 1, \infty$ and exponents $\{0, 1 - c\}$, $\{0, c - a - b\}$, $\{a, b\}$. If $c \notin \ZZ$, a second solution near $0$ is $z^{1-c}F(a - c + 1, b - c + 1; 2 - c; z)$.
+\end{proposition}
+
+\begin{proof}
+With $\theta = z\frac{d}{dz}$, which acts on $z^n$ as multiplication by $n$, the equation multiplied by $z$ reads $\theta(\theta + c - 1)w = z(\theta + a)(\theta + b)w$. On $w = \sum A_nz^n$ this is
+$n(n + c - 1)A_n = (n - 1 + a)(n - 1 + b)A_{n-1}$, which is the recursion satisfied by $A_n = \frac{(a)_n(b)_n}{(c)_nn!}$. The exponents are read off from the leading terms at each point (at $\infty$, substitute $z = 1/u$),
+and they add up to $1$, in accordance with Fuchs' relation. Substituting $w = z^{1-c}v$ turns the equation into the hypergeometric equation with parameters $(a - c + 1, b - c + 1, 2 - c)$.
+\end{proof}
+
+\begin{theorem}[Euler's integral]\label{special-functions:theorem-euler-integral}
+If $\operatorname{Re}c > \operatorname{Re}b > 0$ and $|z| < 1$, then
+\[
+F(a, b; c; z) = \frac{\Gamma(c)}{\Gamma(b)\Gamma(c - b)}\int_0^1t^{b-1}(1 - t)^{c-b-1}(1 - zt)^{-a}\,dt.
+\]
+The right side is holomorphic on $\CC \setminus [1, \infty)$, which continues $F$ there.
+\end{theorem}
+
+\begin{proof}
+For $|u| < 1$, $(1 - u)^{-a} = \sum_n\frac{(a)_n}{n!}u^n$ (Example~\ref{special-functions:example-hypergeometric}(1): both sides are holomorphic, equal to $1$ at $0$, and satisfy $(1 - u)f^{\prime} = af$, so $(1 - u)^af$ has derivative $0$).
+For $|zt| \leq |z| < 1$ the series converges uniformly in $t \in [0, 1]$, so we may integrate termwise, and by Proposition~\ref{special-functions:proposition-beta}
+\[
+\int_0^1t^{b+n-1}(1 - t)^{c-b-1}dt = \frac{\Gamma(b + n)\Gamma(c - b)}{\Gamma(c + n)} = \frac{\Gamma(b)\Gamma(c - b)}{\Gamma(c)}\cdot\frac{(b)_n}{(c)_n}.
+\]
+Summing gives the formula. For $z \notin [1, \infty)$, $1 - zt \neq 0$ for $t \in [0, 1]$, and Lemma~\ref{special-functions:lemma-holomorphic-integrals} gives holomorphy.
+\end{proof}
+
+\begin{theorem}[Gauss]\label{special-functions:theorem-gauss-summation}
+If $\operatorname{Re}c > \operatorname{Re}b > 0$ and $\operatorname{Re}(c - a - b) > 0$, the series $F(a, b; c; 1)$ converges absolutely and
+\[
+F(a, b; c; 1) = \frac{\Gamma(c)\Gamma(c - a - b)}{\Gamma(c - a)\Gamma(c - b)}.
+\]
+\end{theorem}
+
+\begin{proof}
+\emph{Convergence.} The partial products of the Weierstrass product (Theorem~\ref{special-functions:theorem-weierstrass-gamma}) are $\frac{(s)_{n+1}}{n!\,n^s}e^{s(\gamma - H_n + \log n)}$, so
+$\frac{(s)_{n+1}}{n!\,n^s} \to \frac{1}{\Gamma(s)}$ for every $s \in \CC$ (Euler's limit formula without the restriction of Theorem~\ref{special-functions:theorem-euler-limit}); multiplying by $\frac{n}{s + n}$,
+$(s)_n/((n - 1)!\,n^s) \to 1/\Gamma(s)$. So the $n$-th coefficient is $O(n^{\operatorname{Re}(a + b - c) - 1})$ (it vanishes for large $n$ if $a$ or $b$ is a nonpositive integer), the series converges absolutely on $|z| \leq 1$, and $F(a, b; c; z) \to F(a, b; c; 1)$
+as $z \to 1^-$ by uniform convergence on $[0, 1]$.
+\emph{Value.} For $0 < z < 1$ and $t \in [0, 1)$, $1 - zt \geq 1 - t > 0$, so $|(1 - zt)^{-a}| = (1 - zt)^{-\operatorname{Re}a} \leq 1 + (1 - t)^{-\operatorname{Re}a}$. This makes the integrand of Theorem~\ref{special-functions:theorem-euler-integral}
+dominated by an integrable function, because $\operatorname{Re}(c - b) > 0$ and $\operatorname{Re}(c - b - a) > 0$. By dominated convergence, as $z \to 1^-$ the integral tends to
+$\int_0^1t^{b-1}(1 - t)^{c-a-b-1}dt = \frac{\Gamma(b)\Gamma(c - a - b)}{\Gamma(c - a)}$, and the formula follows.
+\end{proof}
+
+\begin{corollary}[Chu--Vandermonde]\label{special-functions:corollary-chu-vandermonde}
+For integers $n \geq 0$ and $c \notin \ZZ_{\leq 0}$, $F(-n, b; c; 1) = \frac{(c - b)_n}{(c)_n}$.
+\end{corollary}
+
+\begin{proof}
+Both sides are rational functions of $b$ and $c$. For $\operatorname{Re}c > \operatorname{Re}b > 0$, Theorem~\ref{special-functions:theorem-gauss-summation} applies with $a = -n$ (then $\operatorname{Re}(c - a - b) > n \geq 0$) and gives
+$\frac{\Gamma(c)\Gamma(c - b + n)}{\Gamma(c + n)\Gamma(c - b)} = \frac{(c - b)_n}{(c)_n}$; two rational functions that agree on an open set agree.
+\end{proof}
+
+\begin{remark}\label{special-functions:remark-kummer-confluent}
+Kummer found $24$ solutions of the hypergeometric equation of the form $z^\lambda(1 - z)^\mu F(\cdots; \cdots; \phi(z))$, with $\phi$ one of the six M\"obius maps permuting $0, 1, \infty$; for example
+$F(a, b; c; z) = (1 - z)^{-a}F(a, c - b; c; \frac{z}{z - 1})$ (\emph{Pfaff's transformation}), which follows from Euler's integral by $t \mapsto 1 - t$. Letting $b \to \infty$ in $F(a, b; c; z/b)$ gives the \emph{confluent
+hypergeometric function} $M(a; c; z) = {}_1F_1(a; c; z) = \sum_n\frac{(a)_n}{(c)_nn!}z^n$, an entire function solving Kummer's equation $zw^{\prime\prime} + (c - z)w^{\prime} - aw = 0$, with an irregular singular point at $\infty$;
+it contains $e^z = M(a; a; z)$, the error function and the Hermite and Laguerre polynomials \cite{andrews-askey-roy}.
+\end{remark}
+
+\section{Bessel functions and spherical harmonics}\label{special-functions:section-bessel}
+
+\begin{definition}\label{special-functions:definition-bessel}
+For $\nu \in \CC$, $\nu \notin \ZZ_{<0}$, the \emph{Bessel function of the first kind} is
+\[
+J_\nu(z) = \sum_{k \geq 0}\frac{(-1)^k}{k!\,\Gamma(k + \nu + 1)}\Bigl(\frac z2\Bigr)^{2k+\nu},
+\]
+where $(z/2)^\nu$ uses the principal branch; for $\nu = -n$ a negative integer the same formula, with $1/\Gamma = 0$ at the poles, gives $J_{-n} = (-1)^nJ_n$.
+\end{definition}
+
+The series $z^{-\nu}J_\nu(z)$ converges for all $z$ (the coefficients decay like $1/(k!)^2$), and the computation of Example~\ref{special-functions:example-frobenius}(2) shows that $J_\nu$ solves Bessel's equation. For
+$\nu \notin \ZZ$, $J_\nu$ and $J_{-\nu}$ are independent solutions; for integers one needs a second solution with a logarithm, the Bessel function of the second kind $Y_n$ (Theorem~\ref{special-functions:theorem-frobenius}(3)).
+
+\begin{theorem}[Generating function]\label{special-functions:theorem-bessel-generating}
+For $z \in \CC$ and $t \neq 0$,
+\[
+\exp\Bigl(\frac z2\Bigl(t - \frac1t\Bigr)\Bigr) = \sum_{n \in \ZZ}J_n(z)t^n.
+\]
+Consequently, for integers $n$, $J_n(z) = \frac1\pi\int_0^\pi\cos(n\theta - z\sin\theta)\,d\theta$ (\emph{Bessel's integral}), and $|J_n(x)| \leq 1$ for real $x$.
+\end{theorem}
+
+\begin{proof}
+Multiply the absolutely convergent series $e^{zt/2} = \sum_j\frac{(z/2)^jt^j}{j!}$ and $e^{-z/(2t)} = \sum_k\frac{(-1)^k(z/2)^kt^{-k}}{k!}$; the coefficient of $t^n$ ($n \geq 0$) is $\sum_k\frac{(-1)^k(z/2)^{n+2k}}{(n + k)!\,k!} = J_n(z)$,
+and for $n < 0$ the analogous computation gives $(-1)^nJ_{-n} = J_n$. With $t = e^{i\theta}$, $e^{iz\sin\theta} = \sum_nJ_n(z)e^{in\theta}$, uniformly in $\theta$, so $J_n(z) = \frac{1}{2\pi}\int_{-\pi}^{\pi}e^{i(z\sin\theta - n\theta)}d\theta$; the
+imaginary part of the integrand is odd in $\theta$, which gives Bessel's integral and the bound.
+\end{proof}
+
+\begin{proposition}\label{special-functions:proposition-bessel-recurrences}
+$J_{\nu-1}(z) + J_{\nu+1}(z) = \frac{2\nu}{z}J_\nu(z)$ and $J_{\nu-1}(z) - J_{\nu+1}(z) = 2J_\nu^{\prime}(z)$. Moreover
+$J_{1/2}(x) = \sqrt{\frac{2}{\pi x}}\sin x$ and $J_{-1/2}(x) = \sqrt{\frac{2}{\pi x}}\cos x$ for $x > 0$.
+\end{proposition}
+
+\begin{proof}
+From the series, $(z^\nu J_\nu)^{\prime} = z^\nu J_{\nu-1}$ and $(z^{-\nu}J_\nu)^{\prime} = -z^{-\nu}J_{\nu+1}$, by differentiating termwise and using $\Gamma(k + \nu + 1) = (k + \nu)\Gamma(k + \nu)$. Expanding the derivatives gives
+$J_\nu^{\prime} + \frac\nu zJ_\nu = J_{\nu-1}$ and $J_\nu^{\prime} - \frac\nu zJ_\nu = -J_{\nu+1}$; adding and subtracting gives the recurrences. For $\nu = \frac12$, the duplication formula gives
+$k!\,\Gamma(k + \frac32) = \frac{(2k + 1)!\sqrt{\pi}}{2^{2k+1}}$, so $J_{1/2}(x) = \sqrt{\frac{2}{\pi x}}\sum_k\frac{(-1)^kx^{2k+1}}{(2k + 1)!}$; similarly for $\nu = -\frac12$.
+\end{proof}
+
+\begin{remark}\label{special-functions:remark-bessel-asymptotics}
+Stationary phase (Remark~\ref{special-functions:remark-stationary-phase}) applied to Bessel's integral gives, for real $x \to \infty$,
+$J_\nu(x) = \sqrt{\frac{2}{\pi x}}\bigl(\cos(x - \frac{\nu\pi}{2} - \frac\pi4) + O(x^{-1})\bigr)$, exact for $\nu = \pm\frac12$ by Proposition~\ref{special-functions:proposition-bessel-recurrences} \cite{watson-bessel}. Hence $J_\nu$ has
+infinitely many positive zeros $j_{\nu,1} < j_{\nu,2} < \cdots$, spaced asymptotically by $\pi$. They are the frequencies of a circular drum: the eigenfunctions of the Laplacian on the unit disc with Dirichlet boundary
+conditions are $J_n(j_{n,k}r)e^{\pm in\theta}$, with eigenvalues $j_{n,k}^2$, which one finds by separating variables in polar coordinates.
+\end{remark}
+
+Separating variables in spherical coordinates leads instead to spherical harmonics, which have a purely algebraic description.
+
+\begin{definition}\label{special-functions:definition-harmonic-polynomials}
+Let $\mathcal{P}_k$ be the space of homogeneous polynomials of degree $k$ in $n$ real variables, $|x|^2 = x_1^2 + \cdots + x_n^2$ and $\Delta = \sum_i\partial_i^2$. The space of \emph{harmonic polynomials of degree $k$}
+is $\mathcal{H}_k = \{P \in \mathcal{P}_k : \Delta P = 0\}$; restrictions of its elements to $S^{n-1}$ are the \emph{spherical harmonics} of degree $k$.
+\end{definition}
+
+\begin{theorem}\label{special-functions:theorem-harmonic-decomposition}
+$\mathcal{P}_k = \mathcal{H}_k \oplus |x|^2\mathcal{P}_{k-2}$, so $\mathcal{P}_k = \mathcal{H}_k \oplus |x|^2\mathcal{H}_{k-2} \oplus |x|^4\mathcal{H}_{k-4} \oplus \cdots$, and
+\[
+\dim\mathcal{H}_k = \binom{n + k - 1}{k} - \binom{n + k - 3}{k - 2}.
+\]
+For $n = 3$ this is $2k + 1$. Every polynomial restricted to $S^{n-1}$ is a sum of spherical harmonics.
+\end{theorem}
+
+\begin{proof}
+\emph{An inner product.} For $P, Q \in \mathcal{P}_k$ put $\langle P, Q\rangle = P(\partial)Q$, the constant obtained by substituting $\partial_i$ for $x_i$ in $P$ and applying the operator to $Q$. On monomials,
+$\langle x^\alpha, x^\beta\rangle = \alpha!\,\delta_{\alpha\beta}$, so this is a positive definite symmetric bilinear form. \emph{Adjointness.} For $R \in \mathcal{P}_{k-2}$, $\langle|x|^2R, Q\rangle = R(\partial)\Delta Q = \langle R, \Delta Q\rangle$,
+since $|x|^2(\partial) = \Delta$. So $\mathcal{H}_k = \ker\Delta$ is the orthogonal complement of $|x|^2\mathcal{P}_{k-2}$, which gives the decomposition, and $\Delta \colon \mathcal{P}_k \to \mathcal{P}_{k-2}$ is surjective, being adjoint to
+the injective multiplication by $|x|^2$. The dimension formula follows from $\dim\mathcal{P}_k = \binom{n + k - 1}{k}$ (with $\mathcal{P}_{-1} = \mathcal{P}_{-2} = 0$), and iterating gives the second decomposition. On the sphere $|x|^2 = 1$, so a polynomial of degree $k$
+restricts to a sum of spherical harmonics of degrees $k, k - 2, \ldots$.
+\end{proof}
+
+\begin{remark}\label{special-functions:remark-spherical-harmonics}
+The spherical harmonics of degree $k$ are eigenfunctions of the Laplacian of the round sphere with eigenvalue $-k(k + n - 2)$ (this is proved in Chapter~\ref{riemannian-geometry}), the
+spaces $\mathcal{H}_k|_{S^{n-1}}$ are orthogonal in $L^2(S^{n-1})$, and by Theorem~\ref{special-functions:theorem-harmonic-decomposition} and the Stone--Weierstrass theorem their sum is dense: $L^2(S^{n-1}) = \widehat{\bigoplus}_k\mathcal{H}_k$.
+For $n = 3$, the harmonics invariant under rotations about the $x_3$-axis are multiples of $P_k(\cos\theta)$, $\theta$ the polar angle, and the \emph{addition theorem} expresses $P_k(\langle\xi, \eta\rangle)$ as
+$\frac{4\pi}{2k + 1}\sum_mY_{k,m}(\xi)\overline{Y_{k,m}(\eta)}$ for an orthonormal basis $(Y_{k,m})$ of $\mathcal{H}_k$. In quantum mechanics $\mathcal{H}_k$ is the space of states of angular momentum $k$, the irreducible representation of
+$\mathrm{SO}(3)$ of dimension $2k + 1$.
+\end{remark}
+
+\section{Elliptic integrals and elliptic functions}\label{special-functions:section-elliptic}
+
+\begin{definition}\label{special-functions:definition-elliptic-integrals}
+For $0 \leq k < 1$, the \emph{complete elliptic integrals} of the first and second kind are
+\[
+K(k) = \int_0^{\pi/2}\frac{d\theta}{\sqrt{1 - k^2\sin^2\theta}}, \qquad E(k) = \int_0^{\pi/2}\sqrt{1 - k^2\sin^2\theta}\,d\theta,
+\]
+and $k^{\prime} = \sqrt{1 - k^2}$ is the complementary modulus.
+\end{definition}
+
+\begin{example}\label{special-functions:example-elliptic-integrals}
+\begin{enumerate}
+\item The ellipse $x = a\cos\theta$, $y = b\sin\theta$ with $a \geq b$ and eccentricity $e = \sqrt{1 - b^2/a^2}$ has perimeter $\int_0^{2\pi}\sqrt{a^2\sin^2\theta + b^2\cos^2\theta}\,d\theta = 4aE(e)$.
+\item A pendulum of length $L$ released at angle $\theta_0$ satisfies $\ddot\theta = -\frac gL\sin\theta$. Energy conservation gives $\dot\theta^2 = \frac{2g}{L}(\cos\theta - \cos\theta_0)$, and the substitution
+$\sin\frac\theta2 = \sin\frac{\theta_0}{2}\sin\phi$ turns the period $4\int_0^{\theta_0}d\theta/\dot\theta$ into $T = 4\sqrt{L/g}\,K(\sin\frac{\theta_0}{2})$. For small $\theta_0$, $K \approx \frac\pi2$ and $T \approx 2\pi\sqrt{L/g}$.
+\end{enumerate}
+\end{example}
+
+\begin{definition}\label{special-functions:definition-agm}
+For $a \geq b > 0$ let $a_0 = a$, $b_0 = b$, $a_{n+1} = \frac{a_n + b_n}{2}$, $b_{n+1} = \sqrt{a_nb_n}$. The \emph{arithmetic-geometric mean} $M(a, b)$ is the common limit of $(a_n)$ and $(b_n)$.
+\end{definition}
+
+The limit exists: $b_n \leq b_{n+1} \leq a_{n+1} \leq a_n$ by the inequality between the arithmetic and geometric means, and $a_{n+1} - b_{n+1} = \frac{(a_n - b_n)^2}{2(\sqrt{a_n} + \sqrt{b_n})^2}$, so
+$a_{n+1} - b_{n+1} \leq \frac{(a_n - b_n)^2}{8b}$: the convergence is quadratic, and the number of correct digits roughly doubles at each step.
+
+\begin{theorem}[Gauss]\label{special-functions:theorem-agm}
+For $a, b > 0$,
+\[
+I(a, b) = \int_0^{\pi/2}\frac{d\theta}{\sqrt{a^2\cos^2\theta + b^2\sin^2\theta}} = \frac{\pi}{2M(a, b)}.
+\]
+In particular $K(k) = \frac{\pi}{2M(1, k^{\prime})}$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1.} The substitution $t = b\tan\theta$ gives $I(a, b) = \int_0^\infty\frac{dt}{\sqrt{(a^2 + t^2)(b^2 + t^2)}} = \frac12\int_{-\infty}^\infty\frac{dt}{\sqrt{(a^2 + t^2)(b^2 + t^2)}}$.
+\emph{Step 2: invariance.} Let $a_1 = \frac{a + b}{2}$, $b_1 = \sqrt{ab}$, and substitute $t = \frac12(u - \frac{ab}{u})$, an increasing bijection from $(0, \infty)$ onto $\RR$ with $dt = \frac{u^2 + ab}{2u^2}du$. A direct computation gives
+$a_1^2 + t^2 = \frac{(u^2 + a^2)(u^2 + b^2)}{4u^2}$ and $b_1^2 + t^2 = \frac{(u^2 + ab)^2}{4u^2}$, so $\frac{dt}{\sqrt{(a_1^2 + t^2)(b_1^2 + t^2)}} = \frac{2\,du}{\sqrt{(u^2 + a^2)(u^2 + b^2)}}$. By Step 1,
+$I(a_1, b_1) = \frac12\cdot 2\int_0^\infty\frac{du}{\sqrt{(u^2 + a^2)(u^2 + b^2)}} = I(a, b)$.
+\emph{Step 3.} Hence $I(a, b) = I(a_n, b_n)$ for all $n$, and $I$ is continuous, so $I(a, b) = I(M, M) = \frac{\pi}{2M}$ with $M = M(a, b)$. For $K$: $I(1, k^{\prime}) = \int_0^{\pi/2}\frac{d\theta}{\sqrt{1 - k^2\sin^2\theta}}$.
+\end{proof}
+
+\begin{example}\label{special-functions:example-lemniscate}
+Gauss computed on 30 May 1799 that $M(1, \sqrt2) = 1.19814\ldots$ agrees to eleven decimals with $\pi/\varpi$, where $\varpi = 2\int_0^1\frac{dt}{\sqrt{1 - t^4}} = 2.62205\ldots$ is the \emph{lemniscate constant}, half the
+length of the lemniscate $r^2 = \cos 2\theta$. Theorem~\ref{special-functions:theorem-agm} proves it: substituting $t = \cos\phi$, $\int_0^1\frac{dt}{\sqrt{1 - t^4}} = \int_0^{\pi/2}\frac{d\phi}{\sqrt{1 + \cos^2\phi}} = I(\sqrt2, 1) = \frac{\pi}{2M(\sqrt2, 1)}$.
+The quadratic convergence of the AGM is the basis of the fastest known algorithms for computing $\pi$ (Brent--Salamin) \cite{borwein-pi-agm}.
+\end{example}
+
+The inverse functions of elliptic integrals are doubly periodic, as $\arcsin$ inverts $\int dt/\sqrt{1 - t^2}$ and $\sin$ has a period. Weierstrass constructed them directly.
+
+\begin{definition}\label{special-functions:definition-lattice}
+A \emph{lattice} in $\CC$ is $\Lambda = \ZZ\omega_1 + \ZZ\omega_2$ with $\omega_1$, $\omega_2$ linearly independent over $\RR$. An \emph{elliptic function} for $\Lambda$ is a meromorphic function $f$ on $\CC$ with $f(z + \omega) = f(z)$ for
+all $\omega \in \Lambda$. The \emph{Eisenstein series} are $G_{2k}(\Lambda) = \sum_{\omega \in \Lambda \setminus 0}\omega^{-2k}$ for $k \geq 2$, and the \emph{Weierstrass function} is
+\[
+\wp(z) = \frac{1}{z^2} + \sum_{\omega \in \Lambda \setminus 0}\Bigl(\frac{1}{(z - \omega)^2} - \frac{1}{\omega^2}\Bigr).
+\]
+\end{definition}
+
+\begin{lemma}\label{special-functions:lemma-lattice-sums}
+$\sum_{\omega \in \Lambda \setminus 0}|\omega|^{-s}$ converges for $s > 2$. Hence the Eisenstein series converge absolutely, and the series for $\wp$ converges absolutely and uniformly on compact sets avoiding $\Lambda$.
+\end{lemma}
+
+\begin{proof}
+Let $c > 0$ be the minimum of $|x\omega_1 + y\omega_2|$ on the square $\max(|x|, |y|) = 1$. The $8m$ lattice points with $\max(|x|, |y|) = m$ have $|\omega| \geq cm$, so the sum is at most $\sum_m8m(cm)^{-s} < \infty$. For $\wp$, when
+$|z| \leq R$ and $|\omega| \geq 2R$, $\bigl|\frac{1}{(z - \omega)^2} - \frac{1}{\omega^2}\bigr| = \frac{|z||2\omega - z|}{|\omega|^2|z - \omega|^2} \leq \frac{10R}{|\omega|^3}$, and the case $s = 3$ applies.
+\end{proof}
+
+\begin{theorem}\label{special-functions:theorem-weierstrass-p}
+$\wp$ is an even elliptic function with double poles exactly at $\Lambda$, and
+\[
+\wp(z) = \frac{1}{z^2} + \sum_{k \geq 1}(2k + 1)G_{2k+2}z^{2k} \quad \text{near } 0, \qquad (\wp^{\prime})^2 = 4\wp^3 - g_2\wp - g_3,
+\]
+with $g_2 = 60G_4$ and $g_3 = 140G_6$. A nonconstant elliptic function has poles; one without poles is constant.
+\end{theorem}
+
+\begin{proof}
+\emph{Liouville.} An elliptic function without poles is bounded on the compact fundamental parallelogram, hence on $\CC$, hence constant (Corollary~\ref{complex-analysis:corollary-liouville}).
+\emph{Periodicity.} By Lemma~\ref{special-functions:lemma-lattice-sums}, $\wp$ is meromorphic with double poles at $\Lambda$, and even since $\Lambda = -\Lambda$. Its derivative $\wp^{\prime}(z) = -2\sum_{\omega \in \Lambda}(z - \omega)^{-3}$ is
+visibly periodic, so $\wp(z + \omega_i) - \wp(z) = C_i$ is constant; at $z = -\omega_i/2$ evenness gives $C_i = \wp(\omega_i/2) - \wp(-\omega_i/2) = 0$.
+\emph{Laurent expansion.} For $|z| < |\omega|$, $\frac{1}{(z - \omega)^2} - \frac{1}{\omega^2} = \sum_{m \geq 1}(m + 1)\frac{z^m}{\omega^{m+2}}$; summing over $\omega$, the odd powers cancel by symmetry and the even ones give the
+expansion.
+\emph{Differential equation.} From $\wp = z^{-2} + 3G_4z^2 + 5G_6z^4 + O(z^6)$ one computes $(\wp^{\prime})^2 = 4z^{-6} - 24G_4z^{-2} - 80G_6 + O(z^2)$ and $4\wp^3 = 4z^{-6} + 36G_4z^{-2} + 60G_6 + O(z^2)$, so
+$(\wp^{\prime})^2 - 4\wp^3 + 60G_4\wp + 140G_6$ is an elliptic function holomorphic at $0$, hence everywhere, vanishing at $0$; by Liouville it is identically $0$.
+\end{proof}
+
+\begin{remark}\label{special-functions:remark-elliptic-curves}
+So $z \mapsto (\wp(z), \wp^{\prime}(z))$ maps $\CC/\Lambda$ minus $0$ onto the affine curve $y^2 = 4x^3 - g_2x - g_3$, and $0$ to the point at infinity: a complex torus is a plane cubic curve, an \emph{elliptic curve}. The
+\emph{addition theorem} $\wp(z + w) = -\wp(z) - \wp(w) + \frac14\bigl(\frac{\wp^{\prime}(z) - \wp^{\prime}(w)}{\wp(z) - \wp(w)}\bigr)^2$ is the chord-and-tangent group law on the cubic. The coefficients $G_{2k}$, as functions of
+$\tau = \omega_2/\omega_1$, are modular forms, and every elliptic function for $\Lambda$ is a rational function of $\wp$ and $\wp^{\prime}$. These themes are developed in the chapters on Riemann surfaces, elliptic curves and
+modular forms.
+\end{remark}
+
+\section{Theta functions}\label{special-functions:section-theta}
+
+\begin{definition}\label{special-functions:definition-theta}
+For $z \in \CC$ and $\tau$ in the upper half-plane $\mathbb{H}$, the \emph{Jacobi theta function} is
+\[
+\vartheta(z \mid \tau) = \sum_{n \in \ZZ}e^{\pi in^2\tau + 2\pi inz}.
+\]
+\end{definition}
+
+\begin{notation}\label{special-functions:notation-theta}
+We write $q = e^{\pi i\tau}$, so $|q| < 1$, and $\vartheta(z \mid \tau) = \sum_nq^{n^2}e^{2\pi inz}$; $\vartheta(\tau) = \vartheta(0 \mid \tau)$. Here $\mathbb{H} = \{\operatorname{Im}\tau > 0\}$ is the upper half-plane, not the
+quaternions.
+\end{notation}
+
+\begin{proposition}\label{special-functions:proposition-theta-basic}
+The series converges absolutely and uniformly on compact subsets of $\CC \times \mathbb{H}$, so $\vartheta$ is holomorphic in both variables. It satisfies
+\begin{enumerate}
+\item $\vartheta(z + 1 \mid \tau) = \vartheta(z \mid \tau)$ and $\vartheta(z + \tau \mid \tau) = e^{-\pi i\tau - 2\pi iz}\vartheta(z \mid \tau)$;
+\item the heat equation $\frac{\partial\vartheta}{\partial\tau} = \frac{1}{4\pi i}\frac{\partial^2\vartheta}{\partial z^2}$;
+\item the product formula $\vartheta(z \mid \tau) = \prod_{n \geq 1}(1 - q^{2n})(1 + q^{2n-1}e^{2\pi iz})(1 + q^{2n-1}e^{-2\pi iz})$.
+\end{enumerate}
+Hence the zeros of $\vartheta(\cdot \mid \tau)$ are the points $\frac12 + \frac\tau2 + \ZZ + \ZZ\tau$, all simple.
+\end{proposition}
+
+\begin{proof}
+For $\operatorname{Im}\tau \geq \varepsilon$ and $|\operatorname{Im}z| \leq R$, $|e^{\pi in^2\tau + 2\pi inz}| \leq e^{-\pi\varepsilon n^2 + 2\pi R|n|}$, which is summable; holomorphy follows from Weierstrass' theorem
+(Corollary~\ref{complex-analysis:corollary-liouville}(4)), applied in each variable. (1) The first identity is clear; for the second, $\pi in^2\tau + 2\pi in(z + \tau) = \pi i(n + 1)^2\tau + 2\pi i(n + 1)z - \pi i\tau - 2\pi iz$, and reindexing gives the claim.
+(2) Each term satisfies the equation, and termwise differentiation is allowed by locally uniform convergence. (3) This is Jacobi's triple product identity (Theorem~\ref{generating-functions:theorem-triple-product}) with
+$z$ there replaced by $e^{2\pi iz}$: it is an identity of formal power series in $q$ whose coefficients are Laurent polynomials in $e^{2\pi iz}$, and for $|q| < 1$ both sides converge absolutely as double series, so the
+coefficientwise identity becomes an identity of functions. The factors $1 + q^{2n-1}e^{\pm 2\pi iz}$ vanish exactly at the stated points (and $1 - q^{2n} \neq 0$), simply, and by Lemma~\ref{special-functions:lemma-infinite-products} these are all the zeros.
+\end{proof}
+
+To prove the transformation formula under $\tau \mapsto -1/\tau$ we need a version of the Poisson summation formula, which we prove with residues.
+
+\begin{lemma}[Poisson summation in a strip]\label{special-functions:lemma-poisson-strip}
+Let $f$ be holomorphic on a strip $|\operatorname{Im}z| < a$ with $|f(x + iy)| \leq \frac{A}{1 + x^2}$ there, and $\hat{f}(\xi) = \int_\RR f(x)e^{-2\pi ix\xi}dx$. Then $\sum_{n \in \ZZ}f(n) = \sum_{n \in \ZZ}\hat{f}(n)$, both series converging
+absolutely.
+\end{lemma}
+
+\begin{proof}
+Fix $0 < b < a$. The function $f(z)/(e^{2\pi iz} - 1)$ has simple poles at the integers with residues $f(n)/(2\pi i)$. Integrate it around the rectangle with vertices $\pm(N + \frac12) \pm ib$; on the vertical sides
+$1/|e^{2\pi iz} - 1|$ is bounded independently of $N$ and $|f| = O(N^{-2})$, so by the residue theorem (Theorem~\ref{complex-analysis:theorem-residues}), letting $N \to \infty$,
+\[
+\sum_nf(n) = \int_{L_{-b}}\frac{f(z)}{e^{2\pi iz} - 1}dz - \int_{L_b}\frac{f(z)}{e^{2\pi iz} - 1}dz,
+\]
+where $L_{\pm b}$ is the line $\operatorname{Im}z = \pm b$ traversed from left to right. On $L_{-b}$, $|e^{2\pi iz}| = e^{2\pi b} > 1$ and $\frac{1}{e^{2\pi iz} - 1} = \sum_{n \geq 1}e^{-2\pi inz}$; on $L_b$, $|e^{2\pi iz}| = e^{-2\pi b} < 1$ and
+$\frac{1}{e^{2\pi iz} - 1} = -\sum_{n \geq 0}e^{2\pi inz}$, both uniformly on the line. Integrating termwise, $\sum_nf(n) = \sum_{n \geq 1}\int_{L_{-b}}f(z)e^{-2\pi inz}dz + \sum_{n \geq 0}\int_{L_b}f(z)e^{2\pi inz}dz$. By Cauchy's theorem and the
+decay of $f$, each line can be moved to the real axis, which gives $\sum_{n \geq 1}\hat{f}(n) + \sum_{n \geq 0}\hat{f}(-n)$. On $L_{\mp b}$ the terms are $O(e^{-2\pi nb})$, which gives the absolute convergence.
+\end{proof}
+
+\begin{lemma}\label{special-functions:lemma-gaussian-fourier}
+For $t > 0$ and $\xi \in \RR$, $\int_\RR e^{-\pi tx^2}e^{-2\pi ix\xi}dx = t^{-1/2}e^{-\pi\xi^2/t}$.
+\end{lemma}
+
+\begin{proof}
+By scaling it suffices to take $t = 1$. Completing the square, the integral is $e^{-\pi\xi^2}\int_\RR e^{-\pi(x + i\xi)^2}dx$. By Cauchy's theorem applied to $e^{-\pi z^2}$ on the rectangle with vertices $\pm R$, $\pm R + i\xi$, whose
+vertical sides contribute $O(e^{-\pi(R^2 - \xi^2)})$, this equals $\int_\RR e^{-\pi x^2}dx = 1$ (Example~\ref{special-functions:example-gamma-half}).
+\end{proof}
+
+\begin{theorem}[Transformation formula]\label{special-functions:theorem-theta-transformation}
+For $\tau \in \mathbb{H}$, $\vartheta(-1/\tau) = \sqrt{\tau/i}\,\vartheta(\tau)$, with the branch of the square root that is positive for $\tau \in i\RR_{>0}$. In particular, $\sum_ne^{-\pi n^2/t} = \sqrt{t}\sum_ne^{-\pi n^2t}$ for $t > 0$.
+\end{theorem}
+
+\begin{proof}
+For $\tau = it$, apply Lemma~\ref{special-functions:lemma-poisson-strip} to $f(x) = e^{-\pi tx^2}$, which satisfies its hypotheses on every strip, since $|f(x + iy)| = e^{-\pi t(x^2 - y^2)}$; by Lemma~\ref{special-functions:lemma-gaussian-fourier},
+$\sum_ne^{-\pi tn^2} = t^{-1/2}\sum_ne^{-\pi n^2/t}$, which is the claim for $\tau = it$. Both sides of the formula are holomorphic on $\mathbb{H}$ and agree on the imaginary axis, so they agree everywhere by the identity theorem
+(Theorem~\ref{complex-analysis:theorem-identity}).
+\end{proof}
+
+\begin{remark}\label{special-functions:remark-theta-applications}
+Together with $\vartheta(\tau + 2) = \vartheta(\tau)$, the transformation formula says that $\vartheta(\tau)^k$ is a modular form of weight $k/2$ for a congruence subgroup. Since $\vartheta(\tau)^k = \sum_nr_k(n)q^n$, where $r_k(n)$ is
+the number of representations of $n$ as a sum of $k$ squares, the theory of modular forms gives formulas such as Jacobi's $r_4(n) = 8\sum_{d \mid n,\ 4 \nmid d}d$, which in particular reproves Lagrange's four-square theorem, and
+$r_2(n) = 4\sum_{d \mid n}\chi_{-4}(d)$ \cite{hardy-wright}. The case $t$ real of Theorem~\ref{special-functions:theorem-theta-transformation} gives Riemann's functional equation of $\zeta$ in Chapter~\ref{analytic-number-theory}.
+Physically, $\sum_ne^{-(x + n)^2/4t}/\sqrt{4\pi t}$ is the heat kernel on the circle $\RR/\ZZ$, and the transformation formula says that it equals the Fourier series $\sum_ne^{-4\pi^2n^2t + 2\pi inx}$. Quotients of theta functions with
+characteristics give Jacobi's elliptic functions $\operatorname{sn}$, $\operatorname{cn}$, $\operatorname{dn}$, which invert the incomplete elliptic integral $\int_0^x\frac{dt}{\sqrt{(1 - t^2)(1 - k^2t^2)}}$.
+\end{remark}
+
+\section{Exercises}\label{special-functions:section-exercises}
+
+\begin{exercise}\label{special-functions:exercise-gamma-half-integers}
+Show that $\Gamma(n + \frac12) = \frac{(2n)!}{4^nn!}\sqrt{\pi}$ for $n \geq 0$, and that $\int_{-1}^1(1 - x^2)^ndx = \frac{2^{2n+1}(n!)^2}{(2n + 1)!}$.
+\end{exercise}
+
+\begin{solution}
+By induction from $\Gamma(\frac12) = \sqrt\pi$ (Example~\ref{special-functions:example-gamma-half}) and $\Gamma(n + \frac32) = (n + \frac12)\Gamma(n + \frac12)$: $\frac{(2n + 2)!}{4^{n+1}(n + 1)!} = \frac{(2n + 1)(2n + 2)}{4(n + 1)}\cdot\frac{(2n)!}{4^nn!}$ and
+$\frac{(2n + 1)(2n + 2)}{4(n + 1)} = n + \frac12$. For the integral, substitute $u = x^2$ on $[0, 1]$: $2\int_0^1(1 - x^2)^ndx = \int_0^1u^{-1/2}(1 - u)^ndu = B(\frac12, n + 1) = \frac{\Gamma(\frac12)n!}{\Gamma(n + \frac32)}$, and the first
+part gives $\frac{\sqrt\pi\,n!\,4^{n+1}(n + 1)!}{(2n + 2)!\sqrt\pi} = \frac{2^{2n+1}(n!)^2}{(2n + 1)!}$.
+\end{solution}
+
+\begin{exercise}\label{special-functions:exercise-duplication-bohr-mollerup}
+Use Theorem~\ref{special-functions:theorem-bohr-mollerup} to prove the duplication formula for real $x > 0$.
+\end{exercise}
+
+\begin{solution}
+Let $f(x) = \frac{2^{x-1}}{\sqrt\pi}\Gamma(\frac x2)\Gamma(\frac{x + 1}{2})$. Its logarithm is a sum of a linear function and two convex functions, so it is convex. $f(x + 1) = \frac{2^x}{\sqrt\pi}\Gamma(\frac{x+1}2)\Gamma(\frac x2 + 1) = 2\cdot\frac x2\cdot f(x) = xf(x)$,
+and $f(1) = \frac{1}{\sqrt\pi}\Gamma(\frac12)\Gamma(1) = 1$. So $f = \Gamma$, which is $\Gamma(\frac x2)\Gamma(\frac x2 + \frac12) = 2^{1-x}\sqrt\pi\,\Gamma(x)$, the duplication formula with $s = x/2$.
+\end{solution}
+
+\begin{exercise}\label{special-functions:exercise-digamma}
+Show that $\Gamma^{\prime}(1) = -\gamma$ and $\frac{\Gamma^{\prime}}{\Gamma}(s) = -\gamma - \frac1s + \sum_{k \geq 1}\bigl(\frac1k - \frac{1}{s + k}\bigr)$.
+\end{exercise}
+
+\begin{solution}
+Take the logarithmic derivative of the Weierstrass product (Theorem~\ref{special-functions:theorem-weierstrass-gamma}) with Lemma~\ref{special-functions:lemma-infinite-products}:
+$-\frac{\Gamma^{\prime}}{\Gamma}(s) = \frac1s + \gamma + \sum_k\bigl(\frac{1}{s + k} - \frac1k\bigr)$. At $s = 1$, $\sum_k(\frac{1}{k+1} - \frac1k) = -1$, so $-\Gamma^{\prime}(1) = 1 + \gamma - 1 = \gamma$, using $\Gamma(1) = 1$.
+\end{solution}
+
+\begin{exercise}\label{special-functions:exercise-watson-example}
+Find the asymptotic expansion of $\int_0^\infty\frac{e^{-xt}}{1 + t^2}dt$ as $x \to \infty$.
+\end{exercise}
+
+\begin{solution}
+$\frac{1}{1 + t^2} = \sum_k(-1)^kt^{2k}$ near $0$, so Watson's lemma (Theorem~\ref{special-functions:theorem-watson}, $\alpha = 1$, $a_{2k} = (-1)^k$, odd coefficients $0$) gives $\sum_k(-1)^k\frac{(2k)!}{x^{2k+1}} = \frac1x - \frac{2}{x^3} + \frac{24}{x^5} - \cdots$.
+\end{solution}
+
+\begin{exercise}\label{special-functions:exercise-gauss-legendre}
+Show that the two-point Gauss rule for $w = 1$ on $(-1, 1)$ is $\int_{-1}^1q = q(-\frac{1}{\sqrt3}) + q(\frac{1}{\sqrt3})$, exact for cubic polynomials, and that it fails for $q = x^4$.
+\end{exercise}
+
+\begin{solution}
+The monic orthogonal polynomial of degree $2$ is $x^2 - \frac13$ (orthogonal to $1$ and $x$), with zeros $\pm\frac{1}{\sqrt3}$. By symmetry the two weights are equal, and $\int 1 = 2$ makes them $1$. By
+Theorem~\ref{special-functions:theorem-gauss-quadrature} the rule is exact on $\mathcal{P}_3$. For $x^4$: $\int_{-1}^1x^4 = \frac25$, while the rule gives $\frac29$.
+\end{solution}
+
+\begin{exercise}\label{special-functions:exercise-legendre-hypergeometric}
+Show that $F(-n, n + 1; 1; \frac{1 - x}{2})$ is a polynomial of degree $n$ in $x$ with value $1$ at $x = 1$, solving Legendre's equation with $\lambda = n(n + 1)$, and conclude that it equals $P_n(x)$.
+\end{exercise}
+
+\begin{solution}
+\emph{The hypergeometric polynomial.} The series terminates since $(-n)_k = 0$ for $k > n$, and the coefficient of $u^n$ is nonzero, so it is a polynomial of degree $n$ in $u = \frac{1 - x}{2}$, hence in $x$;
+at $x = 1$, $u = 0$ and $F = 1$. By Proposition~\ref{special-functions:proposition-hypergeometric-equation} with $(a, b, c) = (-n, n + 1, 1)$ it solves $u(1 - u)w^{\prime\prime} + (1 - 2u)w^{\prime} + n(n + 1)w = 0$, and since
+$u(1 - u) = \frac{1 - x^2}{4}$, $\frac{d}{du} = -2\frac{d}{dx}$ and $1 - 2u = x$, this becomes Legendre's equation $(1 - x^2)w^{\prime\prime} - 2xw^{\prime} + n(n + 1)w = 0$.
+\emph{$P_n$ solves it.} Let $L(y) = ((1 - x^2)y^{\prime})^{\prime} + n(n + 1)y$. Then $L(P_n)$ has degree at most $n$, and its coefficient of $x^n$ is $(-n(n + 1) + n(n + 1))$ times that of $P_n$, so $\deg L(P_n) < n$. For
+$q \in \mathcal{P}_{n-1}$, integrating by parts twice (the boundary terms contain $1 - x^2$), $\int_{-1}^1qL(P_n) = \int_{-1}^1L(q)P_n = 0$, by Proposition~\ref{special-functions:proposition-legendre-hermite}(1). So $L(P_n)$ is orthogonal to
+itself, and $L(P_n) = 0$.
+\emph{Uniqueness.} For $y = \sum_jc_jx^j$, $L(y) = 0$ means $(j + 2)(j + 1)c_{j+2} = (j(j + 1) - n(n + 1))c_j$ for all $j$. If $y$ is a polynomial solution, let $j$ be the largest index with $c_j \neq 0$; the relation gives
+$j(j + 1) = n(n + 1)$, so $j = n$. Going down from $c_n$, the relation determines $c_{n-2}, c_{n-4}, \ldots$, since $j(j + 1) - n(n + 1) \neq 0$ for $j < n$; and the coefficients of the other parity vanish, since their
+largest nonzero one would again have index $n$. So the polynomial solutions form a line, and the two polynomials, both equal to $1$ at $x = 1$, coincide.
+\end{solution}
+
+\begin{exercise}\label{special-functions:exercise-bessel-integral}
+Show that $J_0^{\prime} = -J_1$ and $\int_0^xtJ_0(t)\,dt = xJ_1(x)$.
+\end{exercise}
+
+\begin{solution}
+By Proposition~\ref{special-functions:proposition-bessel-recurrences} with $\nu = 0$: $(z^0J_0)^{\prime} = -z^0J_1$, that is $J_0^{\prime} = -J_1$; with $\nu = 1$: $(zJ_1)^{\prime} = zJ_0$, and integrating from $0$, where $zJ_1(z)$ vanishes,
+gives the second identity.
+\end{solution}
+
+\begin{exercise}\label{special-functions:exercise-harmonic-degree-two}
+Find a basis of $\mathcal{H}_2$ for $n = 3$ and check $\dim\mathcal{H}_2 = 5$.
+\end{exercise}
+
+\begin{solution}
+$\mathcal{P}_2$ has dimension $6$, and $\Delta$ maps it onto the constants, with $\Delta(\sum a_{ij}x_ix_j) = 2\sum_ia_{ii}$. So $\mathcal{H}_2$ consists of the quadratic forms with traceless matrix: a basis is
+$x_1x_2$, $x_1x_3$, $x_2x_3$, $x_1^2 - x_2^2$, $x_2^2 - x_3^2$, and $5 = \binom42 - \binom20$, in agreement with Theorem~\ref{special-functions:theorem-harmonic-decomposition}.
+\end{solution}
+
+\begin{exercise}\label{special-functions:exercise-agm-numerics}
+Compute three steps of the AGM of $1$ and $\sqrt2$ and deduce $\varpi$ to five digits.
+\end{exercise}
+
+\begin{solution}
+$(a, b) = (1.41421, 1)$, then $(1.207107, 1.189207)$, then $(1.198157, 1.198124)$, then $(1.1981402, 1.1981402)$. So $M(1, \sqrt2) = 1.19814$ and $\varpi = \pi/M = 2.62206$ (more precisely $2.622057\ldots$),
+by Example~\ref{special-functions:example-lemniscate}.
+\end{solution}
+
+\begin{exercise}\label{special-functions:exercise-wp-half-periods}
+Show that $\wp^{\prime}$ vanishes at the half-periods $\frac{\omega_1}{2}$, $\frac{\omega_2}{2}$, $\frac{\omega_1 + \omega_2}{2}$, so that $4x^3 - g_2x - g_3 = 4(x - e_1)(x - e_2)(x - e_3)$ with $e_i$ the values of $\wp$ there.
+\end{exercise}
+
+\begin{solution}
+$\wp^{\prime}$ is odd and periodic, so for a half-period $h$, $\wp^{\prime}(h) = -\wp^{\prime}(-h) = -\wp^{\prime}(h - 2h) = -\wp^{\prime}(h)$, hence $\wp^{\prime}(h) = 0$ (the half-periods are not poles). By the differential equation each
+$e_i = \wp(h_i)$ is a root of $4x^3 - g_2x - g_3$. They are distinct: $\wp - e_i$ has a double zero at $h_i$ (as $\wp^{\prime}(h_i) = 0$), and an elliptic function of order $2$ (two poles counted with multiplicity in a period
+parallelogram) has exactly two zeros there, by the argument principle (Theorem~\ref{complex-analysis:theorem-argument-principle}) applied to the boundary of the parallelogram, where the contributions of opposite sides cancel.
+So $\wp(h_j) \neq e_i$ for $j \neq i$.
+\end{solution}

@@ -128,8 +128,11 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
   harmonic functions and the Dirichlet problem, Runge, Mittag-Leffler, Weierstrass factorisation,
   Hadamard, Picard's theorems, normal families (Montel), analytic continuation and monodromy,
   Riemann surfaces of algebraic functions (informal; curves chapter does the theory).
-- `special-functions` (planned, new): Gamma (moved from analytic-number-theory), asymptotics,
-  orthogonal polynomials, Fuchsian equations, hypergeometric, Bessel, elliptic and theta functions.
+- `special-functions` (draft 2026-11-08; Gamma section moved here from analytic-number-theory,
+  plus Bohr-Mollerup): to deepen: saddle point method with full proof, Stirling for complex s,
+  Jacobi polynomials and Christoffel-Darboux, Bessel Y_nu and Hankel functions, Kummer's 24
+  solutions and Riemann P-symbol, Jacobi elliptic functions, addition theorem for wp, Legendre
+  relation, incomplete Gamma and error function, Airy functions, zeta of Hurwitz type.
 - `functional-analysis` (complete, 1234): Banach algebras and Gelfand theory, spectral theorem for
   unbounded operators, compact and Fredholm operators, weak topologies, Banach–Alaoglu,
   Krein–Milman, Dunford–Pettis, interpolation (Riesz–Thorin, Marcinkiewicz), locally convex spaces.
@@ -189,6 +192,7 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
 - `ordinary-differential-equations` (planned): as in its outline; plus Floquet theory, Sturm
   comparison, boundary value problems and Green's functions, Hamiltonian systems (pointer to
   symplectic), bifurcation theory, chaos (Smale horseshoe, Lorenz), circle maps and rotation number.
+  Holomorphic solutions, regular singular points and Frobenius are in special-functions: cite them.
 - `ergodic-theory` (planned): plus the ergodicity of the Gauss map (see continued-fractions),
   Furstenberg's multiple recurrence and Szemerédi, topological dynamics, entropy (Kolmogorov–Sinai).
 - `sobolev-spaces` (planned, PDE): plus first-order equations and characteristics, conservation

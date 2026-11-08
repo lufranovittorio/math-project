@@ -14,7 +14,7 @@ used the same idea earlier, with real $s$ only, to prove that every progression 
 functions $L(s, \chi) = \sum\chi(n)n^{-s}$ attached to the characters $\chi$ of $(\ZZ/q\ZZ)^\times$, and the fact that $L(1, \chi) \neq 0$.
 
 This chapter develops these ideas with complete proofs. Its tools are the complex analysis of Chapter~\ref{complex-analysis}, Poisson summation from Chapter~\ref{distributions}, and the
-estimates of Chapter~\ref{prime-numbers}; the Gamma function, needed for the functional equation of $\zeta$, is developed here from scratch.
+estimates of Chapter~\ref{prime-numbers}; the Gamma function, needed for the functional equation of $\zeta$, is developed in Section~\ref{special-functions:section-gamma}.
 
 The chapter is organised as follows.
 \begin{enumerate}
@@ -23,8 +23,6 @@ Landau's theorem on series with nonnegative coefficients.
 \item Section~\ref{analytic-number-theory:section-averages}: averages of arithmetic functions: Euler's summation formula and Euler's constant, Dirichlet's hyperbola method and the divisor
 problem, the averages of $\sigma$ and $\varphi$, the probability $6/\pi^2$ that two integers are coprime, squarefree numbers, the bound $\tau(n) \ll n^\varepsilon$, and the theorem of Hardy and Ramanujan
 that most integers $n$ have about $\log\log n$ prime factors.
-\item Section~\ref{analytic-number-theory:section-gamma}: the Gamma function: continuation, Euler's limit formula, the Weierstrass product, the partial fraction expansion of the cotangent and the
-product of the sine, the reflection and duplication formulas, the Beta function.
 \item Section~\ref{analytic-number-theory:section-zeta}: the Riemann zeta function: continuation, bounds near $\operatorname{Re}s = 1$, no zeros on $\operatorname{Re}s = 1$, the functional equation,
 trivial zeros, the values $\zeta(2k)$ and $\zeta(1 - 2k)$ in terms of Bernoulli numbers.
 \item Section~\ref{analytic-number-theory:section-pnt}: Newman's analytic theorem and the prime number theorem; $\sum\mu(n)/n = 0$; the maximal order of $\tau(n)$; the prime number theorem with an
@@ -293,7 +291,7 @@ For $x \geq 1$,
 \[
 \sum_{n \leq x}\frac1n = \log x + \gamma + R(x), \qquad |R(x)| \leq \frac1x, \qquad \text{where} \quad \gamma = 1 - \int_1^\infty\frac{\{u\}}{u^2}\,du.
 \]
-So $\gamma = \lim_{n \to \infty}(1 + \frac12 + \cdots + \frac1n - \log n) = 0.5772156649\ldots$ is \emph{Euler's constant}.
+So $\gamma = \lim_{n \to \infty}(1 + \frac12 + \cdots + \frac1n - \log n) = 0.5772156649\ldots$ is Euler's constant (Lemma~\ref{special-functions:lemma-euler-constant}), and the error is at most $\frac1x$.
 \end{proposition}
 
 \begin{proof}
@@ -459,240 +457,6 @@ Bernoulli variables, and the \emph{Erd\H{o}s--Kac theorem} \cite{erdos-kac-1940}
 \]
 \end{remark}
 
-\section{The Gamma function}\label{analytic-number-theory:section-gamma}
-
-The functional equation of $\zeta$ involves Euler's Gamma function, the function that interpolates the factorials. We develop the properties we need: meromorphic continuation, absence of zeros,
-the reflection and duplication formulas. Along the way we prove the partial fraction expansion of the cotangent and the product formula for the sine, which also give the values $\zeta(2k)$.
-Integrals depending holomorphically on a parameter are handled by the following lemma.
-
-\begin{lemma}\label{analytic-number-theory:lemma-holomorphic-integrals}
-Let $I \subseteq \RR$ be an interval, $U \subseteq \CC$ open, and $F \colon I \times U \to \CC$ continuous and holomorphic in $s$ for each fixed $x \in I$. Suppose that for every compact $K \subseteq U$
-there is an integrable function $G_K$ on $I$ with $|F(x, s)| \leq G_K(x)$ for $x \in I$, $s \in K$. Then $\Phi(s) = \int_IF(x, s)\,dx$ is holomorphic on $U$, and
-$\Phi^{\prime}(s) = \int_I\partial_sF(x, s)\,dx$.
-\end{lemma}
-
-\begin{proof}
-\emph{Continuity.} If $s_k \to s$ in $U$, the points lie in a compact disc $K \subseteq U$ for large $k$, $F(x, s_k) \to F(x, s)$ for each $x$, and $|F(x, s_k)| \leq G_K(x)$; so
-$\Phi(s_k) \to \Phi(s)$ by dominated convergence (Theorem~\ref{measure-theory:theorem-dominated-convergence}).
-\emph{Holomorphy.} Let $T \subseteq U$ be a closed triangle. The function $(x, w) \mapsto F(x, w)$ on $I \times \partial T$ is continuous and bounded by $G_T(x)$, so by Fubini's theorem
-(Theorem~\ref{measure-theory:theorem-fubini}) $\int_{\partial T}\Phi(w)\,dw = \int_I\int_{\partial T}F(x, w)\,dw\,dx = 0$, the inner integral vanishing by Goursat's theorem
-(Theorem~\ref{complex-analysis:theorem-goursat}). By Morera's theorem (Corollary~\ref{complex-analysis:corollary-liouville}(3)), $\Phi$ is holomorphic.
-\emph{Derivative.} Let $\overline{D}(s, r) \subseteq U$. By the Cauchy integral formula for derivatives (Theorem~\ref{complex-analysis:theorem-cauchy-formula}), applied to $\Phi$ and to each
-$F(x, \cdot)$, and Fubini's theorem again on $I \times \partial D(s, r)$,
-$\Phi^{\prime}(s) = \frac{1}{2\pi i}\int_{\partial D}\frac{\Phi(w)}{(w - s)^2}dw = \int_I\frac{1}{2\pi i}\int_{\partial D}\frac{F(x, w)}{(w - s)^2}dw\,dx = \int_I\partial_sF(x, s)\,dx$.
-\end{proof}
-
-\begin{definition}\label{analytic-number-theory:definition-gamma}
-The \emph{Gamma function} is
-\[
-\Gamma(s) = \int_0^\infty t^{s-1}e^{-t}\,dt, \qquad \sigma > 0,
-\]
-where $t^{s-1} = e^{(s-1)\log t}$.
-\end{definition}
-
-\begin{proposition}\label{analytic-number-theory:proposition-gamma-basic}
-\begin{enumerate}
-\item The integral converges absolutely for $\sigma > 0$ and defines a holomorphic function there, with $\Gamma(\sigma) > 0$ for real $\sigma > 0$ and $\Gamma(\bar s) = \overline{\Gamma(s)}$.
-\item $\Gamma(s + 1) = s\Gamma(s)$ for $\sigma > 0$, $\Gamma(1) = 1$, and $\Gamma(n + 1) = n!$ for integers $n \geq 0$.
-\item $\Gamma$ extends to a meromorphic function on $\CC$, holomorphic except for simple poles at $s = 0, -1, -2, \ldots$, with $\operatorname{Res}_{s = -n}\Gamma = \frac{(-1)^n}{n!}$, and
-$\Gamma(s + 1) = s\Gamma(s)$ holds on all of $\CC$.
-\end{enumerate}
-\end{proposition}
-
-\begin{proof}
-(1) If $a \leq \sigma \leq b$ with $0 < a$, then $|t^{s-1}e^{-t}| = t^{\sigma - 1}e^{-t} \leq (t^{a-1} + t^{b-1})e^{-t}$, which is integrable on $(0, \infty)$ (near $0$ because $a > 0$, near $\infty$
-because of $e^{-t}$). So Lemma~\ref{analytic-number-theory:lemma-holomorphic-integrals} applies with $I = (0, \infty)$. For real $s$ the integrand is positive, and conjugating the integrand gives
-$\Gamma(\bar s) = \overline{\Gamma(s)}$.
-(2) Integrate by parts on $[\varepsilon, R]$: $\int_\varepsilon^Rt^se^{-t}dt = [-t^se^{-t}]_\varepsilon^R + s\int_\varepsilon^Rt^{s-1}e^{-t}dt$, and let $\varepsilon \to 0$, $R \to \infty$. Also
-$\Gamma(1) = \int_0^\infty e^{-t}dt = 1$, and induction gives $\Gamma(n + 1) = n!$.
-(3) For an integer $n \geq 1$ put $\Gamma_n(s) = \frac{\Gamma(s + n)}{s(s + 1)\cdots(s + n - 1)}$ on $\sigma > -n$, $s \notin \{0, -1, \ldots, -n + 1\}$. It is meromorphic there and, by (2),
-equals $\Gamma$ on $\sigma > 0$ and $\Gamma_{n+1}$ on $\sigma > -n$. So these functions glue to a meromorphic function on $\CC$. Near $s = -n$, $\Gamma_{n+1}$ is $\Gamma(s + n + 1)$, holomorphic and
-equal to $1$ at $s = -n$, divided by $s(s + 1)\cdots(s + n)$, which has a simple zero at $-n$; so the pole is simple with residue
-$\frac{1}{(-n)(-n + 1)\cdots(-1)} = \frac{(-1)^n}{n!}$. The functional equation persists by the identity theorem (Theorem~\ref{complex-analysis:theorem-identity}).
-\end{proof}
-
-The Gamma function is related to many integrals through the following formula, which uses a change of variables in a double integral.
-
-\begin{proposition}[Euler's Beta integral]\label{analytic-number-theory:proposition-beta}
-For $\operatorname{Re}a, \operatorname{Re}b > 0$, let $B(a, b) = \int_0^1u^{a-1}(1 - u)^{b-1}\,du$. Then
-\[
-\Gamma(a)\Gamma(b) = \Gamma(a + b)B(a, b), \qquad \text{so} \quad B(a, b) = \frac{\Gamma(a)\Gamma(b)}{\Gamma(a + b)}
-\]
-whenever $\Gamma(a + b) \neq 0$: for real $a, b > 0$ by Proposition~\ref{analytic-number-theory:proposition-gamma-basic}(1), and always by Theorem~\ref{analytic-number-theory:theorem-weierstrass-gamma} below.
-\end{proposition}
-
-\begin{proof}
-By Fubini's theorem (Theorem~\ref{measure-theory:theorem-fubini}), the integrand being absolutely integrable,
-$\Gamma(a)\Gamma(b) = \int_0^\infty\int_0^\infty x^{a-1}y^{b-1}e^{-x-y}\,dx\,dy$. The map $(r, u) \mapsto (x, y) = (ru, r(1 - u))$ is a diffeomorphism from $(0, \infty) \times (0, 1)$ onto
-$(0, \infty)^2$, with inverse $r = x + y$, $u = x/(x + y)$, and Jacobian determinant $\bigl|\det\begin{pmatrix}u & r \\ 1 - u & -r\end{pmatrix}\bigr| = r$. By the change of variables formula
-(Theorem~\ref{measure-theory:theorem-change-of-variables}),
-\[
-\Gamma(a)\Gamma(b) = \int_0^\infty\int_0^1r^{a+b-1}u^{a-1}(1 - u)^{b-1}e^{-r}\,du\,dr = \Gamma(a + b)B(a, b). \qedhere
-\]
-\end{proof}
-
-\begin{example}\label{analytic-number-theory:example-gamma-half}
-With $a = b = \frac12$ and the substitution $u = \sin^2\phi$, $du = 2\sin\phi\cos\phi\,d\phi$,
-\[
-\Gamma(\tfrac12)^2 = \Gamma(1)B(\tfrac12, \tfrac12) = \int_0^1\frac{du}{\sqrt{u(1 - u)}} = \int_0^{\pi/2}2\,d\phi = \pi, \qquad \text{so} \quad \Gamma(\tfrac12) = \sqrt{\pi}
-\]
-(as $\Gamma(\frac12) > 0$). Substituting $t = x^2$ in the definition gives $\Gamma(\frac12) = \int_0^\infty e^{-x^2}\cdot 2\,dx$, that is, the Gaussian integral $\int_{-\infty}^\infty e^{-x^2}dx = \sqrt{\pi}$. Then
-$\Gamma(\frac32) = \frac12\sqrt{\pi}$, $\Gamma(\frac52) = \frac34\sqrt{\pi}$, and the volume of the unit ball in $\RR^n$ is $\omega_n = \pi^{n/2}/\Gamma(\frac n2 + 1)$
-(Exercise~\ref{measure-theory:exercise-ball-volume}): $\omega_3 = \pi^{3/2}/\Gamma(\frac52) = \frac43\pi$.
-\end{example}
-
-\begin{theorem}[Euler's limit formula]\label{analytic-number-theory:theorem-euler-limit}
-For $\sigma > 0$,
-\[
-\Gamma(s) = \lim_{n \to \infty}\frac{n!\,n^s}{s(s + 1)\cdots(s + n)}.
-\]
-\end{theorem}
-
-\begin{proof}
-\emph{Step 1: a truncated integral.} Let $\Gamma_n(s) = \int_0^nt^{s-1}(1 - t/n)^n\,dt$. Substituting $t = nu$ gives $\Gamma_n(s) = n^sB(s, n + 1)$. For $m \geq 1$, integration by parts gives
-$\int_0^1u^{a-1}(1 - u)^m\,du = \frac ma\int_0^1u^a(1 - u)^{m-1}\,du$ when $\operatorname{Re}a > 0$ (the boundary terms vanish), that is $B(a, m + 1) = \frac maB(a + 1, m)$. Applying this $n$ times,
-\[
-\Gamma_n(s) = n^s\frac{n!}{s(s + 1)\cdots(s + n - 1)}\int_0^1u^{s+n-1}\,du = \frac{n!\,n^s}{s(s + 1)\cdots(s + n)}.
-\]
-\emph{Step 2: the limit.} Since $\log(1 - v) \leq -v$ for $0 \leq v < 1$, $0 \leq (1 - t/n)^n\mathbf{1}_{t < n} \leq e^{-t}$, and $(1 - t/n)^n \to e^{-t}$ for each $t$
-(Proposition~\ref{real-analysis:proposition-notable-limits}). By dominated convergence, with dominating function $t^{\sigma - 1}e^{-t}$, $\Gamma_n(s) \to \Gamma(s)$.
-\end{proof}
-
-To pass from the limit formula to a product we need infinite products of holomorphic functions.
-
-\begin{lemma}[Infinite products]\label{analytic-number-theory:lemma-infinite-products}
-Let $U \subseteq \CC$ be open and $u_k$ holomorphic functions on $U$ such that $\sum_k\sup_K|u_k| < \infty$ for every compact $K \subseteq U$. Then the partial products $P_N = \prod_{k \leq N}(1 + u_k)$
-converge uniformly on compact subsets of $U$ to a holomorphic function $P$. A point $s$ is a zero of $P$ exactly when $1 + u_k(s) = 0$ for some $k$, and its order is the sum of the orders of these
-zeros. Off the zeros, $P^{\prime}/P = \sum_ku_k^{\prime}/(1 + u_k)$, uniformly on compact subsets.
-\end{lemma}
-
-\begin{proof}
-\emph{Step 1: a logarithm.} For $|u| \leq \frac12$ let $\log(1 + u) = \sum_{j \geq 1}(-1)^{j+1}u^j/j$. As in the proof of Proposition~\ref{analytic-number-theory:proposition-log-zeta},
-$\exp(\log(1 + u)) = 1 + u$, and $|\log(1 + u)| \leq \sum_j|u|^j = \frac{|u|}{1 - |u|} \leq 2|u|$.
-\emph{Step 2: convergence.} Fix a compact $K$. There is $k_0$ with $|u_k| \leq \frac12$ on $K$ for $k > k_0$. The series $\sum_{k > k_0}\log(1 + u_k)$ converges uniformly on $K$ by Step 1 and the hypothesis
-(Weierstrass M-test), to a continuous function $S$, so $\prod_{k_0 < k \leq N}(1 + u_k) = \exp(\sum_{k_0 < k \leq N}\log(1 + u_k)) \to e^S$ uniformly on $K$, and $e^S$ has no zeros. Multiplying by the
-finitely many factors $k \leq k_0$ gives the uniform convergence of $P_N$ on $K$, and the zeros of $P$ in $K$ are those of these finitely many factors, with orders adding up. $P$ is holomorphic by
-Weierstrass' theorem (Corollary~\ref{complex-analysis:corollary-liouville}(4)).
-\emph{Step 3: logarithmic derivative.} $P_N^{\prime}/P_N = \sum_{k \leq N}u_k^{\prime}/(1 + u_k)$ by the product rule, and $P_N \to P$, $P_N^{\prime} \to P^{\prime}$ uniformly on compact subsets
-(Weierstrass' theorem); on a compact set where $P \neq 0$, $|P|$ is bounded below, so $P_N^{\prime}/P_N \to P^{\prime}/P$ uniformly there.
-\end{proof}
-
-\begin{theorem}[Weierstrass product]\label{analytic-number-theory:theorem-weierstrass-gamma}
-The function $1/\Gamma$ extends to an entire function, and for all $s \in \CC$
-\[
-\frac{1}{\Gamma(s)} = se^{\gamma s}\prod_{k \geq 1}\Bigl(1 + \frac sk\Bigr)e^{-s/k},
-\]
-the product converging uniformly on compact sets. Its zeros are the points $0, -1, -2, \ldots$, all simple. In particular $\Gamma$ has no zeros, and Euler's limit formula
-(Theorem~\ref{analytic-number-theory:theorem-euler-limit}) holds for all $s \notin \{0, -1, -2, \ldots\}$.
-\end{theorem}
-
-\begin{proof}
-\emph{Step 1: the product converges.} For $|w| \leq 1$, $(1 + w)e^{-w} = 1 + \sum_{j \geq 2}c_jw^j$ with $c_j = \frac{(-1)^j}{j!} + \frac{(-1)^{j-1}}{(j - 1)!} = (-1)^j\frac{1 - j}{j!}$, so
-$|(1 + w)e^{-w} - 1| \leq |w|^2\sum_{j \geq 2}\frac{j - 1}{j!} = |w|^2$ (the last sum is $\sum_{j \geq 1}\frac{1}{(j - 1)!} - \sum_{j \geq 1}\frac1{j!} = e - (e - 1) = 1$, the term $j = 1$ being $0$). With
-$w = s/k$, the factors $1 + u_k(s) = (1 + s/k)e^{-s/k}$ satisfy $|u_k(s)| \leq R^2/k^2$ for $|s| \leq R \leq k$. By Lemma~\ref{analytic-number-theory:lemma-infinite-products}, $E(s) = se^{\gamma s}\prod_k(1 + s/k)e^{-s/k}$
-is an entire function, with simple zeros exactly at $0, -1, -2, \ldots$
-\emph{Step 2: $E = 1/\Gamma$.} For $\sigma > 0$, with $H_n = \sum_{k \leq n}\frac1k$,
-\[
-\frac{s(s + 1)\cdots(s + n)}{n!\,n^s} = s\prod_{k=1}^n\Bigl(1 + \frac sk\Bigr)e^{-s\log n} = se^{s(H_n - \log n)}\prod_{k=1}^n\Bigl(1 + \frac sk\Bigr)e^{-s/k},
-\]
-which tends to $E(s)$, because $H_n - \log n \to \gamma$ (Proposition~\ref{analytic-number-theory:proposition-harmonic}). By Theorem~\ref{analytic-number-theory:theorem-euler-limit} the left side
-tends to $1/\Gamma(s)$; so $\Gamma(s)E(s) = 1$ for $\sigma > 0$. Both sides are meromorphic on the connected set $\CC$, so $\Gamma E = 1$ everywhere by the identity theorem. Hence $1/\Gamma = E$ is
-entire, and $\Gamma$ never vanishes. Finally, the computation of Step 2 shows that $\frac{s(s + 1)\cdots(s + n)}{n!\,n^s} \to E(s)$ for every $s \in \CC$; for $s \notin \{0, -1, \ldots\}$ the limit
-$E(s) = 1/\Gamma(s)$ is nonzero, and taking reciprocals gives Euler's limit formula at $s$.
-\end{proof}
-
-\subsection{The cotangent, the sine, and the reflection formula}\label{analytic-number-theory:subsection-cotangent}
-
-\begin{theorem}[Euler]\label{analytic-number-theory:theorem-cotangent}
-For $z \in \CC \setminus \ZZ$,
-\[
-\pi\cot\pi z = \frac1z + \sum_{n \geq 1}\frac{2z}{z^2 - n^2} = \lim_{N \to \infty}\sum_{n = -N}^N\frac{1}{z - n},
-\]
-the series converging absolutely and uniformly on compact subsets of $\CC \setminus \ZZ$.
-\end{theorem}
-
-\begin{proof}
-We follow Herglotz's argument \cite{aigner-ziegler}.
-\emph{Step 1: the series.} For $|z| \leq R$ and $n \geq 2R$, $|\frac{2z}{z^2 - n^2}| \leq \frac{2R}{n^2 - R^2} \leq \frac{8R}{3n^2}$, so the series converges absolutely and locally uniformly on
-$\CC \setminus \ZZ$; call its sum $S(z)$. Since $\frac{1}{z - n} + \frac{1}{z + n} = \frac{2z}{z^2 - n^2}$, $S(z) = \lim_NS_N(z)$ with $S_N(z) = \sum_{|n| \leq N}\frac{1}{z - n}$. Near an integer $m$,
-$S(z) - \frac{1}{z - m}$ is a locally uniform limit of functions holomorphic near $m$; so $S$ has a simple pole with residue $1$ at each integer.
-\emph{Step 2: the difference is entire.} $\pi\cot\pi z = \pi\cos\pi z/\sin\pi z$ also has simple poles with residue $\frac{\pi\cos\pi m}{\pi\cos\pi m} = 1$ at each integer $m$, and no other poles. So
-$h(z) = \pi\cot\pi z - S(z)$ has removable singularities at the integers (Proposition~\ref{complex-analysis:proposition-singularities}) and is entire. Both functions are odd, so $h$ is odd and
-$h(0) = 0$; both are real on $\RR \setminus \ZZ$, so $h$ is real on $\RR$.
-\emph{Step 3: periodicity.} $S_N(z + 1) - S_N(z) = \frac{1}{z + 1 + N} - \frac{1}{z - N} \to 0$, so $S$ has period $1$, as $\cot\pi z$ does; hence $h(z + 1) = h(z)$.
-\emph{Step 4: a duplication identity.} For $f = \pi\cot\pi z$: with $a = \pi z/2$, $\cot a + \cot(a + \frac\pi2) = \cot a - \tan a = \frac{\cos^2a - \sin^2a}{\sin a\cos a} = 2\cot 2a$, so
-$f(\frac z2) + f(\frac{z + 1}2) = 2f(z)$. For $S$: $S_N(\frac z2) + S_N(\frac{z + 1}2) = \sum_{|n| \leq N}\bigl(\frac{2}{z - 2n} + \frac{2}{z - (2n - 1)}\bigr) = 2S_{2N}(z) + \frac{2}{z + 2N + 1}$, since the
-numbers $2n$ and $2n - 1$ with $|n| \leq N$ are exactly the integers from $-2N - 1$ to $2N$. Letting $N \to \infty$, $S(\frac z2) + S(\frac{z + 1}2) = 2S(z)$. Hence $h(\frac z2) + h(\frac{z + 1}2) = 2h(z)$
-for $z \notin \ZZ$, and by continuity for all $z$.
-\emph{Step 5: Herglotz's trick.} The continuous periodic real function $h|_\RR$ attains its maximum $M$ at some $x_0 \in [0, 1]$. Then $h(\frac{x_0}2) + h(\frac{x_0 + 1}2) = 2M$ with both terms $\leq M$, so
-$h(\frac{x_0}2) = M$. Repeating, $h(x_0/2^k) = M$ for all $k$, and by continuity $M = h(0) = 0$. Applying this to $-h$, the minimum is $0$ too, so $h = 0$ on $\RR$, and $h = 0$ on $\CC$ by the identity
-theorem.
-\end{proof}
-
-\begin{corollary}[Euler's product for the sine]\label{analytic-number-theory:corollary-sine-product}
-For all $z \in \CC$,
-\[
-\sin\pi z = \pi z\prod_{n \geq 1}\Bigl(1 - \frac{z^2}{n^2}\Bigr).
-\]
-\end{corollary}
-
-\begin{proof}
-By Lemma~\ref{analytic-number-theory:lemma-infinite-products} with $u_n = -z^2/n^2$, the right side is an entire function $P$ with simple zeros exactly at the integers, and off the integers
-$\frac{P^{\prime}}{P} = \frac1z + \sum_n\frac{-2z/n^2}{1 - z^2/n^2} = \frac1z + \sum_n\frac{2z}{z^2 - n^2} = \pi\cot\pi z = \frac{(\sin\pi z)^{\prime}}{\sin\pi z}$ by Theorem~\ref{analytic-number-theory:theorem-cotangent}.
-So $(\sin\pi z/P)^{\prime} = \frac{\sin\pi z}{P}\bigl(\frac{(\sin\pi z)^{\prime}}{\sin\pi z} - \frac{P^{\prime}}{P}\bigr) = 0$ on the connected open set $\CC \setminus \ZZ$, and $\sin\pi z = cP(z)$. Letting $z \to 0$,
-$c = \lim\frac{\sin\pi z}{\pi z} = 1$.
-\end{proof}
-
-\begin{example}\label{analytic-number-theory:example-wallis}
-At $z = \frac12$: $1 = \frac\pi2\prod_n\bigl(1 - \frac{1}{4n^2}\bigr)$, that is, \emph{Wallis' product} $\frac\pi2 = \prod_{n \geq 1}\frac{(2n)^2}{(2n - 1)(2n + 1)} = \frac21\cdot\frac23\cdot\frac43\cdot\frac45\cdot\frac65\cdot\frac67\cdots$
-Comparing the coefficients of $z^3$ in $\sin\pi z = \pi z - \frac{\pi^3z^3}{6} + \cdots$ and in the product, $-\frac{\pi^3}{6} = -\pi\sum_n\frac1{n^2}$, which is Euler's original (heuristic) derivation of
-$\zeta(2) = \frac{\pi^2}{6}$; here it is a proof.
-\end{example}
-
-\begin{theorem}[Reflection formula]\label{analytic-number-theory:theorem-reflection}
-For $s \in \CC \setminus \ZZ$,
-\[
-\Gamma(s)\Gamma(1 - s) = \frac{\pi}{\sin\pi s}.
-\]
-\end{theorem}
-
-\begin{proof}
-By Theorem~\ref{analytic-number-theory:theorem-weierstrass-gamma}, the factors $e^{\pm\gamma s}$ and $e^{\mp s/k}$ cancel in
-$\frac{1}{\Gamma(s)\Gamma(-s)} = se^{\gamma s}\prod_k\bigl(1 + \frac sk\bigr)e^{-s/k}\cdot(-s)e^{-\gamma s}\prod_k\bigl(1 - \frac sk\bigr)e^{s/k} = -s^2\prod_k\Bigl(1 - \frac{s^2}{k^2}\Bigr) = -\frac{s\sin\pi s}{\pi}$
-by Corollary~\ref{analytic-number-theory:corollary-sine-product}. Since $\Gamma(1 - s) = -s\Gamma(-s)$, $\Gamma(s)\Gamma(1 - s) = -s\Gamma(s)\Gamma(-s) = \frac{\pi}{\sin\pi s}$.
-\end{proof}
-
-\begin{example}\label{analytic-number-theory:example-reflection}
-At $s = \frac12$ the formula gives $\Gamma(\frac12)^2 = \pi$ again. On the line $s = \frac12 + it$, since $\Gamma(\frac12 - it) = \overline{\Gamma(\frac12 + it)}$ and
-$\sin(\frac\pi2 + i\pi t) = \cos(i\pi t) = \cosh\pi t$,
-\[
-\bigl|\Gamma(\tfrac12 + it)\bigr|^2 = \frac{\pi}{\cosh\pi t}:
-\]
-the Gamma function decays exponentially on vertical lines. This decay, of size $e^{-\pi|t|/2}$ on every vertical line by Stirling's formula (Remark~\ref{analytic-number-theory:remark-stirling-gamma}), is what
-makes the integrals of the next sections converge.
-\end{example}
-
-\begin{proposition}[Legendre's duplication formula]\label{analytic-number-theory:proposition-duplication}
-For $2s \notin \{0, -1, -2, \ldots\}$, $\Gamma(s)\Gamma(s + \frac12) = 2^{1 - 2s}\sqrt{\pi}\,\Gamma(2s)$.
-\end{proposition}
-
-\begin{proof}
-Let $s > 0$ be real. In $B(s, s) = \int_0^1(u(1 - u))^{s-1}du = 2\int_0^{1/2}(u(1 - u))^{s-1}du$ substitute $v = 4u(1 - u)$, which increases from $0$ to $1$ on $[0, \frac12]$, with
-$dv = 4(1 - 2u)\,du$ and $1 - 2u = \sqrt{1 - v}$:
-\[
-B(s, s) = 2\int_0^1\Bigl(\frac v4\Bigr)^{s-1}\frac{dv}{4\sqrt{1 - v}} = 2^{1 - 2s}B(s, \tfrac12).
-\]
-By Proposition~\ref{analytic-number-theory:proposition-beta}, $\frac{\Gamma(s)^2}{\Gamma(2s)} = 2^{1-2s}\frac{\Gamma(s)\Gamma(\frac12)}{\Gamma(s + \frac12)}$, which is the claim for real $s > 0$, as
-$\Gamma(\frac12) = \sqrt{\pi}$. Both sides are meromorphic on $\CC$, so the identity theorem extends it.
-\end{proof}
-
-\begin{remark}\label{analytic-number-theory:remark-stirling-gamma}
-Stirling's formula for $n!$ (Theorem~\ref{real-analysis:theorem-stirling}) extends to the complex Gamma function: for every $\delta > 0$,
-$\log\Gamma(s) = (s - \frac12)\log s - s + \frac12\log 2\pi + O_\delta(|s|^{-1})$ uniformly for $|\arg s| \leq \pi - \delta$, $|s| \geq 1$, with the principal branches of the logarithms
-\cite{iwaniec-kowalski}, \cite{titchmarsh-zeta}. In particular $|\Gamma(\sigma + it)| \sim \sqrt{2\pi}|t|^{\sigma - 1/2}e^{-\pi|t|/2}$ as $|t| \to \infty$ with $\sigma$ fixed, in agreement with
-Example~\ref{analytic-number-theory:example-reflection}. We shall not need it: the proofs below use only the results proved in this section.
-\end{remark}
-
 \section{The Riemann zeta function}\label{analytic-number-theory:section-zeta}
 
 \subsection{Continuation to the half-plane $\sigma > 0$}\label{analytic-number-theory:subsection-zeta-continuation}
@@ -709,7 +473,7 @@ In particular $\zeta(s) = \frac{s}{s - 1} - s\int_1^\infty\{u\}u^{-s-1}\,du$, an
 \emph{Step 1: the formula for $\sigma > 1$.} Lemma~\ref{analytic-number-theory:lemma-euler-summation} with $f(u) = u^{-s}$ on $[x, X]$ gives
 $\sum_{x < n \leq X}n^{-s} = \frac{x^{1-s} - X^{1-s}}{s - 1} - s\int_x^X\{u\}u^{-s-1}du - \{X\}X^{-s} + \{x\}x^{-s}$. For $\sigma > 1$ let $X \to \infty$: the terms in $X$ tend to $0$, and
 \eqref{analytic-number-theory:equation-zeta-approximate} follows.
-\emph{Step 2: continuation.} For $\sigma \geq a > 0$, $|\{u\}u^{-s-1}| \leq u^{-a-1}$, which is integrable on $[x, \infty)$; so by Lemma~\ref{analytic-number-theory:lemma-holomorphic-integrals} the
+\emph{Step 2: continuation.} For $\sigma \geq a > 0$, $|\{u\}u^{-s-1}| \leq u^{-a-1}$, which is integrable on $[x, \infty)$; so by Lemma~\ref{special-functions:lemma-holomorphic-integrals} the
 integral is holomorphic on $\sigma > 0$, and the right side of \eqref{analytic-number-theory:equation-zeta-approximate} is meromorphic on $\sigma > 0$ with at most a pole at $s = 1$. For different values of
 $x$ these functions agree on $\sigma > 1$, hence everywhere on $\sigma > 0$ by the identity theorem; they define the continuation of $\zeta$.
 \emph{Step 3: the pole.} With $x = 1$, $\zeta(s) = 1 + \frac{1}{s - 1} - s\int_1^\infty\{u\}u^{-s-1}du$. The last term is holomorphic at $s = 1$ with value $\int_1^\infty\{u\}u^{-2}du = 1 - \gamma$ there
@@ -745,7 +509,7 @@ For $\sigma \geq 2$, $|\zeta(s)| \leq \zeta(2)$ and $|\zeta^{\prime}(s)| \leq \s
 \emph{The bound for $\zeta$.} The terms of \eqref{analytic-number-theory:equation-zeta-approximate} are bounded as follows: $\sum_{n \leq x}n^{-\sigma} \leq e(1 + \log x)$;
 $\bigl|\frac{x^{1-s}}{s - 1}\bigr| \leq \frac{x^{1-\sigma}}{|t|} \leq \frac{e}{x}$; $\{x\}x^{-\sigma} \leq \frac ex$; and
 $\bigl|s\int_x^\infty\{u\}u^{-s-1}du\bigr| \leq |s|\frac{x^{-\sigma}}{\sigma} \leq (2 + |t|)\cdot\frac{e}{x}\cdot 2 \leq 6e$. So $|\zeta(s)| \ll \log|t|$.
-\emph{The bound for $\zeta^{\prime}$.} Differentiate \eqref{analytic-number-theory:equation-zeta-approximate}, using Lemma~\ref{analytic-number-theory:lemma-holomorphic-integrals} for the integral:
+\emph{The bound for $\zeta^{\prime}$.} Differentiate \eqref{analytic-number-theory:equation-zeta-approximate}, using Lemma~\ref{special-functions:lemma-holomorphic-integrals} for the integral:
 \[
 \begin{aligned}
 \zeta^{\prime}(s) = &-\sum_{n \leq x}\frac{\log n}{n^s} - \frac{x^{1-s}\log x}{s - 1} - \frac{x^{1-s}}{(s - 1)^2} - \frac{\{x\}\log x}{x^s} \\
@@ -824,9 +588,9 @@ absolute values is $\pi^{-\sigma/2}\Gamma(\frac\sigma2)\zeta(\sigma) < \infty$ (
 \]
 and the last integral is $\frac12\bigl(\frac{2}{s - 1} - \frac2s\bigr) = \frac{1}{s - 1} - \frac1s$ for $\sigma > 1$. Adding $\int_1^\infty w(x)x^{s/2}dx/x$ gives \eqref{analytic-number-theory:equation-xi}.
 \emph{Step 3: the integral is entire.} For $|s| \leq R$, $|w(x)(x^{s/2} + x^{(1-s)/2})x^{-1}| \leq 4e^{-\pi x}x^{R}$ for $x \geq 1$, an integrable function; so
-Lemma~\ref{analytic-number-theory:lemma-holomorphic-integrals} applies.
+Lemma~\ref{special-functions:lemma-holomorphic-integrals} applies.
 \emph{Step 4: consequences.} (1) The right side of \eqref{analytic-number-theory:equation-xi} is meromorphic on $\CC$ with simple poles at $0$ and $1$ only, and it is unchanged by $s \mapsto 1 - s$.
-(2) Put $\zeta(s) = \pi^{s/2}\xi(s)/\Gamma(\frac s2)$. Since $1/\Gamma$ is entire (Theorem~\ref{analytic-number-theory:theorem-weierstrass-gamma}), this is meromorphic on $\CC$; it agrees with $\zeta$
+(2) Put $\zeta(s) = \pi^{s/2}\xi(s)/\Gamma(\frac s2)$. Since $1/\Gamma$ is entire (Theorem~\ref{special-functions:theorem-weierstrass-gamma}), this is meromorphic on $\CC$; it agrees with $\zeta$
 on $\sigma > 1$, hence with the continuation of Proposition~\ref{analytic-number-theory:proposition-zeta-continuation} on $\sigma > 0$. Its possible poles are those of $\xi$. At $s = 0$, the simple pole
 of $\xi$ is cancelled by the simple zero of $1/\Gamma(\frac s2)$; at $s = 1$ there is a simple pole, as $\Gamma(\frac12) \neq 0$. Finally
 $\zeta(s) = \pi^{s/2}\xi(1 - s)/\Gamma(\frac s2) = \pi^{s/2}\pi^{-(1-s)/2}\Gamma(\frac{1 - s}2)\zeta(1 - s)/\Gamma(\frac s2)$.
@@ -843,7 +607,7 @@ $\zeta(s) = \pi^{s/2}\xi(1 - s)/\Gamma(\frac s2) = \pi^{s/2}\pi^{-(1-s)/2}\Gamma
 \end{corollary}
 
 \begin{proof}
-(1) Near $s = 0$, $\xi(s) = -\frac1s + O(1)$ by \eqref{analytic-number-theory:equation-xi}, and $\frac{1}{\Gamma(s/2)} = \frac s2(1 + O(s))$ by Theorem~\ref{analytic-number-theory:theorem-weierstrass-gamma}. So
+(1) Near $s = 0$, $\xi(s) = -\frac1s + O(1)$ by \eqref{analytic-number-theory:equation-xi}, and $\frac{1}{\Gamma(s/2)} = \frac s2(1 + O(s))$ by Theorem~\ref{special-functions:theorem-weierstrass-gamma}. So
 $\zeta(0) = \lim_{s \to 0}\pi^{s/2}\xi(s)/\Gamma(\frac s2) = -\frac12$.
 (2) For $\sigma > 1$ by Example~\ref{analytic-number-theory:example-dirichlet-series-table}(1), and for $\sigma = 1$ by Theorem~\ref{analytic-number-theory:theorem-zeta-nonvanishing} (at $s = 1$ there is a pole).
 (3) For $\sigma \leq 0$, $s \neq 0$: $\xi(s) = \xi(1 - s) = \pi^{-(1-s)/2}\Gamma(\frac{1 - s}2)\zeta(1 - s)$ with $\operatorname{Re}(1 - s) \geq 1$, $1 - s \neq 1$, so $\xi(s) \neq 0$ by (2) and
@@ -874,7 +638,7 @@ where $B_n$ are the Bernoulli numbers (Definition~\ref{generating-functions:defi
 \end{theorem}
 
 \begin{proof}
-\emph{Step 1: the cotangent as a power series in $\zeta(2k)$.} For $|z| < 1$, by Theorem~\ref{analytic-number-theory:theorem-cotangent},
+\emph{Step 1: the cotangent as a power series in $\zeta(2k)$.} For $|z| < 1$, by Theorem~\ref{special-functions:theorem-cotangent},
 \[
 \pi z\cot\pi z = 1 + \sum_{n \geq 1}\frac{2z^2}{z^2 - n^2} = 1 - 2\sum_{n \geq 1}\sum_{k \geq 1}\frac{z^{2k}}{n^{2k}} = 1 - 2\sum_{k \geq 1}\zeta(2k)z^{2k},
 \]
@@ -938,7 +702,7 @@ to an open set containing the closed half-plane $\operatorname{Re}z \geq 0$. The
 \end{theorem}
 
 \begin{proof}
-Let $|f| \leq B$. The function $g$ is holomorphic on $\operatorname{Re}z > 0$ by Lemma~\ref{analytic-number-theory:lemma-holomorphic-integrals} (dominate by $Be^{-\eta u}$ on
+Let $|f| \leq B$. The function $g$ is holomorphic on $\operatorname{Re}z > 0$ by Lemma~\ref{special-functions:lemma-holomorphic-integrals} (dominate by $Be^{-\eta u}$ on
 $\operatorname{Re}z \geq \eta$). For $T > 0$ let $g_T(z) = \int_0^Tf(u)e^{-zu}du$, an entire function by the same lemma; we must show $g_T(0) \to g(0)$.
 \emph{Step 1: a contour.} Fix $R > 0$. The extension of $g$ is holomorphic on an open set containing the compact set $\{|z| \leq R, \operatorname{Re}z \geq 0\}$, hence containing
 $\{|z| \leq R, \operatorname{Re}z \geq -\delta\}$ for some $\delta = \delta(R) > 0$. Let $C$ be the boundary of this region, traversed counterclockwise, and let $C_+$, $C_-$ be its parts in
@@ -1518,9 +1282,9 @@ Show that $\Gamma(n + \frac12) = \frac{(2n)!}{4^nn!}\sqrt{\pi}$ for $n \geq 0$, 
 
 \begin{solution}
 By induction from $\Gamma(\frac12) = \sqrt\pi$: $\Gamma(n + \frac32) = (n + \frac12)\Gamma(n + \frac12) = \frac{2n + 1}{2}\cdot\frac{(2n)!}{4^nn!}\sqrt\pi = \frac{(2n + 2)!}{4^{n+1}(n + 1)!}\sqrt\pi$, because
-$\frac{(2n + 2)!}{(2n)!} = (2n + 1)(2n + 2)$. (For $n \geq 1$ this is also the case $s = n$ of the duplication formula, Proposition~\ref{analytic-number-theory:proposition-duplication}:
+$\frac{(2n + 2)!}{(2n)!} = (2n + 1)(2n + 2)$. (For $n \geq 1$ this is also the case $s = n$ of the duplication formula, Proposition~\ref{special-functions:proposition-duplication}:
 $\Gamma(n + \frac12) = 2^{1-2n}\sqrt\pi\,\frac{(2n - 1)!}{(n - 1)!} = \frac{(2n)!}{4^nn!}\sqrt\pi$.) For the second claim, $\Gamma(-it) = \overline{\Gamma(it)}$ and $\Gamma(1 - it) = -it\Gamma(-it)$, so by
-Theorem~\ref{analytic-number-theory:theorem-reflection} $|\Gamma(it)|^2 = \Gamma(it)\Gamma(-it) = \frac{\Gamma(it)\Gamma(1 - it)}{-it} = \frac{\pi}{-it\sin(\pi it)} = \frac{\pi}{t\sinh\pi t}$, using
+Theorem~\ref{special-functions:theorem-reflection} $|\Gamma(it)|^2 = \Gamma(it)\Gamma(-it) = \frac{\Gamma(it)\Gamma(1 - it)}{-it} = \frac{\pi}{-it\sin(\pi it)} = \frac{\pi}{t\sinh\pi t}$, using
 $\sin(i\pi t) = i\sinh\pi t$.
 \end{solution}
 
