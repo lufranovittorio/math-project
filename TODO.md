@@ -227,7 +227,9 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
   non-integer s (Proposition sobolev-sections, Warner). Possible: parametrix and
   pseudodifferential operators (survey).
 - `de-rham`: still to do: Thom isomorphism and Euler class with forms (Bott–Tu), Leray–Hirsch.
-- `spin-geometry` (planned, new): Clifford algebras, spin structures, Dirac operator, index theorem.
+- `spin-geometry` (draft 2026-11-08): to deepen: proof of the Lichnerowicz formula in full, spin
+  connection details, real spinor representations and Clifford modules (ABS), Spin^c and
+  Seiberg-Witten, proof of w_2 obstruction, heat-kernel proof of the index theorem (Getzler).
 - Also: *Riemann surfaces* are covered by `complex-manifolds` and `curves`; *Morse theory* goes as
   sections in `riemannian-geometry` or `smooth-manifolds` (Morse lemma, handle decompositions,
   Morse inequalities, h-cobordism (survey)).

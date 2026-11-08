@@ -1,25 +1,530 @@
 \chapter{Spin Geometry and the Index Theorem}\label{spin-geometry}
-\chapterstatus{planned}
+\chapterstatus{draft}
 
-The Dirac operator is a square root of the Laplacian; to define it on a manifold one needs Clifford
-algebras and spin structures. Its index is computed by the Atiyah--Singer index theorem, which unifies
-the Gauss--Bonnet, Hirzebruch signature and Riemann--Roch theorems.
+Dirac looked for a first-order differential operator whose square is the Laplacian. On $\RR^n$ this means $D = \sum_ie_i\partial_i$ with coefficients satisfying $e_ie_j + e_je_i = -2\delta_{ij}$, which no
+numbers satisfy for $n \geq 2$; the coefficients must lie in an algebra built for the purpose, the Clifford algebra. Its group of units contains the group $\mathrm{Spin}(n)$, the connected double cover of
+$\mathrm{SO}(n)$, and on a Riemannian manifold whose frame bundle lifts to $\mathrm{Spin}(n)$ there is a bundle of spinors and a Dirac operator. The Dirac operator is elliptic, so it has a Fredholm index, and
+the Atiyah--Singer index theorem computes it as a characteristic number, the $\hat{A}$-genus. Variants of the same construction give the operators $d + \delta$, the signature operator and the Dolbeault
+operator, whose indices are the Euler characteristic, the signature and the holomorphic Euler characteristic.
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{multilinear-algebra} (Multilinear Algebra), Chapter~\ref{lie-groups} (Lie Groups), Chapter~\ref{characteristic-classes} (Characteristic Classes), Chapter~\ref{k-theory} (Topological K-Theory), Chapter~\ref{riemannian-geometry} (Riemannian Geometry), Chapter~\ref{elliptic-operators} (Elliptic Operators on Compact Manifolds) and Chapter~\ref{hodge-theorem} (Harmonic Forms and the Hodge Theorem).
+The chapter develops Clifford algebras with their classification and $8$-periodicity, the groups $\mathrm{Pin}(n)$ and $\mathrm{Spin}(n)$ with their low-dimensional identifications, spin structures and the
+obstruction $w_2$, spinor bundles and the Dirac operator with the Lichnerowicz formula, and then states the index theorem and derives Lichnerowicz's obstruction to positive scalar curvature and Rokhlin's
+theorem. The heat-kernel proof is outlined, together with its supergeometric ingredients.
 
-\noindent\textbf{Planned contents.}
+\noindent\textbf{Prerequisites.} Chapter~\ref{multilinear-algebra} (Multilinear Algebra), Chapter~\ref{lie-groups} (Lie Groups), Chapter~\ref{connections} (Connections and Curvature),
+Chapter~\ref{characteristic-classes} (Characteristic Classes), Chapter~\ref{k-theory} (Topological K-Theory), Chapter~\ref{riemannian-geometry} (Riemannian Geometry),
+Chapter~\ref{elliptic-operators} (Elliptic Operators on Compact Manifolds) and Chapter~\ref{hodge-theorem} (Harmonic Forms and the Hodge Theorem).
+
+\section{Clifford algebras}\label{spin-geometry:section-clifford-algebras}
+
+\begin{definition}\label{spin-geometry:definition-clifford-algebra}
+Let $V$ be a finite-dimensional vector space over $k = \RR$ or $\CC$ with a quadratic form $q$. A \emph{Clifford algebra} of $(V, q)$ is an associative unital $k$-algebra $\mathrm{Cl}(V, q)$ with a linear map
+$V \to \mathrm{Cl}(V, q)$, written $v \mapsto v$, such that $v \cdot v = -q(v)1$ for all $v \in V$, and universal with this property: every linear map $f \colon V \to A$ to an associative unital algebra with
+$f(v)^2 = -q(v)1$ extends uniquely to an algebra homomorphism $\mathrm{Cl}(V, q) \to A$.
+\end{definition}
+
+\begin{notation}\label{spin-geometry:notation-clifford}
+The product in $\mathrm{Cl}(V, q)$ is \emph{Clifford multiplication}, written $x \cdot y$ or $xy$. We write $\mathrm{Cl}_{r,s}$ for $\mathrm{Cl}(\RR^{r+s}, q)$ with
+$q(x) = x_1^2 + \cdots + x_r^2 - x_{r+1}^2 - \cdots - x_{r+s}^2$, so that the standard basis satisfies $e_i^2 = -1$ for $i \leq r$ and $e_i^2 = 1$ for $i > r$; $\mathrm{Cl}_n = \mathrm{Cl}_{n,0}$; and
+$\mathrm{Cl}^\CC_n = \mathrm{Cl}_n \otimes_\RR \CC$. For a multi-index $I = \{i_1 < \cdots < i_k\}$, $e_I = e_{i_1}\cdots e_{i_k}$ and $e_\emptyset = 1$. The sign convention $v^2 = -q(v)$ is the one of
+\cite{lawson-michelsohn}; other books use $v^2 = q(v)$, which exchanges $\mathrm{Cl}_{r,s}$ and $\mathrm{Cl}_{s,r}$.
+\end{notation}
+
+Polarising $v^2 = -q(v)$ gives the basic relation: if $B(v, w) = \frac12(q(v + w) - q(v) - q(w))$ is the associated bilinear form, then
+\begin{equation}\label{spin-geometry:equation-clifford-relation}
+vw + wv = -2B(v, w),
+\end{equation}
+so orthogonal vectors anticommute. In $\mathrm{Cl}_n$: $e_ie_j = -e_je_i$ for $i \neq j$ and $e_i^2 = -1$.
+
+\begin{proposition}\label{spin-geometry:proposition-clifford-structure}
+Let $(V, q)$ be as above, with $\dim V = n$.
 \begin{enumerate}
-\item Clifford algebras: definition, $\mathbb{Z}/2$-grading, the classification of real and complex
-Clifford algebras and their $8$-periodicity; relation with Bott periodicity.
-\item The groups $\mathrm{Pin}(n)$ and $\mathrm{Spin}(n)$, the double cover of $\mathrm{SO}(n)$, spinor representations;
-low-dimensional isomorphisms ($\mathrm{Spin}(3) = \mathrm{SU}(2)$, $\mathrm{Spin}(4) = \mathrm{SU}(2) \times \mathrm{SU}(2)$, \ldots).
-\item Spin and $\mathrm{Spin}^c$ structures; the second Stiefel--Whitney class as obstruction; examples.
-\item Spinor bundles, the spin connection, the Dirac operator; the Weitzenb\"ock formula and
-Lichnerowicz's theorem; the $\hat{A}$-genus.
-\item Dirac-type operators: the de Rham, signature and Dolbeault operators.
-\item The Atiyah--Singer index theorem (statement and the heat-kernel sketch); the special cases of
-Gauss--Bonnet--Chern, Hirzebruch's signature theorem, Hirzebruch--Riemann--Roch, and Rokhlin's theorem.
-\item Supergeometry for the index theorem: Clifford modules as super vector spaces, supertraces of heat operators, Getzler's rescaling (sketch); supermanifolds, the Berezinian and the
-$\hat A$-genus as a Berezin integral (survey).
-\item Exercises with solutions.
+\item The Clifford algebra exists: $\mathrm{Cl}(V, q) = T(V)/I_q$, where $I_q$ is the two-sided ideal generated by the elements $v \otimes v + q(v)$.
+\item It is a superalgebra (Definition~\ref{multilinear-algebra:definition-superalgebra}): $\mathrm{Cl} = \mathrm{Cl}^0 \oplus \mathrm{Cl}^1$, where $\mathrm{Cl}^0$ ($\mathrm{Cl}^1$) is spanned by products of an even (odd)
+number of vectors. The automorphism $\alpha$ extending $v \mapsto -v$ is $+1$ on $\mathrm{Cl}^0$ and $-1$ on $\mathrm{Cl}^1$, and there is an anti-automorphism $x \mapsto x^t$ with
+$(v_1\cdots v_k)^t = v_k\cdots v_1$.
+\item If $e_1, \ldots, e_n$ is a $B$-orthogonal basis of $V$, the elements $e_I$ form a basis of $\mathrm{Cl}(V, q)$; so $\dim\mathrm{Cl}(V, q) = 2^n$, and the map $\Lambda(V) \to \mathrm{Cl}(V, q)$,
+$e_{i_1} \wedge \cdots \wedge e_{i_k} \mapsto e_{i_1}\cdots e_{i_k}$, is a linear isomorphism.
 \end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) $T(V)$ is the free algebra on $V$ (Proposition~\ref{multilinear-algebra:proposition-universal-algebras}), so algebra maps $T(V)/I_q \to A$ correspond to linear maps $f$ with $f(v)^2 = -q(v)$.
+(2) The ideal $I_q$ is generated by elements of even degree, so the $\ZZ/2$-grading of $T(V)$ by parity of degree descends. The map $v \mapsto -v$ satisfies $(-v)^2 = -q(v)$, so it extends to an algebra
+endomorphism $\alpha$ with $\alpha^2 = \id$. The map $v \mapsto v$ into the opposite algebra $\mathrm{Cl}^{\op}$ satisfies the same relation, so it extends to an anti-homomorphism $x \mapsto x^t$.
+(3) \emph{Spanning}: by \eqref{spin-geometry:equation-clifford-relation}, $e_ie_j = -e_je_i$ for $i \neq j$ and $e_i^2 = -q(e_i)$, so every product of basis vectors can be reordered to $\pm$ a scalar times some $e_I$.
+\emph{Independence}: we construct a representation. On $\Lambda(V)$ define $c(v)\omega = v \wedge \omega - \iota_v\omega$, where $\iota_v$ is the interior product with the linear form $B(v, -)$
+(Definition~\ref{multilinear-algebra:definition-interior-product}, transported to $\Lambda(V)$ via $V \cong (V^*)^*$). Since $\iota_v$ is an antiderivation with $\iota_v(w) = B(v, w)$
+(Proposition~\ref{multilinear-algebra:proposition-interior-antiderivation}), one has $v \wedge v = 0$, $\iota_v^2 = 0$ and $\iota_v(v \wedge \omega) + v \wedge \iota_v\omega = B(v, v)\omega$, so
+$c(v)^2\omega = -(v \wedge \iota_v\omega + \iota_v(v \wedge \omega)) = -q(v)\omega$. Hence $c$ extends to an algebra map $\mathrm{Cl}(V, q) \to \End(\Lambda V)$, and $x \mapsto c(x)1$ sends $e_I$ to
+$e_{i_1} \wedge \cdots \wedge e_{i_k}$ (the interior products vanish, as the basis is orthogonal and the indices are distinct). These images are linearly independent, so the $e_I$ are.
+\end{proof}
+
+\begin{example}\label{spin-geometry:example-small-clifford}
+\begin{enumerate}
+\item $\mathrm{Cl}_1 = \RR[e]/(e^2 + 1) \cong \CC$, with $\mathrm{Cl}_1^0 = \RR$ and $\mathrm{Cl}_1^1 = \RR i$.
+\item $\mathrm{Cl}_2 \cong \mathbb{H}$, the quaternions, by $e_1 \mapsto i$, $e_2 \mapsto j$, $e_1e_2 \mapsto k$: the relations $i^2 = j^2 = -1$, $ij = -ji$ hold, and both algebras have dimension $4$.
+\item $\mathrm{Cl}_{0,1} = \RR[e]/(e^2 - 1) \cong \RR \oplus \RR$, by $e \mapsto (1, -1)$.
+\item $\mathrm{Cl}_{0,2} \cong M_2(\RR)$, by $e_1 \mapsto \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}$, $e_2 \mapsto \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$: these square to $1$, anticommute, and with their
+product and $1$ span $M_2(\RR)$.
+\item If $q = 0$, then $\mathrm{Cl}(V, 0) = \Lambda(V)$, and the representation in the proof of Proposition~\ref{spin-geometry:proposition-clifford-structure} is left multiplication.
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{spin-geometry:counterexample-not-graded-commutative}
+The linear isomorphism $\Lambda(V) \cong \mathrm{Cl}(V, q)$ is not an algebra isomorphism when $q \neq 0$: in $\mathrm{Cl}_1$ the square of $e$ is $-1$, while in $\Lambda(\RR)$ the square of $e$ is $0$. Only
+the associated graded algebra of the filtration by the number of factors is $\Lambda(V)$. The Clifford algebra is a quantisation of the exterior algebra, a point of view that is central in the heat-kernel
+proof of the index theorem (Section~\ref{spin-geometry:section-index-theorem}).
+\end{counterexample}
+
+\begin{proposition}\label{spin-geometry:proposition-even-part}
+$\mathrm{Cl}_n^0 \cong \mathrm{Cl}_{n-1}$ for $n \geq 1$, and $\mathrm{Cl}(V \oplus W, q \oplus q^{\prime}) \cong \mathrm{Cl}(V, q) \hat\otimes \mathrm{Cl}(W, q^{\prime})$, the super tensor product of
+Definition~\ref{multilinear-algebra:definition-superalgebra}.
+\end{proposition}
+
+\begin{proof}
+For the first statement, $f(e_i) = e_ie_n$ ($i < n$) defines a map $\RR^{n-1} \to \mathrm{Cl}_n^0$ with $f(v)^2 = -|v|^2$: indeed $(e_ie_n)^2 = -e_i^2e_n^2 = -1$, and $e_ie_n$, $e_je_n$ anticommute for $i \neq j$. It extends to
+$\mathrm{Cl}_{n-1} \to \mathrm{Cl}_n^0$, which is surjective because $e_ie_j = -(e_ie_n)(e_je_n)$, hence bijective, both sides having dimension $2^{n-1}$. For the second, $v + w \mapsto v \otimes 1 + 1 \otimes w$ satisfies
+$(v \otimes 1 + 1 \otimes w)^2 = -q(v) - q^{\prime}(w)$, because $v \otimes 1$ and $1 \otimes w$ anticommute in the super tensor product; the induced map is surjective, and dimensions agree.
+\end{proof}
+
+To classify the real Clifford algebras we use ordinary (ungraded) tensor products.
+
+\begin{lemma}\label{spin-geometry:lemma-periodicity-isomorphisms}
+For all $n \geq 0$, $\mathrm{Cl}_{0,n+2} \cong \mathrm{Cl}_{n,0} \otimes \mathrm{Cl}_{0,2}$ and $\mathrm{Cl}_{n+2,0} \cong \mathrm{Cl}_{0,n} \otimes \mathrm{Cl}_{2,0}$.
+\end{lemma}
+
+\begin{proof}
+Let $e^{\prime}_1, \ldots, e^{\prime}_n$ be the generators of $\mathrm{Cl}_{n,0}$ and $e^{\prime\prime}_1, e^{\prime\prime}_2$ those of $\mathrm{Cl}_{0,2}$, and $u = e^{\prime\prime}_1e^{\prime\prime}_2$, so that $u^2 = -1$ and $u$ anticommutes with
+$e^{\prime\prime}_1$, $e^{\prime\prime}_2$. Define $f(e_i) = e^{\prime}_i \otimes u$ for $i \leq n$ and $f(e_{n+j}) = 1 \otimes e^{\prime\prime}_j$. Then $f(e_i)^2 = (e^{\prime}_i)^2 \otimes u^2 = (-1)(-1) = 1$, $f(e_{n+j})^2 = 1$, and the images
+pairwise anticommute (for $i, i^{\prime} \leq n$ because the $e^{\prime}_i$ do; for $i \leq n < m$ because $u$ anticommutes with $e^{\prime\prime}_j$). So $f$ extends to $\mathrm{Cl}_{0,n+2} \to \mathrm{Cl}_{n,0} \otimes \mathrm{Cl}_{0,2}$. Its image
+contains $1 \otimes e^{\prime\prime}_j$ and $e^{\prime}_i \otimes 1 = -f(e_i)f(e_{n+1})f(e_{n+2})$, which generate, and both sides have dimension $2^{n+2}$. The second isomorphism is proved by the same formulas, with
+$(e^{\prime}_i)^2 = 1$ and $(e^{\prime\prime}_j)^2 = -1$, so that $u^2 = -1$ again and $f(e_i)^2 = -1$.
+\end{proof}
+
+\begin{lemma}\label{spin-geometry:lemma-tensor-division-algebras}
+$\CC \otimes_\RR \CC \cong \CC \oplus \CC$, $\CC \otimes_\RR \mathbb{H} \cong M_2(\CC)$ and $\mathbb{H} \otimes_\RR \mathbb{H} \cong M_4(\RR)$. Also $M_a(\RR) \otimes M_b(A) \cong M_{ab}(A)$ for every algebra $A$.
+\end{lemma}
+
+\begin{proof}
+$z \otimes w \mapsto (zw, z\bar{w})$ is an algebra map $\CC \otimes \CC \to \CC \oplus \CC$, injective on the basis $1 \otimes 1$, $i \otimes 1$, $1 \otimes i$, $i \otimes i$ (images $(1, 1)$, $(i, i)$, $(i, -i)$, $(-1, 1)$), hence an
+isomorphism. For $\mathbb{H} \otimes \mathbb{H}$, let $\varphi(p \otimes q)$ be the real linear map $x \mapsto px\bar{q}$ of $\mathbb{H} \cong \RR^4$; since $\overline{qq^{\prime}} = \bar{q}^{\prime}\bar{q}$, $\varphi$ is an algebra
+homomorphism to $\End_\RR(\mathbb{H}) = M_4(\RR)$. A check on the basis $1, i, j, k$ shows $\operatorname{tr}(x \mapsto pxq) = 4\operatorname{Re}(p)\operatorname{Re}(q)$, so for basis units $e_a$ the orthogonal maps
+$T_{ab} = \varphi(e_a \otimes e_b)$ satisfy $\operatorname{tr}(T_{ab}T_{cd}^{\mathsf{T}}) = \operatorname{tr}(x \mapsto e_a\bar{e}_cxe_d\bar{e}_b) = 4\delta_{ac}\delta_{bd}$: they are orthogonal for the trace inner product,
+hence linearly independent, and $\varphi$ is an isomorphism by dimensions. For $\CC \otimes \mathbb{H}$, view $\mathbb{H}$ as a complex vector space of dimension $2$ by right multiplication by $\CC = \RR + \RR i$; the
+maps $x \mapsto px\bar{z}$ ($p \in \mathbb{H}$, $z \in \CC$) are complex linear, and the restriction of $\varphi$ gives an injective algebra map $\CC \otimes \mathbb{H} \to \End_\CC(\mathbb{H}) = M_2(\CC)$, bijective by
+dimensions. The last statement is the identification of a block matrix with a matrix of blocks.
+\end{proof}
+
+\begin{theorem}[Classification of Clifford algebras]\label{spin-geometry:theorem-classification}
+\begin{enumerate}
+\item The algebras $\mathrm{Cl}_n$ for $n = 1, \ldots, 8$ are
+$\CC$, $\mathbb{H}$, $\mathbb{H} \oplus \mathbb{H}$, $M_2(\mathbb{H})$, $M_4(\CC)$, $M_8(\RR)$, $M_8(\RR) \oplus M_8(\RR)$, $M_{16}(\RR)$.
+\item (Periodicity) $\mathrm{Cl}_{n+8} \cong \mathrm{Cl}_n \otimes M_{16}(\RR) = M_{16}(\mathrm{Cl}_n)$.
+\item $\mathrm{Cl}^\CC_{2k} \cong M_{2^k}(\CC)$ and $\mathrm{Cl}^\CC_{2k+1} \cong M_{2^k}(\CC) \oplus M_{2^k}(\CC)$; in particular $\mathrm{Cl}^\CC_{n+2} \cong M_2(\mathrm{Cl}^\CC_n)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+By Lemma~\ref{spin-geometry:lemma-periodicity-isomorphisms} and Example~\ref{spin-geometry:example-small-clifford}, $\mathrm{Cl}_{n+2,0} \cong \mathrm{Cl}_{0,n} \otimes \mathbb{H}$ and $\mathrm{Cl}_{0,n+2} \cong \mathrm{Cl}_{n,0} \otimes M_2(\RR)$. Starting from
+$\mathrm{Cl}_{1,0} = \CC$, $\mathrm{Cl}_{2,0} = \mathbb{H}$, $\mathrm{Cl}_{0,1} = \RR \oplus \RR$, $\mathrm{Cl}_{0,2} = M_2(\RR)$ and using Lemma~\ref{spin-geometry:lemma-tensor-division-algebras}:
+$\mathrm{Cl}_{0,3} = M_2(\CC)$, $\mathrm{Cl}_{0,4} = M_2(\mathbb{H})$, and then $\mathrm{Cl}_3 = (\RR \oplus \RR) \otimes \mathbb{H} = \mathbb{H} \oplus \mathbb{H}$, $\mathrm{Cl}_4 = M_2(\RR) \otimes \mathbb{H} = M_2(\mathbb{H})$,
+$\mathrm{Cl}_5 = M_2(\CC) \otimes \mathbb{H} = M_4(\CC)$, $\mathrm{Cl}_6 = M_2(\mathbb{H}) \otimes \mathbb{H} = M_8(\RR)$; further $\mathrm{Cl}_{0,5} = \mathrm{Cl}_3 \otimes M_2(\RR) = M_2(\mathbb{H})^{\oplus 2}$ and
+$\mathrm{Cl}_{0,6} = M_4(\mathbb{H})$, so $\mathrm{Cl}_7 = M_8(\RR)^{\oplus 2}$ and $\mathrm{Cl}_8 = M_4(\mathbb{H}) \otimes \mathbb{H} = M_{16}(\RR)$. For (2), applying the two isomorphisms alternately,
+$\mathrm{Cl}_{n+4} \cong \mathrm{Cl}_{0,n+2} \otimes \mathbb{H} \cong \mathrm{Cl}_n \otimes M_2(\RR) \otimes \mathbb{H} = \mathrm{Cl}_n \otimes M_2(\mathbb{H})$, so $\mathrm{Cl}_{n+8} \cong \mathrm{Cl}_n \otimes M_4(\mathbb{H} \otimes \mathbb{H}) = \mathrm{Cl}_n \otimes M_{16}(\RR)$.
+For (3), over $\CC$ the signature is irrelevant ($e \mapsto ie$ changes the sign of $e^2$), so the isomorphisms give $\mathrm{Cl}^\CC_{n+2} \cong \mathrm{Cl}^\CC_n \otimes_\CC (\CC \otimes \mathbb{H}) = M_2(\mathrm{Cl}^\CC_n)$, and
+$\mathrm{Cl}^\CC_1 = \CC \oplus \CC$, $\mathrm{Cl}^\CC_2 = M_2(\CC)$.
+\end{proof}
+
+\begin{remark}\label{spin-geometry:remark-bott-clifford}
+The period $8$ of Theorem~\ref{spin-geometry:theorem-classification} and the period $2$ of its complex part are the periods of real and complex Bott periodicity (Theorem~\ref{k-theory:theorem-bott} and
+Remark~\ref{k-theory:remark-real-k-theory}). Atiyah, Bott and Shapiro made this precise: if $M_n$ is the Grothendieck group of $\ZZ/2$-graded $\mathrm{Cl}_n$-modules, then $M_n/i^*M_{n+1} \cong \widetilde{KO}(S^n)$,
+which recovers the table $\ZZ, \ZZ/2, \ZZ/2, 0, \ZZ, 0, 0, 0$ \cite{atiyah-bott-shapiro-1964}. The algebras $\mathbb{H} \oplus \mathbb{H}$ and $M_8(\RR) \oplus M_8(\RR)$ in degrees $3$ and $7$, where the algebra splits, are
+responsible for the two summands of the spinor representation in dimensions $4$ and $8$.
+\end{remark}
+
+Every module over $M_m(D)$, $D = \RR, \CC, \mathbb{H}$, is a direct sum of copies of $D^m$ \cite[Chapter I]{lawson-michelsohn}. So $\mathrm{Cl}^\CC_{2k}$ has a unique irreducible module, of complex dimension
+$2^k$, and $\mathrm{Cl}^\CC_{2k+1}$ has two, of dimension $2^k$.
+
+\begin{definition}\label{spin-geometry:definition-spinor-module}
+The \emph{complex spinor module} $S_n$ is the irreducible $\mathrm{Cl}^\CC_{2k}$-module for $n = 2k$, of dimension $2^k$, and for $n = 2k + 1$ one of the two irreducible modules of $\mathrm{Cl}^\CC_n$, of dimension $2^k$ (they become isomorphic
+on restriction to $\mathrm{Cl}^{\CC,0}_n$, hence to $\mathrm{Spin}(n)$). For $n = 2k$ the \emph{complex volume element} $\omega = i^ke_1\cdots e_n$ satisfies $\omega^2 = 1$ and anticommutes with vectors, and $S_n = S_n^+ \oplus S_n^-$ is the decomposition into its
+$(\pm 1)$-eigenspaces, the \emph{half-spin modules}; Clifford multiplication by a vector exchanges $S^+_n$ and $S^-_n$.
+\end{definition}
+
+The claim $\omega^2 = 1$ is a computation: $(e_1\cdots e_n)^2 = (-1)^{n(n-1)/2}e_1^2\cdots e_n^2 = (-1)^{n(n-1)/2 + n} = (-1)^{k}$ for $n = 2k$ (as $k(2k - 1) + 2k \equiv k$ modulo $2$), and $i^{2k} = (-1)^k$. A vector
+anticommutes with $e_1\cdots e_n$ when $n$ is even, because it anticommutes with all factors but one.
+
+\section{The groups Pin and Spin}\label{spin-geometry:section-spin-groups}
+
+\begin{definition}\label{spin-geometry:definition-pin-spin}
+$\mathrm{Pin}(n) \subseteq \mathrm{Cl}_n^\times$ is the subgroup generated by the unit vectors $u \in S^{n-1} \subseteq \RR^n$, and $\mathrm{Spin}(n) = \mathrm{Pin}(n) \cap \mathrm{Cl}_n^0$, the elements that are
+products of an even number of unit vectors. The \emph{twisted adjoint action} is $\tilde{\rho}(x)(v) = \alpha(x)vx^{-1}$.
+\end{definition}
+
+\begin{lemma}\label{spin-geometry:lemma-reflections}
+For a unit vector $u$, $\tilde{\rho}(u)$ preserves $\RR^n$ and is the reflection in the hyperplane $u^\perp$. Hence $\tilde{\rho}$ maps $\mathrm{Pin}(n)$ to $\mathrm{O}(n)$ and $\mathrm{Spin}(n)$ to $\mathrm{SO}(n)$, and on
+$\mathrm{Spin}(n)$ it is the ordinary conjugation $\rho(x)v = xvx^{-1}$.
+\end{lemma}
+
+\begin{proof}
+$u^2 = -1$, so $u^{-1} = -u$ and $\tilde{\rho}(u)v = (-u)v(-u) = uvu$. For $v = u$ this is $u^3 = -u$, and for $v \perp u$ it is $-vu^2 = v$ by \eqref{spin-geometry:equation-clifford-relation}. A product of an even
+number of reflections has determinant $1$, and $\alpha(x) = x$ for $x \in \mathrm{Cl}^0$.
+\end{proof}
+
+\begin{lemma}\label{spin-geometry:lemma-kernel}
+If $x \in \mathrm{Cl}_n$ satisfies $\alpha(x)v = vx$ for all $v \in \RR^n$, then $x$ is a scalar.
+\end{lemma}
+
+\begin{proof}
+Write $x = x_0 + x_1$ with $x_j \in \mathrm{Cl}^j$; comparing parities, $x_0v = vx_0$ and $x_1v = -vx_1$. Fix $i$ and write $x_0 = a_0 + e_ia_1$, $x_1 = b_1 + e_ib_0$, where $a_0, b_0$ are even, $a_1, b_1$ odd and none
+involves $e_i$; such elements commute (even) or anticommute (odd) with $e_i$. Then $x_0e_i = e_ix_0$ reads $e_ia_0 + a_1 = e_ia_0 - a_1$, so $a_1 = 0$, and $x_1e_i = -e_ix_1$ reads $-e_ib_1 - b_0 = -e_ib_1 + b_0$, so
+$b_0 = 0$. As this holds for every $i$, $x_0$ and $x_1$ involve no $e_i$ (Proposition~\ref{spin-geometry:proposition-clifford-structure}(3)); so $x_0$ is a scalar and $x_1 = 0$.
+\end{proof}
+
+\begin{theorem}\label{spin-geometry:theorem-double-cover}
+\begin{enumerate}
+\item $\mathrm{Pin}(n)$ and $\mathrm{Spin}(n)$ are compact Lie groups, and $\tilde{\rho} \colon \mathrm{Pin}(n) \to \mathrm{O}(n)$ and $\rho \colon \mathrm{Spin}(n) \to \mathrm{SO}(n)$ are surjective homomorphisms with kernel $\{\pm 1\}$.
+\item For $n \geq 2$, $\mathrm{Spin}(n)$ is connected, so $\rho$ is a nontrivial double covering.
+\item For $n \geq 3$, $\pi_1(\mathrm{SO}(n)) \cong \ZZ/2$ and $\mathrm{Spin}(n)$ is the universal covering group of $\mathrm{SO}(n)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{Surjectivity (Cartan--Dieudonn\'e).} Every $A \in \mathrm{O}(n)$ is a product of at most $n$ reflections: if $Ae_n \neq e_n$, the reflection $r$ in $(Ae_n - e_n)^\perp$ maps $Ae_n$ to $e_n$, so $rA$ fixes $e_n$ and
+preserves $e_n^\perp$, and induction on $n$ applies. By Lemma~\ref{spin-geometry:lemma-reflections} the products of unit vectors map onto $\mathrm{O}(n)$, and the even ones onto $\mathrm{SO}(n)$.
+\emph{Kernel.} If $\tilde{\rho}(x) = \id$, Lemma~\ref{spin-geometry:lemma-kernel} makes $x = \lambda$ a scalar. For $x = u_1\cdots u_k$ a product of unit vectors, $xx^t = u_1\cdots u_ku_k\cdots u_1 = (-1)^k$, so $\lambda^2 = (-1)^k$,
+which forces $\lambda = \pm 1$; and $-1 = e_1 \cdot (-e_1)$ lies in $\mathrm{Spin}(n)$.
+\emph{Lie groups.} Every element of $\mathrm{Pin}(n)$ is $\pm$ a product of at most $n$ unit vectors, and $-u_1 \cdots u_k = (-u_1)u_2\cdots u_k$; so $\mathrm{Pin}(n)$ is a finite union of continuous images of products of spheres,
+hence compact, hence a closed subgroup of $\mathrm{Cl}_n^\times$, and a Lie group by Theorem~\ref{lie-groups:theorem-closed-subgroup}; so is $\mathrm{Spin}(n)$. A continuous surjective homomorphism of compact Lie groups
+with finite kernel is a covering map.
+(2) The path $\gamma(t) = (e_1\cos t + e_2\sin t)(e_1\cos t - e_2\sin t) = -\cos 2t - e_1e_2\sin 2t$ lies in $\mathrm{Spin}(n)$ and joins $-1$ ($t = 0$) to $1$ ($t = \pi/2$). Since $\mathrm{SO}(n)$ is connected
+(Proposition~\ref{lie-groups:proposition-connectedness}), every $x \in \mathrm{Spin}(n)$ is joined to $1$ or to $-1$ by lifting a path from $\rho(x)$ to the identity (Proposition~\ref{homotopy:proposition-homotopy-lifting}), and
+$-1$ is joined to $1$ by $\gamma$; so $\mathrm{Spin}(n)$ is connected.
+(3) As in Proposition~\ref{k-theory:proposition-pi-one-gl}, $Q \mapsto Qe_n$ is a locally trivial bundle $\mathrm{SO}(n) \to S^{n-1}$ with fibre $\mathrm{SO}(n-1)$, and its long exact sequence shows that
+$\pi_1(\mathrm{SO}(n-1)) \to \pi_1(\mathrm{SO}(n))$ is surjective for $n \geq 3$ and bijective for $n \geq 4$. Since $\pi_1(\mathrm{SO}(3)) \cong \ZZ/2$ (Example~\ref{lie-groups:example-covering-groups}), $\pi_1(\mathrm{SO}(n))$ is
+a quotient of $\ZZ/2$, and it is nonzero because $\mathrm{SO}(n)$ has the connected double cover $\mathrm{Spin}(n)$. So $\pi_1(\mathrm{SO}(n)) = \ZZ/2$, and the connected double cover is the universal one.
+\end{proof}
+
+\begin{proposition}\label{spin-geometry:proposition-spin-lie-algebra}
+The Lie algebra of $\mathrm{Spin}(n)$ is $\mathfrak{spin}(n) = \Lambda^2\RR^n = \operatorname{span}\{e_ie_j : i < j\} \subseteq \mathrm{Cl}_n$ with the commutator bracket, and $d\rho \colon \mathfrak{spin}(n) \to \mathfrak{so}(n)$ is the
+isomorphism with $d\rho(e_ie_j) = 2(E_{ji} - E_{ij})$, where $E_{ji}$ maps $e_i$ to $e_j$. Its inverse is
+\begin{equation}\label{spin-geometry:equation-xi}
+\xi(A) = \frac14\sum_{i,j}\langle Ae_i, e_j\rangle e_ie_j.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+For $i \neq j$, $\exp(te_ie_j) = \cos t + e_ie_j\sin t$ (as $(e_ie_j)^2 = -1$) lies in $\mathrm{Spin}(n)$: it is $e_i \cdot (-e_i\cos t + e_j\sin t)$, a product of two unit vectors. So the $e_ie_j$ lie in the Lie algebra, which has dimension $\dim\mathrm{SO}(n) = n(n-1)/2$ since $\rho$ is a covering. The derivative of conjugation is $d\rho(x)v = xv - vx$, and
+$e_ie_je_i - e_ie_ie_j = 2e_j$, $e_ie_je_j - e_je_ie_j = -2e_i$, while $e_ie_j$ commutes with $e_k$ for $k \neq i, j$. Writing $A = \sum_{i<j}\langle Ae_i, e_j\rangle(E_{ji} - E_{ij})$ gives the inverse
+$\xi(A) = \frac12\sum_{i<j}\langle Ae_i, e_j\rangle e_ie_j$, which equals \eqref{spin-geometry:equation-xi} because the terms $(i, j)$ and $(j, i)$ there coincide.
+\end{proof}
+
+\begin{example}\label{spin-geometry:example-low-dimensional-spin}
+\begin{enumerate}
+\item $\mathrm{Spin}(2) = \{\cos t + e_1e_2\sin t\} \cong \mathrm{U}(1)$, and $\rho(\cos t + e_1e_2\sin t)$ is the rotation by $2t$ (Exercise~\ref{spin-geometry:exercise-spin-two}): the double cover
+$\mathrm{Spin}(2) \to \mathrm{SO}(2)$ is $z \mapsto z^2$.
+\item $\mathrm{Spin}(3) \cong \mathrm{Sp}(1) = \mathrm{SU}(2)$, the unit quaternions: by Proposition~\ref{spin-geometry:proposition-even-part}, $\mathrm{Cl}_3^0 \cong \mathrm{Cl}_2 = \mathbb{H}$, and under this isomorphism $\mathrm{Spin}(3)$, a
+connected $3$-dimensional compact group of units containing the products of pairs of unit vectors, is the group $S^3$ of unit quaternions. This recovers the double covering $\mathrm{SU}(2) \to \mathrm{SO}(3)$ of
+Example~\ref{lie-groups:example-covering-groups}.
+\item $\mathrm{Spin}(4) \cong \mathrm{Sp}(1) \times \mathrm{Sp}(1)$: $\mathrm{Cl}_4^0 \cong \mathrm{Cl}_3 = \mathbb{H} \oplus \mathbb{H}$, and $\mathrm{Spin}(4)$ is the product of the unit spheres; the map to $\mathrm{SO}(4)$ is
+$(p, q) \mapsto (x \mapsto px\bar{q})$ on $\mathbb{H} = \RR^4$. The two factors act on the half-spin modules $S_4^\pm \cong \mathbb{H}$.
+\item One also has $\mathrm{Spin}(5) \cong \mathrm{Sp}(2)$ and $\mathrm{Spin}(6) \cong \mathrm{SU}(4)$ \cite[Chapter I]{lawson-michelsohn}. These accidental isomorphisms stop at $n = 6$.
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{spin-geometry:counterexample-no-splitting}
+The covering $\rho$ does not split: there is no continuous homomorphism $s \colon \mathrm{SO}(n) \to \mathrm{Spin}(n)$ with $\rho s = \id$ for $n \geq 2$, since
+its image would be a subgroup mapping isomorphically to $\mathrm{SO}(n)$, so $\mathrm{Spin}(n) \cong \mathrm{SO}(n) \times \{\pm 1\}$ would be disconnected, contradicting Theorem~\ref{spin-geometry:theorem-double-cover}(2). The
+rotation by $2\pi$ in a plane lifts to $-1$: this is the sign change of a spinor under a full rotation that physicists observe for electrons.
+\end{counterexample}
+
+\section{Spin structures}\label{spin-geometry:section-spin-structures}
+
+\begin{definition}\label{spin-geometry:definition-spin-structure}
+Let $E \to M$ be an oriented real vector bundle of rank $n \geq 3$ with a metric, and $P_{\mathrm{SO}}(E)$ its principal $\mathrm{SO}(n)$-bundle of oriented orthonormal frames
+(Definition~\ref{connections:definition-principal-bundle}). A \emph{spin structure} on $E$ is a principal $\mathrm{Spin}(n)$-bundle $P_{\mathrm{Spin}}(E)$ with a map $\eta \colon P_{\mathrm{Spin}}(E) \to P_{\mathrm{SO}}(E)$ over $M$ such that
+$\eta(pg) = \eta(p)\rho(g)$. Two spin structures are equivalent if there is an isomorphism of principal bundles compatible with the maps $\eta$. A \emph{spin manifold} is an oriented Riemannian manifold with a spin
+structure on $TM$. For $n = 1, 2$ one uses the same definition with the double covers $\mathrm{Spin}(1) = \{\pm 1\} \to \mathrm{SO}(1)$ and $z \mapsto z^2$ on $\mathrm{U}(1)$.
+\end{definition}
+
+\begin{theorem}\label{spin-geometry:theorem-spin-obstruction}
+An oriented vector bundle $E$ over a manifold (or a CW complex) admits a spin structure if and only if $w_2(E) = 0$. In that case the equivalence classes of spin structures are in bijection with $H^1(M; \ZZ/2)$, which acts
+on them simply transitively.
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+Choose a good cover $(U_\alpha)$ (all finite intersections contractible) and transition functions $g_{\alpha\beta} \colon U_{\alpha\beta} \to \mathrm{SO}(n)$ of $P_{\mathrm{SO}}(E)$. On the contractible sets $U_{\alpha\beta}$ they lift
+to $\tilde{g}_{\alpha\beta} \colon U_{\alpha\beta} \to \mathrm{Spin}(n)$ (Proposition~\ref{homotopy:proposition-lifting-criterion} for the covering $\rho$), with $\tilde{g}_{\beta\alpha} = \tilde{g}_{\alpha\beta}^{-1}$. The cocycle condition holds
+for the lifts up to sign, $\tilde{g}_{\alpha\beta}\tilde{g}_{\beta\gamma}\tilde{g}_{\gamma\alpha} = \varepsilon_{\alpha\beta\gamma} \in \{\pm 1\}$, and $\varepsilon$ is a \v{C}ech $2$-cocycle with values in $\ZZ/2$. Changing the lifts by
+signs changes $\varepsilon$ by a coboundary, and a spin structure is exactly a choice of lifts with $\varepsilon = 1$; so a spin structure exists if and only if $[\varepsilon] = 0$ in $\check{H}^2(M; \ZZ/2) = H^2(M; \ZZ/2)$. Two
+choices with $\varepsilon = 1$ differ by a $1$-cocycle $\delta_{\alpha\beta} \in \{\pm 1\}$, and equivalent ones by a coboundary, which gives the $H^1(M; \ZZ/2)$-torsor. The omitted verification is that $[\varepsilon] = w_2(E)$, which
+one checks on the universal bundle over $\mathrm{BSO}(n)$, where both classes are the unique nonzero element of $H^2(\mathrm{BSO}(n); \ZZ/2) = \ZZ/2$ \cite[Chapter II]{lawson-michelsohn}, \cite{milnor-spin-1963}.
+\end{proof}
+
+\begin{example}\label{spin-geometry:example-spin-manifolds}
+\begin{enumerate}
+\item Spheres are spin: $TS^n \oplus \RR \cong \RR^{n+1}$ (Example~\ref{vector-bundles:example-stably-trivial}), so $w(TS^n) = 1$ by the Whitney formula. For $n \geq 2$ the spin structure is unique, as $H^1(S^n; \ZZ/2) = 0$.
+The circle has two spin structures; on a torus $T^n$ there are $2^n$.
+\item Parallelisable manifolds, in particular Lie groups, are spin. Closed orientable surfaces are spin: $H^2(M; \ZZ/2) = \ZZ/2$ is detected by evaluation on $[M]$, and
+$\langle w_2(TM), [M]\rangle \equiv \chi(M) = 2 - 2g \equiv 0 \pmod 2$ (Corollary~\ref{characteristic-classes:corollary-top-stiefel-whitney}).
+\item $\RR\PP^n$ ($n \geq 2$) has $w(T\RR\PP^n) = (1 + a)^{n+1}$, so $w_1 = (n + 1)a$ and $w_2 = \binom{n+1}{2}a^2$; it is orientable if and only if $n$ is odd, and spin if and only if moreover $\binom{n+1}{2}$ is even, that is,
+$n \equiv 3 \pmod 4$. So $\RR\PP^3$ and $\RR\PP^7$ are spin, and $\RR\PP^5$ is orientable but not spin.
+\item For a complex manifold, $w_2(TM) = c_1(TM) \bmod 2$ \cite[Chapter 14]{milnor-stasheff}, so $M$ is spin if and only if $c_1(TM) \bmod 2 = 0$, for instance when $c_1(TM)$ is divisible by $2$. As $c(T\CC\PP^n) = (1 + h)^{n+1}$ (Exercise~\ref{characteristic-classes:exercise-chern-projective} for $n = 2$, and the Euler sequence in general), $\CC\PP^n$ is spin if and only if $n$ is odd.
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{spin-geometry:counterexample-cp2}
+$\CC\PP^2$ is a simply connected closed $4$-manifold that is not spin: $w_2 = 3h \bmod 2 \neq 0$. Its signature is $1$, which is not divisible by $16$, so $\CC\PP^2$ also shows that the hypothesis ``spin'' cannot be dropped
+in Rokhlin's theorem (Theorem~\ref{spin-geometry:theorem-rokhlin}).
+\end{counterexample}
+
+\begin{remark}\label{spin-geometry:remark-spin-c}
+$\mathrm{Spin}^c(n) = \mathrm{Spin}(n) \times_{\{\pm 1\}} \mathrm{U}(1)$ maps onto $\mathrm{SO}(n) \times \mathrm{U}(1)$ with kernel $\ZZ/2$. A \emph{$\mathrm{Spin}^c$ structure} on $E$ is a lift of $P_{\mathrm{SO}}(E) \times_M P_{\mathrm{U}(1)}(L)$ for some
+complex line bundle $L$; it exists if and only if $w_2(E)$ is the reduction of an integral class (namely $c_1(L)$). Every almost complex manifold is $\mathrm{Spin}^c$, with $L = \Lambda^nTM$, and so is every closed oriented
+$4$-manifold \cite[Appendix D]{lawson-michelsohn}; $\mathrm{Spin}^c$ structures on $4$-manifolds are the starting point of Seiberg--Witten theory.
+\end{remark}
+
+\section{Spinor bundles and the Dirac operator}\label{spin-geometry:section-dirac-operator}
+
+Let $M$ be a spin manifold of dimension $n$ with spin structure $P_{\mathrm{Spin}} \to P_{\mathrm{SO}}(TM)$.
+
+\begin{definition}\label{spin-geometry:definition-spinor-bundle}
+The \emph{spinor bundle} is the associated bundle $S = P_{\mathrm{Spin}} \times_{\mathrm{Spin}(n)} S_n$, where $\mathrm{Spin}(n) \subseteq \mathrm{Cl}_n^0$ acts on the spinor module of
+Definition~\ref{spin-geometry:definition-spinor-module} by left multiplication. Since $\rho(g)v = gvg^{-1}$, Clifford multiplication $\RR^n \otimes S_n \to S_n$ is $\mathrm{Spin}(n)$-equivariant and defines \emph{Clifford
+multiplication} $TM \otimes S \to S$, $X \otimes \psi \mapsto X \cdot \psi$, with $X \cdot X \cdot \psi = -|X|^2\psi$. For $n$ even, $S = S^+ \oplus S^-$ and $X \cdot$ exchanges the two summands.
+\end{definition}
+
+\begin{notation}\label{spin-geometry:notation-dirac}
+$(e_i)$ denotes a local oriented orthonormal frame, $\nabla$ the Levi-Civita connection on $TM$ and also the induced connection on $S$ below, and $\langle\ ,\ \rangle$ a Hermitian metric on $S$ for which
+Clifford multiplication by unit vectors is unitary (it exists by averaging over the compact group $\mathrm{Pin}(n)$, Corollary~\ref{lie-groups:corollary-averaging}); then $X \cdot$ is skew-adjoint, as
+$X \cdot X \cdot = -|X|^2$. Sections of $S$ are \emph{spinor fields}, or \emph{spinors}.
+\end{notation}
+
+\begin{proposition}\label{spin-geometry:proposition-spin-connection}
+The Levi-Civita connection induces a connection $\nabla$ on $S$, the \emph{spin connection}, given in a local frame $(e_i)$ lifted to a local section of $P_{\mathrm{Spin}}$ by
+\[
+\nabla_X\psi = X(\psi) + \frac14\sum_{i,j}\langle\nabla_Xe_i, e_j\rangle e_ie_j \cdot \psi,
+\]
+where $X(\psi)$ differentiates the components. It is metric, and $\nabla_X(Y \cdot \psi) = (\nabla_XY) \cdot \psi + Y \cdot \nabla_X\psi$.
+\end{proposition}
+
+\begin{proof}[Sketch of proof]
+The connection form of the Levi-Civita connection is an $\mathfrak{so}(n)$-valued form on $P_{\mathrm{SO}}$; since $\eta$ is a covering and $d\rho$ is an isomorphism (Proposition~\ref{spin-geometry:proposition-spin-lie-algebra}), its
+pullback composed with $\xi$ is a principal connection on $P_{\mathrm{Spin}}$ (Definition~\ref{connections:definition-principal-connection}), and the induced covariant derivative on the associated bundle is given in local sections by the
+formula, by \eqref{spin-geometry:equation-xi}. It is metric because $e_ie_j$ is skew-adjoint. The compatibility with Clifford multiplication holds because $\mathrm{Spin}(n)$ acts compatibly on $\RR^n \otimes S_n \to S_n$, so the
+induced connections on the three associated bundles are compatible; a direct check uses $[\xi(A), v] = Av$ for $A \in \mathfrak{so}(n)$, which is the statement $d\rho \circ \xi = \id$.
+\end{proof}
+
+\begin{definition}\label{spin-geometry:definition-dirac-operator}
+The \emph{Dirac operator} is $D \colon \Gamma(S) \to \Gamma(S)$, $D\psi = \sum_ie_i \cdot \nabla_{e_i}\psi$, which does not depend on the choice of frame (it is the composite of $\nabla$ with Clifford multiplication
+$T^*M \otimes S \cong TM \otimes S \to S$). For $n$ even it is odd for the grading, and we write $D^\pm \colon \Gamma(S^\pm) \to \Gamma(S^\mp)$ for its restrictions.
+\end{definition}
+
+\begin{example}\label{spin-geometry:example-dirac-plane}
+On $\RR^2$ take $S = \CC^2$ with $e_1 = \begin{pmatrix} 0 & -1 \\ 1 & 0 \end{pmatrix}$ and $e_2 = \begin{pmatrix} 0 & i \\ i & 0 \end{pmatrix}$. These square to $-1$ and anticommute, and
+$\omega = ie_1e_2 = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}$, so $S^\pm$ are the coordinate lines. With $\partial_z = \frac12(\partial_x - i\partial_y)$ and $\partial_{\bar{z}} = \frac12(\partial_x + i\partial_y)$,
+\[
+D = e_1\partial_x + e_2\partial_y = \begin{pmatrix} 0 & -2\partial_z \\ 2\partial_{\bar{z}} & 0 \end{pmatrix}, \qquad D^2 = -(\partial_x^2 + \partial_y^2).
+\]
+So $D^+ = 2\partial_{\bar{z}}$ is the Cauchy--Riemann operator, harmonic spinors in $S^+$ are holomorphic functions, and $D$ is a square root of the Laplacian. On $\RR$ with $\mathrm{Cl}_1 = \CC$, $D = i\,d/dx$.
+\end{example}
+
+\begin{proposition}\label{spin-geometry:proposition-dirac-elliptic}
+$D$ is a first-order elliptic operator with principal symbol $\sigma_1(D)(x, \xi) = i\xi^\sharp \cdot$, which satisfies $\sigma_1(D)(x, \xi)^2 = |\xi|^2$. On a compact spin manifold $D$ is formally self-adjoint, so
+$\ker D$ is finite-dimensional, and for $n$ even $(D^+)^* = D^-$ and $\operatorname{ind}D^+ = \dim\ker D^+ - \dim\ker D^-$.
+\end{proposition}
+
+\begin{proof}
+In a local trivialisation $D = \sum_ie_i \cdot e_i(\ ) + (\text{order } 0)$, so its symbol (Definition~\ref{elliptic-operators:definition-differential-operator}) is $\sum_ii\xi(e_i)e_i \cdot = i\xi^\sharp \cdot$, whose square is
+$-(\xi^\sharp \cdot)^2 = |\xi|^2$; so $D$ is elliptic. For self-adjointness let $\psi$, $\varphi$ be spinors, fix a point $p$ and a frame with $(\nabla e_i)(p) = 0$. At $p$, using skew-adjointness of $e_i \cdot$ and metric
+compatibility,
+\[
+\langle D\psi, \varphi\rangle = \sum_i\langle e_i \cdot \nabla_{e_i}\psi, \varphi\rangle = -\sum_i\langle\nabla_{e_i}\psi, e_i \cdot \varphi\rangle = -\sum_ie_i\langle\psi, e_i \cdot \varphi\rangle + \langle\psi, D\varphi\rangle.
+\]
+Define the complex vector field $V = \sum_i\langle\psi, e_i \cdot \varphi\rangle e_i$, which does not depend on the frame. At $p$, $\operatorname{div}V = \sum_ie_i\langle\psi, e_i \cdot \varphi\rangle$, so
+$\langle D\psi, \varphi\rangle - \langle\psi, D\varphi\rangle = -\operatorname{div}V$ everywhere, both sides being independent of the frame. Integrating, with
+Lemma~\ref{hodge-theorem:lemma-codifferential-connection}(2) applied to the real and imaginary parts of $V$, gives $(D\psi, \varphi) = (\psi, D\varphi)$. The rest follows from
+Theorem~\ref{elliptic-operators:theorem-fredholm}.
+\end{proof}
+
+\begin{theorem}[Lichnerowicz formula]\label{spin-geometry:theorem-lichnerowicz-formula}
+On a spin manifold with scalar curvature $s$, $D^2 = \nabla^*\nabla + \frac{s}{4}$, where $\nabla^*\nabla\psi = -\sum_i(\nabla_{e_i}\nabla_{e_i}\psi - \nabla_{\nabla_{e_i}e_i}\psi)$.
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+At a point with $(\nabla e_i)(p) = 0$, $D^2 = \sum_{i,j}e_ie_j\nabla_{e_i}\nabla_{e_j} = -\sum_i\nabla_{e_i}\nabla_{e_i} + \sum_{i<j}e_ie_jR^S(e_i, e_j)$, by splitting the sum into $i = j$ and antisymmetric parts, where $R^S$ is the curvature
+of the spin connection. From the local formula of Proposition~\ref{spin-geometry:proposition-spin-connection}, $R^S(X, Y) = \frac14\sum_{k,l}\langle R(X, Y)e_k, e_l\rangle e_ke_l$. So the zeroth-order term is
+$\frac18\sum_{i,j,k,l}\langle R(e_i, e_j)e_k, e_l\rangle e_ie_je_ke_l$. The omitted verification is the Clifford computation: by the first Bianchi identity the terms with $i$, $j$, $k$ distinct cancel, and the remaining terms, using
+$e_k^2 = -1$ and the definition of the Ricci and scalar curvature (Definition~\ref{riemannian-geometry:definition-curvature-tensor}), add up to $\frac{s}{4}$ \cite[Chapter II]{lawson-michelsohn}.
+\end{proof}
+
+\begin{theorem}[Lichnerowicz]\label{spin-geometry:theorem-lichnerowicz-vanishing}
+On a compact spin manifold with scalar curvature $s \geq 0$, every harmonic spinor ($D\psi = 0$) is parallel, and it vanishes if $s > 0$ at some point. In particular, if $s > 0$ everywhere, then $\ker D = 0$.
+\end{theorem}
+
+\begin{proof}
+Integrating Theorem~\ref{spin-geometry:theorem-lichnerowicz-formula} against $\psi$ gives $\|D\psi\|^2 = \|\nabla\psi\|^2 + \int_M\frac{s}{4}|\psi|^2$, since $\nabla^*\nabla$ is the formal adjoint composite (as in
+Proposition~\ref{hodge-theorem:proposition-weitzenbock}). If $D\psi = 0$ and $s \geq 0$, both terms on the right vanish: $\nabla\psi = 0$, so $|\psi|$ is constant, and $s|\psi|^2 = 0$ forces $\psi = 0$ if $s(p) > 0$ somewhere.
+\end{proof}
+
+Compare Theorem~\ref{hodge-theorem:theorem-bochner}, where the Bochner formula $\Delta = \nabla^*\nabla + \mathrm{Ric}$ on $1$-forms shows that positive Ricci curvature kills harmonic $1$-forms. For spinors only the scalar
+curvature enters, which is a much weaker hypothesis; the price is that the conclusion concerns $\ker D$, whose topological meaning is the index theorem.
+
+\section{The index theorem}\label{spin-geometry:section-index-theorem}
+
+\begin{definition}\label{spin-geometry:definition-a-hat}
+For a real vector bundle with Pontryagin classes $p_i$, write formally $\sum_ip_i = \prod_j(1 + x_j^2)$. The \emph{$\hat{A}$-class} is $\hat{A} = \prod_j\frac{x_j/2}{\sinh(x_j/2)}$, a power series in the $p_i$:
+\[
+\hat{A} = 1 - \frac{p_1}{24} + \frac{7p_1^2 - 4p_2}{5760} + \cdots.
+\]
+For a closed oriented manifold of dimension $4k$, the \emph{$\hat{A}$-genus} is $\hat{A}[M] = \langle\hat{A}_k(TM), [M]\rangle$, the component of degree $4k$ evaluated on the fundamental class.
+\end{definition}
+
+The function $\frac{x/2}{\sinh(x/2)}$ is even, so $\hat{A}$ is a symmetric power series in the $x_j^2$ and hence in the $p_i$ (Definition~\ref{characteristic-classes:definition-pontryagin}); the first coefficient comes from
+$\frac{x/2}{\sinh(x/2)} = 1 - \frac{x^2}{24} + \frac{7x^4}{5760} - \cdots$.
+
+\begin{theorem}[Atiyah--Singer]\label{spin-geometry:theorem-index-spin}
+Let $M$ be a closed spin manifold of dimension $4k$ and $E \to M$ a Hermitian vector bundle with a connection, and let $D_E^+ \colon \Gamma(S^+ \otimes E) \to \Gamma(S^- \otimes E)$ be the Dirac operator twisted by $E$. Then
+\[
+\operatorname{ind}D_E^+ = \int_M\hat{A}(TM)\,\mathrm{ch}(E).
+\]
+In particular $\operatorname{ind}D^+ = \hat{A}[M]$, which is therefore an integer.
+\end{theorem}
+
+This is \cite{atiyah-singer-1968-3}, where the general index theorem of \cite{atiyah-singer-1968-1} is specialised to Dirac operators; the formula also holds in dimensions $4k + 2$, where both sides are computed the same way.
+The integrality of $\hat{A}[M]$ for spin manifolds was proved by Borel and Hirzebruch before the index theorem, and asking for an operator explaining it was one of Atiyah and Singer's starting points.
+
+\begin{corollary}[Lichnerowicz]\label{spin-geometry:corollary-psc-obstruction}
+A closed spin manifold with $\hat{A}[M] \neq 0$ admits no Riemannian metric of positive scalar curvature.
+\end{corollary}
+
+\begin{proof}
+For a metric with $s > 0$, $\ker D^+ = \ker D^- = 0$ by Theorem~\ref{spin-geometry:theorem-lichnerowicz-vanishing}, so $\hat{A}[M] = \operatorname{ind}D^+ = 0$ by Theorem~\ref{spin-geometry:theorem-index-spin}.
+\end{proof}
+
+\begin{example}\label{spin-geometry:example-four-dimensions}
+In dimension $4$, $\hat{A}[M] = -\frac{1}{24}p_1[M]$, and Hirzebruch's signature theorem $\sigma(M) = \frac13p_1[M]$ (Example~\ref{k-theory:example-signature-theorem}) gives $\hat{A}[M] = -\frac{\sigma(M)}{8}$. So the signature of a
+closed spin $4$-manifold is divisible by $8$. A K3 surface (a simply connected compact complex surface with $c_1 = 0$, studied in the chapters on complex surfaces) is spin with signature $-16$, so $\hat{A} = 2$ and K3 surfaces
+carry no metric of positive scalar curvature; the Calabi--Yau metrics on them are Ricci-flat. The torus $T^4$ has $\hat{A} = 0$ and a flat metric, with $\ker D^\pm$ the constant spinors.
+\end{example}
+
+\begin{theorem}[Rokhlin]\label{spin-geometry:theorem-rokhlin}
+The signature of a closed smooth spin $4$-manifold is divisible by $16$.
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+By Example~\ref{spin-geometry:example-four-dimensions}, $\sigma(M) = -8\operatorname{ind}D^+$. In dimension $4$, $\mathrm{Spin}(4) = \mathrm{Sp}(1) \times \mathrm{Sp}(1)$ acts on $S^\pm \cong \mathbb{H}$ through quaternionic scalars on one
+side (Example~\ref{spin-geometry:example-low-dimensional-spin}(3)), so $S^\pm$ carry a quaternionic structure, right multiplication by $j$, which commutes with Clifford multiplication and the spin connection, hence with $D$.
+So $\ker D^\pm$ are quaternionic vector spaces, of even complex dimension, and $\operatorname{ind}D^+$ is even. Rokhlin's original proof was homotopy-theoretic \cite{lawson-michelsohn}.
+\end{proof}
+
+\begin{remark}\label{spin-geometry:remark-rokhlin-consequences}
+The intersection form $E_8$ is even, unimodular, positive definite of rank $8$ and signature $8$ (Example~\ref{poincare-duality:example-intersection-forms}). On a simply connected $4$-manifold the form is even if and only if $w_2 = 0$, by Wu's formula (Theorem~\ref{characteristic-classes:theorem-wu}), so
+Rokhlin's theorem shows that no closed smooth simply connected $4$-manifold has intersection form $E_8$, although Freedman constructed a topological one \cite{freedman-1982}. Donaldson's theorem goes much further: a positive
+definite intersection form of a smooth closed simply connected $4$-manifold is diagonal \cite{donaldson-1983}.
+\end{remark}
+
+The other classical operators are Dirac operators of Clifford module bundles other than the spinor bundle, and they exist without a spin structure.
+
+\begin{definition}\label{spin-geometry:definition-dirac-bundle}
+A \emph{Dirac bundle} over a Riemannian manifold is a Hermitian vector bundle $W$ with a Clifford multiplication $TM \otimes W \to W$, $X \cdot X \cdot w = -|X|^2w$, by skew-adjoint maps, and a metric connection satisfying
+$\nabla_X(Y \cdot w) = (\nabla_XY) \cdot w + Y \cdot \nabla_Xw$. Its \emph{Dirac operator} is $D = \sum_ie_i \cdot \nabla_{e_i}$; Proposition~\ref{spin-geometry:proposition-dirac-elliptic} holds with the same proof.
+\end{definition}
+
+\begin{example}\label{spin-geometry:example-de-rham-dirac}
+Let $W = \Lambda^\bullet T^*M \otimes \CC$ with $X \cdot \omega = X^\flat \wedge \omega - \iota_X\omega$, the Clifford action of the proof of Proposition~\ref{spin-geometry:proposition-clifford-structure}(3), and the Levi-Civita connection. Then
+$\sum_ie^i \wedge \nabla_{e_i} = d$ (by Lemma~\ref{hodge-theorem:lemma-codifferential-connection}(1) and its analogue in all degrees) and $-\sum_i\iota_{e_i}\nabla_{e_i} = \delta$ (Lemma~\ref{hodge-theorem:lemma-codifferential-connection}(3) and its
+analogue), so $D = d + \delta$ and $D^2 = \Delta$ is the Hodge Laplacian. With the grading by parity of degree, $\operatorname{ind}(D \colon \Omega^{\mathrm{even}} \to \Omega^{\mathrm{odd}}) = \sum_k(-1)^k\dim\mathcal{H}^k = \chi(M)$ by the Hodge
+theorem (Theorem~\ref{hodge-theorem:theorem-hodge}). With the grading by the involution $\tau$ of Remark~\ref{hodge-theorem:remark-signature-operator} on a $4l$-manifold, the index is $\sigma(M)$. On a K\"ahler manifold,
+$\Lambda^{0,\bullet}T^*M \otimes E$ for a holomorphic Hermitian bundle $E$ is a Dirac bundle with $D = \sqrt2(\bar\partial + \bar\partial^*)$, whose index is the holomorphic Euler characteristic $\chi(M, E)$ (Chapter~\ref{kodaira}).
+\end{example}
+
+\begin{theorem}[Atiyah--Singer, classical cases]\label{spin-geometry:theorem-index-classical}
+For a closed oriented Riemannian manifold $M$ of dimension $n$:
+\begin{enumerate}
+\item (Gauss--Bonnet--Chern) $\operatorname{ind}(d + \delta)^{\mathrm{even}} = \chi(M) = \int_Me(TM)$;
+\item (Hirzebruch) for $n = 4l$, the index of the signature operator is $\sigma(M) = \int_ML(TM)$, with $L = \prod_j\frac{x_j}{\tanh x_j}$;
+\item (Hirzebruch--Riemann--Roch) for a compact complex manifold and a holomorphic bundle $E$, $\chi(M, E) = \int_M\mathrm{ch}(E)\,\mathrm{td}(TM)$.
+\end{enumerate}
+\end{theorem}
+
+In each case the left side is an index by Example~\ref{spin-geometry:example-de-rham-dirac}, and the right side is the general Atiyah--Singer integrand for the corresponding symbol \cite{atiyah-singer-1968-3}. Locally every
+manifold is spin, and on a spin manifold $\Lambda^\bullet T^*M \otimes \CC \cong S \otimes S^*$ (for $n$ even) and $\Lambda^{0,\bullet} \cong S \otimes K^{-1/2}$ when a square root of the canonical bundle exists; so (1)--(3) follow from
+Theorem~\ref{spin-geometry:theorem-index-spin} with $E = S$, resp.\ $E = K^{-1/2}$, by identities of characteristic classes such as $\hat{A}(TM)\,\mathrm{ch}(S^+ - S^-) = e(TM)$ \cite{lawson-michelsohn}. Statement (1) is
+Theorem~\ref{characteristic-classes:theorem-euler}(3); (2) and (3) are Remark~\ref{characteristic-classes:remark-signature}.
+
+\begin{example}\label{spin-geometry:example-sphere-index}
+On $S^2 = \CC\PP^1$ with its unique spin structure, $S^+ \cong \mathcal{O}(-1)$ and $S^- \cong \mathcal{O}(1)$ (as $K = \mathcal{O}(-2)$), and $\hat{A}(TS^2) = 1$. Twisting by $\mathcal{O}(m)$, the index formula gives
+$\operatorname{ind}D^+_{\mathcal{O}(m)} = \int_{S^2}\mathrm{ch}(\mathcal{O}(m)) = m$, and $D^+_{\mathcal{O}(m)}$ is the Dolbeault operator of $\mathcal{O}(m - 1)$, whose index $\chi(\CC\PP^1, \mathcal{O}(m - 1)) = m$ was computed by
+Riemann--Roch in Example~\ref{characteristic-classes:example-chern-character-cp1}. For $m = 0$ the index is $0$, consistent with $s > 0$ for the round metric and Theorem~\ref{spin-geometry:theorem-lichnerowicz-vanishing}.
+\end{example}
+
+\begin{remark}\label{spin-geometry:remark-heat-kernel-proof}
+\emph{The heat-kernel proof.} By the McKean--Singer argument (Corollary~\ref{hodge-theorem:corollary-mckean-singer} and Remark~\ref{hodge-theorem:remark-heat-kernel}), for a graded Dirac operator
+$\operatorname{ind}D^+ = \operatorname{str}e^{-tD^2}$ for every $t > 0$, the supertrace (Definition~\ref{multilinear-algebra:definition-supertrace}) of the heat operator, and as $t \to 0$ the heat kernel has an asymptotic expansion
+whose terms are local curvature expressions. The index is the constant term. A priori this term involves many derivatives of the curvature; Getzler's rescaling shows that it is $\hat{A}(TM)\,\mathrm{ch}(E)$ in degree $n$
+\cite{berline-getzler-vergne}. The rescaling assigns degree $1$ to Clifford multiplication by $e_i$ and degree $-1$ to $\partial_i$, which in the limit replaces $\mathrm{Cl}_n$ by its associated graded algebra $\Lambda(\RR^n)$
+(Counterexample~\ref{spin-geometry:counterexample-not-graded-commutative}); the supertrace on $\mathrm{Cl}^\CC_n \cong \End(S_n)$ becomes, up to a constant, the coefficient of $e_1\cdots e_n$, that is, the Berezin integral of
+Definition~\ref{multilinear-algebra:definition-berezin}, and the operator $D^2$ becomes a harmonic oscillator whose kernel is given by Mehler's formula, which produces the function $\frac{x/2}{\sinh(x/2)}$. In the language of
+supermanifolds, $\hat{A}[M]$ is a Berezin integral over the odd tangent bundle of $M$, which is how physicists derive the index theorem from supersymmetric quantum mechanics.
+\end{remark}
+
+\section{Exercises}\label{spin-geometry:section-exercises}
+
+\begin{exercise}\label{spin-geometry:exercise-cl-three}
+Let $\omega = e_1e_2e_3 \in \mathrm{Cl}_3$. Show that $\omega$ is central with $\omega^2 = 1$, that $\frac12(1 \pm \omega)$ are orthogonal central idempotents, and deduce $\mathrm{Cl}_3 \cong \mathbb{H} \oplus \mathbb{H}$ directly.
+\end{exercise}
+
+\begin{solution}
+$e_1$ anticommutes with $e_2$ and $e_3$, so $e_1\omega = e_1e_1e_2e_3 = \omega e_1$ (two sign changes); similarly for $e_2$, $e_3$, so $\omega$ is central. $\omega^2 = e_1e_2e_3e_1e_2e_3 = e_1e_2e_1e_2e_3e_3 = (e_1e_2)^2 \cdot (-1) = (-1)(-1) = 1$.
+Then $\pi_\pm = \frac12(1 \pm \omega)$ satisfy $\pi_\pm^2 = \pi_\pm$, $\pi_+\pi_- = 0$, $\pi_+ + \pi_- = 1$, and $\mathrm{Cl}_3 = \pi_+\mathrm{Cl}_3 \oplus \pi_-\mathrm{Cl}_3$ as algebras. Each summand is the image of
+$\mathrm{Cl}_3^0 \cong \mathbb{H}$ (Proposition~\ref{spin-geometry:proposition-even-part}) under $x \mapsto \pi_\pm x$, which is injective since $\omega$ is odd ($\pi_\pm x = 0$ with $x$ even forces $x = \mp\omega x$, odd, so $x = 0$); both have
+dimension $4$.
+\end{solution}
+
+\begin{exercise}\label{spin-geometry:exercise-spin-two}
+In $\mathrm{Cl}_2$ let $g_t = \cos t + e_1e_2\sin t$. Compute $g_te_1g_t^{-1}$ and $g_te_2g_t^{-1}$, and show that $\rho(g_t)$ is the counterclockwise rotation by the angle $2t$.
+\end{exercise}
+
+\begin{solution}
+$g_t^{-1} = \cos t - e_1e_2\sin t$ and $e_1e_2$ anticommutes with $e_1$, $e_2$, so $g_tv = vg_t^{-1}$ for $v = e_1, e_2$ and $g_tvg_t^{-1} = g_t^2v = (\cos 2t + e_1e_2\sin 2t)v$. Since $e_1e_2e_1 = e_2$ and $e_1e_2e_2 = -e_1$,
+$\rho(g_t)e_1 = \cos 2t\,e_1 + \sin 2t\,e_2$ and $\rho(g_t)e_2 = -\sin 2t\,e_1 + \cos 2t\,e_2$: the counterclockwise rotation by $2t$. So $\mathrm{Spin}(2) \to \mathrm{SO}(2)$ is $e^{it} \mapsto e^{2it}$.
+\end{solution}
+
+\begin{exercise}\label{spin-geometry:exercise-projective-spin}
+For which $n \leq 8$ is $\RR\PP^n$ orientable, and for which is it spin? For which $n$ is $\CC\PP^n$ spin?
+\end{exercise}
+
+\begin{solution}
+By Example~\ref{spin-geometry:example-spin-manifolds}(3), $\RR\PP^n$ is orientable exactly for $n$ odd, and spin exactly for $n \equiv 3 \pmod 4$: $\RR\PP^1$ (a circle, spin), $\RR\PP^3$ and $\RR\PP^7$; $\RR\PP^5$ has
+$w_2 = \binom62a^2 = 15a^2 \neq 0$. For $\CC\PP^n$, $c_1 = (n + 1)h$, so $w_2 = (n + 1)h \bmod 2$ vanishes exactly for $n$ odd.
+\end{solution}
+
+\begin{exercise}\label{spin-geometry:exercise-a-hat-cp2}
+Show directly, with Example~\ref{spin-geometry:example-four-dimensions}, that $\CC\PP^2$ cannot be spin, and that $\CC\PP^2 \# \CC\PP^2$ (connected sum, signature $2$) cannot be spin either.
+\end{exercise}
+
+\begin{solution}
+For a spin $4$-manifold $\hat{A}[M] = -\sigma(M)/8$ is an integer, so $8 \mid \sigma$. But $\sigma(\CC\PP^2) = 1$ and $\sigma(\CC\PP^2 \# \CC\PP^2) = 2$ (signature is additive under connected sum, the intersection forms adding
+orthogonally).
+\end{solution}
+
+\begin{exercise}\label{spin-geometry:exercise-torus-dirac}
+Let $T^2 = \RR^2/\ZZ^2$ with the flat metric and the spin structure for which spinors are $\ZZ^2$-periodic functions $\RR^2 \to \CC^2$, with $D$ as in Example~\ref{spin-geometry:example-dirac-plane}. Show that $\ker D$
+consists of the constant spinors, and that $\operatorname{ind}D^+ = 0$.
+\end{exercise}
+
+\begin{solution}
+$D^2 = -(\partial_x^2 + \partial_y^2)$ acts on Fourier modes $e^{2\pi i(ax + by)}$ by $4\pi^2(a^2 + b^2)$. As $D$ is self-adjoint, $\ker D = \ker D^2$, which consists of the constant spinors. Then
+$\ker D^+ = \CC$ and $\ker D^- = \CC$ (the two coordinate lines), so $\operatorname{ind}D^+ = 1 - 1 = 0$, in agreement with $\hat{A}(TT^2) = 1$, whose degree-$2$ component vanishes.
+\end{solution}
+
+\begin{exercise}\label{spin-geometry:exercise-dirac-square-flat}
+Show that on $\RR^n$ with constant generators of $\mathrm{Cl}_n$ acting on $\CC^N$, $D = \sum_ie_i\partial_i$ satisfies $D^2 = -\sum_i\partial_i^2$, and that this property characterises the relations of the Clifford algebra.
+\end{exercise}
+
+\begin{solution}
+$D^2 = \sum_{i,j}e_ie_j\partial_i\partial_j = \sum_ie_i^2\partial_i^2 + \sum_{i<j}(e_ie_j + e_je_i)\partial_i\partial_j$, since $\partial_i\partial_j = \partial_j\partial_i$. This equals $-\sum\partial_i^2$ for all functions if and only if
+$e_i^2 = -1$ and $e_ie_j + e_je_i = 0$ for $i \neq j$, which are the relations \eqref{spin-geometry:equation-clifford-relation} for the standard basis.
+\end{solution}
