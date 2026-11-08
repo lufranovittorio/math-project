@@ -1,22 +1,645 @@
 \chapter{Probability Theory}\label{probability}
-\chapterstatus{planned}
+\chapterstatus{draft}
 
-The axioms of Kolmogorov make probability a part of measure theory. This chapter develops the theory
-of random variables and their distributions up to the classical limit theorems.
+The axioms of Kolmogorov make probability a part of measure theory: a probability is a measure of total mass $1$, a random variable is a measurable function, and its expectation is its integral. What makes
+probability a subject of its own is the notion of independence, and the striking regularity that independence produces in the large: the law of large numbers, the central limit theorem, the Poisson law of rare
+events, large deviations, and the universal laws of random matrices.
+\begin{itemize}
+\item Section~\ref{probability:section-random-variables}: random variables, distributions, distribution functions, expectation, the classical distributions.
+\item Section~\ref{probability:section-independence}: independence of $\sigma$-algebras and random variables, Kolmogorov's zero-one law, sums of independent variables.
+\item Section~\ref{probability:section-inequalities}: moments and the inequalities of Markov, Chebyshev, Chernoff and Hoeffding.
+\item Section~\ref{probability:section-lln}: the weak and strong laws of large numbers, Kolmogorov's inequality, random series.
+\item Section~\ref{probability:section-characteristic-functions}: convergence in distribution, characteristic functions, the inversion and continuity theorems.
+\item Section~\ref{probability:section-clt}: the central limit theorem and the Lindeberg--Feller theorem.
+\item Section~\ref{probability:section-poisson}: the Poisson approximation, infinitely divisible and stable laws.
+\item Section~\ref{probability:section-large-deviations}: Cram\'er's theorem.
+\item Section~\ref{probability:section-random-matrices}: Wigner's semicircle law.
+\end{itemize}
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{measure-theory} (Measure and Integration), Chapter~\ref{functional-analysis} (Functional Analysis) and Chapter~\ref{distributions} (Distributions and Sobolev Spaces).
+\noindent\textbf{Prerequisites.} Chapter~\ref{measure-theory} (Measure and Integration), Chapter~\ref{radon-measures} (Radon Measures), Chapter~\ref{special-functions} (Special Functions) and Chapter~\ref{distributions}
+(Distributions and Sobolev Spaces).
 
-\noindent\textbf{Planned contents.}
+\section{Random variables and their distributions}\label{probability:section-random-variables}
+
+\begin{definition}\label{probability:definition-probability-space}
+A \emph{probability space} is a measure space $(\Omega, \mathcal{F}, P)$ with $P(\Omega) = 1$; elements of $\mathcal{F}$ are \emph{events}. A \emph{random variable} with values in a measurable space $(E, \mathcal{E})$ is a measurable
+map $X \colon \Omega \to E$; a \emph{real random variable} takes values in $\RR$ with the Borel $\sigma$-algebra, and a \emph{random vector} in $\RR^d$. The \emph{distribution} or \emph{law} of $X$ is the image measure
+$P_X = X_*P$ on $E$, $P_X(B) = P(X \in B)$ (Definition~\ref{measure-theory:definition-image-measure}). The \emph{distribution function} of a real random variable is $F_X(x) = P(X \leq x)$.
+\end{definition}
+
+\begin{notation}\label{probability:notation-probability}
+We write $\{X \in B\}$ for $X^{-1}(B)$ and $P(X \in B)$ for its probability; ``almost surely'' (a.s.) means outside an event of probability $0$. The \emph{expectation} of a real random variable is
+$E[X] = \int_\Omega X\,dP$ when it is defined, and $E[X; A] = E[X\mathbf{1}_A]$. $X \sim \mu$ means that $X$ has law $\mu$, and $X \overset{d}{=} Y$ that $X$ and $Y$ have the same law. $\operatorname{Var}(X) = E[(X - E X)^2]$ and
+$\operatorname{Cov}(X, Y) = E[(X - EX)(Y - EY)]$. $N(m, \sigma^2)$ is the normal law of Example~\ref{probability:example-classical-distributions}.
+\end{notation}
+
+By the change of variables formula (Proposition~\ref{measure-theory:proposition-image-measure}), $E[g(X)] = \int_Eg\,dP_X$ for measurable $g \geq 0$ or $g$ with $g(X)$ integrable: every quantity depending only on $X$ is
+computed from its law, and the underlying space $\Omega$ plays a secondary role.
+
+\begin{proposition}\label{probability:proposition-distribution-function}
+The distribution function $F$ of a real random variable is nondecreasing and right-continuous, with $F(x) \to 0$ as $x \to -\infty$ and $F(x) \to 1$ as $x \to \infty$; it determines the law, and $P(X = x) = F(x) - F(x-)$.
+Conversely, every $F$ with these properties is the distribution function of a random variable: if $U$ is uniform on $(0, 1)$ and $G(u) = \inf\{x : F(x) \geq u\}$, then $G(U)$ has distribution function $F$.
+\end{proposition}
+
+\begin{proof}
+Monotonicity is clear; right-continuity and the limits follow from continuity of $P$ along monotone sequences of events. $F$ determines $P_X$ on the $\pi$-system of half-lines $(-\infty, x]$, which generates the Borel sets, hence
+everywhere by Dynkin's lemma (Lemma~\ref{measure-theory:lemma-dynkin}). For the converse, $G$ is nondecreasing and finite on $(0, 1)$; by right-continuity of $F$ the infimum is attained, so $G(u) \leq x$ iff $u \leq F(x)$.
+Hence $P(G(U) \leq x) = P(U \leq F(x)) = F(x)$.
+\end{proof}
+
+The \emph{quantile transform} $G(U)$ of the proof is how random numbers with a given law are simulated from uniform ones.
+
+\begin{definition}\label{probability:definition-discrete-continuous}
+A real random variable is \emph{discrete} if $P(X \in S) = 1$ for a countable set $S$; its law is then determined by the \emph{probability mass function} $p(x) = P(X = x)$. It is \emph{(absolutely) continuous} with
+\emph{density} $f$ if $P(X \in B) = \int_Bf\,dx$ for all Borel $B$, that is $P_X = f\,dx$; then $E[g(X)] = \int g(x)f(x)\,dx$.
+\end{definition}
+
+\begin{example}\label{probability:example-classical-distributions}
+The classical laws, with mean and variance (computed from the definitions, or more easily with Proposition~\ref{probability:proposition-characteristic-function-moments}):
 \begin{enumerate}
-\item Probability spaces, random variables, distributions, expectation; the classical distributions.
-\item Independence, Kolmogorov's zero-one law, Borel--Cantelli (revisited).
-\item Inequalities: Markov, Chebyshev, Jensen, H\"older; moments.
-\item Laws of large numbers: weak, strong (Etemadi), Kolmogorov's three series theorem.
-\item Characteristic functions, L\'evy's continuity theorem; weak convergence and tightness (Prokhorov).
-\item The central limit theorem: Lindeberg--Feller, Berry--Esseen; the law of the iterated logarithm.
-\item Infinitely divisible and stable laws; Poisson convergence.
-\item Large deviations: Cram\'er's theorem.
-\item Large deviations: Cramér's theorem, Chernoff bounds, Sanov's theorem (statement).
-\item Random matrices: Wigner's semicircle law (moment method), the Marchenko--Pastur law, GUE and the Tracy--Widom distribution (survey).
-\item Exercises with solutions.
+\item \emph{Bernoulli} $B(1, p)$: $P(X = 1) = p = 1 - P(X = 0)$; mean $p$, variance $p(1 - p)$. \emph{Binomial} $B(n, p)$: $P(X = k) = \binom nkp^k(1 - p)^{n-k}$, the number of successes in $n$ independent trials; mean
+$np$, variance $np(1 - p)$.
+\item \emph{Geometric}: $P(X = k) = (1 - p)^{k-1}p$, $k \geq 1$, the time of the first success; mean $1/p$, variance $(1 - p)/p^2$.
+\item \emph{Poisson} $\mathrm{Poi}(\lambda)$: $P(X = k) = e^{-\lambda}\lambda^k/k!$; mean and variance $\lambda$.
+\item \emph{Uniform} on $[a, b]$: density $\frac{1}{b - a}$ on $[a, b]$; mean $\frac{a + b}{2}$, variance $\frac{(b - a)^2}{12}$.
+\item \emph{Exponential} $\mathrm{Exp}(\lambda)$: density $\lambda e^{-\lambda x}$ on $(0, \infty)$; mean $1/\lambda$, variance $1/\lambda^2$; it is \emph{memoryless}, $P(X > s + t \mid X > s) = P(X > t)$.
+\item \emph{Normal} or Gaussian $N(m, \sigma^2)$: density $\frac{1}{\sigma\sqrt{2\pi}}e^{-(x - m)^2/2\sigma^2}$; mean $m$, variance $\sigma^2$. The density integrates to $1$ by Example~\ref{special-functions:example-gamma-half}.
+\item \emph{Gamma} $\Gamma(\alpha, \lambda)$: density $\frac{\lambda^\alpha}{\Gamma(\alpha)}x^{\alpha-1}e^{-\lambda x}$ on $(0, \infty)$; mean $\alpha/\lambda$, variance $\alpha/\lambda^2$. For $\alpha = 1$ it is $\mathrm{Exp}(\lambda)$.
+\item \emph{Cauchy}: density $\frac{1}{\pi(1 + x^2)}$. It has no mean: $E|X| = \int\frac{|x|}{\pi(1 + x^2)}dx = \infty$.
 \end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{probability:counterexample-law-not-variable}
+The law does not determine the random variable: on $[0, 1]$ with Lebesgue measure, $X(\omega) = \omega$ and $Y(\omega) = 1 - \omega$ are both uniform, $X \overset{d}{=} Y$, but $X \neq Y$ almost everywhere. Statements about
+laws (convergence in distribution, the central limit theorem) are therefore weaker than statements about the variables themselves (almost sure convergence, the strong law).
+\end{counterexample}
+
+\section{Independence}\label{probability:section-independence}
+
+\begin{definition}\label{probability:definition-independent-sigma-algebras}
+Sub-$\sigma$-algebras $\mathcal{F}_1, \mathcal{F}_2, \ldots$ of $\mathcal{F}$ are \emph{independent} if $P(A_1 \cap \cdots \cap A_m) = P(A_1)\cdots P(A_m)$ whenever $A_j \in \mathcal{F}_{k_j}$ for distinct $k_1, \ldots, k_m$.
+Random variables $X_k$ are independent if the $\sigma$-algebras $\sigma(X_k) = \{X_k^{-1}(B)\}$ are, which agrees with Definition~\ref{measure-theory:definition-independent-variables}. A sequence is \emph{i.i.d.} if it is
+independent and identically distributed.
+\end{definition}
+
+By Corollary~\ref{measure-theory:corollary-independent-sequences}, for any laws $\mu_k$ there is a probability space carrying independent random variables $X_k \sim \mu_k$; this is what makes the theory non-vacuous.
+
+\begin{lemma}\label{probability:lemma-pi-system-independence}
+If $\mathcal{P}_1, \ldots, \mathcal{P}_n$ are $\pi$-systems (closed under finite intersections) containing $\Omega$ with $P(A_1 \cap \cdots \cap A_n) = \prod P(A_j)$ for $A_j \in \mathcal{P}_j$, then $\sigma(\mathcal{P}_1), \ldots, \sigma(\mathcal{P}_n)$
+are independent. Consequently, real random variables $X_1, \ldots, X_n$ are independent iff $P(X_1 \leq x_1, \ldots, X_n \leq x_n) = \prod_jP(X_j \leq x_j)$ for all $x_j$, iff the law of $(X_1, \ldots, X_n)$ is the product
+$P_{X_1} \otimes \cdots \otimes P_{X_n}$.
+\end{lemma}
+
+\begin{proof}
+Fix $A_2 \in \mathcal{P}_2, \ldots, A_n \in \mathcal{P}_n$. The sets $A_1 \in \mathcal{F}$ with $P(A_1 \cap A_2 \cap \cdots \cap A_n) = \prod P(A_j)$ form a family containing $\mathcal{P}_1$, hence $\Omega$. It is closed under countable disjoint unions by
+$\sigma$-additivity, and under complements: subtract the identity for $A_1$ from the identity for $\Omega$. By Dynkin's lemma it contains $\sigma(\mathcal{P}_1)$. Repeat with each index in turn. Since each $\mathcal{P}_j$ contains $\Omega$, the
+identity for all $n$ sets gives it for subfamilies. The half-lines $(-\infty, x]$ together with $\RR$ form a $\pi$-system generating the Borel sets, which gives the second statement; the third follows because the product
+measure is characterised by its values on boxes (Lemma~\ref{measure-theory:lemma-dynkin}).
+\end{proof}
+
+\begin{corollary}\label{probability:corollary-independence-products}
+\begin{enumerate}
+\item (Grouping) If $X_1, X_2, \ldots$ are independent, then $f(X_1, \ldots, X_n)$ and $g(X_{n+1}, X_{n+2}, \ldots)$ are independent for measurable $f$, $g$; more generally, disjoint groups of independent variables generate
+independent $\sigma$-algebras.
+\item If $X$, $Y$ are independent and integrable, then $XY$ is integrable and $E[XY] = E[X]E[Y]$; so $\operatorname{Cov}(X, Y) = 0$ and $\operatorname{Var}(X + Y) = \operatorname{Var}X + \operatorname{Var}Y$ when $X, Y \in L^2$.
+\item If $X$, $Y$ are independent real random variables, $P_{X+Y} = P_X * P_Y$, where $(\mu * \nu)(B) = \int\nu(B - x)\,d\mu(x)$; if they have densities $f$, $g$, then $X + Y$ has density $f * g$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(1) The events $\{X_1 \in B_1, \ldots, X_n \in B_n\}$, and those $\{X_{n+1} \in B_{n+1}, \ldots, X_m \in B_m\}$ for all $m$, form $\pi$-systems containing $\Omega$ that generate $\sigma(X_1, \ldots, X_n)$ and $\sigma(X_{n+1}, \ldots)$, and
+they satisfy the product rule; apply Lemma~\ref{probability:lemma-pi-system-independence}. (2) By the lemma and Fubini's theorem (Theorem~\ref{measure-theory:theorem-fubini}),
+$E|XY| = \int|x||y|\,d(P_X \otimes P_Y) = E|X|E|Y|$, and the same computation without absolute values. (3) $P(X + Y \in B) = \int\int\mathbf{1}_B(x + y)\,dP_Y(y)\,dP_X(x)$ by Fubini; with densities, substitute $y = z - x$.
+\end{proof}
+
+\begin{example}\label{probability:example-sums}
+If $X \sim \mathrm{Poi}(\lambda)$ and $Y \sim \mathrm{Poi}(\mu)$ are independent, $P(X + Y = n) = \sum_k e^{-\lambda}\frac{\lambda^k}{k!}e^{-\mu}\frac{\mu^{n-k}}{(n - k)!} = e^{-\lambda-\mu}\frac{(\lambda + \mu)^n}{n!}$ by the binomial theorem:
+$X + Y \sim \mathrm{Poi}(\lambda + \mu)$. A sum of $n$ independent $\mathrm{Exp}(\lambda)$ variables is $\Gamma(n, \lambda)$, by induction on the convolution $\int_0^x\frac{\lambda^{n-1}y^{n-2}e^{-\lambda y}}{(n - 2)!}\lambda e^{-\lambda(x - y)}dy$.
+Sums of independent normals are normal (Example~\ref{probability:example-characteristic-functions}).
+\end{example}
+
+\begin{counterexample}\label{probability:counterexample-uncorrelated}
+Uncorrelated does not imply independent: if $X \sim N(0, 1)$ and $Y = X^2$, then $\operatorname{Cov}(X, Y) = E[X^3] = 0$, but $P(|X| \leq 1, Y > 1) = 0 \neq P(|X| \leq 1)P(Y > 1)$. And pairwise independence does not imply
+independence (Example~\ref{measure-theory:example-pairwise-independent}).
+\end{counterexample}
+
+\begin{definition}\label{probability:definition-tail}
+For random variables $X_1, X_2, \ldots$, the \emph{tail $\sigma$-algebra} is $\mathcal{T} = \bigcap_n\sigma(X_n, X_{n+1}, \ldots)$. Its events do not depend on any finite number of the $X_k$: for real variables, $\{\sum X_k$
+converges$\}$ and $\{\limsup_n\frac1n(X_1 + \cdots + X_n) \leq c\}$ are tail events.
+\end{definition}
+
+\begin{theorem}[Kolmogorov's zero-one law]\label{probability:theorem-zero-one}
+If $X_1, X_2, \ldots$ are independent, every tail event has probability $0$ or $1$, and every $\mathcal{T}$-measurable random variable with values in $[-\infty, \infty]$ is almost surely constant.
+\end{theorem}
+
+\begin{proof}
+By Corollary~\ref{probability:corollary-independence-products}(1), $\sigma(X_1, \ldots, X_n)$ is independent of $\sigma(X_{n+1}, \ldots) \supseteq \mathcal{T}$. So $\mathcal{T}$ is independent of the $\pi$-system
+$\bigcup_n\sigma(X_1, \ldots, X_n)$, hence by Lemma~\ref{probability:lemma-pi-system-independence} of the $\sigma$-algebra it generates, which contains $\mathcal{T}$. So every $A \in \mathcal{T}$ is independent of itself:
+$P(A) = P(A)^2$. For a $\mathcal{T}$-measurable $Y$, $P(Y \leq c) \in \{0, 1\}$ for all $c$, so $Y = \sup\{c : P(Y \leq c) = 0\}$ almost surely.
+\end{proof}
+
+So a random series of independent terms converges with probability $0$ or $1$, and $\limsup S_n/n$ is almost surely constant. The second Borel--Cantelli lemma (Theorem~\ref{measure-theory:theorem-borel-cantelli}(2)) is a
+quantitative instance.
+
+\section{Moments and inequalities}\label{probability:section-inequalities}
+
+\begin{definition}\label{probability:definition-moments}
+The \emph{$k$-th moment} of $X$ is $E[X^k]$ when $E|X|^k < \infty$. The \emph{moment generating function} is $M_X(\lambda) = E[e^{\lambda X}] \in (0, \infty]$, and $\Lambda_X = \log M_X$ is the \emph{cumulant generating function}.
+\end{definition}
+
+The basic inequalities are those of measure theory read probabilistically: Markov's $P(|X| \geq t) \leq E|X|/t$, Chebyshev's $P(|X - EX| \geq t) \leq \operatorname{Var}X/t^2$ (Remark~\ref{measure-theory:remark-markov-chebyshev}),
+Jensen's $\varphi(EX) \leq E\varphi(X)$ for convex $\varphi$ (Proposition~\ref{measure-theory:proposition-jensen}), and H\"older's inequality, which gives $\|X\|_p \leq \|X\|_q$ for $p \leq q$ on a probability space. Applying
+Markov's inequality to $e^{\lambda X}$ gives exponential bounds.
+
+\begin{proposition}[Chernoff bound]\label{probability:proposition-chernoff}
+For every real $X$ and $t$, $P(X \geq t) \leq \inf_{\lambda \geq 0}e^{-\lambda t}M_X(\lambda)$. If $S_n$ is a sum of $n$ i.i.d.\ copies of $X$, $P(S_n \geq nt) \leq \exp\bigl(-n\sup_{\lambda \geq 0}(\lambda t - \Lambda_X(\lambda))\bigr)$.
+\end{proposition}
+
+\begin{proof}
+$P(X \geq t) \leq P(e^{\lambda X} \geq e^{\lambda t}) \leq e^{-\lambda t}E[e^{\lambda X}]$ by Markov, for $\lambda \geq 0$. For $S_n$, $M_{S_n} = M_X^n$ by Corollary~\ref{probability:corollary-independence-products}(2).
+\end{proof}
+
+\begin{lemma}[Hoeffding]\label{probability:lemma-hoeffding}
+If $a \leq X \leq b$ and $E[X] = 0$, then $E[e^{\lambda X}] \leq e^{\lambda^2(b - a)^2/8}$ for all real $\lambda$.
+\end{lemma}
+
+\begin{proof}
+We may assume $a < 0 < b$ (if $a = 0$ or $b = 0$ then $X = 0$). By convexity, $e^{\lambda x} \leq \frac{b - x}{b - a}e^{\lambda a} + \frac{x - a}{b - a}e^{\lambda b}$ on $[a, b]$; taking expectations,
+$E[e^{\lambda X}] \leq \frac{b}{b - a}e^{\lambda a} - \frac{a}{b - a}e^{\lambda b} = e^{L(h)}$ with $h = \lambda(b - a)$, $p = \frac{-a}{b - a} \in (0, 1)$ and $L(h) = -hp + \log(1 - p + pe^h)$. Then $L(0) = L^{\prime}(0) = 0$ and
+$L^{\prime\prime}(h) = q(1 - q) \leq \frac14$ with $q = \frac{pe^h}{1 - p + pe^h}$, so $L(h) \leq \frac{h^2}{8}$ by Taylor's theorem.
+\end{proof}
+
+\begin{theorem}[Hoeffding's inequality]\label{probability:theorem-hoeffding}
+Let $X_1, \ldots, X_n$ be independent with $a_i \leq X_i \leq b_i$, and $S = \sum X_i$. Then for $t > 0$,
+\[
+P(S - ES \geq t) \leq \exp\Bigl(-\frac{2t^2}{\sum_i(b_i - a_i)^2}\Bigr).
+\]
+\end{theorem}
+
+\begin{proof}
+By Lemma~\ref{probability:lemma-hoeffding} applied to $X_i - EX_i$ and independence, $E[e^{\lambda(S - ES)}] \leq e^{\lambda^2D/8}$ with $D = \sum(b_i - a_i)^2$. The Chernoff bound gives $e^{-\lambda t + \lambda^2D/8}$, minimal at $\lambda = 4t/D$.
+\end{proof}
+
+\begin{example}\label{probability:example-hoeffding}
+For $n$ fair coin tosses with $S$ heads, $P(|S - \frac n2| \geq t) \leq 2e^{-2t^2/n}$; with $t = 0.1n$, the probability that the proportion of heads deviates from $\frac12$ by $0.1$ is at most $2e^{-0.02n}$, about $4 \cdot 10^{-9}$
+for $n = 1000$. Chebyshev's inequality gives only $\frac{n/4}{(0.1n)^2} = 0.025$. Concentration inequalities of this kind are the basic tool of the probabilistic method (Chapter~\ref{probabilistic-method}) and of statistical
+learning theory.
+\end{example}
+
+\section{Laws of large numbers}\label{probability:section-lln}
+
+\begin{theorem}[Weak law of large numbers]\label{probability:theorem-weak-law}
+Let $X_1, X_2, \ldots$ be pairwise uncorrelated with $E[X_k] = m$ and $\operatorname{Var}X_k \leq C$. Then $S_n/n \to m$ in probability: $P(|S_n/n - m| \geq \varepsilon) \leq \frac{C}{n\varepsilon^2}$.
+\end{theorem}
+
+\begin{proof}
+$\operatorname{Var}(S_n) = \sum\operatorname{Var}X_k \leq nC$, and Chebyshev's inequality gives the bound.
+\end{proof}
+
+\begin{example}[Bernstein polynomials]\label{probability:example-bernstein}
+Let $f \in C[0, 1]$ and $B_nf(x) = \sum_{k=0}^nf(\frac kn)\binom nkx^k(1 - x)^{n-k} = E[f(S_n/n)]$, with $S_n \sim B(n, x)$. Given $\varepsilon$, choose $\delta$ with $|f(y) - f(x)| < \varepsilon$ for $|y - x| < \delta$. Then
+$|B_nf(x) - f(x)| \leq E|f(S_n/n) - f(x)| \leq \varepsilon + 2\|f\|_\infty P(|S_n/n - x| \geq \delta) \leq \varepsilon + \frac{2\|f\|_\infty x(1 - x)}{n\delta^2} \leq \varepsilon + \frac{\|f\|_\infty}{2n\delta^2}$, uniformly in $x$. So the polynomials $B_nf$
+converge uniformly to $f$: a probabilistic proof of Weierstrass' approximation theorem (Corollary~\ref{real-analysis:corollary-weierstrass}).
+\end{example}
+
+\begin{theorem}[Strong law of large numbers; Etemadi]\label{probability:theorem-strong-law}
+Let $X_1, X_2, \ldots$ be pairwise independent, identically distributed and integrable, with $E[X_1] = m$. Then $S_n/n \to m$ almost surely.
+\end{theorem}
+
+\begin{proof}
+\emph{Reduction to $X_k \geq 0$.} The positive and negative parts $X_k^\pm$ are again pairwise independent and identically distributed, so we may assume $X_k \geq 0$.
+\emph{Truncation.} Let $Y_k = X_k\mathbf{1}_{\{X_k \leq k\}}$ and $T_n = Y_1 + \cdots + Y_n$. Since $\sum_kP(X_k > k) \leq \int_0^\infty P(X_1 > t)\,dt = E[X_1] < \infty$ (layer cake formula,
+Proposition~\ref{measure-theory:proposition-layer-cake}), Borel--Cantelli shows that almost surely $X_k = Y_k$ for all large $k$; so it suffices to prove $T_n/n \to m$.
+\emph{A variance bound.} By the layer cake formula $E[Y_k^2] = \int_0^\infty2yP(Y_k > y)\,dy \leq \int_0^k2yP(X_1 > y)\,dy$. For $y \geq 0$, $2y\sum_{k > y}k^{-2} \leq 4$ (for $y < 1$ use $\sum k^{-2} \leq 2$; for $y \geq 1$,
+$\sum_{k > y}k^{-2} \leq \frac{1}{\lfloor y\rfloor} \leq \frac2y$). Hence, by Tonelli,
+\[
+\sum_k\frac{E[Y_k^2]}{k^2} \leq \int_0^\infty\Bigl(2y\sum_{k > y}k^{-2}\Bigr)P(X_1 > y)\,dy \leq 4E[X_1].
+\]
+\emph{Along a geometric subsequence.} Fix $\alpha > 1$ and let $k(n) = \lfloor\alpha^n\rfloor$. The $Y_k$ are pairwise independent, so $\operatorname{Var}T_{k(n)} = \sum_{j \leq k(n)}\operatorname{Var}Y_j \leq \sum_{j \leq k(n)}E[Y_j^2]$. By Chebyshev,
+\[
+\begin{aligned}
+\sum_nP\bigl(|T_{k(n)} - E T_{k(n)}| > \varepsilon k(n)\bigr) &\leq \frac{1}{\varepsilon^2}\sum_n\frac{1}{k(n)^2}\sum_{j \leq k(n)}E[Y_j^2] \\
+&= \frac{1}{\varepsilon^2}\sum_jE[Y_j^2]\sum_{n : k(n) \geq j}\frac{1}{k(n)^2}.
+\end{aligned}
+\]
+As $k(n) \geq \alpha^n/2$, the inner sum is at most $4\sum_{n : \alpha^n \geq j}\alpha^{-2n} \leq \frac{4}{1 - \alpha^{-2}}j^{-2}$, so the whole sum is finite by the variance bound. By Borel--Cantelli and letting $\varepsilon \to 0$ along a sequence,
+$(T_{k(n)} - ET_{k(n)})/k(n) \to 0$ almost surely. Since $E[Y_j] \to E[X_1] = m$ by monotone convergence, $ET_{k(n)}/k(n) \to m$ (Ces\`aro), and so $T_{k(n)}/k(n) \to m$ almost surely.
+\emph{Interpolation.} For $k(n) \leq j < k(n + 1)$, as $T$ is nondecreasing, $\frac{T_{k(n)}}{k(n + 1)} \leq \frac{T_j}{j} \leq \frac{T_{k(n+1)}}{k(n)}$. Since $k(n + 1)/k(n) \to \alpha$, $\frac m\alpha \leq \liminf\frac{T_j}{j} \leq \limsup\frac{T_j}{j} \leq \alpha m$
+almost surely. Let $\alpha \downarrow 1$ along a sequence.
+\end{proof}
+
+This proof, which needs only pairwise independence and no fourth moments, is due to Etemadi \cite{etemadi-1981}; for the classical approach via Kolmogorov's inequality see \cite{billingsley-probability}.
+
+\begin{example}\label{probability:example-strong-law}
+\begin{enumerate}
+\item \emph{Frequencies.} For i.i.d.\ $X_k$ and a Borel set $B$, $\frac1n\#\{k \leq n : X_k \in B\} \to P(X_1 \in B)$ almost surely: probability is limiting frequency, which is the frequentist's definition turned into a theorem. With
+the binary digits of a uniform number this gives Borel's theorem on normal numbers (Theorem~\ref{measure-theory:theorem-borel-normal}).
+\item \emph{Monte Carlo integration.} For $U_k$ i.i.d.\ uniform on $[0, 1]^d$ and $f \in L^1$, $\frac1n\sum_{k \leq n}f(U_k) \to \int f$ almost surely, with error of order $n^{-1/2}$ (by the central limit theorem) in every dimension.
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{probability:counterexample-no-mean}
+Integrability is necessary: if $X_k$ are i.i.d.\ with $E|X_1| = \infty$, then $\limsup_n|S_n|/n = \infty$ almost surely. Indeed, for every $c > 0$, $\sum_nP(|X_n| > cn) \geq \int_1^\infty P(|X_1| > ct)\,dt = \infty$, so by the second
+Borel--Cantelli lemma $|X_n| > cn$ infinitely often; since $|X_n| \leq |S_n| + |S_{n-1}|$, $\max(|S_n|/n, |S_{n-1}|/(n - 1)) > c/2$ infinitely often. For the Cauchy law $S_n/n$ is again Cauchy for every $n$
+(Example~\ref{probability:example-characteristic-functions}), so averaging does not help at all.
+\end{counterexample}
+
+\begin{theorem}[Kolmogorov's maximal inequality]\label{probability:theorem-kolmogorov-inequality}
+Let $X_1, \ldots, X_n$ be independent with mean $0$ and finite variance, and $S_k = X_1 + \cdots + X_k$. Then for $\lambda > 0$,
+$P(\max_{k \leq n}|S_k| \geq \lambda) \leq \operatorname{Var}(S_n)/\lambda^2$.
+\end{theorem}
+
+\begin{proof}
+Let $A_k = \{|S_k| \geq \lambda, |S_j| < \lambda \text{ for } j < k\}$, disjoint with union $\{\max|S_k| \geq \lambda\}$. Then $E[S_n^2] \geq \sum_kE[S_n^2; A_k] \geq \sum_kE[S_k^2 + 2S_k(S_n - S_k); A_k]$. The variable $S_k\mathbf{1}_{A_k}$ depends
+on $X_1, \ldots, X_k$, hence is independent of $S_n - S_k$, which has mean $0$; so the cross terms vanish and $E[S_n^2] \geq \sum_kE[S_k^2; A_k] \geq \lambda^2\sum_kP(A_k)$.
+\end{proof}
+
+\begin{theorem}[Random series]\label{probability:theorem-random-series}
+\begin{enumerate}
+\item If $X_k$ are independent with mean $0$ and $\sum_k\operatorname{Var}X_k < \infty$, then $\sum_kX_k$ converges almost surely.
+\item (Kolmogorov's three-series theorem, sufficiency) Let $X_k$ be independent, $A > 0$ and $Y_k = X_k\mathbf{1}_{\{|X_k| \leq A\}}$. If $\sum_kP(|X_k| > A)$, $\sum_kE[Y_k]$ and $\sum_k\operatorname{Var}Y_k$ converge, then $\sum X_k$
+converges almost surely.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) By Theorem~\ref{probability:theorem-kolmogorov-inequality} applied to $X_{m+1}, \ldots, X_n$ and letting $n \to \infty$, $P(\sup_{k > m}|S_k - S_m| \geq \varepsilon) \leq \varepsilon^{-2}\sum_{k > m}\operatorname{Var}X_k \to 0$. So
+$\sup_{j,k > m}|S_j - S_k|$ tends to $0$ in probability; being decreasing in $m$, it tends to $0$ almost surely, and $(S_n)$ is almost surely Cauchy. (2) By (1), $\sum(Y_k - EY_k)$ converges almost surely, hence so does $\sum Y_k$;
+by Borel--Cantelli $X_k = Y_k$ for all large $k$ almost surely.
+\end{proof}
+
+The three-series theorem is also necessary: if $\sum X_k$ converges with positive probability, the three series converge for every $A > 0$ \cite{durrett-probability}.
+
+\begin{example}\label{probability:example-random-harmonic}
+Let $\varepsilon_k = \pm1$ be independent fair signs. Then $\sum_k\varepsilon_k/k^\alpha$ converges almost surely for $\alpha > \frac12$, by Theorem~\ref{probability:theorem-random-series}(1), since $\sum k^{-2\alpha} < \infty$; for
+$\alpha \leq \frac12$ it diverges almost surely (by the necessity of the three series). The random harmonic series $\sum\pm\frac1k$ converges with probability $1$, although $\sum\frac1k$ diverges.
+\end{example}
+
+\section{Convergence in distribution and characteristic functions}\label{probability:section-characteristic-functions}
+
+\begin{definition}\label{probability:definition-convergence-distribution}
+Real random variables $X_n$ \emph{converge in distribution} to $X$, written $X_n \Rightarrow X$, if $E[h(X_n)] \to E[h(X)]$ for every bounded continuous $h \colon \RR \to \RR$; that is, the laws $P_{X_n}$ converge narrowly to $P_X$
+(Definition~\ref{radon-measures:definition-narrow}). The variables may live on different probability spaces. The \emph{characteristic function} of $X$ is $\varphi_X(t) = E[e^{itX}] = \int e^{itx}\,dP_X(x)$, $t \in \RR$.
+\end{definition}
+
+\begin{notation}\label{probability:notation-characteristic}
+$\Rightarrow$ denotes convergence in distribution, also written $X_n \Rightarrow \mu$ for a law $\mu$. The characteristic function is a Fourier transform with the probabilists' normalisation: in the notation of
+Chapter~\ref{distributions}, $\varphi_X(t) = \widehat{P_X}(-t/2\pi)$.
+\end{notation}
+
+\begin{proposition}\label{probability:proposition-convergence-distribution}
+\begin{enumerate}
+\item Almost sure convergence implies convergence in probability, which implies convergence in distribution.
+\item $X_n \Rightarrow X$ iff $F_{X_n}(x) \to F_X(x)$ at every point $x$ where $F_X$ is continuous.
+\item If $X_n \Rightarrow c$ for a constant $c$, then $X_n \to c$ in probability.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) The first implication is Proposition~\ref{measure-theory:proposition-modes}. If $X_n \to X$ in probability and $h$ is bounded continuous, every subsequence has a further subsequence converging almost surely
+(Theorem~\ref{measure-theory:theorem-cauchy-in-measure}), along which $E[h(X_n)] \to E[h(X)]$ by dominated convergence; so the whole sequence converges.
+(2) If $X_n \Rightarrow X$ and $\delta > 0$, let $h$ be continuous, equal to $1$ on $(-\infty, x]$, $0$ on $[x + \delta, \infty)$, linear in between. Then $\limsup F_{X_n}(x) \leq \lim E[h(X_n)] = E[h(X)] \leq F_X(x + \delta)$, and similarly
+$\liminf F_{X_n}(x) \geq F_X(x - \delta)$; at a continuity point this gives convergence. Conversely, suppose $F_n = F_{X_n} \to F = F_X$ at continuity points, and let $G_n$, $G$ be the quantile functions of
+Proposition~\ref{probability:proposition-distribution-function}. If $G$ is continuous at $u \in (0, 1)$ and $y < G(u) < z$ are continuity points of $F$, then $F(y) < u$ (as $G(u) \leq y$ iff $u \leq F(y)$), so $F_n(y) < u$ and $G_n(u) > y$ for large $n$.
+Also $F(z) > u$: by continuity of $G$ at $u$ there is $u^{\prime} \in (u, 1)$ with $G(u^{\prime}) < z$, and then $u^{\prime} \leq F(G(u^{\prime})) \leq F(z)$. So $F_n(z) > u$, hence $G_n(u) \leq z$, for large $n$. Hence $G_n(u) \to G(u)$ at the continuity points of $G$, which are all but countably many. With $U$ uniform, $G_n(U) \overset{d}{=} X_n$ converges almost surely to $G(U) \overset{d}{=} X$, and (1) applies.
+(3) $P(|X_n - c| > \varepsilon) \leq 1 - F_n(c + \varepsilon) + F_n(c - \varepsilon) \to 0$ by (2).
+\end{proof}
+
+\begin{counterexample}\label{probability:counterexample-distribution-not-probability}
+Convergence in distribution does not imply convergence in probability: if $X \sim N(0, 1)$ and $X_n = -X$ for all $n$, then $X_n \Rightarrow X$ (same law), but $|X_n - X| = 2|X|$ does not tend to $0$. The convergence $F_n(x) \to F(x)$
+may fail at discontinuities of $F$: $X_n = \frac1n \Rightarrow 0$, but $F_{X_n}(0) = 0 \not\to 1 = F_0(0)$.
+\end{counterexample}
+
+\begin{proposition}\label{probability:proposition-characteristic-function-moments}
+$\varphi_X$ is uniformly continuous, $\varphi_X(0) = 1$, $|\varphi_X| \leq 1$, $\varphi_{aX+b}(t) = e^{itb}\varphi_X(at)$, $\varphi_{-X} = \overline{\varphi_X}$, and $\varphi_{X+Y} = \varphi_X\varphi_Y$ for independent $X$, $Y$. If $E|X|^k < \infty$, then
+$\varphi_X$ is $k$ times continuously differentiable with $\varphi_X^{(j)}(0) = i^jE[X^j]$ for $j \leq k$; in particular, if $E[X] = 0$ and $E[X^2] = \sigma^2$, then $\varphi_X(t) = 1 - \frac{\sigma^2t^2}{2} + o(t^2)$ as $t \to 0$.
+\end{proposition}
+
+\begin{proof}
+$|\varphi(t + h) - \varphi(t)| \leq E|e^{ihX} - 1|$, which tends to $0$ with $h$ by dominated convergence, uniformly in $t$. Multiplicativity is Corollary~\ref{probability:corollary-independence-products}(2) for the complex
+variables $e^{itX}$, $e^{itY}$ (apply it to real and imaginary parts). Differentiation under the integral sign is justified by $|\frac{d^j}{dt^j}e^{itx}| = |x|^j$ and dominated convergence. The last statement is Taylor's formula
+at order $2$.
+\end{proof}
+
+\begin{example}\label{probability:example-characteristic-functions}
+\begin{enumerate}
+\item $\mathrm{Poi}(\lambda)$: $\varphi(t) = \sum_ke^{-\lambda}\frac{(\lambda e^{it})^k}{k!} = e^{\lambda(e^{it} - 1)}$. $B(n, p)$: $(1 - p + pe^{it})^n$. Uniform on $[-1, 1]$: $\frac{\sin t}{t}$.
+\item $N(0, 1)$: $\varphi(t) = e^{-t^2/2}$, by Theorem~\ref{distributions:theorem-fourier-schwartz}(1) after the substitution $x = \sqrt{2\pi}y$; so $N(m, \sigma^2)$ has $\varphi(t) = e^{imt - \sigma^2t^2/2}$, and by multiplicativity and
+uniqueness (Theorem~\ref{probability:theorem-inversion}) independent $N(m_1, \sigma_1^2)$ and $N(m_2, \sigma_2^2)$ variables have an $N(m_1 + m_2, \sigma_1^2 + \sigma_2^2)$ sum.
+\item Cauchy: $\varphi(t) = e^{-|t|}$. Indeed $\int e^{-|t|}e^{-itx}dt = \frac{2}{1 + x^2}$ by direct integration, so by the inversion formula of Theorem~\ref{probability:theorem-inversion}, the law with characteristic function $e^{-|t|}$ has
+density $\frac{1}{2\pi}\cdot\frac{2}{1 + x^2}$. Consequently, for i.i.d.\ Cauchy $X_k$, $\varphi_{S_n/n}(t) = (e^{-|t|/n})^n = e^{-|t|}$: $S_n/n$ is Cauchy.
+\end{enumerate}
+\end{example}
+
+\begin{theorem}[Inversion and uniqueness]\label{probability:theorem-inversion}
+A probability measure $\mu$ on $\RR$ is determined by its characteristic function $\varphi$. If $\varphi \in L^1(\RR)$, then $\mu$ has the bounded continuous density $f(x) = \frac{1}{2\pi}\int e^{-itx}\varphi(t)\,dt$.
+\end{theorem}
+
+\begin{proof}
+For $\sigma > 0$ let $g_\sigma(u) = \frac{1}{\sigma\sqrt{2\pi}}e^{-u^2/2\sigma^2}$, the density of $N(0, \sigma^2)$. By Example~\ref{probability:example-characteristic-functions}(2) with the roles of variables exchanged,
+$g_\sigma(u) = \frac{1}{2\pi}\int e^{itu}e^{-\sigma^2t^2/2}dt$. The measure $\mu * g_\sigma$ (the law of $X + \sigma Z$ with $X \sim \mu$ and $Z \sim N(0, 1)$ independent) has density
+\[
+\begin{aligned}
+f_\sigma(x) = \int g_\sigma(x - y)\,d\mu(y) &= \frac{1}{2\pi}\int\int e^{it(x - y)}e^{-\sigma^2t^2/2}\,dt\,d\mu(y) \\
+&= \frac{1}{2\pi}\int e^{-itx}\varphi(t)e^{-\sigma^2t^2/2}\,dt,
+\end{aligned}
+\]
+by Fubini (the integrand is integrable) and the substitution $t \mapsto -t$. So $f_\sigma$, hence $\mu * g_\sigma$, is determined by $\varphi$. As $\sigma \to 0$, $X + \sigma Z \to X$ almost surely, so $\mu * g_\sigma \to \mu$ narrowly
+(Proposition~\ref{probability:proposition-convergence-distribution}), and $\mu$ is determined, since narrow limits are unique (two finite Radon measures with the same integrals on $C_c$ coincide, by Riesz--Markov). If
+$\varphi \in L^1$, $f_\sigma \to f$ uniformly by dominated convergence, so $\int hf\,dx = \lim\int hf_\sigma\,dx = \int h\,d\mu$ for $h \in C_c(\RR)$, and $\mu = f\,dx$.
+\end{proof}
+
+\begin{theorem}[L\'evy's continuity theorem]\label{probability:theorem-levy-continuity}
+Let $\mu_n$ be probability measures on $\RR$ with characteristic functions $\varphi_n$. If $\mu_n \to \mu$ narrowly, then $\varphi_n \to \varphi_\mu$ pointwise. Conversely, if $\varphi_n \to \varphi$ pointwise and $\varphi$ is continuous at $0$,
+then $\varphi$ is the characteristic function of a probability measure $\mu$ and $\mu_n \to \mu$ narrowly.
+\end{theorem}
+
+\begin{proof}
+The first statement holds because $x \mapsto e^{itx}$ is bounded and continuous. \emph{A tightness estimate.} For a probability measure $\nu$ with characteristic function $\psi$ and $u > 0$, Fubini gives
+$\frac1u\int_{-u}^u(1 - \psi(t))\,dt = \int\bigl(2 - \frac{2\sin ux}{ux}\bigr)d\nu(x) \geq \nu(\{|x| \geq 2/u\})$, since the integrand is $\geq 0$, and $\geq 1$ when $|ux| \geq 2$ because then $|\frac{\sin ux}{ux}| \leq \frac12$.
+\emph{Tightness.} Given $\varepsilon$, choose $u$ with $\frac1u\int_{-u}^u|1 - \varphi| < \varepsilon$, by continuity at $0$ and $\varphi(0) = \lim\varphi_n(0) = 1$. By dominated convergence $\frac1u\int_{-u}^u(1 - \varphi_n) \to \frac1u\int_{-u}^u(1 - \varphi)$, so
+$\mu_n(\{|x| \geq 2/u\}) < 2\varepsilon$ for large $n$; enlarging the interval for the finitely many remaining $n$, $(\mu_n)$ is tight.
+\emph{Conclusion.} By Prokhorov's theorem (Theorem~\ref{radon-measures:theorem-prokhorov}) every subsequence has a further subsequence converging narrowly to some $\nu$, whose characteristic function is
+$\lim\varphi_n = \varphi$ by the first part. By Theorem~\ref{probability:theorem-inversion}, all these limits are the same measure $\mu$, and then the whole sequence converges to $\mu$: otherwise some bounded continuous $h$ and
+some subsequence would keep $|\int h\,d\mu_n - \int h\,d\mu| \geq \varepsilon$, but that subsequence has a further subsequence converging to $\mu$.
+\end{proof}
+
+\begin{counterexample}\label{probability:counterexample-continuity-at-zero}
+Continuity of the limit at $0$ is needed: for $\mu_n = N(0, n)$, $\varphi_n(t) = e^{-nt^2/2} \to \mathbf{1}_{\{0\}}(t)$, which is not continuous at $0$, and indeed $\mu_n$ does not converge narrowly: the mass escapes to infinity.
+\end{counterexample}
+
+\section{The central limit theorem}\label{probability:section-clt}
+
+\begin{lemma}\label{probability:lemma-products}
+\begin{enumerate}
+\item If $z_1, \ldots, z_n, w_1, \ldots, w_n$ are complex numbers of modulus $\leq 1$, then $|\prod z_k - \prod w_k| \leq \sum|z_k - w_k|$.
+\item For real $x$, $|e^{ix} - 1 - ix + \frac{x^2}{2}| \leq \min(\frac{|x|^3}{6}, x^2)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) Induction, using $z_1Z - w_1W = z_1(Z - W) + (z_1 - w_1)W$. (2) Taylor's formula with integral remainder: the left side is $|\frac{i^3}{2}\int_0^x(x - s)^2e^{is}ds| \leq \frac{|x|^3}{6}$. Also
+$|e^{ix} - 1 - ix| = |\int_0^xi(e^{is} - 1)\,ds| \leq |\int_0^x|s|\,ds| = \frac{x^2}{2}$, using $|e^{is} - 1| \leq |s|$; adding $\frac{x^2}{2}$ gives the bound $x^2$.
+\end{proof}
+
+\begin{theorem}[Lindeberg--Feller]\label{probability:theorem-lindeberg}
+For each $n$ let $X_{n,1}, \ldots, X_{n,n}$ be independent with mean $0$, and suppose
+\begin{enumerate}
+\item $\sum_mE[X_{n,m}^2] \to \sigma^2 > 0$;
+\item (\emph{Lindeberg's condition}) $\sum_mE[X_{n,m}^2; |X_{n,m}| > \varepsilon] \to 0$ for every $\varepsilon > 0$.
+\end{enumerate}
+Then $S_n = X_{n,1} + \cdots + X_{n,n} \Rightarrow N(0, \sigma^2)$.
+\end{theorem}
+
+\begin{proof}
+Let $\sigma_{n,m}^2 = E[X_{n,m}^2]$ and $\varphi_{n,m}$ the characteristic functions. Since $\sigma_{n,m}^2 \leq \varepsilon^2 + E[X_{n,m}^2; |X_{n,m}| > \varepsilon]$, (2) gives $\max_m\sigma_{n,m}^2 \to 0$. Fix $t$. By
+Lemma~\ref{probability:lemma-products}(2), splitting according to $|X_{n,m}| \leq \varepsilon$,
+\[
+\begin{aligned}
+\bigl|\varphi_{n,m}(t) - (1 - \tfrac12t^2\sigma_{n,m}^2)\bigr| &\leq E\min(|tX_{n,m}|^3, |tX_{n,m}|^2) \\
+&\leq \varepsilon|t|^3\sigma_{n,m}^2 + t^2E[X_{n,m}^2; |X_{n,m}| > \varepsilon].
+\end{aligned}
+\]
+For large $n$ all $c_{n,m} = \frac12t^2\sigma_{n,m}^2$ lie in $[0, \frac12]$, so Lemma~\ref{probability:lemma-products}(1) and (1), (2) give
+$\limsup_n|\prod_m\varphi_{n,m}(t) - \prod_m(1 - c_{n,m})| \leq \varepsilon|t|^3\sigma^2$, for every $\varepsilon$. Finally, $|\log(1 - c) + c| \leq c^2$ for $0 \leq c \leq \frac12$, so
+$|\sum_m\log(1 - c_{n,m}) + \sum_mc_{n,m}| \leq \max_mc_{n,m}\sum_mc_{n,m} \to 0$, and $\prod_m(1 - c_{n,m}) \to e^{-t^2\sigma^2/2}$. So $\varphi_{S_n}(t) \to e^{-\sigma^2t^2/2}$, and L\'evy's theorem concludes.
+\end{proof}
+
+\begin{corollary}[Central limit theorem]\label{probability:corollary-clt}
+If $X_1, X_2, \ldots$ are i.i.d.\ with mean $m$ and variance $\sigma^2 \in (0, \infty)$, then $\frac{S_n - nm}{\sigma\sqrt n} \Rightarrow N(0, 1)$, that is,
+$P\bigl(\frac{S_n - nm}{\sigma\sqrt n} \leq x\bigr) \to \frac{1}{\sqrt{2\pi}}\int_{-\infty}^xe^{-u^2/2}du$ for every $x$.
+\end{corollary}
+
+\begin{proof}
+Apply Theorem~\ref{probability:theorem-lindeberg} to $X_{n,m} = (X_m - m)/(\sigma\sqrt n)$: $\sum_mE[X_{n,m}^2] = 1$, and the Lindeberg sum is $\sigma^{-2}E[(X_1 - m)^2; |X_1 - m| > \varepsilon\sigma\sqrt n] \to 0$ by dominated
+convergence. The distribution function of $N(0, 1)$ is continuous, so Proposition~\ref{probability:proposition-convergence-distribution}(2) gives the second form.
+\end{proof}
+
+\begin{example}[De Moivre--Laplace]\label{probability:example-de-moivre}
+For $S_n \sim B(n, p)$, $\frac{S_n - np}{\sqrt{np(1 - p)}} \Rightarrow N(0, 1)$. With $n = 10000$ fair coin tosses, $P(4900 \leq S_n \leq 5100) \approx P(|Z| \leq 2) \approx 0.954$. De Moivre found this approximation in 1733 for
+$p = \frac12$, using Stirling's formula on the binomial coefficients.
+\end{example}
+
+\begin{remark}\label{probability:remark-clt}
+\begin{enumerate}
+\item (\emph{Berry--Esseen}) If moreover $E|X_1|^3 = \rho < \infty$, then $\sup_x|P(\frac{S_n - nm}{\sigma\sqrt n} \leq x) - \Phi(x)| \leq \frac{C\rho}{\sigma^3\sqrt n}$ with an absolute constant $C < 0.48$; the rate $n^{-1/2}$ is attained by
+Bernoulli variables \cite{durrett-probability}.
+\item (\emph{Feller}) If $\max_m\sigma_{n,m}^2 \to 0$, Lindeberg's condition is also necessary for $S_n \Rightarrow N(0, \sigma^2)$.
+\item (\emph{Law of the iterated logarithm}) For i.i.d.\ variables with mean $0$ and variance $1$, $\limsup_n\frac{S_n}{\sqrt{2n\log\log n}} = 1$ almost surely (Hartman--Wintner): the central limit theorem says $S_n/\sqrt n$ is of order $1$
+in distribution, but along a typical path it fluctuates up to $\sqrt{2\log\log n}$ \cite{durrett-probability}.
+\item The multivariate central limit theorem holds with the same proof, using $\varphi_X(t) = E[e^{i\langle t, X\rangle}]$ on $\RR^d$: i.i.d.\ random vectors with covariance matrix $\Sigma$ give a Gaussian limit with covariance $\Sigma$.
+\end{enumerate}
+\end{remark}
+
+\begin{counterexample}\label{probability:counterexample-clt}
+Finite variance is essential: for i.i.d.\ Cauchy variables, $S_n/\sqrt n = \sqrt n\cdot S_n/n$ has the law of $\sqrt n$ times a Cauchy variable, which does not converge in distribution; the correct normalisation is $S_n/n$, and the
+limit is Cauchy, not normal. Heavy-tailed variables lead to the stable laws of Section~\ref{probability:section-poisson}.
+\end{counterexample}
+
+\section{Poisson approximation, infinitely divisible and stable laws}\label{probability:section-poisson}
+
+\begin{theorem}[Law of rare events]\label{probability:theorem-poisson-limit}
+If $S_n \sim B(n, p_n)$ with $np_n \to \lambda > 0$, then $S_n \Rightarrow \mathrm{Poi}(\lambda)$; equivalently, $P(S_n = k) \to e^{-\lambda}\lambda^k/k!$ for every $k$.
+\end{theorem}
+
+\begin{proof}
+$\varphi_{S_n}(t) = (1 + p_n(e^{it} - 1))^n = (1 + \frac{z_n}{n})^n$ with $z_n = np_n(e^{it} - 1) \to z = \lambda(e^{it} - 1)$, and $(1 + z_n/n)^n \to e^z$ (take logarithms for large $n$). L\'evy's theorem and
+Example~\ref{probability:example-characteristic-functions}(1) give $S_n \Rightarrow \mathrm{Poi}(\lambda)$; for integer-valued variables, narrow convergence gives convergence of each $P(S_n = k)$, by testing against a continuous
+function equal to $1$ at $k$ and $0$ outside $(k - \frac12, k + \frac12)$.
+\end{proof}
+
+\begin{definition}\label{probability:definition-total-variation}
+The \emph{total variation distance} between laws $\mu$, $\nu$ on a countable set is $d_{TV}(\mu, \nu) = \frac12\sum_k|\mu(k) - \nu(k)| = \sup_B|\mu(B) - \nu(B)|$.
+\end{definition}
+
+\begin{proposition}[Le Cam]\label{probability:proposition-le-cam}
+Let $X_1, \ldots, X_n$ be independent Bernoulli variables with $P(X_i = 1) = p_i$, and $S = \sum X_i$. Then $d_{TV}(P_S, \mathrm{Poi}(\sum p_i)) \leq \sum p_i^2$.
+\end{proposition}
+
+\begin{proof}
+\emph{Coupling.} For laws $\mu$, $\nu$ on $\ZZ_{\geq 0}$ there are random variables $X \sim \mu$, $Y \sim \nu$ on one probability space with $P(X \neq Y) = d_{TV}(\mu, \nu)$: let $m(k) = \min(\mu(k), \nu(k))$, $\alpha = \sum m = 1 - d_{TV}$; with
+probability $\alpha$ choose $X = Y$ according to $m/\alpha$, and otherwise choose $X$ according to $(\mu - m)/(1 - \alpha)$ and $Y$ according to $(\nu - m)/(1 - \alpha)$ (these have disjoint supports). \emph{One summand.} For
+$\mu = B(1, p)$ and $\nu = \mathrm{Poi}(p)$, $2d_{TV} = (e^{-p} - 1 + p) + p(1 - e^{-p}) + (1 - e^{-p} - pe^{-p}) = 2p(1 - e^{-p}) \leq 2p^2$. \emph{Sum.} Couple each $X_i$ with $Y_i \sim \mathrm{Poi}(p_i)$, independently over $i$
+(Corollary~\ref{measure-theory:corollary-independent-sequences}). Then $\sum Y_i \sim \mathrm{Poi}(\sum p_i)$ (Example~\ref{probability:example-sums}) and
+$d_{TV}(P_S, P_{\sum Y_i}) \leq P(\sum X_i \neq \sum Y_i) \leq \sum P(X_i \neq Y_i) \leq \sum p_i^2$.
+\end{proof}
+
+So the number of rare, roughly independent events is approximately Poisson: misprints on a page, decays of atoms in a second, Prussian cavalrymen killed by horse kicks (Bortkiewicz's famous data of 1898).
+
+\begin{definition}\label{probability:definition-infinitely-divisible}
+A law $\mu$ on $\RR$ is \emph{infinitely divisible} if for every $n$ there is a law $\mu_n$ with $\mu = \mu_n^{*n}$, that is, $X \overset{d}{=} X_{n,1} + \cdots + X_{n,n}$ with i.i.d.\ $X_{n,m}$; equivalently, $\varphi_\mu$ has an $n$-th root
+that is a characteristic function, for every $n$. It is \emph{stable} if for i.i.d.\ $X$, $X_1, X_2, \ldots \sim \mu$ and every $n$ there are $a_n > 0$, $b_n$ with $X_1 + \cdots + X_n \overset{d}{=} a_nX + b_n$.
+\end{definition}
+
+\begin{example}\label{probability:example-infinitely-divisible}
+Normal, Poisson, Cauchy and Gamma laws are infinitely divisible: $e^{imt - \sigma^2t^2/2}$, $e^{\lambda(e^{it} - 1)}$, $e^{-|t|}$ and $(1 - it/\lambda)^{-\alpha}$ have the $n$-th roots $e^{imt/n - \sigma^2t^2/2n}$, etc., of the same type. So is a
+\emph{compound Poisson} law, the law of $Y_1 + \cdots + Y_N$ with $N \sim \mathrm{Poi}(\lambda)$ independent of i.i.d.\ $Y_k \sim \nu$, whose characteristic function is $\exp(\lambda\int(e^{itx} - 1)\,d\nu(x))$. Normal and Cauchy laws are
+stable, with $a_n = \sqrt n$ and $a_n = n$.
+\end{example}
+
+\begin{counterexample}\label{probability:counterexample-not-infinitely-divisible}
+A nondegenerate law with bounded support is never infinitely divisible: if $|X| \leq c$ and $X \overset{d}{=} \sum_{m \leq n}X_{n,m}$, then $|X_{n,m}| \leq c/n$ almost surely (if $P(X_{n,1} > c/n) > 0$, all $n$ summands exceed $c/n$ simultaneously with positive probability, and the sum exceeds $c$; similarly below), so
+$\operatorname{Var}X = n\operatorname{Var}X_{n,1} \leq c^2/n \to 0$. In particular Bernoulli and uniform laws are not infinitely divisible. Also $e^{-|t|^\alpha}$ is not a characteristic function for $\alpha > 2$: it would be twice
+differentiable at $0$ with second derivative $0$, but $E[X^2] \leq \liminf_{h \to 0}\frac{2 - \varphi(h) - \varphi(-h)}{h^2} = -\varphi^{\prime\prime}(0) = 0$ by Fatou's lemma applied to $\frac{2 - 2\cos hX}{h^2} \to X^2$, so $X = 0$ and
+$\varphi = 1$, a contradiction.
+\end{counterexample}
+
+\begin{theorem}[L\'evy--Khintchine]\label{probability:theorem-levy-khintchine}
+A function $\varphi$ is the characteristic function of an infinitely divisible law iff
+\[
+\varphi(t) = \exp\Bigl(ibt - \frac{\sigma^2t^2}{2} + \int_{\RR \setminus 0}\bigl(e^{itx} - 1 - itx\mathbf{1}_{\{|x| \leq 1\}}\bigr)\,d\nu(x)\Bigr)
+\]
+with $b \in \RR$, $\sigma^2 \geq 0$ and a measure $\nu$ on $\RR \setminus 0$ (the \emph{L\'evy measure}) with $\int\min(1, x^2)\,d\nu < \infty$. The stable laws are the normal laws and, for $0 < \alpha < 2$, the laws with
+$\nu(dx) = (c_+\mathbf{1}_{x > 0} + c_-\mathbf{1}_{x < 0})|x|^{-1-\alpha}dx$; the symmetric ones have $\varphi(t) = e^{-c|t|^\alpha}$, $0 < \alpha \leq 2$.
+\end{theorem}
+
+This is quoted from \cite[Chapter XVII]{feller-2}. Infinitely divisible laws are exactly the limits of row sums of triangular arrays of independent, uniformly small variables, and the laws of $L_1$ for L\'evy processes
+$(L_t)$ (Chapter~\ref{martingales}); $\sigma^2$ describes the Brownian part and $\nu$ the jumps.
+
+\section{Large deviations}\label{probability:section-large-deviations}
+
+The law of large numbers says that $P(S_n \geq nx) \to 0$ for $x > m$; the central limit theorem describes deviations of size $\sqrt n$. Deviations of size $n$ have exponentially small probability, with an exact rate.
+
+\begin{definition}\label{probability:definition-rate-function}
+For a real random variable $X$ with $\Lambda(\lambda) = \log E[e^{\lambda X}] < \infty$ for all $\lambda$, the \emph{rate function} is the Legendre transform $I(x) = \sup_{\lambda \in \RR}(\lambda x - \Lambda(\lambda))$.
+\end{definition}
+
+\begin{theorem}[Cram\'er]\label{probability:theorem-cramer}
+Let $X_1, X_2, \ldots$ be i.i.d.\ copies of $X$, with $\Lambda$ finite everywhere and mean $m$, and let $x > m$ be such that $\Lambda^{\prime}(\lambda^*) = x$ for some $\lambda^* > 0$. Then
+\[
+\lim_{n \to \infty}\frac1n\log P(S_n \geq nx) = -I(x) = -(\lambda^*x - \Lambda(\lambda^*)).
+\]
+\end{theorem}
+
+\begin{proof}
+$\Lambda$ is smooth and convex (differentiate under the integral; $\Lambda^{\prime\prime}$ is the variance of the tilted law below), so $\lambda \mapsto \lambda x - \Lambda(\lambda)$ is concave with critical point $\lambda^*$, and
+$I(x) = \lambda^*x - \Lambda(\lambda^*)$. \emph{Upper bound.} By the Chernoff bound (Proposition~\ref{probability:proposition-chernoff}) with $\lambda = \lambda^*$, $P(S_n \geq nx) \leq e^{-nI(x)}$ for every $n$.
+\emph{Lower bound by tilting.} Let $Q$ be the law with $dQ = e^{\lambda^*y - \Lambda(\lambda^*)}dP_X(y)$, a probability measure with mean $\Lambda^{\prime}(\lambda^*) = x$ and finite variance $\Lambda^{\prime\prime}(\lambda^*)$. Let $Y_k$ be
+i.i.d.\ $\sim Q$ and $T_n = \sum Y_k$; then for every Borel $B \subseteq \RR^n$, $P((X_1, \ldots, X_n) \in B) = E[e^{-\lambda^*T_n + n\Lambda(\lambda^*)}; (Y_1, \ldots, Y_n) \in B]$. For $\delta > 0$,
+\[
+P(S_n \geq nx) \geq P(nx \leq S_n \leq n(x + \delta)) \geq e^{-n(\lambda^*(x + \delta) - \Lambda(\lambda^*))}P(0 \leq T_n - nx \leq n\delta).
+\]
+By the central limit theorem for the $Y_k$, $P(0 \leq T_n - nx \leq n\delta) \to \frac12$. Hence $\liminf\frac1n\log P(S_n \geq nx) \geq -I(x) - \lambda^*\delta$ for every $\delta > 0$.
+\end{proof}
+
+\begin{example}\label{probability:example-cramer}
+\begin{enumerate}
+\item For $X \sim N(0, 1)$, $\Lambda(\lambda) = \lambda^2/2$ and $I(x) = x^2/2$: $P(S_n \geq nx) = e^{-nx^2/2 + o(n)}$, consistent with $S_n/\sqrt n \sim N(0, 1)$.
+\item For a fair coin, $X \in \{0, 1\}$, $\Lambda(\lambda) = \log\frac{1 + e^\lambda}{2}$ and $I(x) = x\log 2x + (1 - x)\log 2(1 - x)$ for $0 < x < 1$, the \emph{relative entropy} of $(x, 1 - x)$ with respect to $(\frac12, \frac12)$. The
+probability of at least $60\%$ heads in $n$ tosses is $e^{-0.0201n + o(n)}$.
+\end{enumerate}
+\end{example}
+
+\begin{remark}\label{probability:remark-sanov}
+Cram\'er's theorem holds for all $x$ (with $I = \infty$ outside the closed convex hull of the support), and without assuming $\Lambda$ finite, in the general form of a \emph{large deviation principle}. Sanov's theorem is
+the analogue for empirical measures: the probability that the empirical distribution of $n$ i.i.d.\ samples from $\mu$ is close to $\nu$ is $e^{-nH(\nu \mid \mu) + o(n)}$, with $H(\nu \mid \mu) = \int\log\frac{d\nu}{d\mu}\,d\nu$ the
+relative entropy \cite{dembo-zeitouni}. This connects probability with information theory (Chapter~\ref{information-theory}) and with statistical mechanics, where $-I$ is an entropy.
+\end{remark}
+
+\section{Random matrices}\label{probability:section-random-matrices}
+
+\begin{definition}\label{probability:definition-wigner}
+A \emph{Wigner matrix} of size $n$ is a real symmetric random matrix $W_n = (w_{ij})$ whose entries $w_{ij}$, $i \leq j$, are independent, with $w_{ij}$ ($i < j$) identically distributed with mean $0$ and variance $1$, the diagonal
+entries identically distributed with mean $0$, and all moments finite. Its \emph{empirical spectral distribution} is $L_n = \frac1n\sum_{k=1}^n\delta_{\lambda_k/\sqrt n}$, where $\lambda_1, \ldots, \lambda_n$ are the eigenvalues of $W_n$.
+The \emph{semicircle law} is $\sigma(dx) = \frac{1}{2\pi}\sqrt{4 - x^2}\,\mathbf{1}_{[-2,2]}(x)\,dx$.
+\end{definition}
+
+\begin{proposition}\label{probability:proposition-semicircle-moments}
+The semicircle law is a probability measure; its odd moments vanish, and $\int x^{2k}\,d\sigma = C_k = \frac{1}{k + 1}\binom{2k}{k}$, the $k$-th Catalan number.
+\end{proposition}
+
+\begin{proof}
+Odd moments vanish by symmetry. Substituting $x = 2\sqrt s$ on $[0, 2]$,
+$\int x^{2k}d\sigma = \frac1\pi\int_0^2x^{2k}\sqrt{4 - x^2}\,dx = \frac{2\cdot 4^k}{\pi}\int_0^1s^{k-1/2}(1 - s)^{1/2}ds = \frac{2\cdot 4^k}{\pi}B(k + \tfrac12, \tfrac32)$. By Proposition~\ref{special-functions:proposition-beta}, with
+$\Gamma(\frac32) = \frac{\sqrt\pi}{2}$ and $\Gamma(k + \frac12) = \frac{(2k)!}{4^kk!}\sqrt\pi$ (from $\Gamma(\frac12) = \sqrt\pi$ and the functional equation), this is
+$\frac{2\cdot 4^k}{\pi}\cdot\frac{(2k)!\sqrt\pi}{4^kk!}\cdot\frac{\sqrt\pi}{2}\cdot\frac{1}{(k + 1)!} = \frac{(2k)!}{k!(k + 1)!}$. For $k = 0$ this gives total mass $1$.
+\end{proof}
+
+\begin{theorem}[Wigner's semicircle law]\label{probability:theorem-wigner}
+For Wigner matrices, $E\int x^k\,dL_n \to \int x^k\,d\sigma$ for every $k$, and $L_n \to \sigma$ narrowly in probability: for every bounded continuous $h$, $\int h\,dL_n \to \int h\,d\sigma$ in probability.
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+\emph{Moments as walks.} $\int x^k\,dL_n = \frac{1}{n^{1+k/2}}\operatorname{tr}W_n^k = \frac{1}{n^{1+k/2}}\sum_{i_1, \ldots, i_k}w_{i_1i_2}w_{i_2i_3}\cdots w_{i_ki_1}$, a sum over closed walks of length $k$ on $\{1, \ldots, n\}$. \emph{Counting.} The
+expectation of a term vanishes unless every edge is traversed at least twice (mean $0$ and independence). A walk with $k$ steps traversing each of its edges at least twice visits at most $\frac k2 + 1$ vertices, with equality iff
+$k$ is even, each edge is traversed exactly twice and the edges form a tree; these walks are counted by $n^{k/2+1}(1 + o(1))$ times the number of rooted plane trees with $k/2$ edges, which is $C_{k/2}$ (by
+Theorem~\ref{generating-functions:theorem-catalan} and the interpretations of Proposition~\ref{generating-functions:proposition-catalan-interpretations}), each contributing $E[w_{12}^2]^{k/2} = 1$. All other walks contribute $O(n^{-1/2})$
+after normalisation, using the finite moments. \emph{Concentration.} A similar count shows $\operatorname{Var}\int x^k\,dL_n = O(n^{-2})$. \emph{Moments to measures.} $\sigma$ has compact support, so it is determined by its moments,
+and moment convergence plus concentration gives narrow convergence in probability. The omitted verifications are the error terms in the counting \cite{anderson-guionnet-zeitouni}.
+\end{proof}
+
+\begin{remark}\label{probability:remark-random-matrices}
+For Gaussian entries (the \emph{Gaussian orthogonal ensemble}, or its complex Hermitian version, the GUE) the joint density of the eigenvalues is explicit, proportional to $\prod_{i<j}|\lambda_i - \lambda_j|^\beta e^{-c\sum\lambda_i^2}$
+with $\beta = 1$ or $2$ and a constant $c > 0$ depending on the normalisation: eigenvalues repel each other. The largest eigenvalue, rescaled as $n^{2/3}(\lambda_{\max}/\sqrt n - 2)$, converges to the \emph{Tracy--Widom distribution}, which also describes the longest increasing
+subsequence of a random permutation (Baik--Deift--Johansson). For sample covariance matrices $\frac1nXX^T$ with $X$ of size $p \times n$, $p/n \to c$, the limit is the \emph{Marchenko--Pastur law}. Montgomery and Dyson observed that
+the zeros of the Riemann zeta function, suitably rescaled, have the pair correlation of GUE eigenvalues (Chapter~\ref{analytic-number-theory}) \cite{anderson-guionnet-zeitouni}.
+\end{remark}
+
+\section{Exercises}\label{probability:section-exercises}
+
+\begin{exercise}\label{probability:exercise-coupon-collector}
+A collector buys cards, each uniformly random among $n$ types, independently. Let $T_n$ be the number of purchases until all types are collected. Show that $E[T_n] = nH_n$, $H_n = 1 + \frac12 + \cdots + \frac1n$, that
+$\operatorname{Var}T_n \leq \frac{\pi^2}{6}n^2$, and that $T_n/(n\log n) \to 1$ in probability.
+\end{exercise}
+
+\begin{solution}
+After $k - 1$ types are collected, the waiting time for a new type is geometric with success probability $p_k = \frac{n - k + 1}{n}$, and these waiting times $G_k$ are independent; $T_n = \sum_{k=1}^nG_k$. So
+$E[T_n] = \sum\frac{n}{n - k + 1} = nH_n$ and $\operatorname{Var}T_n = \sum\frac{1 - p_k}{p_k^2} \leq \sum_{j=1}^n\frac{n^2}{j^2} \leq \frac{\pi^2}{6}n^2$. By Chebyshev, $P(|T_n - nH_n| \geq \varepsilon n\log n) \leq \frac{\pi^2}{6\varepsilon^2\log^2n} \to 0$, and
+$H_n/\log n \to 1$.
+\end{solution}
+
+\begin{exercise}\label{probability:exercise-memoryless}
+Show that a random variable $X > 0$ with $P(X > s + t) = P(X > s)P(X > t)$ for all $s, t \geq 0$ is exponential (or $X = \infty$ a.s.).
+\end{exercise}
+
+\begin{solution}
+$g(t) = P(X > t)$ is nonincreasing, right-continuous, with $g(s + t) = g(s)g(t)$. If $g(1) = 0$ then $g(1/n)^n = 0$ and $g(1/n) = 0$, so $P(X > 0) = \lim g(1/n) = 0$, impossible. So $g(1) = e^{-\lambda}$ with $\lambda \in [0, \infty)$, then
+$g(q) = e^{-\lambda q}$ for rational $q > 0$ by the functional equation, and for all $t$ by monotonicity. If $\lambda = 0$, $X = \infty$ almost surely; otherwise $X \sim \mathrm{Exp}(\lambda)$.
+\end{solution}
+
+\begin{exercise}\label{probability:exercise-birthday}
+Show that among $k$ people with independent uniformly distributed birthdays among $N$ days, the probability that all birthdays differ is at most $e^{-k(k-1)/2N}$; deduce that for $N = 365$ and $k = 23$ a coincidence is more likely
+than not.
+\end{exercise}
+
+\begin{solution}
+The probability is $\prod_{j=1}^{k-1}(1 - \frac jN) \leq \prod e^{-j/N} = e^{-k(k-1)/2N}$, using $1 - x \leq e^{-x}$. For $k = 23$, $N = 365$: $e^{-253/365} = e^{-0.693\ldots} < \frac12$, since $\log 2 = 0.6931\ldots$ and $253/365 = 0.6932\ldots$.
+\end{solution}
+
+\begin{exercise}\label{probability:exercise-characteristic-symmetrisation}
+Show that if $\varphi$ is a characteristic function, so are $\overline\varphi$, $|\varphi|^2$ and $\operatorname{Re}\varphi$. Show that $\cos t$ is the characteristic function of a fair sign $\pm1$, but $\cos t$ is not the characteristic function
+of an infinitely divisible law.
+\end{exercise}
+
+\begin{solution}
+$\overline\varphi = \varphi_{-X}$, $|\varphi|^2 = \varphi_{X - X^{\prime}}$ for an independent copy $X^{\prime}$, and $\operatorname{Re}\varphi$ is the characteristic function of $\varepsilon X$ with an independent fair sign $\varepsilon$, as it equals
+$\frac12(\varphi + \overline\varphi)$. $E[e^{it\varepsilon}] = \frac12(e^{it} + e^{-it}) = \cos t$. The sign has bounded support and is nondegenerate, so it is not infinitely divisible
+(Counterexample~\ref{probability:counterexample-not-infinitely-divisible}).
+\end{solution}
+
+\begin{exercise}\label{probability:exercise-chernoff-coin}
+Using Proposition~\ref{probability:proposition-chernoff}, show that for $n$ fair coin tosses $P(S_n \geq \frac34n) \leq (2\cdot 3^{-3/4})^n \approx 0.877^n$.
+\end{exercise}
+
+\begin{solution}
+$M(\lambda) = \frac{1 + e^\lambda}{2}$. Minimise $e^{-3\lambda/4}\frac{1 + e^\lambda}{2}$: the derivative vanishes at $e^\lambda = 3$, giving $3^{-3/4}\cdot\frac{1 + 3}{2} = 2\cdot 3^{-3/4} = 0.877\ldots$. (The exponent is $I(\frac34) = \frac34\log\frac32 + \frac14\log\frac12 = 0.1308\ldots$, and
+$e^{-0.1308} = 0.877$.)
+\end{solution}
+
+\begin{exercise}\label{probability:exercise-poisson-thinning}
+Let $N \sim \mathrm{Poi}(\lambda)$ and, given $N$, let each of the $N$ points be kept independently with probability $p$. Show that the number of kept points is $\mathrm{Poi}(\lambda p)$, independent of the number of discarded
+points, which is $\mathrm{Poi}(\lambda(1 - p))$.
+\end{exercise}
+
+\begin{solution}
+$P(K = k, D = d) = P(N = k + d)\binom{k + d}{k}p^k(1 - p)^d = e^{-\lambda}\frac{\lambda^{k+d}}{k!\,d!}p^k(1 - p)^d = e^{-\lambda p}\frac{(\lambda p)^k}{k!}\cdot e^{-\lambda(1-p)}\frac{(\lambda(1 - p))^d}{d!}$, a product of the two Poisson mass functions.
+\end{solution}
+
+\begin{exercise}\label{probability:exercise-clt-gamma}
+Deduce from the central limit theorem that $e^{-n}\sum_{k=0}^n\frac{n^k}{k!} \to \frac12$.
+\end{exercise}
+
+\begin{solution}
+The sum is $P(S_n \leq n)$ for $S_n \sim \mathrm{Poi}(n)$, a sum of $n$ independent $\mathrm{Poi}(1)$ variables with mean and variance $1$ (Example~\ref{probability:example-sums}). By Corollary~\ref{probability:corollary-clt},
+$P(\frac{S_n - n}{\sqrt n} \leq 0) \to \Phi(0) = \frac12$.
+\end{solution}

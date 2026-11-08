@@ -158,8 +158,14 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
   amenability, KK-theory and Baum–Connes (survey), Pimsner–Voiculescu.
 
 ### VII. Probability and Statistics
-- `probability` (planned): as in its outline; move Borel–Cantelli and independence here from
-  measure-theory (or cite).
+- `probability` (draft 2026-11-08): to deepen: conditional expectation and regular conditional
+  laws (now only in `martingales` plans), Gaussian vectors and Cochran, necessity in the
+  three-series theorem, Feller's converse, Berry–Esseen and the LIL with proofs, Stein's method,
+  Lévy–Khintchine with proof, domains of attraction, Cramér for all x and Gärtner–Ellis, Sanov
+  with proof, Wigner with full error terms, Stieltjes transform, Marchenko–Pastur, local CLT,
+  Skorokhod representation, uniform integrability, Kolmogorov extension, exchangeability
+  (de Finetti), concentration (McDiarmid, Talagrand). Independence and Borel–Cantelli stay in
+  measure-theory and are cited.
 - `martingales` (planned, with the stochastic-process outlines): Markov chains (recurrence,
   stationary distributions, mixing times), Poisson processes, Brownian motion (construction,
   path properties, strong Markov, reflection), stochastic calculus (Itô integral, Itô's formula,
@@ -470,7 +476,6 @@ together in one place.
      the perimeter version needs BV functions), Steiner symmetrisation,
      Kakeya/Besicovitch sets, rectifiability in depth; perhaps split into
      `hausdorff-measures`, `fractals`, `area-coarea`, `rectifiability`;
-   - move Borel–Cantelli/independence into `probability` when it is written.
 4. **Algebraic geometry**.
 5. Then free choice. Discrete mathematics is paused: the first part of
    `graph-theory` is drafted in `drafts/graph-theory-part1.tex` (introduction,
