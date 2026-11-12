@@ -1284,6 +1284,10 @@ $\partial_jf(\xi_j) \to \partial_jf(a)$. The statement about $C^k$ follows by in
 Corollary~\ref{real-analysis:corollary-integration-rules} applies.
 \end{proof}
 
+The derivative $Df(a)$ uses the vector space structure of $\RR^n$: the increment $h$ and the point $a + h$ only make sense because $\RR^n$ is a vector space. On a smooth manifold there is no such structure, and the
+derivative is replaced by the \emph{differential} $d_pf \colon T_pM \to T_{f(p)}N$ between tangent spaces (Chapter~\ref{smooth-manifolds}). In charts the differential is computed by the derivative of this section, and on
+open subsets of Euclidean spaces the two coincide.
+
 \begin{counterexample}\label{real-analysis:counterexample-partials}
 Let $f(x, y) = xy/(x^2 + y^2)$ for $(x, y) \neq 0$ and $f(0) = 0$. Both partial derivatives exist everywhere ($f$ vanishes on the axes), but $f(t, t) = 1/2$ for $t \neq 0$, so $f$ is not continuous at $0$, let
 alone differentiable.

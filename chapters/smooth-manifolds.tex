@@ -616,9 +616,10 @@ By the inverse function theorem its inverse is smooth, so $(r, \theta) = P^{-1}$
 (Proposition~\ref{smooth-manifolds:proposition-smooth-maps}(3)), the \emph{polar coordinates}. With $x = r\cos\theta$ and $y = r\sin\theta$,
 Proposition~\ref{smooth-manifolds:proposition-change-of-coordinates} gives
 \[
-\frac{\partial}{\partial r} = \cos\theta\,\frac{\partial}{\partial x} + \sin\theta\,\frac{\partial}{\partial y} = \frac{x}{r}\frac{\partial}{\partial x}
-+ \frac{y}{r}\frac{\partial}{\partial y}, \qquad \frac{\partial}{\partial\theta} = -r\sin\theta\,\frac{\partial}{\partial x} + r\cos\theta\,\frac{\partial}{\partial y}
-= -y\frac{\partial}{\partial x} + x\frac{\partial}{\partial y}.
+\begin{aligned}
+\frac{\partial}{\partial r} &= \cos\theta\,\frac{\partial}{\partial x} + \sin\theta\,\frac{\partial}{\partial y} = \frac{x}{r}\frac{\partial}{\partial x} + \frac{y}{r}\frac{\partial}{\partial y}, \\
+\frac{\partial}{\partial\theta} &= -r\sin\theta\,\frac{\partial}{\partial x} + r\cos\theta\,\frac{\partial}{\partial y} = -y\frac{\partial}{\partial x} + x\frac{\partial}{\partial y}.
+\end{aligned}
 \]
 So $\partial/\partial r$ is the unit radial vector and $\partial/\partial\theta$ is the velocity of rotation about the origin. Note that $\partial/\partial r$
 depends on the whole chart $(r, \theta)$, not only on the function $r$: in the chart $(r, y)$, defined where $x > 0$, the vector $\partial/\partial r$ is
@@ -664,6 +665,32 @@ We now have three equivalent descriptions of $T_pM$: derivations at $p$ (the def
 (Proposition~\ref{smooth-manifolds:proposition-tangent-curves}); and vectors of components that change by the Jacobian matrix of the transition map
 (Proposition~\ref{smooth-manifolds:proposition-change-of-coordinates}). Each is useful: derivations for algebra (vector fields as derivations, the Lie
 bracket), curves for geometry (velocities, flows), components for computation.
+\end{remark}
+
+\begin{remark}[The differential and the derivative]\label{smooth-manifolds:remark-differential-derivative}
+The derivative $Df(a)$ of Definition~\ref{real-analysis:definition-differentiable} and the differential $d_pf$ of Definition~\ref{smooth-manifolds:definition-tangent-space} are the same
+object in two settings: $Df(a)$ is the differential written in coordinates, and $d_pf$ is its coordinate-free version.
+\begin{enumerate}
+\item \emph{On open subsets of Euclidean spaces they coincide.} For $F \colon U \to V$ between open sets of $\RR^n$ and $\RR^m$, the canonical isomorphisms $\RR^n \cong T_aU$, $v \mapsto D_v|_a$, and $\RR^m \cong T_{F(a)}V$ of
+Proposition~\ref{smooth-manifolds:proposition-tangent-euclidean} turn $d_aF$ into $DF(a)$, so the matrix of $d_aF$ in the bases $\partial/\partial x^i$ is the Jacobian matrix. The chain rule
+$d_p(g \circ f) = d_{f(p)}g \circ d_pf$ of Proposition~\ref{smooth-manifolds:proposition-tangent-space}(3) becomes the chain rule of Proposition~\ref{real-analysis:proposition-derivative-basic}(2).
+\item \emph{On a manifold there is no canonical choice of coordinates.} $T_pM$ has no preferred isomorphism with $\RR^n$: each chart gives one, and two charts give isomorphisms that differ by the Jacobian matrix of the
+transition map (Proposition~\ref{smooth-manifolds:proposition-change-of-coordinates}). This is why $T_pM$ is defined intrinsically, by derivations. Computed in charts $\varphi$ at $p$ and $\psi$ at $f(p)$, the differential
+$d_pf$ has the matrix of $DF(\varphi(p))$, where $F = \psi \circ f \circ \varphi^{-1}$ is the local representative (Proposition~\ref{smooth-manifolds:proposition-tangent-space}(3)). Changing the charts multiplies this matrix
+on both sides by Jacobian matrices of transition maps, by the chain rule of Chapter~\ref{real-analysis}; this is the computation showing that ``the derivative of $f$ at $p$'' is a well-defined linear map between tangent
+spaces, even though the matrix $DF(\varphi(p))$ depends on the charts.
+\item \emph{Directional derivatives.} By Proposition~\ref{smooth-manifolds:proposition-velocity}, $d_pf(\gamma^{\prime}(0)) = (f \circ \gamma)^{\prime}(0)$ for every smooth curve through $p$. For the straight line $\gamma(t) = a + th$ in $\RR^n$ this is
+$DF(a)h = \frac{d}{dt}F(a + th)|_{t=0}$: the differential sends a velocity to a velocity, as the derivative sends an increment $h$ to the first-order increment $DF(a)h$.
+\item \emph{Regularity.} $Df(a)$ is defined for a map that is merely differentiable at the single point $a$. The differential $d_pf$, as defined here, requires $f$ to be smooth, because derivations act on $C^\infty(M)$, and
+the proof that derivations are directional derivatives uses Hadamard's lemma (Lemma~\ref{smooth-manifolds:lemma-hadamard}), which loses one derivative and so needs $C^\infty$ functions. For $C^k$ manifolds and maps with
+$k < \infty$ one uses the descriptions by curves or by components of Remark~\ref{smooth-manifolds:remark-three-definitions} instead.
+\item \emph{Real-valued functions and the total differential.} For $f \colon M \to \RR$, $d_pf$ maps $T_pM$ to $T_{f(p)}\RR \cong \RR$, so it is a linear form on $T_pM$, the covector $(df)_p$ of Chapter~\ref{differential-forms}. On
+an open set of $\RR^n$ it is the row vector $Df(a) = (\partial_1f(a), \ldots, \partial_nf(a))$, and the classical ``total differential'' $df = \partial_1f\,dx^1 + \cdots + \partial_nf\,dx^n$ of calculus, which there is only a
+notation for $Df$, becomes an identity between $1$-forms, with $dx^i$ the differentials of the coordinate functions.
+\item \emph{Submanifolds of $\RR^N$.} If $S \subseteq \RR^N$ is a submanifold (Section~\ref{smooth-manifolds:section-submanifolds}), the velocities of curves in $S$ identify $T_pS$ with a linear subspace of $\RR^N$; for instance
+$T_xS^n = x^\perp$. If $f \colon S \to \RR^m$ is the restriction of a smooth map $F$ defined on an open set of $\RR^N$, then $f = F \circ \iota$ and the chain rule gives $d_pf = DF(p)|_{T_pS}$: the differential is the
+derivative of any extension, restricted to the tangent directions. This is the form in which tangent spaces of level sets appear in the method of Lagrange multipliers of Chapter~\ref{real-analysis}.
+\end{enumerate}
 \end{remark}
 
 \begin{corollary}\label{smooth-manifolds:corollary-invariance-dimension}
