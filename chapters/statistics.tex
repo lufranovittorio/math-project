@@ -1,20 +1,648 @@
 \chapter{Mathematical Statistics}\label{statistics}
-\chapterstatus{planned}
+\chapterstatus{draft}
 
-How to learn about an unknown distribution from samples: estimation, testing and the Bayesian point of
-view, with their optimality theorems.
+Probability theory starts from a known distribution and computes the likely behaviour of samples. Statistics goes the other way: it observes a sample and asks what can be said about the unknown distribution that produced it.
+The mathematical theory makes this precise by fixing a family of candidate distributions, a \emph{statistical model}, and studying procedures (estimators, tests, confidence sets, posterior distributions, learning rules)
+together with the optimality theorems that say how well any procedure can do.
+\begin{itemize}
+\item Section~\ref{statistics:section-models}: statistical models, sufficiency, the factorisation theorem, exponential families.
+\item Section~\ref{statistics:section-estimation}: estimators and their risk; Rao--Blackwell, Lehmann--Scheff\'e and Cram\'er--Rao.
+\item Section~\ref{statistics:section-normal-samples}: samples from the normal law; the $\chi^2$, $t$ and $F$ laws; confidence intervals.
+\item Section~\ref{statistics:section-maximum-likelihood}: maximum likelihood; consistency and asymptotic normality.
+\item Section~\ref{statistics:section-tests}: hypothesis tests and the Neyman--Pearson lemma.
+\item Section~\ref{statistics:section-linear-model}: the linear model, least squares and the Gauss--Markov theorem.
+\item Section~\ref{statistics:section-bayesian}: Bayesian inference.
+\item Section~\ref{statistics:section-nonparametric}: the empirical distribution and the Glivenko--Cantelli theorem.
+\item Section~\ref{statistics:section-learning}: statistical learning theory, VC dimension and the Sauer--Shelah lemma.
+\end{itemize}
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{probability} (Probability Theory) and Chapter~\ref{linear-algebra} (Linear Algebra).
+\noindent\textbf{Prerequisites.} Chapter~\ref{probability} (Probability Theory), Chapter~\ref{martingales} (Stochastic Processes), for conditional expectation, and Chapter~\ref{linear-algebra} (Linear Algebra).
 
-\noindent\textbf{Planned contents.}
+\section{Statistical models and sufficiency}\label{statistics:section-models}
+
+\begin{definition}\label{statistics:definition-model}
+A \emph{statistical model} is a measurable space $(\mathcal{X}, \mathcal{A})$, the \emph{sample space}, with a family $\mathcal{P} = \{P_\theta : \theta \in \Theta\}$ of probability measures on it; $\Theta$ is the \emph{parameter space}. The
+model is \emph{parametric} if $\Theta \subseteq \RR^k$, and \emph{dominated} if all $P_\theta$ are absolutely continuous with respect to one $\sigma$-finite measure $\mu$; then $p_\theta = dP_\theta/d\mu$ is the \emph{density}, and
+$\theta \mapsto p_\theta(x)$ is the \emph{likelihood function} of the observation $x$. A \emph{statistic} is a measurable map $T$ from $\mathcal{X}$ to some measurable space.
+\end{definition}
+
+\begin{notation}\label{statistics:notation-model}
+$E_\theta$ and $\operatorname{Var}_\theta$ refer to $P_\theta$. The typical observation is an \emph{i.i.d.\ sample} $X = (X_1, \ldots, X_n)$ from a law $Q_\theta$ on $\RR$, so that $\mathcal{X} = \RR^n$ and $P_\theta = Q_\theta^{\otimes n}$,
+with density $p_\theta(x) = \prod_iq_\theta(x_i)$. $\bar X = \frac1n\sum X_i$ is the \emph{sample mean} and $S^2 = \frac{1}{n - 1}\sum(X_i - \bar X)^2$ the \emph{sample variance}.
+\end{notation}
+
+\begin{example}\label{statistics:example-models}
 \begin{enumerate}
-\item Statistical models, sufficiency and the factorisation theorem, completeness, exponential families.
-\item Estimators: bias, risk, Rao--Blackwell, Lehmann--Scheff\'e, the Cram\'er--Rao bound.
-\item Maximum likelihood: consistency and asymptotic normality.
-\item Hypothesis tests: the Neyman--Pearson lemma, likelihood ratio tests, confidence intervals.
-\item The normal linear model: least squares, Gauss--Markov, Cochran's theorem, $t$ and $F$ tests.
-\item Bayesian inference, conjugate priors, the Bernstein--von Mises theorem (statement).
-\item Nonparametric methods: the empirical distribution, Glivenko--Cantelli, Kolmogorov--Smirnov.
-\item Statistical learning theory: empirical risk minimisation, PAC learning, VC dimension and the Sauer--Shelah lemma, uniform convergence, regularisation; kernels and support vector machines.
-\item Exercises with solutions.
+\item \emph{Bernoulli model}: $n$ independent trials with unknown success probability $\theta \in [0, 1]$; $p_\theta(x) = \theta^{\sum x_i}(1 - \theta)^{n - \sum x_i}$ on $\{0, 1\}^n$, with respect to counting measure.
+\item \emph{Normal model}: $X_i$ i.i.d.\ $N(m, \sigma^2)$ with $\theta = (m, \sigma^2) \in \RR \times (0, \infty)$; $p_\theta(x) = (2\pi\sigma^2)^{-n/2}\exp(-\frac{1}{2\sigma^2}\sum(x_i - m)^2)$.
+\item \emph{Uniform model}: $X_i$ i.i.d.\ uniform on $[0, \theta]$, $\theta > 0$; $p_\theta(x) = \theta^{-n}\mathbf{1}_{\{\max x_i \leq \theta\}}$ for $x \in [0, \infty)^n$.
+\item \emph{Nonparametric model}: $X_i$ i.i.d.\ from an arbitrary law $Q$ on $\RR$; here $\Theta$ is the set of all probability measures on $\RR$, and the model is not dominated.
 \end{enumerate}
+\end{example}
+
+A statistic summarises the data. It is \emph{sufficient} if it loses no information about $\theta$: once $T(X)$ is known, the remaining randomness of $X$ does not depend on $\theta$, so it cannot help to estimate it.
+
+\begin{definition}\label{statistics:definition-sufficient}
+A statistic $T$ is \emph{sufficient} for the model $\mathcal{P}$ if for every $A \in \mathcal{A}$ there is a version of $P_\theta(A \mid T)$ that does not depend on $\theta$.
+\end{definition}
+
+\begin{theorem}[Fisher--Neyman factorisation]\label{statistics:theorem-factorisation}
+In a dominated model with densities $p_\theta$, a statistic $T$ is sufficient iff there are measurable functions $g_\theta \geq 0$ and $h \geq 0$ with $p_\theta(x) = g_\theta(T(x))h(x)$ $\mu$-almost everywhere, for every $\theta$.
+\end{theorem}
+
+\begin{proof}[Proof for countable sample spaces]
+Let $\mathcal{X}$ be countable and $\mu$ counting measure, so $p_\theta(x) = P_\theta(\{x\})$. If $p_\theta = g_\theta(T)h$ and $P_\theta(T = t) > 0$, then for $x$ with $T(x) = t$,
+\[
+P_\theta(X = x \mid T = t) = \frac{g_\theta(t)h(x)}{\sum_{y : T(y) = t}g_\theta(t)h(y)} = \frac{h(x)}{\sum_{T(y) = t}h(y)},
+\]
+which does not depend on $\theta$; so $P_\theta(A \mid T) = \sum_{x \in A}P(X = x \mid T)$ has a $\theta$-free version. Conversely, if $T$ is sufficient, let $k(x) = P_\theta(X = x \mid T = T(x))$, independent of $\theta$; then
+$p_\theta(x) = P_\theta(T = T(x))k(x)$, a factorisation with $g_\theta(t) = P_\theta(T = t)$ and $h = k$.
+\end{proof}
+
+The general case is due to Halmos and Savage; it reduces to the countable case by replacing $\mu$ with a probability measure $\sum_jc_jP_{\theta_j}$ equivalent to the family, and uses the Radon--Nikodym theorem
+\cite{lehmann-casella}.
+
+\begin{example}\label{statistics:example-sufficient}
+\begin{enumerate}
+\item In the Bernoulli model, $T = \sum X_i$ (the number of successes) is sufficient, with $h = 1$: the order of the successes carries no information about $\theta$.
+\item In the normal model, $(\sum X_i, \sum X_i^2)$, equivalently $(\bar X, S^2)$, is sufficient, since $\sum(x_i - m)^2 = \sum x_i^2 - 2m\sum x_i + nm^2$.
+\item In the uniform model, $T = \max X_i$ is sufficient, with $g_\theta(t) = \theta^{-n}\mathbf{1}_{\{t \leq \theta\}}$.
+\item In every i.i.d.\ model the \emph{order statistics} $X_{(1)} \leq \cdots \leq X_{(n)}$ are sufficient: the density is symmetric in $x_1, \ldots, x_n$.
+\end{enumerate}
+\end{example}
+
+\begin{definition}\label{statistics:definition-exponential-family}
+A model is an \emph{exponential family} if its densities have the form
+\[
+p_\theta(x) = h(x)\exp\bigl(\langle\eta(\theta), T(x)\rangle - A(\theta)\bigr)
+\]
+with $T \colon \mathcal{X} \to \RR^k$ and $\eta \colon \Theta \to \RR^k$. Then $T$ is sufficient, by the factorisation theorem. In the \emph{natural parametrisation} $\eta$ itself is the parameter, ranging over the set where
+$\int he^{\langle\eta, T\rangle}d\mu < \infty$, and $A(\eta) = \log\int he^{\langle\eta, T\rangle}d\mu$.
+\end{definition}
+
+\begin{example}\label{statistics:example-exponential-families}
+The Bernoulli law is $\theta^x(1 - \theta)^{1-x} = \exp(x\log\frac{\theta}{1 - \theta} + \log(1 - \theta))$, with natural parameter the \emph{log-odds} $\eta = \log\frac{\theta}{1 - \theta}$; this is why logistic regression models log-odds
+linearly. Poisson, exponential, Gamma, normal and binomial (fixed $n$) laws are exponential families; so are i.i.d.\ samples from them, with $T$ replaced by $\sum_iT(x_i)$. The uniform family on $[0, \theta]$ and the Cauchy
+location family are not: in the first the support depends on $\theta$, and in the second no finite-dimensional statistic is sufficient.
+\end{example}
+
+\begin{proposition}\label{statistics:proposition-exponential-family-moments}
+In a natural exponential family, $A$ is convex and smooth in the interior of the natural parameter space, with $\nabla A(\eta) = E_\eta[T]$ and $\nabla^2A(\eta) = \operatorname{Cov}_\eta(T)$.
+\end{proposition}
+
+\begin{proof}
+$e^{A(\eta)} = \int he^{\langle\eta, T\rangle}d\mu$ is a Laplace transform; differentiation under the integral sign is justified in the interior by dominated convergence (the integrand $|T|^ke^{\langle\eta, T\rangle}$ is dominated by a multiple of
+$e^{\langle\eta^{\prime}, T\rangle} + e^{\langle\eta^{\prime\prime}, T\rangle}$ for nearby $\eta^{\prime}$, $\eta^{\prime\prime}$). Then $\nabla A = \frac{\int Th e^{\langle\eta, T\rangle}}{\int he^{\langle\eta, T\rangle}} = E_\eta[T]$, and differentiating again gives
+$E_\eta[TT^{\mathsf T}] - E_\eta[T]E_\eta[T]^{\mathsf T}$, which is positive semidefinite; so $A$ is convex.
+\end{proof}
+
+\begin{definition}\label{statistics:definition-complete}
+A statistic $T$ is \emph{complete} if $E_\theta[f(T)] = 0$ for all $\theta$ implies $f(T) = 0$ $P_\theta$-almost surely for all $\theta$.
+\end{definition}
+
+\begin{example}\label{statistics:example-complete}
+In the Bernoulli model $T = \sum X_i \sim B(n, \theta)$ is complete: $E_\theta[f(T)] = (1 - \theta)^n\sum_kf(k)\binom nk\rho^k$ with $\rho = \frac{\theta}{1 - \theta}$ is a polynomial in $\rho \in (0, \infty)$ that vanishes identically only if all
+$f(k) = 0$. In the uniform model, $\max X_i$ is complete: $E_\theta[f(T)] = n\theta^{-n}\int_0^\theta f(t)t^{n-1}dt = 0$ for all $\theta$ forces $f(t)t^{n-1} = 0$ almost everywhere (differentiate in $\theta$, or use the uniqueness of
+measures on intervals). More generally, in an exponential family whose natural parameter space contains an open set, $T$ is complete, by the uniqueness of the Laplace transform \cite{lehmann-casella}.
+\end{example}
+
+\section{Estimation}\label{statistics:section-estimation}
+
+\begin{definition}\label{statistics:definition-estimator}
+An \emph{estimator} of a function $g(\theta) \in \RR$ is a statistic $\hat g = \hat g(X)$. Its \emph{bias} is $E_\theta[\hat g] - g(\theta)$, and it is \emph{unbiased} if the bias vanishes for all $\theta$. Its \emph{mean squared error}, or
+\emph{risk} for the quadratic loss, is $R(\theta, \hat g) = E_\theta[(\hat g - g(\theta))^2] = \operatorname{Var}_\theta\hat g + \mathrm{bias}^2$. A sequence of estimators $\hat g_n$ (one for each sample size) is \emph{consistent} if
+$\hat g_n \to g(\theta)$ in $P_\theta$-probability for every $\theta$.
+\end{definition}
+
+\begin{example}\label{statistics:example-estimators}
+\begin{enumerate}
+\item $\bar X$ is an unbiased estimator of the mean, with variance $\sigma^2/n$; it is consistent by the law of large numbers.
+\item $S^2$ is unbiased for the variance: $\sum(X_i - \bar X)^2 = \sum(X_i - m)^2 - n(\bar X - m)^2$ has expectation $n\sigma^2 - \sigma^2$. This is why one divides by $n - 1$. Among estimators $c\sum(X_i - \bar X)^2$ of $\sigma^2$
+in the normal model, the mean squared error is smallest for $c = \frac{1}{n + 1}$ (Exercise~\ref{statistics:exercise-variance-mse}): unbiasedness is not the same as optimality.
+\item In the uniform model on $[0, \theta]$, $2\bar X$ is unbiased with variance $\frac{\theta^2}{3n}$, while $\frac{n + 1}{n}\max X_i$ is unbiased with variance $\frac{\theta^2}{n(n + 2)}$, an order of magnitude smaller.
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{statistics:counterexample-unbiased}
+Unbiased estimators may not exist, or be absurd. If $X \sim \mathrm{Poi}(\lambda)$ is a single observation, the only unbiased estimator of $e^{-2\lambda}$ is $(-1)^X$: indeed $\sum_kf(k)e^{-\lambda}\frac{\lambda^k}{k!} = e^{-2\lambda}$ for all
+$\lambda$ means $\sum_kf(k)\frac{\lambda^k}{k!} = e^{-\lambda}$, so $f(k) = (-1)^k$ by uniqueness of power series coefficients. It estimates a number in $(0, 1)$ by $\pm1$. In the Bernoulli model with one trial, there is no unbiased
+estimator of $\frac{1}{\theta}$, since $E_\theta[f(X)] = (1 - \theta)f(0) + \theta f(1)$ is a polynomial.
+\end{counterexample}
+
+\begin{theorem}[Rao--Blackwell]\label{statistics:theorem-rao-blackwell}
+Let $T$ be sufficient and $\hat g$ an estimator with $E_\theta[\hat g^2] < \infty$. Then $\tilde g = E[\hat g \mid T]$ (which does not depend on $\theta$) is an estimator with the same bias and
+$R(\theta, \tilde g) \leq R(\theta, \hat g)$ for all $\theta$, with equality iff $\hat g = \tilde g$ almost surely.
+\end{theorem}
+
+\begin{proof}
+By sufficiency, a version of $E_\theta[\hat g \mid T]$ can be chosen independently of $\theta$ (for indicators by Definition~\ref{statistics:definition-sufficient}, then for simple functions and by monotone convergence), so $\tilde g$ is
+a statistic. $E_\theta[\tilde g] = E_\theta[\hat g]$, and by the variance decomposition (Exercise~\ref{martingales:exercise-projection}),
+$\operatorname{Var}_\theta\hat g = \operatorname{Var}_\theta\tilde g + E_\theta[(\hat g - \tilde g)^2]$.
+\end{proof}
+
+\begin{theorem}[Lehmann--Scheff\'e]\label{statistics:theorem-lehmann-scheffe}
+If $T$ is sufficient and complete and $\varphi(T)$ is an unbiased estimator of $g(\theta)$ with finite variance, then $\varphi(T)$ is the unique \emph{uniformly minimum variance unbiased estimator} (UMVUE): every unbiased
+$\hat g$ satisfies $\operatorname{Var}_\theta\hat g \geq \operatorname{Var}_\theta\varphi(T)$ for all $\theta$.
+\end{theorem}
+
+\begin{proof}
+For unbiased $\hat g$ with finite variance, $E[\hat g \mid T] = \psi(T)$ is unbiased, so $E_\theta[\psi(T) - \varphi(T)] = 0$ for all $\theta$, and completeness gives $\psi(T) = \varphi(T)$. By Rao--Blackwell,
+$\operatorname{Var}\hat g \geq \operatorname{Var}\psi(T) = \operatorname{Var}\varphi(T)$, with equality only if $\hat g = \varphi(T)$.
+\end{proof}
+
+\begin{example}\label{statistics:example-umvue}
+In the Bernoulli model, $\bar X$ is the UMVUE of $\theta$, and $\frac{T(n - T)}{n(n - 1)}$ ($T = \sum X_i$) is the UMVUE of $\theta(1 - \theta)$, being an unbiased function of the complete sufficient statistic: $E[T(n - T)] = n^2\theta - n\theta(1 - \theta) - n^2\theta^2 =
+n(n - 1)\theta(1 - \theta)$. In the uniform model, $\frac{n + 1}{n}\max X_i$ is the UMVUE of $\theta$, which explains Example~\ref{statistics:example-estimators}(3).
+\end{example}
+
+\begin{definition}\label{statistics:definition-fisher-information}
+Let $\Theta \subseteq \RR$ be open and the model \emph{regular}: the densities $p_\theta(x) > 0$ have a common support, are differentiable in $\theta$, and $\int\partial_\theta p_\theta\,d\mu = 0$ (differentiation under the integral sign
+of $\int p_\theta = 1$). The \emph{score} is $\ell^{\prime}_\theta(x) = \partial_\theta\log p_\theta(x)$, and the \emph{Fisher information} is $I(\theta) = E_\theta[\ell^{\prime}_\theta(X)^2]$.
+\end{definition}
+
+The score has mean zero, $E_\theta[\ell_\theta^{\prime}] = \int\partial_\theta p_\theta\,d\mu = 0$, so $I(\theta) = \operatorname{Var}_\theta\ell^{\prime}_\theta$. For an i.i.d.\ sample of size $n$ the scores add, and the information is $nI_1(\theta)$, $n$ times the
+information of one observation. If $\ell_\theta$ is twice differentiable and one may differentiate twice under the integral, $I(\theta) = -E_\theta[\ell^{\prime\prime}_\theta]$.
+
+\begin{theorem}[Cram\'er--Rao inequality]\label{statistics:theorem-cramer-rao}
+In a regular model, let $\hat g$ be an estimator with $E_\theta[\hat g^2] < \infty$ such that $\gamma(\theta) = E_\theta[\hat g]$ may be differentiated under the integral sign. Then
+\[
+\operatorname{Var}_\theta\hat g \geq \frac{\gamma^{\prime}(\theta)^2}{I(\theta)}.
+\]
+In particular, an unbiased estimator of $\theta$ from an i.i.d.\ sample of size $n$ has variance at least $\frac{1}{nI_1(\theta)}$.
+\end{theorem}
+
+\begin{proof}
+$\gamma^{\prime}(\theta) = \int\hat g\,\partial_\theta p_\theta\,d\mu = E_\theta[\hat g\ell_\theta^{\prime}] = \operatorname{Cov}_\theta(\hat g, \ell^{\prime}_\theta)$, as the score has mean zero. By the Cauchy--Schwarz inequality
+(Proposition~\ref{linear-algebra:proposition-cauchy-schwarz}, in $L^2(P_\theta)$), $\gamma^{\prime}(\theta)^2 \leq \operatorname{Var}_\theta\hat g\cdot\operatorname{Var}_\theta\ell^{\prime}_\theta$.
+\end{proof}
+
+\begin{example}\label{statistics:example-cramer-rao}
+\begin{enumerate}
+\item For $N(m, \sigma^2)$ with known $\sigma^2$, $\ell^{\prime}_m = (x - m)/\sigma^2$, $I_1 = 1/\sigma^2$, and $\bar X$ attains the bound $\sigma^2/n$: it is \emph{efficient}.
+\item For $\mathrm{Poi}(\lambda)$, $I_1 = 1/\lambda$, attained by $\bar X$. For the Bernoulli model, $I_1 = \frac{1}{\theta(1 - \theta)}$, attained by $\bar X$.
+\item Equality in Cauchy--Schwarz requires $\hat g - \gamma(\theta) = c(\theta)\ell^{\prime}_\theta$; this happens essentially only in exponential families with $\hat g$ a function of $T$ that is affine in $T$. For instance no unbiased
+estimator of $\sigma$ in the normal model attains the bound.
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{statistics:counterexample-cramer-rao}
+Regularity is needed: in the uniform model on $[0, \theta]$ the support moves with $\theta$, and the UMVUE $\frac{n+1}{n}\max X_i$ has variance $\frac{\theta^2}{n(n + 2)}$, of order $n^{-2}$, below any bound of the form $c/n$. The
+interchange $\frac{d}{d\theta}\int_0^\theta = \int_0^\theta\frac{d}{d\theta}$ fails because of the boundary term.
+\end{counterexample}
+
+\section{Samples from the normal law}\label{statistics:section-normal-samples}
+
+\begin{definition}\label{statistics:definition-chi-square}
+Let $Z_1, Z_2, \ldots$ be i.i.d.\ $N(0, 1)$. The \emph{$\chi^2$ law with $k$ degrees of freedom}, $\chi^2_k$, is the law of $Z_1^2 + \cdots + Z_k^2$. \emph{Student's $t$ law} $t_k$ is the law of $Z_0/\sqrt{V/k}$ with $Z_0 \sim N(0, 1)$ and
+$V \sim \chi^2_k$ independent; \emph{Fisher's $F$ law} $F_{k,l}$ is the law of $\frac{U/k}{V/l}$ with independent $U \sim \chi^2_k$, $V \sim \chi^2_l$.
+\end{definition}
+
+\begin{proposition}\label{statistics:proposition-chi-square}
+$\chi^2_k = \Gamma(\frac k2, \frac12)$, with density $\frac{x^{k/2-1}e^{-x/2}}{2^{k/2}\Gamma(k/2)}$ on $(0, \infty)$, mean $k$ and variance $2k$. The $t_k$ law has density proportional to $(1 + \frac{t^2}{k})^{-(k+1)/2}$; $t_1$ is the Cauchy law,
+and $t_k \Rightarrow N(0, 1)$ as $k \to \infty$.
+\end{proposition}
+
+\begin{proof}
+$P(Z^2 \leq x) = 2\int_0^{\sqrt x}\frac{e^{-u^2/2}}{\sqrt{2\pi}}du$ has derivative $\frac{x^{-1/2}e^{-x/2}}{\sqrt{2\pi}}$, the $\Gamma(\frac12, \frac12)$ density (Example~\ref{special-functions:example-gamma-half}). Sums of independent
+$\Gamma(\alpha, \lambda)$ and $\Gamma(\beta, \lambda)$ variables are $\Gamma(\alpha + \beta, \lambda)$: the convolution of the densities is $\frac{\lambda^{\alpha+\beta}e^{-\lambda x}}{\Gamma(\alpha)\Gamma(\beta)}\int_0^xy^{\alpha-1}(x - y)^{\beta-1}dy$, and the integral is
+$x^{\alpha+\beta-1}B(\alpha, \beta)$ (Proposition~\ref{special-functions:proposition-beta}). The moments follow from Example~\ref{probability:example-classical-distributions}. For $t_k$, condition on $V$: the density of $Z_0/\sqrt{V/k}$ at
+$t$ is $\int_0^\infty\sqrt{v/k}\,\frac{e^{-t^2v/2k}}{\sqrt{2\pi}}f_V(v)\,dv$, a Gamma integral proportional to $(1 + t^2/k)^{-(k+1)/2}$. Finally $V/k \to 1$ almost surely by the law of large numbers, so $Z_0/\sqrt{V/k} \to Z_0$ almost
+surely and in distribution.
+\end{proof}
+
+\begin{lemma}\label{statistics:lemma-orthogonal-invariance}
+If $Z = (Z_1, \ldots, Z_n)$ has i.i.d.\ $N(0, 1)$ coordinates and $Q$ is an orthogonal $n \times n$ matrix, then $QZ$ has the same law. Consequently, if $\RR^n = V_1 \oplus \cdots \oplus V_r$ is an orthogonal decomposition with
+$\dim V_j = d_j$ and $\pi_j$ are the orthogonal projections, then $\pi_1Z, \ldots, \pi_rZ$ are independent and $|\pi_jZ|^2 \sim \chi^2_{d_j}$.
+\end{lemma}
+
+\begin{proof}
+The density $(2\pi)^{-n/2}e^{-|z|^2/2}$ is invariant under $Q$, and $|\det Q| = 1$, so the change of variables formula (Theorem~\ref{measure-theory:theorem-change-of-variables}) gives the first claim. Choose an orthonormal basis adapted to the
+decomposition and let $Q$ be the matrix with these vectors as rows; then $W = QZ$ has i.i.d.\ $N(0, 1)$ coordinates, $\pi_jZ$ is a function of the block of coordinates of $W$ belonging to $V_j$, and $|\pi_jZ|^2$ is the sum of
+their squares. Disjoint blocks of independent variables are independent (Corollary~\ref{probability:corollary-independence-products}(1)).
+\end{proof}
+
+\begin{theorem}[Fisher]\label{statistics:theorem-fisher}
+If $X_1, \ldots, X_n$ are i.i.d.\ $N(m, \sigma^2)$, then $\bar X$ and $S^2$ are independent, $\bar X \sim N(m, \sigma^2/n)$, $\frac{(n - 1)S^2}{\sigma^2} \sim \chi^2_{n-1}$, and
+\[
+\frac{\sqrt n(\bar X - m)}{S} \sim t_{n-1}.
+\]
+\end{theorem}
+
+\begin{proof}
+Write $X_i = m + \sigma Z_i$. Let $V_1 = \RR\mathbf{1}$ with $\mathbf{1} = (1, \ldots, 1)$ and $V_2 = \mathbf{1}^\perp$. Then $\pi_1Z = \bar Z\mathbf{1}$ and $\pi_2Z = (Z_i - \bar Z)_i$, so by Lemma~\ref{statistics:lemma-orthogonal-invariance},
+$\bar Z$ and $\sum(Z_i - \bar Z)^2 \sim \chi^2_{n-1}$ are independent; and $\sqrt n\bar Z = \langle Z, \mathbf{1}/\sqrt n\rangle$ is the coordinate of $QZ$ along a unit vector, so $\sqrt n\bar Z \sim N(0, 1)$. Now $\bar X = m + \sigma\bar Z$ and
+$(n - 1)S^2 = \sigma^2\sum(Z_i - \bar Z)^2$; and $\frac{\sqrt n(\bar X - m)}{S} = \frac{\sqrt n\bar Z}{\sqrt{\sum(Z_i - \bar Z)^2/(n - 1)}}$ is $t_{n-1}$ by definition.
+\end{proof}
+
+The point of the $t$ statistic is that its law does not depend on the unknown $\sigma$: it is a \emph{pivot}. Gosset, a chemist at the Guinness brewery, found the law in 1908 and published it under the pseudonym ``Student''.
+
+\begin{definition}\label{statistics:definition-confidence}
+A \emph{confidence set} of level $1 - \alpha$ for $g(\theta)$ is a random set $C(X)$ with $P_\theta(g(\theta) \in C(X)) \geq 1 - \alpha$ for all $\theta$.
+\end{definition}
+
+\begin{example}\label{statistics:example-confidence}
+In the normal model, let $t_{n-1, \alpha/2}$ be the $1 - \frac\alpha2$ quantile of $t_{n-1}$. By Theorem~\ref{statistics:theorem-fisher},
+\[
+C(X) = \Bigl[\bar X - t_{n-1,\alpha/2}\frac{S}{\sqrt n},\ \bar X + t_{n-1,\alpha/2}\frac{S}{\sqrt n}\Bigr]
+\]
+is a confidence interval for $m$ of level exactly $1 - \alpha$. For large $n$, $t_{n-1, 0.025} \approx 1.96$. The statement is about the random interval: once the data are observed, the interval either contains $m$ or not, and
+the number $0.95$ describes the long-run frequency of success of the procedure. For non-normal data with finite variance, the same interval has asymptotic level $1 - \alpha$ by the central limit theorem.
+\end{example}
+
+\section{Maximum likelihood}\label{statistics:section-maximum-likelihood}
+
+\begin{definition}\label{statistics:definition-mle}
+In a dominated model, a \emph{maximum likelihood estimator} (MLE) is a statistic $\hat\theta(X)$ with $p_{\hat\theta(X)}(X) = \sup_\theta p_\theta(X)$. For an i.i.d.\ sample one maximises the \emph{log-likelihood}
+$\ell_n(\theta) = \sum_i\log q_\theta(X_i)$.
+\end{definition}
+
+\begin{example}\label{statistics:example-mle}
+\begin{enumerate}
+\item Bernoulli: $\ell_n(\theta) = T\log\theta + (n - T)\log(1 - \theta)$ is maximal at $\hat\theta = T/n = \bar X$.
+\item Normal: $\hat m = \bar X$ and $\hat\sigma^2 = \frac1n\sum(X_i - \bar X)^2$, which is biased.
+\item Uniform on $[0, \theta]$: $\theta^{-n}\mathbf{1}_{\{\max X_i \leq \theta\}}$ is maximal at $\hat\theta = \max X_i$, again biased.
+\item In a natural exponential family, $\ell_n(\eta) = \langle\eta, \sum T(X_i)\rangle - nA(\eta) + \text{const}$ is concave (Proposition~\ref{statistics:proposition-exponential-family-moments}), and the MLE solves
+$E_\eta[T] = \frac1n\sum T(X_i)$: it matches the expected and observed sufficient statistics.
+\end{enumerate}
+The MLE is \emph{equivariant}: the MLE of $g(\theta)$ is $g(\hat\theta)$, for every bijection $g$.
+\end{example}
+
+\begin{definition}\label{statistics:definition-kullback-leibler}
+The \emph{Kullback--Leibler divergence} (relative entropy) of probability densities $q$, $r$ with respect to $\mu$ is $K(q, r) = \int q\log\frac qr\,d\mu \in [0, \infty]$ (with $0\log\frac0r = 0$, and $K = \infty$ if $q > 0 = r$ on a set of positive measure).
+\end{definition}
+
+\begin{lemma}[Gibbs' inequality]\label{statistics:lemma-gibbs}
+$K(q, r) \geq 0$, with equality iff $q = r$ $\mu$-almost everywhere.
+\end{lemma}
+
+\begin{proof}
+On $\{q > 0\}$, by Jensen's inequality for the strictly concave $\log$ (Proposition~\ref{measure-theory:proposition-jensen}) with respect to the probability $q\,d\mu$, $-K(q, r) = \int_{q > 0}q\log\frac rq\,d\mu \leq \log\int_{q > 0}r\,d\mu \leq 0$,
+with equality iff $r/q$ is constant on $\{q > 0\}$ and $\int_{q > 0}r = 1$, that is, iff $r = q$.
+\end{proof}
+
+This is why maximum likelihood works: by the law of large numbers, $\frac1n(\ell_n(\theta) - \ell_n(\theta_0)) \to -K(q_{\theta_0}, q_\theta)$ under $P_{\theta_0}$, which is maximal exactly at $\theta = \theta_0$ when the model is
+\emph{identifiable} ($\theta \neq \theta^{\prime}$ implies $Q_\theta \neq Q_{\theta^{\prime}}$).
+
+\begin{theorem}[Consistency of the MLE, finite parameter space]\label{statistics:theorem-mle-consistency}
+Let $\Theta$ be finite, the model identifiable, and $K(q_{\theta_0}, q_\theta) < \infty$ for all $\theta$. Then under $P_{\theta_0}$, almost surely, the MLE equals $\theta_0$ for all large $n$.
+\end{theorem}
+
+\begin{proof}
+For $\theta \neq \theta_0$, $\log\frac{q_\theta(X_i)}{q_{\theta_0}(X_i)}$ are i.i.d.\ with mean $-K(q_{\theta_0}, q_\theta) < 0$ (by Lemma~\ref{statistics:lemma-gibbs} and identifiability). They are integrable: the positive part has
+$E[\log^+\frac{q_\theta}{q_{\theta_0}}] \leq E[\frac{q_\theta}{q_{\theta_0}}] \leq 1$, and then the negative part is integrable because the mean $-K$ is finite. The strong law (Theorem~\ref{probability:theorem-strong-law}) applies. So $\frac1n(\ell_n(\theta) - \ell_n(\theta_0)) \to -K < 0$ almost surely, and
+$\ell_n(\theta) < \ell_n(\theta_0)$ for large $n$; as $\Theta$ is finite, this holds simultaneously for all $\theta \neq \theta_0$.
+\end{proof}
+
+\begin{theorem}[Asymptotic normality of the MLE]\label{statistics:theorem-mle-normality}
+Let $\Theta \subseteq \RR$ be open, $\theta \mapsto \log q_\theta(x)$ of class $C^3$ with $|\partial_\theta^3\log q_\theta(x)| \leq M(x)$, $E_{\theta_0}M < \infty$ near $\theta_0$, the model regular with $0 < I_1(\theta_0) < \infty$ and
+$I_1(\theta_0) = -E_{\theta_0}[\partial_\theta^2\log q_\theta]$. If $\hat\theta_n$ is a consistent sequence of roots of $\ell_n^{\prime}(\theta) = 0$, then under $P_{\theta_0}$,
+\[
+\sqrt n(\hat\theta_n - \theta_0) \Rightarrow N\bigl(0, I_1(\theta_0)^{-1}\bigr).
+\]
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+Taylor expansion of $\ell_n^{\prime}$ at $\theta_0$: $0 = \ell_n^{\prime}(\hat\theta_n) = \ell_n^{\prime}(\theta_0) + (\hat\theta_n - \theta_0)\ell_n^{\prime\prime}(\theta_0) + \frac12(\hat\theta_n - \theta_0)^2\ell_n^{\prime\prime\prime}(\tilde\theta_n)$, so
+\[
+\sqrt n(\hat\theta_n - \theta_0) = \frac{n^{-1/2}\ell_n^{\prime}(\theta_0)}{-n^{-1}\ell_n^{\prime\prime}(\theta_0) - \frac12(\hat\theta_n - \theta_0)n^{-1}\ell^{\prime\prime\prime}_n(\tilde\theta_n)}.
+\]
+The numerator is a normalised sum of i.i.d.\ scores with mean $0$ and variance $I_1(\theta_0)$, so it converges in distribution to $N(0, I_1(\theta_0))$ by the central limit theorem (Corollary~\ref{probability:corollary-clt}). In the
+denominator, $-n^{-1}\ell_n^{\prime\prime}(\theta_0) \to I_1(\theta_0)$ almost surely by the strong law, and the last term tends to $0$ in probability, as $|n^{-1}\ell^{\prime\prime\prime}_n| \leq n^{-1}\sum M(X_i)$ is bounded in probability. The
+conclusion follows from Slutsky's lemma ($X_n \Rightarrow X$ and $Y_n \to c$ in probability imply $X_n/Y_n \Rightarrow X/c$ for $c \neq 0$), whose proof we omit.
+\end{proof}
+
+So the MLE asymptotically attains the Cram\'er--Rao bound $\frac{1}{nI_1(\theta)}$: it is \emph{asymptotically efficient}. H\'ajek and Le Cam made this precise: no regular estimator does better asymptotically, by the
+\emph{convolution} and \emph{local asymptotic minimax theorems} \cite{van-der-vaart}.
+
+\begin{counterexample}\label{statistics:counterexample-mle}
+\begin{enumerate}
+\item In the uniform model the MLE $\max X_i$ converges at rate $n^{-1}$, not $n^{-1/2}$, and $n(\theta - \max X_i)/\theta \Rightarrow \mathrm{Exp}(1)$: the model is not regular.
+\item (Neyman--Scott) If $X_{i1}, X_{i2}$ are independent $N(m_i, \sigma^2)$ for $i = 1, \ldots, n$, with $n$ nuisance means, the MLE of $\sigma^2$ is $\frac{1}{4n}\sum_i(X_{i1} - X_{i2})^2 \to \frac{\sigma^2}{2}$: it is inconsistent when the number of
+parameters grows with $n$.
+\item The likelihood may be unbounded: for a mixture $\frac12N(0, 1) + \frac12N(m, \sigma^2)$, letting $m = X_1$ and $\sigma \to 0$ sends the likelihood to $\infty$.
+\end{enumerate}
+\end{counterexample}
+
+\section{Hypothesis testing}\label{statistics:section-tests}
+
+\begin{definition}\label{statistics:definition-test}
+Let $\Theta = \Theta_0 \sqcup \Theta_1$; the \emph{null hypothesis} is $H_0 : \theta \in \Theta_0$, the \emph{alternative} $H_1 : \theta \in \Theta_1$. A (randomised) \emph{test} is a statistic $\phi \colon \mathcal{X} \to [0, 1]$, the probability of rejecting
+$H_0$. Its \emph{power function} is $\beta_\phi(\theta) = E_\theta[\phi]$; it has \emph{level} $\alpha$ if $\beta_\phi(\theta) \leq \alpha$ for $\theta \in \Theta_0$. Rejecting a true $H_0$ is an error of the \emph{first kind}, accepting a false
+one an error of the \emph{second kind}, of probability $1 - \beta_\phi(\theta)$ for $\theta \in \Theta_1$. A level $\alpha$ test is \emph{uniformly most powerful} (UMP) if its power is maximal at every $\theta \in \Theta_1$ among all level
+$\alpha$ tests.
+\end{definition}
+
+The asymmetry is deliberate: the error of the first kind is controlled at a small level, typically $\alpha = 0.05$, and among such tests one maximises the power.
+
+\begin{theorem}[Neyman--Pearson lemma]\label{statistics:theorem-neyman-pearson}
+Let $\Theta = \{\theta_0, \theta_1\}$, with densities $p_0$, $p_1$. For $k \geq 0$ and $\gamma \in [0, 1]$, the \emph{likelihood ratio test}
+\[
+\phi^*(x) = \begin{cases} 1 & p_1(x) > kp_0(x), \\ \gamma & p_1(x) = kp_0(x), \\ 0 & p_1(x) < kp_0(x) \end{cases}
+\]
+is most powerful among tests of level $\alpha = E_0[\phi^*]$. For every $\alpha \in (0, 1)$ there are $k$ and $\gamma$ with $E_0[\phi^*] = \alpha$.
+\end{theorem}
+
+\begin{proof}
+\emph{Optimality.} If $\phi$ has level $\alpha$, then $(\phi^* - \phi)(p_1 - kp_0) \geq 0$ everywhere: where $p_1 > kp_0$, $\phi^* = 1 \geq \phi$; where $p_1 < kp_0$, $\phi^* = 0 \leq \phi$. Integrating,
+$E_1[\phi^*] - E_1[\phi] \geq k(E_0[\phi^*] - E_0[\phi]) \geq 0$. \emph{Existence.} Let $F(k) = P_0(p_1 > kp_0)$, nonincreasing and right-continuous in $k$, with $F(k) \to 0$ as $k \to \infty$ (as $P_0(p_0 > 0) = 1$). Let
+$k = \inf\{k^{\prime} : F(k^{\prime}) \leq \alpha\}$; then $F(k) \leq \alpha \leq F(k-) = P_0(p_1 \geq kp_0)$, and $\gamma = \frac{\alpha - F(k)}{P_0(p_1 = kp_0)}$ (any $\gamma$ if the denominator vanishes) gives level $\alpha$.
+\end{proof}
+
+\begin{example}\label{statistics:example-neyman-pearson}
+For $N(m, 1)$ samples and $H_0 : m = 0$ against $H_1 : m = m_1 > 0$, the likelihood ratio is $\exp(m_1\sum x_i - nm_1^2/2)$, increasing in $\bar x$; so the most powerful test rejects when $\sqrt n\bar X > z_\alpha$, the $1 - \alpha$
+quantile of $N(0, 1)$. It does not depend on $m_1$, so it is UMP for $H_0 : m = 0$ against $H_1 : m > 0$ (one-sided). There is no UMP test against $m \neq 0$: the best test against $m_1 > 0$ is poor against $m_1 < 0$.
+\end{example}
+
+\begin{remark}\label{statistics:remark-tests}
+\begin{enumerate}
+\item \emph{$p$-values.} For a family of tests rejecting when $T(X) > c$, the $p$-value of the observation is $\sup_{\theta \in \Theta_0}P_\theta(T \geq T(x))$, the smallest level at which the data lead to rejection. Under a simple null with
+continuous $T$ it is uniform on $[0, 1]$. It is not the probability that $H_0$ is true.
+\item \emph{Duality.} If $\phi_{\theta_0}$ are level $\alpha$ tests of $H_0 : \theta = \theta_0$, then $C(x) = \{\theta_0 : \phi_{\theta_0}(x) = 0\}$ is a confidence set of level $1 - \alpha$, and conversely.
+\item \emph{Likelihood ratio tests and Wilks' theorem.} For nested regular models with $\dim\Theta - \dim\Theta_0 = r$, $2\log\frac{\sup_\Theta p_\theta(X)}{\sup_{\Theta_0}p_\theta(X)} \Rightarrow \chi^2_r$ under $H_0$; Pearson's $\chi^2$ goodness-of-fit test
+$\sum\frac{(O_j - E_j)^2}{E_j} \Rightarrow \chi^2_{m-1}$ for $m$ cells is the main example \cite{van-der-vaart}.
+\item \emph{Multiple testing.} Testing $N$ true hypotheses at level $\alpha$ each produces about $\alpha N$ false rejections. Bonferroni's correction (level $\alpha/N$ each) controls the probability of any false rejection by the union
+bound; the Benjamini--Hochberg procedure controls the expected proportion of false rejections among rejections.
+\end{enumerate}
+\end{remark}
+
+\section{The linear model}\label{statistics:section-linear-model}
+
+\begin{definition}\label{statistics:definition-linear-model}
+The \emph{linear model} is $Y = X\beta + \varepsilon$, where $Y \in \RR^n$ is observed, $X$ is a known $n \times p$ \emph{design matrix} of rank $p$, $\beta \in \RR^p$ is unknown, and the errors $\varepsilon_i$ are uncorrelated with mean $0$ and
+variance $\sigma^2$. The \emph{normal linear model} assumes moreover $\varepsilon_i$ i.i.d.\ $N(0, \sigma^2)$. The \emph{least squares estimator} $\hat\beta$ minimises $|Y - X\beta|^2$.
+\end{definition}
+
+\begin{proposition}\label{statistics:proposition-least-squares}
+$\hat\beta = (X^{\mathsf T}X)^{-1}X^{\mathsf T}Y$, and $X\hat\beta = HY$ is the orthogonal projection of $Y$ onto the column space of $X$, with $H = X(X^{\mathsf T}X)^{-1}X^{\mathsf T}$ (the \emph{hat matrix}). $\hat\beta$ is unbiased with
+covariance $\sigma^2(X^{\mathsf T}X)^{-1}$, and $\hat\sigma^2 = \frac{|Y - X\hat\beta|^2}{n - p}$ is unbiased for $\sigma^2$.
+\end{proposition}
+
+\begin{proof}
+$X\beta$ ranges over the column space $V$, and the closest point to $Y$ is the orthogonal projection, characterised by $X^{\mathsf T}(Y - X\hat\beta) = 0$ (the \emph{normal equations}); $X^{\mathsf T}X$ is invertible since $X$ has rank $p$.
+$E\hat\beta = (X^{\mathsf T}X)^{-1}X^{\mathsf T}X\beta = \beta$, and with $A = (X^{\mathsf T}X)^{-1}X^{\mathsf T}$, $\operatorname{Cov}\hat\beta = A(\sigma^2I)A^{\mathsf T} = \sigma^2(X^{\mathsf T}X)^{-1}$. Finally $Y - X\hat\beta = (I - H)\varepsilon$, and
+$E|(I - H)\varepsilon|^2 = \sigma^2\operatorname{tr}(I - H) = \sigma^2(n - p)$, as $I - H$ is the projection onto $V^\perp$, of dimension $n - p$.
+\end{proof}
+
+\begin{theorem}[Gauss--Markov]\label{statistics:theorem-gauss-markov}
+In the linear model, for every $c \in \RR^p$, $c^{\mathsf T}\hat\beta$ has the smallest variance among all linear unbiased estimators of $c^{\mathsf T}\beta$: least squares is BLUE (best linear unbiased).
+\end{theorem}
+
+\begin{proof}
+Let $a^{\mathsf T}Y$ be unbiased for $c^{\mathsf T}\beta$: $a^{\mathsf T}X\beta = c^{\mathsf T}\beta$ for all $\beta$, i.e.\ $X^{\mathsf T}a = c$. Write $c^{\mathsf T}\hat\beta = a_0^{\mathsf T}Y$ with $a_0 = X(X^{\mathsf T}X)^{-1}c \in V$. Then $X^{\mathsf T}(a - a_0) = 0$, so
+$a - a_0 \perp V \ni a_0$, and $\operatorname{Var}(a^{\mathsf T}Y) = \sigma^2|a|^2 = \sigma^2(|a_0|^2 + |a - a_0|^2) \geq \operatorname{Var}(a_0^{\mathsf T}Y)$.
+\end{proof}
+
+\begin{theorem}\label{statistics:theorem-normal-linear-model}
+In the normal linear model, every linear combination $c^{\mathsf T}\hat\beta$ is $N(c^{\mathsf T}\beta, \sigma^2c^{\mathsf T}(X^{\mathsf T}X)^{-1}c)$, $(n - p)\hat\sigma^2/\sigma^2 \sim \chi^2_{n-p}$, and $\hat\beta$ is independent of
+$\hat\sigma^2$. Consequently, for
+$c \in \RR^p$, $\frac{c^{\mathsf T}(\hat\beta - \beta)}{\hat\sigma\sqrt{c^{\mathsf T}(X^{\mathsf T}X)^{-1}c}} \sim t_{n-p}$. If $V_0 \subseteq V$ is the column space of a submodel with $p_0$ parameters, then under the submodel
+\[
+F = \frac{(|Y - \hat Y_0|^2 - |Y - \hat Y|^2)/(p - p_0)}{|Y - \hat Y|^2/(n - p)} \sim F_{p - p_0, n - p},
+\]
+where $\hat Y$, $\hat Y_0$ are the projections of $Y$ onto $V$, $V_0$.
+\end{theorem}
+
+\begin{proof}
+Write $\varepsilon = \sigma Z$. $\hat\beta - \beta = AZ\sigma$ depends only on $\pi_VZ$ (as $A(I - H) = 0$), and $Y - \hat Y = \sigma\pi_{V^\perp}Z$; by Lemma~\ref{statistics:lemma-orthogonal-invariance} they are independent and
+$|\pi_{V^\perp}Z|^2 \sim \chi^2_{n-p}$. The numerator of the $t$ statistic is $c^{\mathsf T}AZ\sigma$, a linear combination of i.i.d.\ normals, hence $N(0, \sigma^2c^{\mathsf T}(X^{\mathsf T}X)^{-1}c)$
+(Example~\ref{probability:example-characteristic-functions}(2)). For $F$, under the submodel $Y - \hat Y_0 = \sigma\pi_{V_0^\perp}Z$, and $|Y - \hat Y_0|^2 - |Y - \hat Y|^2 = \sigma^2|\pi_{V \ominus V_0}Z|^2$; apply the lemma to
+$\RR^n = V_0 \oplus (V \ominus V_0) \oplus V^\perp$.
+\end{proof}
+
+\begin{example}\label{statistics:example-regression}
+Simple linear regression $Y_i = a + bx_i + \varepsilon_i$ has $p = 2$ and
+$\hat b = \frac{\sum(x_i - \bar x)(Y_i - \bar Y)}{\sum(x_i - \bar x)^2}$, $\hat a = \bar Y - \hat b\bar x$. The one-way analysis of variance (comparing the means of $k$ groups) is the $F$ test of the submodel ``all means equal'' inside the
+model ``one mean per group''; Theorem~\ref{statistics:theorem-normal-linear-model} is Cochran's theorem in disguise. Galton coined the word \emph{regression} for the observation that children of tall parents are on average less tall
+than their parents: with $\operatorname{Var}x = \operatorname{Var}Y$ and correlation $r < 1$, the slope is $r < 1$.
+\end{example}
+
+\begin{remark}\label{statistics:remark-high-dimensional}
+When $p$ is comparable to or larger than $n$, least squares breaks down, and one adds a penalty: \emph{ridge regression} minimises $|Y - X\beta|^2 + \lambda|\beta|^2$, with solution $(X^{\mathsf T}X + \lambda I)^{-1}X^{\mathsf T}Y$, and the
+\emph{lasso} minimises $|Y - X\beta|^2 + \lambda\sum|\beta_j|$, whose solutions are sparse. Such biased estimators can have much smaller risk; already for $p \geq 3$ and $Y \sim N(\beta, I_p)$ the estimator $Y$ of $\beta$ is
+inadmissible, being dominated by the \emph{James--Stein estimator} $(1 - \frac{p - 2}{|Y|^2})Y$ (Stein's paradox) \cite{lehmann-casella}.
+\end{remark}
+
+\section{Bayesian inference}\label{statistics:section-bayesian}
+
+\begin{definition}\label{statistics:definition-posterior}
+In the \emph{Bayesian} approach the parameter is itself random, with a \emph{prior} law $\Pi$ on $\Theta$, and $P_\theta$ is the conditional law of $X$ given $\theta$. In a dominated model with jointly measurable $p_\theta(x)$, the
+\emph{posterior} law is the conditional law of $\theta$ given $X = x$:
+\[
+\Pi(d\theta \mid x) = \frac{p_\theta(x)\,\Pi(d\theta)}{\int_\Theta p_{\theta^{\prime}}(x)\,\Pi(d\theta^{\prime})}
+\]
+(\emph{Bayes' formula}): posterior $\propto$ likelihood $\times$ prior.
+\end{definition}
+
+That this is a regular conditional distribution follows as in Example~\ref{martingales:example-conditional-density}(1), with $\Pi$ in place of Lebesgue measure.
+
+\begin{example}\label{statistics:example-conjugate}
+\begin{enumerate}
+\item \emph{Beta--binomial.} With prior $\mathrm{Beta}(a, b)$, density $\propto\theta^{a-1}(1 - \theta)^{b-1}$, and $T$ successes in $n$ Bernoulli trials, the posterior is $\mathrm{Beta}(a + T, b + n - T)$, with mean
+$\frac{a + T}{a + b + n}$. The uniform prior $a = b = 1$ gives Laplace's \emph{rule of succession}: after $T$ successes in $n$ trials, the probability of success at the next trial is $\frac{T + 1}{n + 2}$. Laplace computed with it the
+probability that the sun rises tomorrow.
+\item \emph{Normal--normal.} With $X_i \sim N(m, \sigma^2)$, $\sigma$ known, and prior $m \sim N(\mu_0, \tau^2)$, the posterior of $m$ is normal with precision (inverse variance) $\frac{1}{\tau^2} + \frac{n}{\sigma^2}$ and mean the
+precision-weighted average of $\mu_0$ and $\bar X$. Precisions add.
+\end{enumerate}
+Families closed under this updating are \emph{conjugate}; every exponential family has one.
+\end{example}
+
+\begin{proposition}\label{statistics:proposition-bayes-estimator}
+For the quadratic loss, the estimator minimising the \emph{Bayes risk} $\int R(\theta, \hat g)\,\Pi(d\theta)$ is the posterior mean $E[g(\theta) \mid X]$, provided $E[g(\theta)^2] < \infty$.
+\end{proposition}
+
+\begin{proof}
+The Bayes risk is $E[(\hat g(X) - g(\theta))^2]$ under the joint law of $(\theta, X)$, minimised over $\sigma(X)$-measurable $\hat g(X)$ by the conditional expectation, by Exercise~\ref{martingales:exercise-projection}.
+\end{proof}
+
+\begin{remark}\label{statistics:remark-bayes}
+\begin{enumerate}
+\item \emph{Bernstein--von Mises.} In regular parametric models the posterior is asymptotically $N(\hat\theta_n, (nI(\theta_0))^{-1})$ in total variation, for every prior with a positive continuous density: for large samples,
+Bayesian credible intervals and frequentist confidence intervals agree, and the prior is forgotten \cite{van-der-vaart}.
+\item \emph{Decision theory.} An estimator is \emph{admissible} if no other has risk $\leq$ everywhere and $<$ somewhere; Bayes estimators with proper priors and unique minimisers are admissible, and admissible estimators are
+limits of Bayes estimators (Wald's complete class theorems). A \emph{minimax} estimator minimises $\sup_\theta R(\theta, \cdot)$; a Bayes estimator with constant risk is minimax.
+\item \emph{Doob's consistency theorem} is a martingale statement: $E[g(\theta) \mid X_1, \ldots, X_n] \to g(\theta)$ almost surely under the joint law, by L\'evy's upward theorem (Corollary~\ref{martingales:corollary-levy-upward}), whenever
+$g(\theta)$ is a function of the infinite sample.
+\end{enumerate}
+\end{remark}
+
+\section{Nonparametric statistics}\label{statistics:section-nonparametric}
+
+\begin{definition}\label{statistics:definition-empirical}
+The \emph{empirical distribution} of a sample $X_1, \ldots, X_n$ is $\hat Q_n = \frac1n\sum_i\delta_{X_i}$, and its distribution function is $\hat F_n(x) = \frac1n\#\{i : X_i \leq x\}$.
+\end{definition}
+
+For each fixed $x$, $n\hat F_n(x) \sim B(n, F(x))$, so $\hat F_n(x) \to F(x)$ almost surely by the strong law, and $\sqrt n(\hat F_n(x) - F(x)) \Rightarrow N(0, F(x)(1 - F(x)))$. The convergence is in fact uniform.
+
+\begin{theorem}[Glivenko--Cantelli]\label{statistics:theorem-glivenko-cantelli}
+For i.i.d.\ real $X_i$ with distribution function $F$, $\sup_x|\hat F_n(x) - F(x)| \to 0$ almost surely.
+\end{theorem}
+
+\begin{proof}
+Fix $k$ and choose $-\infty = x_0 < x_1 < \cdots < x_k = \infty$ with $F(x_j-) - F(x_{j-1}) \leq \frac1k$ (possible with $x_j = G(j/k)$, $G$ the quantile function of Proposition~\ref{probability:proposition-distribution-function}). By the strong
+law, almost surely $\hat F_n(x_j) \to F(x_j)$ and $\hat F_n(x_j-) \to F(x_j-)$ for all $j$ (apply it to the indicators of $(-\infty, x_j]$ and $(-\infty, x_j)$). For $x_{j-1} \leq x < x_j$, monotonicity gives
+\[
+\hat F_n(x) - F(x) \leq \hat F_n(x_j-) - F(x_{j-1}) \leq \hat F_n(x_j-) - F(x_j-) + \tfrac1k,
+\]
+and similarly $\hat F_n(x) - F(x) \geq \hat F_n(x_{j-1}) - F(x_{j-1}) - \frac1k$. So $\limsup_n\sup_x|\hat F_n - F| \leq \frac1k$ almost surely, for every $k$.
+\end{proof}
+
+Glivenko--Cantelli is called the fundamental theorem of statistics: with enough data, the whole distribution is learned uniformly. It is a uniform law of large numbers over the class of half-lines, and
+Section~\ref{statistics:section-learning} generalises it to any class of finite VC dimension.
+
+\begin{remark}\label{statistics:remark-kolmogorov-smirnov}
+\begin{enumerate}
+\item \emph{Dvoretzky--Kiefer--Wolfowitz--Massart}: $P(\sup_x|\hat F_n - F| > \varepsilon) \leq 2e^{-2n\varepsilon^2}$ for all $n$ and $\varepsilon$, which gives distribution-free confidence bands for $F$.
+\item \emph{Kolmogorov--Smirnov}: for continuous $F$, the law of $\sup_x|\hat F_n - F|$ does not depend on $F$ (transform by $F$ to uniform variables), and $\sqrt n\sup_x|\hat F_n(x) - F(x)| \Rightarrow K$ with
+$P(K \leq t) = 1 - 2\sum_{k \geq 1}(-1)^{k-1}e^{-2k^2t^2}$, the law of the maximum of a Brownian bridge (Chapter~\ref{martingales}). This gives a test of the hypothesis that a sample comes from a given $F$ \cite{van-der-vaart}.
+\item \emph{The bootstrap} (Efron, 1979) estimates the law of a statistic $T(X_1, \ldots, X_n)$ by the law of $T(X_1^*, \ldots, X_n^*)$, where the $X_i^*$ are drawn with replacement from the observed sample, that is, from $\hat Q_n$; it is
+justified, for smooth functionals, by the closeness of $\hat Q_n$ to $Q$.
+\end{enumerate}
+\end{remark}
+
+\section{Statistical learning theory}\label{statistics:section-learning}
+
+\begin{definition}\label{statistics:definition-learning}
+In the \emph{classification} problem, data $(X_i, Y_i)$, $i = 1, \ldots, n$, are i.i.d.\ from an unknown law $D$ on $\mathcal{X} \times \{0, 1\}$. A \emph{classifier} is a measurable $h \colon \mathcal{X} \to \{0, 1\}$, with \emph{risk}
+$L(h) = P(h(X) \neq Y)$ and \emph{empirical risk} $\hat L_n(h) = \frac1n\#\{i : h(X_i) \neq Y_i\}$. Given a class $\mathcal{H}$ of classifiers, \emph{empirical risk minimisation} (ERM) chooses $\hat h \in \mathcal{H}$ minimising
+$\hat L_n$.
+\end{definition}
+
+ERM works if $\hat L_n$ is uniformly close to $L$ on $\mathcal{H}$: if $\sup_{h \in \mathcal{H}}|\hat L_n(h) - L(h)| \leq \varepsilon$, then $L(\hat h) \leq \hat L_n(\hat h) + \varepsilon \leq \hat L_n(h) + \varepsilon \leq L(h) + 2\varepsilon$ for every
+$h \in \mathcal{H}$, so $L(\hat h) \leq \inf_{\mathcal{H}}L + 2\varepsilon$.
+
+\begin{proposition}[Finite classes]\label{statistics:proposition-finite-class}
+If $\mathcal{H}$ is finite, then with probability at least $1 - \delta$,
+\[
+\sup_{h \in \mathcal{H}}|\hat L_n(h) - L(h)| \leq \sqrt{\frac{\log(2|\mathcal{H}|/\delta)}{2n}}.
+\]
+\end{proposition}
+
+\begin{proof}
+For each $h$, $n\hat L_n(h)$ is a sum of $n$ independent indicators with mean $nL(h)$, so by Hoeffding's inequality (Theorem~\ref{probability:theorem-hoeffding}, applied to the sum and its negative)
+$P(|\hat L_n(h) - L(h)| > \varepsilon) \leq 2e^{-2n\varepsilon^2}$. By the union bound the probability that some $h$ deviates is at most $2|\mathcal{H}|e^{-2n\varepsilon^2}$; set this equal to $\delta$.
+\end{proof}
+
+Infinite classes need a measure of complexity. The right one counts how many labellings of $n$ points the class can produce.
+
+\begin{definition}\label{statistics:definition-vc}
+For a class $\mathcal{H}$ of functions $\mathcal{X} \to \{0, 1\}$ (equivalently, of subsets of $\mathcal{X}$), the \emph{growth function} is $\Pi_{\mathcal{H}}(n) = \max_{x_1, \ldots, x_n}\#\{(h(x_1), \ldots, h(x_n)) : h \in \mathcal{H}\}$. A finite set is
+\emph{shattered} if $\mathcal{H}$ realises all $2^{|S|}$ labellings of it. The \emph{Vapnik--Chervonenkis dimension} $\mathrm{VC}(\mathcal{H})$ is the largest size of a shattered set ($\infty$ if there are arbitrarily large ones).
+\end{definition}
+
+\begin{example}\label{statistics:example-vc}
+\begin{enumerate}
+\item Half-lines $(-\infty, a]$ in $\RR$ have VC dimension $1$: two points $x_1 < x_2$ cannot be labelled $(0, 1)$. Intervals have VC dimension $2$: the labelling $(1, 0, 1)$ of three points is impossible.
+\item Half-planes in $\RR^2$ have VC dimension $3$: three points in general position are shattered, while for four points either one lies in the convex hull of the others, or they form a convex quadrilateral and the two
+diagonal pairs cannot be separated (Radon's theorem). More generally half-spaces in $\RR^d$ have VC dimension $d + 1$.
+\item $\{x \mapsto \mathbf{1}_{\{\sin(tx) > 0\}} : t \in \RR\}$ has infinite VC dimension although it has one parameter: dimension counting is not the right notion of complexity.
+\end{enumerate}
+\end{example}
+
+\begin{lemma}[Sauer--Shelah]\label{statistics:lemma-sauer-shelah}
+If $\mathrm{VC}(\mathcal{H}) = d < \infty$, then $\Pi_{\mathcal{H}}(n) \leq \sum_{i=0}^d\binom ni \leq (\frac{en}{d})^d$ for $n \geq d \geq 1$.
+\end{lemma}
+
+\begin{proof}
+We prove, by induction on $n$, the stronger statement: a family $\mathcal{S}$ of subsets of an $n$-element set $X$ has at most as many members as there are subsets of $X$ shattered by $\mathcal{S}$. Since only sets of size $\leq d$ can be
+shattered, this gives the bound $\sum_{i \leq d}\binom ni$. For $n = 0$ it is clear. Fix $x \in X$ and let $\mathcal{S}_1 = \{A \setminus \{x\} : A \in \mathcal{S}\}$ and $\mathcal{S}_2 = \{A \subseteq X \setminus \{x\} : A \in \mathcal{S}, A \cup \{x\} \in \mathcal{S}\}$, families of subsets
+of $X \setminus \{x\}$ with $|\mathcal{S}| = |\mathcal{S}_1| + |\mathcal{S}_2|$. A set shattered by $\mathcal{S}_1$ is shattered by $\mathcal{S}$; if $B$ is shattered by $\mathcal{S}_2$, then both $B$ and $B \cup \{x\}$ are shattered by $\mathcal{S}$, and $B \cup \{x\}$ is
+not counted for $\mathcal{S}_1$ (which lives on $X \setminus \{x\}$). By induction, $|\mathcal{S}| \leq \#\mathrm{sh}(\mathcal{S}_1) + \#\mathrm{sh}(\mathcal{S}_2) \leq \#\mathrm{sh}(\mathcal{S})$. For the last inequality,
+$\sum_{i \leq d}\binom ni(\frac dn)^d \leq \sum_{i \leq d}\binom ni(\frac dn)^i \leq (1 + \frac dn)^n \leq e^d$.
+\end{proof}
+
+So the growth function is either $2^n$ for all $n$ or polynomial in $n$: there is nothing in between. The lemma was found independently by Sauer, by Shelah (in model theory) and by Vapnik and Chervonenkis, all around 1971.
+
+\begin{theorem}[Vapnik--Chervonenkis]\label{statistics:theorem-vc}
+For every class $\mathcal{H}$, every law $D$ and $n\varepsilon^2 \geq 2$,
+\[
+P\Bigl(\sup_{h \in \mathcal{H}}|\hat L_n(h) - L(h)| > \varepsilon\Bigr) \leq 4\Pi_{\mathcal{H}}(2n)e^{-n\varepsilon^2/8}.
+\]
+In particular, if $\mathrm{VC}(\mathcal{H}) < \infty$, ERM over $\mathcal{H}$ achieves risk within $O(\sqrt{(d\log n + \log(1/\delta))/n})$ of the best in $\mathcal{H}$ with probability $1 - \delta$, uniformly over all laws $D$.
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+\emph{Symmetrisation.} Let $(X_i^{\prime}, Y_i^{\prime})$ be an independent \emph{ghost sample} with empirical risk $\hat L_n^{\prime}$. If $|\hat L_n(h) - L(h)| > \varepsilon$ for some $h$, then by Chebyshev's inequality (using $n\varepsilon^2 \geq 2$), with conditional
+probability at least $\frac12$ also $|\hat L_n(h) - \hat L_n^{\prime}(h)| > \frac\varepsilon2$; so the probability in question is at most $2P(\sup_h|\hat L_n - \hat L_n^{\prime}| > \frac\varepsilon2)$. \emph{Random signs.} Swapping the $i$-th points of the
+two samples does not change the joint law, so $\hat L_n - \hat L_n^{\prime}$ has the law of $\frac1n\sum_i\sigma_i(\mathbf{1}_{h(X_i) \neq Y_i} - \mathbf{1}_{h(X_i^{\prime}) \neq Y_i^{\prime}})$ with independent fair signs $\sigma_i$. \emph{Union bound.}
+Conditionally on the $2n$ points, only $\Pi_{\mathcal{H}}(2n)$ distinct behaviours of $h$ occur, and for each Hoeffding's inequality in the signs gives $2e^{-n\varepsilon^2/8}$. The omitted verifications are the measurability of the
+supremum and the conditioning steps \cite{devroye-gyorfi-lugosi}. The last statement follows with Lemma~\ref{statistics:lemma-sauer-shelah} and the argument preceding Proposition~\ref{statistics:proposition-finite-class}.
+\end{proof}
+
+\begin{remark}\label{statistics:remark-learning}
+\begin{enumerate}
+\item \emph{PAC learning.} A class is \emph{PAC learnable} (probably approximately correct, Valiant 1984) if some rule achieves risk within $\varepsilon$ of $\inf_{\mathcal{H}}L$ with probability $1 - \delta$ from $n(\varepsilon, \delta)$ samples, uniformly in
+$D$. The \emph{fundamental theorem of statistical learning} says that this holds iff $\mathrm{VC}(\mathcal{H}) < \infty$, and then $n(\varepsilon, \delta) \asymp \frac{d + \log(1/\delta)}{\varepsilon^2}$. Taking $\mathcal{H}$ = half-lines recovers
+Glivenko--Cantelli.
+\item \emph{No free lunch.} Without restricting $\mathcal{H}$ no rule learns: for every rule and $n$ there is a law on $2n$ points, with deterministic labels, on which the rule has risk at least $\frac14$ with probability at least
+$\frac17$ \cite{shalev-shwartz-ben-david}.
+\item \emph{Regularisation, kernels and neural networks.} \emph{Structural risk minimisation} trades empirical risk against complexity over nested classes. \emph{Support vector machines} separate data by the hyperplane of
+maximal margin in a feature space given implicitly by a positive definite \emph{kernel} $k(x, x^{\prime}) = \langle\Phi(x), \Phi(x^{\prime})\rangle$ (a reproducing kernel Hilbert space, Chapter~\ref{functional-analysis}); margin bounds do not
+depend on the dimension of the feature space. Modern neural networks fit their training data exactly and still generalise, which VC bounds do not explain; this is an active research area.
+\end{enumerate}
+\end{remark}
+
+\section{Exercises}\label{statistics:section-exercises}
+
+\begin{exercise}\label{statistics:exercise-variance-mse}
+For an i.i.d.\ $N(m, \sigma^2)$ sample, show that among the estimators $c\sum_i(X_i - \bar X)^2$ of $\sigma^2$ the mean squared error is minimal for $c = \frac{1}{n + 1}$.
+\end{exercise}
+
+\begin{solution}
+Let $W = \sum(X_i - \bar X)^2 = \sigma^2V$ with $V \sim \chi^2_{n-1}$ (Theorem~\ref{statistics:theorem-fisher}), so $E[W] = (n - 1)\sigma^2$ and $E[W^2] = \sigma^4(2(n - 1) + (n - 1)^2) = \sigma^4(n - 1)(n + 1)$
+(Proposition~\ref{statistics:proposition-chi-square}). The risk $E[(cW - \sigma^2)^2] = \sigma^4(c^2(n^2 - 1) - 2c(n - 1) + 1)$ is minimal at $c = \frac{n - 1}{n^2 - 1} = \frac{1}{n + 1}$.
+\end{solution}
+
+\begin{exercise}\label{statistics:exercise-german-tank}
+Serial numbers $1, \ldots, N$ are observed by drawing $k$ of them at random without replacement; let $M$ be the largest observed. Show that $\hat N = M + \frac Mk - 1$ is unbiased for $N$. (This estimator was used by the Allies
+to estimate German tank production in the Second World War.)
+\end{exercise}
+
+\begin{solution}
+$P(M = m) = \binom{m - 1}{k - 1}/\binom Nk$ for $k \leq m \leq N$. Then $E[M] = \sum_mm\binom{m-1}{k-1}/\binom Nk = k\sum_m\binom mk/\binom Nk = k\binom{N+1}{k+1}/\binom Nk = \frac{k(N + 1)}{k + 1}$, using $m\binom{m-1}{k-1} = k\binom mk$ and the
+hockey-stick identity $\sum_{m \leq N}\binom mk = \binom{N+1}{k+1}$. Hence $E[\frac{k + 1}{k}M - 1] = N$, and $\frac{k + 1}{k}M - 1 = M + \frac Mk - 1$.
+\end{solution}
+
+\begin{exercise}\label{statistics:exercise-fisher-normal}
+Compute the Fisher information matrix of the normal model $N(m, \sigma^2)$ in the parameters $(m, \sigma^2)$, and show that it is diagonal.
+\end{exercise}
+
+\begin{solution}
+$\log q = -\frac12\log(2\pi\sigma^2) - \frac{(x - m)^2}{2\sigma^2}$. The scores are $\partial_m = \frac{x - m}{\sigma^2}$ and $\partial_{\sigma^2} = -\frac{1}{2\sigma^2} + \frac{(x - m)^2}{2\sigma^4}$. Then
+$E[\partial_m^2] = \frac{1}{\sigma^2}$, $E[\partial_m\partial_{\sigma^2}] = 0$ (odd moments of $x - m$ vanish), and $E[\partial_{\sigma^2}^2] = \frac{1}{4\sigma^8}\operatorname{Var}((x - m)^2) = \frac{2\sigma^4}{4\sigma^8} = \frac{1}{2\sigma^4}$. So
+$I = \operatorname{diag}(\sigma^{-2}, \frac12\sigma^{-4})$.
+\end{solution}
+
+\begin{exercise}\label{statistics:exercise-exponential-mle}
+For an i.i.d.\ $\mathrm{Exp}(\lambda)$ sample, find the MLE of $\lambda$, its asymptotic law, and show that it is biased; find an unbiased multiple of it.
+\end{exercise}
+
+\begin{solution}
+$\ell_n = n\log\lambda - \lambda\sum X_i$ is maximal at $\hat\lambda = 1/\bar X$. $I_1(\lambda) = \frac{1}{\lambda^2}$, so $\sqrt n(\hat\lambda - \lambda) \Rightarrow N(0, \lambda^2)$ by Theorem~\ref{statistics:theorem-mle-normality}. Since $\sum X_i \sim \Gamma(n, \lambda)$,
+$E[1/\sum X_i] = \int_0^\infty\frac{\lambda^nx^{n-2}e^{-\lambda x}}{(n - 1)!}dx = \frac{\lambda}{n - 1}$, so $E[\hat\lambda] = \frac{n\lambda}{n - 1}$, and $\frac{n - 1}{n}\hat\lambda = \frac{n - 1}{\sum X_i}$ is unbiased.
+\end{solution}
+
+\begin{exercise}\label{statistics:exercise-neyman-pearson-poisson}
+For a single observation $X \sim \mathrm{Poi}(\lambda)$, find the most powerful test of $H_0 : \lambda = 1$ against $H_1 : \lambda = 2$ at level $\alpha = 0.05$ (randomisation is needed).
+\end{exercise}
+
+\begin{solution}
+The likelihood ratio $2^xe^{-1}$ is increasing in $x$, so the test rejects for large $x$. Under $H_0$, $P(X \geq 4) = 1 - e^{-1}(1 + 1 + \frac12 + \frac16) = 0.0190$ and $P(X = 3) = \frac{e^{-1}}{6} = 0.0613$. So $\phi^* = 1$ for $x \geq 4$, $\phi^*(3) = \gamma$
+with $0.0190 + 0.0613\gamma = 0.05$, $\gamma \approx 0.506$, and $\phi^* = 0$ for $x \leq 2$.
+\end{solution}
+
+\begin{exercise}\label{statistics:exercise-vc-rectangles}
+Show that axis-parallel rectangles in $\RR^2$ have VC dimension $4$.
+\end{exercise}
+
+\begin{solution}
+The four points $(\pm1, 0)$, $(0, \pm1)$ are shattered: for any subset, the smallest rectangle containing it contains no other of the four points. Given five points, choose a leftmost, a rightmost, a topmost and a bottommost one;
+at least one of the five points is not among these four (if fewer than four distinct points are chosen, more remain), and every rectangle containing the chosen points contains it. So no five points are shattered.
+\end{solution}
+
+\begin{exercise}\label{statistics:exercise-posterior-predictive}
+With the uniform prior on $\theta$ and $n$ Bernoulli trials all successes, show that the posterior probability that $\theta > \frac12$ is $1 - 2^{-(n+1)}$.
+\end{exercise}
+
+\begin{solution}
+The posterior is $\mathrm{Beta}(n + 1, 1)$, with density $(n + 1)\theta^n$ (Example~\ref{statistics:example-conjugate}(1)). So $P(\theta > \frac12 \mid X) = \int_{1/2}^1(n + 1)\theta^nd\theta = 1 - 2^{-(n+1)}$.
+\end{solution}

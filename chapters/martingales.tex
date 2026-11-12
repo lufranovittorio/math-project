@@ -1,67 +1,904 @@
 \chapter{Stochastic Processes}\label{martingales}
-\chapterstatus{planned}
+\chapterstatus{draft}
 
+A \emph{stochastic process} is a family of random variables $(X_t)_{t \in T}$ indexed by time, $T = \ZZ_{\geq 0}$ or $T = [0, \infty)$. Chapter~\ref{probability} studied sums of independent variables; here the
+variables may depend on each other, and the chapter treats the three kinds of dependence that dominate probability theory and its applications:
+\begin{itemize}
+\item \emph{martingales}, the fair games, whose increments have conditional mean zero (Sections~\ref{martingales:section-conditional-expectation}--\ref{martingales:section-convergence});
+\item \emph{Markov chains}, processes without memory (Sections~\ref{martingales:section-markov-chains} and~\ref{martingales:section-poisson-process});
+\item \emph{Brownian motion}, the continuous-time limit of random walks, and the stochastic calculus built on it (Sections~\ref{martingales:section-brownian-motion} and~\ref{martingales:section-stochastic-calculus}).
+\end{itemize}
+The basic tool for all three is conditional expectation, which makes ``the expected value of $X$ given the information available at time $n$'' a random variable.
 
-\section{Conditional Expectation and Martingales}\label{martingales:section-martingales}
-Conditional expectation given a $\sigma$-algebra, and the processes that are fair games: martingales,
-their stopping theorems and convergence theorems.
+\noindent\textbf{Prerequisites.} Chapter~\ref{probability} (Probability Theory), Chapter~\ref{signed-measures} (Signed and Complex Measures) and Chapter~\ref{functional-analysis} (Functional Analysis).
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{probability} (Probability Theory).
+\section{Conditional expectation}\label{martingales:section-conditional-expectation}
 
-\noindent\textbf{Planned contents.}
+If $B$ is an event with $P(B) > 0$, the conditional probability $P(A \mid B) = P(A \cap B)/P(B)$ and the conditional expectation $E[X \mid B] = E[X; B]/P(B)$ are elementary. If $\Omega$ is partitioned into countably many
+events $B_i$ of positive probability, generating a $\sigma$-algebra $\mathcal{G}$, it is natural to call the random variable
+\[
+E[X \mid \mathcal{G}] = \sum_iE[X \mid B_i]\mathbf{1}_{B_i}
+\]
+the conditional expectation of $X$ given the information in $\mathcal{G}$: if we know which $B_i$ occurred, it is our best guess of $X$. It is $\mathcal{G}$-measurable, and $E[E[X \mid \mathcal{G}]; A] = E[X; A]$ for every
+$A \in \mathcal{G}$. These two properties make sense for every sub-$\sigma$-algebra, and they are taken as the definition.
+
+\begin{definition}\label{martingales:definition-conditional-expectation}
+Let $(\Omega, \mathcal{F}, P)$ be a probability space, $\mathcal{G} \subseteq \mathcal{F}$ a sub-$\sigma$-algebra and $X \in L^1(\Omega, \mathcal{F}, P)$. A \emph{conditional expectation} of $X$ given $\mathcal{G}$ is a random variable $Y$
+such that
 \begin{enumerate}
-\item Conditional expectation: existence via Radon--Nikodym and via orthogonal projection; properties; regular conditional distributions.
-\item Filtrations, martingales, sub- and supermartingales; stopping times; the optional stopping theorem.
-\item Doob's inequalities, upcrossings and the martingale convergence theorems; uniform integrability.
-\item Backward martingales and a martingale proof of the strong law; the Radon--Nikodym theorem via martingales.
-\item Applications: random walks, branching processes, Azuma--Hoeffding.
-\item Exercises with solutions.
+\item $Y$ is $\mathcal{G}$-measurable and integrable, and
+\item $E[Y; A] = E[X; A]$ for every $A \in \mathcal{G}$.
 \end{enumerate}
+\end{definition}
 
-\section{Markov Chains}\label{martingales:section-markov-chains}
-Random processes without memory on countable state spaces: classification of states, stationary
-distributions, convergence to equilibrium and mixing times.
+\begin{notation}\label{martingales:notation-conditional-expectation}
+We write $E[X \mid \mathcal{G}]$ for any conditional expectation (they agree almost surely, by Theorem~\ref{martingales:theorem-conditional-expectation}), and all equalities and inequalities between conditional expectations
+hold almost surely. $E[X \mid Y] = E[X \mid \sigma(Y)]$ for a random variable $Y$, and $P(A \mid \mathcal{G}) = E[\mathbf{1}_A \mid \mathcal{G}]$.
+\end{notation}
 
-\noindent\textbf{Prerequisites.} Section~\ref{martingales:section-martingales} and Chapter~\ref{linear-algebra} (Linear Algebra).
+\begin{theorem}\label{martingales:theorem-conditional-expectation}
+For $X \in L^1$ and a sub-$\sigma$-algebra $\mathcal{G}$, a conditional expectation $E[X \mid \mathcal{G}]$ exists and is unique almost surely. If $X \in L^2$, it is the orthogonal projection of $X$ onto the closed subspace
+$L^2(\Omega, \mathcal{G}, P)$ of $L^2(\Omega, \mathcal{F}, P)$.
+\end{theorem}
 
-\noindent\textbf{Planned contents.}
+\begin{proof}
+\emph{Uniqueness.} If $Y$, $Y^{\prime}$ are both conditional expectations, $A = \{Y > Y^{\prime}\} \in \mathcal{G}$ and $E[Y - Y^{\prime}; A] = E[X; A] - E[X; A] = 0$, so $P(A) = 0$; by symmetry $Y = Y^{\prime}$ almost surely.
+\emph{Existence.} Write $X = X^+ - X^-$; it suffices to treat $X \geq 0$. Then $\nu(A) = E[X; A]$, $A \in \mathcal{G}$, is a finite measure on $(\Omega, \mathcal{G})$, absolutely continuous with respect to the restriction of $P$
+to $\mathcal{G}$. By the Radon--Nikodym theorem (Theorem~\ref{signed-measures:theorem-lebesgue-radon-nikodym}), $\nu = Y\cdot P|_{\mathcal{G}}$ for a $\mathcal{G}$-measurable $Y \geq 0$, which is a conditional expectation.
+\emph{The $L^2$ case.} $L^2(\mathcal{G})$ is complete, hence closed in $L^2(\mathcal{F})$. Let $Y$ be the orthogonal projection of $X$ (Theorem~\ref{functional-analysis:theorem-projection}). Then $X - Y \perp \mathbf{1}_A$ for
+$A \in \mathcal{G}$, which is condition (2).
+\end{proof}
+
+The $L^2$ description says that $E[X \mid \mathcal{G}]$ is the best $\mathcal{G}$-measurable predictor of $X$ in the mean square sense; this is how conditional expectations appear in filtering and regression.
+
+\begin{proposition}\label{martingales:proposition-conditional-expectation-properties}
+Let $X, Y \in L^1$ and $\mathcal{H} \subseteq \mathcal{G} \subseteq \mathcal{F}$.
 \begin{enumerate}
-\item Markov chains, transition matrices, the strong Markov property.
-\item Recurrence and transience; P\'olya's theorem on random walks in $\ZZ^d$.
-\item Stationary distributions, the ergodic theorem for chains, convergence to equilibrium by coupling.
-\item Reversibility, random walks on graphs and electrical networks.
-\item Mixing times, spectral gap, Markov chain Monte Carlo.
-\item Continuous-time chains and the Poisson process.
-\item Exercises with solutions.
+\item (Linearity and monotonicity) $E[aX + bY \mid \mathcal{G}] = aE[X \mid \mathcal{G}] + bE[Y \mid \mathcal{G}]$, and $X \leq Y$ implies $E[X \mid \mathcal{G}] \leq E[Y \mid \mathcal{G}]$; so $|E[X \mid \mathcal{G}]| \leq E[|X| \mid \mathcal{G}]$.
+\item $E[E[X \mid \mathcal{G}]] = E[X]$.
+\item (Taking out what is known) If $Z$ is $\mathcal{G}$-measurable and $ZX$ is integrable, $E[ZX \mid \mathcal{G}] = ZE[X \mid \mathcal{G}]$; in particular $E[Z \mid \mathcal{G}] = Z$.
+\item (Tower property) $E[E[X \mid \mathcal{G}] \mid \mathcal{H}] = E[X \mid \mathcal{H}] = E[E[X \mid \mathcal{H}] \mid \mathcal{G}]$.
+\item (Independence) If $\sigma(X)$ and $\mathcal{G}$ are independent, $E[X \mid \mathcal{G}] = E[X]$.
+\item (Conditional monotone and dominated convergence) If $0 \leq X_n \uparrow X$, then $E[X_n \mid \mathcal{G}] \uparrow E[X \mid \mathcal{G}]$. If $X_n \to X$ almost surely and $|X_n| \leq W \in L^1$, then
+$E[X_n \mid \mathcal{G}] \to E[X \mid \mathcal{G}]$ almost surely.
+\item (Conditional Jensen) If $\varphi \colon \RR \to \RR$ is convex and $\varphi(X) \in L^1$, then $\varphi(E[X \mid \mathcal{G}]) \leq E[\varphi(X) \mid \mathcal{G}]$. In particular $\|E[X \mid \mathcal{G}]\|_p \leq \|X\|_p$ for $1 \leq p \leq \infty$.
 \end{enumerate}
+\end{proposition}
 
-\section{Brownian Motion}\label{martingales:section-brownian-motion}
-The central object of stochastic analysis: its construction, its path properties and its connection
-with the Laplace operator.
+\begin{proof}
+In each case we check that the proposed right side satisfies Definition~\ref{martingales:definition-conditional-expectation} and use uniqueness.
+(1) Linearity is clear. If $X \leq Y$ and $A = \{E[X \mid \mathcal{G}] > E[Y \mid \mathcal{G}]\}$, then $0 \leq E[E[X \mid \mathcal{G}] - E[Y \mid \mathcal{G}]; A] = E[X - Y; A] \leq 0$, so $P(A) = 0$.
+(2) Take $A = \Omega$.
+(3) For $Z = \mathbf{1}_B$ with $B \in \mathcal{G}$: $E[\mathbf{1}_BE[X \mid \mathcal{G}]; A] = E[X; A \cap B]$. By linearity it holds for simple $Z$; for $X, Z \geq 0$ by monotone convergence (approximate $Z$ by simple functions from below);
+in general by splitting into positive and negative parts.
+(4) The second equality is (3), since $E[X \mid \mathcal{H}]$ is $\mathcal{G}$-measurable. For the first, if $A \in \mathcal{H} \subseteq \mathcal{G}$, $E[E[X \mid \mathcal{G}]; A] = E[X; A]$.
+(5) For $A \in \mathcal{G}$, $E[X; A] = E[X]P(A) = E[E[X]; A]$ by Corollary~\ref{probability:corollary-independence-products}(2).
+(6) By (1), $Y_n = E[X_n \mid \mathcal{G}]$ is a.s.\ nondecreasing; its limit $Y$ is $\mathcal{G}$-measurable and $E[Y; A] = \lim E[Y_n; A] = \lim E[X_n; A] = E[X; A]$ by monotone convergence. For the dominated version, let
+$V_n = \sup_{k \geq n}|X_k - X|$, so $V_n \downarrow 0$ and $V_n \leq 2W$; then $|E[X_n \mid \mathcal{G}] - E[X \mid \mathcal{G}]| \leq E[V_n \mid \mathcal{G}]$, which is a.s.\ nonincreasing with a limit $V \geq 0$, and $E[V] \leq E[V_n] \to 0$ by
+dominated convergence; so $V = 0$.
+(7) A convex function is the supremum of the countably many affine functions $\ell(x) = ax + b \leq \varphi$ with rational $a$, $b$ (its supporting lines at rational points can be approximated by these). For each such $\ell$,
+$E[\varphi(X) \mid \mathcal{G}] \geq E[\ell(X) \mid \mathcal{G}] = \ell(E[X \mid \mathcal{G}])$ almost surely, and a countable supremum of a.s.\ inequalities holds a.s. With $\varphi(x) = |x|^p$ and (2) we get the $L^p$ bound for $p < \infty$;
+for $p = \infty$ use (1).
+\end{proof}
 
-\noindent\textbf{Prerequisites.} Section~\ref{martingales:section-martingales} and Chapter~\ref{general-topology} (General Topology).
-
-\noindent\textbf{Planned contents.}
+\begin{example}\label{martingales:example-conditional-density}
 \begin{enumerate}
-\item Gaussian processes; construction of Brownian motion (L\'evy, Kolmogorov's extension and continuity theorems).
-\item Path properties: nowhere differentiability, H\"older continuity, quadratic variation, the law of the iterated logarithm.
-\item The Markov and strong Markov properties, the reflection principle.
-\item Brownian motion and harmonic functions: the Dirichlet problem, recurrence and transience.
-\item Donsker's invariance principle.
-\item Exercises with solutions.
+\item If $(X, Y)$ has a joint density $f(x, y)$ and $g(X)$ is integrable, then
+\[
+E[g(X) \mid Y] = h(Y), \qquad h(y) = \frac{\int g(x)f(x, y)\,dx}{\int f(x, y)\,dx}
+\]
+(and $h(y) = 0$ where the denominator vanishes). Indeed, for $A = \{Y \in B\}$, Fubini gives $E[h(Y); A] = \int_B h(y)\int f(x, y)\,dx\,dy = \int_B\int g(x)f(x, y)\,dx\,dy = E[g(X); A]$. The function
+$x \mapsto f(x, y)/\int f(x^{\prime}, y)\,dx^{\prime}$ is the \emph{conditional density} of $X$ given $Y = y$.
+\item If $X_1, X_2, \ldots$ are i.i.d.\ integrable and $S_n = X_1 + \cdots + X_n$, then $E[X_1 \mid S_n] = S_n/n$: by symmetry $E[X_k \mid S_n]$ is the same for every $k \leq n$ (the pairs $(X_k, S_n)$ all have the same law), and the sum
+over $k$ is $E[S_n \mid S_n] = S_n$.
 \end{enumerate}
+\end{example}
 
-\section{Stochastic Calculus}\label{martingales:section-stochastic-calculus}
-Integration against Brownian motion, It\^o's formula, and stochastic differential equations.
+\begin{counterexample}[The Borel--Kolmogorov paradox]\label{martingales:counterexample-borel-kolmogorov}
+Conditioning on an event of probability zero is not well defined; only conditioning on a $\sigma$-algebra is. Let a point be uniform on the unit sphere $S^2$, with longitude $\lambda \in [0, 2\pi)$ and latitude
+$\theta \in [-\frac\pi2, \frac\pi2]$; its density in these coordinates is $\frac{1}{4\pi}\cos\theta$. Conditioning on the equator $\theta = 0$, by Example~\ref{martingales:example-conditional-density}, the longitude is uniform. But the
+equator is also the meridian circle $\lambda \in \{0, \pi\}$ after a rotation, and conditioning on $\lambda$ the latitude has conditional density $\frac12\cos\theta$, not uniform. The same great circle gets two different
+``conditional laws'', because it is obtained as the limit of different families of events of positive probability.
+\end{counterexample}
 
-\noindent\textbf{Prerequisites.} Section~\ref{martingales:section-brownian-motion} (Brownian Motion).
+\begin{definition}\label{martingales:definition-regular-conditional}
+Let $X$ be a real random variable and $\mathcal{G}$ a sub-$\sigma$-algebra. A \emph{regular conditional distribution} of $X$ given $\mathcal{G}$ is a map $\mu \colon \Omega \times \mathcal{B}(\RR) \to [0, 1]$ such that
+$\mu(\omega, \cdot)$ is a probability measure for every $\omega$, and $\mu(\cdot, B)$ is a version of $P(X \in B \mid \mathcal{G})$ for every Borel $B$.
+\end{definition}
 
-\noindent\textbf{Planned contents.}
+\begin{theorem}\label{martingales:theorem-regular-conditional}
+Every real random variable has a regular conditional distribution given any sub-$\sigma$-algebra; then $E[g(X) \mid \mathcal{G}](\omega) = \int g\,d\mu(\omega, \cdot)$ for Borel $g$ with $g(X) \in L^1$.
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+For rational $q$ choose versions $F(\omega, q)$ of $P(X \leq q \mid \mathcal{G})$. By Proposition~\ref{martingales:proposition-conditional-expectation-properties}(1) and (6), outside a null set $N$ the function $q \mapsto F(\omega, q)$
+is nondecreasing, $F(\omega, q) = \lim_{r \downarrow q}F(\omega, r)$ along rationals, and its limits at $\mp\infty$ are $0$ and $1$ (countably many conditions). For $\omega \notin N$ let $F(\omega, x) = \inf_{q > x}F(\omega, q)$, a distribution
+function, and $\mu(\omega, \cdot)$ the corresponding law (Proposition~\ref{probability:proposition-distribution-function}); for $\omega \in N$ let $\mu(\omega, \cdot)$ be a fixed law. The class of Borel $B$ for which $\mu(\cdot, B)$ is a
+version of $P(X \in B \mid \mathcal{G})$ contains the half-lines and is a Dynkin system, by conditional monotone convergence, hence is everything (Lemma~\ref{measure-theory:lemma-dynkin}). The formula for $g$ follows for
+indicators, then simple functions, then by monotone convergence. The verifications omitted are the monotone limits at each step.
+\end{proof}
+
+The same holds for random variables with values in any complete separable metric space, which is the setting in which regular conditional distributions are used \cite{kallenberg}; for arbitrary measurable spaces it
+can fail.
+
+\section{Martingales and stopping times}\label{martingales:section-martingales}
+
+\begin{definition}\label{martingales:definition-martingale}
+A \emph{filtration} is a nondecreasing sequence $\mathcal{F}_0 \subseteq \mathcal{F}_1 \subseteq \cdots$ of sub-$\sigma$-algebras of $\mathcal{F}$; $\mathcal{F}_n$ is the information available at time $n$. A process $(X_n)_{n \geq 0}$ is
+\emph{adapted} if each $X_n$ is $\mathcal{F}_n$-measurable, and \emph{predictable} if each $X_n$ ($n \geq 1$) is $\mathcal{F}_{n-1}$-measurable. An adapted process of integrable random variables is a
 \begin{enumerate}
-\item Continuous martingales, quadratic variation, local martingales.
-\item The It\^o integral and its isometry; It\^o's formula.
-\item L\'evy's characterisation, Girsanov's theorem, martingale representation.
-\item Stochastic differential equations: existence and uniqueness, the Markov property, Feynman--Kac.
-\item Applications: the Black--Scholes model, Ornstein--Uhlenbeck processes.
-\item Exercises with solutions.
+\item \emph{martingale} if $E[X_{n+1} \mid \mathcal{F}_n] = X_n$ for all $n$;
+\item \emph{submartingale} if $E[X_{n+1} \mid \mathcal{F}_n] \geq X_n$, and \emph{supermartingale} if $E[X_{n+1} \mid \mathcal{F}_n] \leq X_n$.
 \end{enumerate}
+Without mention of a filtration, the \emph{natural filtration} $\mathcal{F}_n = \sigma(X_0, \ldots, X_n)$ is meant.
+\end{definition}
+
+\begin{notation}\label{martingales:notation-martingale}
+$\Delta X_n = X_n - X_{n-1}$ denotes the increments, and $\mathcal{F}_\infty = \sigma(\bigcup_n\mathcal{F}_n)$. By the tower property, a martingale satisfies $E[X_m \mid \mathcal{F}_n] = X_n$ for all $m \geq n$, and $E[X_n] = E[X_0]$.
+\end{notation}
+
+A martingale is the fortune of a gambler in a fair game: given the past, the expected gain of the next round is zero. A supermartingale is an unfavourable game (the name comes from potential theory: superharmonic functions
+are supermartingales along Brownian paths).
+
+\begin{example}\label{martingales:example-martingales}
+\begin{enumerate}
+\item \emph{Sums.} If $\xi_1, \xi_2, \ldots$ are independent integrable with mean $0$, $S_n = \xi_1 + \cdots + \xi_n$ is a martingale: $E[S_{n+1} \mid \mathcal{F}_n] = S_n + E[\xi_{n+1}] = S_n$ by
+Proposition~\ref{martingales:proposition-conditional-expectation-properties}(3), (5). If moreover $E[\xi_k^2] = \sigma^2$, then $S_n^2 - n\sigma^2$ is a martingale.
+\item \emph{Products.} If $\xi_k \geq 0$ are independent with mean $1$, $M_n = \xi_1\cdots\xi_n$ is a martingale. For instance, for i.i.d.\ $\xi_k$ with $\Lambda(\lambda) = \log E[e^{\lambda\xi_1}] < \infty$,
+$\exp(\lambda S_n - n\Lambda(\lambda))$ is a martingale (the \emph{exponential martingale}).
+\item \emph{Doob martingales.} If $X \in L^1$, $X_n = E[X \mid \mathcal{F}_n]$ is a martingale, by the tower property: the successive best guesses of $X$ as information accumulates.
+\item \emph{Likelihood ratios.} If $P$ and $Q$ are probability measures with $Q \ll P$ on each $\mathcal{F}_n$, the densities $L_n = dQ|_{\mathcal{F}_n}/dP|_{\mathcal{F}_n}$ form a $P$-martingale.
+\item \emph{Convex functions.} If $X_n$ is a martingale and $\varphi$ is convex with $\varphi(X_n) \in L^1$, then $\varphi(X_n)$ is a submartingale, by conditional Jensen; for instance $|X_n|$, and $X_n^2$ if $X_n \in L^2$.
+\end{enumerate}
+\end{example}
+
+\begin{definition}\label{martingales:definition-transform}
+For an adapted process $X$ and a predictable process $H$, the \emph{martingale transform} is $(H \cdot X)_n = \sum_{k=1}^nH_k\,\Delta X_k$, with $(H \cdot X)_0 = 0$.
+\end{definition}
+
+If $X_n$ is the price of a share and $H_k$ the number of shares held during the round $k$, chosen with the information at time $k - 1$, then $(H \cdot X)_n$ is the gain of the trading strategy $H$. The discrete analogue of the
+stochastic integral of Section~\ref{martingales:section-stochastic-calculus}, it is a martingale whenever $X$ is: no strategy beats a fair game.
+
+\begin{proposition}\label{martingales:proposition-transform}
+If $X$ is a martingale and $H$ is predictable and bounded, $H \cdot X$ is a martingale. If $X$ is a supermartingale and $0 \leq H_k \leq c$, $H \cdot X$ is a supermartingale.
+\end{proposition}
+
+\begin{proof}
+$(H \cdot X)_n$ is integrable and adapted, and $E[(H \cdot X)_{n+1} - (H \cdot X)_n \mid \mathcal{F}_n] = H_{n+1}E[X_{n+1} - X_n \mid \mathcal{F}_n]$, which is $0$, resp.\ $\leq 0$, by
+Proposition~\ref{martingales:proposition-conditional-expectation-properties}(3).
+\end{proof}
+
+\begin{definition}\label{martingales:definition-stopping-time}
+A \emph{stopping time} is a random variable $T \colon \Omega \to \{0, 1, 2, \ldots, \infty\}$ with $\{T = n\} \in \mathcal{F}_n$ for every $n$: whether to stop at time $n$ is decided with the information at time $n$. The
+\emph{stopped process} is $X^T_n = X_{T \wedge n}$; if $T < \infty$, $X_T(\omega) = X_{T(\omega)}(\omega)$.
+\end{definition}
+
+\begin{example}\label{martingales:example-stopping-times}
+Constants are stopping times, and so are $T \wedge S$, $T \vee S$ and $T + S$ for stopping times $T$, $S$. For an adapted process and a Borel set $B$, the \emph{hitting time} $T_B = \inf\{n \geq 0 : X_n \in B\}$ is a stopping time,
+since $\{T_B = n\} = \{X_0 \notin B, \ldots, X_{n-1} \notin B, X_n \in B\}$. The \emph{last} time $X$ is in $B$ before time $10$ is not a stopping time: it depends on the future.
+\end{example}
+
+\begin{proposition}\label{martingales:proposition-stopped}
+If $X$ is a martingale (resp.\ supermartingale) and $T$ a stopping time, $X^T$ is a martingale (resp.\ supermartingale). If $T \leq N$ is bounded, $E[X_T] = E[X_0]$ (resp.\ $E[X_T] \leq E[X_0]$).
+\end{proposition}
+
+\begin{proof}
+$X_{T \wedge n} = X_0 + (H \cdot X)_n$ with $H_k = \mathbf{1}_{\{T \geq k\}}$, which is predictable since $\{T \geq k\} = \Omega \setminus \{T \leq k - 1\} \in \mathcal{F}_{k-1}$. Apply Proposition~\ref{martingales:proposition-transform}, and
+for bounded $T$ take $n = N$.
+\end{proof}
+
+\begin{theorem}[Optional stopping theorem]\label{martingales:theorem-optional-stopping}
+Let $X$ be a martingale and $T$ an almost surely finite stopping time. Then $E[X_T] = E[X_0]$ in each of the following cases:
+\begin{enumerate}
+\item $T$ is bounded;
+\item $|X_{T \wedge n}| \leq K$ for all $n$, for a constant $K$;
+\item $E[T] < \infty$ and $|\Delta X_n| \leq c$ for all $n$, for a constant $c$.
+\end{enumerate}
+More generally, it holds whenever the family $(X_{T \wedge n})_n$ is uniformly integrable.
+\end{theorem}
+
+\begin{proof}
+$X_{T \wedge n} \to X_T$ almost surely as $T < \infty$, and $E[X_{T \wedge n}] = E[X_0]$ by Proposition~\ref{martingales:proposition-stopped}. In case (2), dominated convergence gives the claim; in case (3), $|X_{T \wedge n}| \leq |X_0| + cT$, which
+is integrable. In the uniformly integrable case use Vitali's theorem (Theorem~\ref{signed-measures:theorem-vitali-convergence}).
+\end{proof}
+
+\begin{example}[Gambler's ruin]\label{martingales:example-gamblers-ruin}
+A gambler starts with $a$ euros and bets one euro on fair coin tosses until reaching $N > a$ or $0$. The fortune is $S_n = a + \xi_1 + \cdots + \xi_n$ with fair signs $\xi_k$, stopped at $T = \inf\{n : S_n \in \{0, N\}\}$.
+\begin{enumerate}
+\item $T < \infty$ almost surely, and even $E[T] < \infty$: in every block of $N$ consecutive tosses, all heads (probability $2^{-N}$) forces exit, so $P(T > kN) \leq (1 - 2^{-N})^k$.
+\item By optional stopping (case (2)), $a = E[S_T] = NP(S_T = N)$: the probability of winning is $a/N$.
+\item $S_n^2 - n$ is a martingale with bounded increments on $\{n < T\}$; optional stopping applied to it (case (3) for the stopped process) gives $E[S_T^2] = a^2 + E[T]$, so $E[T] = N^2\frac aN - a^2 = a(N - a)$.
+\item For an unfair coin, $P(\xi_k = 1) = p \neq \frac12$, $q = 1 - p$, the process $(q/p)^{S_n}$ is a martingale, and the same argument gives $P(S_T = N) = \frac{1 - (q/p)^a}{1 - (q/p)^N}$. In a casino with $p = \frac{18}{37}$, starting with
+$a = 100$ and aiming at $N = 200$, the probability of success is about $4.4 \cdot 10^{-3}$, while in a fair game it is $\frac12$.
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{martingales:counterexample-optional-stopping}
+Optional stopping fails without conditions. For the simple random walk $S_n$ started at $0$ and $T = \inf\{n : S_n = 1\}$, Example~\ref{martingales:example-gamblers-ruin} shows that $P(T < \infty) \geq P(\text{hit } 1 \text{ before } {-N})
+= \frac{N}{N + 1}$ for every $N$, so $T < \infty$ almost surely; but $E[S_T] = 1 \neq 0 = E[S_0]$. By case (3) of the theorem, $E[T] = \infty$. This is the \emph{doubling strategy} in disguise: a gambler who doubles the stake after
+each loss is sure to win one euro eventually, but needs unbounded credit and time.
+\end{counterexample}
+
+\begin{theorem}[Wald's identity]\label{martingales:theorem-wald}
+Let $\xi_1, \xi_2, \ldots$ be i.i.d.\ integrable with mean $m$, $S_n = \sum_{k \leq n}\xi_k$, and $T$ a stopping time for the natural filtration with $E[T] < \infty$. Then $E[S_T] = mE[T]$.
+\end{theorem}
+
+\begin{proof}
+$M_n = S_n - nm$ is a martingale, so $E[M_{T \wedge n}] = 0$. Now $|M_{T \wedge n}| \leq \sum_{k=1}^\infty|\xi_k - m|\mathbf{1}_{\{T \geq k\}}$, and since $\{T \geq k\} \in \mathcal{F}_{k-1}$ is independent of $\xi_k$,
+$E\sum_k|\xi_k - m|\mathbf{1}_{\{T \geq k\}} = E|\xi_1 - m|\sum_kP(T \geq k) = E|\xi_1 - m|E[T] < \infty$. Dominated convergence gives $E[S_T - Tm] = 0$.
+\end{proof}
+
+\section{Martingale inequalities and convergence}\label{martingales:section-convergence}
+
+\begin{theorem}[Doob's maximal inequality]\label{martingales:theorem-doob-maximal}
+Let $X$ be a submartingale, $\lambda > 0$ and $X_n^* = \max_{k \leq n}X_k$. Then $\lambda P(X_n^* \geq \lambda) \leq E[X_n; X_n^* \geq \lambda] \leq E[X_n^+]$.
+\end{theorem}
+
+\begin{proof}
+Let $A_k = \{X_k \geq \lambda, X_j < \lambda \text{ for } j < k\} \in \mathcal{F}_k$, disjoint with union $\{X_n^* \geq \lambda\}$. By the submartingale property $E[X_n; A_k] \geq E[X_k; A_k] \geq \lambda P(A_k)$; sum over $k \leq n$.
+\end{proof}
+
+Applied to the submartingale $S_n^2$ of a sum of independent centred variables, this is Kolmogorov's inequality (Theorem~\ref{probability:theorem-kolmogorov-inequality}).
+
+\begin{theorem}[Doob's $L^p$ inequality]\label{martingales:theorem-doob-lp}
+If $X$ is a nonnegative submartingale and $1 < p < \infty$, then $\|X_n^*\|_p \leq \frac{p}{p - 1}\|X_n\|_p$. In particular, for a martingale $X$, $E[\max_{k \leq n}|X_k|^2] \leq 4E[X_n^2]$.
+\end{theorem}
+
+\begin{proof}
+We may assume $X_n \in L^p$; then $X_k \in L^p$ for $k \leq n$ by conditional Jensen ($X_k \leq E[X_n \mid \mathcal{F}_k]$), so $X_n^* \leq \sum_{k \leq n}X_k \in L^p$. By the layer cake formula
+(Proposition~\ref{measure-theory:proposition-layer-cake}), Theorem~\ref{martingales:theorem-doob-maximal} and Fubini,
+\[
+\begin{aligned}
+E[(X_n^*)^p] &= \int_0^\infty p\lambda^{p-1}P(X_n^* \geq \lambda)\,d\lambda \leq \int_0^\infty p\lambda^{p-2}E[X_n; X_n^* \geq \lambda]\,d\lambda \\
+&= \frac{p}{p - 1}E[X_n(X_n^*)^{p-1}].
+\end{aligned}
+\]
+By H\"older's inequality the right side is at most $\frac{p}{p - 1}\|X_n\|_p\|X_n^*\|_p^{p-1}$; divide by $\|X_n^*\|_p^{p-1}$ (if it is nonzero). For a martingale apply this to $|X_n|$.
+\end{proof}
+
+\begin{counterexample}\label{martingales:counterexample-doob-l1}
+There is no $L^1$ version: for the martingale $X_n = \prod_{k \leq n}\xi_k$ with independent $\xi_k \in \{0, 2\}$ equally likely, $E[X_n] = 1$, while $X_n^* = 2^{N}$ where $N = \min(n, \text{the index of the first } 0)$, so
+$E[X_n^*] = \sum_{k<n}2^k2^{-k-1} + 2^n2^{-n} = \frac n2 + 1 \to \infty$.
+\end{counterexample}
+
+\begin{definition}\label{martingales:definition-upcrossings}
+For a process $X$, numbers $a < b$ and $n \geq 0$, the \emph{number of upcrossings} $U_n[a, b]$ of $[a, b]$ by time $n$ is the largest $k$ for which there are times $s_1 < t_1 < s_2 < t_2 < \cdots < s_k < t_k \leq n$ with
+$X_{s_i} \leq a$ and $X_{t_i} \geq b$.
+\end{definition}
+
+\begin{lemma}[Doob's upcrossing inequality]\label{martingales:lemma-upcrossing}
+If $X$ is a submartingale, $(b - a)E[U_n[a, b]] \leq E[(X_n - a)^+] - E[(X_0 - a)^+]$.
+\end{lemma}
+
+\begin{proof}
+$Y_n = a + (X_n - a)^+$ is a submartingale (Example~\ref{martingales:example-martingales}(5), as $x \mapsto a + (x - a)^+$ is convex and nondecreasing) with the same upcrossings of $[a, b]$. Let $H_k = 1$ if time $k$ lies in an
+upcrossing in progress, precisely: $H$ switches on after the first time $Y \leq a$ (i.e.\ $Y = a$) and off after the next time $Y \geq b$, and so on; $H$ is predictable, since $H_k$ is decided by $Y_0, \ldots, Y_{k-1}$. Each completed
+upcrossing contributes at least $b - a$ to $(H \cdot Y)_n$, and an incomplete final one contributes $Y_n - a \geq 0$; so $(b - a)U_n[a, b] \leq (H \cdot Y)_n$. As $1 - H$ is predictable and nonnegative, $((1 - H) \cdot Y)_n$ is a
+submartingale with mean $\geq 0$ (Proposition~\ref{martingales:proposition-transform} applied to the supermartingale $-Y$). Hence $(b - a)E[U_n] \leq E[(H \cdot Y)_n] \leq E[(H \cdot Y)_n] + E[((1 - H) \cdot Y)_n] = E[Y_n - Y_0]$.
+\end{proof}
+
+\begin{theorem}[Martingale convergence theorem]\label{martingales:theorem-convergence}
+Let $X$ be a submartingale with $\sup_nE[X_n^+] < \infty$. Then $X_n$ converges almost surely to an integrable random variable $X_\infty$. In particular, every martingale bounded in $L^1$ and every nonnegative
+supermartingale converges almost surely.
+\end{theorem}
+
+\begin{proof}
+For rationals $a < b$, $U_n[a, b] \uparrow U_\infty[a, b]$ and by Lemma~\ref{martingales:lemma-upcrossing} and monotone convergence $E[U_\infty[a, b]] \leq \frac{\sup_nE[X_n^+] + |a|}{b - a} < \infty$, so $U_\infty[a, b] < \infty$ almost
+surely. Outside the countable union of the null sets $\{U_\infty[a, b] = \infty\}$, $\liminf X_n = \limsup X_n$: if $\liminf X_n < a < b < \limsup X_n$ there would be infinitely many upcrossings. So $X_n \to X_\infty \in [-\infty, \infty]$
+almost surely, and by Fatou's lemma (Corollary~\ref{measure-theory:corollary-integral-properties}) $E|X_\infty| \leq \liminf E|X_n| = \liminf(2E[X_n^+] - E[X_n]) \leq 2\sup E[X_n^+] - E[X_0] < \infty$. For a nonnegative
+supermartingale apply this to the submartingale $-X_n$, whose positive part vanishes.
+\end{proof}
+
+\begin{example}\label{martingales:example-convergence}
+\begin{enumerate}
+\item \emph{P\'olya's urn.} An urn contains one red and one blue ball; at each step a ball is drawn uniformly, and returned together with a new ball of the same colour. The fraction $R_n$ of red balls after $n$ steps (out
+of $n + 2$) is a martingale with values in $[0, 1]$: if there are $r$ red balls, $E[R_{n+1} \mid \mathcal{F}_n] = \frac{r}{n+2}\cdot\frac{r + 1}{n + 3} + \frac{n + 2 - r}{n + 2}\cdot\frac{r}{n + 3} = \frac{r}{n + 2}$. So $R_n$ converges almost
+surely; the limit is uniformly distributed on $[0, 1]$ (Exercise~\ref{martingales:exercise-polya}). The urn ``remembers'' its early history forever.
+\item \emph{Random signs.} $\sum_k\varepsilon_k/k$ with independent fair signs is an $L^2$-bounded martingale, so it converges almost surely, recovering Example~\ref{probability:example-random-harmonic}.
+\end{enumerate}
+\end{example}
+
+\begin{counterexample}\label{martingales:counterexample-not-l1}
+Almost sure convergence need not hold in $L^1$: the martingale $X_n = \prod_{k \leq n}\xi_k$ of Counterexample~\ref{martingales:counterexample-doob-l1} converges almost surely to $0$ (some $\xi_k$ vanishes), while
+$E[X_n] = 1$ for all $n$. A fair game can converge to ruin with probability one.
+\end{counterexample}
+
+\begin{theorem}\label{martingales:theorem-ui-convergence}
+For a martingale $(X_n)$ the following are equivalent:
+\begin{enumerate}
+\item $(X_n)$ is uniformly integrable (Definition~\ref{signed-measures:definition-uniformly-integrable});
+\item $X_n$ converges almost surely and in $L^1$;
+\item $X_n$ converges in $L^1$;
+\item there is $X \in L^1$ with $X_n = E[X \mid \mathcal{F}_n]$ for all $n$ (the martingale is \emph{closed}).
+\end{enumerate}
+Then $X_n \to E[X \mid \mathcal{F}_\infty]$, and $X_\infty = \lim X_n$ satisfies $X_n = E[X_\infty \mid \mathcal{F}_n]$.
+\end{theorem}
+
+\begin{proof}
+(1) $\Rightarrow$ (2): A uniformly integrable family is bounded in $L^1$ (Proposition~\ref{signed-measures:proposition-uniformly-integrable}), so $X_n \to X_\infty$ almost surely by Theorem~\ref{martingales:theorem-convergence}, and in $L^1$ by
+Vitali's theorem. (2) $\Rightarrow$ (3) is clear. (3) $\Rightarrow$ (4): If $X_n \to X_\infty$ in $L^1$, then for fixed $n$ and $m \geq n$, $X_n = E[X_m \mid \mathcal{F}_n]$, and $\|E[X_m \mid \mathcal{F}_n] - E[X_\infty \mid \mathcal{F}_n]\|_1 \leq
+\|X_m - X_\infty\|_1 \to 0$ (conditional Jensen); so $X_n = E[X_\infty \mid \mathcal{F}_n]$.
+(4) $\Rightarrow$ (1): Let $Y_n = E[X \mid \mathcal{F}_n]$. Given $\varepsilon > 0$, choose $\delta$ with $E[|X|; A] < \varepsilon$ when $P(A) < \delta$ (Proposition~\ref{signed-measures:proposition-uniformly-integrable} for the single function $X$). By
+Markov's inequality, $P(|Y_n| > M) \leq E|Y_n|/M \leq E|X|/M < \delta$ for $M$ large, uniformly in $n$; and since $\{|Y_n| > M\} \in \mathcal{F}_n$, $E[|Y_n|; |Y_n| > M] \leq E[E[|X| \mid \mathcal{F}_n]; |Y_n| > M] = E[|X|; |Y_n| > M] <
+\varepsilon$.
+Finally, if $X_n = E[X \mid \mathcal{F}_n] \to X_\infty$, then $X_\infty$ is $\mathcal{F}_\infty$-measurable, and $E[X_\infty; A] = \lim E[X_n; A] = E[X; A]$ for $A \in \bigcup_n\mathcal{F}_n$. The class of $A \in \mathcal{F}_\infty$ with $E[X_\infty; A] = E[X; A]$ contains the
+$\pi$-system $\bigcup_n\mathcal{F}_n$, which contains $\Omega$, and is closed under complements and (by dominated convergence) countable disjoint unions; by Lemma~\ref{measure-theory:lemma-dynkin} it is $\mathcal{F}_\infty$, so
+$X_\infty = E[X \mid \mathcal{F}_\infty]$.
+\end{proof}
+
+\begin{corollary}[L\'evy's upward theorem and zero-one law]\label{martingales:corollary-levy-upward}
+For $X \in L^1$, $E[X \mid \mathcal{F}_n] \to E[X \mid \mathcal{F}_\infty]$ almost surely and in $L^1$. In particular, for $A \in \mathcal{F}_\infty$, $P(A \mid \mathcal{F}_n) \to \mathbf{1}_A$ almost surely.
+\end{corollary}
+
+\begin{proof}
+This is Theorem~\ref{martingales:theorem-ui-convergence}, (4) $\Rightarrow$ (2), with the identification of the limit; for $A \in \mathcal{F}_\infty$, $E[\mathbf{1}_A \mid \mathcal{F}_\infty] = \mathbf{1}_A$.
+\end{proof}
+
+L\'evy's zero-one law gives a second proof of Kolmogorov's zero-one law (Theorem~\ref{probability:theorem-zero-one}): if $A$ is a tail event of independent $X_k$ and $\mathcal{F}_n = \sigma(X_1, \ldots, X_n)$, then $A$ is
+independent of $\mathcal{F}_n$, so $P(A) = P(A \mid \mathcal{F}_n) \to \mathbf{1}_A$, and $P(A) \in \{0, 1\}$.
+
+\begin{theorem}[Backward martingales]\label{martingales:theorem-backward}
+Let $\mathcal{G}_0 \supseteq \mathcal{G}_1 \supseteq \cdots$ be a nonincreasing sequence of sub-$\sigma$-algebras, $\mathcal{G}_\infty = \bigcap_n\mathcal{G}_n$, and $X \in L^1$. Then $E[X \mid \mathcal{G}_n] \to E[X \mid \mathcal{G}_\infty]$
+almost surely and in $L^1$.
+\end{theorem}
+
+\begin{proof}
+Let $Y_n = E[X \mid \mathcal{G}_n]$. For fixed $N$, the sequence $Y_N, Y_{N-1}, \ldots, Y_0$ is a martingale for the filtration $\mathcal{G}_N \subseteq \cdots \subseteq \mathcal{G}_0$, so by Lemma~\ref{martingales:lemma-upcrossing} the expected
+number of upcrossings of $[a, b]$ by $(Y_N, \ldots, Y_0)$ is at most $\frac{E|X| + |a|}{b - a}$, uniformly in $N$. As in Theorem~\ref{martingales:theorem-convergence}, $Y_n$ converges almost surely to some $Y_\infty$. The family $(Y_n)$
+is uniformly integrable by the argument of (4) $\Rightarrow$ (1) above, so the convergence also holds in $L^1$. $Y_\infty$ is $\mathcal{G}_m$-measurable for every $m$ (as a limit of $Y_n$, $n \geq m$), hence
+$\mathcal{G}_\infty$-measurable, and for $A \in \mathcal{G}_\infty$, $E[Y_\infty; A] = \lim E[Y_n; A] = E[X; A]$.
+\end{proof}
+
+\begin{corollary}[Strong law of large numbers]\label{martingales:corollary-strong-law}
+If $X_1, X_2, \ldots$ are i.i.d.\ and integrable, $S_n/n \to E[X_1]$ almost surely and in $L^1$.
+\end{corollary}
+
+\begin{proof}
+Let $\mathcal{G}_n = \sigma(S_n, X_{n+1}, X_{n+2}, \ldots)$, a nonincreasing sequence. As in Example~\ref{martingales:example-conditional-density}(2), $E[X_k \mid \mathcal{G}_n]$ is the same for all $k \leq n$: for
+$A = \{S_n \in B, (X_{n+1}, X_{n+2}, \ldots) \in C\}$, $E[X_k; A]$ does not depend on $k \leq n$, because the law of $(X_k, S_n, X_{n+1}, \ldots)$ does not, and such sets form a $\pi$-system generating $\mathcal{G}_n$. Hence
+$E[X_1 \mid \mathcal{G}_n] = \frac1n\sum_{k \leq n}E[X_k \mid \mathcal{G}_n] = \frac{S_n}{n}$. By Theorem~\ref{martingales:theorem-backward}, $S_n/n$ converges almost surely and in $L^1$. The limit equals $\limsup_n(X_m + \cdots + X_n)/n$ for every $m$,
+so it is measurable for the tail $\sigma$-algebra of the $X_k$, hence almost surely constant (Theorem~\ref{probability:theorem-zero-one}); by $L^1$ convergence the constant is $E[S_n/n] = E[X_1]$.
+\end{proof}
+
+This is a second proof of Theorem~\ref{probability:theorem-strong-law} for i.i.d.\ variables, adding the $L^1$ convergence. The same idea, conditioning on the symmetric information, proves de Finetti's theorem: an
+infinite exchangeable sequence is a mixture of i.i.d.\ sequences \cite{kallenberg}.
+
+\begin{theorem}[Azuma--Hoeffding inequality]\label{martingales:theorem-azuma}
+Let $X$ be a martingale with $|\Delta X_k| \leq c_k$. Then for $t > 0$,
+\[
+P(X_n - X_0 \geq t) \leq \exp\Bigl(-\frac{t^2}{2\sum_{k \leq n}c_k^2}\Bigr).
+\]
+\end{theorem}
+
+\begin{proof}
+By convexity, for $|x| \leq c$, $e^{\lambda x} \leq \frac{c - x}{2c}e^{-\lambda c} + \frac{c + x}{2c}e^{\lambda c}$. Applied to $x = \Delta X_k$ and conditioned on $\mathcal{F}_{k-1}$, where $E[\Delta X_k \mid \mathcal{F}_{k-1}] = 0$, this gives
+$E[e^{\lambda\Delta X_k} \mid \mathcal{F}_{k-1}] \leq \cosh(\lambda c_k) \leq e^{\lambda^2c_k^2/2}$ (compare the Taylor series termwise). By induction, using Proposition~\ref{martingales:proposition-conditional-expectation-properties}(3),
+$E[e^{\lambda(X_n - X_0)}] \leq e^{\lambda^2\sum c_k^2/2}$. The Chernoff bound (Proposition~\ref{probability:proposition-chernoff}) with $\lambda = t/\sum c_k^2$ concludes.
+\end{proof}
+
+\begin{corollary}[Bounded differences]\label{martingales:corollary-bounded-differences}
+Let $\xi_1, \ldots, \xi_n$ be independent and $f$ a function of $n$ variables such that changing the $k$-th variable changes $f$ by at most $c_k$. Then $Z = f(\xi_1, \ldots, \xi_n)$ satisfies
+$P(Z - EZ \geq t) \leq e^{-t^2/2\sum c_k^2}$.
+\end{corollary}
+
+\begin{proof}
+Apply Theorem~\ref{martingales:theorem-azuma} to the Doob martingale $X_k = E[Z \mid \xi_1, \ldots, \xi_k]$. By independence, $X_k = \int f(\xi_1, \ldots, \xi_k, y_{k+1}, \ldots, y_n)\,d\mu(y)$ with $\mu$ the law of $(\xi_{k+1}, \ldots, \xi_n)$ (Fubini), and
+$X_{k-1}$ is the same integral with $\xi_k$ replaced by an integration variable; so $|\Delta X_k| \leq c_k$.
+\end{proof}
+
+\begin{example}\label{martingales:example-bounded-differences}
+Throw $m$ balls independently into $n$ bins and let $Z$ be the number of empty bins. Moving one ball changes $Z$ by at most $1$, so $P(|Z - EZ| \geq t) \leq 2e^{-t^2/2m}$, with $E[Z] = n(1 - \frac1n)^m$. For $m = n$, $Z$ is
+$n/e + O(\sqrt{n\log n})$ with high probability. The same argument shows that the chromatic number of a random graph is concentrated in an interval of length $O(\sqrt n)$ (Chapter~\ref{probabilistic-method}).
+\end{example}
+
+\begin{definition}\label{martingales:definition-branching}
+A \emph{Galton--Watson branching process} with offspring law $(p_k)_{k \geq 0}$ is $Z_0 = 1$, $Z_{n+1} = \sum_{i=1}^{Z_n}\xi_{n+1,i}$, where the $\xi_{n,i}$ are i.i.d.\ with $P(\xi = k) = p_k$: each individual of generation $n$
+has an independent random number of children. Let $m = E[\xi] = \sum kp_k$ and $f(s) = \sum_kp_ks^k$ the generating function.
+\end{definition}
+
+\begin{theorem}\label{martingales:theorem-branching}
+Assume $0 < m < \infty$ and $p_1 < 1$. Then $Z_n/m^n$ is a nonnegative martingale, so it converges almost surely. The \emph{extinction probability} $q = P(Z_n = 0 \text{ for some } n)$ is the smallest root of $f(s) = s$ in
+$[0, 1]$; in particular $q = 1$ if $m \leq 1$ and $q < 1$ if $m > 1$.
+\end{theorem}
+
+\begin{proof}
+\emph{Martingale.} Given $\mathcal{F}_n$, $Z_{n+1}$ is a sum of $Z_n$ independent copies of $\xi$, so $E[Z_{n+1} \mid \mathcal{F}_n] = mZ_n$ (decompose on the events $\{Z_n = j\}$). Theorem~\ref{martingales:theorem-convergence} applies.
+\emph{Generating functions.} Similarly $E[s^{Z_{n+1}} \mid \mathcal{F}_n] = f(s)^{Z_n}$, so $f_n(s) = E[s^{Z_n}]$ satisfies $f_{n+1} = f_n \circ f$ and $f_n = f^{\circ n}$. Thus $q_n = P(Z_n = 0) = f_n(0)$ satisfies $q_{n+1} = f(q_n)$,
+$q_0 = 0$, and $q_n \uparrow q$ (extinction by time $n$ is an increasing union). By continuity $f(q) = q$. If $s \in [0, 1]$ is any fixed point, $q_n = f^{\circ n}(0) \leq f^{\circ n}(s) = s$ by monotonicity of $f$, so $q \leq s$.
+\emph{Location of the root.} $f$ is convex on $[0, 1]$ with $f(1) = 1$ and $f^{\prime}(1^-) = m$. If $m \leq 1$ and $p_0 + p_1 < 1$, $f$ is strictly convex, so $f(s) > 1 + m(s - 1) \geq s$ for $s < 1$, and $q = 1$; if $p_0 + p_1 = 1$ and
+$m \leq 1$, then $p_0 > 0$ (as $p_1 < 1$) and $f(s) = p_0 + p_1s > s$ for $s < 1$. If $m > 1$, $f(s) < s$ for $s$ slightly below $1$ and $f(0) = p_0 \geq 0$, so there is a fixed point in $[0, 1)$, and $q < 1$.
+\end{proof}
+
+\begin{example}\label{martingales:example-branching}
+\begin{enumerate}
+\item If each individual has $0$ or $2$ children with probabilities $\frac14$, $\frac34$, then $m = \frac32$ and $f(s) = \frac14 + \frac34s^2 = s$ has roots $\frac13$ and $1$: the population survives forever with probability $\frac23$.
+\item In the critical case $m = 1$, $Z_n$ is a martingale that converges almost surely to $0$ although $E[Z_n] = 1$: another fair game with certain ruin. Galton and Watson studied the problem in 1874 to explain the
+extinction of aristocratic surnames.
+\end{enumerate}
+\end{example}
+
+\begin{remark}\label{martingales:remark-radon-nikodym}
+Martingales also prove theorems outside probability. If $\nu \ll \mu$ are finite measures on $[0, 1)$ and $\mathcal{F}_n$ is generated by the dyadic intervals of length $2^{-n}$, then
+$X_n = \sum_I\frac{\nu(I)}{\mu(I)}\mathbf{1}_I$ is a $\mu$-martingale (Example~\ref{martingales:example-martingales}(4)), uniformly integrable because $\nu \ll \mu$; its limit is $d\nu/d\mu$, which proves the Radon--Nikodym theorem
+for separable $\sigma$-algebras and the differentiation theorem along dyadic intervals simultaneously \cite{williams-martingales}.
+\end{remark}
+
+\section{Markov chains}\label{martingales:section-markov-chains}
+
+\begin{definition}\label{martingales:definition-markov-chain}
+Let $S$ be a countable set (the \emph{state space}). A \emph{transition matrix} is a matrix $P = (p(i, j))_{i,j \in S}$ with $p(i, j) \geq 0$ and $\sum_jp(i, j) = 1$. A process $(X_n)_{n \geq 0}$ with values in $S$ is a
+\emph{Markov chain} with transition matrix $P$ if
+\[
+P(X_{n+1} = j \mid X_0 = i_0, \ldots, X_{n-1} = i_{n-1}, X_n = i) = p(i, j)
+\]
+whenever the conditioning event has positive probability. The law of $X_0$ is the \emph{initial distribution}.
+\end{definition}
+
+\begin{notation}\label{martingales:notation-markov}
+$P_i$ and $E_i$ denote probability and expectation for the chain started at $X_0 = i$, and $P_\mu$ for the initial distribution $\mu$. Measures on $S$ are row vectors and functions are column vectors: $(\mu P)(j) = \sum_i\mu(i)p(i, j)$,
+$(Pf)(i) = \sum_jp(i, j)f(j)$. $p^n(i, j)$ denotes the entries of $P^n$. $T_j = \inf\{n \geq 1 : X_n = j\}$ is the first return or hitting time of $j$.
+\end{notation}
+
+\begin{proposition}\label{martingales:proposition-markov-construction}
+For every transition matrix $P$ and initial distribution $\mu$ there is a Markov chain with these data. Then $P_\mu(X_0 = i_0, \ldots, X_n = i_n) = \mu(i_0)p(i_0, i_1)\cdots p(i_{n-1}, i_n)$, the law of $X_n$ is $\mu P^n$, and
+(\emph{Chapman--Kolmogorov}) $p^{m+n}(i, j) = \sum_kp^m(i, k)p^n(k, j)$.
+\end{proposition}
+
+\begin{proof}
+Enumerate $S = \{s_1, s_2, \ldots\}$ and let $\phi(i, u) = s_m$ for the least $m$ with $\sum_{l \leq m}p(i, s_l) \geq u$. If $U$ is uniform on $(0, 1]$, $P(\phi(i, U) = j) = p(i, j)$. Take $X_0 \sim \mu$ and independent uniform
+$U_1, U_2, \ldots$ (Corollary~\ref{measure-theory:corollary-independent-sequences}), and $X_{n+1} = \phi(X_n, U_{n+1})$. Since $U_{n+1}$ is independent of $(X_0, \ldots, X_n)$, the defining property holds, and the product formula follows
+by induction. Summing it over $i_0, \ldots, i_{n-1}$ gives $\mu P^n$; Chapman--Kolmogorov is the associativity $P^{m+n} = P^mP^n$.
+\end{proof}
+
+\begin{example}\label{martingales:example-markov-chains}
+\begin{enumerate}
+\item \emph{Random walks.} On $\ZZ^d$, $p(x, x \pm e_k) = \frac{1}{2d}$: the \emph{simple random walk}. On a graph with finite degrees, $p(v, w) = 1/\deg v$ for each neighbour $w$ of $v$.
+\item \emph{Ehrenfest urn.} $N$ molecules in two chambers; at each step a uniformly chosen molecule changes chamber. The number $X_n$ in the left chamber is a chain on $\{0, \ldots, N\}$ with $p(k, k - 1) = \frac kN$,
+$p(k, k + 1) = \frac{N - k}{N}$: a model of the approach to thermal equilibrium.
+\item \emph{Card shuffling.} Riffle shuffles or random transpositions of a deck form a random walk on the symmetric group $S_{52}$.
+\item \emph{Branching processes} (Definition~\ref{martingales:definition-branching}) and gambler's ruin are Markov chains.
+\end{enumerate}
+\end{example}
+
+\begin{proposition}[Strong Markov property]\label{martingales:proposition-strong-markov}
+Let $T$ be a stopping time of the natural filtration. Conditionally on $\{T < \infty, X_T = i\}$, the process $(X_{T+n})_{n \geq 0}$ is a Markov chain with transition matrix $P$ started at $i$, independent of
+$X_0, \ldots, X_T$: for events $A \in \mathcal{F}_T = \{A : A \cap \{T = n\} \in \mathcal{F}_n \text{ for all } n\}$ and $B \subseteq S^{\ZZ_{\geq 0}}$ measurable,
+$P_\mu(A, T < \infty, X_T = i, (X_{T+n})_n \in B) = P_\mu(A, T < \infty, X_T = i)P_i((X_n)_n \in B)$.
+\end{proposition}
+
+\begin{proof}
+Decompose according to $\{T = m\}$: it suffices to prove the identity with $T = m$ fixed and $A \in \mathcal{F}_m$, and for cylinder sets $B = \{x_0 = j_0, \ldots, x_k = j_k\}$, which form a $\pi$-system generating the product
+$\sigma$-algebra (Lemma~\ref{measure-theory:lemma-dynkin}). For $A = \{X_0 = i_0, \ldots, X_m = i_m\}$ with $i_m = i$ this is the product formula of Proposition~\ref{martingales:proposition-markov-construction}, and a general
+$A \in \mathcal{F}_m$ is a countable disjoint union of such events.
+\end{proof}
+
+\begin{definition}\label{martingales:definition-recurrence}
+A state $i$ is \emph{recurrent} if $P_i(T_i < \infty) = 1$ and \emph{transient} otherwise; a recurrent state is \emph{positive recurrent} if $E_i[T_i] < \infty$ and \emph{null recurrent} otherwise. State $j$ is
+\emph{accessible} from $i$ if $p^n(i, j) > 0$ for some $n \geq 0$; the chain is \emph{irreducible} if every state is accessible from every other. The \emph{period} of $i$ is $\gcd\{n \geq 1 : p^n(i, i) > 0\}$; the chain is
+\emph{aperiodic} if every state has period $1$.
+\end{definition}
+
+\begin{theorem}\label{martingales:theorem-recurrence-criterion}
+A state $i$ is recurrent iff $\sum_{n \geq 1}p^n(i, i) = \infty$. Precisely, the number of returns $N_i = \#\{n \geq 1 : X_n = i\}$ satisfies $P_i(N_i \geq k) = f^k$ with $f = P_i(T_i < \infty)$, and $E_i[N_i] = \sum_{n \geq 1}p^n(i, i)$.
+In an irreducible chain all states are recurrent or all are transient, and if they are recurrent, $P_j(T_i < \infty) = 1$ for all $i$, $j$.
+\end{theorem}
+
+\begin{proof}
+$E_i[N_i] = \sum_nP_i(X_n = i)$ by monotone convergence. By the strong Markov property at the time of the $(k - 1)$-st return, $P_i(N_i \geq k) = fP_i(N_i \geq k - 1)$, so $P_i(N_i \geq k) = f^k$ and $E_i[N_i] = \sum_{k \geq 1}f^k$, which is
+finite iff $f < 1$. If $i$ is recurrent and $p^a(i, j) > 0$, $p^b(j, i) > 0$, then $p^{a+n+b}(j, j) \geq p^b(j, i)p^n(i, i)p^a(i, j)$, so $\sum_np^n(j, j) = \infty$ and $j$ is recurrent. Finally, let $i$ be recurrent and $j$ accessible from $i$. Taking a path from $i$ to $j$ of positive probability and cutting it at its last visit to $i$, there is $n$ with $P_i(X_n = j, T_i > n) > 0$.
+By the Markov property at time $n$, $0 = P_i(T_i = \infty) \geq P_i(X_n = j, T_i > n)P_j(T_i = \infty)$, so $P_j(T_i < \infty) = 1$.
+\end{proof}
+
+\begin{theorem}[P\'olya]\label{martingales:theorem-polya}
+The simple random walk on $\ZZ^d$ is recurrent for $d = 1, 2$ and transient for $d \geq 3$.
+\end{theorem}
+
+\begin{proof}
+Let $\phi(\theta) = \frac1d\sum_{k=1}^d\cos\theta_k$ for $\theta \in Q = [-\pi, \pi]^d$, the characteristic function of a step: $E[e^{i\langle\theta, \xi\rangle}] = \phi(\theta)$. By independence of the steps, $E_0[e^{i\langle\theta, X_n\rangle}] = \phi(\theta)^n$,
+and by orthogonality of the characters $e^{i\langle\theta, x\rangle}$, $x \in \ZZ^d$, on $Q$,
+\[
+p^n(0, 0) = \frac{1}{(2\pi)^d}\int_Q\phi(\theta)^n\,d\theta.
+\]
+As $p^n(0, 0) = 0$ for odd $n$ and $\phi^{2n} \geq 0$, monotone convergence gives $\sum_np^n(0, 0) = (2\pi)^{-d}\int_Q\frac{d\theta}{1 - \phi(\theta)^2} \in (0, \infty]$. Now $1 - \phi^2 = (1 - \phi)(1 + \phi)$ vanishes on $Q$ only at
+$\theta = 0$ (where $\phi = 1$) and at the corners $\theta \in \{\pm\pi\}^d$ (where $\phi = -1$); since $\frac{2t^2}{\pi^2} \leq 1 - \cos t \leq \frac{t^2}{2}$ on $[-\pi, \pi]$, $1 - \phi(\theta)$ is comparable to $|\theta|^2$, and by the symmetry
+$\phi(\theta + (\pi, \ldots, \pi)) = -\phi(\theta)$ the same holds for $1 + \phi$ near the corners. Away from these points $1 - \phi^2$ is bounded below. So the integral is finite iff $\int_{|\theta| < 1}|\theta|^{-2}\,d\theta < \infty$, that is,
+iff $d \geq 3$ (polar coordinates). Theorem~\ref{martingales:theorem-recurrence-criterion} concludes.
+\end{proof}
+
+\begin{remark}\label{martingales:remark-polya}
+``A drunk man will find his way home, but a drunk bird may get lost forever'' (Kakutani). In $\ZZ^3$ the return probability is $1 - 1/u_3 \approx 0.3405$, where $u_3 = (2\pi)^{-3}\int_Q\frac{d\theta}{1 - \phi(\theta)}$ is the expected number of
+visits to $0$ (Watson's integral). In $\ZZ^1$ the walk is null recurrent: $E_0[T_0] = \infty$, by Counterexample~\ref{martingales:counterexample-optional-stopping}.
+\end{remark}
+
+\begin{definition}\label{martingales:definition-stationary}
+A \emph{stationary distribution} is a probability measure $\pi$ on $S$ with $\pi P = \pi$. A measure $\pi$ is \emph{reversible} if $\pi(i)p(i, j) = \pi(j)p(j, i)$ for all $i$, $j$ (\emph{detailed balance}).
+\end{definition}
+
+A reversible probability measure is stationary: $\sum_i\pi(i)p(i, j) = \sum_i\pi(j)p(j, i) = \pi(j)$. If $X_0 \sim \pi$ is stationary, then $X_n \sim \pi$ for all $n$, and the chain is a stationary process; if $\pi$ is reversible, the
+chain run backwards in time has the same law.
+
+\begin{example}\label{martingales:example-stationary}
+\begin{enumerate}
+\item For the random walk on a finite connected graph $G = (V, E)$, $\pi(v) = \frac{\deg v}{2|E|}$ is reversible: $\pi(v)p(v, w) = \frac{1}{2|E|}$ for adjacent $v$, $w$.
+\item For the Ehrenfest urn, the binomial law $\pi(k) = \binom Nk2^{-N}$ is reversible: $\binom Nk\frac{N - k}{N} = \binom N{k+1}\frac{k + 1}{N}$.
+\item The simple random walk on $\ZZ^d$ has no stationary distribution: the invariant measures are multiples of counting measure, which is infinite.
+\end{enumerate}
+\end{example}
+
+\begin{theorem}\label{martingales:theorem-stationary}
+Let the chain be irreducible and recurrent, and fix a state $k$. Then $\lambda(j) = E_k\sum_{n=0}^{T_k - 1}\mathbf{1}_{\{X_n = j\}}$, the expected time spent in $j$ during an excursion from $k$, defines an invariant measure ($\lambda P = \lambda$) with
+$0 < \lambda(j) < \infty$ and $\lambda(k) = 1$, and every invariant measure is a multiple of $\lambda$. Consequently, an irreducible chain has a stationary distribution iff it is positive recurrent, and then the stationary distribution
+is unique, given by $\pi(j) = 1/E_j[T_j]$.
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+\emph{Invariance.} $\lambda(j) = \sum_{n \geq 1}P_k(X_n = j, n \leq T_k)$ (shifting the excursion by one step, using $X_0 = X_{T_k} = k$), and by the Markov property at time $n - 1$, with $\{n \leq T_k\} \in \mathcal{F}_{n-1}$,
+$P_k(X_n = j, n \leq T_k) = \sum_iP_k(X_{n-1} = i, n - 1 < T_k)p(i, j)$; summing over $n$ gives $\lambda(j) = \sum_i\lambda(i)p(i, j)$. \emph{Finiteness and positivity.} From $\lambda = \lambda P^n$, $1 = \lambda(k) \geq \lambda(j)p^n(j, k)$ and
+$\lambda(j) \geq \lambda(k)p^n(k, j)$, for suitable $n$. \emph{Uniqueness.} If $\mu$ is invariant with $\mu(k) = 1$, iterating $\mu(j) = \mu(k)p(k, j) + \sum_{i \neq k}\mu(i)p(i, j)$ shows $\mu \geq \lambda$, and $\mu - \lambda$ is invariant and
+vanishes at $k$, hence everywhere by the positivity argument. \emph{Stationary distributions.} $\sum_j\lambda(j) = E_k[T_k]$, so $\lambda$ normalises iff $k$ is positive recurrent, and then $\pi(k) = \lambda(k)/E_k[T_k] = 1/E_k[T_k]$. If
+the chain is transient, $p^n(i, j) \to 0$ for all $i$, $j$ (the series $\sum_np^n(i, j) = P_i(T_j < \infty)E_j[N_j + 1]$ converges), so a stationary $\pi = \pi P^n$ would vanish by dominated convergence. The omitted verifications are
+the interchanges of sums, justified by nonnegativity.
+\end{proof}
+
+\begin{example}\label{martingales:example-knight}
+A knight moves at random on a chessboard, choosing each legal move with equal probability. Starting from a corner, the expected number of moves until it returns is $1/\pi(\text{corner}) = 2|E|/\deg(\text{corner}) = 336/2 = 168$,
+by Example~\ref{martingales:example-stationary}(1) and Exercise~\ref{martingales:exercise-knight}.
+\end{example}
+
+\begin{lemma}\label{martingales:lemma-aperiodic}
+If $i$ has period $1$, then $p^n(i, i) > 0$ for all large $n$.
+\end{lemma}
+
+\begin{proof}
+$A = \{n \geq 1 : p^n(i, i) > 0\}$ is closed under addition (Chapman--Kolmogorov). Its gcd is $1$, so some finite subset has gcd $1$, and by B\'ezout's theorem (Theorem~\ref{number-systems:theorem-bezout}, applied repeatedly) there are integers $c_a$ with
+$\sum_ac_aa = 1$. Collecting the terms with $c_a > 0$ and those with $c_a < 0$, $1 = x - y$ where $x$ and $y$ are sums of elements of $A$ (or $0$), hence in $A \cup \{0\}$. If $y = 0$, then $1 \in A$ and $A = \ZZ_{\geq 1}$. Otherwise
+$x = y + 1$ with $x, y \in A$. For $n \geq y^2$ write $n = qy + r$ with $0 \leq r < y \leq q$; then $n = (q - r)y + rx$ with $q - r \geq 1$, so $n \in A$.
+\end{proof}
+
+\begin{theorem}[Convergence to equilibrium]\label{martingales:theorem-convergence-equilibrium}
+Let the chain be irreducible, aperiodic, with stationary distribution $\pi$. Then for every initial distribution $\mu$, $d_{TV}(\mu P^n, \pi) \to 0$; in particular $p^n(i, j) \to \pi(j)$.
+\end{theorem}
+
+\begin{proof}
+\emph{Coupling.} Let $(X_n)$ and $(Y_n)$ be independent chains with $X_0 \sim \mu$ and $Y_0 \sim \pi$. The pair $(X_n, Y_n)$ is a Markov chain on $S \times S$ with transition probabilities $p(i, j)p(k, l)$ and stationary distribution
+$\pi \otimes \pi$. It is irreducible: by Lemma~\ref{martingales:lemma-aperiodic} and irreducibility, $p^n(i, j)p^n(k, l) > 0$ for all large $n$. By Theorem~\ref{martingales:theorem-stationary} it is positive recurrent, so by
+Theorem~\ref{martingales:theorem-recurrence-criterion} the time $\tau = \inf\{n : X_n = Y_n\}$ is almost surely finite.
+\emph{Swapping.} Let $Z_n = X_n$ for $n < \tau$ and $Z_n = Y_n$ for $n \geq \tau$. By the strong Markov property at $\tau$, $(Z_n)$ is again a chain with transition matrix $P$ and $Z_0 \sim \mu$, so $Z_n \sim \mu P^n$, while $Y_n \sim \pi$.
+Hence for every $A \subseteq S$, $|\mu P^n(A) - \pi(A)| = |P(Z_n \in A) - P(Y_n \in A)| \leq P(Z_n \neq Y_n) \leq P(\tau > n) \to 0$.
+\end{proof}
+
+\begin{counterexample}\label{martingales:counterexample-periodic}
+Aperiodicity is needed: the walk on two states with $p(1, 2) = p(2, 1) = 1$ has stationary distribution $(\frac12, \frac12)$, but $p^n(1, 1)$ alternates between $0$ and $1$. The \emph{lazy} chain $\frac12(I + P)$ is aperiodic with
+the same stationary distribution, which is the standard cure.
+\end{counterexample}
+
+\begin{theorem}[Ergodic theorem for Markov chains]\label{martingales:theorem-markov-ergodic}
+Let the chain be irreducible and positive recurrent with stationary distribution $\pi$, and $f \colon S \to \RR$ with $\sum_j\pi(j)|f(j)| < \infty$. Then for every initial distribution,
+$\frac1n\sum_{k=0}^{n-1}f(X_k) \to \sum_j\pi(j)f(j)$ almost surely. In particular the fraction of time spent in $j$ tends to $\pi(j)$.
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+Let $\tau_0 < \tau_1 < \cdots$ be the successive visits to a fixed state $k$ ($\tau_0 < \infty$ a.s.\ by Theorem~\ref{martingales:theorem-recurrence-criterion}). By the strong Markov property the excursions between them are
+i.i.d., so the sums $Y_r = \sum_{\tau_{r-1} \leq n < \tau_r}f(X_n)$ and the lengths $\tau_r - \tau_{r-1}$ are i.i.d.\ sequences with means $\sum_j\lambda(j)f(j)$ and $E_k[T_k]$, in the notation of Theorem~\ref{martingales:theorem-stationary}. The
+strong law (Theorem~\ref{probability:theorem-strong-law}) applied to both, together with the bound of the partial excursion at time $n$ (handled by applying the same argument to $|f|$), gives the limit
+$\sum_j\lambda(j)f(j)/E_k[T_k] = \sum_j\pi(j)f(j)$.
+\end{proof}
+
+\begin{remark}\label{martingales:remark-mixing}
+\begin{enumerate}
+\item \emph{Markov chain Monte Carlo.} To sample from a probability measure $\pi$ on a huge finite set (Ising configurations, colourings of a graph), one designs a chain with stationary distribution $\pi$ and runs it for a
+long time. The \emph{Metropolis algorithm}: propose a move $i \to j$ by a symmetric matrix $Q$ and accept it with probability $\min(1, \pi(j)/\pi(i))$; the resulting chain is reversible with respect to $\pi$, and only ratios of
+$\pi$ are needed, not its normalising constant.
+\item \emph{Mixing times.} The \emph{mixing time} $t_{\mathrm{mix}} = \min\{n : \max_id_{TV}(p^n(i, \cdot), \pi) \leq \frac14\}$ measures the speed of Theorem~\ref{martingales:theorem-convergence-equilibrium}. For a reversible chain the
+eigenvalues of $P$ are real, $1 = \lambda_1 > \lambda_2 \geq \cdots \geq \lambda_{|S|} \geq -1$, and $t_{\mathrm{mix}}$ is controlled by the \emph{spectral gap} $1 - \max(\lambda_2, |\lambda_{|S|}|)$. Bayer and Diaconis showed that
+$\frac32\log_2n$ riffle shuffles mix a deck of $n$ cards, with a sharp \emph{cutoff}; for $52$ cards, seven shuffles suffice \cite{levin-peres-wilmer}.
+\item \emph{Electrical networks.} For the random walk on a graph with edge conductances, hitting probabilities are voltages and escape probabilities are effective conductances; recurrence is equivalent to infinite
+effective resistance to infinity, which gives a robust proof of P\'olya's theorem (Rayleigh's monotonicity) \cite{doyle-snell}.
+\end{enumerate}
+\end{remark}
+
+\section{The Poisson process}\label{martingales:section-poisson-process}
+
+\begin{definition}\label{martingales:definition-poisson-process}
+Let $\tau_1, \tau_2, \ldots$ be i.i.d.\ $\mathrm{Exp}(\lambda)$ and $T_n = \tau_1 + \cdots + \tau_n$. The \emph{Poisson process} of rate $\lambda$ is $N_t = \#\{n \geq 1 : T_n \leq t\}$, $t \geq 0$: it counts the arrivals up to time $t$
+when the waiting times between arrivals are independent exponentials.
+\end{definition}
+
+\begin{theorem}\label{martingales:theorem-poisson-process}
+The Poisson process has independent stationary Poisson increments: for $0 = t_0 < t_1 < \cdots < t_k$ the increments $N_{t_j} - N_{t_{j-1}}$ are independent with laws $\mathrm{Poi}(\lambda(t_j - t_{j-1}))$. Given $N_t = n$, the
+arrival times $T_1, \ldots, T_n$ are distributed as the order statistics of $n$ independent uniform points of $[0, t]$.
+\end{theorem}
+
+\begin{proof}
+\emph{Joint density.} $(T_1, \ldots, T_{n+1})$ has density $\lambda^{n+1}e^{-\lambda s_{n+1}}$ on $\{0 < s_1 < \cdots < s_{n+1}\}$, by the change of variables $s_j = \tau_1 + \cdots + \tau_j$ (Jacobian $1$). \emph{Conditional law.} For a
+Borel set $A \subseteq \{0 < s_1 < \cdots < s_n < t\}$,
+\[
+P((T_1, \ldots, T_n) \in A, N_t = n) = \int_A\int_t^\infty\lambda^{n+1}e^{-\lambda s_{n+1}}\,ds_{n+1}\,ds = \lambda^ne^{-\lambda t}|A|.
+\]
+With $A$ the whole simplex, of volume $t^n/n!$, this gives $P(N_t = n) = e^{-\lambda t}(\lambda t)^n/n!$, and dividing, the conditional density of $(T_1, \ldots, T_n)$ is the constant $n!/t^n$, which is the density of the order statistics
+of $n$ uniform points. \emph{Increments.} Given $N_t = n$, the numbers of the $n$ uniform points falling in the intervals $(t_{j-1}, t_j]$, $t_k = t$, are multinomial with probabilities $(t_j - t_{j-1})/t$. Multiplying the multinomial
+probabilities by $P(N_t = n)$ factorises as a product of Poisson probabilities, as in Exercise~\ref{probability:exercise-poisson-thinning}.
+\end{proof}
+
+\begin{remark}\label{martingales:remark-poisson-process}
+\begin{enumerate}
+\item The Poisson process is the simplest continuous-time Markov chain: it jumps from $n$ to $n + 1$ at rate $\lambda$. A general continuous-time chain on a countable set waits an exponential time with a rate $q(i)$ in state $i$ and
+then jumps according to a transition matrix; it is described by its \emph{generator} $Q$, and its transition probabilities are $e^{tQ}$.
+\item $N_t - \lambda t$ and $(N_t - \lambda t)^2 - \lambda t$ are martingales; by the law of rare events (Theorem~\ref{probability:theorem-poisson-limit}), the Poisson process is the limit of Bernoulli trials with success probability
+$\lambda\,\Delta t$ in each small time interval. Superposition of independent Poisson processes and independent thinning give Poisson processes again (Exercise~\ref{probability:exercise-poisson-thinning}).
+\item The arrival times form a \emph{Poisson point process} on $[0, \infty)$; more generally, for a measure $\mu$ on a space $E$ there is a random point set whose counts in disjoint sets are independent with Poisson laws of means
+$\mu(A)$. This is the jump structure of L\'evy processes (Theorem~\ref{probability:theorem-levy-khintchine}).
+\end{enumerate}
+\end{remark}
+
+\section{Brownian motion}\label{martingales:section-brownian-motion}
+
+\begin{definition}\label{martingales:definition-brownian-motion}
+A (standard, one-dimensional) \emph{Brownian motion} is a process $(B_t)_{t \geq 0}$ on a probability space such that
+\begin{enumerate}
+\item $B_0 = 0$;
+\item for $0 \leq t_0 < t_1 < \cdots < t_k$ the increments $B_{t_j} - B_{t_{j-1}}$ are independent, and $B_t - B_s \sim N(0, t - s)$ for $s < t$;
+\item for every $\omega$, $t \mapsto B_t(\omega)$ is continuous.
+\end{enumerate}
+A $d$-dimensional Brownian motion is $(B^1_t, \ldots, B^d_t)$ with independent one-dimensional Brownian motions $B^k$.
+\end{definition}
+
+By the central limit theorem, (2) is forced on any process with independent stationary increments of finite variance and continuous paths, and Brownian motion is the scaling limit of random walks
+(Remark~\ref{martingales:remark-donsker}). It was used by Bachelier (1900) for stock prices and by Einstein (1905) for the motion of pollen particles, and constructed rigorously by Wiener (1923).
+
+\begin{theorem}[Wiener; L\'evy's construction]\label{martingales:theorem-brownian-existence}
+Brownian motion exists.
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+It suffices to construct it on $[0, 1]$ and to concatenate independent copies. Let $Z_0$ and $Z_{n,k}$ ($n \geq 0$, $k$ odd, $0 < k < 2^n$) be independent $N(0, 1)$ variables
+(Corollary~\ref{measure-theory:corollary-independent-sequences}). Define $B$ at the dyadic points by induction: $B_0 = 0$, $B_1 = Z_0$, and at a new dyadic point $t = k2^{-n}$ ($k$ odd), with neighbours $t_\pm = t \pm 2^{-n}$,
+\[
+B_t = \tfrac12(B_{t_-} + B_{t_+}) + 2^{-(n+1)/2}Z_{n,k}.
+\]
+\emph{Increments.} Induction on $n$ shows that the increments of $B$ between consecutive points of $2^{-n}\ZZ \cap [0, 1]$ are independent $N(0, 2^{-n})$: if $X = B_{t_+} - B_{t_-} \sim N(0, 2^{1-n})$ and $Y = 2^{-(n+1)/2}Z_{n,k}$, then
+$\frac X2 + Y$ and $\frac X2 - Y$ are independent $N(0, 2^{-n})$ variables (a computation with characteristic functions in two variables, which is the verification we omit). \emph{Continuity.} The piecewise linear interpolations
+$B^{(n)}$ satisfy $\|B^{(n)} - B^{(n-1)}\|_\infty = 2^{-(n+1)/2}\max_k|Z_{n,k}|$, and $P(\max_k|Z_{n,k}| > n) \leq 2^ne^{-n^2/2}$ is summable; by Borel--Cantelli the $B^{(n)}$ converge uniformly to a continuous limit, which extends $B$ from
+the dyadic points. \emph{Extension.} Increments over arbitrary times are limits of dyadic increments, and limits in probability of independent Gaussian vectors are Gaussian with the limiting covariance (by L\'evy's continuity
+theorem in several variables).
+\end{proof}
+
+\begin{proposition}[Invariances]\label{martingales:proposition-brownian-invariance}
+If $B$ is a Brownian motion, so are $-B_t$; $c^{-1/2}B_{ct}$ for $c > 0$ (\emph{scaling}); $B_{s+t} - B_s$ for fixed $s \geq 0$, which is moreover independent of $(B_r)_{r \leq s}$ (\emph{simple Markov property}).
+\end{proposition}
+
+\begin{proof}
+Each process has continuous paths starting at $0$, and its increments over disjoint intervals are increments of $B$ over disjoint intervals, multiplied by constants; their laws are computed from
+Example~\ref{probability:example-characteristic-functions}(2): $c^{-1/2}N(0, c(t - s)) = N(0, t - s)$. Independence of $(B_{s+t} - B_s)_t$ from $(B_r)_{r \leq s}$ holds for finitely many times by (2), hence for the generated
+$\sigma$-algebras by Lemma~\ref{probability:lemma-pi-system-independence}.
+\end{proof}
+
+\begin{proposition}[Quadratic variation]\label{martingales:proposition-quadratic-variation}
+Let $0 = t_0 < t_1 < \cdots < t_m = t$ be a partition with mesh $\delta = \max(t_k - t_{k-1})$. Then
+\[
+E\Bigl[\Bigl(\sum_k(B_{t_k} - B_{t_{k-1}})^2 - t\Bigr)^2\Bigr] = 2\sum_k(t_k - t_{k-1})^2 \leq 2t\delta.
+\]
+So the sums of squared increments converge to $t$ in $L^2$ as the mesh tends to $0$, and almost surely along any sequence of partitions with summable meshes.
+\end{proposition}
+
+\begin{proof}
+The terms $D_k = (B_{t_k} - B_{t_{k-1}})^2 - (t_k - t_{k-1})$ are independent with mean $0$ and variance $\operatorname{Var}(\Delta_k^2) = 2(\Delta t_k)^2$, as $E[Z^4] = 3$ for $Z \sim N(0, 1)$. So $E[(\sum D_k)^2] = \sum E[D_k^2]$. For the almost sure
+statement, Chebyshev's inequality and Borel--Cantelli.
+\end{proof}
+
+\begin{corollary}\label{martingales:corollary-unbounded-variation}
+Almost surely, the Brownian path has infinite variation on every interval $[s, t]$, $s < t$.
+\end{corollary}
+
+\begin{proof}
+It suffices to treat rational $s < t$, a countable family. For dyadic partitions of $[s, t]$ of mesh $2^{-n}(t - s)$, $\sum_k(\Delta_kB)^2 \to t - s > 0$ almost surely by Proposition~\ref{martingales:proposition-quadratic-variation} (applied to the
+Brownian motion $B_{s+r} - B_s$). But $\sum_k(\Delta_kB)^2 \leq \max_k|\Delta_kB|\cdot\sum_k|\Delta_kB|$, and $\max_k|\Delta_kB| \to 0$ by uniform continuity of the path on $[s, t]$; so $\sum_k|\Delta_kB| \to \infty$.
+\end{proof}
+
+This is why the Riemann--Stieltjes integral $\int f\,dB$ cannot be defined pathwise, and a new integral is needed (Section~\ref{martingales:section-stochastic-calculus}).
+
+\begin{theorem}[Paley--Wiener--Zygmund]\label{martingales:theorem-nowhere-differentiable}
+Almost surely, $t \mapsto B_t$ is differentiable at no point of $[0, \infty)$.
+\end{theorem}
+
+\begin{proof}
+It suffices to consider $[0, 1]$. If the path is differentiable at $s \in [0, 1]$, there are integers $C$, $M$ with $|B_t - B_s| \leq C|t - s|$ for $|t - s| \leq 4/M$. For $n \geq M$, let $j = \lfloor ns\rfloor$ and $\Delta_i = B_{(i+1)/n} - B_{i/n}$;
+the points $\frac in$ for $j + 1 \leq i \leq j + 4$ lie within $\frac4n$ of $s$, so $|\Delta_i| \leq \frac{8C}{n}$ for $i = j + 1, j + 2, j + 3$. So the path lies in
+$E_n = \{\exists j \leq n : |\Delta_{j+1}|, |\Delta_{j+2}|, |\Delta_{j+3}| \leq 8C/n\}$ for all $n \geq M$. The $\Delta_i$ are independent $N(0, \frac1n)$, whose density is at most $\sqrt{n/2\pi}$, so
+\[
+P(E_n) \leq (n + 1)\Bigl(\frac{16C}{n}\sqrt{\frac{n}{2\pi}}\Bigr)^3 = O(n^{-1/2}).
+\]
+Hence $P(\bigcap_{n \geq M}E_n) = 0$, and the set of paths differentiable somewhere is contained in the countable union over $C$, $M$ of these null events.
+\end{proof}
+
+\begin{theorem}[Reflection principle]\label{martingales:theorem-reflection}
+For $a > 0$ and $t > 0$, $P(\max_{s \leq t}B_s \geq a) = 2P(B_t \geq a) = P(|B_t| \geq a)$. Consequently the hitting time $T_a = \inf\{s : B_s = a\}$ is almost surely finite, with density $\frac{a}{\sqrt{2\pi s^3}}e^{-a^2/2s}$ and
+$E[T_a] = \infty$.
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+$T_a$ is a stopping time, and by the \emph{strong Markov property} of Brownian motion (the analogue of Proposition~\ref{martingales:proposition-strong-markov}: $(B_{T_a + s} - a)_{s \geq 0}$ is a Brownian motion independent of the past
+up to $T_a$, which we do not prove here \cite{morters-peres}), the path reflected at $a$ after $T_a$ is again a Brownian motion. Paths with $\max_{s \leq t}B_s \geq a$ and $B_t < a$ correspond bijectively to paths with $B_t > a$ under
+this reflection, so $P(\max \geq a, B_t < a) = P(B_t > a)$; and $P(B_t = a) = 0$. The density of $T_a$ is the derivative of $P(T_a \leq s) = P(|B_s| \geq a) = 2\int_{a/\sqrt s}^\infty\frac{e^{-x^2/2}}{\sqrt{2\pi}}dx$, which tends to $1$ as
+$s \to \infty$; and $\int^\infty s\cdot s^{-3/2}ds = \infty$.
+\end{proof}
+
+\begin{remark}\label{martingales:remark-brownian}
+\begin{enumerate}
+\item \emph{Martingales.} $B_t$, $B_t^2 - t$ and $\exp(\lambda B_t - \lambda^2t/2)$ are continuous-time martingales. Optional stopping as in Example~\ref{martingales:example-gamblers-ruin} shows that Brownian motion started at $0$
+leaves $(-b, a)$ at $a$ with probability $\frac{b}{a + b}$, after an expected time $ab$.
+\item \emph{Harmonic functions.} For a bounded domain $D \subseteq \RR^d$ with regular boundary and continuous $g$ on $\partial D$, $u(x) = E_x[g(B_\tau)]$, where $\tau$ is the exit time of $D$, is the solution of the Dirichlet problem
+$\Delta u = 0$ in $D$, $u = g$ on $\partial D$ (Kakutani, 1944); the mean value property of harmonic functions is the rotation invariance of Brownian motion. Recurrence of Brownian motion in $\RR^2$ and transience in $\RR^d$,
+$d \geq 3$, mirror P\'olya's theorem, and correspond to the harmonic functions $\log|x|$ and $|x|^{2-d}$.
+\item \emph{Law of the iterated logarithm.} $\limsup_{t \to \infty}B_t/\sqrt{2t\log\log t} = 1$ almost surely, and by time inversion ($tB_{1/t}$ is a Brownian motion) $\limsup_{t \to 0}B_t/\sqrt{2t\log\log(1/t)} = 1$: paths are H\"older
+continuous of every order $<\frac12$ but not of order $\frac12$ \cite{morters-peres}.
+\end{enumerate}
+\end{remark}
+
+\begin{remark}[Donsker's invariance principle]\label{martingales:remark-donsker}
+If $S_n$ is a random walk with i.i.d.\ steps of mean $0$ and variance $1$, the rescaled interpolated paths $t \mapsto S_{\lfloor nt\rfloor}/\sqrt n$ converge in distribution, as random elements of the space of paths with the uniform
+topology, to Brownian motion. Hence functionals of random walks, such as $\max_{k \leq n}S_k/\sqrt n$ or the fraction of time spent positive (Paul L\'evy's arcsine law), converge in distribution to the corresponding Brownian
+functionals; tightness is proved with the Arzel\`a--Ascoli theorem (Theorem~\ref{general-topology:theorem-arzela-ascoli}) and Prokhorov's theorem \cite{morters-peres}.
+\end{remark}
+
+\section{Stochastic calculus}\label{martingales:section-stochastic-calculus}
+
+Let $B$ be a Brownian motion and $\mathcal{F}_t = \sigma(B_s : s \leq t)$. We want to define $\int_0^tH_s\,dB_s$ for random integrands $H$ that do not anticipate the future, as the continuous-time analogue of the martingale
+transform of Definition~\ref{martingales:definition-transform}.
+
+\begin{definition}\label{martingales:definition-simple-process}
+A \emph{simple process} is $H_s = \sum_{k=0}^{m-1}\eta_k\mathbf{1}_{(t_k, t_{k+1}]}(s)$ with $0 = t_0 < \cdots < t_m$ and bounded $\mathcal{F}_{t_k}$-measurable random variables $\eta_k$. Its \emph{It\^o integral} is
+$\int_0^\infty H_s\,dB_s = \sum_k\eta_k(B_{t_{k+1}} - B_{t_k})$.
+\end{definition}
+
+\begin{proposition}[It\^o isometry]\label{martingales:proposition-ito-isometry}
+For simple $H$, $E[\int H\,dB] = 0$ and $E\bigl[\bigl(\int_0^\infty H_s\,dB_s\bigr)^2\bigr] = E\int_0^\infty H_s^2\,ds$.
+\end{proposition}
+
+\begin{proof}
+Let $\Delta_k = B_{t_{k+1}} - B_{t_k}$, independent of $\mathcal{F}_{t_k}$ with mean $0$ and variance $t_{k+1} - t_k$. Then $E[\eta_k\Delta_k] = E[\eta_k]E[\Delta_k] = 0$. For $j < k$, $\eta_j\Delta_j\eta_k$ is $\mathcal{F}_{t_k}$-measurable, so
+$E[\eta_j\Delta_j\eta_k\Delta_k] = 0$; and $E[\eta_k^2\Delta_k^2] = E[\eta_k^2](t_{k+1} - t_k)$. Summing, $E[(\sum_k\eta_k\Delta_k)^2] = \sum_kE[\eta_k^2](t_{k+1} - t_k) = E\int H^2\,ds$.
+\end{proof}
+
+\begin{theorem}\label{martingales:theorem-ito-integral}
+Let $\mathcal{L}^2$ be the space of processes $H$, measurable in $(s, \omega)$ and adapted ($H_s$ is $\mathcal{F}_s$-measurable), with $E\int_0^\infty H_s^2\,ds < \infty$. Simple processes are dense in $\mathcal{L}^2$ for the norm
+$(E\int H^2\,ds)^{1/2}$, so the It\^o integral extends uniquely to an isometry $\mathcal{L}^2 \to L^2(\Omega)$. The process $t \mapsto \int_0^tH_s\,dB_s = \int H_s\mathbf{1}_{[0, t]}(s)\,dB_s$ has a continuous version, which is a martingale.
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+Given the density, the extension is the extension of a uniformly continuous linear map from a dense subspace into a complete space. For density: bounded $H$ with continuous paths are approximated by the left-endpoint simple
+processes $\sum_kH_{t_k}\mathbf{1}_{(t_k, t_{k+1}]}$, by dominated convergence; general $H$ are approximated by such processes by truncation and convolution in time with a one-sided mollifier, which preserves adaptedness.
+The martingale property holds for simple $H$ by Proposition~\ref{martingales:proposition-conditional-expectation-properties} and passes to $L^2$ limits; continuity follows from Doob's $L^2$ inequality
+(Theorem~\ref{martingales:theorem-doob-lp}, in its continuous-time form) and Borel--Cantelli. These are the verifications we omit \cite{karatzas-shreve}.
+\end{proof}
+
+\begin{example}\label{martingales:example-ito-bdb}
+$\int_0^tB_s\,dB_s = \frac12(B_t^2 - t)$. Indeed, for a partition $0 = t_0 < \cdots < t_m = t$, the left-endpoint simple process $H^{(m)} = \sum_kB_{t_k}\mathbf{1}_{(t_k, t_{k+1}]}$ satisfies
+$E\int_0^t(B_s - H^{(m)}_s)^2ds = \sum_k\frac12(t_{k+1} - t_k)^2 \to 0$, so $\int H^{(m)}\,dB \to \int_0^tB\,dB$ in $L^2$; and
+\[
+\int H^{(m)}\,dB = \sum_kB_{t_k}(B_{t_{k+1}} - B_{t_k}) = \frac12B_t^2 - \frac12\sum_k(B_{t_{k+1}} - B_{t_k})^2 \to \frac12(B_t^2 - t)
+\]
+in $L^2$ by Proposition~\ref{martingales:proposition-quadratic-variation}. The extra term $-\frac t2$, absent from the ordinary calculus $\int x\,dx = \frac{x^2}{2}$, comes from the quadratic variation; with midpoint sums one would get
+the \emph{Stratonovich} integral $\frac12B_t^2$, which obeys the ordinary chain rule but is not a martingale.
+\end{example}
+
+\begin{theorem}[It\^o's formula]\label{martingales:theorem-ito-formula}
+For $f \in C^2(\RR)$ with bounded $f^{\prime}$ and $f^{\prime\prime}$,
+\[
+f(B_t) = f(B_0) + \int_0^tf^{\prime}(B_s)\,dB_s + \frac12\int_0^tf^{\prime\prime}(B_s)\,ds.
+\]
+More generally, for $f \in C^{1,2}([0, \infty) \times \RR)$ with bounded derivatives, $df(t, B_t) = \partial_tf\,dt + \partial_xf\,dB_t + \frac12\partial_x^2f\,dt$.
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+For a partition of $[0, t]$, Taylor's formula gives $f(B_t) - f(B_0) = \sum_kf^{\prime}(B_{t_k})\Delta_kB + \frac12\sum_kf^{\prime\prime}(B_{t_k})(\Delta_kB)^2 + R$, where $|R| \leq \sum_k\omega(\max_j|\Delta_jB|)(\Delta_kB)^2$ with $\omega$ the modulus
+of continuity of $f^{\prime\prime}$ on the range of the path. As the mesh tends to $0$: the first sum tends to $\int f^{\prime}(B)\,dB$ in $L^2$, as in Example~\ref{martingales:example-ito-bdb}; the second tends to $\frac12\int f^{\prime\prime}(B_s)\,ds$,
+by the argument of Proposition~\ref{martingales:proposition-quadratic-variation} applied with the weights $f^{\prime\prime}(B_{t_k})$; and $R \to 0$ in probability. The omitted verification is the weighted quadratic variation estimate
+\cite{karatzas-shreve}.
+\end{proof}
+
+Informally: $(dB_t)^2 = dt$, $dt\,dB_t = 0$, $(dt)^2 = 0$, and Taylor's formula is kept to second order. With $f(x) = x^2$ the formula recovers Example~\ref{martingales:example-ito-bdb}.
+
+\begin{example}[Geometric Brownian motion]\label{martingales:example-geometric-brownian}
+$X_t = X_0\exp(\sigma B_t + (\mu - \frac12\sigma^2)t)$ satisfies, by It\^o's formula with $f(t, x) = X_0e^{\sigma x + (\mu - \sigma^2/2)t}$,
+\[
+dX_t = \mu X_t\,dt + \sigma X_t\,dB_t,
+\]
+the \emph{stochastic differential equation} of a price with constant expected return $\mu$ and volatility $\sigma$. Note $E[X_t] = X_0e^{\mu t}$, while the typical growth rate is $\mu - \frac{\sigma^2}{2}$: $\frac1t\log X_t \to \mu - \frac{\sigma^2}{2}$
+almost surely, by the law of large numbers for $B_t/t$.
+\end{example}
+
+\begin{remark}\label{martingales:remark-stochastic-calculus}
+\begin{enumerate}
+\item \emph{Stochastic differential equations.} $dX_t = b(X_t)\,dt + \sigma(X_t)\,dB_t$ with Lipschitz $b$, $\sigma$ has a unique strong solution, by Picard iteration in the space of continuous adapted processes with the It\^o isometry and
+Doob's inequality replacing the sup norm estimates of the deterministic case (Theorem~\ref{real-analysis:theorem-picard-lindelof}). The solution is a Markov process with generator $Lf = bf^{\prime} + \frac12\sigma^2f^{\prime\prime}$; the
+\emph{Ornstein--Uhlenbeck process} $dX = -\theta X\,dt + \sigma\,dB$ is the Gaussian stationary example \cite{oksendal}.
+\item \emph{Girsanov's theorem.} Under the probability $dQ = \exp(\theta B_T - \frac12\theta^2T)\,dP$, the process $B_t - \theta t$, $t \leq T$, is a Brownian motion: drift can be removed by a change of measure. \emph{L\'evy's
+characterisation}: a continuous martingale $M$ with $M_0 = 0$ and $M_t^2 - t$ a martingale is a Brownian motion. \emph{Martingale representation}: every square integrable $\mathcal{F}_T$-measurable variable is
+$E[X] + \int_0^TH\,dB$ \cite{revuz-yor}.
+\item \emph{Feynman--Kac.} The solution of $\partial_tu = \frac12\Delta u - Vu$, $u(0, \cdot) = g$, is $u(t, x) = E_x[g(B_t)e^{-\int_0^tV(B_s)\,ds}]$: parabolic PDE and Brownian expectations are the same thing.
+\item \emph{Black--Scholes.} If a share follows geometric Brownian motion and money earns interest at rate $r$, the arbitrage-free price of a European call option with strike $K$ and maturity $T$ is the expectation of its
+discounted payoff under the measure making $e^{-rt}X_t$ a martingale (Girsanov); this gives the Black--Scholes formula
+$C = X_0\Phi(d_1) - Ke^{-rT}\Phi(d_2)$ with $d_{1,2} = \frac{\log(X_0/K) + (r \pm \sigma^2/2)T}{\sigma\sqrt T}$ \cite{black-scholes-1973}.
+\end{enumerate}
+\end{remark}
+
+\section{Exercises}\label{martingales:section-exercises}
+
+\begin{exercise}\label{martingales:exercise-projection}
+Let $X \in L^2$ and $\mathcal{G}$ a sub-$\sigma$-algebra. Show that $E[(X - Y)^2] \geq E[(X - E[X \mid \mathcal{G}])^2]$ for every $\mathcal{G}$-measurable $Y \in L^2$, and that $\operatorname{Var}X = E[\operatorname{Var}(X \mid \mathcal{G})] + \operatorname{Var}E[X \mid \mathcal{G}]$, where
+$\operatorname{Var}(X \mid \mathcal{G}) = E[X^2 \mid \mathcal{G}] - E[X \mid \mathcal{G}]^2$.
+\end{exercise}
+
+\begin{solution}
+With $Z = E[X \mid \mathcal{G}]$, $X - Z \perp L^2(\mathcal{G})$ (Theorem~\ref{martingales:theorem-conditional-expectation}), so $E[(X - Y)^2] = E[(X - Z)^2] + E[(Z - Y)^2]$ by Pythagoras. For the variance formula,
+$E[\operatorname{Var}(X \mid \mathcal{G})] = E[X^2] - E[Z^2]$ and $\operatorname{Var}Z = E[Z^2] - E[X]^2$ (using $E[Z] = E[X]$); add.
+\end{solution}
+
+\begin{exercise}\label{martingales:exercise-hth}
+A fair coin is tossed until the pattern $HTH$ appears. Show that the expected number of tosses is $10$, whereas for $HHT$ it is $8$.
+\end{exercise}
+
+\begin{solution}
+Let $e_0$, $e_1$, $e_2$ be the expected remaining numbers of tosses when the current progress towards $HTH$ is nothing, $H$, $HT$. Conditioning on the next toss (a Markov chain argument): $e_0 = 1 + \frac12e_1 + \frac12e_0$,
+$e_1 = 1 + \frac12e_1 + \frac12e_2$, $e_2 = 1 + \frac12\cdot 0 + \frac12e_0$. So $e_0 = 2 + e_1$, $e_1 = 2 + e_2$, $e_2 = 1 + \frac12e_0$, whence $e_0 = 5 + \frac12e_0$ and $e_0 = 10$. For $HHT$: $e_0 = 1 + \frac12e_1 + \frac12e_0$,
+$e_1 = 1 + \frac12e_2 + \frac12e_0$ (after $H$, a $T$ destroys progress), $e_2 = 1 + \frac12e_2 + 0$ (after $HH$, a further $H$ keeps $HH$); so $e_2 = 2$, $e_0 = 2 + e_1$, $e_1 = 2 + \frac12e_0$, and $e_0 = 8$. The difference comes from
+the self-overlap of $HTH$.
+\end{solution}
+
+\begin{exercise}\label{martingales:exercise-polya}
+In P\'olya's urn (Example~\ref{martingales:example-convergence}(1)), show that the number of red balls after $n$ draws is uniformly distributed on $\{1, \ldots, n + 1\}$, and deduce that the limit of $R_n$ is uniform on $[0, 1]$.
+\end{exercise}
+
+\begin{solution}
+A given sequence of draws with $k$ reds and $n - k$ blues has probability $\frac{k!\,(n - k)!}{(n + 1)!}$: the numerators of the successive probabilities are $1, 2, \ldots, k$ for the red draws and $1, \ldots, n - k$ for the blue ones,
+in some order, and the denominators are $2, 3, \ldots, n + 1$. Multiplying by $\binom nk$ gives $\frac{1}{n + 1}$ for each $k \in \{0, \ldots, n\}$, that is $k + 1$ red balls. So $R_n$ is uniform on $\{\frac{1}{n + 2}, \ldots, \frac{n + 1}{n + 2}\}$, which
+converges in distribution to the uniform law; since $R_n$ converges almost surely, the limit is uniform (Proposition~\ref{probability:proposition-convergence-distribution}).
+\end{solution}
+
+\begin{exercise}\label{martingales:exercise-walk-expected-time}
+Let $S_n$ be the simple random walk started at $0$ and $T = \inf\{n : S_n = 1\}$. Show without computation that $E[T] = \infty$, using Wald's identity.
+\end{exercise}
+
+\begin{solution}
+$T < \infty$ almost surely (Counterexample~\ref{martingales:counterexample-optional-stopping}). If $E[T] < \infty$, Theorem~\ref{martingales:theorem-wald} would give $E[S_T] = 0\cdot E[T] = 0$, but $S_T = 1$.
+\end{solution}
+
+\begin{exercise}\label{martingales:exercise-knight}
+Show that the knight's graph on an $8 \times 8$ chessboard has $168$ edges, and deduce Example~\ref{martingales:example-knight}.
+\end{exercise}
+
+\begin{solution}
+A knight move is a vector $\pm(1, 2)$, $\pm(2, 1)$, $\pm(1, -2)$ or $\pm(2, -1)$; up to sign there are $4$ directions. The move by $(1, 2)$ is possible from the $7 \cdot 6 = 42$ squares $(x, y)$ with $x \leq 7$, $y \leq 6$, and likewise $42$
+for each other direction, so there are $4 \cdot 42 = 168$ edges and the total degree is $336$. A corner has degree $2$; by Theorem~\ref{martingales:theorem-stationary} and Example~\ref{martingales:example-stationary}(1),
+$E_{\text{corner}}[T] = 336/2 = 168$ (the graph is connected).
+\end{solution}
+
+\begin{exercise}\label{martingales:exercise-branching-poisson}
+For a branching process with $\mathrm{Poi}(m)$ offspring, show that the extinction probability $q$ satisfies $q = e^{m(q - 1)}$, and compute $q$ numerically for $m = 2$.
+\end{exercise}
+
+\begin{solution}
+$f(s) = \sum_ke^{-m}\frac{m^ks^k}{k!} = e^{m(s - 1)}$, and $q$ is the smallest fixed point by Theorem~\ref{martingales:theorem-branching}. For $m = 2$, iterating $q_{n+1} = e^{2(q_n - 1)}$ from $q_0 = 0$ gives
+$0.135, 0.177, 0.193, 0.199, \ldots \to q \approx 0.2032$.
+\end{solution}
+
+\begin{exercise}\label{martingales:exercise-wiener-integral}
+For a deterministic $f \in L^2([0, \infty))$, show that $\int_0^\infty f(s)\,dB_s$ has law $N(0, \|f\|_2^2)$. Deduce that $\int_0^ts\,dB_s \sim N(0, \frac{t^3}{3})$.
+\end{exercise}
+
+\begin{solution}
+For a step function $f = \sum_kc_k\mathbf{1}_{(t_k, t_{k+1}]}$, the integral $\sum_kc_k\Delta_kB$ is a sum of independent normal variables, hence $N(0, \sum c_k^2(t_{k+1} - t_k)) = N(0, \|f\|_2^2)$
+(Example~\ref{probability:example-characteristic-functions}(2)). Step functions are dense in $L^2$, the integral is an isometry (Theorem~\ref{martingales:theorem-ito-integral}), and $L^2$ limits of $N(0, \sigma_n^2)$ variables with
+$\sigma_n \to \sigma$ are $N(0, \sigma^2)$: their characteristic functions converge (by $|e^{ix} - e^{iy}| \leq |x - y|$) to $e^{-\sigma^2t^2/2}$. For $f(s) = s\mathbf{1}_{[0, t]}$, $\|f\|_2^2 = t^3/3$.
+\end{solution}
+
+\begin{exercise}\label{martingales:exercise-ehrenfest-return}
+For the Ehrenfest urn with $N$ molecules, show that the expected return time to the state where all molecules are on the left is $2^N$, while the expected return time to $N/2$ ($N$ even) is $2^N/\binom{N}{N/2} \sim \sqrt{\pi N/2}$.
+\end{exercise}
+
+\begin{solution}
+The chain is irreducible on a finite set with reversible distribution $\pi(k) = \binom Nk2^{-N}$ (Example~\ref{martingales:example-stationary}(2)); by Theorem~\ref{martingales:theorem-stationary}, $E_k[T_k] = 1/\pi(k)$. For $k = N$ this is
+$2^N$; for $k = N/2$ it is $2^N/\binom N{N/2}$, and $\binom{N}{N/2} \sim 2^N\sqrt{2/(\pi N)}$ by Stirling's formula. This resolves the paradox of Loschmidt and Zermelo: the second law of thermodynamics is not violated in
+practice, since for $N = 10^{23}$ the recurrence time $2^N$ dwarfs the age of the universe.
+\end{solution}

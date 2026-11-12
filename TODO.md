@@ -166,13 +166,22 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
   Skorokhod representation, uniform integrability, Kolmogorov extension, exchangeability
   (de Finetti), concentration (McDiarmid, Talagrand). Independence and Borel–Cantelli stay in
   measure-theory and are cited.
-- `martingales` (planned, with the stochastic-process outlines): Markov chains (recurrence,
-  stationary distributions, mixing times), Poisson processes, Brownian motion (construction,
-  path properties, strong Markov, reflection), stochastic calculus (Itô integral, Itô's formula,
-  Girsanov, SDEs), random walks and potential theory, percolation (survey).
-- `statistics` (planned): estimation, sufficiency, Cramér–Rao, maximum likelihood, tests and
-  Neyman–Pearson, confidence intervals, linear models, Bayesian inference, nonparametric methods,
-  bootstrap.
+- `martingales` (Stochastic Processes, draft 2026-11-08): to deepen: regular conditional laws
+  on Polish spaces, optional sampling for general stopping times and continuous time, Doob
+  decomposition, L^p convergence, martingale CLT, Kolmogorov extension and continuity theorems,
+  full proofs of Lévy's construction, strong Markov for Brownian motion, reflection, Donsker,
+  LIL, Brownian motion and the Dirichlet problem with proofs, continuous-time Markov chains
+  and generators, mixing times and spectral gap in depth, electrical networks, Itô integral
+  density and Itô's formula with full proofs, Girsanov, SDE existence/uniqueness, Feynman–Kac,
+  local times, Lévy processes, percolation (survey), interacting particle systems.
+- `statistics` (draft 2026-11-08): to deepen: factorisation theorem in general (Halmos–Savage),
+  minimal sufficiency, Basu, completeness of exponential families, multiparameter Cramér–Rao,
+  MLE consistency (Wald) for general parameter spaces, Slutsky and the delta method, Le Cam
+  theory (LAN, contiguity, Hájek convolution), Wilks with proof, UMP tests for monotone
+  likelihood ratio and UMPU tests, Pearson chi-square, Gaussian vectors and Cochran in general,
+  James–Stein with proof, admissibility and minimax, Bernstein–von Mises, DKW, Kolmogorov–
+  Smirnov, empirical processes, bootstrap consistency, density estimation, VC theorem with full
+  proof, Rademacher complexity, PAC lower bounds, kernels and SVMs, time series.
 - `information-theory` (planned): entropy, source and channel coding theorems, Kraft, Huffman,
   error-correcting codes (Hamming, Reed–Solomon, BCH, bounds), rate distortion.
 
