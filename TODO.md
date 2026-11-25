@@ -215,10 +215,15 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
 - Arithmetic of curves stays in Part *Algebraic and Arithmetic Geometry* (modular forms, elliptic curves).
 
 ### IX. Differential Equations and Dynamical Systems
-- `ordinary-differential-equations` (planned): as in its outline; plus Floquet theory, Sturm
-  comparison, boundary value problems and Green's functions, Hamiltonian systems (pointer to
-  symplectic), bifurcation theory, chaos (Smale horseshoe, Lorenz), circle maps and rotation number.
-  Holomorphic solutions, regular singular points and Frobenius are in special-functions: cite them.
+- `ordinary-differential-equations` (draft 2026-11-25): to deepen: maximal solutions without
+  uniqueness (Zorn) and Kneser's theorem, Osgood with proof, comparison theorems and differential
+  inequalities, instability theorem (Chetaev), converse Lyapunov theorems, full proof of
+  Lotka-Volterra periodicity, Sturm oscillation theorem with the Prufer angle, singular
+  Sturm-Liouville problems and Weyl's alternative, Hartman-Grobman and stable manifold theorem with
+  proofs, centre manifolds, general saddle-node and Hopf theorems, Poincare-Bendixson with full
+  proof, Lienard's theorem, Poincare maps and structural stability, circle maps and rotation number
+  (Denjoy), Sharkovskii with proof, symbolic dynamics and the horseshoe, Hamiltonian systems and
+  KAM (survey), delay equations, pole placement with proof, Kalman filter.
 - `ergodic-theory` (planned): plus the ergodicity of the Gauss map (see continued-fractions),
   Furstenberg's multiple recurrence and Szemerédi, topological dynamics, entropy (Kolmogorov–Sinai).
 - `sobolev-spaces` (planned, PDE): plus first-order equations and characteristics, conservation

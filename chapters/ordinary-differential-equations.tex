@@ -1,38 +1,1059 @@
 \chapter{Ordinary Differential Equations and Dynamical Systems}\label{ordinary-differential-equations}
-\chapterstatus{planned}
+\chapterstatus{draft}
 
+A differential equation prescribes the velocity of a moving point as a function of its time and position, and asks for the motion. Newton's laws, the growth of populations, the spread of an epidemic, the
+currents in an electrical circuit and the reactions in a chemical plant are all of this form. Chapter~\ref{real-analysis} proved the basic facts: local existence and uniqueness for locally Lipschitz equations
+(Theorem~\ref{real-analysis:theorem-picard-lindelof}), Gr\"onwall's lemma, and global existence for linear equations. This chapter takes the subject up from there, in two directions. The first is \emph{quantitative}: we
+solve linear equations completely, find the solutions of analytic equations as power series, and study boundary value problems. The second is \emph{qualitative}: most nonlinear equations cannot be solved in closed form,
+and Poincar\'e's idea was to describe the solutions without solving, through equilibria, stability, periodic orbits, limit sets and bifurcations. This is the theory of dynamical systems, which also includes iterated
+maps and chaos.
+\begin{itemize}
+\item Section~\ref{ordinary-differential-equations:section-ode}: Peano's existence theorem, global existence, scalar equations solved by quadrature.
+\item Section~\ref{ordinary-differential-equations:section-dependence}: flows, and continuous and differentiable dependence on initial data and parameters; Liouville's formula.
+\item Section~\ref{ordinary-differential-equations:section-linear}: linear systems, the matrix exponential, equations with constant coefficients, Floquet theory and parametric resonance.
+\item Section~\ref{ordinary-differential-equations:section-stability}: stability of equilibria, linearisation and Lyapunov functions.
+\item Section~\ref{ordinary-differential-equations:section-sturm-liouville}: Sturm's oscillation theorems and Sturm--Liouville eigenvalue problems.
+\item Section~\ref{ordinary-differential-equations:section-complex-domain}: real analytic equations, Euler equations and the Airy equation, building on the complex theory of Chapter~\ref{special-functions}.
+\item Section~\ref{ordinary-differential-equations:section-applications}: population dynamics, epidemics and control theory.
+\item Section~\ref{ordinary-differential-equations:section-dynamical-systems}: flows, limit sets, LaSalle's principle and the Poincar\'e--Bendixson theorem.
+\item Section~\ref{ordinary-differential-equations:section-hyperbolic}: hyperbolic equilibria, invariant manifolds and bifurcations.
+\item Section~\ref{ordinary-differential-equations:section-one-dimensional}: iterated maps of an interval, the logistic family, ``period three implies chaos''.
+\end{itemize}
 
-\section{Ordinary Differential Equations}\label{ordinary-differential-equations:section-ode}
-Existence, uniqueness and qualitative behaviour of solutions of ordinary differential equations,
-continuing the first results of Chapter~\ref{real-analysis}.
+\noindent\textbf{Prerequisites.} Chapter~\ref{real-analysis} (Real Analysis), Chapter~\ref{general-topology} (General Topology), Chapter~\ref{linear-algebra} (Linear Algebra), Chapter~\ref{complex-analysis} (Complex Analysis),
+Chapter~\ref{special-functions} (Special Functions) and Chapter~\ref{functional-analysis} (Functional Analysis). References: \cite{hartman-ode}, \cite{coddington-levinson}, \cite{teschl-ode}, \cite{hirsch-smale-devaney}, \cite{guckenheimer-holmes}.
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{real-analysis} (Real Analysis), Chapter~\ref{general-topology} (General Topology) and Chapter~\ref{linear-algebra} (Linear Algebra).
+\section{Existence, uniqueness and maximal solutions}\label{ordinary-differential-equations:section-ode}
 
-\noindent\textbf{Planned contents.}
+\begin{notation}\label{ordinary-differential-equations:notation-ode}
+Throughout, $D \subseteq \RR \times \RR^n$ is open, $F \colon D \to \RR^n$ is continuous, and we study the equation $x' = F(t, x)$ of Definition~\ref{real-analysis:definition-ode}, where $x^{\prime} = dx/dt$ is the derivative
+with respect to the \emph{time} $t$. $\|\cdot\|$ is the Euclidean norm on $\RR^n$ and, for matrices, the operator norm $\|A\| = \sup_{\|v\| \leq 1}\|Av\|$, which satisfies $\|AB\| \leq \|A\|\|B\|$. A solution with
+$\varphi(t_0) = x_0$ is a solution of the \emph{initial value problem} with initial condition $(t_0, x_0)$. The equation is \emph{autonomous} if $F$ does not depend on $t$; then we write $F \colon U \to \RR^n$ with $U \subseteq \RR^n$
+open and call $F$ a \emph{vector field}.
+\end{notation}
+
+\emph{Reductions.} An equation of order $k$, $y^{(k)} = f(t, y, y^{\prime}, \ldots, y^{(k-1)})$, is equivalent to the first-order system for $x = (y, y^{\prime}, \ldots, y^{(k-1)})$ with $x_1^{\prime} = x_2$, \ldots, $x_{k-1}^{\prime} = x_k$,
+$x_k^{\prime} = f(t, x)$. A non-autonomous equation becomes autonomous by adding time as a coordinate: $(s, x)^{\prime} = (1, F(s, x))$. And an equation depending on parameters $\mu$ becomes one without parameters by adding the
+equation $\mu^{\prime} = 0$. So first-order autonomous systems are general, and we use whichever form is convenient.
+
+\begin{theorem}[Peano]\label{ordinary-differential-equations:theorem-peano}
+If $F$ is continuous on $D$ and $(t_0, x_0) \in D$, there is $\delta > 0$ and a solution of $x' = F(t, x)$ on $[t_0 - \delta, t_0 + \delta]$ with $\varphi(t_0) = x_0$.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: a box.} Choose $a, b > 0$ with $R = [t_0 - a, t_0 + a] \times \overline{B}(x_0, b) \subseteq D$, let $M = \sup_R\|F\| + 1$ and $\delta = \min(a, b/M)$. We construct a solution on $[t_0, t_0 + \delta]$; the interval
+$[t_0 - \delta, t_0]$ is treated in the same way, and the two solutions glue at $t_0$.
+
+\emph{Step 2: Euler polygons.} For $k \geq 1$ let $h = \delta/k$ and $t_j = t_0 + jh$. Define $\varphi_k(t_0) = x_0$ and, inductively,
+$\varphi_k(t) = \varphi_k(t_j) + (t - t_j)F(t_j, \varphi_k(t_j))$ for $t \in [t_j, t_{j+1}]$. By induction on $j$, $\|\varphi_k(t) - x_0\| \leq M(t - t_0) \leq b$, so $(t_j, \varphi_k(t_j)) \in R$ and the construction can go on. Each
+$\varphi_k$ is $M$-Lipschitz.
+
+\emph{Step 3: a limit.} The family $(\varphi_k)$ is equicontinuous (it is uniformly Lipschitz) and bounded, so by the Arzel\`a--Ascoli theorem (Theorem~\ref{real-analysis:theorem-arzela-ascoli}) a subsequence converges
+uniformly to a continuous $\varphi \colon [t_0, t_0 + \delta] \to \overline{B}(x_0, b)$.
+
+\emph{Step 4: the limit is a solution.} Let $\tau_k(s) = t_j$ for $s \in [t_j, t_{j+1})$. Then $\varphi_k(t) = x_0 + \int_{t_0}^tF(\tau_k(s), \varphi_k(\tau_k(s)))\,ds$, since $\varphi_k$ is affine with this slope on each step. Now
+$|\tau_k(s) - s| \leq h$ and $\|\varphi_k(\tau_k(s)) - \varphi(s)\| \leq Mh + \|\varphi_k - \varphi\|_\infty$, which tend to $0$ along the subsequence, uniformly in $s$. As $F$ is uniformly continuous on the compact $R$, the integrands
+converge uniformly to $F(s, \varphi(s))$, and in the limit $\varphi(t) = x_0 + \int_{t_0}^tF(s, \varphi(s))\,ds$. By Definition~\ref{real-analysis:definition-ode}, $\varphi$ is a solution.
+\end{proof}
+
+This answers Exercise~\ref{real-analysis:exercise-peano}. Without uniqueness the gluing argument of Theorem~\ref{real-analysis:theorem-picard-lindelof}(3) does not apply directly, but Zorn's lemma still extends every
+solution to a maximal one, which leaves every compact subset of $D$ \cite[Chapter II]{hartman-ode}.
+
+\begin{counterexample}\label{ordinary-differential-equations:counterexample-peano}
 \begin{enumerate}
-\item Picard--Lindel\"of revisited, Peano's existence theorem, maximal solutions and blow-up.
-\item Gr\"onwall's inequality; continuous and differentiable dependence on initial data and parameters.
-\item Linear systems: the matrix exponential, Jordan form, variation of constants, Floquet theory.
-\item Stability: linearisation, Lyapunov functions, LaSalle's invariance principle.
-\item Boundary value problems and Sturm--Liouville theory; oscillation theorems.
-\item Equations in the complex domain: regular singular points and Frobenius' method.
-\item Applications: population dynamics (logistic, Lotka--Volterra), epidemic models (SIR, the basic reproduction number), chemical kinetics; linear control systems, controllability and
-observability (Kalman rank condition), the Kalman filter (survey).
-\item Exercises with solutions.
+\item \emph{Non-uniqueness can be massive.} For $x' = 2\sqrt{|x|}$, $x(0) = 0$, every function $x(t) = (t - c)^2$ for $t \geq c$, $x = 0$ on $[d, c]$, $x(t) = -(t - d)^2$ for $t \leq d$ (with $d \leq 0 \leq c$) is a solution:
+infinitely many solutions, filling the region between the two parabolas. Kneser's theorem says that the set of points reached at time $t$ by the solutions of an initial value problem is always a compact connected set
+\cite[Chapter II]{hartman-ode}.
+\item \emph{Continuity is needed.} The equation $x' = H(-x)$, where $H$ is the Heaviside function ($1$ on $[0, \infty)$, $0$ on $(-\infty, 0)$), has no solution with $x(0) = 0$ on any interval $[0, \delta]$: a solution would
+satisfy $x' \in \{0, 1\}$, hence by Darboux's theorem (Theorem~\ref{real-analysis:theorem-darboux}) $x^{\prime}$ is constant; $x^{\prime} = 1$ gives $x > 0$ and then $x' = 0$, and $x' = 0$ gives $x = 0$ and then $x' = 1$.
+\item \emph{Infinite dimensions.} Peano's theorem fails in infinite-dimensional Banach spaces (Dieudonn\'e, 1950): the proof used compactness of closed balls. Picard--Lindel\"of still holds there, since its proof uses only
+completeness.
 \end{enumerate}
+\end{counterexample}
 
-\section{Dynamical Systems}\label{ordinary-differential-equations:section-dynamical-systems}
-The long-time behaviour of flows and iterated maps: limit sets, hyperbolicity, bifurcations and chaos.
+\begin{remark}\label{ordinary-differential-equations:remark-osgood}
+Lipschitz continuity is sufficient for uniqueness, not necessary. \emph{Osgood's criterion}: if $\|F(t, x) - F(t, y)\| \leq \omega(\|x - y\|)$ with $\omega$ continuous, increasing, $\omega(0) = 0$ and
+$\int_0^1\frac{du}{\omega(u)} = \infty$, solutions are unique; this covers $\omega(u) = u\log\frac1u$, and fails for $\omega(u) = 2\sqrt u$, as in the counterexample \cite[Chapter III]{hartman-ode}.
+\end{remark}
 
-\noindent\textbf{Prerequisites.} Section~\ref{ordinary-differential-equations:section-ode}.
+\begin{proposition}[Global existence]\label{ordinary-differential-equations:proposition-global}
+Let $F \colon I \times \RR^n \to \RR^n$ be continuous and locally Lipschitz in $x$, with $I$ an open interval, and suppose $\|F(t, x)\| \leq a(t) + b(t)\|x\|$ with $a$, $b$ continuous on $I$. Then all maximal solutions are defined on
+all of $I$. In particular, this holds when $F$ is bounded, or globally Lipschitz in $x$.
+\end{proposition}
 
-\noindent\textbf{Planned contents.}
+\begin{proof}
+Let $\varphi$ be the maximal solution with $\varphi(t_0) = x_0$, on $(\alpha, \beta)$, and suppose $\beta < \sup I$. On $[t_0, \beta]$, $a \leq A$ and $b \leq B$, so $\|\varphi(t)\| \leq \|x_0\| + A(\beta - t_0) + B\int_{t_0}^t\|\varphi\|$ and
+by Gr\"onwall's lemma (Lemma~\ref{real-analysis:lemma-gronwall}) $\varphi$ is bounded on $[t_0, \beta)$. Its graph stays in the compact set $[t_0, \beta] \times \overline{B}(0, C)$ of $D$, contradicting
+Theorem~\ref{real-analysis:theorem-picard-lindelof}(3). The same argument works at $\alpha$. A globally $L$-Lipschitz $F$ satisfies $\|F(t, x)\| \leq \|F(t, 0)\| + L\|x\|$.
+\end{proof}
+
+\begin{example}\label{ordinary-differential-equations:example-global}
 \begin{enumerate}
-\item Flows and maps, orbits, limit sets; the Poincar\'e--Bendixson theorem.
-\item Hyperbolic fixed points: Hartman--Grobman; stable and unstable manifolds.
-\item Periodic orbits and Poincar\'e maps; structural stability.
-\item Bifurcations: saddle-node, pitchfork, Hopf.
-\item One-dimensional dynamics: the logistic map, period doubling, Sharkovskii's theorem.
-\item Chaos: symbolic dynamics, the horseshoe, Lyapunov exponents.
-\item Exercises with solutions.
+\item The pendulum $\theta'' = -\sin\theta$ has global solutions: as a system $(\theta, \omega)^{\prime} = (\omega, -\sin\theta)$ it is globally Lipschitz.
+\item Quadratic growth is not enough: $x' = x^2$ blows up (Counterexample~\ref{real-analysis:counterexample-ode}), and so does $x' = 1 + x^2$, with solution $\tan t$ on $(-\frac\pi2, \frac\pi2)$.
+\item A \emph{Lyapunov-type bound} also gives global existence: for $x' = -x^3$ on $\RR$, $(x^2)^{\prime} = -2x^4 \leq 0$, so $|x(t)|$ decreases and solutions exist for all $t \geq 0$, although $F$ grows faster than linearly; backwards in time
+they blow up, $x(t) = (2t + x_0^{-2})^{-1/2}$.
 \end{enumerate}
+\end{example}
+
+\emph{Scalar autonomous equations} can be understood completely.
+
+\begin{proposition}\label{ordinary-differential-equations:proposition-scalar-autonomous}
+Let $f \colon J \to \RR$ be locally Lipschitz on an open interval $J$ and $x' = f(x)$.
+\begin{enumerate}
+\item If $f(x_0) = 0$, the maximal solution with $x(t_0) = x_0$ is constant. If $f(x_0) \neq 0$, the solution is strictly monotone, never reaches a zero of $f$, and is given implicitly by \emph{separation of variables}:
+$t - t_0 = \int_{x_0}^{x(t)}\frac{du}{f(u)}$.
+\item A bounded solution on $[t_0, \infty)$ converges to a zero of $f$ as $t \to \infty$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) The constant is a solution, and solutions are unique. If $f(x_0) \neq 0$, the solution never meets a zero $z$ of $f$, since it would then coincide with the constant solution $z$; so $f(x(t))$ has constant sign by the
+intermediate value theorem, and $x$ is strictly monotone. Let $G(y) = \int_{x_0}^y\frac{du}{f(u)}$, defined on the interval between consecutive zeros of $f$ containing $x_0$; then $(G(x(t)))^{\prime} = x^{\prime}(t)/f(x(t)) = 1$, so
+$G(x(t)) = t - t_0$. (2) A bounded monotone function has a limit $L$, with $L \in J$ if the solution is bounded inside $J$ (and its closure in $J$); then $x'(t) = f(x(t)) \to f(L)$, and if $f(L) \neq 0$, $x$ would be unbounded by the mean
+value theorem. So $f(L) = 0$.
+\end{proof}
+
+So on the line the picture is simple: the zeros of $f$ are equilibria, and between them solutions move monotonically from one to the next (the \emph{phase line}). An equilibrium where $f$ changes from $+$ to $-$ attracts its
+neighbours. In dimension $2$ solutions can rotate, and in dimension $3$ they can be chaotic (Section~\ref{ordinary-differential-equations:section-dynamical-systems}).
+
+\begin{example}[Exactly solvable equations]\label{ordinary-differential-equations:example-solvable}
+\begin{enumerate}
+\item \emph{Linear scalar equations} $x' = a(t)x + b(t)$: with $A(t) = \int_{t_0}^ta$, multiplying by the \emph{integrating factor} $e^{-A}$ gives $(e^{-A}x)^{\prime} = e^{-A}b$, so
+$x(t) = e^{A(t)}\bigl(x_0 + \int_{t_0}^te^{-A(s)}b(s)\,ds\bigr)$.
+\item \emph{Separable equations} $x' = g(t)h(x)$: away from zeros of $h$, $\int\frac{dx}{h(x)} = \int g(t)\,dt$, as in Proposition~\ref{ordinary-differential-equations:proposition-scalar-autonomous}.
+\item \emph{Bernoulli equations} $x' = a(t)x + b(t)x^m$, $m \neq 1$: the substitution $y = x^{1-m}$ gives the linear equation $y' = (1 - m)(a y + b)$.
+\item \emph{Riccati equations} $x' = a(t) + b(t)x + c(t)x^2$ are in general not solvable by quadratures (Liouville), but if one solution $x_1$ is known, $x = x_1 + 1/y$ gives a linear equation for $y$; and $x = -u^{\prime}/(cu)$ turns
+it into a linear second-order equation for $u$.
+\item \emph{Exact equations} $P(t, x) + Q(t, x)x' = 0$ with $\partial_xP = \partial_tQ$ on a convex domain: $(P, Q)$ is the gradient of a function $\Phi$ (as in the Poincar\'e lemma for $1$-forms), and the solutions are the level curves
+$\Phi(t, x(t)) = c$.
+\end{enumerate}
+\end{example}
+
+\section{Flows and dependence on initial conditions}\label{ordinary-differential-equations:section-dependence}
+
+\begin{definition}\label{ordinary-differential-equations:definition-flow}
+Let $F$ be continuous and locally Lipschitz in $x$ on $D$. For $(t_0, x_0) \in D$ let $(\alpha(t_0, x_0), \beta(t_0, x_0))$ be the interval of the maximal solution with initial condition $(t_0, x_0)$. The \emph{flow} of the equation is
+$\Phi(t, t_0, x_0)$, the value at $t$ of that solution, defined on
+$\mathcal{D} = \{(t, t_0, x_0) : (t_0, x_0) \in D, \ \alpha(t_0, x_0) < t < \beta(t_0, x_0)\}$. For an autonomous equation with vector field $F$ on $U$, $\Phi(t, t_0, x_0)$ depends only on $t - t_0$, and we write
+$\varphi_t(x_0) = \Phi(t, 0, x_0)$.
+\end{definition}
+
+\begin{proposition}[Flow properties]\label{ordinary-differential-equations:proposition-flow-properties}
+\begin{enumerate}
+\item $\Phi(t_0, t_0, x) = x$ and $\Phi(t, s, \Phi(s, t_0, x)) = \Phi(t, t_0, x)$ whenever the right side is defined and $s$ is in its interval of definition.
+\item For an autonomous equation, $\varphi_0 = \mathrm{id}$ and $\varphi_{t+s} = \varphi_t \circ \varphi_s$ where defined. If all maximal solutions are defined on $\RR$ (the vector field is \emph{complete}), $t \mapsto \varphi_t$ is a homomorphism
+from $(\RR, +)$ to the group of bijections of $U$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) Both sides, as functions of $t$, are maximal solutions with the value $\Phi(s, t_0, x)$ at $t = s$; by uniqueness they coincide. (2) If $x(t)$ solves an autonomous equation, so does $x(t + s)$; hence
+$\Phi(t + s, s, x) = \Phi(t, 0, x)$, and (1) gives $\varphi_{t+s} = \varphi_t \circ \varphi_s$. Then $\varphi_{-t}$ is inverse to $\varphi_t$.
+\end{proof}
+
+\begin{theorem}[Continuous dependence]\label{ordinary-differential-equations:theorem-continuous-dependence}
+Let $F$ be continuous and locally Lipschitz in $x$ on $D$. Then $\mathcal{D}$ is open in $\RR \times D$ and $\Phi$ is continuous on $\mathcal{D}$. More precisely, if $\varphi$ is a solution on a compact interval $[c, d] \ni t_0$, there are
+$\varepsilon > 0$ and $L$ such that for $|s_0 - t_0| < \varepsilon$ and $\|y_0 - \varphi(s_0)\| < \varepsilon$, the solution $\psi$ with $\psi(s_0) = y_0$ exists on $[c, d]$ and $\|\psi(t) - \varphi(t)\| \leq e^{L(d - c)}\|y_0 - \varphi(s_0)\|$ there.
+\end{theorem}
+
+\begin{proof}
+\emph{A tube.} The graph $\Gamma = \{(t, \varphi(t)) : t \in [c, d]\}$ is compact, so there is $r > 0$ such that the closed tube $T = \{(t, x) : t \in [c, d], \|x - \varphi(t)\| \leq r\}$ lies in $D$, and $F$ is Lipschitz in $x$ on $T$
+with some constant $L$ (a Lebesgue number argument for a finite cover of $T$ by neighbourhoods on which $F$ is Lipschitz, plus boundedness of $\|F(t, x) - F(t, y)\|/\|x - y\|$ for $\|x - y\|$ bounded below). \emph{The estimate.} Let
+$\varepsilon = re^{-L(d - c)}/2$ and let $\psi$ be the maximal solution with $\psi(s_0) = y_0$. As long as $(t, \psi(t)) \in T$, $u = \|\psi - \varphi\|$ satisfies $u(t) \leq u(s_0) + L|\int_{s_0}^tu|$, so by Gr\"onwall
+$u(t) \leq \varepsilon e^{L(d - c)} = r/2$. Hence the graph of $\psi$ cannot leave $T$ over $[c, d]$, and by Theorem~\ref{real-analysis:theorem-picard-lindelof}(3) $\psi$ exists on all of $[c, d]$, with the estimate.
+\emph{Continuity.} If $(t, t_0, x_0) \in \mathcal{D}$, apply this to the solution through $(t_0, x_0)$ on an interval $[c, d]$ containing $t$ and $t_0$ in its interior: nearby $(t^{\prime}, s_0, y_0)$ with $t^{\prime} \in (c, d)$ are in
+$\mathcal{D}$, so $\mathcal{D}$ is open, and $\|\Phi(t^{\prime}, s_0, y_0) - \Phi(t, t_0, x_0)\| \leq \|\psi(t^{\prime}) - \varphi(t^{\prime})\| + \|\varphi(t^{\prime}) - \varphi(t)\|$, where $\|y_0 - \varphi(s_0)\| \leq \|y_0 - x_0\| + \|\varphi(t_0) - \varphi(s_0)\|$.
+\end{proof}
+
+\begin{theorem}[Differentiable dependence]\label{ordinary-differential-equations:theorem-differentiable-dependence}
+If $F$ is of class $C^k$ on $D$, $1 \leq k \leq \infty$, the flow $\Phi$ is of class $C^k$ on $\mathcal{D}$. The derivative $Y(t) = D_{x_0}\Phi(t, t_0, x_0)$ is the solution of the \emph{variational equation}
+\[
+Y^{\prime} = D_xF(t, \varphi(t))\,Y, \qquad Y(t_0) = I,
+\]
+along $\varphi(t) = \Phi(t, t_0, x_0)$, and $\partial_{t_0}\Phi(t, t_0, x_0) = -Y(t)F(t_0, x_0)$.
+\end{theorem}
+
+This proves Theorem~\ref{real-analysis:theorem-smooth-dependence}, which was quoted there.
+
+\begin{proof}
+\emph{Step 1: reduction to autonomous equations and to $k = 1$.} With $z = (s, x)$ and $G(z) = (1, F(s, x))$, the flow of $z' = G(z)$ is $\psi_\tau(t_0, x_0) = (t_0 + \tau, \Phi(t_0 + \tau, t_0, x_0))$, so it suffices to show that
+the flow $(t, x) \mapsto \varphi_t(x)$ of a $C^k$ vector field $F$ on $U$ is $C^k$. Suppose this is known for $k = 1$, together with the variational equation. For $k \geq 2$, the pair $(\varphi_t(x), D_x\varphi_t(x))$ is the flow of the
+$C^{k-1}$ vector field $(x, Y) \mapsto (F(x), DF(x)Y)$ on $U \times M_n(\RR)$, with initial value $(x, I)$; by induction on $k$ it is $C^{k-1}$, so the partial derivatives $D_x\varphi_t(x)$ and $\partial_t\varphi_t(x) = F(\varphi_t(x))$ are
+$C^{k-1}$, and $\varphi$ is $C^k$.
+
+\emph{Step 2: the candidate derivative.} Fix $x$ and a compact interval $[0, d]$ (negative times are similar) on which $\varphi_t(x)$ is defined. By Theorem~\ref{ordinary-differential-equations:theorem-continuous-dependence} there are
+$\varepsilon$, $r$, $L$ such that for $\|h\| < \varepsilon$, $\varphi_t(x + h)$ exists on $[0, d]$, stays in a compact tube $T$ around the orbit on which $\|DF\| \leq L$, and $\|\varphi_t(x + h) - \varphi_t(x)\| \leq e^{Ld}\|h\|$. Let $Y(t)$ solve
+$Y' = A(t)Y$, $Y(0) = I$, with $A(t) = DF(\varphi_t(x))$; it exists on $[0, d]$ by Proposition~\ref{real-analysis:proposition-ode-dependence}(2).
+
+\emph{Step 3: the remainder.} Let $r(t) = \varphi_t(x + h) - \varphi_t(x) - Y(t)h$. Then $r(0) = 0$ and $r' = A(t)r + \rho(t)$ with
+$\rho(t) = F(\varphi_t(x + h)) - F(\varphi_t(x)) - DF(\varphi_t(x))(\varphi_t(x + h) - \varphi_t(x))$. By the mean value inequality in integral form and uniform continuity of $DF$ on the compact tube (shrunk so that its $x$-sections
+are convex), $\|\rho(t)\| \leq \eta(\|h\|)\,e^{Ld}\|h\|$ with $\eta(s) \to 0$ as $s \to 0$. Gr\"onwall applied to $\|r(t)\| \leq L\int_0^t\|r\| + d\,\eta(\|h\|)e^{Ld}\|h\|$ gives $\|r(t)\| \leq de^{2Ld}\eta(\|h\|)\|h\| = o(\|h\|)$.
+So $\varphi_t$ is differentiable at $x$ with $D\varphi_t(x) = Y(t)$.
+
+\emph{Step 4: continuity of the derivatives.} $\partial_t\varphi_t(x) = F(\varphi_t(x))$ is continuous in $(t, x)$. For $x^{\prime}$ near $x$, let $Y^{\prime}$ be the corresponding solution with coefficient $A^{\prime}(t) = DF(\varphi_t(x^{\prime}))$. Then
+$(Y - Y^{\prime})^{\prime} = A(Y - Y^{\prime}) + (A - A^{\prime})Y^{\prime}$, and Gr\"onwall gives $\|Y(t) - Y^{\prime}(t)\| \leq C\sup_{[0, d]}\|A - A^{\prime}\|$, which tends to $0$ as $x^{\prime} \to x$ by continuity of the flow and uniform
+continuity of $DF$ on $T$. So the partial derivatives of $\varphi$ are continuous, and $\varphi$ is $C^1$.
+
+\emph{Step 5: the derivative in $t_0$.} Differentiating $\Phi(t, t_0, \Phi(t_0, s, y)) = \Phi(t, s, y)$ (Proposition~\ref{ordinary-differential-equations:proposition-flow-properties}) in $t_0$ gives
+$\partial_{t_0}\Phi + D_{x_0}\Phi\cdot F(t_0, \Phi(t_0, s, y)) = 0$.
+\end{proof}
+
+\begin{corollary}[Parameters]\label{ordinary-differential-equations:corollary-parameters}
+If $F(t, x, \mu)$ is $C^k$ in all variables, the solution $\Phi(t, t_0, x_0, \mu)$ is $C^k$ in $(t, t_0, x_0, \mu)$, and $Z = \partial_\mu\Phi$ solves $Z' = D_xF\,Z + D_\mu F$, $Z(t_0) = 0$.
+\end{corollary}
+
+\begin{proof}
+Apply Theorem~\ref{ordinary-differential-equations:theorem-differentiable-dependence} to the system $x' = F(t, x, \mu)$, $\mu' = 0$, and read off the $\mu$-block of its variational equation.
+\end{proof}
+
+\begin{example}\label{ordinary-differential-equations:example-variational}
+For $x' = x^2$ the flow is $\varphi_t(x) = \frac{x}{1 - tx}$, defined for $tx < 1$, an open set. Its derivative $\partial_x\varphi_t(x) = (1 - tx)^{-2}$ indeed solves $Y' = 2\varphi_t(x)Y$, $Y(0) = 1$. For the pendulum with
+friction $\mu$, $\theta'' = -\sin\theta - \mu\theta'$, Corollary~\ref{ordinary-differential-equations:corollary-parameters} gives the first-order effect of friction by solving a linear equation along the frictionless motion: this
+is the starting point of \emph{perturbation theory}.
+\end{example}
+
+\begin{counterexample}\label{ordinary-differential-equations:counterexample-sensitivity}
+Continuous dependence holds on \emph{compact} time intervals, with a constant $e^{L(d - c)}$ that grows exponentially, and nothing better is true in general. For $x' = x$, nearby solutions separate like $e^t$. In chaotic systems this
+exponential separation, combined with recurrence, makes long-term prediction impossible: Lorenz found in 1963 that rounding an initial condition to three digits changed the computed weather after a few weeks of model time
+(Remark~\ref{ordinary-differential-equations:remark-chaos-flows}).
+\end{counterexample}
+
+\begin{theorem}[Liouville's formula]\label{ordinary-differential-equations:theorem-liouville}
+Let $F$ be a $C^1$ vector field on $U$ with flow $\varphi_t$. Then $\det D\varphi_t(x) = \exp\int_0^t(\operatorname{div}F)(\varphi_s(x))\,ds$, where $\operatorname{div}F = \operatorname{tr}DF = \sum_i\partial_iF_i$. If
+$\operatorname{div}F = 0$, the flow preserves Lebesgue measure: $\lambda(\varphi_t(B)) = \lambda(B)$ for every measurable $B$ on which $\varphi_t$ is defined.
+\end{theorem}
+
+\begin{proof}
+$Y(t) = D\varphi_t(x)$ solves $Y' = A(t)Y$ with $A(t) = DF(\varphi_t(x))$. Since $Y(t + h) = (I + hA(t) + o(h))Y(t)$ and $\det(I + hB) = 1 + h\operatorname{tr}B + O(h^2)$ (expand the determinant), $f(t) = \det Y(t)$
+satisfies $f' = \operatorname{tr}A(t)f$, $f(0) = 1$, and Example~\ref{ordinary-differential-equations:example-solvable}(1) gives the formula. If $\operatorname{div}F = 0$, $\varphi_t$ is a $C^1$ diffeomorphism onto its image with
+Jacobian determinant $1$, so the change of variables formula (Theorem~\ref{measure-theory:theorem-change-of-variables}) gives $\lambda(\varphi_t(B)) = \int_B|\det D\varphi_t| = \lambda(B)$.
+\end{proof}
+
+The flow of a Hamiltonian system $q' = \partial_pH$, $p' = -\partial_qH$ has divergence $\partial_q\partial_pH - \partial_p\partial_qH = 0$, so it preserves volume in phase space: this is \emph{Liouville's theorem} of statistical mechanics,
+the starting point of ergodic theory (Chapter~\ref{ergodic-theory}) and of symplectic geometry (Chapter~\ref{symplectic-geometry}).
+
+\section{Linear systems}\label{ordinary-differential-equations:section-linear}
+
+\begin{definition}\label{ordinary-differential-equations:definition-linear}
+A \emph{linear system} is $x' = A(t)x + b(t)$ with $A \colon I \to M_n(\mathbb{K})$ and $b \colon I \to \mathbb{K}^n$ continuous on an open interval $I$, $\mathbb{K} = \RR$ or $\CC$; it is \emph{homogeneous} if $b = 0$. A
+\emph{fundamental matrix} is a matrix solution $X \colon I \to M_n(\mathbb{K})$ of $X' = A(t)X$ with $X(t)$ invertible; the \emph{principal fundamental matrix} at $t_0$ has $X(t_0) = I$.
+\end{definition}
+
+\begin{proposition}\label{ordinary-differential-equations:proposition-linear-structure}
+\begin{enumerate}
+\item The solutions of the homogeneous system, all defined on $I$, form an $n$-dimensional vector space, and $x \mapsto x(t_0)$ is an isomorphism onto $\mathbb{K}^n$ for every $t_0 \in I$.
+\item If $X$ is a matrix solution, $\det X(t) = \det X(t_0)\exp\int_{t_0}^t\operatorname{tr}A(s)\,ds$; in particular $X(t)$ is invertible for all $t$ as soon as it is for one $t$.
+\item (Variation of constants) If $X$ is a fundamental matrix, the solution of $x' = A(t)x + b(t)$ with $x(t_0) = x_0$ is
+\[
+x(t) = X(t)X(t_0)^{-1}x_0 + \int_{t_0}^tX(t)X(s)^{-1}b(s)\,ds.
+\]
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) Solutions are global by Proposition~\ref{real-analysis:proposition-ode-dependence}(2) (the complex case is the real case in $\RR^{2n}$), linear combinations of solutions are solutions, and the evaluation map is
+surjective by existence and injective by uniqueness. (2) As in the proof of Theorem~\ref{ordinary-differential-equations:theorem-liouville}, $f = \det X$ satisfies $f' = \operatorname{tr}A\,f$; this computation does not need
+$X$ invertible, since $X(t + h) = (I + hA(t) + o(h))X(t)$ always. (3) $X(t)^{-1}$ is differentiable, and writing $x = X(t)c(t)$, $x' = Ax + Xc^{\prime}$, so $x$ solves the equation iff $c' = X^{-1}b$. Integrate.
+\end{proof}
+
+The name ``variation of constants'' records Lagrange's idea: the general solution $X(t)c$ of the homogeneous equation is made into a solution of the inhomogeneous one by letting the constant $c$ vary. Formula (3) is
+\emph{Duhamel's principle}: the response to a forcing $b$ is the superposition of the free evolutions of the impulses $b(s)\,ds$.
+
+\begin{proposition}[The matrix exponential]\label{ordinary-differential-equations:proposition-matrix-exponential}
+For $X \in M_n(\mathbb{K})$ the series $e^X = \sum_{k \geq 0}X^k/k!$ converges absolutely, and:
+\begin{enumerate}
+\item if $XY = YX$, then $e^{X+Y} = e^Xe^Y$; in particular $e^X$ is invertible with inverse $e^{-X}$;
+\item $t \mapsto e^{tX}$ is a homomorphism $(\RR, +) \to \GL_n(\mathbb{K})$, with derivative $\frac{d}{dt}e^{tX} = Xe^{tX} = e^{tX}X$; so $e^{(t - t_0)A}$ is the principal fundamental matrix of $x' = Ax$ at $t_0$;
+\item $e^{AXA^{-1}} = Ae^XA^{-1}$ for $A$ invertible, $(e^X)^T = e^{X^T}$ and $(e^X)^* = e^{X^*}$;
+\item $\det e^X = e^{\operatorname{tr}X}$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Since $\|X^k/k!\| \leq \|X\|^k/k!$ and $\sum_k\|X\|^k/k! = e^{\|X\|}$, the series converges absolutely in the complete space $M_n(\mathbb{K})$ (Proposition~\ref{real-analysis:proposition-series}).
+
+(1) As $X$ and $Y$ commute, $(X + Y)^k = \sum_{i+j=k}\frac{k!}{i!j!}X^iY^j$. So, with $a = \|X\|$ and $b = \|Y\|$,
+\[
+\Bigl\|\sum_{k \leq N}\frac{(X + Y)^k}{k!} - \sum_{i \leq N}\frac{X^i}{i!}\sum_{j \leq N}\frac{Y^j}{j!}\Bigr\| = \Bigl\|\sum_{\substack{i, j \leq N\\ i + j > N}}\frac{X^iY^j}{i!j!}\Bigr\|
+\leq \sum_{i + j > N}\frac{a^ib^j}{i!j!},
+\]
+and the right side equals $e^{a+b} - \sum_{k \leq N}\frac{(a + b)^k}{k!} \to 0$. Hence $e^{X+Y} = e^Xe^Y$. Taking $Y = -X$ gives $e^Xe^{-X} = e^0 = I$.
+
+(2) By (1), $e^{sX}e^{tX} = e^{(s+t)X}$. Each entry of $e^{tX}$ is a power series $\sum_k(X^k)_{ij}t^k/k!$ in $t$ with infinite radius of convergence, and differentiating term by term
+(Theorem~\ref{real-analysis:theorem-power-series-derivative}) gives $\sum_{k \geq 1}t^{k-1}X^k/(k - 1)! = Xe^{tX}$, which also equals $e^{tX}X$.
+
+(3) $(AXA^{-1})^k = AX^kA^{-1}$, and transposition and conjugate transposition are continuous and linear, with $(X^k)^T = (X^T)^k$; sum the series.
+
+(4) By (2) and Proposition~\ref{ordinary-differential-equations:proposition-linear-structure}(2) with $A = X$ constant, $\det e^{tX} = e^{t\operatorname{tr}X}$. Take $t = 1$.
+\end{proof}
+
+\begin{counterexample}\label{ordinary-differential-equations:counterexample-exponential-commute}
+Without commutation, $e^{X+Y} \neq e^Xe^Y$ in general: for $X = \bigl(\begin{smallmatrix}0 & 1\\ 0 & 0\end{smallmatrix}\bigr)$, $Y = \bigl(\begin{smallmatrix}0 & 0\\ 1 & 0\end{smallmatrix}\bigr)$, $e^Xe^Y = \bigl(\begin{smallmatrix}2 & 1\\ 1 & 1\end{smallmatrix}\bigr)$
+while $e^{X+Y} = \bigl(\begin{smallmatrix}\cosh 1 & \sinh 1\\ \sinh 1 & \cosh 1\end{smallmatrix}\bigr)$. Likewise, for non-constant $A(t)$, the fundamental matrix is not $\exp\int_{t_0}^tA$ unless the matrices $A(t)$ commute with each other; the correction
+terms are given by the Magnus expansion, whose first term is $\frac12\int\int_{s < t}[A(t), A(s)]$.
+\end{counterexample}
+
+\begin{proposition}[Computing $e^{tA}$]\label{ordinary-differential-equations:proposition-computing-exponential}
+Let $A \in M_n(\CC)$ have Jordan form $A = PJP^{-1}$, $J = \bigoplus_iJ_{e_i}(\lambda_i)$ (Theorem~\ref{linear-algebra:theorem-jordan}). Then $e^{tA} = Pe^{tJ}P^{-1}$, $e^{tJ} = \bigoplus_ie^{tJ_{e_i}(\lambda_i)}$ and
+\[
+e^{tJ_e(\lambda)} = e^{\lambda t}\sum_{k=0}^{e-1}\frac{t^k}{k!}N^k, \qquad N = J_e(\lambda) - \lambda I,
+\]
+the upper triangular matrix with entries $e^{\lambda t}t^{j-i}/(j - i)!$ for $j \geq i$. In particular every solution of $x' = Ax$ has coordinates of the form $\sum_ip_i(t)e^{\lambda_it}$ with polynomials $p_i$ of degree less than the size of
+the largest Jordan block of $\lambda_i$.
+\end{proposition}
+
+\begin{proof}
+Proposition~\ref{ordinary-differential-equations:proposition-matrix-exponential}(3) gives the conjugation, powers of a block diagonal matrix are block diagonal, and $J_e(\lambda) = \lambda I + N$ with $\lambda I$ and $N$ commuting and
+$N^e = 0$, so (1) of the same proposition gives $e^{tJ_e(\lambda)} = e^{\lambda t}e^{tN}$ with a finite series.
+\end{proof}
+
+For real $A$, the real solutions are the real parts of the complex ones; a pair of eigenvalues $\alpha \pm i\beta$ contributes oscillations $e^{\alpha t}\cos\beta t$, $e^{\alpha t}\sin\beta t$. In the plane this gives the classical
+\emph{phase portraits}.
+
+\begin{proposition}[Planar linear systems]\label{ordinary-differential-equations:proposition-planar}
+Let $A \in M_2(\RR)$ with $\tau = \operatorname{tr}A$, $\Delta = \det A \neq 0$. The origin is the only equilibrium of $x' = Ax$, and:
+\begin{enumerate}
+\item if $\Delta < 0$, the eigenvalues are real of opposite signs: a \emph{saddle}; two lines of solutions, one tending to $0$ and one escaping, and all other solutions escape in both time directions;
+\item if $\Delta > 0$ and $\tau^2 \geq 4\Delta$, the eigenvalues are real with the sign of $\tau$: a \emph{node}, all solutions tend to $0$ as $t \to \infty$ ($\tau < 0$, stable) or as $t \to -\infty$ ($\tau > 0$, unstable);
+\item if $\Delta > 0$ and $\tau^2 < 4\Delta$, the eigenvalues are $\alpha \pm i\beta$ with $\alpha = \tau/2$, $\beta > 0$, and in a suitable basis $e^{tA} = e^{\alpha t}\bigl(\begin{smallmatrix}\cos\beta t & \sin\beta t\\ -\sin\beta t & \cos\beta t\end{smallmatrix}\bigr)$:
+a \emph{focus} (spirals towards $0$ or away from it) if $\tau \neq 0$, and a \emph{centre} (all solutions periodic with period $2\pi/\beta$, on ellipses) if $\tau = 0$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+The eigenvalues are the roots of $\lambda^2 - \tau\lambda + \Delta$, with product $\Delta$ and sum $\tau$, which gives the sign statements. In cases (1) and (2) with distinct eigenvalues, in an eigenbasis $x(t) = (c_1e^{\lambda_1t}, c_2e^{\lambda_2t})$,
+and the claims are read off; for a double eigenvalue, Proposition~\ref{ordinary-differential-equations:proposition-computing-exponential} gives $e^{\lambda t}(c_1 + c_2t, c_2)$, again tending to $0$ iff $\lambda < 0$. In case (3), let
+$u + iv$ be an eigenvector for $\alpha + i\beta$. Then $Au = \alpha u - \beta v$ and $Av = \beta u + \alpha v$; $u$ and $v$ are linearly independent, since otherwise $u + iv$ would be a complex multiple of a real vector, which would be a real
+eigenvector for a non-real eigenvalue. In the basis $(u, v)$, $A = \alpha I + \beta K$ with $K = \bigl(\begin{smallmatrix}0 & 1\\ -1 & 0\end{smallmatrix}\bigr)$, $K^2 = -I$, and $e^{t\beta K} = \cos(\beta t)I + \sin(\beta t)K$ by
+separating even and odd powers; $\alpha I$ commutes with $K$.
+\end{proof}
+
+\begin{theorem}[Linear equations of order $n$ with constant coefficients]\label{ordinary-differential-equations:theorem-constant-coefficients}
+Let $p(\lambda) = \lambda^n + a_{n-1}\lambda^{n-1} + \cdots + a_0 = \prod_j(\lambda - \lambda_j)^{m_j}$ with $a_i \in \CC$ and distinct roots $\lambda_j$. The functions $t^ke^{\lambda_jt}$, $0 \leq k < m_j$, form a basis of the solution space
+of $y^{(n)} + a_{n-1}y^{(n-1)} + \cdots + a_0y = 0$.
+\end{theorem}
+
+\begin{proof}
+Write the equation as $p(D)y = 0$ with $D = d/dt$; the factors $(D - \lambda_j)^{m_j}$ commute. Since $(D - \lambda)(g(t)e^{\lambda t}) = g^{\prime}(t)e^{\lambda t}$, $(D - \lambda)^m$ kills $t^ke^{\lambda t}$ for $k < m$, so these $n$ functions are
+solutions. The solution space has dimension $n$, by Proposition~\ref{ordinary-differential-equations:proposition-linear-structure}(1) applied to the equivalent first-order system. It remains to show linear independence: suppose
+$\sum_jq_j(t)e^{\lambda_jt} = 0$ with polynomials $q_j$, not all zero, and the number of nonzero $q_j$ minimal. Multiply by $e^{-\lambda_1t}$ (with $q_1 \neq 0$) and apply $D^{\deg q_1 + 1}$: the first term disappears, and each other term
+becomes $\tilde q_j(t)e^{(\lambda_j - \lambda_1)t}$, where $\tilde q_j$ has the same degree as $q_j$, because $D(qe^{\mu t}) = (q' + \mu q)e^{\mu t}$ preserves the degree when $\mu \neq 0$. This is a shorter relation, a contradiction unless
+there was only one term, $q_1e^{\lambda_1t} = 0$, which forces $q_1 = 0$.
+\end{proof}
+
+\begin{example}[Oscillators and resonance]\label{ordinary-differential-equations:example-oscillator}
+The damped harmonic oscillator $y'' + 2\gamma y' + \omega^2y = 0$, $\gamma \geq 0$, $\omega > 0$, has $p(\lambda) = \lambda^2 + 2\gamma\lambda + \omega^2$ with roots $-\gamma \pm \sqrt{\gamma^2 - \omega^2}$: for $\gamma < \omega$ the solutions
+$e^{-\gamma t}\cos(\sqrt{\omega^2 - \gamma^2}t + c)$ oscillate with decaying amplitude (\emph{underdamped}); $\gamma = \omega$ is \emph{critical damping}, with solutions $(c_1 + c_2t)e^{-\omega t}$; for $\gamma > \omega$ they decay without
+oscillating. Under a periodic force, $y'' + \omega^2y = \cos\Omega t$ has the particular solution $\frac{\cos\Omega t}{\omega^2 - \Omega^2}$ when $\Omega \neq \omega$, while at \emph{resonance} $\Omega = \omega$ it has
+$\frac{t\sin\omega t}{2\omega}$, of linearly growing amplitude (differentiate twice to check). With damping $\gamma > 0$ the amplitude stays bounded, but is largest near $\Omega = \omega$: this is how a radio selects a station,
+and why soldiers break step on bridges.
+\end{example}
+
+\emph{Periodic coefficients.} If $A(t + T) = A(t)$, the solutions are not periodic in general, but Floquet showed that the equation is a constant coefficient one in disguise.
+
+\begin{lemma}[Matrix logarithm]\label{ordinary-differential-equations:lemma-logarithm}
+Every invertible $M \in M_n(\CC)$ is $e^B$ for some $B \in M_n(\CC)$.
+\end{lemma}
+
+\begin{proof}
+By Proposition~\ref{ordinary-differential-equations:proposition-matrix-exponential}(3) and the Jordan form it suffices to treat a block $M = \lambda(I + N^{\prime})$ with $\lambda \neq 0$ and $N^{\prime} = \lambda^{-1}N$ nilpotent, $N^{\prime e} = 0$.
+Let $\ell(x) = \sum_{k \geq 1}(-1)^{k+1}x^k/k$. For real $|x| < 1$, $e^{\ell(x)} = 1 + x$, so the formal power series $\exp(\ell(x))$ and $1 + x$ have the same coefficients (both sides are given by convergent power series near $0$,
+whose coefficients are determined by the function, Theorem~\ref{real-analysis:theorem-power-series-derivative}). The coefficients of $\exp(\ell(x))$ up to degree $e - 1$ are polynomial identities in finitely many terms, and they
+remain true after substituting the nilpotent $N^{\prime}$ for $x$: so $e^{\ell(N^{\prime})} = I + N^{\prime}$, where $\ell(N^{\prime})$ is a finite sum. Choose $\mu \in \CC$ with $e^\mu = \lambda$ (Proposition~\ref{real-analysis:proposition-exponential});
+$B = \mu I + \ell(N^{\prime})$ satisfies $e^B = \lambda(I + N^{\prime})$, since $\mu I$ commutes with everything.
+\end{proof}
+
+\begin{theorem}[Floquet]\label{ordinary-differential-equations:theorem-floquet}
+Let $A \colon \RR \to M_n(\CC)$ be continuous and $T$-periodic, and $X$ the principal fundamental matrix of $x' = A(t)x$ at $0$. Then $X(t + T) = X(t)X(T)$; the \emph{monodromy matrix} $X(T)$ is $e^{TB}$ for some $B$, and
+$X(t) = P(t)e^{tB}$ with $P$ continuously differentiable, invertible and $T$-periodic. The change of variables $x = P(t)y$ transforms the equation into $y' = By$. The eigenvalues of $X(T)$, the \emph{Floquet multipliers},
+have product $\exp\int_0^T\operatorname{tr}A$.
+\end{theorem}
+
+\begin{proof}
+$t \mapsto X(t + T)$ solves the same equation, by periodicity of $A$, with value $X(T)$ at $t = 0$; so does $X(t)X(T)$, and they agree by uniqueness. Lemma~\ref{ordinary-differential-equations:lemma-logarithm} gives $B$ with
+$e^{TB} = X(T)$. Then $P(t) = X(t)e^{-tB}$ is invertible and $P(t + T) = X(t)X(T)e^{-TB}e^{-tB} = P(t)$. If $x = P(t)y$, then $x = X(t)e^{-tB}y$, and $x$ solves the equation iff $e^{-tB}y$ is constant, iff $y' = By$. The product of
+the multipliers is $\det X(T)$, given by Proposition~\ref{ordinary-differential-equations:proposition-linear-structure}(2).
+\end{proof}
+
+Hence all solutions tend to $0$ iff all multipliers have modulus $< 1$, and there is a nonzero $T$-periodic solution iff $1$ is a multiplier (an eigenvector $v$ of $X(T)$ with eigenvalue $1$ gives the solution $X(t)v$, with
+$X(t + T)v = X(t)v$).
+
+\begin{proposition}[Hill's equation and parametric resonance]\label{ordinary-differential-equations:proposition-hill}
+Let $q$ be continuous, real and $T$-periodic, and $M$ the monodromy matrix of $y'' + q(t)y = 0$ as a system for $(y, y^{\prime})$. Then $\det M = 1$, and: if $|\operatorname{tr}M| < 2$, all solutions are bounded on $\RR$; if
+$|\operatorname{tr}M| > 2$, there are solutions growing exponentially as $t \to \infty$.
+\end{proposition}
+
+\begin{proof}
+The system has $A(t) = \bigl(\begin{smallmatrix}0 & 1\\ -q & 0\end{smallmatrix}\bigr)$ with trace $0$, so $\det M = 1$ by Floquet's theorem. The multipliers are the roots of $\mu^2 - (\operatorname{tr}M)\mu + 1$. If
+$|\operatorname{tr}M| < 2$, they are non-real, conjugate, of modulus $1$ and distinct, so $M$ is diagonalisable over $\CC$ with $\|M^k\|$ bounded for $k \in \ZZ$, and $X(t + kT) = X(t)M^k$ is bounded. If $|\operatorname{tr}M| > 2$, they are
+real with $|\mu_1| > 1 > |\mu_2|$, and for an eigenvector $v$ of $\mu_1$, $X(kT)v = \mu_1^kv$.
+\end{proof}
+
+For the \emph{Mathieu equation} $y'' + (a + b\cos t)y = 0$, the plane of parameters $(a, b)$ splits into regions of stability and instability (the \emph{Arnold tongues}), which for small $b$ emanate from $a = k^2/4$, $k = 0, 1, 2, \ldots$.
+Periodic modulation of a parameter at twice the natural frequency destabilises an oscillator: this is how a child pumps a swing, and why an inverted pendulum becomes stable when its support oscillates quickly (Kapitza)
+\cite{arnold-mechanics}.
+
+\section{Stability}\label{ordinary-differential-equations:section-stability}
+
+\begin{definition}\label{ordinary-differential-equations:definition-stability}
+Let $F$ be a locally Lipschitz vector field on $U \subseteq \RR^n$ and $x^*$ an \emph{equilibrium}, $F(x^*) = 0$. It is \emph{(Lyapunov) stable} if for every $\varepsilon > 0$ there is $\delta > 0$ such that every solution with
+$\|x(0) - x^*\| < \delta$ is defined on $[0, \infty)$ and satisfies $\|x(t) - x^*\| < \varepsilon$ there. It is \emph{asymptotically stable} if moreover $x(t) \to x^*$ for all $x(0)$ in some neighbourhood, and \emph{unstable} if it is not stable.
+The \emph{basin of attraction} of an asymptotically stable $x^*$ is the set of $x(0)$ with $x(t) \to x^*$.
+\end{definition}
+
+\begin{counterexample}\label{ordinary-differential-equations:counterexample-attracting-unstable}
+Attraction does not imply stability: there are planar vector fields where every solution tends to the equilibrium, but some only after a large excursion (Vinograd's example \cite{hahn-stability}). And stability does not imply
+attraction: the centre $x' = y$, $y' = -x$ is stable, with solutions on circles, but not asymptotically stable.
+\end{counterexample}
+
+\begin{theorem}[Linear stability]\label{ordinary-differential-equations:theorem-linear-stability}
+Let $A \in M_n(\RR)$ and $s(A) = \max\operatorname{Re}\lambda$ over the eigenvalues of $A$.
+\begin{enumerate}
+\item For every $\alpha > s(A)$ there is $C$ with $\|e^{tA}\| \leq Ce^{\alpha t}$ for $t \geq 0$.
+\item The origin is asymptotically stable for $x' = Ax$ iff $s(A) < 0$, and then $\|x(t)\| \leq Ce^{\alpha t}\|x(0)\|$ with $\alpha < 0$.
+\item It is stable iff $s(A) \leq 0$ and every eigenvalue with real part $0$ has only Jordan blocks of size $1$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) By Proposition~\ref{ordinary-differential-equations:proposition-computing-exponential} the entries of $e^{tA}$ are sums of terms $ct^ke^{\lambda t}$, and $|t^ke^{\lambda t}|e^{-\alpha t} = t^ke^{(\operatorname{Re}\lambda - \alpha)t}$ is bounded on
+$[0, \infty)$. (2) and (3): if $s(A) < 0$, take $s(A) < \alpha < 0$ in (1). If $\operatorname{Re}\lambda > 0$ for an eigenvector $v = u + iw$, the real solutions $\varepsilon\operatorname{Re}(e^{\lambda t}v)$ and $\varepsilon\operatorname{Re}(e^{\lambda t}(-iv))$
+start arbitrarily close to $0$ and one of them is unbounded (their combination $\varepsilon e^{\lambda t}v$ has modulus $\varepsilon e^{\operatorname{Re}\lambda t}\|v\|$). If $\operatorname{Re}\lambda = 0$ with a Jordan block of size $\geq 2$, the same
+argument with the solution $e^{tA}v_2$, $v_2$ the second vector of a Jordan chain, $e^{tA}v_2 = e^{\lambda t}(v_2 + tv_1)$, gives unbounded solutions. If $\operatorname{Re}\lambda = 0$ with only blocks of size $1$, and all other eigenvalues have negative
+real part, $e^{tA}$ is bounded on $[0, \infty)$, hence the origin is stable, but solutions $\operatorname{Re}(e^{\lambda t}v)$ do not tend to $0$.
+\end{proof}
+
+\begin{theorem}[Lyapunov's linearisation theorem]\label{ordinary-differential-equations:theorem-linearisation}
+Let $F$ be $C^1$ on $U$, $F(x^*) = 0$ and $A = DF(x^*)$. If all eigenvalues of $A$ have negative real part, $x^*$ is asymptotically stable, and solutions near $x^*$ converge exponentially fast.
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: a quadratic form.} By Theorem~\ref{ordinary-differential-equations:theorem-linear-stability}(1) the integral $P = \int_0^\infty e^{tA^T}e^{tA}\,dt$ converges. $P$ is symmetric and positive definite, since
+$v^TPv = \int_0^\infty\|e^{tA}v\|^2\,dt > 0$ for $v \neq 0$, and $A^TP + PA = \int_0^\infty\frac{d}{dt}\bigl(e^{tA^T}e^{tA}\bigr)\,dt = -I$. Let $m > 0$ be the least eigenvalue of $P$ (Theorem~\ref{linear-algebra:theorem-spectral}), so
+$m\|y\|^2 \leq y^TPy \leq \|P\|\|y\|^2$.
+
+\emph{Step 2: a Lyapunov function.} Write $y = x - x^*$, $F(x) = Ay + r(y)$ with $\|r(y)\| \leq \frac{\|y\|}{4\|P\|}$ for $\|y\| \leq \rho$ (differentiability of $F$ at $x^*$). Let $V(y) = y^TPy$. Along a solution,
+$\frac{d}{dt}V = y^T(A^TP + PA)y + 2y^TPr(y) \leq -\|y\|^2 + \frac12\|y\|^2 \leq -\frac{1}{2\|P\|}V$ while $\|y\| \leq \rho$.
+
+\emph{Step 3: conclusion.} The set $\{V < m\rho^2\}$ lies in the ball $\|y\| < \rho$. A solution starting in it stays in it, since $V$ decreases there, so it is defined for all $t \geq 0$ (Theorem~\ref{real-analysis:theorem-picard-lindelof}(3))
+and $V(y(t)) \leq V(y(0))e^{-t/(2\|P\|)}$, so $\|y(t)\| \leq \sqrt{\|P\|/m}\,\|y(0)\|e^{-t/(4\|P\|)}$. This gives stability and exponential convergence.
+\end{proof}
+
+If some eigenvalue of $A$ has positive real part, $x^*$ is unstable (Lyapunov; \cite[Chapter 2]{teschl-ode}); this also follows from the unstable manifold theorem of Section~\ref{ordinary-differential-equations:section-hyperbolic}. If
+the eigenvalues lie in the closed left half-plane with some on the imaginary axis, linearisation decides nothing.
+
+\begin{counterexample}\label{ordinary-differential-equations:counterexample-linearisation}
+$x' = -x^3$ and $x' = x^3$ both have linearisation $0$ at $0$; the first is asymptotically stable (but not exponentially: $x(t) \sim (2t)^{-1/2}$), the second unstable. In the plane, $x' = -y \pm x(x^2 + y^2)$, $y' = x \pm y(x^2 + y^2)$
+both linearise to a centre, but $r = \sqrt{x^2 + y^2}$ satisfies $rr^{\prime} = xx^{\prime} + yy^{\prime} = \pm r^4$, so $r' = \pm r^3$: with $+$ the origin is unstable, with $-$ asymptotically stable.
+\end{counterexample}
+
+\begin{theorem}[Lyapunov functions]\label{ordinary-differential-equations:theorem-lyapunov}
+Let $F$ be locally Lipschitz on $U$, $F(x^*) = 0$, and $V \colon W \to \RR$ a $C^1$ function on a neighbourhood $W$ of $x^*$ with $V(x^*) = 0$ and $V(x) > 0$ for $x \neq x^*$. Let $\dot V = \nabla V \cdot F$, the derivative of $V$
+along solutions.
+\begin{enumerate}
+\item If $\dot V \leq 0$ on $W$, then $x^*$ is stable.
+\item If $\dot V < 0$ on $W \setminus \{x^*\}$, then $x^*$ is asymptotically stable.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) Let $\varepsilon > 0$ with $\overline{B}(x^*, \varepsilon) \subseteq W$ and $\mu = \min\{V(x) : \|x - x^*\| = \varepsilon\} > 0$. Choose $\delta < \varepsilon$ with $V < \mu$ on $B(x^*, \delta)$. A solution starting in $B(x^*, \delta)$ has
+$V(x(t)) \leq V(x(0)) < \mu$ while it stays in $W$, so it never reaches the sphere of radius $\varepsilon$; staying in a compact ball, it is defined for all $t \geq 0$ by Theorem~\ref{real-analysis:theorem-picard-lindelof}(3).
+(2) For such a solution $V(x(t))$ decreases to a limit $c \geq 0$. If $c > 0$, choose $\eta > 0$ with $V < c$ on $B(x^*, \eta)$; the solution stays in the compact annulus $\eta \leq \|x - x^*\| \leq \varepsilon$, where $\dot V \leq -\kappa < 0$, so
+$V(x(t)) \leq V(x(0)) - \kappa t \to -\infty$, a contradiction. So $V(x(t)) \to 0$, and the same annulus argument shows $x(t) \to x^*$: otherwise $\|x(t_k) - x^*\| \geq \eta$ along a sequence, where $V \geq \min\{V : \eta \leq \|x - x^*\| \leq \varepsilon\} > 0$.
+\end{proof}
+
+\begin{example}[The pendulum]\label{ordinary-differential-equations:example-pendulum}
+For $\theta'' + k\theta' + \sin\theta = 0$, $k \geq 0$, the energy $E(\theta, \omega) = \frac12\omega^2 + 1 - \cos\theta$ ($\omega = \theta'$) is positive near $(0, 0)$ except at the origin and $\dot E = -k\omega^2 \leq 0$. So the lower equilibrium is stable
+by Theorem~\ref{ordinary-differential-equations:theorem-lyapunov}(1). Without friction ($k = 0$) $E$ is conserved, solutions near the origin are periodic, and the equilibrium is not asymptotically stable. With friction, $\dot E$
+vanishes on the whole line $\omega = 0$, so (2) does not apply to $E$; but the linearisation $\bigl(\begin{smallmatrix}0 & 1\\ -1 & -k\end{smallmatrix}\bigr)$ has eigenvalues $\frac{-k \pm \sqrt{k^2 - 4}}{2}$ with negative real parts, and
+Theorem~\ref{ordinary-differential-equations:theorem-linearisation} gives asymptotic stability. LaSalle's principle (Theorem~\ref{ordinary-differential-equations:theorem-lasalle}) recovers this from $E$ alone, with an explicit basin. The upper
+equilibrium $(\pi, 0)$ has linearisation $\bigl(\begin{smallmatrix}0 & 1\\ 1 & -k\end{smallmatrix}\bigr)$, with determinant $-1$: a saddle, unstable.
+\end{example}
+
+\begin{remark}\label{ordinary-differential-equations:remark-converse-lyapunov}
+Conversely, every asymptotically stable equilibrium of a $C^1$ vector field has a smooth Lyapunov function on its basin (Massera, Kurzweil) \cite{hahn-stability}, but there is no general recipe to find one; in practice one uses
+energies, entropies, or the quadratic form of Theorem~\ref{ordinary-differential-equations:theorem-linearisation}. Lyapunov functions are the main tool of nonlinear control and of the stability theory of numerical schemes.
+\end{remark}
+
+\section{Sturm--Liouville theory}\label{ordinary-differential-equations:section-sturm-liouville}
+
+Second-order linear equations $y'' + q(t)y = 0$ cannot be solved explicitly in general, but the zeros of their solutions can be located: they oscillate faster when $q$ is larger. Every equation $(py')' + ry' + qy = 0$ with $p > 0$
+of class $C^1$ can be put in this form (Exercise~\ref{ordinary-differential-equations:exercise-liouville-normal-form}).
+
+\begin{theorem}[Sturm separation theorem]\label{ordinary-differential-equations:theorem-sturm-separation}
+Let $q$ be continuous on an interval $I$ and $y_1$, $y_2$ linearly independent real solutions of $y'' + q(t)y = 0$. Then the zeros of $y_1$ and $y_2$ are simple, isolated, and strictly interlace: between two consecutive zeros of $y_1$ there is
+exactly one zero of $y_2$.
+\end{theorem}
+
+\begin{proof}
+A zero $a$ of a nonzero solution is simple, since $y(a) = y'(a) = 0$ forces $y = 0$; it is isolated, since $y(t) = y'(a)(t - a) + o(t - a)$. The \emph{Wronskian} $W = y_1y_2^{\prime} - y_1^{\prime}y_2$ is the determinant of the fundamental
+matrix of the system for $(y, y^{\prime})$, whose trace is $0$, so $W$ is a nonzero constant (Proposition~\ref{ordinary-differential-equations:proposition-linear-structure}(2)). At consecutive zeros $a < b$ of $y_1$, $y_1^{\prime}(a)$ and $y_1^{\prime}(b)$
+are nonzero of opposite signs ($y_1$ has constant sign on $(a, b)$), and $W = -y_1^{\prime}y_2$ there, so $y_2(a)$ and $y_2(b)$ are nonzero of opposite signs, and $y_2$ vanishes in $(a, b)$. Two zeros of $y_2$ in $(a, b)$ would give, by the same
+argument with the roles exchanged, a zero of $y_1$ between them.
+\end{proof}
+
+\begin{theorem}[Sturm comparison theorem]\label{ordinary-differential-equations:theorem-sturm-comparison}
+Let $q_1 \leq q_2$ be continuous on $[a, b]$, $y'' + q_1y = 0$ with $y(a) = y(b) = 0$ and $y > 0$ on $(a, b)$, and $z'' + q_2z = 0$ with $z \neq 0$. Then $z$ has a zero in $(a, b)$, unless $q_1 = q_2$ on $[a, b]$ and $z$ is a multiple of $y$.
+\end{theorem}
+
+\begin{proof}
+Suppose $z$ has no zero in $(a, b)$, say $z > 0$ there. Then $(y^{\prime}z - yz^{\prime})^{\prime} = y^{\prime\prime}z - yz^{\prime\prime} = (q_2 - q_1)yz \geq 0$, so integrating, $y^{\prime}(b)z(b) - y^{\prime}(a)z(a) = \int_a^b(q_2 - q_1)yz \geq 0$.
+But $y^{\prime}(a) > 0 > y^{\prime}(b)$ (simple zeros) and $z(a), z(b) \geq 0$, so the left side is $\leq 0$. Hence both sides vanish: $z(a) = z(b) = 0$, and $(q_2 - q_1)yz = 0$ on $(a, b)$, where $yz > 0$, so $q_1 = q_2$. Then $z$ and $y$ solve the same
+equation and vanish at $a$, so they are proportional.
+\end{proof}
+
+\begin{corollary}\label{ordinary-differential-equations:corollary-zero-spacing}
+If $0 < m^2 \leq q(t) \leq M^2$ on an interval, consecutive zeros of a nonzero solution of $y'' + qy = 0$ are at distance between $\pi/M$ and $\pi/m$. If $q \leq 0$, a nonzero solution has at most one zero.
+\end{corollary}
+
+\begin{proof}
+Compare with $\sin(m(t - a))$, which has consecutive zeros at distance $\pi/m$, and with $\sin(M(t - a))$, using Theorem~\ref{ordinary-differential-equations:theorem-sturm-comparison} in both directions. For $q \leq 0$, compare
+with the constant solution $1$ of $y'' = 0$: a solution with two consecutive zeros $a < b$ would force $1$ to vanish in $(a, b)$.
+\end{proof}
+
+\begin{example}[Zeros of Bessel functions]\label{ordinary-differential-equations:example-bessel-zeros}
+For the Bessel equation $t^2y'' + ty' + (t^2 - \nu^2)y = 0$, solved by the Bessel functions of Definition~\ref{special-functions:definition-bessel}, the substitution $y = t^{-1/2}u$ gives $u'' + \bigl(1 - \frac{4\nu^2 - 1}{4t^2}\bigr)u = 0$. So nonzero solutions have infinitely many positive zeros, and the distance between
+consecutive large zeros tends to $\pi$; for $\nu > \frac12$ it is larger than $\pi$, for $\nu < \frac12$ smaller, and for $\nu = \frac12$ the solutions are $t^{-1/2}\sin(t + c)$ exactly. The zeros of $J_n$ are the frequencies of the vibration modes of a circular drum.
+\end{example}
+
+\begin{theorem}[Sturm--Liouville problems]\label{ordinary-differential-equations:theorem-sturm-liouville}
+Let $p$ be real $C^1$ and $q$ real continuous on $[a, b]$, with $p > 0$, and $Ly = -(py^{\prime})^{\prime} + qy$. The eigenvalue problem $Ly = \lambda y$, $y(a) = y(b) = 0$ has the following properties.
+\begin{enumerate}
+\item The eigenvalues form a sequence $\lambda_1 < \lambda_2 < \cdots$ of real numbers tending to $\infty$, each with a one-dimensional space of eigenfunctions, which may be taken real.
+\item Normalised real eigenfunctions $e_k$ form an orthonormal basis of $L^2([a, b])$; so every $f \in L^2$ is $\sum_k\langle f, e_k\rangle e_k$ in $L^2$.
+\item $\lambda_1 = \min\bigl\{\int_a^b(p|y^{\prime}|^2 + q|y|^2) / \int_a^b|y|^2\bigr\}$ over nonzero $C^2$ functions $y$ vanishing at $a$ and $b$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: a shift.} Replacing $q$ by $q + c$ shifts all eigenvalues by $c$, so we may assume $q > 0$. Then $Ly = 0$, $y(a) = y(b) = 0$ has only the solution $0$: integrating by parts, $0 = \int\bar yLy = \int(p|y^{\prime}|^2 + q|y|^2)$. The same
+computation shows that eigenvalues are real and positive, and that $L$ is symmetric: $\int\bar zLy = \int(p\bar z^{\prime}y^{\prime} + q\bar zy) = \int\overline{Lz}\,y$ for $y$, $z$ vanishing at the endpoints.
+
+\emph{Step 2: Green's function.} Let $u$ be the real solution of $Lu = 0$ with $u(a) = 0$, $u'(a) = 1$, and $v$ the one with $v(b) = 0$, $v'(b) = 1$. Then $\kappa = p(uv^{\prime} - u^{\prime}v)$ is constant, since its derivative is
+$u(pv^{\prime})^{\prime} - v(pu^{\prime})^{\prime} = uqv - vqu = 0$, and $\kappa \neq 0$, since otherwise $u$ and $v$ would be proportional and $u$ would be a nonzero solution vanishing at $a$ and $b$. Let
+$G(t, s) = -u(\min(t, s))v(\max(t, s))/\kappa$, a continuous symmetric real function on $[a, b]^2$. For continuous $f$, the function
+$y(t) = \int_a^bG(t, s)f(s)\,ds = -\frac1\kappa\bigl(v(t)\int_a^tuf + u(t)\int_t^bvf\bigr)$ vanishes at $a$ and $b$, and differentiating twice (the boundary terms cancel) gives $(py^{\prime})^{\prime} = qy - f$, that is $Ly = f$.
+Conversely, if $y$ is $C^2$ with $y(a) = y(b) = 0$, then $\int G(\cdot, s)(Ly)(s)\,ds = y$, by uniqueness in Step 1.
+
+\emph{Step 3: a compact operator.} Let $(Tf)(t) = \int_a^bG(t, s)f(s)\,ds$ on $L^2([a, b])$. By Cauchy--Schwarz, $|Tf(t) - Tf(t^{\prime})| \leq \|G(t, \cdot) - G(t^{\prime}, \cdot)\|_2\|f\|_2$ and $|Tf(t)| \leq \|G\|_\infty\sqrt{b - a}\|f\|_2$; by uniform
+continuity of $G$ the image of the unit ball is a bounded equicontinuous family in $C([a, b])$, relatively compact by Arzel\`a--Ascoli, hence relatively compact in $L^2$ (as $\|g\|_2 \leq \sqrt{b - a}\|g\|_\infty$). So $T$ is compact; it is
+self-adjoint by symmetry of $G$ and Fubini's theorem (Theorem~\ref{measure-theory:theorem-fubini}). It is injective: if $Tf = 0$, then $\langle f, Tg\rangle = \langle Tf, g\rangle = 0$ for continuous $g$, and by Step 2 the functions $Tg$
+include all $C^2$ functions vanishing near $a$ and $b$, which are dense in $L^2$ (Proposition~\ref{measure-theory:proposition-density}, and uniform approximation of continuous functions with compact support by smooth ones by
+convolution); so $f = 0$.
+
+\emph{Step 4: spectral theorem.} By Theorem~\ref{functional-analysis:theorem-spectral-compact}, $L^2$ has an orthonormal basis of eigenvectors of $T$, with real nonzero eigenvalues $\mu_k$ (as $T$ is injective) accumulating only at $0$. If
+$Tf = \mu f$, then $f = \mu^{-1}Tf$ is continuous, hence $C^2$ with $Lf = \mu^{-1}f$ and $f(a) = f(b) = 0$ by Step 2; conversely an eigenfunction of $L$ with eigenvalue $\lambda$ is an eigenfunction of $T$ with eigenvalue $1/\lambda$. Each
+eigenspace is one-dimensional: two eigenfunctions with the same $\lambda$ both vanish at $a$, so they are proportional (Proposition~\ref{ordinary-differential-equations:proposition-linear-structure}(1)), and real and imaginary parts of
+eigenfunctions are eigenfunctions. Since $L^2$ is infinite-dimensional, there are infinitely many eigenvalues $\lambda_k = 1/\mu_k > 0$, and $\lambda_k \to \infty$ as $\mu_k \to 0$. This proves (1) and (2).
+
+\emph{Step 5: Rayleigh quotient.} For $y$ as in (3), $\int\bar yLy = \int(p|y^{\prime}|^2 + q|y|^2)$; expanding $y = \sum c_ke_k$ in $L^2$, $\langle Ly, e_k\rangle = \langle y, Le_k\rangle = \lambda_k c_k$, so
+$\int\bar yLy = \sum_k\lambda_k|c_k|^2 \geq \lambda_1\sum|c_k|^2 = \lambda_1\|y\|_2^2$ by Parseval, with equality for $y = e_1$.
+\end{proof}
+
+\begin{example}\label{ordinary-differential-equations:example-sturm-liouville}
+For $-y'' = \lambda y$ on $[0, \pi]$, the eigenvalues are $k^2$, $k \geq 1$, with eigenfunctions $\sin kt$: the theorem contains the completeness of the Fourier sine series in $L^2([0, \pi])$. The $k$-th eigenfunction has exactly
+$k - 1$ zeros in the open interval; this holds for every Sturm--Liouville problem (\emph{Sturm's oscillation theorem}, proved with the Pr\"ufer angle $\theta = \arctan(y/(py^{\prime}))$ and the comparison theorem)
+\cite[Chapter 8]{coddington-levinson}. Physically, the eigenfunctions are the shapes of the vibration modes of a string with density and tension varying along it, and $\sqrt{\lambda_k}$ are its frequencies; quantum mechanically, $L$
+is a Schr\"odinger operator and $\lambda_k$ are the energy levels of a particle in a box (Chapter~\ref{quantum-mechanics}).
+\end{example}
+
+\begin{remark}\label{ordinary-differential-equations:remark-sturm-liouville-general}
+The same proof works with a weight, $Ly = \lambda wy$ with $w > 0$ (in $L^2(w\,dt)$), and with \emph{separated} boundary conditions $\alpha y(a) + \alpha^{\prime}y^{\prime}(a) = 0$, $\beta y(b) + \beta^{\prime}y^{\prime}(b) = 0$. With periodic boundary conditions
+eigenvalues can be double ($\cos kt$, $\sin kt$). On infinite intervals or with singular endpoints (Legendre, Hermite, Laguerre and Bessel equations) the spectrum can have a continuous part, and Weyl's limit point/limit circle theory
+decides which boundary conditions are needed; Hermite functions, for instance, are the eigenfunctions of the harmonic oscillator $-y'' + t^2y$ on $\RR$, with eigenvalues $2k + 1$.
+\end{remark}
+
+\section{Analytic equations}\label{ordinary-differential-equations:section-complex-domain}
+
+Linear equations with holomorphic coefficients were studied in Section~\ref{special-functions:section-fuchsian}: they have holomorphic solutions on every disc where the coefficients are holomorphic
+(Theorem~\ref{special-functions:theorem-holomorphic-solutions}), continuation around singular points gives the monodromy representation (Definition~\ref{special-functions:definition-monodromy}), and at a regular singular point
+the Frobenius method gives solutions $z^\rho\sum c_kz^k$ (Theorem~\ref{special-functions:theorem-frobenius}); Bessel's, Legendre's and the hypergeometric equation are worked out there. Here we draw the consequences for real
+equations.
+
+\begin{theorem}[Real analytic coefficients]\label{ordinary-differential-equations:theorem-real-analytic}
+Let $A \colon I \to M_n(\RR)$ and $b \colon I \to \RR^n$ be real analytic on an open interval $I$ (each entry analytic in the sense of Definition~\ref{real-analysis:definition-analytic}). Then every solution of $x' = A(t)x + b(t)$ is real analytic on
+$I$. If the Taylor series of the entries of $A$ and $b$ at $t_0$ converge on $(t_0 - r, t_0 + r)$, so does the Taylor series at $t_0$ of every solution, and it represents the solution there.
+\end{theorem}
+
+\begin{proof}
+The inhomogeneous equation is the homogeneous one for $(x, 1) \in \RR^{n+1}$ with the matrix $\bigl(\begin{smallmatrix}A & b\\ 0 & 0\end{smallmatrix}\bigr)$, so let $b = 0$. Suppose the series $A(t) = \sum_kA_k(t - t_0)^k$ converges for $|t - t_0| < r$.
+Then $\sum_kA_k(z - t_0)^k$ converges for complex $|z - t_0| < r$ (absolute convergence of power series inside the radius, Theorem~\ref{real-analysis:theorem-power-series}) and defines a holomorphic matrix function $\tilde A$ on the disc
+$D(t_0, r)$. By Theorem~\ref{special-functions:theorem-holomorphic-solutions} the equation $w' = \tilde A(z)w$, $w(t_0) = x(t_0)$, has a holomorphic solution on the disc, given by a power series with real coefficients (the recurrence
+for the coefficients has real data). Restricted to the real interval, it solves $x' = A(t)x$ with the same initial value, so it is $x$ by uniqueness. Since every $t_0 \in I$ has such an $r > 0$, $x$ is analytic on $I$.
+\end{proof}
+
+\begin{example}\label{ordinary-differential-equations:example-radius}
+The solution of $x' = \frac{x}{1 + t^2}$, $x(0) = 1$, is $e^{\arctan t}$, real analytic on all of $\RR$, but its Taylor series at $0$ has radius of convergence exactly $1$: the coefficient $\frac{1}{1 + t^2}$ has poles at $\pm i$, and so does
+$\arctan$, so the solution, extended holomorphically, has essential singularities there. The radius of convergence of a power series solution is controlled by the complex singularities of the coefficients, which are invisible on
+the real line. This is why numerical methods based on Taylor series need a step size that depends on the distance to complex singularities.
+\end{example}
+
+The real counterpart of a regular singular point is the \emph{Euler equation}, which reduces to constant coefficients.
+
+\begin{proposition}[Euler equations]\label{ordinary-differential-equations:proposition-euler-equation}
+Let $a, b \in \RR$ and $I(\rho) = \rho(\rho - 1) + a\rho + b$. On $t > 0$, the substitution $t = e^s$, $y(t) = u(s)$ transforms $t^2y'' + aty' + by = 0$ into the constant coefficient equation $\ddot u + (a - 1)\dot u + bu = 0$, whose
+characteristic polynomial is $I$. So a basis of solutions is:
+\begin{enumerate}
+\item $t^{\rho_1}$, $t^{\rho_2}$ if $I$ has distinct real roots $\rho_1$, $\rho_2$;
+\item $t^\rho$, $t^\rho\ln t$ if $\rho$ is a double root;
+\item $t^\alpha\cos(\beta\ln t)$, $t^\alpha\sin(\beta\ln t)$ if the roots are $\alpha \pm i\beta$, $\beta > 0$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+By the chain rule, $\dot u = ty'(t)$ and $\ddot u = t^2y''(t) + ty'(t)$ (dots for $d/ds$), so $t^2y'' + aty' + by = \ddot u + (a - 1)\dot u + bu$, with characteristic polynomial $\lambda^2 + (a - 1)\lambda + b = I(\lambda)$. Apply
+Theorem~\ref{ordinary-differential-equations:theorem-constant-coefficients} and take real and imaginary parts of $e^{(\alpha + i\beta)s} = t^\alpha e^{i\beta\ln t}$.
+\end{proof}
+
+In case (3) the solutions oscillate infinitely often as $t \to 0^+$, with zeros accumulating geometrically ($\beta\ln t \in \pi\ZZ + c$). The Frobenius solutions of Theorem~\ref{special-functions:theorem-frobenius} are perturbations of these:
+near a regular singular point the equation looks like its Euler equation $t^2y'' + p(0)ty' + q(0)y = 0$.
+
+\begin{example}[The Airy equation]\label{ordinary-differential-equations:example-airy}
+The equation $y'' = ty$ has entire coefficients, so its solutions are entire functions of $t$ (Theorem~\ref{special-functions:theorem-holomorphic-solutions}): $y = \sum_kc_kt^k$ with $(k + 2)(k + 1)c_{k+2} = c_{k-1}$ and $c_2 = 0$, so $c_0$
+and $c_1$ determine everything. For $t > 0$ the equation is $y'' + qy = 0$ with $q = -t < 0$, so a nonzero solution has at most one positive zero (Corollary~\ref{ordinary-differential-equations:corollary-zero-spacing}); for
+$t < 0$, $q = -t \to \infty$ as $t \to -\infty$, and the solutions oscillate with zeros becoming denser, at spacing about $\pi/\sqrt{|t|}$ (Exercise~\ref{ordinary-differential-equations:exercise-airy-zeros}, after $t \mapsto -t$). The
+Airy function $\mathrm{Ai}$, the solution decaying as $t \to \infty$, describes the intensity of light near a caustic, such as the bright edge of a rainbow, and the transition between the classically allowed and forbidden regions in
+quantum mechanics.
+\end{example}
+
+\begin{remark}[The Riemann--Hilbert problem]\label{ordinary-differential-equations:remark-riemann-hilbert}
+Riemann asked whether every representation of the fundamental group of the sphere minus finitely many points arises as the monodromy of a Fuchsian equation, and Hilbert listed this as his twenty-first problem
+(Section~\ref{special-functions:section-fuchsian}). For first-order systems $w' = A(z)w$ with simple poles, Plemelj gave a positive answer in 1908 under the weaker condition that the singular points be regular; with Fuchsian
+systems in the strict sense, Bolibrukh found counterexamples in 1989. The modern form of the question is the Riemann--Hilbert correspondence between flat connections with regular singularities and representations of the
+fundamental group (Chapter~\ref{connections}), extended by Deligne to all dimensions and by Kashiwara and Mebkhout to regular holonomic $D$-modules.
+\end{remark}
+
+\section{Applications: populations, epidemics and control}\label{ordinary-differential-equations:section-applications}
+
+\begin{example}[Logistic growth]\label{ordinary-differential-equations:example-logistic}
+A population with growth rate $r > 0$ and carrying capacity $K > 0$ follows $x' = rx(1 - x/K)$ (Verhulst, 1838). By separation of variables and partial fractions, the solution with $x(0) = x_0 > 0$ is
+$x(t) = \frac{K}{1 + (K/x_0 - 1)e^{-rt}}$, which tends to $K$; the equilibrium $K$ attracts all positive solutions, in accordance with the phase line of Proposition~\ref{ordinary-differential-equations:proposition-scalar-autonomous}. The
+solution is the \emph{sigmoid} curve: exponential growth at first, then saturation, with the inflection point at $x = K/2$.
+\end{example}
+
+\begin{proposition}[Lotka--Volterra]\label{ordinary-differential-equations:proposition-lotka-volterra}
+Let $a, b, c, d > 0$ and consider prey $x$ and predators $y$ with $x' = x(a - by)$, $y' = y(-c + dx)$ on the open quadrant $x, y > 0$.
+\begin{enumerate}
+\item The quadrant is invariant, and $H(x, y) = dx - c\ln x + by - a\ln y$ is constant along solutions; $H$ is strictly convex with its minimum at the unique equilibrium $(c/d, a/b)$.
+\item Every solution other than the equilibrium is periodic.
+\item (Volterra's principle) If $x$, $y$ is a solution with period $T$, then $\frac1T\int_0^Tx = \frac cd$ and $\frac1T\int_0^Ty = \frac ab$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}[Sketch of proof]
+(1) The axes consist of orbits, so by uniqueness solutions starting in the quadrant stay there. $\dot H = (d - \frac cx)x(a - by) + (b - \frac ay)y(dx - c) = (dx - c)(a - by) + (by - a)(dx - c) = 0$, and $H$ is a sum of strictly convex functions
+of $x$ and of $y$, each minimal at $c/d$, respectively $a/b$. (2) The level sets $\{H = h\}$, $h > \min H$, are compact (as $H \to \infty$ at the boundary of the quadrant and at infinity), so solutions exist for all time. The level set
+meets the half-line $\{x = c/d, y > a/b\}$ in exactly one point, by strict convexity in $y$. Following the signs of $x'$ and $y'$ in the four quadrants around the equilibrium, a solution through this point crosses the four quadrants in
+turn and returns to the half-line, hence to the same point, so it is periodic. The omitted verification is that each quadrant is crossed in finite time, which follows from the bounds on $|x'|$, $|y'|$ away from the equilibrium on the
+compact level set. (3) $(\ln y)^{\prime} = -c + dx$, and integrating over a period gives $0 = -cT + d\int_0^Tx$; similarly for $y$.
+\end{proof}
+
+Volterra devised the model in 1926 to explain the observation of D'Ancona that during the First World War, when fishing in the Adriatic was reduced, the proportion of predatory fish rose. Fishing reduces $a$ and increases $c$
+(by the same effort $\epsilon$: $a \mapsto a - \epsilon$, $c \mapsto c + \epsilon$), so by (3) it \emph{raises} the average prey population $c/d$ and lowers the average predator population $a/b$. The same reasoning warns that a pesticide
+killing both a pest and its predators can increase the pest.
+
+\begin{proposition}[The SIR model]\label{ordinary-differential-equations:proposition-sir}
+Let $\beta, \gamma > 0$, $R_0 = \beta/\gamma$, and let susceptible, infected and recovered fractions follow $S' = -\beta SI$, $I' = \beta SI - \gamma I$, $R' = \gamma I$, with $S(0) = S_0 > 0$, $I(0) = I_0 > 0$, $R(0) = R_0^{\prime} \geq 0$ and
+$S_0 + I_0 + R_0^{\prime} = 1$.
+\begin{enumerate}
+\item Solutions exist for all $t \geq 0$, with $S, I > 0$ and $S + I + R = 1$; $S$ decreases to a limit $S_\infty > 0$, and $I(t) \to 0$.
+\item If $R_0S_0 \leq 1$, $I$ decreases from the start; if $R_0S_0 > 1$, $I$ first increases, reaching its maximum when $S = 1/R_0$, and then decreases (an \emph{epidemic}).
+\item (Final size) $\ln\frac{S_0}{S_\infty} = R_0(1 - R_0^{\prime} - S_\infty)$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) The sum $S + I + R$ has derivative $0$. While the solution exists, $S(t) = S_0\exp(-\beta\int_0^tI) > 0$ and $I(t) = I_0\exp\int_0^t(\beta S - \gamma) > 0$, and then $R$ increases, so all three stay in $[0, 1]$, and the solution is global by
+Theorem~\ref{real-analysis:theorem-picard-lindelof}(3). $S$ is decreasing and positive, with limit $S_\infty \geq 0$. $R$ is increasing and bounded, so $\int_0^\infty\gamma I = \lim R - R_0^{\prime} < \infty$; as $I^{\prime}$ is bounded, $I$ is
+uniformly continuous, and a nonnegative integrable uniformly continuous function tends to $0$. (2) $I' = \gamma I(R_0S - 1)$ and $S$ decreases. (3) $dS/dR = S^{\prime}/R^{\prime} = -R_0S$, so $\ln S = \ln S_0 - R_0(R - R_0^{\prime})$ along the
+solution, and as $t \to \infty$, $R \to 1 - S_\infty$. In particular $S_\infty = S_0e^{-R_0(1 - R_0^{\prime} - S_\infty)} > 0$.
+\end{proof}
+
+The model of Kermack and McKendrick (1927) \cite{kermack-mckendrick-1927} explains two facts. First, an epidemic does not stop because everybody has been infected: a positive fraction $S_\infty$ escapes it. Second, there is a
+threshold: the infection grows only if the \emph{basic reproduction number} $R_0$, the expected number of secondary cases caused by one case in a susceptible population, times $S_0$ exceeds $1$. Vaccinating a fraction $1 - 1/R_0$ of the
+population brings $R_0S_0$ below $1$ (\emph{herd immunity}); for measles, $R_0 \approx 15$ and the threshold is about $93\%$.
+
+\begin{definition}\label{ordinary-differential-equations:definition-controllable}
+A \emph{linear control system} is $x' = Ax + Bu(t)$ with $A \in M_n(\RR)$, $B \in M_{n \times m}(\RR)$, and \emph{controls} $u \colon [0, T] \to \RR^m$, continuous. It is \emph{controllable} if for all $x_0$, $x_1 \in \RR^n$ and
+$T > 0$ there is a control steering $x(0) = x_0$ to $x(T) = x_1$.
+\end{definition}
+
+\begin{theorem}[Kalman rank condition]\label{ordinary-differential-equations:theorem-kalman}
+The system is controllable iff the $n \times nm$ matrix $(B, AB, A^2B, \ldots, A^{n-1}B)$ has rank $n$.
+\end{theorem}
+
+\begin{proof}
+By variation of constants, $x(T) = e^{TA}x_0 + \int_0^Te^{(T-s)A}Bu(s)\,ds$. Let $W = \int_0^Te^{(T-s)A}BB^Te^{(T-s)A^T}\,ds$, a symmetric positive semidefinite matrix (the \emph{controllability Gramian}). \emph{If $W$ is invertible},
+the control $u(s) = B^Te^{(T-s)A^T}W^{-1}(x_1 - e^{TA}x_0)$ gives $x(T) = x_1$. \emph{If $W$ is singular}, there is $v \neq 0$ with $0 = v^TWv = \int_0^T\|B^Te^{(T-s)A^T}v\|^2\,ds$, so $v^Te^{tA}B = 0$ for $t \in [0, T]$, and for every control
+$v^Tx(T) = v^Te^{TA}x_0$: the endpoint is confined to an affine hyperplane, and the system is not controllable. \emph{The rank condition.} If $v^Te^{tA}B = 0$ on $[0, T]$, differentiating $k$ times at $t = 0$ gives $v^TA^kB = 0$ for all $k$,
+so the rank is $< n$. Conversely if $v^TA^kB = 0$ for $k < n$, then by Cayley--Hamilton (Theorem~\ref{linear-algebra:theorem-cayley-hamilton}) $A^k$ is a combination of $I, \ldots, A^{n-1}$ for every $k$, so $v^TA^kB = 0$ for all $k$ and
+$v^Te^{tA}B = \sum_kt^kv^TA^kB/k! = 0$, so $v^TWv = 0$.
+\end{proof}
+
+\begin{example}\label{ordinary-differential-equations:example-control}
+The \emph{double integrator} $x'' = u$ (a cart pushed by a force $u$) is $\bigl(\begin{smallmatrix}x\\ v\end{smallmatrix}\bigr)^{\prime} = \bigl(\begin{smallmatrix}0 & 1\\ 0 & 0\end{smallmatrix}\bigr)\bigl(\begin{smallmatrix}x\\ v\end{smallmatrix}\bigr) + \bigl(\begin{smallmatrix}0\\ 1\end{smallmatrix}\bigr)u$, with
+$(B, AB) = \bigl(\begin{smallmatrix}0 & 1\\ 1 & 0\end{smallmatrix}\bigr)$ of rank $2$: one can bring the cart from any position and speed to any other in any time. Two identical carts pushed by the same force are not controllable: the
+difference of their states evolves freely.
+\end{example}
+
+\begin{remark}\label{ordinary-differential-equations:remark-control}
+\begin{enumerate}
+\item \emph{Observability.} If only $y = Cx$ is measured, the state can be reconstructed from $y$ on $[0, T]$ iff $(C^T, A^TC^T, \ldots, (A^T)^{n-1}C^T)$ has rank $n$, by the same argument applied to the dual system.
+\item \emph{Stabilisation.} If the system is controllable, for every monic real polynomial $\chi$ of degree $n$ there is a feedback $u = Kx$ such that $A + BK$ has characteristic polynomial $\chi$ (\emph{pole placement}); in particular it can be
+made asymptotically stable. This is how an inverted pendulum on a cart, or a rocket, is balanced.
+\item \emph{Optimal control and filtering.} Minimising $\int(x^TQx + u^TRu)$ leads to a feedback given by the solution of a matrix Riccati equation (the linear-quadratic regulator), and estimating the state from noisy measurements
+leads to the Kalman filter, which propagates a mean and a covariance by the same equations; it navigated the Apollo spacecraft and runs in every GPS receiver \cite{sontag-control}. For nonlinear systems, controllability is
+governed by Lie brackets of vector fields (Chow--Rashevskii).
+\end{enumerate}
+\end{remark}
+
+\section{Dynamical systems}\label{ordinary-differential-equations:section-dynamical-systems}
+
+\begin{definition}\label{ordinary-differential-equations:definition-dynamical-system}
+A \emph{(continuous) dynamical system} or \emph{flow} on a metric space $X$ is a continuous map $\varphi \colon \RR \times X \to X$, $(t, x) \mapsto \varphi_t(x)$, with $\varphi_0 = \mathrm{id}$ and $\varphi_{t+s} = \varphi_t \circ \varphi_s$. A
+\emph{discrete dynamical system} is a continuous map $f \colon X \to X$, iterated: $f^n = f \circ \cdots \circ f$. The \emph{orbit} of $x$ is $\{\varphi_t(x) : t \in \RR\}$, its \emph{forward orbit} $\{\varphi_t(x) : t \geq 0\}$; a set $S$ is
+\emph{invariant} if $\varphi_t(S) = S$ for all $t$. A point is an \emph{equilibrium} if $\varphi_t(x) = x$ for all $t$, and \emph{periodic} with period $T > 0$ if $\varphi_T(x) = x$.
+\end{definition}
+
+The flow of a complete vector field is a dynamical system (Proposition~\ref{ordinary-differential-equations:proposition-flow-properties} and Theorem~\ref{ordinary-differential-equations:theorem-continuous-dependence}); most statements
+below hold for local flows as well, as long as the solutions considered exist for $t \geq 0$. The \emph{Poincar\'e map} of a periodic orbit, the first return map to a transversal section, reduces the study of flows near periodic orbits
+to discrete dynamical systems, with the Floquet multipliers of the linearised equation as eigenvalues of its derivative.
+
+\begin{proposition}\label{ordinary-differential-equations:proposition-orbits}
+For the flow of a $C^1$ vector field on $U \subseteq \RR^n$:
+\begin{enumerate}
+\item two orbits are either disjoint or equal;
+\item if $\varphi_T(x) = x$ for some $T > 0$ and $x$ is not an equilibrium, there is a least such $T$, the \emph{period}, and the orbit is homeomorphic to a circle;
+\item an equilibrium cannot be reached in finite time by a non-constant solution.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) If $\varphi_s(x) = \varphi_{s^{\prime}}(y)$ then $y = \varphi_{s - s^{\prime}}(x)$ by the group property. (2) The set $\{T : \varphi_T(x) = x\}$ is a closed subgroup of $\RR$, not equal to $\RR$ since $F(x) \neq 0$ (then $\varphi_t(x) \neq x$ for small
+$t \neq 0$), so it is $T_0\ZZ$ with $T_0 > 0$; $t \mapsto \varphi_t(x)$ induces a continuous bijection $\RR/T_0\ZZ \to$ orbit, a homeomorphism by compactness. (3) is (1) applied to the orbit $\{x^*\}$.
+\end{proof}
+
+\begin{definition}\label{ordinary-differential-equations:definition-limit-set}
+The \emph{$\omega$-limit set} of $x$ is $\omega(x) = \bigcap_{T \geq 0}\overline{\{\varphi_t(x) : t \geq T\}}$, the set of limits of sequences $\varphi_{t_k}(x)$ with $t_k \to \infty$; the $\alpha$-limit set is defined with $t \to -\infty$.
+\end{definition}
+
+\begin{proposition}\label{ordinary-differential-equations:proposition-limit-sets}
+If the forward orbit of $x$ has compact closure $K$, then $\omega(x)$ is nonempty, compact, connected and invariant, and $d(\varphi_t(x), \omega(x)) \to 0$ as $t \to \infty$.
+\end{proposition}
+
+\begin{proof}
+$\omega(x)$ is a decreasing intersection of nonempty compact subsets of $K$, so it is nonempty and compact. \emph{Invariance}: if $\varphi_{t_k}(x) \to y$, then $\varphi_{t_k + s}(x) = \varphi_s(\varphi_{t_k}(x)) \to \varphi_s(y)$ by continuity, so
+$\varphi_s(y) \in \omega(x)$ for all $s$, and $\varphi_s(\omega(x)) = \omega(x)$ since $\varphi_{-s}$ is the inverse. \emph{Convergence}: if $d(\varphi_{t_k}(x), \omega(x)) \geq \varepsilon$ with $t_k \to \infty$, a subsequence of $\varphi_{t_k}(x)$ converges
+in $K$ to a point of $\omega(x)$, a contradiction. \emph{Connectedness}: if $\omega(x) = A \cup B$ with $A$, $B$ disjoint nonempty compact sets at distance $3\varepsilon > 0$, the orbit is within $\varepsilon$ of $\omega(x)$ for $t \geq T$ and visits the
+$\varepsilon$-neighbourhoods of both $A$ and $B$ at arbitrarily large times; by connectedness of time intervals it passes through the compact set $\{z \in K : d(z, A) \geq \varepsilon, d(z, B) \geq \varepsilon\}$ at arbitrarily large times, which gives a point
+of $\omega(x)$ outside $A \cup B$.
+\end{proof}
+
+\begin{theorem}[LaSalle's invariance principle]\label{ordinary-differential-equations:theorem-lasalle}
+Let $F$ be a $C^1$ vector field on $U$, $V \colon U \to \RR$ of class $C^1$, and $K \subseteq U$ compact and forward invariant ($\varphi_t(K) \subseteq K$ for $t \geq 0$) with $\dot V = \nabla V \cdot F \leq 0$ on $K$. Then for every $x \in K$,
+$\omega(x)$ is contained in the largest invariant subset $M$ of $E = \{y \in K : \dot V(y) = 0\}$.
+\end{theorem}
+
+\begin{proof}
+$V(\varphi_t(x))$ is nonincreasing and bounded below on $K$, with limit $c$. For $y \in \omega(x) \subseteq K$, $V(y) = c$ by continuity. Since $\omega(x)$ is invariant (Proposition~\ref{ordinary-differential-equations:proposition-limit-sets}), $V$ is
+constant $= c$ along the orbit of $y$, so $\dot V(y) = 0$. So $\omega(x)$ is an invariant subset of $E$, hence of $M$.
+\end{proof}
+
+\begin{example}\label{ordinary-differential-equations:example-lasalle-pendulum}
+For the damped pendulum of Example~\ref{ordinary-differential-equations:example-pendulum} with $k > 0$, let $0 < h < 2$ and $K$ the component of $\{E \leq h\}$ containing the origin, a compact set with $|\theta| < \pi$, forward invariant since $E$
+decreases. $E = \{\omega = 0\}$, and an invariant subset of it consists of solutions with $\theta^{\prime} \equiv 0$, hence $\sin\theta \equiv 0$, $\theta = 0$. So every solution starting in $K$ converges to $(0, 0)$: the basin of attraction contains
+$K$.
+\end{example}
+
+\begin{proposition}[Gradient systems]\label{ordinary-differential-equations:proposition-gradient}
+For $x' = -\nabla V(x)$ with $V$ of class $C^2$: $V$ decreases along non-constant solutions, there are no periodic orbits other than equilibria, and if a forward orbit is bounded, its $\omega$-limit set consists of critical points of $V$.
+\end{proposition}
+
+\begin{proof}
+$\dot V = -\|\nabla V\|^2$, which is $< 0$ except at equilibria. A periodic non-constant orbit would have $V(\varphi_T(x)) < V(x) = V(\varphi_T(x))$. For the last statement apply LaSalle's principle with $K$ the closure of the forward orbit:
+$E$ is the set of critical points.
+\end{proof}
+
+In the plane, limit sets are very restricted.
+
+\begin{theorem}[Poincar\'e--Bendixson]\label{ordinary-differential-equations:theorem-poincare-bendixson}
+Let $F$ be a $C^1$ vector field on an open $U \subseteq \RR^2$, and suppose the forward orbit of $x$ has compact closure in $U$. If $\omega(x)$ contains no equilibrium, it is a periodic orbit. More generally, if $F$ has finitely many
+equilibria in that closure, $\omega(x)$ is an equilibrium, a periodic orbit, or a finite set of equilibria together with orbits converging to them in both time directions.
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+\emph{Transversals.} Near a non-equilibrium point $p$, a short segment $\Sigma$ through $p$ transverse to $F$ is crossed by all nearby orbits, in the same direction (flow box, from Theorem~\ref{ordinary-differential-equations:theorem-differentiable-dependence}
+and the implicit function theorem). \emph{Monotonicity.} The successive intersections of a forward orbit with $\Sigma$ are monotone along $\Sigma$: the orbit arc between two intersections and the piece of $\Sigma$ between them form a closed curve
+which, by the Jordan curve theorem, bounds a region that the orbit cannot leave (or enter) again. Hence $\omega(x)$ meets $\Sigma$ in at most one point. \emph{Conclusion.} Take $y \in \omega(x)$ and $z \in \omega(y) \subseteq \omega(x)$, not an
+equilibrium, with a transversal $\Sigma$ at $z$. The orbit of $y$ lies in $\omega(x)$ and meets $\Sigma$ in at most one point, but accumulates at $z$; so it passes through $z$ repeatedly, and is periodic. A further argument with
+transversals shows that $\omega(x)$ equals this periodic orbit. The omitted verifications are the flow box construction and the use of the Jordan curve theorem; see \cite[Chapter VII]{hartman-ode} or \cite[Chapter 7]{teschl-ode}.
+\end{proof}
+
+\begin{corollary}\label{ordinary-differential-equations:corollary-trapping}
+If a compact set $K \subseteq U \subseteq \RR^2$ is forward invariant and contains no equilibria, it contains a periodic orbit. In particular, a forward invariant annulus without equilibria contains a periodic orbit.
+\end{corollary}
+
+\begin{proof}
+For $x \in K$, $\omega(x) \subseteq K$ is a periodic orbit by Theorem~\ref{ordinary-differential-equations:theorem-poincare-bendixson}.
+\end{proof}
+
+\begin{example}[The van der Pol oscillator]\label{ordinary-differential-equations:example-van-der-pol}
+The equation $x'' - \mu(1 - x^2)x' + x = 0$, $\mu > 0$, models a circuit with a vacuum tube that amplifies small oscillations and damps large ones. The origin is an unstable focus or node (linearisation with trace $\mu > 0$ and
+determinant $1$), and one can construct a forward invariant annulus around it; by Corollary~\ref{ordinary-differential-equations:corollary-trapping} there is a periodic orbit, and Li\'enard's theorem shows that it is unique and attracts
+every other orbit: a \emph{limit cycle} \cite{guckenheimer-holmes}. Heartbeats and many other self-sustained oscillations are of this kind. Hilbert's sixteenth problem asks for a bound on the number of limit cycles of polynomial
+vector fields of degree $d$ in the plane; it is open even for $d = 2$, and only finiteness for each field is known (Ilyashenko, \'Ecalle).
+\end{example}
+
+\begin{remark}[Excluding periodic orbits]\label{ordinary-differential-equations:remark-dulac}
+\emph{Bendixson--Dulac criterion}: if there is a $C^1$ function $g > 0$ on a simply connected planar region $\Omega$ with $\operatorname{div}(gF)$ of constant sign and not identically zero on open sets, there is no periodic orbit in $\Omega$;
+the proof applies Green's theorem (Chapter~\ref{riemannian-geometry}) to the region bounded by the orbit, on whose boundary $gF$ is tangent. Gradient systems (Proposition~\ref{ordinary-differential-equations:proposition-gradient}) and the
+index theory of vector fields (every periodic orbit in the plane encloses an equilibrium, by Brouwer's theorem) give other criteria.
+\end{remark}
+
+\begin{remark}[Chaos for flows]\label{ordinary-differential-equations:remark-chaos-flows}
+In dimension $3$ the Poincar\'e--Bendixson theorem fails dramatically. The \emph{Lorenz system} $x' = \sigma(y - x)$, $y' = x(\rho - z) - y$, $z' = xy - \beta z$, a truncation of the equations of atmospheric convection, has for
+$\sigma = 10$, $\rho = 28$, $\beta = 8/3$ a \emph{strange attractor}: an invariant set of fractal structure on which solutions depend sensitively on initial conditions. That this attractor really exists, with the properties suggested by the
+computer pictures, was proved only in 2002, with a computer-assisted proof, by Tucker; it was Smale's fourteenth problem for the twenty-first century.
+\end{remark}
+
+\section{Hyperbolicity, invariant manifolds and bifurcations}\label{ordinary-differential-equations:section-hyperbolic}
+
+\begin{definition}\label{ordinary-differential-equations:definition-hyperbolic}
+An equilibrium $x^*$ of a $C^1$ vector field is \emph{hyperbolic} if no eigenvalue of $A = DF(x^*)$ has real part $0$. Then $\RR^n = E^s \oplus E^u$, the sums of the generalised eigenspaces of eigenvalues with negative, respectively
+positive, real part (the \emph{stable} and \emph{unstable subspaces}). Its \emph{stable set} is $W^s(x^*) = \{x : \varphi_t(x) \to x^* \text{ as } t \to \infty\}$, and its \emph{unstable set} $W^u(x^*)$ is defined with $t \to -\infty$.
+\end{definition}
+
+\begin{theorem}[Hartman--Grobman and the stable manifold theorem]\label{ordinary-differential-equations:theorem-hartman-grobman}
+Let $x^*$ be a hyperbolic equilibrium of a $C^k$ vector field, $k \geq 1$.
+\begin{enumerate}
+\item (Hartman--Grobman) There are neighbourhoods $N$ of $x^*$ and $N^{\prime}$ of $0$ and a homeomorphism $h \colon N \to N^{\prime}$ with $h(\varphi_t(x)) = e^{tA}h(x)$ whenever both sides are defined in $N$: near $x^*$ the flow is topologically
+conjugate to its linearisation.
+\item (Stable manifold theorem) Near $x^*$, the points whose forward orbit stays in a small neighbourhood form an embedded $C^k$ submanifold $W^s_{\mathrm{loc}}$ of dimension $\dim E^s$, tangent to $E^s$ at $x^*$, whose points converge to
+$x^*$ exponentially fast; similarly for $W^u_{\mathrm{loc}}$. Globally $W^s(x^*) = \bigcup_{t \leq 0}\varphi_t(W^s_{\mathrm{loc}})$ is an injectively immersed manifold.
+\end{enumerate}
+\end{theorem}
+
+These are \cite[Chapter IX]{hartman-ode}; see also \cite[Chapter 9]{teschl-ode}. The conjugacy $h$ cannot in general be taken $C^1$: smooth linearisation requires non-resonance conditions on the eigenvalues (Sternberg).
+
+\begin{example}\label{ordinary-differential-equations:example-saddle-manifolds}
+For $x' = x$, $y' = -y + x^2$, the origin is a hyperbolic saddle with $E^u$ the $x$-axis and $E^s$ the $y$-axis. Solving, $x = x_0e^t$ and $y = \frac{x_0^2}{3}e^{2t} + (y_0 - \frac{x_0^2}{3})e^{-t}$. The solution tends to $0$ as $t \to \infty$
+iff $x_0 = 0$: $W^s$ is the $y$-axis. It tends to $0$ as $t \to -\infty$ iff $y_0 = x_0^2/3$: $W^u$ is the parabola $y = x^2/3$, tangent to $E^u$ but not equal to it.
+\end{example}
+
+Hyperbolic equilibria persist under small perturbations of the vector field (by the implicit function theorem, as $DF(x^*)$ is invertible) and keep their type. Non-hyperbolic ones are where qualitative changes happen when parameters
+vary.
+
+\begin{definition}\label{ordinary-differential-equations:definition-bifurcation}
+For a family of vector fields $F(x, \mu)$ depending on a parameter $\mu$, a \emph{bifurcation} occurs at $\mu_0$ if the phase portraits for $\mu$ near $\mu_0$ are not all topologically equivalent (related by homeomorphisms mapping orbits
+to orbits, preserving the direction of time).
+\end{definition}
+
+\begin{proposition}[Normal forms of elementary bifurcations]\label{ordinary-differential-equations:proposition-bifurcations}
+\begin{enumerate}
+\item (Saddle-node) $x' = \mu - x^2$ has no equilibrium for $\mu < 0$, one for $\mu = 0$, and two for $\mu > 0$: $\sqrt\mu$ asymptotically stable and $-\sqrt\mu$ unstable.
+\item (Transcritical) $x' = \mu x - x^2$ has equilibria $0$ and $\mu$, which exchange stability at $\mu = 0$.
+\item (Pitchfork) $x' = \mu x - x^3$ has the single equilibrium $0$, asymptotically stable, for $\mu \leq 0$; for $\mu > 0$, $0$ is unstable and $\pm\sqrt\mu$ are asymptotically stable.
+\item (Hopf) In polar coordinates, $r' = \mu r - r^3$, $\theta' = 1$, that is $x' = \mu x - y - x(x^2 + y^2)$, $y' = x + \mu y - y(x^2 + y^2)$: for $\mu \leq 0$ the origin is asymptotically stable and there are no periodic orbits; for
+$\mu > 0$ the origin is unstable and the circle $r = \sqrt\mu$ is a periodic orbit attracting every solution except the equilibrium.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+In (1)--(3) the equilibria are the zeros of $f(x) = F(x, \mu)$, and an equilibrium $z$ with $f'(z) < 0$ is asymptotically stable, with $f'(z) > 0$ unstable (Theorem~\ref{ordinary-differential-equations:theorem-linearisation} and
+Proposition~\ref{ordinary-differential-equations:proposition-scalar-autonomous}): $f' = -2x$ in (1), $\mu - 2x$ in (2), $\mu - 3x^2$ in (3), and at $\mu = 0$ the phase line gives the stability of $0$ in (3) directly. (4) The polar form follows from
+$rr^{\prime} = xx^{\prime} + yy^{\prime}$ and $r^2\theta^{\prime} = xy^{\prime} - yx^{\prime}$. The scalar equation $r' = \mu r - r^3$ on $r \geq 0$ is case (3): for $\mu \leq 0$ every $r(t) \to 0$, and for $\mu > 0$ every $r(t)$ with $r(0) > 0$ tends to
+$\sqrt\mu$, while $\theta$ turns with unit speed.
+\end{proof}
+
+These normal forms are universal: by the implicit function theorem and a change of coordinates, a generic one-parameter family of scalar equations with $f(0) = f'(0) = 0$ undergoes a saddle-node bifurcation, and a generic planar family
+whose linearisation has a pair of eigenvalues crossing the imaginary axis with nonzero speed undergoes a Hopf bifurcation, \emph{supercritical} (a stable cycle is born, as in (4)) or \emph{subcritical} (an unstable cycle dies), according to
+the sign of a computable coefficient \cite[Chapter 3]{guckenheimer-holmes}. Centre manifold theory reduces bifurcations in any dimension to these low-dimensional models.
+
+\section{Iterated maps of the interval}\label{ordinary-differential-equations:section-one-dimensional}
+
+\begin{definition}\label{ordinary-differential-equations:definition-periodic-point}
+Let $f \colon I \to I$ be a continuous map of an interval. A point $p$ is \emph{periodic} of \emph{(least) period} $n \geq 1$ if $f^n(p) = p$ and $f^k(p) \neq p$ for $0 < k < n$; a \emph{fixed point} has period $1$. If $f$ is $C^1$, a fixed point is
+\emph{attracting} if $|f'(p)| < 1$ and \emph{repelling} if $|f'(p)| > 1$; a periodic point of period $n$ is attracting or repelling if it is so as a fixed point of $f^n$, whose derivative there, $\prod_{k<n}f^{\prime}(f^k(p))$, is the
+\emph{multiplier} of the orbit.
+\end{definition}
+
+\begin{proposition}\label{ordinary-differential-equations:proposition-attracting-fixed-point}
+If $p$ is an attracting fixed point of a $C^1$ map $f$, there is $\delta > 0$ with $f^n(x) \to p$ geometrically for all $|x - p| < \delta$. If $p$ is repelling, every $x \neq p$ near $p$ eventually leaves a neighbourhood of $p$.
+\end{proposition}
+
+\begin{proof}
+Choose $|f'(p)| < \kappa < 1$ and $\delta$ with $|f'| \leq \kappa$ on $[p - \delta, p + \delta]$. By the mean value theorem $|f(x) - p| \leq \kappa|x - p|$ there, so $|f^n(x) - p| \leq \kappa^n|x - p|$. In the repelling case, $|f(x) - p| \geq \kappa|x - p|$ with
+$\kappa > 1$ near $p$, so the distance to $p$ grows geometrically while the iterates stay near $p$.
+\end{proof}
+
+\begin{example}[The logistic family]\label{ordinary-differential-equations:example-logistic-map}
+Let $f_r(x) = rx(1 - x)$ on $[0, 1]$, $0 < r \leq 4$, the discrete analogue of logistic growth for populations with non-overlapping generations.
+\begin{enumerate}
+\item For $r \leq 1$ all orbits tend to $0$. For $1 < r < 3$ the fixed point $p_r = 1 - \frac1r$ has multiplier $f_r^{\prime}(p_r) = 2 - r \in (-1, 1)$ and is attracting.
+\item At $r = 3$ the multiplier passes through $-1$ and an orbit of period $2$ is born: $f_r^2(x) = x$ has, besides $0$ and $p_r$, the roots of $r^2x^2 - r(r + 1)x + (r + 1)$, namely $\frac{r + 1 \pm \sqrt{(r + 1)(r - 3)}}{2r}$, real for $r > 3$.
+Its multiplier is $r^2(1 - 2x_1)(1 - 2x_2) = -r^2 + 2r + 4$ (using $x_1 + x_2 = \frac{r + 1}{r}$ and $x_1x_2 = \frac{r + 1}{r^2}$), which lies in $(-1, 1)$ for $3 < r < 1 + \sqrt6 \approx 3.449$.
+\item Then the $2$-cycle becomes unstable and a $4$-cycle appears, and so on: a cascade of \emph{period doublings} at parameters $r_n$ accumulating at $r_\infty \approx 3.5699$, with $\frac{r_n - r_{n-1}}{r_{n+1} - r_n} \to \delta = 4.6692\ldots$. Feigenbaum
+discovered (1978) that the same constant $\delta$ appears for every family of unimodal maps with a quadratic maximum; the universality was proved by Lanford with computer assistance, and conceptually by Sullivan, McMullen and Lyubich
+through renormalisation.
+\item Beyond $r_\infty$ the dynamics is chaotic for a set of parameters of positive measure (Jakobson), interspersed with dense windows of attracting cycles, such as the period $3$ window starting at $r = 1 + \sqrt8 \approx 3.828$; for
+$r = 4$, see Proposition~\ref{ordinary-differential-equations:proposition-tent-conjugacy}.
+\end{enumerate}
+\end{example}
+
+\begin{lemma}\label{ordinary-differential-equations:lemma-interval-covering}
+Let $g \colon I \to \RR$ be continuous and $K$, $J$ compact intervals with $K \subseteq I$.
+\begin{enumerate}
+\item If $J \subseteq g(K)$, there is a compact interval $K^{\prime} \subseteq K$ with $g(K^{\prime}) = J$.
+\item If $K \subseteq g(K)$, then $g$ has a fixed point in $K$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) Let $J = [\alpha, \beta]$ with $\alpha < \beta$ (if $\alpha = \beta$ take a point). Choose $u, v \in K$ with $g(u) = \alpha$, $g(v) = \beta$, say $u < v$ (the other case is symmetric). Let $u^* = \max\{x \in [u, v] : g(x) = \alpha\}$ and
+$v^* = \min\{x \in [u^*, v] : g(x) = \beta\}$. On $(u^*, v^*)$, $g$ takes neither the value $\alpha$ nor $\beta$, and $g((u^*, v^*))$ is an interval containing values arbitrarily close to $\alpha$ and to $\beta$, so it equals $(\alpha, \beta)$ by the
+intermediate value theorem (Corollary~\ref{real-analysis:corollary-ivt-real}); take $K^{\prime} = [u^*, v^*]$. (2) Let $K = [a, b]$ and $u, v \in K$ with $g(u) = a \leq u$ and $g(v) = b \geq v$; then $g(x) - x$ changes sign between $u$ and $v$.
+\end{proof}
+
+\begin{theorem}[Period three implies all periods; Li--Yorke, Sharkovskii]\label{ordinary-differential-equations:theorem-period-three}
+If a continuous map $f \colon I \to I$ of an interval has a point of period $3$, it has points of every period $n \geq 1$.
+\end{theorem}
+
+\begin{proof}
+Let $a < b < c$ be the orbit of period $3$. Replacing $f$ by $x \mapsto -f(-x)$ if necessary we may assume $f(b) = c$; then $f(a) = b$ and $f(c) = a$ (the other cyclic order, $f(b) = a$, is the reflected one). Let $L = [a, b]$ and $R = [b, c]$.
+Then $f(L) \supseteq [b, c] = R$ and $f(R) \supseteq [a, c] = L \cup R$. For $n = 1$, $R \subseteq f(R)$ gives a fixed point by Lemma~\ref{ordinary-differential-equations:lemma-interval-covering}(2). Let $n \geq 2$. Put $A_0 = R$, and for
+$1 \leq k \leq n - 2$ choose, by Lemma~\ref{ordinary-differential-equations:lemma-interval-covering}(1), $A_k \subseteq A_{k-1}$ with $f(A_k) = A_{k-1}$. This is possible because $A_{k-1} \subseteq f(A_{k-1})$: for $k = 1$, $f(A_0) = f(R) \supseteq R$, and for $k \geq 2$,
+$f(A_{k-1}) = A_{k-2} \supseteq A_{k-1}$. Then $f^k(A_k) = A_0 = R$. Since $f^{n-1}(A_{n-2}) = f(R) \supseteq L$, choose $A_{n-1} \subseteq A_{n-2}$ with $f^{n-1}(A_{n-1}) = L$. Then
+$f^n(A_{n-1}) = f(L) \supseteq R \supseteq A_{n-1}$, and the lemma gives $x \in A_{n-1}$ with $f^n(x) = x$.
+
+By construction $f^k(x) \in f^k(A_k) = R$ for $0 \leq k \leq n - 2$, and $f^{n-1}(x) \in L$. If $f^{n-1}(x) = b$, then $x = f(b) = c$, so $f(x) = a \notin R$, which is impossible if $n \geq 3$, while for $n = 2$, $f(x) = b$ and $f(b) = c = x$ would give
+$f(x) = f(c) = a \neq b$. So $f^{n-1}(x) \in L \setminus \{b\}$ is not in $R$. If the least period $m$ of $x$ were smaller than $n$, the orbit $\{x, \ldots, f^{m-1}(x)\}$ would lie in $R$ (as $m - 1 \leq n - 2$), but it contains $f^{n-1}(x) \notin R$.
+So $x$ has least period $n$.
+\end{proof}
+
+\begin{remark}[Sharkovskii's theorem]\label{ordinary-differential-equations:remark-sharkovskii}
+Order the positive integers as $3 \rhd 5 \rhd 7 \rhd \cdots \rhd 2\cdot3 \rhd 2\cdot5 \rhd \cdots \rhd 2^2\cdot3 \rhd 2^2\cdot5 \rhd \cdots \rhd 2^3 \rhd 2^2 \rhd 2 \rhd 1$ (odd numbers except $1$, then twice them, then four times them, \ldots, and finally the
+powers of $2$ in decreasing order). Sharkovskii proved (1964) that if a continuous map of an interval has a point of period $m$ and $m \rhd n$, it has a point of period $n$, and that for every $m$ there are maps with period $m$ and no
+period preceding $m$ \cite{sharkovskii-1964}. So $3$ is the strongest period, and a map with finitely many periods has only powers of $2$; in the logistic family, the period doubling cascade realises the tail of the order. Li and Yorke,
+who rediscovered the case $m = 3$ in 1975, added that period $3$ forces an uncountable \emph{scrambled set} of orbits that approach each other and separate again infinitely often, and named the phenomenon ``chaos''
+\cite{li-yorke-1975}. The theorem is special to the line: a rotation of the circle by $2\pi/3$ has period $3$ and nothing else.
+\end{remark}
+
+\begin{definition}\label{ordinary-differential-equations:definition-chaos}
+A continuous map $f \colon X \to X$ of a metric space is \emph{chaotic} (in the sense of Devaney \cite{devaney-chaos}) if its periodic points are dense, it is \emph{topologically transitive} (for nonempty open $U$, $V$ there is $n$ with
+$f^n(U) \cap V \neq \emptyset$), and it has \emph{sensitive dependence on initial conditions}: there is $\varepsilon > 0$ such that every neighbourhood of every $x$ contains a $y$ with $d(f^n(x), f^n(y)) \geq \varepsilon$ for some $n$.
+\end{definition}
+
+\begin{proposition}\label{ordinary-differential-equations:proposition-tent-conjugacy}
+\begin{enumerate}
+\item The \emph{doubling map} $D(x) = 2x \bmod 1$ on $\RR/\ZZ$ is chaotic; it has exactly $2^n - 1$ fixed points of $D^n$.
+\item The \emph{tent map} $T(x) = 1 - |1 - 2x|$ on $[0, 1]$ and the logistic map $f_4(x) = 4x(1 - x)$ are conjugate: $h(x) = \sin^2(\pi x/2)$ is a homeomorphism of $[0, 1]$ with $f_4 \circ h = h \circ T$. Both are chaotic.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) In binary, $x = 0.x_1x_2x_3\ldots$ and $D(x) = 0.x_2x_3\ldots$: $D$ shifts the digits. \emph{Periodic points}: $D^n(x) = x$ iff $(2^n - 1)x \in \ZZ$, so the fixed points of $D^n$ are the $2^n - 1$ points $k/(2^n - 1)$, which become dense as $n$
+grows. \emph{Transitivity}: an open set contains a dyadic interval $I$ of length $2^{-n}$ (all $x$ with prescribed first $n$ digits), and $D^n(I)$ is the whole circle. \emph{Sensitivity} with $\varepsilon = \frac14$: given $x$ and $n$, the point $y$
+obtained by changing the $(n + 1)$-st and $(n+2)$-nd binary digits of $x$, which is at distance at most $2^{-n}$, has $D^n(y) - D^n(x) \equiv \pm\frac14$ or $\pm\frac34 \pmod 1$ (as the first two digits of $D^n(x)$ change), at distance $\geq \frac14$ on the
+circle.
+
+(2) $h$ is an increasing bijection of $[0, 1]$. For $x \leq \frac12$, $h(T(x)) = \sin^2(\pi x)$; for $x \geq \frac12$, $h(T(x)) = \sin^2(\pi - \pi x) = \sin^2(\pi x)$; and $f_4(h(x)) = 4\sin^2(\frac{\pi x}{2})\cos^2(\frac{\pi x}{2}) = \sin^2(\pi x)$. Chaos is preserved by
+conjugacy by a homeomorphism of compact spaces (sensitivity uses uniform continuity of $h$ and $h^{-1}$). For $T$, the map $\kappa \colon \RR/\ZZ \to [0, 1]$, $\kappa(x) = 1 - |1 - 2\{x\}|$ with $\{x\} \in [0, 1)$ the fractional part, is a continuous
+surjection with $\kappa \circ D = T \circ \kappa$ (check on $[0, \frac12)$ and $[\frac12, 1)$). Periodic points of $D$ map to periodic points of $T$, which are dense as the image of a dense set under a continuous surjection; transitivity passes to $T$, since
+preimages under $\kappa$ of nonempty open sets are nonempty open sets; for sensitivity,
+$T^n$ maps each interval $[\frac{k}{2^n}, \frac{k + 1}{2^n}]$ onto $[0, 1]$, so every neighbourhood of $x$ contains a point $y$ with $|T^n(x) - T^n(y)| \geq \frac12$.
+\end{proof}
+
+\begin{remark}\label{ordinary-differential-equations:remark-lyapunov-exponents}
+The \emph{Lyapunov exponent} $\lambda(x) = \lim_n\frac1n\ln|(f^n)^{\prime}(x)|$ measures the exponential rate of separation of nearby orbits. For the doubling and tent maps it is $\ln 2$ wherever defined; for $f_4$ it is $\ln 2$ for almost every
+$x$, by the conjugacy and Birkhoff's ergodic theorem for the invariant density $\frac{1}{\pi\sqrt{x(1 - x)}}$ (Chapter~\ref{ergodic-theory}). Positive Lyapunov exponents, together with recurrence, are the measurable signature of chaos.
+Smale's \emph{horseshoe}, a map of the square that stretches it, folds it and lays it back across itself, contains an invariant Cantor set on which the dynamics is conjugate to the shift on two symbols; Smale showed that a horseshoe
+appears near every transversal homoclinic orbit, which explains Poincar\'e's discovery of chaotic behaviour in the three-body problem.
+\end{remark}
+
+\section{Exercises}\label{ordinary-differential-equations:section-exercises}
+
+\begin{exercise}\label{ordinary-differential-equations:exercise-square-root}
+Show that $x' = \sqrt{|x|}$, $x(0) = 0$, has infinitely many solutions on $\RR$, and determine all of them. Why does this not contradict Theorem~\ref{real-analysis:theorem-picard-lindelof}?
+\end{exercise}
+
+\begin{solution}
+A solution is nondecreasing (as $x' \geq 0$). Where $x > 0$, separation of variables gives $2\sqrt x = t - c$, so $x = (t - c)^2/4$ for $t \geq c$; where $x < 0$, $-2\sqrt{-x} = t - d$, so $x = -(t - d)^2/4$ for $t \leq d$. The solutions are
+$x(t) = -(t - d)^2/4$ for $t \leq d$, $0$ on $[d, c]$, $(t - c)^2/4$ for $t \geq c$, with $-\infty \leq d \leq 0 \leq c \leq \infty$; each is $C^1$, as both pieces have derivative $0$ at the junctions. The right side is not Lipschitz near $x = 0$, since
+$\sqrt{|x|}/|x| \to \infty$.
+\end{solution}
+
+\begin{exercise}\label{ordinary-differential-equations:exercise-exponential-jordan}
+Compute $e^{tA}$ for $A = \bigl(\begin{smallmatrix}2 & 1\\ 0 & 2\end{smallmatrix}\bigr)$ and for $A = \bigl(\begin{smallmatrix}1 & -2\\ 2 & 1\end{smallmatrix}\bigr)$, and solve $x' = Ax$, $x(0) = (1, 0)$ for both.
+\end{exercise}
+
+\begin{solution}
+For the first, $A = 2I + N$ with $N^2 = 0$, so $e^{tA} = e^{2t}(I + tN) = e^{2t}\bigl(\begin{smallmatrix}1 & t\\ 0 & 1\end{smallmatrix}\bigr)$ and $x(t) = (e^{2t}, 0)$. For the second, $A = I + 2J$ with $J = \bigl(\begin{smallmatrix}0 & -1\\ 1 & 0\end{smallmatrix}\bigr)$,
+$J^2 = -I$, so $e^{tA} = e^t\bigl(\begin{smallmatrix}\cos 2t & -\sin 2t\\ \sin 2t & \cos 2t\end{smallmatrix}\bigr)$ and $x(t) = e^t(\cos 2t, \sin 2t)$, an unstable focus.
+\end{solution}
+
+\begin{exercise}\label{ordinary-differential-equations:exercise-abel}
+Show that for $y'' + a(t)y' + b(t)y = 0$ with continuous coefficients, the Wronskian of two solutions satisfies $W(t) = W(t_0)\exp(-\int_{t_0}^ta)$ (Abel's formula). Given one solution $y_1$ without zeros, find a second one.
+\end{exercise}
+
+\begin{solution}
+The system for $(y, y^{\prime})$ has matrix $\bigl(\begin{smallmatrix}0 & 1\\ -b & -a\end{smallmatrix}\bigr)$, of trace $-a$, and $W$ is the determinant of a matrix solution: apply Proposition~\ref{ordinary-differential-equations:proposition-linear-structure}(2).
+For a second solution, $(y_2/y_1)^{\prime} = W/y_1^2$, so $y_2 = y_1\int\frac{e^{-\int a}}{y_1^2}$ (\emph{reduction of order}). For example $y'' - 2y' + y = 0$ with $y_1 = e^t$ gives $y_2 = te^t$.
+\end{solution}
+
+\begin{exercise}\label{ordinary-differential-equations:exercise-lyapunov-quadratic}
+Show that every solution of $x' = -x + y^2$, $y' = -y - xy$ is defined for all $t \geq 0$ and tends to $(0, 0)$.
+\end{exercise}
+
+\begin{solution}
+With $V = x^2 + y^2$, $\dot V = 2x(-x + y^2) + 2y(-y - xy) = -2x^2 - 2y^2 = -2V$. So $V(t) = V(0)e^{-2t}$ along solutions, which therefore stay bounded, exist for all $t \geq 0$ (Theorem~\ref{real-analysis:theorem-picard-lindelof}(3)) and converge
+to $0$ exponentially.
+\end{solution}
+
+\begin{exercise}\label{ordinary-differential-equations:exercise-liouville-normal-form}
+Let $p > 0$ be $C^2$, $r$ $C^1$ and $q$ continuous. Show that the substitution $y = g(t)z$ with a suitable $g > 0$, followed if necessary by a change of the independent variable $s = \int dt/p$, transforms $(py')' + ry' + qy = 0$ into an equation of the
+form $z'' + Q z = 0$.
+\end{exercise}
+
+\begin{solution}
+With $s = \int_{t_0}^tdu/p(u)$, $\frac{d}{dt} = \frac1p\frac{d}{ds}$, so $py^{\prime} = \frac{dy}{ds}$ and the equation becomes $\frac{1}{p}\frac{d^2y}{ds^2} + \frac{r}{p}\frac{dy}{ds} + qy = 0$, that is $\ddot y + r\dot y + pqy = 0$ with dots for $d/ds$. For
+$\ddot y + a\dot y + by = 0$, put $y = gz$ with $g = \exp(-\frac12\int a)$: then $\ddot y + a\dot y + by = g(\ddot z + (b - \frac{a^2}{4} - \frac{\dot a}{2})z)$, which has no first-order term.
+\end{solution}
+
+\begin{exercise}\label{ordinary-differential-equations:exercise-airy-zeros}
+Show that every nonzero real solution of $y'' + ty = 0$ has infinitely many zeros in $(1, \infty)$, and that the distance between consecutive zeros in $[t_0, \infty)$ is at most $\pi/\sqrt{t_0}$.
+\end{exercise}
+
+\begin{solution}
+On $[t_0, \infty)$, $q(t) = t \geq t_0 = m^2$, so by Corollary~\ref{ordinary-differential-equations:corollary-zero-spacing} (whose proof only uses the lower bound for this statement) any interval of length $\pi/\sqrt{t_0}$ in $[t_0, \infty)$ contains a
+zero: compare with $\sin(\sqrt{t_0}(t - c))$, which has consecutive zeros $c$, $c + \pi/\sqrt{t_0}$, using Theorem~\ref{ordinary-differential-equations:theorem-sturm-comparison}. So there are infinitely many zeros, and their spacing tends to $0$.
+\end{solution}
+
+\begin{exercise}\label{ordinary-differential-equations:exercise-sir-final-size}
+For the SIR model with $R_0 = 2$, $R(0) = 0$ and $S_0 \to 1$, $I_0 \to 0$, compute numerically the final fraction $S_\infty$ of people never infected, and the maximal fraction of simultaneously infected people.
+\end{exercise}
+
+\begin{solution}
+The final size equation becomes $-\ln S_\infty = 2(1 - S_\infty)$, whose root in $(0, 1)$ is $S_\infty \approx 0.203$ (Newton's method from $0.2$): about $80\%$ of the population is infected. Along the solution
+$I + S - \frac{1}{R_0}\ln S$ is constant (its derivative is $I' + S'(1 - \frac{1}{R_0S}) = \gamma I(R_0S - 1) - \beta SI + \gamma I = 0$), equal to $1$ in the limit. The maximum of $I$ is at $S = \frac12$: $I_{\max} = 1 - \frac12 + \frac12\ln\frac12 \approx 0.153$.
+\end{solution}
+
+\begin{exercise}\label{ordinary-differential-equations:exercise-kalman-two-carts}
+Show with the Kalman rank condition that the system $x_1' = x_2$, $x_2' = u$, $x_3' = x_4$, $x_4' = -x_3 + u$ (a cart and a harmonic oscillator driven by the same force) is controllable.
+\end{exercise}
+
+\begin{solution}
+Here $B = (0, 1, 0, 1)^T$, $AB = (1, 0, 1, 0)^T$, $A^2B = (0, 0, 0, -1)^T$ and $A^3B = (0, 0, -1, 0)^T$. These four vectors are linearly independent (the last two give $e_4$ and $e_3$, and then the first two give $e_2$ and $e_1$), so the rank is $4$.
+\end{solution}
+
+\begin{exercise}\label{ordinary-differential-equations:exercise-periods-interval}
+Show that every continuous $f \colon [0, 1] \to [0, 1]$ has a fixed point; that $f(x) = 1 - x$ has points of periods $1$ and $2$ only; and that a continuous map of an interval with a point of period $2$ has a fixed point between the two points
+of the orbit.
+\end{exercise}
+
+\begin{solution}
+$g(x) = f(x) - x$ has $g(0) \geq 0 \geq g(1)$; apply the intermediate value theorem. For $f(x) = 1 - x$, $f^2 = \mathrm{id}$, so every point has period $1$ or $2$, and $\frac12$ is the only fixed point. If $f(a) = b$ and $f(b) = a$ with $a < b$, then $K = [a, b]$ satisfies $K \subseteq f(K)$ by the intermediate value theorem, and
+Lemma~\ref{ordinary-differential-equations:lemma-interval-covering}(2) gives a fixed point in $K$, necessarily in $(a, b)$. Sharkovskii's theorem (Remark~\ref{ordinary-differential-equations:remark-sharkovskii}) generalises this: period
+$2^k$ forces all periods $2^j$, $j < k$.
+\end{solution}

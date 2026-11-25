@@ -248,25 +248,7 @@ For $X \in M_n(\mathbb{K})$ the series $e^X = \sum_{k \geq 0}X^k/k!$ converges a
 \end{lemma}
 
 \begin{proof}
-Since $\|X^k/k!\| \leq \|X\|^k/k!$ and $\sum_k\|X\|^k/k! = e^{\|X\|}$, the series converges absolutely in the complete space $M_n(\mathbb{K})$
-(Proposition~\ref{real-analysis:proposition-series}).
-
-(1) As $X$ and $Y$ commute, $(X + Y)^k = \sum_{i+j=k}\frac{k!}{i!j!}X^iY^j$. So, with $a = \|X\|$ and $b = \|Y\|$,
-\[
-\Bigl\|\sum_{k \leq N}\frac{(X + Y)^k}{k!} - \sum_{i \leq N}\frac{X^i}{i!}\sum_{j \leq N}\frac{Y^j}{j!}\Bigr\| = \Bigl\|\sum_{\substack{i, j \leq N\\ i + j > N}}\frac{X^iY^j}{i!j!}\Bigr\|
-\leq \sum_{i + j > N}\frac{a^ib^j}{i!j!} = e^{a+b} - \sum_{k \leq N}\frac{(a + b)^k}{k!},
-\]
-which tends to $0$ as $N \to \infty$. Hence $e^{X+Y} = e^Xe^Y$. Taking $Y = -X$ gives $e^Xe^{-X} = e^0 = I$.
-
-(2) By (1), $e^{sX}e^{tX} = e^{(s+t)X}$. Each entry of $e^{tX}$ is a power series $\sum_k(X^k)_{ij}t^k/k!$ in $t$ with infinite radius of convergence, so it is
-smooth, and differentiating term by term (Theorem~\ref{real-analysis:theorem-power-series-derivative}) gives $\sum_{k \geq 1}t^{k-1}X^k/(k - 1)! = Xe^{tX}$,
-which also equals $e^{tX}X$.
-
-(3) $(AXA^{-1})^k = AX^kA^{-1}$, and transposition and conjugate transposition are continuous and linear, with $(X^k)^T = (X^T)^k$; sum the series.
-
-(4) Let $f(t) = \det e^{tX}$. By (2), $f(t + h) = f(t)\det(e^{hX})$, and $e^{hX} = I + hX + O(h^2)$, so expanding the determinant as a sum of products of entries,
-$\det e^{hX} = 1 + h\operatorname{tr}X + O(h^2)$. Hence $f'(t) = f(t)\operatorname{tr}X$ and $f(0) = 1$, so $(f(t)e^{-t\operatorname{tr}X})' = 0$ and
-$f(t) = e^{t\operatorname{tr}X}$. Take $t = 1$.
+This is Proposition~\ref{ordinary-differential-equations:proposition-matrix-exponential}, where the matrix exponential is introduced to solve linear differential equations with constant coefficients.
 \end{proof}
 
 \begin{example}\label{lie-groups:example-exponentials}
