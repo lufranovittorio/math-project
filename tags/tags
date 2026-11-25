@@ -6870,3 +6870,17 @@
 05AS,statistics:exercise-vc-rectangles
 05AT,statistics:exercise-posterior-predictive
 05AU,smooth-manifolds:remark-differential-derivative
+05AV,general-topology:definition-sequential
+05AW,general-topology:notation-sequential
+05AX,general-topology:lemma-sequential-basic
+05AY,general-topology:lemma-nested-basis
+05AZ,general-topology:proposition-first-countable-sequences
+05B0,general-topology:counterexample-sequentially-continuous
+05B1,general-topology:proposition-sequential-spaces
+05B2,general-topology:proposition-first-countable-hausdorff
+05B3,general-topology:counterexample-unique-limits
+05B4,general-topology:remark-sequential-hierarchy
+05B5,general-topology:proposition-compact-first-countable
+05B6,general-topology:exercise-sorgenfrey-right-continuous
+05B7,general-topology:exercise-countable-product-first-countable
+05B8,general-topology:exercise-bouquet-frechet-urysohn
