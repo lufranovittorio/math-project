@@ -182,8 +182,13 @@ notion is developed twice). This list supersedes the chapter lists of Phase 1 be
   James–Stein with proof, admissibility and minimax, Bernstein–von Mises, DKW, Kolmogorov–
   Smirnov, empirical processes, bootstrap consistency, density estimation, VC theorem with full
   proof, Rademacher complexity, PAC lower bounds, kernels and SVMs, time series.
-- `information-theory` (planned): entropy, source and channel coding theorems, Kraft, Huffman,
-  error-correcting codes (Hamming, Reed–Solomon, BCH, bounds), rate distortion.
+- `information-theory` (draft 2026-11-25): to deepen: full proof of channel achievability (joint
+  typicality lemma), strong converse and error exponents, rate-distortion theorem with proof,
+  Lempel–Ziv and universal coding, arithmetic coding, entropy rate of stationary and Markov
+  sources, Shannon–McMillan–Breiman, Slepian–Wolf and network information theory, BCH, Golay,
+  cyclic codes, MacWilliams identities, Berlekamp–Welch decoding, LDPC and polar codes, linear
+  programming bound, entropy power inequality with proof, Fisher information and de Bruijn,
+  quantum information in full (Holevo, Schumacher, stabiliser codes, teleportation).
 
 ### VIII. Number Theory
 - `prime-numbers`, `continued-fractions`, `geometry-of-numbers`, `analytic-number-theory`,

@@ -1,17 +1,481 @@
 \chapter{Information Theory}\label{information-theory}
-\chapterstatus{planned}
+\chapterstatus{draft}
 
-Entropy measures uncertainty, and it governs how well data can be compressed and how fast it can be
-sent through a noisy channel.
+How much information does a message contain, how far can it be compressed, and how fast can it be sent through a noisy channel? Shannon answered all three questions in one paper in 1948 \cite{shannon-1948}, with one
+quantity, the \emph{entropy}, and the answers are sharp theorems: a source of entropy $H$ can be compressed to $H$ bits per symbol and no further, and a channel of capacity $C$ carries $C$ bits per use with arbitrarily small
+error, and no more.
+\begin{itemize}
+\item Section~\ref{information-theory:section-entropy}: entropy, conditional entropy, mutual information; the data processing and Fano inequalities.
+\item Section~\ref{information-theory:section-source-coding}: prefix codes, the Kraft--McMillan inequality, the source coding theorem and Huffman codes.
+\item Section~\ref{information-theory:section-aep}: the asymptotic equipartition property and typical sequences.
+\item Section~\ref{information-theory:section-channel-coding}: channels, capacity and Shannon's noisy channel coding theorem.
+\item Section~\ref{information-theory:section-error-correcting}: error-correcting codes: Hamming, Reed--Solomon, and the bounds of Hamming, Singleton and Gilbert--Varshamov.
+\item Section~\ref{information-theory:section-differential-entropy}: differential entropy and the Gaussian channel.
+\item Section~\ref{information-theory:section-quantum}: a survey of quantum information, with the no-cloning theorem.
+\end{itemize}
 
-\noindent\textbf{Prerequisites.} Chapter~\ref{probability} (Probability Theory).
+\noindent\textbf{Prerequisites.} Chapter~\ref{probability} (Probability Theory), Chapter~\ref{statistics} (Mathematical Statistics), for the Kullback--Leibler divergence, Chapter~\ref{fields} (Fields) and
+Chapter~\ref{linear-algebra} (Linear Algebra).
 
-\noindent\textbf{Planned contents.}
+\section{Entropy and mutual information}\label{information-theory:section-entropy}
+
+\emph{Motivation.} How many yes/no questions are needed to identify an unknown object? If it is one of $2^k$ equally likely objects, $k$ questions suffice (halve the set each time) and are necessary. If the objects have
+unequal probabilities, one should ask questions that split the probability, not the number of objects, in halves; an object of probability $p$ is then identified after about $\log_2\frac1p$ questions. The average
+$\sum_xp(x)\log_2\frac{1}{p(x)}$ is the entropy.
+
+\begin{definition}\label{information-theory:definition-entropy}
+Let $X$ be a random variable with values in a finite or countable set $\mathcal{X}$ and probability mass function $p(x) = P(X = x)$. Its \emph{entropy} is
+\[
+H(X) = -\sum_{x \in \mathcal{X}}p(x)\log p(x) = E\Bigl[\log\frac{1}{p(X)}\Bigr] \in [0, \infty],
+\]
+with the convention $0\log 0 = 0$. For $p \in [0, 1]$, the \emph{binary entropy function} is $h(p) = -p\log p - (1 - p)\log(1 - p)$, the entropy of a Bernoulli variable with parameter $p$.
+\end{definition}
+
+\begin{notation}\label{information-theory:notation-log}
+In this chapter $\log = \log_2$, and entropy is measured in \emph{bits}; $\ln$ is the natural logarithm, and entropies computed with $\ln$ are in \emph{nats} ($1$ nat $= \log_2e$ bits). $H(X)$ depends only on the law of
+$X$, and we also write $H(p)$ for a probability vector $p$. For several variables, $p(x, y) = P(X = x, Y = y)$, $p(y \mid x) = P(Y = y \mid X = x)$, and $H(X, Y)$ is the entropy of the pair. $|\mathcal{X}|$ is the number of elements of
+$\mathcal{X}$. $K(q, r)$ is the Kullback--Leibler divergence of Definition~\ref{statistics:definition-kullback-leibler}, always computed with the natural logarithm, so that $K/\ln 2$ is in bits.
+\end{notation}
+
+\begin{example}\label{information-theory:example-entropy}
 \begin{enumerate}
-\item Entropy, relative entropy, mutual information; Gibbs' and Fano's inequalities.
-\item The asymptotic equipartition property; source coding and Huffman codes; Kraft's inequality.
-\item Channel capacity and Shannon's noisy channel coding theorem.
-\item Differential entropy and the Gaussian channel.
-\item Quantum information (survey): qubits, entanglement, von Neumann entropy, quantum channels, teleportation and quantum error correction.
-\item Exercises with solutions.
+\item A fair coin has $H = 1$ bit; a fair die $\log 6 \approx 2.585$ bits; a uniform variable on $N$ values $\log N$ bits.
+\item $h(p)$ is symmetric about $\frac12$, concave, $h(0) = h(1) = 0$ and $h(\frac12) = 1$; $h(0.11) \approx 0.5$: a coin with $P(\text{heads}) = 0.11$ carries half a bit per toss.
+\item If $X$ is geometric with $P(X = k) = 2^{-k}$, $k \geq 1$, then $H(X) = \sum_kk2^{-k} = 2$ bits. Questions ``is $X = 1$?'', ``is $X = 2$?'', \ldots{} identify $X$ with exactly $2$ questions on average.
+\item Entropy can be infinite: $p(k) = \frac{c}{k\log^2k}$, $k \geq 2$, has $\sum p(k)\log\frac{1}{p(k)} = \infty$, by comparison with $\sum\frac{1}{k\log k}$.
 \end{enumerate}
+\end{example}
+
+\begin{proposition}\label{information-theory:proposition-entropy-bounds}
+$0 \leq H(X) \leq \log|\mathcal{X}|$ for finite $\mathcal{X}$. $H(X) = 0$ iff $X$ is almost surely constant, and $H(X) = \log|\mathcal{X}|$ iff $X$ is uniform.
+\end{proposition}
+
+\begin{proof}
+Each term $-p\log p$ is $\geq 0$, and vanishes iff $p \in \{0, 1\}$. For the upper bound let $u$ be the uniform law; then
+$K(p, u) = \sum_xp(x)\ln\frac{p(x)}{1/|\mathcal{X}|} = (\log|\mathcal{X}| - H(p))\ln 2$, which is $\geq 0$, with equality iff $p = u$, by Gibbs' inequality (Lemma~\ref{statistics:lemma-gibbs}).
+\end{proof}
+
+Under constraints on the mean the maximiser is not uniform but a Boltzmann distribution (Example~\ref{real-analysis:example-gibbs}).
+
+\begin{definition}\label{information-theory:definition-conditional-entropy}
+For random variables $X$, $Y$ with countable values, the \emph{conditional entropy} is
+\[
+H(Y \mid X) = \sum_xp(x)H(Y \mid X = x) = -\sum_{x,y}p(x, y)\log p(y \mid x),
+\]
+where $H(Y \mid X = x)$ is the entropy of the conditional law of $Y$ given $X = x$. The \emph{mutual information} is $I(X; Y) = H(X) - H(X \mid Y)$. For a third variable $Z$, $I(X; Y \mid Z) = H(X \mid Z) - H(X \mid Y, Z)$.
+\end{definition}
+
+\begin{proposition}\label{information-theory:proposition-entropy-rules}
+For random variables with finite values:
+\begin{enumerate}
+\item (Chain rule) $H(X, Y) = H(X) + H(Y \mid X)$; more generally $H(X_1, \ldots, X_n) = \sum_iH(X_i \mid X_1, \ldots, X_{i-1})$.
+\item $I(X; Y) = H(X) + H(Y) - H(X, Y) = I(Y; X) = K(p_{XY}, p_X \otimes p_Y)/\ln 2 \geq 0$, with equality iff $X$ and $Y$ are independent.
+\item (Conditioning reduces entropy) $H(X \mid Y) \leq H(X)$, and $H(X_1, \ldots, X_n) \leq \sum_iH(X_i)$, with equality iff the $X_i$ are independent.
+\item $I(X; Y \mid Z) \geq 0$, and (chain rule) $I(X; (Y, Z)) = I(X; Z) + I(X; Y \mid Z)$.
+\item $H(f(X)) \leq H(X)$ for every function $f$, and $H(X \mid Y) = 0$ iff $X$ is almost surely a function of $Y$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) $\log p(x, y) = \log p(x) + \log p(y \mid x)$ where $p(x, y) > 0$; take expectations. Induction gives the general form.
+(2) By (1) applied in both orders, $H(X) - H(X \mid Y) = H(X) + H(Y) - H(X, Y)$, which is symmetric, and equals $\sum_{x,y}p(x, y)\log\frac{p(x, y)}{p(x)p(y)}$. Gibbs' inequality gives the sign and the case of equality.
+(3) is (2), and by induction with (1), $H(X_1, \ldots, X_n) = \sum_iH(X_i \mid X_1, \ldots, X_{i-1}) \leq \sum_iH(X_i)$; equality forces each $X_i$ to be independent of $(X_1, \ldots, X_{i-1})$.
+(4) $I(X; Y \mid Z) = \sum_zp(z)I(X; Y \mid Z = z)$, a mixture of mutual informations of conditional laws, each $\geq 0$ by (2). The chain rule: $H(X) - H(X \mid Y, Z) = (H(X) - H(X \mid Z)) + (H(X \mid Z) - H(X \mid Y, Z))$.
+(5) By (1), $H(X, f(X)) = H(X) + 0 = H(f(X)) + H(X \mid f(X)) \geq H(f(X))$. $H(X \mid Y) = 0$ iff each conditional law of $X$ given $Y = y$ with $p(y) > 0$ is a point mass (Proposition~\ref{information-theory:proposition-entropy-bounds}).
+\end{proof}
+
+\begin{counterexample}\label{information-theory:counterexample-conditioning}
+Conditioning reduces entropy on average, not for each value: if $X \in \{0, 1\}$, $Y \in \{0, 1\}$ with $P(Y = 0) = \frac34$, $X = 0$ when $Y = 0$ and $X$ uniform when $Y = 1$, then $H(X) = h(\frac18) \approx 0.544$ but
+$H(X \mid Y = 1) = 1$. Likewise $I(X; Y \mid Z)$ can exceed $I(X; Y)$: for independent fair bits $X$, $Y$ and $Z = X + Y \bmod 2$, $I(X; Y) = 0$ but $I(X; Y \mid Z) = 1$.
+\end{counterexample}
+
+\begin{theorem}[Data processing inequality]\label{information-theory:theorem-data-processing}
+If $X \to Y \to Z$ is a \emph{Markov chain}, that is, $X$ and $Z$ are conditionally independent given $Y$, then $I(X; Z) \leq I(X; Y)$. In particular $I(X; g(Y)) \leq I(X; Y)$ for every function $g$.
+\end{theorem}
+
+\begin{proof}
+By Proposition~\ref{information-theory:proposition-entropy-rules}(4) applied in two ways, $I(X; (Y, Z)) = I(X; Z) + I(X; Y \mid Z) = I(X; Y) + I(X; Z \mid Y)$, and $I(X; Z \mid Y) = 0$ by conditional independence (part (2)
+applied to the conditional laws). Since $I(X; Y \mid Z) \geq 0$, $I(X; Z) \leq I(X; Y)$. For $Z = g(Y)$, $X \to Y \to g(Y)$ is a Markov chain.
+\end{proof}
+
+No processing of data, deterministic or random, can increase the information it contains about its source. In statistics, $T(Y)$ is sufficient for a parameter $\theta$ exactly when equality $I(\theta; T(Y)) = I(\theta; Y)$
+holds for all priors (Section~\ref{statistics:section-models}, \cite{cover-thomas}).
+
+\begin{theorem}[Fano's inequality]\label{information-theory:theorem-fano}
+Let $X$ take values in a finite set $\mathcal{X}$, and let $\hat X = g(Y)$ be an estimate of $X$ from an observation $Y$, with error probability $P_e = P(\hat X \neq X)$. Then
+\[
+H(X \mid Y) \leq h(P_e) + P_e\log(|\mathcal{X}| - 1) \leq 1 + P_e\log|\mathcal{X}|.
+\]
+\end{theorem}
+
+\begin{proof}
+Let $E = \mathbf{1}_{\{\hat X \neq X\}}$. By the chain rule in two orders, $H(E, X \mid \hat X) = H(X \mid \hat X) + H(E \mid X, \hat X) = H(X \mid \hat X)$, as $E$ is a function of $(X, \hat X)$; and
+$H(E, X \mid \hat X) = H(E \mid \hat X) + H(X \mid E, \hat X) \leq h(P_e) + P_e\log(|\mathcal{X}| - 1)$, because $H(E \mid \hat X) \leq H(E) = h(P_e)$, given $E = 0$ the variable $X = \hat X$ is determined, and given $E = 1$ it takes at most
+$|\mathcal{X}| - 1$ values. Finally $H(X \mid Y) \leq H(X \mid \hat X)$, by the data processing inequality for $X \to Y \to \hat X$.
+\end{proof}
+
+\begin{remark}\label{information-theory:remark-axioms}
+Entropy is not an arbitrary choice: up to the choice of unit, it is the only function of probability vectors that is continuous, symmetric, maximal at the uniform law, and satisfies the grouping rule
+$H(p_1, \ldots, p_n) = H(p_1 + p_2, p_3, \ldots, p_n) + (p_1 + p_2)H(\frac{p_1}{p_1 + p_2}, \frac{p_2}{p_1 + p_2})$ (Shannon, Khinchin \cite{cover-thomas}). In statistical mechanics, Boltzmann's $S = k\ln W$ is the entropy of the uniform law
+on $W$ microstates, in nats times Boltzmann's constant; in ergodic theory, the Kolmogorov--Sinai entropy of a dynamical system is the entropy per unit time of its best finite description (Chapter~\ref{ergodic-theory}).
+\end{remark}
+
+\section{Source coding}\label{information-theory:section-source-coding}
+
+\begin{definition}\label{information-theory:definition-code}
+Let $\mathcal{D}$ be a finite \emph{code alphabet} with $D \geq 2$ letters and $\mathcal{D}^*$ the set of finite words. A \emph{code} for a countable set $\mathcal{X}$ is a map $C \colon \mathcal{X} \to \mathcal{D}^*$, with \emph{codeword
+lengths} $\ell(x) = |C(x)|$; its \emph{extension} sends a word $x_1\cdots x_n$ to the concatenation $C(x_1)\cdots C(x_n)$. The code is \emph{uniquely decodable} if its extension is injective, and a \emph{prefix code} if no
+codeword is a prefix of another. For a random $X$, the \emph{expected length} is $L(C) = E[\ell(X)]$.
+\end{definition}
+
+A prefix code is uniquely decodable, and decodable \emph{instantaneously}: reading the encoded string from the left, a codeword is recognised as soon as it ends. Prefix codes over $\mathcal{D}$ are the same as sets of leaves of
+the $D$-ary tree.
+
+\begin{example}\label{information-theory:example-codes}
+For $\mathcal{X} = \{a, b, c, d\}$ with probabilities $\frac12, \frac14, \frac18, \frac18$, the prefix code $a \mapsto 0$, $b \mapsto 10$, $c \mapsto 110$, $d \mapsto 111$ has expected length $1.75 = H(X)$. The code $a \mapsto 0$,
+$b \mapsto 01$, $c \mapsto 011$, $d \mapsto 0111$ is uniquely decodable (every codeword starts with $0$, which marks the boundaries) but not prefix. The code $a \mapsto 0$, $b \mapsto 1$, $c \mapsto 01$ is not uniquely decodable:
+$01$ is $c$ or $ab$. Morse code needs pauses between letters for the same reason.
+\end{example}
+
+\begin{theorem}[Kraft--McMillan inequality]\label{information-theory:theorem-kraft}
+\begin{enumerate}
+\item The lengths of a uniquely decodable code satisfy $\sum_xD^{-\ell(x)} \leq 1$.
+\item Conversely, if positive integers $\ell(x)$ satisfy $\sum_xD^{-\ell(x)} \leq 1$, there is a prefix code with these lengths.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) \emph{Finite case.} Let $\mathcal{X}$ be finite, $\ell_{\max} = \max\ell(x)$ and $S = \sum_xD^{-\ell(x)}$. Then $S^k = \sum_{x_1, \ldots, x_k}D^{-(\ell(x_1) + \cdots + \ell(x_k))} = \sum_{m=1}^{k\ell_{\max}}a_mD^{-m}$, where $a_m$ is the number of words of
+length $k$ in $\mathcal{X}$ whose encoding has length $m$. By unique decodability these encodings are distinct words of length $m$, so $a_m \leq D^m$, and $S^k \leq k\ell_{\max}$. As $k \to \infty$, $S \leq (k\ell_{\max})^{1/k} \to 1$. \emph{Countable
+case.} Every finite subcode is uniquely decodable, so every partial sum is at most $1$.
+(2) Enumerate $\mathcal{X}$ as $x_1, x_2, \ldots$ with $\ell_1 \leq \ell_2 \leq \cdots$ (possible since each value $\ell$ is taken by at most $D^\ell$ elements, by the inequality). Let $s_i = \sum_{j < i}D^{-\ell_j} \leq 1 - D^{-\ell_i} < 1$. As $\ell_j \leq \ell_i$ for $j < i$, $s_i$ is a multiple of $D^{-\ell_i}$, so its base-$D$ expansion terminates within $\ell_i$ digits; let $C(x_i)$ be its
+first $\ell_i$ digits (padded with zeros). For $j > i$, $s_j \geq s_i + D^{-\ell_i}$, so $s_j \notin [s_i, s_i + D^{-\ell_i})$, the set of numbers whose expansion starts with $C(x_i)$; hence
+$C(x_i)$ is not a prefix of $C(x_j)$, and it is not a prefix of an earlier, not longer, codeword either, being different from it.
+\end{proof}
+
+So nothing is lost by restricting to prefix codes: any lengths achievable by a uniquely decodable code are achievable by a prefix code.
+
+\begin{theorem}[Source coding theorem]\label{information-theory:theorem-source-coding}
+Let $H_D(X) = H(X)/\log D$ be the entropy in base $D$.
+\begin{enumerate}
+\item Every uniquely decodable code has $L(C) \geq H_D(X)$, with equality iff $p(x) = D^{-\ell(x)}$ for all $x$.
+\item There is a prefix code with $L(C) < H_D(X) + 1$, for instance with the \emph{Shannon lengths} $\ell(x) = \lceil\log_D\frac{1}{p(x)}\rceil$.
+\item Coding blocks of $n$ i.i.d.\ copies of $X$, the optimal expected length per symbol $L_n^*/n$ satisfies $H_D(X) \leq L_n^*/n < H_D(X) + \frac1n$, and tends to $H_D(X)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) Let $r(x) = D^{-\ell(x)}/S$ with $S = \sum D^{-\ell(x)} \leq 1$ (Theorem~\ref{information-theory:theorem-kraft}). Then
+$L(C) - H_D(X) = \sum_xp(x)\log_D\frac{p(x)}{D^{-\ell(x)}} = \frac{K(p, r)}{\ln D} - \log_DS \geq 0$, by Gibbs' inequality and $S \leq 1$, with equality iff $p = r$ and $S = 1$.
+(2) The Shannon lengths satisfy $D^{-\ell(x)} \leq p(x)$, so Kraft's inequality holds and a prefix code exists; and $\ell(x) < \log_D\frac{1}{p(x)} + 1$.
+(3) Apply (1) and (2) to $(X_1, \ldots, X_n)$, whose entropy is $nH(X)$ (Proposition~\ref{information-theory:proposition-entropy-rules}(3)).
+\end{proof}
+
+\begin{theorem}[Huffman]\label{information-theory:theorem-huffman}
+For a finite $\mathcal{X}$ with probabilities $p_1 \geq p_2 \geq \cdots \geq p_m > 0$ ($m \geq 2$), the binary prefix code built recursively by merging the two least probable symbols into one symbol of probability $p_{m-1} + p_m$,
+coding the reduced source, and appending $0$ and $1$ to the codeword of the merged symbol, has minimal expected length among all uniquely decodable binary codes.
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{information-theory:theorem-kraft} it suffices to compare with prefix codes, and an optimal prefix code exists (finitely many length vectors have expected length below a given bound). \emph{An optimal code with
+good shape.} In an optimal prefix code: if $p_i > p_j$ then $\ell_i \leq \ell_j$ (otherwise swapping the codewords shortens the code); the longest codewords come in sibling pairs (a longest codeword without a sibling could be
+shortened by deleting its last digit, keeping the prefix property); so after swapping codewords of equal length we may assume that $x_{m-1}$ and $x_m$ are siblings of maximal length. \emph{Induction.} For such a code $C$,
+merging $x_{m-1}$ and $x_m$ gives a prefix code $C^{\prime}$ for the reduced source with $L(C) = L(C^{\prime}) + p_{m-1} + p_m$. Conversely the Huffman code $C_H$ of the source and the Huffman code $C_H^{\prime}$ of the reduced source satisfy
+$L(C_H) = L(C_H^{\prime}) + p_{m-1} + p_m$. By induction on $m$, $L(C_H^{\prime}) \leq L(C^{\prime})$, so $L(C_H) \leq L(C)$.
+\end{proof}
+
+\begin{example}\label{information-theory:example-huffman}
+For probabilities $0.4, 0.2, 0.2, 0.1, 0.1$, Huffman merges $0.1 + 0.1 = 0.2$, then $0.2 + 0.2 = 0.4$, then $0.2 + 0.4 = 0.6$, then $0.4 + 0.6$, giving lengths $1, 2, 3, 4, 4$ (one of several optimal choices) and expected length
+$2.2$ bits, against $H \approx 2.122$. Huffman found the algorithm in 1951 as a student, in a term paper that replaced the final exam of Fano's course \cite{huffman-1952}.
+\end{example}
+
+\begin{remark}\label{information-theory:remark-practical-compression}
+\emph{Arithmetic coding} encodes a whole message as a subinterval of $[0, 1)$ of length equal to its probability, and achieves $-\log p(x_1, \ldots, x_n) + 2$ bits for a message, with adaptive probability models. \emph{Universal}
+methods such as the Lempel--Ziv algorithms (used in \texttt{zip} and \texttt{gzip}) need no model at all and still achieve the entropy rate of every stationary ergodic source asymptotically \cite{cover-thomas}. Lossy
+compression (JPEG, MP3) is governed by Shannon's \emph{rate--distortion theory}: the minimal rate for reproducing a source within distortion $\Delta$ is $R(\Delta) = \min I(X; \hat X)$ over conditional laws with
+$E[d(X, \hat X)] \leq \Delta$.
+\end{remark}
+
+\section{The asymptotic equipartition property}\label{information-theory:section-aep}
+
+\begin{theorem}[Asymptotic equipartition property]\label{information-theory:theorem-aep}
+Let $X_1, X_2, \ldots$ be i.i.d.\ with values in a finite set $\mathcal{X}$ and law $p$, and $p(x_1, \ldots, x_n) = \prod_ip(x_i)$. Then $-\frac1n\log p(X_1, \ldots, X_n) \to H(X_1)$ almost surely. For $\varepsilon > 0$ the \emph{typical set}
+\[
+A_\varepsilon^{(n)} = \bigl\{(x_1, \ldots, x_n) : 2^{-n(H + \varepsilon)} \leq p(x_1, \ldots, x_n) \leq 2^{-n(H - \varepsilon)}\bigr\}
+\]
+satisfies $P(A_\varepsilon^{(n)}) \to 1$, $|A_\varepsilon^{(n)}| \leq 2^{n(H + \varepsilon)}$ for all $n$, and $|A_\varepsilon^{(n)}| \geq (1 - \varepsilon)2^{n(H - \varepsilon)}$ for large $n$.
+\end{theorem}
+
+\begin{proof}
+$-\frac1n\log p(X_1, \ldots, X_n) = \frac1n\sum_i\log\frac{1}{p(X_i)}$ is an average of i.i.d.\ bounded variables with mean $H$, so the strong law (Theorem~\ref{probability:theorem-strong-law}) gives the first claim, and
+$P(A_\varepsilon^{(n)}) \to 1$ follows. Then $1 \geq \sum_{x \in A_\varepsilon^{(n)}}p(x) \geq |A_\varepsilon^{(n)}|2^{-n(H + \varepsilon)}$, and for large $n$, $1 - \varepsilon \leq P(A_\varepsilon^{(n)}) \leq |A_\varepsilon^{(n)}|2^{-n(H - \varepsilon)}$.
+\end{proof}
+
+So for large $n$ almost all the probability sits on about $2^{nH}$ sequences, each of probability about $2^{-nH}$: the sample behaves like a uniform choice among $2^{nH}$ possibilities. When $H < \log|\mathcal{X}|$ this is a
+vanishing fraction of all $|\mathcal{X}|^n$ sequences. Note that the single most probable sequence is usually \emph{not} typical: for a coin with $P(1) = 0.9$, it is $11\cdots1$, while typical sequences contain about $10\%$ zeros.
+
+\begin{corollary}[Fixed-length compression]\label{information-theory:corollary-fixed-length}
+For every $R > H(X_1)$ and $\delta > 0$ there are, for large $n$, maps $f_n \colon \mathcal{X}^n \to \{0, 1\}^{\lceil nR\rceil}$ and $g_n$ in the other direction with $P(g_n(f_n(X_1, \ldots, X_n)) \neq (X_1, \ldots, X_n)) < \delta$. For
+$R < H(X_1)$, every such pair has error probability tending to $1$.
+\end{corollary}
+
+\begin{proof}
+For $R > H$ take $\varepsilon = R - H$ and encode the at most $2^{n(H + \varepsilon)}$ typical sequences injectively, everything else by a fixed word. For $R < H$, choose $\varepsilon$ with $R < H - 2\varepsilon$. The set $B$ of
+correctly decoded sequences has at most $2^{\lceil nR\rceil}$ elements, so $P(B) \leq P(B \cap A_\varepsilon^{(n)}) + P(\text{not typical}) \leq 2^{nR + 1}2^{-n(H - \varepsilon)} + o(1) \to 0$.
+\end{proof}
+
+\section{Channel coding}\label{information-theory:section-channel-coding}
+
+\begin{definition}\label{information-theory:definition-channel}
+A \emph{discrete memoryless channel} consists of finite input and output alphabets $\mathcal{X}$, $\mathcal{Y}$ and transition probabilities $W(y \mid x)$; used $n$ times on inputs $x_1, \ldots, x_n$ it produces outputs with probability
+$\prod_iW(y_i \mid x_i)$. Its \emph{capacity} is
+\[
+C = \max_{p_X}I(X; Y),
+\]
+the maximum over input laws $p_X$ of the mutual information, where $Y$ has conditional law $W(\cdot \mid x)$ given $X = x$ (the maximum exists: $I$ is continuous on the compact simplex of input laws). An $(M, n)$ \emph{code} consists of
+an encoder $\{1, \ldots, M\} \to \mathcal{X}^n$ and a decoder $\mathcal{Y}^n \to \{1, \ldots, M\}$; its \emph{rate} is $R = \frac{\log M}{n}$ bits per channel use, and its \emph{average error probability} $P_e^{(n)}$ is the probability of
+decoding wrongly when the message is uniform.
+\end{definition}
+
+\begin{example}\label{information-theory:example-capacity}
+\begin{enumerate}
+\item The \emph{binary symmetric channel} flips each bit with probability $p$. For any input law, $H(Y \mid X) = h(p)$, so $I(X; Y) = H(Y) - h(p) \leq 1 - h(p)$, with equality for the uniform input: $C = 1 - h(p)$. For $p = 0.11$,
+$C \approx 0.5$; for $p = \frac12$, $C = 0$.
+\item The \emph{binary erasure channel} delivers each bit with probability $1 - \alpha$ and replaces it by a symbol ``?'' otherwise. Then $C = 1 - \alpha$: the receiver learns which bits were lost, and the capacity is exactly the
+fraction that arrives.
+\item A \emph{noisy typewriter} on $26$ letters sends each letter to itself or to the next one with probability $\frac12$ each. Using only every other letter there is no error at all, at rate $\log 13$; and indeed
+$C = \log 26 - 1 = \log 13$.
+\end{enumerate}
+\end{example}
+
+\begin{theorem}[Shannon's noisy channel coding theorem]\label{information-theory:theorem-channel-coding}
+Let $C$ be the capacity of a discrete memoryless channel.
+\begin{enumerate}
+\item (Achievability) For every $R < C$ there are $(\lceil 2^{nR}\rceil, n)$ codes with $P_e^{(n)} \to 0$ as $n \to \infty$.
+\item (Converse) Every sequence of $(\lceil 2^{nR}\rceil, n)$ codes with $P_e^{(n)} \to 0$ has $R \leq C$; precisely, $P_e^{(n)} \geq 1 - \frac{C}{R} - \frac{1}{nR}$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(2) Let the message $V$ be uniform on $M = \lceil 2^{nR}\rceil$ values, $X^n$ its codeword, $Y^n$ the output and $\hat V$ the decoded message. By memorylessness, $H(Y^n \mid X^n) = \sum_iH(Y_i \mid X_i)$, so
+$I(X^n; Y^n) = H(Y^n) - \sum_iH(Y_i \mid X_i) \leq \sum_i(H(Y_i) - H(Y_i \mid X_i)) = \sum_iI(X_i; Y_i) \leq nC$ (Proposition~\ref{information-theory:proposition-entropy-rules}(3)). Since $V \to X^n \to Y^n$ is a Markov chain, so is $Y^n \to X^n \to V$ (conditional independence is symmetric), and Fano's inequality for $\hat V$ together with the
+data processing inequality $I(V; Y^n) \leq I(X^n; Y^n)$ give
+\[\begin{aligned}
+nR \leq \log M = H(V) &= H(V \mid Y^n) + I(V; Y^n)\\
+&\leq 1 + P_e^{(n)}\log M + I(X^n; Y^n) \leq 1 + P_e^{(n)}\log M + nC.
+\end{aligned}\]
+Dividing by $\log M \geq nR$ gives the bound.
+\end{proof}
+
+\begin{proof}[Sketch of proof of (1)]
+\emph{Random coding.} Fix an input law $p$ achieving $C$ and choose the $M$ codewords independently, each with i.i.d.\ coordinates of law $p$. \emph{Joint typicality decoding.} Decode $y^n$ as the unique message whose
+codeword is jointly typical with $y^n$, that is, $(x^n, y^n)$ is typical for the joint law $p(x)W(y \mid x)$ in the sense of Theorem~\ref{information-theory:theorem-aep} (and its marginals are typical). \emph{Error analysis.} By the
+AEP the transmitted codeword is jointly typical with the output with probability tending to $1$; a different, independent codeword is jointly typical with the output with probability at most $2^{-n(I(X; Y) - 3\varepsilon)}$, by
+counting typical pairs. So the average error over the random choice of the code is at most $\varepsilon + M2^{-n(C - 3\varepsilon)}$, which tends to $0$ when $R < C - 3\varepsilon$, and some code does at least as well as the average.
+The omitted verification is the joint typicality lemma \cite{cover-thomas}. Discarding the worse half of the codewords even gives small \emph{maximal} error probability.
+\end{proof}
+
+The theorem is an existence statement, and for half a century the codes it promises were out of reach. Turbo codes (1993), low-density parity-check codes and polar codes (Ar\i kan, 2009) now operate close to capacity, in
+mobile phones and satellite links.
+
+\begin{remark}\label{information-theory:remark-feedback}
+Feedback does not increase the capacity of a memoryless channel (Shannon), although it simplifies coding; the capacity of a channel with memory, or of networks of channels, is in general unknown. For the binary symmetric
+channel the error probability of the best codes decays exponentially in $n$ for every $R < C$, with an exponent known exactly at rates near $C$.
+\end{remark}
+
+\section{Error-correcting codes}\label{information-theory:section-error-correcting}
+
+Shannon's theorem uses long random codes. The algebraic theory of codes constructs explicit codes with structure that makes encoding and decoding efficient.
+
+\begin{definition}\label{information-theory:definition-block-code}
+Let $\mathbb{F}_q$ be the finite field with $q$ elements (Theorem~\ref{fields:theorem-finite-fields}). The \emph{Hamming distance} on $\mathbb{F}_q^n$ is $d(x, y) = \#\{i : x_i \neq y_i\}$, and the \emph{weight} of $x$ is $\mathrm{wt}(x) = d(x, 0)$. A
+\emph{code} of length $n$ is a subset $\mathcal{C} \subseteq \mathbb{F}_q^n$; its \emph{minimum distance} $d(\mathcal{C})$ is the least distance between distinct codewords. A \emph{linear code} $[n, k, d]_q$ is a $k$-dimensional subspace with
+minimum distance $d$; a \emph{generator matrix} is a $k \times n$ matrix whose rows form a basis, and a \emph{parity check matrix} is an $(n - k) \times n$ matrix $H$ of rank $n - k$ with $\mathcal{C} = \ker H$.
+\end{definition}
+
+\begin{proposition}\label{information-theory:proposition-minimum-distance}
+\begin{enumerate}
+\item The Hamming distance is a metric. A code of minimum distance $d$ detects up to $d - 1$ errors and corrects up to $t = \lfloor\frac{d - 1}{2}\rfloor$ errors: the balls of radius $t$ around codewords are disjoint, so decoding to the
+nearest codeword is correct when at most $t$ coordinates are changed.
+\item For a linear code, $d(\mathcal{C}) = \min\{\mathrm{wt}(c) : c \in \mathcal{C}, c \neq 0\}$, and $d(\mathcal{C})$ is the least number of linearly dependent columns of a parity check matrix.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) The triangle inequality holds coordinatewise. If $x$ lay in the balls of radius $t$ around codewords $c \neq c^{\prime}$, then $d(c, c^{\prime}) \leq 2t < d$. If at most $d - 1$ coordinates of a codeword are changed, the result is not
+another codeword. (2) $d(c, c^{\prime}) = \mathrm{wt}(c - c^{\prime})$ and $c - c^{\prime} \in \mathcal{C}$. A nonzero $c$ with $Hc = 0$ of weight $w$ is a linear dependence among $w$ columns of $H$, and conversely.
+\end{proof}
+
+\begin{example}[Hamming codes]\label{information-theory:example-hamming-codes}
+Let $r \geq 2$ and let $H$ be the $r \times (2^r - 1)$ binary matrix whose columns are all nonzero vectors of $\mathbb{F}_2^r$. Its kernel is the \emph{Hamming code} $[2^r - 1, 2^r - 1 - r, 3]_2$: no column is zero and no two
+columns are equal, so no one or two columns are dependent, while $e_1$, $e_2$, $e_1 + e_2$ are. It corrects one error, and decoding is immediate: if one bit is flipped, the \emph{syndrome} $Hy$ is the column of $H$ at the
+position of the error. For $r = 3$, the $[7, 4, 3]$ code sends $4$ data bits with $3$ check bits; Hamming invented it in 1950 because the relay computers at Bell Labs stopped at every error over weekends.
+\end{example}
+
+\begin{theorem}[Bounds on codes]\label{information-theory:theorem-code-bounds}
+Let $\mathcal{C} \subseteq \mathbb{F}_q^n$ have $M$ codewords and minimum distance $d$, and $V_q(n, r) = \sum_{i=0}^r\binom ni(q - 1)^i$ the number of points in a Hamming ball of radius $r$.
+\begin{enumerate}
+\item (Hamming, sphere packing) $M\,V_q(n, t) \leq q^n$ with $t = \lfloor\frac{d - 1}{2}\rfloor$.
+\item (Singleton) $M \leq q^{n - d + 1}$; for linear codes, $d \leq n - k + 1$.
+\item (Gilbert--Varshamov) Conversely, for every $d \leq n$ there is a code of length $n$ and minimum distance at least $d$ with $M \geq q^n/V_q(n, d - 1)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) The balls of radius $t$ around codewords are disjoint (Proposition~\ref{information-theory:proposition-minimum-distance}). (2) Deleting the last $d - 1$ coordinates is injective on $\mathcal{C}$, since distinct codewords differ in at
+least $d$ places; its image lies in $\mathbb{F}_q^{n - d + 1}$. (3) Choose codewords greedily, each at distance $\geq d$ from the previous ones, until no point is left; then the balls of radius $d - 1$ around the $M$ codewords cover
+$\mathbb{F}_q^n$, so $MV_q(n, d - 1) \geq q^n$.
+\end{proof}
+
+Codes attaining the Hamming bound are \emph{perfect}; the Hamming codes are perfect, as $2^{2^r - 1 - r}(1 + (2^r - 1)) = 2^{2^r - 1}$. Apart from trivial codes, the only other perfect codes over prime power alphabets are the binary
+$[23, 12, 7]$ and ternary $[11, 6, 5]$ Golay codes (Tiet\"av\"ainen, van Lint) \cite{macwilliams-sloane}. Codes attaining the Singleton bound are \emph{maximum distance separable} (MDS).
+
+\begin{theorem}[Reed--Solomon codes]\label{information-theory:theorem-reed-solomon}
+Let $a_1, \ldots, a_n$ be distinct elements of $\mathbb{F}_q$ ($n \leq q$) and $1 \leq k \leq n$. The \emph{Reed--Solomon code} $\{(f(a_1), \ldots, f(a_n)) : f \in \mathbb{F}_q[x], \deg f < k\}$ is a linear $[n, k, n - k + 1]_q$ code; it is MDS.
+\end{theorem}
+
+\begin{proof}
+The evaluation map $f \mapsto (f(a_i))_i$ is linear on the $k$-dimensional space of polynomials of degree $< k$. A nonzero such $f$ has at most $k - 1$ roots (Corollary~\ref{rings:corollary-roots}), so its image has weight at least
+$n - k + 1$; in particular the map is injective, and the code has dimension $k$. By the Singleton bound, $d = n - k + 1$.
+\end{proof}
+
+\begin{example}\label{information-theory:example-reed-solomon}
+Reed--Solomon codes over $\mathbb{F}_{256}$, whose symbols are bytes, correct bursts of errors: a scratch destroys many consecutive bits but only a few bytes. Compact discs use two interleaved Reed--Solomon codes of lengths
+$32$ and $28$ over $\mathbb{F}_{256}$; QR codes, DVDs, deep-space probes and RAID storage use them too. They can be decoded efficiently up to $\lfloor\frac{n - k}{2}\rfloor$ errors by the Berlekamp--Welch or Berlekamp--Massey algorithms,
+which reduce decoding to linear algebra over $\mathbb{F}_q$ \cite{macwilliams-sloane}.
+\end{example}
+
+\begin{remark}\label{information-theory:remark-asymptotic-codes}
+For binary codes with relative distance $\delta = d/n$ and rate $R = k/n$, the Gilbert--Varshamov bound gives codes with $R \geq 1 - h(\delta)$, using $V_2(n, \delta n) \leq 2^{nh(\delta)}$ for $\delta \leq \frac12$. Whether better binary codes
+exist is a famous open problem; for $q \geq 49$ a square, algebraic-geometry codes built from curves with many points over $\mathbb{F}_q$ beat the Gilbert--Varshamov bound (Tsfasman--Vl\u{a}du\c{t}--Zink), one of the striking
+applications of algebraic geometry (Chapter~\ref{curves}).
+\end{remark}
+
+\section{Differential entropy and the Gaussian channel}\label{information-theory:section-differential-entropy}
+
+\begin{definition}\label{information-theory:definition-differential-entropy}
+For a real random variable with density $f$, the \emph{differential entropy} is $h(X) = -\int f\ln f\,dx$ (in nats), when the integral exists; for a random vector with density on $\RR^n$ the definition is the same.
+\end{definition}
+
+\begin{example}\label{information-theory:example-differential-entropy}
+The uniform law on $[a, b]$ has $h = \ln(b - a)$, which is negative for $b - a < 1$: differential entropy is not a limit of discrete entropies, but $H$ of the quantisation of $X$ to intervals of length $\Delta$ is
+$h(X) - \ln\Delta + o(1)$ for nice densities. $N(m, \sigma^2)$ has $h = \frac12\ln(2\pi e\sigma^2)$: $-\ln f = \frac12\ln(2\pi\sigma^2) + \frac{(x - m)^2}{2\sigma^2}$ has mean $\frac12\ln(2\pi\sigma^2) + \frac12$. Exponential: $h = 1 - \ln\lambda$.
+\end{example}
+
+\begin{proposition}[The Gaussian maximises entropy]\label{information-theory:proposition-gaussian-max-entropy}
+If $X$ has density $f$ and variance $\sigma^2$, then $h(X) \leq \frac12\ln(2\pi e\sigma^2)$, with equality iff $X$ is normal.
+\end{proposition}
+
+\begin{proof}
+Let $g$ be the $N(m, \sigma^2)$ density with $m = E[X]$. By Gibbs' inequality (Lemma~\ref{statistics:lemma-gibbs}, with respect to Lebesgue measure), $0 \leq K(f, g) = -h(X) - \int f\ln g$, and
+$-\int f\ln g = \frac12\ln(2\pi\sigma^2) + \frac{E[(X - m)^2]}{2\sigma^2} = \frac12\ln(2\pi e\sigma^2)$. Equality holds iff $f = g$ almost everywhere.
+\end{proof}
+
+This explains the special role of Gaussian noise: for a given power, it is the most random and hence the worst noise. In the central limit theorem, the entropy of the normalised sums increases to that of the Gaussian
+(Barron), a form of the second law of thermodynamics.
+
+\begin{theorem}[Capacity of the Gaussian channel]\label{information-theory:theorem-gaussian-channel}
+For the channel $Y = X + Z$ with Gaussian noise $Z \sim N(0, N)$ independent of the input, and input power constraint $\frac1n\sum_ix_i^2 \leq P$ on codewords, the capacity is
+\[
+C = \frac12\log\Bigl(1 + \frac PN\Bigr) \text{ bits per channel use}.
+\]
+\end{theorem}
+
+\begin{proof}[Sketch of proof]
+The coding theorem and its converse hold as in Theorem~\ref{information-theory:theorem-channel-coding}, with $C = \max\{I(X; Y) : E[X^2] \leq P\}$ and $I(X; Y) = h(Y) - h(Y \mid X) = h(Y) - h(Z)$. Since $\operatorname{Var}Y \leq P + N$,
+Proposition~\ref{information-theory:proposition-gaussian-max-entropy} gives $h(Y) \leq \frac12\ln(2\pi e(P + N))$, with equality for $X \sim N(0, P)$; and $h(Z) = \frac12\ln(2\pi eN)$. The omitted verifications are the extension of the
+coding theorem to continuous alphabets with a power constraint \cite{cover-thomas}.
+\end{proof}
+
+A band-limited channel of bandwidth $W$ hertz carries $2W$ independent samples per second (by the sampling theorem), which gives the \emph{Shannon--Hartley formula} $C = W\log(1 + \mathrm{SNR})$ bits per second. A telephone line
+with $W = 3000$ Hz and signal-to-noise ratio $30$ dB ($\mathrm{SNR} = 1000$) has capacity about $30000$ bits per second, which is what the last generation of analogue modems achieved.
+
+\begin{remark}\label{information-theory:remark-epi}
+The \emph{entropy power inequality} of Shannon and Stam, $e^{2h(X + Y)/n} \geq e^{2h(X)/n} + e^{2h(Y)/n}$ for independent random vectors in $\RR^n$, with equality for proportional Gaussians, is a deep analogue of the
+Brunn--Minkowski inequality of convex geometry; both follow from sharp forms of Young's convolution inequality \cite{cover-thomas}.
+\end{remark}
+
+\section{Quantum information}\label{information-theory:section-quantum}
+
+In quantum mechanics the state of a system is a unit vector $\psi$ in a complex Hilbert space $\mathcal{H}$, up to a phase, or more generally a \emph{density operator} $\rho \geq 0$ with $\operatorname{tr}\rho = 1$ (Chapter~\ref{quantum-mechanics}).
+A \emph{qubit} is a system with $\mathcal{H} = \CC^2$, with basis $|0\rangle$, $|1\rangle$; unlike a bit it can be in any superposition $\alpha|0\rangle + \beta|1\rangle$, $|\alpha|^2 + |\beta|^2 = 1$, and measuring it gives $0$ or $1$ with
+probabilities $|\alpha|^2$, $|\beta|^2$. Two systems combine by the tensor product $\mathcal{H}_1 \otimes \mathcal{H}_2$, with the inner product $\langle a \otimes b, c \otimes d\rangle = \langle a, c\rangle\langle b, d\rangle$ on pure tensors, and
+closed systems evolve by unitary operators.
+
+\begin{theorem}[No-cloning theorem]\label{information-theory:theorem-no-cloning}
+Let $\dim\mathcal{H} \geq 2$ and $e \in \mathcal{H}$ a unit vector. There is no unitary (or even isometric) operator $U$ on $\mathcal{H} \otimes \mathcal{H}$ with $U(\psi \otimes e) = \psi \otimes \psi$ for every unit vector $\psi \in \mathcal{H}$.
+\end{theorem}
+
+\begin{proof}
+If $U$ preserves inner products, then for unit vectors $\phi$, $\psi$,
+$\langle\phi, \psi\rangle = \langle\phi, \psi\rangle\langle e, e\rangle = \langle U(\phi \otimes e), U(\psi \otimes e)\rangle = \langle\phi \otimes \phi, \psi \otimes \psi\rangle = \langle\phi, \psi\rangle^2$, so $\langle\phi, \psi\rangle \in \{0, 1\}$. But for orthonormal $u$, $v$, the
+unit vectors $\phi = u$ and $\psi = (u + v)/\sqrt2$ have $\langle\phi, \psi\rangle = \frac{1}{\sqrt2}$.
+\end{proof}
+
+Unknown quantum states cannot be copied, unlike classical bits; this is the basis of quantum cryptography (the BB84 protocol), where an eavesdropper cannot copy the transmitted qubits without disturbing them.
+
+\begin{remark}\label{information-theory:remark-quantum-survey}
+\begin{enumerate}
+\item \emph{Von Neumann entropy.} $S(\rho) = -\operatorname{tr}\rho\log\rho = H(\lambda)$, the Shannon entropy of the eigenvalues of $\rho$. Schumacher's theorem is the quantum source coding theorem: a source of pure states with
+average density operator $\rho$ can be compressed to $S(\rho)$ qubits per state.
+\item \emph{Entanglement.} The \emph{Bell state} $\frac{1}{\sqrt2}(|00\rangle + |11\rangle) \in \CC^2 \otimes \CC^2$ is not a product of two vectors; its parts are each in the maximally mixed state $\frac12I$, of entropy $1$, while the whole is
+pure, of entropy $0$. Correlations of measurements on entangled pairs violate Bell's inequalities, which any local hidden variable theory satisfies; this was confirmed experimentally (Aspect, Clauser, Zeilinger).
+\item \emph{Teleportation and dense coding.} Sharing one Bell pair, two classical bits suffice to transmit one unknown qubit (teleportation), and one qubit suffices to transmit two classical bits (dense coding). The
+\emph{Holevo bound} says that $n$ qubits carry at most $n$ classical bits of accessible information.
+\item \emph{Quantum error correction.} Although states cannot be copied, they can be protected: Shor's code encodes one qubit in nine and corrects an arbitrary error on any one of them, and the \emph{stabiliser codes} are
+built from classical codes over $\mathbb{F}_4$ \cite{nielsen-chuang}. These codes, together with Shor's factoring algorithm, are the theoretical basis of quantum computing (Chapter~\ref{computability-and-complexity}).
+\end{enumerate}
+\end{remark}
+
+\section{Exercises}\label{information-theory:section-exercises}
+
+\begin{exercise}\label{information-theory:exercise-twelve-coins}
+Among $12$ coins one is counterfeit, lighter or heavier. Using entropy, show that at least $3$ weighings on a balance (each with $3$ outcomes) are needed to find it and tell whether it is lighter or heavier, and that $13$ coins
+with this requirement would need more than $3$ weighings unless the extra information ``the odd coin is not the thirteenth'' is available.
+\end{exercise}
+
+\begin{solution}
+There are $24$ equally likely possibilities, so the unknown has entropy $\log 24 \approx 4.585$ bits. Each weighing has $3$ outcomes, so its outcome has entropy at most $\log 3$, and $k$ weighings give at most $k\log 3$ bits of
+information (Proposition~\ref{information-theory:proposition-entropy-rules}(3) and (5): the answer must be a function of the outcomes). Since $2\log 3 = \log 9 < \log 24$, two weighings do not suffice. With $13$ coins there are
+$26 \leq 27 = 3^3$ possibilities, so counting allows $3$ weighings; but the first weighing of $k$ against $k$ coins leaves $2(13 - 2k)$ possibilities if it balances and $2k$ otherwise, and $\max(26 - 4k, 2k) \leq 9$ is impossible,
+so $3$ weighings are not enough without an extra genuine coin.
+\end{solution}
+
+\begin{exercise}\label{information-theory:exercise-entropy-function}
+On a countable set there is no uniform law and entropy is unbounded (Example~\ref{information-theory:example-entropy}(4)), but a mean constraint bounds it. Prove that among laws on $\{1, 2, \ldots\}$ with $E[X] = \mu > 1$, the geometric law
+$P(X = k) = (1 - q)q^{k-1}$ with $q = 1 - \frac1\mu$ has the largest entropy, equal to $\mu h(\frac1\mu)$. In particular, a positive integer valued variable with finite mean has finite entropy.
+\end{exercise}
+
+\begin{solution}
+Let $g$ be the geometric law. For any $p$ with mean $\mu$, $-\sum_kp(k)\log g(k) = -\log(1 - q) - (\mu - 1)\log q$, which equals $H(g)$ by the same computation for $g$. By Gibbs' inequality, $H(p) \leq -\sum_kp(k)\log g(k) = H(g)$, with
+equality iff $p = g$. With $q = 1 - \frac1\mu$, $H(g) = -\log\frac1\mu - (\mu - 1)\log(1 - \frac1\mu) = \mu h(\frac1\mu)$.
+\end{solution}
+
+\begin{exercise}\label{information-theory:exercise-huffman-dyadic}
+Show that the Huffman code achieves $L = H(X)$ exactly when all probabilities are powers of $\frac12$, and compute its expected length for a fair die.
+\end{exercise}
+
+\begin{solution}
+By Theorem~\ref{information-theory:theorem-source-coding}(1), $L = H$ requires $p(x) = 2^{-\ell(x)}$. Conversely, for dyadic probabilities the Shannon lengths $\log\frac1{p(x)}$ give $L = H$, and Huffman is optimal, so $L_{\mathrm{Huffman}} \leq H$, hence
+$= H$. For a fair die, Huffman merges into lengths $2, 2, 3, 3, 3, 3$ ($\frac16 + \frac16$ three times, then $\frac13 + \frac13$, then $\frac13 + \frac23$), so $L = \frac{2 + 2 + 3 + 3 + 3 + 3}{6} = \frac83 \approx 2.667$ bits, against $H = \log 6 \approx 2.585$.
+\end{solution}
+
+\begin{exercise}\label{information-theory:exercise-bsc-repetition}
+Over a binary symmetric channel with $p = 0.1$, compare the $3$-fold repetition code (rate $\frac13$, majority decoding) and the $[7, 4]$ Hamming code (rate $\frac47$) by their probabilities of decoding a block wrongly, and compare
+both rates with the capacity.
+\end{exercise}
+
+\begin{solution}
+Repetition fails when at least $2$ of $3$ bits flip: $3p^2(1 - p) + p^3 = 0.028$, per data bit. Hamming decoding fails when at least $2$ of $7$ bits flip: $1 - (1 - p)^7 - 7p(1 - p)^6 \approx 1 - 0.478 - 0.372 = 0.150$ per block of $4$ data
+bits. The capacity is $1 - h(0.1) \approx 0.531$, larger than both rates; by Theorem~\ref{information-theory:theorem-channel-coding}, codes of rate $0.5$ with error probability as small as desired exist, but they must be long.
+\end{solution}
+
+\begin{exercise}\label{information-theory:exercise-mutual-information-gaussian}
+Let $(X, Y)$ be a pair of standard normal variables with correlation $\rho$, $|\rho| < 1$, that is $Y = \rho X + \sqrt{1 - \rho^2}Z$ with $Z \sim N(0, 1)$ independent of $X$. Show that $I(X; Y) = -\frac12\ln(1 - \rho^2)$ nats, defining
+$I(X; Y) = h(Y) - h(Y \mid X)$ with $h(Y \mid X) = h(\sqrt{1 - \rho^2}Z)$.
+\end{exercise}
+
+\begin{solution}
+Given $X$, $Y$ is $N(\rho X, 1 - \rho^2)$, so $h(Y \mid X) = \frac12\ln(2\pi e(1 - \rho^2))$, while $Y \sim N(0, 1)$ has $h(Y) = \frac12\ln(2\pi e)$ (Example~\ref{information-theory:example-differential-entropy}). The difference is
+$-\frac12\ln(1 - \rho^2)$, which is $0$ iff $\rho = 0$ and tends to $\infty$ as $|\rho| \to 1$.
+\end{solution}
