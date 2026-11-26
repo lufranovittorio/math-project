@@ -7032,3 +7032,17 @@
 05FG,ordinary-differential-equations:proposition-euler-equation
 05FH,ordinary-differential-equations:example-airy
 05FI,ordinary-differential-equations:remark-riemann-hilbert
+05FJ,general-topology:proposition-hausdorff-diagonal
+05FK,general-topology:counterexample-diagonal
+05FL,general-topology:corollary-connected-metric-uncountable
+05FM,general-topology:counterexample-countable-connected
+05FN,general-topology:proposition-fip
+05FO,general-topology:counterexample-fip
+05FP,general-topology:lemma-tube
+05FQ,general-topology:counterexample-tube
+05FR,general-topology:corollary-projection-closed
+05FS,general-topology:proposition-closed-graph
+05FT,general-topology:counterexample-closed-graph
+05FU,general-topology:theorem-compact-hausdorff-normal
+05FV,general-topology:corollary-compact-hausdorff-topology
+05FW,general-topology:counterexample-compact-not-normal

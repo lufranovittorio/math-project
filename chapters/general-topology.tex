@@ -622,6 +622,31 @@ property of the product. The map $\RR \to \RR^{\NN}$, $t \mapsto (t, t, \ldots)$
 $\prod_{n} (-1/(n+1), 1/(n+1))$ is $\{0\}$, which is not open.
 \end{counterexample}
 
+Being Hausdorff is a property of the diagonal, and this gives a quick way to see that many naturally defined sets are closed.
+
+\begin{proposition}\label{general-topology:proposition-hausdorff-diagonal}
+Let $X$ be a space and $\Delta = \{(x, x) : x \in X\} \subseteq X \times X$ its \emph{diagonal}.
+\begin{enumerate}
+\item $X$ is Hausdorff if and only if $\Delta$ is closed in $X \times X$.
+\item If $X$ is Hausdorff and $f, g \colon Z \to X$ are continuous, the \emph{equaliser} $\{z \in Z : f(z) = g(z)\}$ is closed in $Z$.
+\item If $X$ is Hausdorff, the graph $\Gamma_f = \{(z, f(z)) : z \in Z\}$ of a continuous map $f \colon Z \to X$ is closed in $Z \times X$.
+\item If $X$ is Hausdorff, the set of fixed points of a continuous map $f \colon X \to X$ is closed, and every \emph{retract} of $X$ (a subspace $A$ admitting a continuous $r \colon X \to A$ with $r(a) = a$ for $a \in A$) is closed.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) A point $(x, y) \notin \Delta$ has a basic neighbourhood $U \times V$ disjoint from $\Delta$ if and only if $U \cap V = \emptyset$ (Proposition~\ref{general-topology:proposition-product}(1)). So $X \times X \setminus \Delta$ is open if and only if
+any two distinct points have disjoint neighbourhoods. (2) The equaliser is the preimage of $\Delta$ under the continuous map $(f, g) \colon Z \to X \times X$ (Proposition~\ref{general-topology:proposition-product}(2)). (3) $\Gamma_f$ is the
+equaliser of the two continuous maps $f \circ p_1$ and $p_2$ from $Z \times X$ to $X$. (4) The fixed point set is the equaliser of $f$ and $\mathrm{id}_X$, and a retract $A$ is the fixed point set of $i \circ r$, with $i \colon A \to X$ the
+inclusion.
+\end{proof}
+
+\begin{counterexample}\label{general-topology:counterexample-diagonal}
+In the \emph{Sierpi\'nski space} $\{0, 1\}$, whose open sets are $\emptyset$, $\{1\}$ and $\{0, 1\}$, the diagonal is not closed: an open set containing $(1, 0)$ contains a basic set $U \times V$ with $V \ni 0$, so $V = \{0, 1\}$, and then $(1, 1) \in U \times V$ is a point of the diagonal.
+Correspondingly, the retract $\{1\}$ (with $r$ the constant map $1$) is not closed. In the Euclidean plane, the graph of $f(x) = \sin(1/x)$, $f(0) = 0$, is not closed although $\RR$ is Hausdorff: here $f$ is not continuous, and the hypothesis in (3)
+cannot be dropped.
+\end{counterexample}
+
 \begin{definition}\label{general-topology:definition-quotient}
 A surjective map $q \colon X \to Y$ from a space is a \emph{quotient map} if $Y$ carries the final topology: $V \subseteq Y$ is open if and only if
 $q^{-1}(V)$ is open. For an equivalence relation $\sim$ on $X$, the \emph{quotient space} $X/{\sim}$ is the set of classes with the final topology for
@@ -728,6 +753,20 @@ value between $f(a)$ and $f(b)$.
 Combine Theorem~\ref{general-topology:theorem-intervals-connected} and Proposition~\ref{general-topology:proposition-connected-operations}(1).
 \end{proof}
 
+\begin{corollary}\label{general-topology:corollary-connected-metric-uncountable}
+A connected metric space $X$ with at least two points maps continuously onto a nondegenerate interval of $\RR$; in particular it has at least the cardinality of $\RR$, and is uncountable.
+\end{corollary}
+
+\begin{proof}
+Choose $x_0 \neq x_1$ and let $f(x) = d(x_0, x)$, which is continuous (it is $1$-Lipschitz by the triangle inequality). By Corollary~\ref{general-topology:corollary-ivt}, $f(X)$ is an interval; it contains $0 = f(x_0)$ and $d(x_0, x_1) > 0$,
+so it contains $[0, d(x_0, x_1)]$. Choosing a preimage of each point of this interval gives an injection of an interval, which has the cardinality of $\RR$, into $X$.
+\end{proof}
+
+\begin{counterexample}\label{general-topology:counterexample-countable-connected}
+Without a metric, countable connected spaces exist: $\NN$ with the cofinite topology is connected, since two nonempty open sets have finite complements and therefore meet. There are even countable connected Hausdorff spaces (Bing,
+1953), but no countable connected completely regular space with two points, by the argument of the corollary with a Urysohn function in place of $d(x_0, \cdot)$ (Section~\ref{general-topology:section-separation}).
+\end{counterexample}
+
 \begin{definition}\label{general-topology:definition-components}
 The \emph{connected component} of $x \in X$ is the union of all connected subsets containing $x$. A \emph{path} from $x$ to $y$ is a continuous map
 $\gamma \colon [0, 1] \to X$ with $\gamma(0) = x$ and $\gamma(1) = y$. The space $X$ is \emph{path-connected} if it is nonempty and any two points are
@@ -821,16 +860,77 @@ $f(X)$ cover $X$. (4) Closed subsets are compact by (1), their images are compac
 inverse; for an injection apply this to $X \to f(X)$, and for a surjection use Proposition~\ref{general-topology:proposition-quotient}.
 \end{proof}
 
+Compactness can be expressed through closed sets: taking complements turns open covers into families of closed sets with empty intersection.
+
+\begin{proposition}[Finite intersection property]\label{general-topology:proposition-fip}
+A family of sets has the \emph{finite intersection property} if every finite subfamily has nonempty intersection.
+\begin{enumerate}
+\item A space $X$ is compact if and only if every family of closed subsets with the finite intersection property has nonempty intersection.
+\item (Cantor's intersection theorem) If $X$ is compact and $C_1 \supseteq C_2 \supseteq \cdots$ are nonempty closed subsets, then $\bigcap_nC_n \neq \emptyset$.
+\item If $X$ is Hausdorff and $K_1 \supseteq K_2 \supseteq \cdots$ are nonempty compact subsets, then $K = \bigcap_nK_n$ is nonempty and compact, and every open set $U \supseteq K$ contains some $K_n$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) A family $(C_i)$ of closed sets has empty intersection if and only if the open sets $X \setminus C_i$ cover $X$, and it fails the finite intersection property if and only if finitely many of them cover $X$. So ``every open cover
+has a finite subcover'' is equivalent to ``every family of closed sets with empty intersection fails the finite intersection property''. (2) A decreasing sequence of nonempty sets has the finite intersection property, since a finite
+subfamily has intersection equal to its smallest member. (3) Each $K_n$ is closed (Proposition~\ref{general-topology:proposition-compact-basic}(2)), so the $K_n$ are closed subsets of the compact space $K_1$, and $K \neq \emptyset$ by (2); $K$ is
+closed in $K_1$, hence compact by Proposition~\ref{general-topology:proposition-compact-basic}(1). If $U \supseteq K$ is open, the sets $K_n \setminus U$ are closed in $K_1$, decreasing, with empty intersection, so by (2) one of them is empty.
+\end{proof}
+
+\begin{counterexample}\label{general-topology:counterexample-fip}
+In $\RR$, the closed sets $[n, \infty)$ are nested and nonempty with empty intersection, and so are the bounded sets $(0, \frac1n)$, which are not closed: neither compactness nor closedness can be dropped in (2). In a complete metric space,
+nested nonempty closed sets with diameters tending to $0$ do have a one-point intersection, which is a version of (2) without compactness.
+\end{counterexample}
+
+\begin{lemma}[Tube lemma]\label{general-topology:lemma-tube}
+Let $X$ be a space, $K$ a compact space, $x \in X$, and $W \subseteq X \times K$ an open set containing $\{x\} \times K$. Then there is an open $U \ni x$ with $U \times K \subseteq W$.
+\end{lemma}
+
+\begin{proof}
+For each $k \in K$ choose a basic open set $A_k \times B_k \subseteq W$ containing $(x, k)$. The open sets $B_k$ cover $K$, so finitely many $B_{k_1}, \ldots, B_{k_m}$ do. Then $U = A_{k_1} \cap \cdots \cap A_{k_m}$ is an open neighbourhood of $x$,
+and every $(u, k) \in U \times K$ lies in some $A_{k_j} \times B_{k_j} \subseteq W$.
+\end{proof}
+
+\begin{counterexample}\label{general-topology:counterexample-tube}
+Compactness of $K$ is needed: the open set $W = \{(x, y) : |xy| < 1\} \subseteq \RR \times \RR$ contains $\{0\} \times \RR$, but no set $U \times \RR$ with $U$ an open neighbourhood of $0$, since $(u, 2/u) \notin W$ for $u \neq 0$.
+\end{counterexample}
+
 \begin{proposition}\label{general-topology:proposition-finite-products}
 If $X$ and $Y$ are compact, so is $X \times Y$.
 \end{proposition}
 
 \begin{proof}
-Let $\mathcal{W}$ be an open cover of $X \times Y$ and fix $y \in Y$. For each $x \in X$ choose $W_x \in \mathcal{W}$ containing $(x, y)$ and a basic open
-set $U_x \times V_x$ with $(x, y) \in U_x \times V_x \subseteq W_x$. Finitely many $U_{x_1}, \ldots, U_{x_m}$ cover $X$; let $N_y = \bigcap_j V_{x_j}$. Then
-$X \times N_y$ is covered by $W_{x_1}, \ldots, W_{x_m}$ (the \emph{tube lemma}). Finitely many $N_y$ cover $Y$, and the corresponding finitely many
-members of $\mathcal{W}$ cover $X \times Y$.
+Let $\mathcal{W}$ be an open cover of $X \times Y$ and fix $x \in X$. The subspace $\{x\} \times Y$ is homeomorphic to $Y$, hence compact, so it is covered by finitely many members of $\mathcal{W}$, whose union $W_x$ is open. By the tube lemma
+(Lemma~\ref{general-topology:lemma-tube}) there is an open $U_x \ni x$ with $U_x \times Y \subseteq W_x$. Finitely many $U_{x_1}, \ldots, U_{x_m}$ cover $X$, and the finitely many members of $\mathcal{W}$ used for $W_{x_1}, \ldots, W_{x_m}$ cover
+$X \times Y$.
 \end{proof}
+
+\begin{corollary}\label{general-topology:corollary-projection-closed}
+If $K$ is compact, the projection $p \colon X \times K \to X$ is a closed map for every space $X$.
+\end{corollary}
+
+\begin{proof}
+Let $C \subseteq X \times K$ be closed and $x \notin p(C)$. Then $\{x\} \times K$ lies in the open set $X \times K \setminus C$, and the tube lemma gives an open $U \ni x$ with $U \times K$ disjoint from $C$, that is, $U \cap p(C) = \emptyset$. So the
+complement of $p(C)$ is open.
+\end{proof}
+
+The converse holds too: $K$ is compact if and only if $X \times K \to X$ is closed for every $X$ (Kuratowski's theorem \cite{engelking-general-topology}). Without compactness, the projection $\RR \times \RR \to \RR$ maps the closed hyperbola
+$\{xy = 1\}$ onto the set $\RR \setminus \{0\}$, which is not closed.
+
+\begin{proposition}[Closed graph theorem for compact targets]\label{general-topology:proposition-closed-graph}
+Let $K$ be a compact Hausdorff space. A map $f \colon X \to K$ is continuous if and only if its graph $\Gamma_f$ is closed in $X \times K$.
+\end{proposition}
+
+\begin{proof}
+If $f$ is continuous, $\Gamma_f$ is closed by Proposition~\ref{general-topology:proposition-hausdorff-diagonal}(3). Conversely, for a closed $C \subseteq K$, $f^{-1}(C) = p(\Gamma_f \cap (X \times C))$ is the image of a closed set under the
+projection $p \colon X \times K \to X$, hence closed by Corollary~\ref{general-topology:corollary-projection-closed}.
+\end{proof}
+
+\begin{counterexample}\label{general-topology:counterexample-closed-graph}
+The map $f \colon \RR \to \RR$ with $f(x) = 1/x$ for $x \neq 0$ and $f(0) = 0$ has a closed graph (the hyperbola together with the origin) but is not continuous: the target must be compact. The closed graph theorem of functional analysis
+replaces compactness of the target by completeness and linearity (Chapter~\ref{functional-analysis}).
+\end{counterexample}
 
 \begin{theorem}[Heine--Borel]\label{general-topology:theorem-heine-borel}
 Every closed bounded interval $[a, b] \subseteq \RR$ is compact. A subset of $\RR^n$ (or $\CC^n = \RR^{2n}$) is compact if and only if it is closed
@@ -1054,6 +1154,41 @@ If $X$ is normal, separate $C$ and $X \setminus U$ by disjoint open $V$ and $W$;
 disjoint closed $C, D$ choose $V$ for $U = X \setminus D$; then $V$ and $X \setminus \overline{V}$ separate them. The regular case is identical.
 \end{proof}
 
+\begin{theorem}[Compact Hausdorff spaces are normal]\label{general-topology:theorem-compact-hausdorff-normal}
+Every compact Hausdorff space is normal ($T_4$): disjoint closed sets have disjoint open neighbourhoods. In particular it is regular ($T_3$).
+\end{theorem}
+
+\begin{proof}
+\emph{Step 1: a point and a closed set.} Let $C$ be closed and $y \notin C$. For each $c \in C$ choose disjoint open sets $U_c \ni c$ and $V_c \ni y$ (Hausdorff). The sets $U_c$ cover $C$, which is compact by
+Proposition~\ref{general-topology:proposition-compact-basic}(1), so finitely many $U_{c_1}, \ldots, U_{c_m}$ cover it. Then $U = \bigcup_jU_{c_j} \supseteq C$ and $V = \bigcap_jV_{c_j} \ni y$ are open and disjoint: the finite intersection is
+what makes $V$ open, and this is where compactness enters. So $X$ is regular.
+
+\emph{Step 2: two closed sets.} Let $A$, $B$ be disjoint closed sets. For each $b \in B$, Step 1 gives disjoint open sets $U_b \supseteq A$ and $V_b \ni b$. Finitely many $V_{b_1}, \ldots, V_{b_k}$ cover the compact set $B$, and
+$U = \bigcap_iU_{b_i} \supseteq A$, $V = \bigcup_iV_{b_i} \supseteq B$ are disjoint open sets. A compact Hausdorff space is $T_1$ (points are closed, Lemma~\ref{general-topology:lemma-hausdorff-limits}), so it is normal.
+\end{proof}
+
+The proof is the same argument applied twice, first to upgrade ``points can be separated from points'' to ``points can be separated from closed sets'', then to ``closed sets can be separated from closed sets''; compactness turns each
+time an infinite family of separations into a finite one. Proposition~\ref{general-topology:proposition-compact-basic}(2) is the same statement for compact subsets of a Hausdorff space that is not itself compact.
+
+\begin{corollary}\label{general-topology:corollary-compact-hausdorff-topology}
+Let $\tau \subseteq \tau^{\prime}$ be topologies on a set $X$ with $(X, \tau)$ Hausdorff and $(X, \tau^{\prime})$ compact. Then $\tau = \tau^{\prime}$. So a compact Hausdorff topology cannot be made finer and remain compact, or coarser and
+remain Hausdorff.
+\end{corollary}
+
+\begin{proof}
+The identity $(X, \tau^{\prime}) \to (X, \tau)$ is a continuous bijection from a compact space to a Hausdorff space, hence a homeomorphism by Proposition~\ref{general-topology:proposition-compact-basic}(4).
+\end{proof}
+
+\begin{counterexample}\label{general-topology:counterexample-compact-not-normal}
+\begin{enumerate}
+\item \emph{Hausdorff is needed.} An infinite set with the cofinite topology is compact and $T_1$, but not normal: its closed sets other than $X$ are finite, and two disjoint nonempty finite sets have no disjoint open neighbourhoods, since any two
+nonempty open sets meet.
+\item \emph{Compactness is needed.} The Sorgenfrey plane is Hausdorff, even completely regular, but not normal (Example~\ref{general-topology:example-sorgenfrey-plane}). Local compactness is not enough either: the \emph{Tychonoff plank}
+$([0, \omega_1] \times [0, \omega]) \setminus \{(\omega_1, \omega)\}$, an open subspace of a compact Hausdorff space, is locally compact Hausdorff but not normal \cite{engelking-general-topology}.
+\item \emph{Normality is not hereditary.} The Tychonoff plank is a subspace of the compact Hausdorff, hence normal, space $[0, \omega_1] \times [0, \omega]$: subspaces of normal spaces need not be normal, although closed subspaces are.
+\end{enumerate}
+\end{counterexample}
+
 \begin{proposition}\label{general-topology:proposition-normal-examples}
 Metric spaces and compact Hausdorff spaces are normal.
 \end{proposition}
@@ -1061,8 +1196,7 @@ Metric spaces and compact Hausdorff spaces are normal.
 \begin{proof}
 For a nonempty subset $A$ of a metric space let $d(x, A) = \inf_{a \in A} d(x, a)$. Then $|d(x, A) - d(y, A)| \leq d(x, y)$, so $d(-, A)$ is continuous, and
 $d(x, A) = 0$ if and only if $x \in \overline{A}$. For disjoint nonempty closed $A, B$, the continuous function (Proposition~\ref{general-topology:proposition-product}(5)) $g(x) = d(x, A) - d(x, B)$ is negative on $A$ and positive
-on $B$, so $\{g < 0\}$ and $\{g > 0\}$ separate them. For compact Hausdorff spaces use Propositions~\ref{general-topology:proposition-compact-basic}(1)
-and~(2).
+on $B$, so $\{g < 0\}$ and $\{g > 0\}$ separate them. For compact Hausdorff spaces this is Theorem~\ref{general-topology:theorem-compact-hausdorff-normal}.
 \end{proof}
 
 \begin{theorem}[Urysohn's lemma]\label{general-topology:theorem-urysohn}
@@ -1588,10 +1722,8 @@ Hence, for $X$ locally compact Hausdorff, $F \mapsto \hat{F}$ is a bijection $C(
 
 \begin{proof}
 (1) $\hat{F}(z)$ is the composite of the continuous maps $x \mapsto (z, x)$ and $F$. To show that $\hat{F}$ is continuous it suffices to show that the preimages of the subbasic sets $V(K, U)$ are open
-(Proposition~\ref{general-topology:proposition-continuity}). Let $z \in \hat{F}^{-1}(V(K, U))$, that is, $F(\{z\} \times K) \subseteq U$. The open set $F^{-1}(U) \subseteq Z \times X$ contains
-$\{z\} \times K$. For each $x \in K$ choose a basic open set $A_x \times B_x \subseteq F^{-1}(U)$ containing $(z, x)$; finitely many $B_{x_1}, \ldots, B_{x_m}$ cover $K$, and
-$A = A_{x_1} \cap \cdots \cap A_{x_m}$ is an open neighbourhood of $z$ with $A \times K \subseteq F^{-1}(U)$ (this is the tube lemma of the proof of
-Proposition~\ref{general-topology:proposition-finite-products}). So $\hat{F}(A) \subseteq V(K, U)$, and $\hat{F}^{-1}(V(K, U))$ is open.
+(Proposition~\ref{general-topology:proposition-continuity}). Let $z \in \hat{F}^{-1}(V(K, U))$, that is, $F(\{z\} \times K) \subseteq U$. The open set $F^{-1}(U) \cap (Z \times K)$ of $Z \times K$ contains
+$\{z\} \times K$, so by the tube lemma (Lemma~\ref{general-topology:lemma-tube}) there is an open neighbourhood $A$ of $z$ with $A \times K \subseteq F^{-1}(U)$. So $\hat{F}(A) \subseteq V(K, U)$, and $\hat{F}^{-1}(V(K, U))$ is open.
 
 (2) The map is the composite of $G \times \id_X \colon Z \times X \to C(X, Y) \times X$ and the evaluation map, which is continuous by
 Proposition~\ref{general-topology:proposition-evaluation}.
@@ -2054,14 +2186,16 @@ which is one reason for the importance of the Cantor set.
 \section{Exercises}\label{general-topology:section-exercises}
 
 \begin{exercise}\label{general-topology:exercise-hausdorff-diagonal}
-Show that $X$ is Hausdorff if and only if the diagonal $\Delta = \{(x, x)\}$ is closed in $X \times X$. Deduce that if $f, g \colon Z \to X$ are continuous and $X$
-is Hausdorff, then $\{z : f(z) = g(z)\}$ is closed, and that the graph of a continuous map to a Hausdorff space is closed.
+Let $R \subseteq X \times X$ be an equivalence relation on a space $X$ and $q \colon X \to X/R$ the quotient map. Show that if $X/R$ is Hausdorff, then $R$ is closed in $X \times X$. Conversely, show that if $X$ is compact Hausdorff and $R$ is
+closed, then $q$ is a closed map and $X/R$ is compact Hausdorff.
 \end{exercise}
 
 \begin{solution}
-$(x, y) \notin \Delta$ has a basic neighbourhood $U \times V$ disjoint from $\Delta$ if and only if $U \cap V = \emptyset$. So $X \times X \setminus \Delta$ is open if and
-only if distinct points have disjoint neighbourhoods. The set $\{f = g\}$ is the preimage of $\Delta$ under the continuous map $(f, g) \colon Z \to X \times X$, and
-the graph of $f \colon Y \to X$ is $\{(y, x) : f(y) = x\}$, the equaliser of $f \circ p_1$ and $p_2$.
+$R = (q \times q)^{-1}(\Delta_{X/R})$, the preimage of the diagonal, which is closed by Proposition~\ref{general-topology:proposition-hausdorff-diagonal}(1). Conversely, let $X$ be compact Hausdorff and $R$ closed. For $C \subseteq X$ closed, the
+saturation $q^{-1}(q(C)) = p_1(R \cap (X \times C))$ is the projection of a closed subset of $X \times X$, hence closed by Corollary~\ref{general-topology:corollary-projection-closed}; so $q$ is closed. Each class is the saturation of a point,
+hence closed. Given two distinct classes $A$, $B$, Theorem~\ref{general-topology:theorem-compact-hausdorff-normal} gives disjoint open $U \supseteq A$ and $V \supseteq B$. The sets $U^{\prime} = X \setminus q^{-1}(q(X \setminus U))$ and
+$V^{\prime} = X \setminus q^{-1}(q(X \setminus V))$ are open (as $q$ is closed), saturated, contained in $U$ and $V$, and contain $A$ and $B$ (a class meeting $X \setminus U$ is not $A$, since $A \subseteq U$). So $q(U^{\prime})$ and
+$q(V^{\prime})$ are disjoint open neighbourhoods of the two points of $X/R$. Compactness of $X/R$ is Proposition~\ref{general-topology:proposition-compact-basic}(3).
 \end{solution}
 
 \begin{exercise}\label{general-topology:exercise-closure-product}
@@ -2118,7 +2252,7 @@ $f^+ \colon X^+ \to Y^+$ with $f^+(\infty) = \infty$ is continuous.
 
 \begin{exercise}\label{general-topology:exercise-quotient-product}
 Let $q \colon X \to Y$ be a quotient map and $K$ a compact Hausdorff space. Show that $q \times \id_K \colon X \times K \to Y \times K$ is a quotient map. (Hint:
-use the tube lemma from the proof of Proposition~\ref{general-topology:proposition-finite-products}.)
+use the tube lemma, Lemma~\ref{general-topology:lemma-tube}.)
 \end{exercise}
 
 \begin{exercise}\label{general-topology:exercise-interior-union}
@@ -2148,7 +2282,7 @@ dense subset are equal; give an example showing that the Hausdorff condition is 
 
 \begin{solution}
 $Y = f(X) = f(\overline{A}) \subseteq \overline{f(A)}$ by Proposition~\ref{general-topology:proposition-continuity}(3). The set $\{x : f(x) = g(x)\}$ is the preimage of the diagonal under $(f, g)$, which is
-closed as $Y$ is Hausdorff (Exercise~\ref{general-topology:exercise-hausdorff-diagonal}); it contains the dense set, hence is everything. For $Y$ the Sierpi\'nski space $\{0, 1\}$ and $X = [0, 1]$, the
+closed as $Y$ is Hausdorff (Proposition~\ref{general-topology:proposition-hausdorff-diagonal}(2)); it contains the dense set, hence is everything. For $Y$ the Sierpi\'nski space $\{0, 1\}$ and $X = [0, 1]$, the
 constant map $1$ and the map that is $0$ at $0$ and $1$ elsewhere are continuous (the preimage of the open set $\{1\}$ is $X$, respectively $(0, 1]$) and agree on the dense set $(0, 1]$.
 \end{solution}
 
